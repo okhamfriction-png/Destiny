@@ -5,8 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../application/services/audio_service.dart';
+import '../../application/state/guide_content.dart';
+import '../../application/state/story_controller.dart';
+import '../../application/state/tracking_store.dart';
+import '../../application/state/visual_settings.dart';
 import '../visuals/entity_visuals.dart';
 import '../widgets/destiny_cube_animation.dart';
+import 'guide_screen.dart';
+import 'tracking_screen.dart';
 
 /// Police manuscrite (seule la phrase « RIEN EST ÉCRIT » l'utilise).
 const String _kHand = 'PatrickHand';
@@ -54,8 +60,18 @@ class TopCountdownScreen extends StatefulWidget {
     this.seconds = 30,
     this.alertAt = 10,
     this.cubeAnimation = false,
+    this.guide,
+    this.tracking,
+    this.visualSettings,
+    this.storyController,
     super.key,
   });
+
+  /// Aides de jeu accessibles pendant le chrono (Guide + tableaux de suivi).
+  final GuideContent? guide;
+  final TrackingStore? tracking;
+  final VisualSettings? visualSettings;
+  final StoryController? storyController;
 
   final String lieu;
   final String danger;
@@ -295,6 +311,47 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
                 ),
               ),
             ),
+            // Aides de jeu pendant le chrono : Guide + tableaux de suivi.
+            // Le chrono continue de tourner sous l'écran ouvert.
+            if (widget.guide != null &&
+                widget.tracking != null &&
+                widget.visualSettings != null &&
+                widget.storyController != null)
+              SafeArea(
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        tooltip: 'Guide Destiny',
+                        icon: const Icon(Icons.menu_book, color: _gold),
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => GuideScreen(
+                              guide: widget.guide!,
+                              visualSettings: widget.visualSettings!,
+                            ),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        tooltip: 'Tableaux de suivi',
+                        icon:
+                            const Icon(Icons.fact_check_outlined, color: _gold),
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => TrackingScreen(
+                              store: widget.tracking!,
+                              storyController: widget.storyController!,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             // Cube animé au lancement du chrono (flourish de départ).
             if (_showLaunchCube)
               DestinyCubeAnimation(
@@ -506,145 +563,124 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
     final accent = _done
         ? Colors.white
         : (warning ? const Color(0xFFFF5252) : const Color(0xFFB9A6FF));
-    return LayoutBuilder(builder: (context, c) {
-      // Facteur de zoom : agrandit tout le contenu pour remplir l'écran
-      // (surtout en large / desktop) et améliorer la lisibilité.
-      final double s = (c.maxWidth / 390).clamp(1.0, 2.4).toDouble();
-      final timerSize =
-          _done ? 66.0 * s : (widget.minutesUnit ? 84.0 : 112.0) * s;
-      return SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: c.maxHeight),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20 * s, vertical: 18 * s),
-            child: Column(
-              // spaceEvenly : répartit les blocs sur toute la hauteur → plus de vide.
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _infoBlock(context, scale: s),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(_done ? 'TOP !' : _fmt(_remaining),
-                        style: TextStyle(
-                            fontSize: timerSize,
-                            fontWeight: FontWeight.w900,
-                            height: 1,
-                            color: accent,
-                            letterSpacing: 2)),
-                    SizedBox(height: 8 * s),
-                    Text(
-                      _done
-                          ? 'Scène terminée.'
-                          : _paused
-                              ? 'En pause'
-                              : (warning
-                                  ? 'Conclus, $_remaining s !'
-                                  : 'À toi de jouer.'),
-                      style: TextStyle(
-                          color: _paused
-                              ? _gold
-                              : (warning
-                                  ? const Color(0xFFFF8A80)
-                                  : Colors.white54),
-                          fontSize: 16 * s),
-                    ),
-                    if (widget.destinyEnabled) ...[
-                      SizedBox(height: 6 * s),
-                      Text('DESTINY à ${_destiny.map(_moment).join(" · ")}',
-                          style: TextStyle(color: _gold, fontSize: 13 * s)),
-                    ],
-                  ],
-                ),
-                // Résultats du dé (un par DESTINY passé).
-                if (_rolls.isNotEmpty)
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      for (final roll in _rolls)
-                        Container(
-                          margin: EdgeInsets.only(bottom: 8 * s),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 14 * s, vertical: 10 * s),
-                          decoration: BoxDecoration(
-                            color: _gold.withValues(alpha: 0.10),
-                            borderRadius: BorderRadius.circular(12 * s),
-                            border: Border.all(
-                                color: _gold.withValues(alpha: 0.35)),
-                          ),
-                          child: Text.rich(
-                            TextSpan(children: [
-                              TextSpan(
-                                  text: 'DESTINY ${roll.num} — ',
-                                  style: TextStyle(
-                                      color: _gold,
-                                      fontSize: 15 * s,
-                                      fontWeight: FontWeight.w800)),
-                              TextSpan(
-                                  text: '${roll.emoji ?? '🎲'} ${roll.kind} : ',
-                                  style: TextStyle(
-                                      color: Colors.white70, fontSize: 15 * s)),
-                              TextSpan(
-                                  text: roll.text,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15 * s,
-                                      fontWeight: FontWeight.w700,
-                                      height: 1.3)),
-                            ]),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                    ],
-                  ),
-                Wrap(
-                  spacing: 12 * s,
-                  runSpacing: 12 * s,
-                  alignment: WrapAlignment.center,
-                  children: [
-                    // Pause / Reprendre (uniquement pendant que le chrono tourne).
-                    if (!_done)
-                      FilledButton.icon(
-                        onPressed: _togglePause,
-                        style: FilledButton.styleFrom(
-                          backgroundColor: _gold,
-                          foregroundColor: Colors.black,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 24 * s, vertical: 12 * s),
-                          textStyle: TextStyle(
-                              fontSize: 15 * s, fontWeight: FontWeight.w800),
-                        ),
-                        icon: Icon(_paused ? Icons.play_arrow : Icons.pause,
-                            size: 20 * s),
-                        label: Text(_paused ? 'Reprendre' : 'Pause'),
-                      ),
-                    OutlinedButton.icon(
-                      onPressed: widget.destinyEnabled
-                          ? () {
-                              _timer?.cancel();
-                              SystemChrome.setEnabledSystemUIMode(
-                                  SystemUiMode.edgeToEdge);
-                              setState(() => _setup = true);
-                            }
-                          : _start,
-                      style: OutlinedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 20 * s, vertical: 12 * s),
-                        textStyle: TextStyle(fontSize: 15 * s),
-                      ),
-                      icon: Icon(Icons.replay, size: 18 * s),
-                      label: Text(widget.destinyEnabled
-                          ? 'Régler / relancer'
-                          : 'Relancer'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+    final timerSize = _done ? 66.0 : (widget.minutesUnit ? 84.0 : 104.0);
+
+    // Contenu à largeur de référence ; un FittedBox le met à l'échelle pour
+    // occuper TOUT l'écran sans jamais défiler (ni déborder, ni laisser de vide).
+    final content = SizedBox(
+      width: 360,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _infoBlock(context),
+          const SizedBox(height: 18),
+          Text(_done ? 'TOP !' : _fmt(_remaining),
+              style: TextStyle(
+                  fontSize: timerSize,
+                  fontWeight: FontWeight.w900,
+                  height: 1,
+                  color: accent,
+                  letterSpacing: 2)),
+          const SizedBox(height: 6),
+          Text(
+            _done
+                ? 'Scène terminée.'
+                : _paused
+                    ? 'En pause'
+                    : (warning ? 'Conclus, $_remaining s !' : 'À toi de jouer.'),
+            style: TextStyle(
+                color: _paused
+                    ? _gold
+                    : (warning ? const Color(0xFFFF8A80) : Colors.white54),
+                fontSize: 16),
           ),
-        ),
-      );
-    });
+          if (widget.destinyEnabled) ...[
+            const SizedBox(height: 6),
+            Text('DESTINY à ${_destiny.map(_moment).join(" · ")}',
+                style: const TextStyle(color: _gold, fontSize: 13)),
+          ],
+          // Résultats du dé (un par DESTINY passé).
+          if (_rolls.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            for (final roll in _rolls)
+              Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                decoration: BoxDecoration(
+                  color: _gold.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: _gold.withValues(alpha: 0.35)),
+                ),
+                child: Text.rich(
+                  TextSpan(children: [
+                    TextSpan(
+                        text: 'DESTINY ${roll.num} — ',
+                        style: const TextStyle(
+                            color: _gold, fontWeight: FontWeight.w800)),
+                    TextSpan(
+                        text: '${roll.emoji ?? '🎲'} ${roll.kind} : ',
+                        style: const TextStyle(color: Colors.white70)),
+                    TextSpan(
+                        text: roll.text,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            height: 1.3)),
+                  ]),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+          ],
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            alignment: WrapAlignment.center,
+            children: [
+              // Pause / Reprendre (uniquement pendant que le chrono tourne).
+              if (!_done)
+                FilledButton.icon(
+                  onPressed: _togglePause,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: _gold,
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    textStyle: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.w800),
+                  ),
+                  icon: Icon(_paused ? Icons.play_arrow : Icons.pause, size: 20),
+                  label: Text(_paused ? 'Reprendre' : 'Pause'),
+                ),
+              OutlinedButton.icon(
+                onPressed: widget.destinyEnabled
+                    ? () {
+                        _timer?.cancel();
+                        SystemChrome.setEnabledSystemUIMode(
+                            SystemUiMode.edgeToEdge);
+                        setState(() => _setup = true);
+                      }
+                    : _start,
+                icon: const Icon(Icons.replay, size: 18),
+                label: Text(
+                    widget.destinyEnabled ? 'Régler / relancer' : 'Relancer'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+
+    // SizedBox.expand donne des contraintes SERRÉES au FittedBox → il met le
+    // contenu à l'échelle pour occuper toute la hauteur (au lieu de rester à sa
+    // taille naturelle avec du vide). BoxFit.contain garantit : aucun scroll.
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: SizedBox.expand(
+        child: FittedBox(fit: BoxFit.contain, child: content),
+      ),
+    );
   }
 }
 

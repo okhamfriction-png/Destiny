@@ -132,6 +132,15 @@ class _GenerationHistoryScreenState extends State<GenerationHistoryScreen> {
                               ),
                             ),
                         ],
+                        const SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: FilledButton.icon(
+                            onPressed: () => Navigator.pop(context, r),
+                            icon: const Icon(Icons.open_in_new, size: 18),
+                            label: const Text('Réafficher'),
+                          ),
+                        ),
                       ],
                     ),
                   );

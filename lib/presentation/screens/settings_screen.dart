@@ -94,6 +94,22 @@ class SettingsScreen extends StatelessWidget {
               onTap: () => _push(
                   context, AppearanceScreen(visualSettings: visualSettings)),
             ),
+            Card(
+              margin: const EdgeInsets.symmetric(vertical: 4),
+              child: ListenableBuilder(
+                listenable: visualSettings,
+                builder: (context, _) => SwitchListTile(
+                  secondary: Icon(Icons.admin_panel_settings,
+                      color: theme.colorScheme.primary),
+                  title: const Text('Mode admin'),
+                  subtitle: const Text(
+                      'Autorise l\'édition du Guide Destiny. '
+                      'Désactivé = lecture seule pour les comédiens.'),
+                  value: visualSettings.adminMode,
+                  onChanged: visualSettings.setAdminMode,
+                ),
+              ),
+            ),
             _item(
               context,
               icon: Icons.smart_toy,

@@ -63,6 +63,7 @@ class VisualSettings extends ChangeNotifier {
   static const _kWDang = 'destiny_w_dang';
   static const _kWDest = 'destiny_w_dest';
   static const _kCubeAnim = 'cube_animation';
+  static const _kAdmin = 'admin_mode';
 
   VisualSource _source = VisualSource.ai;
   double _textScale = 1.0;
@@ -75,8 +76,25 @@ class VisualSettings extends ChangeNotifier {
   int _wDest = 7;
   // Animation du cube DESTINY (dés + lancement du chrono). Désactivée par défaut.
   bool _cubeAnimation = false;
+  // Mode admin : autorise l'édition du Guide et de la config. Désactivé par défaut
+  // (les comédiens sont en lecture seule sur le Guide).
+  bool _adminMode = false;
 
   VisualSource get source => _source;
+
+  /// Mode admin : déverrouille l'édition du Guide et la configuration des
+  /// tableaux. Désactivé par défaut.
+  bool get adminMode => _adminMode;
+
+  Future<void> setAdminMode(bool value) async {
+    if (value == _adminMode) return;
+    _adminMode = value;
+    notifyListeners();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_kAdmin, _adminMode);
+    } catch (_) {}
+  }
 
   /// Animation du cube doré (au lancer des dés et au lancement du chrono).
   /// Désactivée par défaut.
@@ -217,6 +235,7 @@ class VisualSettings extends ChangeNotifier {
       _wDang = prefs.getInt(_kWDang) ?? 2;
       _wDest = prefs.getInt(_kWDest) ?? 7;
       _cubeAnimation = prefs.getBool(_kCubeAnim) ?? false;
+      _adminMode = prefs.getBool(_kAdmin) ?? false;
       notifyListeners();
     } catch (_) {
       // Valeurs par défaut conservées.

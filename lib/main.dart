@@ -6,8 +6,10 @@ import 'application/services/random_picker_service.dart';
 import 'application/state/ai_settings.dart';
 import 'application/state/chat_controller.dart';
 import 'application/state/generation_history.dart';
+import 'application/state/guide_content.dart';
 import 'application/state/last_generation_store.dart';
 import 'application/state/music_controller.dart';
+import 'application/state/tracking_store.dart';
 import 'application/state/spectacle_controller.dart';
 import 'application/state/spectacle_store.dart';
 import 'application/state/spinoff_history.dart';
@@ -96,6 +98,10 @@ Future<void> _boot() async {
   // Détecte une partie de Spectacle en cours (bouton « Reprendre »).
   await spectacleController.loadSavedSession();
 
+  // Briques « univers Destiny » : Guide (référence) + tableaux de suivi.
+  final guideContent = GuideContent();
+  final trackingStore = TrackingStore();
+
   runApp(DestinyApp(
     controller: controller,
     audioService: audioService,
@@ -110,6 +116,8 @@ Future<void> _boot() async {
     spectacleController: spectacleController,
     llm: llmService,
     spinoffHistory: spinoffHistory,
+    guideContent: guideContent,
+    trackingStore: trackingStore,
   ));
 }
 
@@ -152,6 +160,8 @@ class DestinyApp extends StatelessWidget {
     required this.spectacleController,
     required this.llm,
     required this.spinoffHistory,
+    required this.guideContent,
+    required this.trackingStore,
     super.key,
   });
 
@@ -168,6 +178,8 @@ class DestinyApp extends StatelessWidget {
   final SpectacleController spectacleController;
   final LlmService llm;
   final SpinoffHistory spinoffHistory;
+  final GuideContent guideContent;
+  final TrackingStore trackingStore;
 
   @override
   Widget build(BuildContext context) {
@@ -189,6 +201,8 @@ class DestinyApp extends StatelessWidget {
         spectacleController: spectacleController,
         llm: llm,
         spinoffHistory: spinoffHistory,
+        guideContent: guideContent,
+        trackingStore: trackingStore,
       ),
     );
   }

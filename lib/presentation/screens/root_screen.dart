@@ -5,10 +5,12 @@ import '../../application/services/llm_service.dart';
 import '../../application/state/ai_settings.dart';
 import '../../application/state/chat_controller.dart';
 import '../../application/state/generation_history.dart';
+import '../../application/state/guide_content.dart';
 import '../../application/state/music_controller.dart';
 import '../../application/state/spectacle_controller.dart';
 import '../../application/state/spinoff_history.dart';
 import '../../application/state/story_controller.dart';
+import '../../application/state/tracking_store.dart';
 import '../../application/state/visual_settings.dart';
 import '../../domain/repositories/catalog_store.dart';
 import '../../domain/repositories/combination_memory.dart';
@@ -18,10 +20,12 @@ import 'catalog_view_screen.dart';
 import 'chat_screen.dart';
 import 'dice_screen.dart';
 import 'generator_screen.dart';
+import 'guide_screen.dart';
 import 'music_screen.dart';
 import 'settings_screen.dart';
 import 'spectacle_screen.dart';
 import 'timer_screen.dart';
+import 'tracking_screen.dart';
 
 /// Shell de navigation : Générateur · Dés · Minuteur · Musique · Chat.
 class RootScreen extends StatefulWidget {
@@ -39,6 +43,8 @@ class RootScreen extends StatefulWidget {
     required this.spectacleController,
     required this.llm,
     required this.spinoffHistory,
+    required this.guideContent,
+    required this.trackingStore,
     super.key,
   });
 
@@ -55,6 +61,8 @@ class RootScreen extends StatefulWidget {
   final SpectacleController spectacleController;
   final LlmService llm;
   final SpinoffHistory spinoffHistory;
+  final GuideContent guideContent;
+  final TrackingStore trackingStore;
 
   @override
   State<RootScreen> createState() => _RootScreenState();
@@ -89,6 +97,28 @@ class _RootScreenState extends State<RootScreen> {
     );
   }
 
+  void _openGuide() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => GuideScreen(
+          guide: widget.guideContent,
+          visualSettings: widget.visualSettings,
+        ),
+      ),
+    );
+  }
+
+  void _openTracking() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => TrackingScreen(
+          store: widget.trackingStore,
+          storyController: widget.controller,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final pages = [
@@ -101,6 +131,8 @@ class _RootScreenState extends State<RootScreen> {
         llm: widget.llm,
         spinoffHistory: widget.spinoffHistory,
         repository: widget.repository,
+        guideContent: widget.guideContent,
+        trackingStore: widget.trackingStore,
       ),
       DiceScreen(
         audioService: widget.audioService,
@@ -167,6 +199,20 @@ class _RootScreenState extends State<RootScreen> {
                 right: 8,
                 child: Row(
                   children: [
+                    _RoundIcon(
+                      icon: Icons.menu_book,
+                      tooltip: 'Guide Destiny',
+                      color: const Color(0xFFFFC24B),
+                      onPressed: _openGuide,
+                    ),
+                    const SizedBox(width: 6),
+                    _RoundIcon(
+                      icon: Icons.fact_check_outlined,
+                      tooltip: 'Suivi de répétition',
+                      color: const Color(0xFFFFC24B),
+                      onPressed: _openTracking,
+                    ),
+                    const SizedBox(width: 6),
                     _RoundIcon(
                       icon: Icons.warning_amber_rounded,
                       tooltip: 'Catalogue des dangers',

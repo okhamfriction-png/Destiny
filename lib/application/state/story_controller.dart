@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../domain/entities/story.dart';
 import '../../domain/usecases/generate_story_usecase.dart';
 import 'generation_history.dart';
 import 'last_generation_store.dart';
@@ -46,6 +47,18 @@ class StoryController extends ChangeNotifier {
 
   void setMode(GeneratorMode mode) {
     _state = _state.copyWith(mode: mode, clearStory: true, clearError: true);
+    notifyListeners();
+  }
+
+  /// Affiche une scène donnée (ex. rechargée depuis l'historique).
+  void showStory(Story story, GeneratorMode mode) {
+    _state = _state.copyWith(
+      status: StoryStatus.success,
+      story: story,
+      mode: mode,
+      clearError: true,
+    );
+    lastStore?.save(story, mode);
     notifyListeners();
   }
 

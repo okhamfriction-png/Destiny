@@ -5,12 +5,20 @@ import '../../application/services/llm_service.dart';
 import '../../application/services/spectacle_prompt.dart';
 import '../../application/state/ai_settings.dart';
 import '../../application/state/generation_history.dart';
+import '../../application/state/guide_content.dart';
 import '../../application/state/spinoff_history.dart';
 import '../../application/state/story_controller.dart';
+import '../../application/state/tracking_store.dart';
 import '../../application/state/story_state.dart';
 import '../../application/state/visual_settings.dart';
+import '../../domain/entities/archetype.dart';
 import '../../domain/entities/chat_message.dart';
+import '../../domain/entities/danger.dart';
+import '../../domain/entities/dilemma.dart';
+import '../../domain/entities/location.dart';
+import '../../domain/entities/player_assignment.dart';
 import '../../domain/entities/spectacle_turn.dart';
+import '../../domain/entities/story.dart';
 import '../../domain/repositories/story_repository.dart';
 import '../visuals/entity_visuals.dart';
 import '../widgets/dilemma_result_card.dart';
@@ -57,6 +65,8 @@ class GeneratorScreen extends StatefulWidget {
     required this.llm,
     required this.spinoffHistory,
     required this.repository,
+    required this.guideContent,
+    required this.trackingStore,
     super.key,
   });
 
@@ -68,6 +78,8 @@ class GeneratorScreen extends StatefulWidget {
   final LlmService llm;
   final SpinoffHistory spinoffHistory;
   final StoryRepository repository;
+  final GuideContent guideContent;
+  final TrackingStore trackingStore;
 
   @override
   State<GeneratorScreen> createState() => _GeneratorScreenState();
@@ -280,17 +292,99 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
             destinyEnabled ? const [12 * 60, 25 * 60, 37 * 60] : const [],
         seconds: destinyEnabled ? 40 * 60 : widget.visualSettings.topSeconds,
         cubeAnimation: widget.visualSettings.cubeAnimation,
+        // Aides de jeu accessibles pendant le chrono.
+        guide: widget.guideContent,
+        tracking: widget.trackingStore,
+        visualSettings: widget.visualSettings,
+        storyController: widget.controller,
       ),
     ));
   }
 
-  void _openHistory() {
+  Future<void> _openHistory() async {
     final spin = widget.controller.state.mode == GeneratorMode.spinoff;
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) => spin
-          ? SpinoffHistoryScreen(history: widget.spinoffHistory)
-          : GenerationHistoryScreen(history: widget.history),
-    ));
+    if (spin) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (_) => SpinoffHistoryScreen(history: widget.spinoffHistory),
+      ));
+      return;
+    }
+    // Retour éventuel d'un record à réafficher dans le Générateur.
+    final record = await Navigator.of(context).push<GenerationRecord>(
+      MaterialPageRoute(
+        builder: (_) => GenerationHistoryScreen(history: widget.history),
+      ),
+    );
+    if (record != null && mounted) {
+      await _loadFromRecord(record);
+    }
+  }
+
+  /// Reconstruit une Story depuis un enregistrement d'historique (résolution
+  /// des entités par nom via le catalogue) et l'affiche dans le Générateur.
+  Future<void> _loadFromRecord(GenerationRecord r) async {
+    try {
+      final locations = await widget.repository.getLocations();
+      final archetypes = await widget.repository.getArchetypes();
+      final dilemmas = r.mode == 'dilemme'
+          ? await widget.repository.getDilemmas()
+          : const <Dilemma>[];
+      if (!mounted) return;
+
+      final location = locations.firstWhere(
+        (l) => l.name == r.location,
+        orElse: () => Location(id: '', name: r.location, roles: r.roles),
+      );
+
+      // Le danger est intégralement reconstituable depuis le record.
+      final danger = Danger(
+        id: '',
+        name: r.danger,
+        style: r.dangerStyle,
+        paliers: r.paliers,
+      );
+
+      final players = <PlayerAssignment>[];
+      for (var k = 0; k < r.archetypes.length; k++) {
+        final arch = archetypes.firstWhere(
+          (a) => a.name == r.archetypes[k],
+          orElse: () => Archetype(id: '', name: r.archetypes[k], traits: ''),
+        );
+        players.add(PlayerAssignment(
+          playerIndex: k + 1,
+          archetype: arch,
+          role: k < r.roles.length ? r.roles[k] : '',
+        ));
+      }
+
+      Dilemma? dilemma;
+      if (r.mode == 'dilemme' && r.dilemma.isNotEmpty) {
+        for (final d in dilemmas) {
+          if (d.nom == r.dilemma) {
+            dilemma = d;
+            break;
+          }
+        }
+      }
+
+      final story = Story(
+        location: location,
+        danger: danger,
+        players: players,
+        dilemma: dilemma,
+        cycle: 1,
+        usedCount: 1,
+        totalCombos: 1,
+      );
+
+      final mode = GeneratorMode.values.firstWhere(
+        (m) => m.name == r.mode,
+        orElse: () => GeneratorMode.histoire,
+      );
+      widget.controller.showStory(story, mode);
+    } catch (_) {
+      // Reconstruction impossible : on ignore silencieusement.
+    }
   }
 
   @override
