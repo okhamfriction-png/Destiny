@@ -1,0 +1,109 @@
+{
+  "universes": [
+    {
+      "file": "audio/universes/animaux_parlent.m4a",
+      "title": "Animaux qui parlent",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/chevaliers_dragons.m4a",
+      "title": "Chevaliers & dragons",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/conte_fees.m4a",
+      "title": "Conte de fées",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/contemporain.m4a",
+      "title": "Contemporain",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/cyberpunk.m4a",
+      "title": "Cyberpunk",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/dark_fantasy.m4a",
+      "title": "Dark Fantasy",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/dessin_anime.m4a",
+      "title": "Dessin animé",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/espace_rigolo.m4a",
+      "title": "Espace rigolo",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/high_fantasy.m4a",
+      "title": "High Fantasy",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/historique.m4a",
+      "title": "Historique",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/horreur.m4a",
+      "title": "Horreur",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/manga_rigolo.m4a",
+      "title": "Manga rigolo",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/monde_magique.m4a",
+      "title": "Monde magique",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/pirates.m4a",
+      "title": "Pirates",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/policier.m4a",
+      "title": "Policier",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/post_apo.m4a",
+      "title": "Post-apocalyptique",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/science_fiction.m4a",
+      "title": "Science-Fiction",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/shonen.m4a",
+      "title": "Shonen",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/sous_la_mer.m4a",
+      "title": "Sous la mer",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/steampunk.m4a",
+      "title": "Steampunk",
+      "loop": true
+    },
+    {
+      "file": "audio/universes/super_heros.m4a",
+      "title": "Super-héros",
+      "loop": true
+    }
+  ]
+}

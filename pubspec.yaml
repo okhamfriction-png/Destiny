@@ -1,0 +1,65 @@
+name: destiny
+description: Destiny - generateur de situations d'improvisation theatrale.
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  sqflite: ^2.3.3+1
+  sqflite_common_ffi: ^2.3.3
+  path: ^1.9.0
+  path_provider: ^2.1.4
+  audioplayers: ^6.1.0
+  http: ^1.2.2
+  shared_preferences: ^2.3.2
+  url_launcher: ^6.3.0
+  font_awesome_flutter: ^10.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.1
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icon/app_icon_full.png"
+  adaptive_icon_background: "#000000"
+  adaptive_icon_foreground: "assets/icon/app_icon_full.png"
+  min_sdk_android: 21
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/data/locations.json
+    - assets/data/dangers.json
+    - assets/data/archetypes.json
+    - assets/data/dilemmas.json
+    - assets/audio/DestinyStorm.wav
+    - assets/audio/story_epic.wav
+    - assets/audio/coin.wav
+    - assets/audio/dice.wav
+    - assets/audio/crack.wav
+    - assets/audio/shine.wav
+    - assets/audio/thunder.wav
+    - assets/audio/reveal.wav
+    - assets/audio/ambiences/
+    - assets/audio/universes/
+    - assets/images/locations/
+    - assets/images/dangers/
+    - assets/images/archetypes/
+    - assets/images/destiny_cube.png
+    - assets/music/
+
+  fonts:
+    - family: PatrickHand
+      fonts:
+        - asset: assets/fonts/PatrickHand-Regular.ttf

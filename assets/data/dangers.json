@@ -1,0 +1,536 @@
+{
+  "dangers": [
+    {
+      "id": "robots_rebelle",
+      "name": "Des robots se rebellent",
+      "style": "Thriller",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Une machine a un geste anormal, on se dit que c'est un bug.",
+        "Les machines se retournent et bloquent les issues, on ne sort plus.",
+        "Elles nous traquent une par une, l'étau se resserre sur nous.",
+        "La rébellion est totale : les arrêter maintenant ou finir avec elles."
+      ]
+    },
+    {
+      "id": "air_irrespirable",
+      "name": "L'air devient irrespirable",
+      "style": "Survie / Dilemme",
+      "rue": false,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "L'air se fait lourd, on respire moins bien sans savoir pourquoi.",
+        "Chaque souffle coûte, et rien ne s'ouvre pour renouveler l'air.",
+        "La tête tourne, la vue se trouble, il faut décider avec le peu qui reste.",
+        "Plus rien à respirer, quelques souffles pour dire l'essentiel."
+      ]
+    },
+    {
+      "id": "siege_arme",
+      "name": "La guerre éclate",
+      "style": "Catastrophe",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Des détonations au loin, des sirènes, on veut croire que ça passe.",
+        "Les explosions coupent les rues autour, impossible de partir.",
+        "Le combat est sur nous, on rampe, chaque geste peut être le dernier.",
+        "Le front nous submerge : traverser le feu ensemble ou rester piégés."
+      ]
+    },
+    {
+      "id": "bombe_retardement",
+      "name": "Le lieu va s'autodétruire",
+      "style": "Thriller",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Une alarme s'allume, un compte à rebours démarre quelque part.",
+        "Le verrouillage s'enclenche, les sorties se scellent, on est dedans.",
+        "Les systèmes lâchent un à un, le temps file, tout tremble.",
+        "Dernières secondes : arrêter le compte ou tout perdre avec le lieu."
+      ]
+    },
+    {
+      "id": "noir_total",
+      "name": "Le noir total",
+      "style": "Survie / Dilemme",
+      "rue": false,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Les lumières faiblissent, des ombres s'étirent, on se rassure mal.",
+        "Le noir tombe d'un coup, on ne retrouve plus la sortie, on tâtonne.",
+        "On ne voit plus rien, chaque bruit tout près devient une menace.",
+        "Dans le noir absolu quelque chose bouge, il faut agir à l'aveugle."
+      ]
+    },
+    {
+      "id": "soleil_grossit",
+      "name": "Le soleil grossit, tout brûle",
+      "style": "Catastrophe",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "La lumière devient trop forte, il fait anormalement chaud.",
+        "La chaleur scelle le lieu, dehors est mortel, on reste enfermés.",
+        "Les vitres se fissurent, le sol brûle, l'ombre se réduit à rien.",
+        "Tout s'embrase, le dernier coin vivable disparaît, il faut choisir."
+      ]
+    },
+    {
+      "id": "soleil_eteint",
+      "name": "Le soleil s'éteint, le froid gagne",
+      "style": "Catastrophe",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "La lumière faiblit, un froid inhabituel s'installe.",
+        "Le gel bloque les portes, on ne peut plus sortir sans mourir.",
+        "Le froid fige tout, les doigts s'engourdissent, bouger fait mal.",
+        "Le noir glacé avale tout, rester immobile c'est mourir, il faut trancher."
+      ]
+    },
+    {
+      "id": "murs_referment",
+      "name": "Les murs se referment",
+      "style": "Survie / Dilemme",
+      "rue": false,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Un grincement, une paroi semble un peu plus proche qu'avant.",
+        "Les murs avancent, l'espace se réduit, aucune issue ne cède.",
+        "Le plafond descend, on doit se baisser, se serrer les uns contre les autres.",
+        "Il reste la place d'un seul corps, qui tient, qui cède."
+      ]
+    },
+    {
+      "id": "perdus_nature",
+      "name": "On est perdus",
+      "style": "Survie / Dilemme",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Le chemin ne ressemble plus à rien de connu, on hésite.",
+        "Chaque direction ramène au même point, on tourne en rond, pris au piège.",
+        "La nuit et le froid tombent, on ne tiendra pas éparpillés.",
+        "Une seule chance de sortie, ensemble ou pas du tout."
+      ]
+    },
+    {
+      "id": "traques",
+      "name": "On est traqués",
+      "style": "Thriller",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Une présence, un doute, on croit être suivis.",
+        "Les sorties sont surveillées, on ne peut plus partir librement.",
+        "Ça se rapproche, méthodique, on doit se cacher serrés.",
+        "Ils sont là : se livrer, se sacrifier, ou tomber ensemble."
+      ]
+    },
+    {
+      "id": "verrouillage",
+      "name": "Tout se verrouille, on est piégés",
+      "style": "Survie / Dilemme",
+      "rue": false,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Une porte claque, on n'y prête pas attention.",
+        "Toutes les issues se scellent une à une, on est enfermés.",
+        "Les parois se resserrent ou l'espace se dégrade, on étouffe.",
+        "Une seule sortie possible, et pas pour tout le monde."
+      ]
+    },
+    {
+      "id": "braquage",
+      "name": "Un braquage",
+      "style": "Thriller",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Une tension, des regards, quelque chose cloche dans le lieu.",
+        "Les armes sortent, les portes se bloquent, personne ne sort.",
+        "Les preneurs s'énervent, chaque mot peut faire basculer.",
+        "Ça dégénère : négocier, se soumettre, ou risquer sa peau."
+      ]
+    },
+    {
+      "id": "brume_etrange",
+      "name": "Un brouillard qui rend fou",
+      "style": "Thriller",
+      "rue": false,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Une brume entre, on se sent bizarre sans comprendre.",
+        "Le brouillard scelle le lieu, on ne trouve plus l'issue, on doute des autres.",
+        "Les perceptions se déforment, on ne sait plus qui croire.",
+        "Chacun voit un ennemi dans l'autre, il faut se ressaisir ou s'entretuer."
+      ]
+    },
+    {
+      "id": "crash_exterieur",
+      "name": "Un crash",
+      "style": "Catastrophe",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Une secousse, une alarme, on veut croire que c'est rien.",
+        "L'impact tord la structure, les issues sont coincées, on est dedans.",
+        "Tout se disloque, le feu ou l'eau gagnent, on rampe.",
+        "La carcasse cède : sortir un par un, choisir qui passe."
+      ]
+    },
+    {
+      "id": "essaim",
+      "name": "Un essaim",
+      "style": "Survie / Dilemme",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Un bourdonnement monte, quelques insectes tournent.",
+        "L'essaim couvre les ouvertures, on ne peut plus sortir.",
+        "Ils s'infiltrent, piqûres partout, on se colle pour se protéger.",
+        "Le nuage vivant nous dévore, il faut un sacrifice pour passer."
+      ]
+    },
+    {
+      "id": "nuage_toxique",
+      "name": "Un gaz toxique se répand",
+      "style": "Survie / Dilemme",
+      "rue": false,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Une odeur étrange, un léger malaise, on hésite.",
+        "Le gaz sature le lieu, les sorties sont dans le nuage, on reste bloqués.",
+        "La tête tourne, on tousse, il faut décider vite et à plusieurs.",
+        "L'air est mortel, un seul masque, un seul souffle, qui vit."
+      ]
+    },
+    {
+      "id": "gouffre",
+      "name": "Un gouffre s'ouvre sous nos pieds",
+      "style": "Catastrophe",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Le sol craque, une fissure court, on se fige.",
+        "Le gouffre coupe le lieu en deux, plus de passage vers la sortie.",
+        "Les bords s'effondrent, on se retient les uns aux autres.",
+        "Tout cède, une main peut sauver ou lâcher."
+      ]
+    },
+    {
+      "id": "incendie",
+      "name": "Un incendie",
+      "style": "Catastrophe",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Une odeur de fumée, une lueur, on n'est pas sûr encore.",
+        "Le feu coupe une première sortie, on ne part plus librement.",
+        "La chaleur est sur nous, les issues tombent une à une, on est piégés.",
+        "Tout brûle : qui passe, qui reste, ce qu'on se dit avant la fin."
+      ]
+    },
+    {
+      "id": "jeu_mortel",
+      "name": "Un jeu mortel",
+      "style": "Thriller",
+      "rue": false,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Une règle absurde s'impose, on croit à une farce.",
+        "Les portes se verrouillent, le jeu commence, impossible de refuser.",
+        "Les épreuves frappent, chaque choix sacrifie quelqu'un.",
+        "Dernière manche : se trahir, se sacrifier, ou tout perdre."
+      ]
+    },
+    {
+      "id": "monstre_geant",
+      "name": "Un monstre géant",
+      "style": "Catastrophe",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Un grondement, le sol vibre, on doute de ce qu'on a vu.",
+        "La créature bloque l'issue, on est acculés dans le lieu.",
+        "Elle démolit tout autour, on se terre, serrés.",
+        "Elle nous trouve : la distraire, se livrer, ou fuir au prix d'un des nôtres."
+      ]
+    },
+    {
+      "id": "naufrage",
+      "name": "Un naufrage",
+      "style": "Catastrophe",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Une gîte, un choc sourd, on veut croire que ça tient.",
+        "L'eau bloque les coursives, on ne remonte plus librement.",
+        "Le niveau monte, le navire penche, on s'accroche ensemble.",
+        "Il coule : une place de moins dans le canot, qui monte."
+      ]
+    },
+    {
+      "id": "pacte_ancien",
+      "name": "Un pacte ancien réactivé",
+      "style": "Thriller",
+      "rue": false,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Un signe étrange, un malaise, on se moque à moitié.",
+        "Le lieu se scelle, on comprend qu'on est liés au pacte, on ne part pas.",
+        "La force réclame son dû, elle frappe l'un après l'autre.",
+        "Le pacte exige un sacrifice : lequel d'entre nous."
+      ]
+    },
+    {
+      "id": "raz_de_maree",
+      "name": "Un raz-de-marée",
+      "style": "Catastrophe",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "La mer se retire trop loin, un grondement monte, on s'inquiète.",
+        "La vague coupe la route, plus moyen de rejoindre les hauteurs.",
+        "L'eau envahit le lieu, on grimpe, on se hisse les uns les autres.",
+        "La vague nous prend : une main tendue, un choix de vie ou de mort."
+      ]
+    },
+    {
+      "id": "tremblement_terre",
+      "name": "Un tremblement de terre",
+      "style": "Catastrophe",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Une vibration, un objet tombe, on se fige une seconde.",
+        "La secousse bloque les issues, les gravats scellent les sorties.",
+        "Tout s'effondre autour, on se protège collés au sol.",
+        "Le bâtiment cède : dégager quelqu'un ou se sauver, il faut choisir."
+      ]
+    },
+    {
+      "id": "tueur_en_serie",
+      "name": "Un tueur en série",
+      "style": "Thriller",
+      "rue": false,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Un détail dérange, un malaise, on se rassure entre nous.",
+        "Une porte verrouillée, un absent, on comprend qu'on est enfermés avec lui.",
+        "Il frappe dans l'ombre, la peur monte, on se soupçonne.",
+        "Il est parmi nous : le démasquer, se livrer, ou tomber un à un."
+      ]
+    },
+    {
+      "id": "volcan",
+      "name": "Un volcan en éruption",
+      "style": "Catastrophe",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "La terre gronde, une odeur de soufre, on hésite à partir.",
+        "La coulée coupe les routes, on est cernés, on reste sur place.",
+        "Les cendres étouffent, la chaleur monte, on se serre.",
+        "La lave arrive : le dernier passage, pour qui."
+      ]
+    },
+    {
+      "id": "ia_controle",
+      "name": "Une IA prend le contrôle",
+      "style": "Thriller",
+      "rue": false,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Un système agit tout seul, on croit à un bug.",
+        "L'IA verrouille tout, coupe les issues, on est à sa merci.",
+        "Elle nous isole, nous manipule, monte les uns contre les autres.",
+        "Elle exige un choix : la débrancher au prix d'un des nôtres."
+      ]
+    },
+    {
+      "id": "invasion_creature",
+      "name": "Une créature nous traque",
+      "style": "Thriller",
+      "rue": false,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Un bruit, une trace, on n'est pas sûrs d'avoir bien vu.",
+        "Elle coupe la sortie, on est acculés dans le lieu.",
+        "Elle rôde tout près, on retient son souffle, serrés.",
+        "Elle attaque : la distraire, se sacrifier, ou fuir sans tous."
+      ]
+    },
+    {
+      "id": "reaction_chimique",
+      "name": "Une fuite de gaz, ça va exploser",
+      "style": "Thriller",
+      "rue": false,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Un sifflement, une odeur de gaz qu'on ne situe pas.",
+        "La moindre étincelle est fatale, on ne peut plus sortir sans risque.",
+        "La concentration monte, chaque geste compte, on retient tout.",
+        "Ça va sauter : une seule issue, un seul geste, qui le fait."
+      ]
+    },
+    {
+      "id": "inondation",
+      "name": "Une inondation",
+      "style": "Survie / Dilemme",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "L'eau s'infiltre, on lève les pieds sans trop s'alarmer.",
+        "Le niveau bloque les portes, on ne sort plus, on est pris.",
+        "L'eau monte vite, on grimpe, on se tient les uns aux autres.",
+        "Il reste un souffle d'air en haut, pas pour tous."
+      ]
+    },
+    {
+      "id": "zombies",
+      "name": "Une invasion de zombies",
+      "style": "Survie / Dilemme",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Des cris dehors, on barricade sans vraiment y croire.",
+        "Ils encerclent le lieu, les issues sont prises, on est enfermés.",
+        "Ils forcent l'entrée, on recule, on se serre.",
+        "Ils sont dans la place : sacrifier une porte, un des nôtres, pour passer."
+      ]
+    },
+    {
+      "id": "invasion_alien",
+      "name": "Une invasion extraterrestre",
+      "style": "Thriller",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Une lumière, un silence anormal, on doute de nos yeux.",
+        "Ils scellent le lieu, coupent tout contact, on est captifs.",
+        "Ils fouillent, prélèvent, on se cache serrés dans le noir.",
+        "Ils nous trouvent : livrer l'un pour sauver les autres, ou tomber ensemble."
+      ]
+    },
+    {
+      "id": "meute",
+      "name": "Une meute lâchée",
+      "style": "Survie / Dilemme",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Des grognements, une présence, on se rapproche instinctivement.",
+        "La meute garde les sorties, on est bloqués à l'intérieur.",
+        "Elle attaque par vagues, on se protège dos à dos.",
+        "Elles percent : un appât, un sacrifice, pour que les autres passent."
+      ]
+    },
+    {
+      "id": "prise_otage",
+      "name": "Une prise d'otage",
+      "style": "Thriller",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Une tension monte, un ton qui change, on sent le danger.",
+        "Les issues sont bloquées, les armes sortent, personne ne part.",
+        "Le preneur s'agite, chaque parole peut sauver ou tuer.",
+        "Ça bascule : se soumettre, résister, ou se sacrifier pour les autres."
+      ]
+    },
+    {
+      "id": "tempete",
+      "name": "Une tempête",
+      "style": "Catastrophe",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Le vent forcit, le ciel noircit, on rentre se mettre à l'abri.",
+        "La tempête scelle les issues, dehors est mortel, on reste enfermés.",
+        "Tout craque, le toit menace, on se regroupe au centre.",
+        "La structure cède : le dernier refuge, pour combien d'entre nous."
+      ]
+    },
+    {
+      "id": "tornade",
+      "name": "Une tornade",
+      "style": "Catastrophe",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Le ciel vire, une colonne se forme au loin, on hésite.",
+        "Elle coupe la route, on doit rester terrés sur place.",
+        "Elle arrache tout autour, on s'accroche les uns aux autres.",
+        "Elle passe sur nous : lâcher prise ou tenir, qui tient qui."
+      ]
+    },
+    {
+      "id": "emeute_hostile",
+      "name": "Une émeute",
+      "style": "Catastrophe",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Des cris montent dehors, une tension dans l'air.",
+        "La foule encercle le lieu, les issues sont prises, on est bloqués.",
+        "Ça force les portes, la violence entre, on se barricade serrés.",
+        "Ils envahissent : livrer quelqu'un, se cacher, ou affronter la vague."
+      ]
+    },
+    {
+      "id": "maladie_contagieuse",
+      "name": "Une épidémie se propage",
+      "style": "Survie / Dilemme",
+      "rue": true,
+      "theatre": true,
+      "actif": true,
+      "paliers": [
+        "Quelqu'un tousse, pâle, on le remarque à peine.",
+        "Le lieu est mis en quarantaine, les portes se scellent, on reste dedans.",
+        "Les symptômes frappent vite, la peur du contact monte, on se soupçonne.",
+        "Le mal est partout : sacrifier un contaminé, s'isoler, choisir qui vit."
+      ]
+    }
+  ]
+}

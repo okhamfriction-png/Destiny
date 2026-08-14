@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "destiny-web",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd build/web && python3 -m http.server \"$PORT\" --bind 127.0.0.1"],
+      "autoPort": true
+    }
+  ]
+}
