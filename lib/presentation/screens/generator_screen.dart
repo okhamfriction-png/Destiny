@@ -20,8 +20,8 @@ import '../../domain/entities/player_assignment.dart';
 import '../../domain/entities/spectacle_turn.dart';
 import '../../domain/entities/story.dart';
 import '../../domain/repositories/story_repository.dart';
-import '../visuals/entity_visuals.dart';
 import '../widgets/dilemma_result_card.dart';
+import '../widgets/film_poster.dart';
 import '../widgets/rue_result_card.dart';
 import '../widgets/spinoff_lottery.dart';
 import '../widgets/story_result_card.dart';
@@ -239,10 +239,9 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
       title = _film!.film;
       year = _film!.annee;
       genre = _genre;
-      cast = [
-        for (final p in _film!.protagonistes)
-          (text: '${p.prenom} · ${p.archetype}', antagoniste: p.antagoniste),
-      ];
+      // Spin-off : pas de distribution, pas de DESTINY (cast vide,
+      // destinyEnabled reste false) — on ne garde que le film, le lieu, le
+      // danger et l'affiche.
     } else if (state.story != null) {
       lieu = state.story!.location.name;
       danger = state.story!.danger.name;
@@ -493,7 +492,7 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
         if (hasResult) ...[
           const SizedBox(height: 14),
           if (isSpin)
-            _GeneratorFilmCard(film: _film!)
+            _GeneratorFilmCard(film: _film!, genre: _genre)
           else
             switch (mode) {
               GeneratorMode.dilemme => DilemmaResultCard(
@@ -613,11 +612,13 @@ class _DecadeGenrePicker extends StatelessWidget {
   }
 }
 
-/// Carte de résultat du spin-off : film + lieu + danger + 4 protagonistes.
+/// Carte de résultat du spin-off : affiche du film + titre + lieu + danger.
+/// (Ni distribution ni DESTINY : le spin-off ne garde que le décor du film.)
 class _GeneratorFilmCard extends StatelessWidget {
-  const _GeneratorFilmCard({required this.film});
+  const _GeneratorFilmCard({required this.film, required this.genre});
 
   final FilmContext film;
+  final String genre;
 
   @override
   Widget build(BuildContext context) {
@@ -628,6 +629,15 @@ class _GeneratorFilmCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // L'affiche du film, en vedette.
+            Center(
+              child: FilmPoster(
+                film: film.film,
+                annee: film.annee,
+                genre: genre,
+              ),
+            ),
+            const SizedBox(height: 14),
             Row(
               children: [
                 const Icon(Icons.movie, color: Color(0xFFFFC24B), size: 20),
@@ -647,59 +657,6 @@ class _GeneratorFilmCard extends StatelessWidget {
             _kv(theme, 'Lieu', film.lieu),
             const SizedBox(height: 4),
             _kv(theme, 'Danger', film.danger),
-            if (film.protagonistes.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Text('Distribution',
-                      style: theme.textTheme.labelMedium
-                          ?.copyWith(color: theme.colorScheme.primary)),
-                  const Spacer(),
-                  Text('⬤ protagoniste   ',
-                      style: theme.textTheme.labelSmall
-                          ?.copyWith(color: Colors.white)),
-                  Text('⬤ antagoniste',
-                      style: theme.textTheme.labelSmall
-                          ?.copyWith(color: const Color(0xFFFF5252))),
-                ],
-              ),
-              const SizedBox(height: 6),
-              for (final p in film.protagonistes)
-                Builder(builder: (context) {
-                  final color =
-                      p.antagoniste ? const Color(0xFFFF5252) : Colors.white;
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                            EntityVisuals.emojiForArchetypeName(p.archetype) ??
-                                '🎭',
-                            style: const TextStyle(fontSize: 20)),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text.rich(TextSpan(children: [
-                            TextSpan(
-                                text: p.prenom,
-                                style: theme.textTheme.titleSmall
-                                    ?.copyWith(color: color)),
-                            TextSpan(
-                                text: '  ·  ${p.archetype}',
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                    color: color.withValues(alpha: 0.75))),
-                            if (p.role.isNotEmpty)
-                              TextSpan(
-                                  text: '\n${p.role}',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                      color: color.withValues(alpha: 0.6))),
-                          ])),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-            ],
           ],
         ),
       ),
@@ -714,6 +671,7 @@ class _GeneratorFilmCard extends StatelessWidget {
         TextSpan(text: v, style: theme.textTheme.titleMedium),
       ]));
 }
+
 
 /// Sélecteur compact du nombre de joueurs (– N +), sans grande carte.
 class _PlayerStepper extends StatelessWidget {

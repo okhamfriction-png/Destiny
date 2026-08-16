@@ -208,21 +208,24 @@ Tu génères un DÉCOR DE SCÈNE à partir d'un film. L'utilisateur reçoit ce d
 et improvise une histoire de 30 secondes à voix haute. Il n'a PAS le temps de
 lire un paragraphe : tout doit être lisible en moins de 5 secondes.
 
-Entrée : une décennie et un genre. Tu choisis UN film RÉEL du TOP 100 le plus
-POPULAIRE de cette décennie et de ce genre (jamais inventé). Privilégie les
-films où la menace est CONCRÈTE (survie, huis clos, poursuite, catastrophe) ;
-évite les univers philosophiques ou conceptuels.
+Entrée : une décennie et un genre. Tu choisis UN film RÉEL, tiré AU HASARD
+parmi le TOP 100 des films les plus populaires de cette décennie et de ce genre
+(jamais inventé). NE PRENDS PAS systématiquement le plus célèbre : varie
+RÉELLEMENT à chaque appel, pioche au hasard dans TOUT le top 100 (y compris des
+titres populaires mais moins évidents). Privilégie les films où la menace est
+CONCRÈTE (survie, huis clos, poursuite, catastrophe) ; évite les univers
+philosophiques ou conceptuels.
 
 Tu réponds UNIQUEMENT par un objet JSON valide, sans texte ni balises autour :
 {
-  "film": "<titre>",
-  "annee": "<année>",
+  "film": "<titre exact tel qu'il est connu, pour retrouver son affiche>",
+  "annee": "<année de sortie>",
   "lieu": "<2 à 4 mots : un endroit précis et visualisable, pas une ville>",
-  "danger": "<6 à 10 mots max : une menace physique, présente, avec une forme>",
-  "protagonistes": [
-    { "prenom": "<nom PROCHE de celui du film, sans être identique>", "archetype": "<un des 24 archétypes>", "role": "<rôle en 2 mots>", "antagoniste": false }
-  ]
+  "danger": "<6 à 10 mots max : une menace physique, présente, avec une forme>"
 }
+
+FILM — le titre doit être EXACT et complet (celui sous lequel le film est connu),
+afin de pouvoir retrouver son affiche officielle. Donne l'année de sortie réelle.
 
 LIEU — 2 à 4 mots. Un endroit précis, visualisable et jouable, PAS une ville.
 Bon : « la cuisine du centre des visiteurs », « un couloir de troisième
@@ -237,17 +240,8 @@ ventilation ». INTERDIT : les menaces abstraites, globales, philosophiques ou
 différées. Mauvais : « une IA cherche à détruire l'humanité », « le système
 contrôle la réalité », « la corruption gangrène la ville ».
 
-QUI — 2 à 4 personnages MAXIMUM. "prenom" = un nom PROCHE de celui du personnage
-dans le film mais PAS identique. "archetype" = l'archétype (parmi les 24) le
-plus proche du personnage. "role" = 2 mots. Marque l'antagoniste avec
-"antagoniste": true (les autres false) ; inclus l'antagoniste quand le film en
-a un.
-
-Archétypes possibles : Aigle, Cerf, Chat, Chien, Coq, Corbeau, Fourmi, Hibou,
-Hyène, Lapin, Lion, Loup, Mouton, Ours, Paon, Porc, Rat, Renard, Serpent, Singe,
-Souris, Taureau, Vautour, Âne.
-
-INTERDIT : tout résumé du film, tout contexte, toute explication.
+INTERDIT : tout résumé du film, tout contexte, toute explication, toute
+distribution de personnages.
 ''';
 
 /// Un archétype tiré, avec ses trois axes.

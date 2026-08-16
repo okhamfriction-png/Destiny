@@ -22,8 +22,9 @@ class GuideSection {
       );
 }
 
-/// Contenu du Guide Destiny : 10 sections, texte par défaut fourni, éditable
-/// (admin) et persisté. C'est la référence permanente pour apprendre / réviser.
+/// Contenu du Guide Destiny : 15 sections (10 fondamentales + 5 « Le système
+/// par les films »), texte par défaut fourni, éditable (admin) et persisté.
+/// C'est la référence permanente pour apprendre / réviser.
 class GuideContent extends ChangeNotifier {
   GuideContent() {
     _sections = List.of(_defaults);
@@ -240,6 +241,125 @@ Répartition :
    – L'un de vous a menti sur quelque chose d'essentiel, il doit l'avouer maintenant.
 
 LE LIEU NE FAIT PAS PARTIE DU DÉ (changer de lieu casse le huis clos). Il est posé au début et reste fixe.''',
+    ),
+    const GuideSection(
+      id: 's11',
+      title: '11. Les statuts à l\'œuvre (films)',
+      body: '''━━━ PARTIE II — LE SYSTÈME PAR LES FILMS ━━━
+Les cinq sections qui suivent montrent la méthode à l'œuvre dans des œuvres connues. Facultatif : ça nourrit le jeu, ça ne remplace rien. À picorer, pas à apprendre.
+
+LE STATUT N'EST PAS CE QU'ON DIT, C'EST CE QU'ON JOUE. Ces scènes le montrent mieux que toute théorie :
+
+• GAME OF THRONES — Tywin dépèce le cerf. Il parle à Jaime sans le regarder, les mains dans les entrailles de l'animal. Statut ultra-haut sans un mot plus fort qu'un autre : il joue haut face à l'environnement, tout lui appartient. Personne n'a besoin qu'on lui dise qui commande.
+
+• LES AFFRANCHIS — l'entrée au Copacabana (plan-séquence). Henry passe par les cuisines, distribue des billets, on lui installe une table devant la scène. Il ne dit presque rien : le statut est joué par l'espace et la réaction des autres. Karen tombe amoureuse dans ce plan — c'est le statut qui la fait tomber, pas une réplique.
+
+• LES AFFRANCHIS — « Funny how? » Tommy fait basculer le statut en une seconde, et personne ne sait si c'est un jeu. Malaise absolu = statut illisible. Toute la table est mal à l'aise parce que personne ne sait quel statut jouer.
+
+• LE ROI LION — Scar (Serpent) démarre bas : il se faufile, il esquive. Mufasa (Lion) est haut : le roi, la force, le droit. Puis Scar renverse (« la nature m'a doté d'intelligence, toi de la force… ») et il sort en statut haut, laissant le roi sans réplique. Preuve que le statut se joue dans la FICTION, pas dans l'archétype : le Lion peut être bas, et c'est ça le drame.
+
+• TAXI DRIVER — « You talkin' to me? » Travis s'entraîne à jouer haut face à un miroir : un statut avec un environnement, sans partenaire.
+
+LEÇON : le statut circule, il n'appartient à personne. Un roi peut être bas face à un sujet, jamais face à son palais. Le micro-écart (un demi-cran) fait le réalisme ; le grand écart fait la comédie.''',
+    ),
+    const GuideSection(
+      id: 's12',
+      title: '12. L\'objectif : moteur × danger',
+      body: '''L'objectif n'est jamais abstrait : il naît du croisement MOTEUR (de l'archétype) × DANGER. Sans danger, « je veux le pouvoir » est vague. Avec un danger qui enferme, ça devient concret et jouable maintenant. Deux pistes par cas — on en choisit une en 3 secondes, ou on en invente une 3e du même esprit.
+
+• SERPENT (le contrôle) · avocat, commissariat — Une preuve l'incrimine. → Faire accuser un autre avant la fin de l'interrogatoire ; ou retourner l'enquêteur contre sa hiérarchie.
+
+• LION (le règne) · capitaine, sous-marin — Une mutinerie se prépare. → Mater le meneur en public pour briser la révolte ; ou lancer une mission qui force tous à me suivre.
+
+• SOURIS (oser malgré tout) · gardien, prison — On me force à choisir un camp. → Trouver à qui obéir sans être tenu responsable ; ou disparaître, et craquer quand c'est impossible.
+
+• OURS (protéger les siens) · infirmier, hôpital — Ordre d'évacuer en laissant un patient. → Cacher mon patient et le défendre ; ou forcer le médecin à le sauver d'abord.
+
+• RAT (le profit) · adjoint, mairie — Un audit surprise va tout révéler. → Faire porter le chapeau au maire ; ou vendre ce que je sais au camp qui gagnera.
+
+• COQ (la conquête) · directeur, école — Un scandale menace ma réputation. → Me mettre en scène en sauveur ; ou écraser celui qui pourrait me faire de l'ombre.
+
+• HIBOU (avoir raison) · médecin, vaisseau — Panne mortelle, personne ne m'écoute. → Prouver que j'avais raison quitte à laisser empirer ; ou prendre le contrôle, seul à comprendre.
+
+• MOUTON (l'abri du plus fort) · steward, avion — Le commandant donne un ordre dangereux. → Trouver vite quel fort suivre ; ou obéir même si absurde, et se figer sous la pression.
+
+• RENARD (le jeu qui gagne) · agent, aéroport — Attentat annoncé, fermeture totale. → Monnayer ma sortie contre une info ; ou négocier avec les deux camps pour garder une issue.
+
+• TAUREAU (s'imposer) · vigile, boîte de nuit — Début d'émeute. → Imposer l'ordre par la force ; ou désigner un coupable et foncer dessus.
+
+• CORBEAU (qu'on le craigne) · notaire, manoir — Héritage contesté, un mort suspect. → Pousser les héritiers à s'entredéchirer ; ou faire chanter celui qui cache, sous couvert de conseil.
+
+• PAON (la gloire) · marié, mariage — Un ex débarque avec un secret. → Étouffer le scandale pour que la fête reste parfaite ; ou retourner l'assemblée contre l'ex pour rester admiré.
+
+RÈGLE : le moteur donne la couleur, le danger donne l'urgence. L'objectif est toujours le moteur rendu concret par la menace — jamais tiré du rôle.''',
+    ),
+    const GuideSection(
+      id: 's13',
+      title: '13. Les 24 archétypes incarnés',
+      body: '''3 références par archétype (univers variés), pour que chacun en connaisse au moins une. Le point commun : aucun ne surjoue son animal. Ils sont intenses parce qu'ils poursuivent un objectif à fond, pas parce qu'ils en rajoutent. L'archétype est stable (tempérament, port, moteur) ; l'émotion monte avec le danger.
+
+• AIGLE (le sommet) — Daenerys (GoT) · Miranda Priestly (Le Diable s'habille en Prada) · Erwin (Attack on Titan)
+• ÂNE (la paix, à son rythme) — Forrest Gump · Woody (Toy Story) · Samsagace têtu (LOTR)
+• CERF (l'honneur) — Ned Stark (GoT) · Atticus Finch · Itachi (Naruto)
+• CHAT (la fascination) — Catwoman · Han Solo · Yoruichi (Bleach)
+• CHIEN (la fidélité) — Samwise (LOTR) · Dwight (The Office) · Hachiko
+• COQ (la conquête) — Michael Scott (The Office) · Gaston · Endeavor (MHA)
+• CORBEAU (qu'on le craigne) — Hannibal Lecter · Le Joker (Dark Knight) · Light Yagami (Death Note)
+• FOURMI (l'ordre) — Skyler White (Breaking Bad) · Mrs Weasley (HP) · Iroh (Avatar)
+• HIBOU (avoir raison) — Tywin Lannister (GoT) · Gus Fring (Breaking Bad) · Yoda
+• HYÈNE (la curée) — Joffrey (GoT) · Biff (Retour vers le futur) · Hidan (Naruto)
+• LAPIN (plaire à tous) — Tommen (GoT) · George McFly · Hinata début (Naruto)
+• LION (le règne) — Aragorn (LOTR) · Maximus (Gladiator) · Mufasa (Le Roi Lion)
+• LOUP (la meute) — Tony Soprano · Anton Chigurh (No Country) · Vegeta (Dragon Ball)
+• MOUTON (l'abri du plus fort) — Theon début (GoT) · les villageois (western) · Krillin (Dragon Ball)
+• OURS (protéger les siens) — Hagrid (HP) · John Coffey (La Ligne verte) · Baloo
+• PAON (la gloire) — Jordan Belfort (Loup de WS) · Lockhart (HP) · Mr Satan (Dragon Ball)
+• PORC (la jouissance) — Donnie (Loup de WS) · Mr Creosote (Monty Python) · le Roi gonflé
+• RAT (le profit) — Littlefinger (GoT) · Gollum (LOTR) · traîtres de cour
+• RENARD (le jeu qui gagne) — Saul Goodman · Tyrion (GoT) · Robin des Bois Disney
+• SERPENT (le contrôle) — John Doe (Seven) · Iago (Othello) · Aizen (Bleach)
+• SINGE (le rire) — Jack Sparrow · Le Joker (Ledger, chaos) · Hisoka (HxH)
+• SOURIS (oser malgré tout) — Bilbo début · Chihiro début · Neville début (HP)
+• TAUREAU (s'imposer) — The Hound (GoT) · Rocky · All Might (MHA)
+• VAUTOUR (ce qui reste) — Walter White fin (Breaking Bad) · Gordon Gekko (Wall Street) · Doflamingo (One Piece)
+
+NOTE : Donnie, Tyrion, John Doe, Gus Fring ne font jamais une vanne ni une grimace. Ils sont à fond dans leur objectif — c'est l'intensité du désir qui crée l'humour, la terreur, l'émotion. Certains se débattent (Walter White : Serpent ou Vautour ?) : en débattre en répétition aiguise l'œil de toute la troupe.''',
+    ),
+    const GuideSection(
+      id: 's14',
+      title: '14. La grammaire ABT (grandes œuvres)',
+      body: '''MAIS / DONC, jamais ET PUIS (règle de Trey Parker). Chaque scène est une conséquence (DONC) ou un retournement (MAIS) de la précédente. Schémas simplifiés — voir la mécanique, pas résumer l'œuvre.
+
+• BREAKING BAD (pilote) — Un prof apprend qu'il a un cancer. DONC il cuisine de la drogue. MAIS son ancien élève est dans le milieu. DONC ils s'associent. MAIS un dealer les menace. DONC il doit tuer. Chaque scène pousse la précédente.
+
+• GAME OF THRONES (le fil Stark) — Le roi demande à Ned d'être sa Main. MAIS Ned découvre un secret sur les héritiers. DONC il enquête. MAIS on l'avertit de se taire. DONC il agit par honneur. MAIS il est trahi et exécuté. L'archétype (Cerf, moteur l'honneur) le mène à sa perte.
+
+• LE LOUP DE WALL STREET — Il découvre l'argent facile. DONC il monte son arnaque. MAIS le FBI s'intéresse à lui. DONC il fuit en avant. MAIS ses proches lâchent. DONC la chute. Le moteur Paon (la gloire) poussé à l'excès est le moteur du récit.
+
+• ATTACK ON TITAN (prémisse) — L'humanité vit derrière des murs. MAIS un mur tombe. DONC le héros perd sa mère. DONC il jure vengeance. MAIS chaque vérité aggrave tout.
+
+TEST : à chaque scène, est-ce un DONC (conséquence) ou un MAIS (retournement) de ce qui précède ? Si c'est un « et puis » qui ouvre autre chose sans cause, c'est une faute de récit.''',
+    ),
+    const GuideSection(
+      id: 's15',
+      title: '15. Le danger qui enferme (7 films)',
+      body: '''Le danger Destiny est un compte à rebours qui ENFERME : posé tôt, il empire toujours, ne redescend jamais, et il coupe les issues — sinon les personnages fuiraient. Attention : ce n'est pas « la suite des événements ». C'est le MÊME danger qui s'aggrave et qui enferme.
+
+• ALIEN — la créature est à bord → elle élimine un membre → plus aucune zone sûre → la traque s'inverse → un seul survivant. Huis clos parfait : personne ne sort, le danger unique monte.
+
+• TITANIC — la coque est touchée → l'eau gagne les ponts → pas assez de canots, on est piégés → le bateau se brise → tout sombre. Irréversible dès la 1re minute ; l'enfermement (au milieu de l'océan) libère les vérités.
+
+• 12 HOMMES EN COLÈRE — un juré doute → le doute gagne → les certitudes se fissurent → le groupe se déchire → le verdict bascule. Le danger n'est pas physique : c'est le doute. Une pièce fermée, une pression qui monte : le plus proche de Destiny.
+
+• THE THING — un truc a pris un des nôtres → on ne sait plus qui → on se verrouille ensemble dans la base → la paranoïa dévore → on s'entretue. L'enfermement + la défiance : le danger fait sortir ce que chacun cachait.
+
+• JURASSIC PARK — une clôture lâche → un prédateur s'échappe → la traque dans le parc → plus aucun lieu sûr → le parc est perdu. Toujours le même danger, jamais résolu.
+
+• WALKING DEAD — la horde est là → elle force l'abri → l'abri devient intenable → la fuite tourne mal → plus aucun refuge. Ils sont trop, ça empire, on est cernés.
+
+• LE DÎNER DE CONS — un quiproquo → un mensonge pour le couvrir → la situation déraille → chaque rattrapage empire → catastrophe. Même mécanique, en comédie : le mensonge enferme aussi sûrement qu'un mur.
+
+LEÇON : un danger, posé tôt, qui monte sans se résoudre et coupe les issues. Palier 2 = une sortie se ferme ; palier 4 = plus rien à perdre, la vérité sort. Si tu sais faire monter UN danger qui enferme, tu sais faire Destiny.''',
     ),
   ];
 }

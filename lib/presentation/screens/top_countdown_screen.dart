@@ -11,6 +11,7 @@ import '../../application/state/tracking_store.dart';
 import '../../application/state/visual_settings.dart';
 import '../visuals/entity_visuals.dart';
 import '../widgets/destiny_cube_animation.dart';
+import '../widgets/film_poster.dart';
 import 'guide_screen.dart';
 import 'tracking_screen.dart';
 
@@ -191,9 +192,13 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
   @override
   void initState() {
     super.initState();
-    _destiny = widget.destinyDefaults.length == 3
-        ? [...widget.destinyDefaults]
-        : _defaultDestiny(_duration);
+    // DESTINY seulement si le mode l'active (Histoire). En spin-off / rue /
+    // dilemme, aucun moment n'est armé → aucun DESTINY ne se déclenche.
+    _destiny = !widget.destinyEnabled
+        ? const []
+        : (widget.destinyDefaults.length == 3
+            ? [...widget.destinyDefaults]
+            : _defaultDestiny(_duration));
     if (!widget.destinyEnabled) _start();
   }
 
@@ -471,10 +476,12 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
         ],
         if (isFilm) ...[
           SizedBox(height: 16 * scale),
-          _Poster(
-              title: widget.filmTitle!,
-              year: widget.filmYear ?? '',
-              genre: widget.genre ?? ''),
+          FilmPoster(
+            film: widget.filmTitle!,
+            annee: widget.filmYear ?? '',
+            genre: widget.genre ?? '',
+            width: 190 * scale,
+          ),
         ],
       ],
     );
@@ -761,61 +768,6 @@ class _ContextLine extends StatelessWidget {
                 fontWeight: FontWeight.w700,
                 height: 1.15)),
       ],
-    );
-  }
-}
-
-/// Affiche stylisée du film (pas d'image réelle : titre + année + genre).
-class _Poster extends StatelessWidget {
-  const _Poster({required this.title, required this.year, required this.genre});
-  final String title;
-  final String year;
-  final String genre;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 160,
-      height: 210,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF3A2E6E), Color(0xFF150F2E)],
-        ),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: _gold, width: 1.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (genre.isNotEmpty)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: _gold.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Text(genre,
-                  style: const TextStyle(
-                      color: _gold, fontSize: 11, fontWeight: FontWeight.w700)),
-            ),
-          const Spacer(),
-          Text(title,
-              maxLines: 4,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  height: 1.1,
-                  fontWeight: FontWeight.w900)),
-          if (year.isNotEmpty) ...[
-            const SizedBox(height: 6),
-            Text(year, style: const TextStyle(color: Colors.white60, fontSize: 14)),
-          ],
-        ],
-      ),
     );
   }
 }
