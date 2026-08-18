@@ -1,0 +1,1162 @@
+{
+ "aeroport": {
+  "sousEspaces": [
+   "hall des départs",
+   "porte d'embarquement",
+   "salon VIP",
+   "contrôle des passeports",
+   "tapis à bagages",
+   "tour de contrôle",
+   "piste de nuit",
+   "zone de transit"
+  ],
+  "vocabulaire": [
+   "embarquement",
+   "escale",
+   "carte d'accès",
+   "douanier",
+   "hôtesse de l'air",
+   "commandant de bord",
+   "détecteur de métaux",
+   "vol retardé",
+   "porte fermée",
+   "correspondance",
+   "soute",
+   "liste noire",
+   "passeport périmé",
+   "annonce au micro",
+   "dernier appel"
+  ]
+ },
+ "laboratoire": {
+  "sousEspaces": [
+   "salle blanche",
+   "animalerie",
+   "chambre froide",
+   "paillasse d'analyses",
+   "bureau du directeur",
+   "sas de décontamination",
+   "salle des serveurs",
+   "stock de réactifs"
+  ],
+  "vocabulaire": [
+   "éprouvette",
+   "microscope",
+   "cobaye",
+   "protocole",
+   "échantillon",
+   "confinement",
+   "blouse blanche",
+   "centrifugeuse",
+   "prélèvement",
+   "molécule",
+   "brevet",
+   "résultats truqués",
+   "quarantaine",
+   "financement",
+   "fuite de données"
+  ]
+ },
+ "hotel_luxe": {
+  "sousEspaces": [
+   "suite présidentielle",
+   "réception",
+   "bar du dernier étage",
+   "spa",
+   "cuisine de banquet",
+   "loge du concierge",
+   "ascenseur privé",
+   "cave à vin"
+  ],
+  "vocabulaire": [
+   "voiturier",
+   "gouvernante",
+   "pourboire",
+   "clé magnétique",
+   "room service",
+   "coffre-fort",
+   "champagne",
+   "client fidèle",
+   "suite nuptiale",
+   "note salée",
+   "portier",
+   "escorte",
+   "réservation annulée",
+   "chambre 1207",
+   "discrétion"
+  ]
+ },
+ "ferme": {
+  "sousEspaces": [
+   "étable",
+   "grange à foin",
+   "poulailler",
+   "champ de blé",
+   "cuisine paysanne",
+   "puits",
+   "hangar à tracteur",
+   "verger"
+  ],
+  "vocabulaire": [
+   "fourche",
+   "récolte",
+   "vêlage",
+   "traite",
+   "épouvantail",
+   "labour",
+   "fumier",
+   "moisson",
+   "sécheresse",
+   "hypothèque",
+   "bétail",
+   "héritage",
+   "voisin envieux",
+   "clôture",
+   "fusil de chasse"
+  ]
+ },
+ "bunker_militaire": {
+  "sousEspaces": [
+   "salle de commandement",
+   "dortoir souterrain",
+   "armurerie",
+   "sas blindé",
+   "réserve de vivres",
+   "cellule d'isolement",
+   "salle radio",
+   "galerie d'évacuation"
+  ],
+  "vocabulaire": [
+   "code de lancement",
+   "alerte rouge",
+   "ration",
+   "générateur",
+   "grade",
+   "consigne",
+   "déserteur",
+   "compte à rebours",
+   "ligne de front",
+   "insubordination",
+   "camouflage",
+   "détonateur",
+   "silo",
+   "ordre secret",
+   "survivant"
+  ]
+ },
+ "bibliotheque": {
+  "sousEspaces": [
+   "salle de lecture",
+   "réserve des manuscrits",
+   "archives au sous-sol",
+   "banque de prêt",
+   "coin des enfants",
+   "cabine de silence",
+   "atelier de reliure",
+   "rayon interdit"
+  ],
+  "vocabulaire": [
+   "cote",
+   "manuscrit",
+   "silence",
+   "amende de retard",
+   "reliure",
+   "fiche de prêt",
+   "grimoire",
+   "carte de lecteur",
+   "index",
+   "poussière",
+   "édition rare",
+   "vol de livre",
+   "bibliothécaire",
+   "marque-page",
+   "chuchotement"
+  ]
+ },
+ "usine": {
+  "sousEspaces": [
+   "chaîne de montage",
+   "atelier de soudure",
+   "salle des machines",
+   "vestiaire ouvrier",
+   "bureau du contremaître",
+   "entrepôt",
+   "quai de chargement",
+   "chaufferie"
+  ],
+  "vocabulaire": [
+   "cadence",
+   "poste de nuit",
+   "syndicat",
+   "grève",
+   "sirène",
+   "accident du travail",
+   "contremaître",
+   "délocalisation",
+   "pointeuse",
+   "prime de rendement",
+   "convoyeur",
+   "licenciement",
+   "casque",
+   "mise à pied",
+   "fonte"
+  ]
+ },
+ "restaurant_gastronomique": {
+  "sousEspaces": [
+   "salle à manger",
+   "cuisine ouverte",
+   "plonge",
+   "cave à vin",
+   "table du chef",
+   "réserve sèche",
+   "terrasse",
+   "bureau de réservation"
+  ],
+  "vocabulaire": [
+   "dressage",
+   "coup de feu",
+   "sommelier",
+   "brigade",
+   "amuse-bouche",
+   "second de cuisine",
+   "étoile",
+   "critique gastronomique",
+   "carte des vins",
+   "commis",
+   "envoyer",
+   "note de dégustation",
+   "réduction",
+   "chef doublé",
+   "service en salle"
+  ]
+ },
+ "commissariat": {
+  "sousEspaces": [
+   "accueil",
+   "salle d'interrogatoire",
+   "garde à vue",
+   "salle de repos",
+   "bureau du chef",
+   "vestiaire",
+   "sous-sol des scellés",
+   "salle d'archives"
+  ],
+  "vocabulaire": [
+   "menottes",
+   "déposition",
+   "aveu",
+   "indic",
+   "mandat",
+   "brigadier",
+   "cellule",
+   "flagrant délit",
+   "alibi",
+   "procès-verbal",
+   "garde à vue",
+   "témoin",
+   "planque",
+   "corruption",
+   "matraque"
+  ]
+ },
+ "centre_commercial": {
+  "sousEspaces": [
+   "galerie marchande",
+   "aire de restauration",
+   "parking souterrain",
+   "cabine d'essayage",
+   "arrière-boutique",
+   "poste de sécurité",
+   "escalator central",
+   "toilettes publiques"
+  ],
+  "vocabulaire": [
+   "vitrine",
+   "solde",
+   "vigile",
+   "caddie",
+   "vol à l'étalage",
+   "caisse",
+   "promotion",
+   "annonce sonore",
+   "carte de fidélité",
+   "code-barres",
+   "fermeture des grilles",
+   "antivol",
+   "flux client",
+   "liquidation",
+   "escalier mécanique"
+  ]
+ },
+ "zoo": {
+  "sousEspaces": [
+   "fosse aux fauves",
+   "vivarium",
+   "enclos des primates",
+   "infirmerie animale",
+   "billetterie",
+   "coulisses des soigneurs",
+   "bassin des phoques",
+   "réserve de nourriture"
+  ],
+  "vocabulaire": [
+   "soigneur",
+   "enclos",
+   "fauve",
+   "captivité",
+   "seringue",
+   "évasion",
+   "vétérinaire",
+   "reproduction",
+   "muselière",
+   "prédateur",
+   "quarantaine",
+   "abattage",
+   "dresseur",
+   "barreaux",
+   "carcasse"
+  ]
+ },
+ "musee": {
+  "sousEspaces": [
+   "galerie des maîtres",
+   "salle des antiquités",
+   "réserve des œuvres",
+   "atelier de restauration",
+   "hall d'entrée",
+   "poste de surveillance",
+   "salle des coffres",
+   "auditorium"
+  ],
+  "vocabulaire": [
+   "toile",
+   "vernissage",
+   "conservateur",
+   "faux",
+   "cartel",
+   "alarme",
+   "restauration",
+   "collection privée",
+   "gardien de salle",
+   "expertise",
+   "socle",
+   "cambriolage",
+   "provenance",
+   "vitrine blindée",
+   "legs"
+  ]
+ },
+ "camping": {
+  "sousEspaces": [
+   "emplacement de tente",
+   "sanitaires collectifs",
+   "feu de camp",
+   "accueil du gérant",
+   "bord du lac",
+   "aire de jeux",
+   "épicerie du camping",
+   "sentier boisé"
+  ],
+  "vocabulaire": [
+   "tente",
+   "piquet",
+   "réchaud",
+   "sac de couchage",
+   "moustique",
+   "orage",
+   "lampe torche",
+   "voisin bruyant",
+   "sentier",
+   "réserve d'eau",
+   "caravane",
+   "sac à dos",
+   "point de vue",
+   "gérant",
+   "nuit blanche"
+  ]
+ },
+ "plateau_tele": {
+  "sousEspaces": [
+   "studio d'enregistrement",
+   "régie",
+   "loges des invités",
+   "coulisses",
+   "maquillage",
+   "salle de rédaction",
+   "gradins du public",
+   "bureau du producteur"
+  ],
+  "vocabulaire": [
+   "direct",
+   "prompteur",
+   "audimat",
+   "régisseur",
+   "présentateur",
+   "coupure pub",
+   "micro-cravate",
+   "applaudissements",
+   "invité surprise",
+   "montage",
+   "clap",
+   "producteur",
+   "caméra 2",
+   "temps d'antenne",
+   "scandale à l'écran"
+  ]
+ },
+ "boite_nuit": {
+  "sousEspaces": [
+   "entrée sous cordon",
+   "piste de danse",
+   "carré VIP",
+   "bar central",
+   "coin fumeurs",
+   "loge du DJ",
+   "toilettes bondées",
+   "arrière-salle"
+  ],
+  "vocabulaire": [
+   "videur",
+   "bracelet VIP",
+   "bouteille magnum",
+   "cierge magique",
+   "stroboscope",
+   "vestiaire",
+   "physio",
+   "after",
+   "pilon",
+   "gogo danseuse",
+   "cabine DJ",
+   "vigile",
+   "liste d'invités",
+   "billet froissé",
+   "dernier verre"
+  ]
+ },
+ "base_spatiale": {
+  "sousEspaces": [
+   "sas d'accostage",
+   "poste de commandement",
+   "module d'habitation",
+   "salle des machines",
+   "serre hydroponique",
+   "coupole d'observation",
+   "baie médicale",
+   "réserve d'oxygène"
+  ],
+  "vocabulaire": [
+   "gravité zéro",
+   "combinaison",
+   "hublot",
+   "réserve d'air",
+   "avarie",
+   "commandant de bord",
+   "protocole d'évacuation",
+   "capsule de secours",
+   "ration lyophilisée",
+   "brèche",
+   "orbite",
+   "ingénieur de vol",
+   "signal de détresse",
+   "recyclage d'eau",
+   "compte à rebours"
+  ]
+ },
+ "bureau": {
+  "sousEspaces": [
+   "open space",
+   "salle de réunion",
+   "bureau du directeur",
+   "machine à café",
+   "photocopieuse",
+   "archives",
+   "ascenseur",
+   "parking souterrain"
+  ],
+  "vocabulaire": [
+   "dossier confidentiel",
+   "réunion de crise",
+   "objectif trimestriel",
+   "note de service",
+   "plan de licenciement",
+   "badge d'accès",
+   "heures supplémentaires",
+   "chef de service",
+   "tasseur de papiers",
+   "promotion",
+   "entretien annuel",
+   "démission",
+   "boîte mail",
+   "clé USB",
+   "pot de départ"
+  ]
+ },
+ "palais_presidentiel": {
+  "sousEspaces": [
+   "salle du conseil",
+   "bureau ovale",
+   "antichambre",
+   "salle de bal",
+   "jardins d'honneur",
+   "bunker de commandement",
+   "appartements privés",
+   "salle de presse"
+  ],
+  "vocabulaire": [
+   "chef d'État",
+   "conseiller",
+   "protocole",
+   "garde républicaine",
+   "décret",
+   "coup d'État",
+   "valise nucléaire",
+   "audience",
+   "porte-parole",
+   "cordon de sécurité",
+   "sommet",
+   "trahison d'État",
+   "sceau présidentiel",
+   "chef de cabinet",
+   "discours à la nation"
+  ]
+ },
+ "manoir_abandonne": {
+  "sousEspaces": [
+   "grand hall",
+   "escalier grinçant",
+   "chambre condamnée",
+   "bibliothèque poussiéreuse",
+   "cave voûtée",
+   "grenier",
+   "jardin envahi",
+   "passage dérobé"
+  ],
+  "vocabulaire": [
+   "draps blancs",
+   "lustre brisé",
+   "portrait de famille",
+   "testament",
+   "gouvernante",
+   "héritier",
+   "revenant",
+   "malédiction",
+   "clé rouillée",
+   "planchers craquants",
+   "toiles d'araignée",
+   "coffre scellé",
+   "cheminée éteinte",
+   "notaire",
+   "dernier héritage"
+  ]
+ },
+ "prison": {
+  "sousEspaces": [
+   "cellule",
+   "cour de promenade",
+   "parloir",
+   "quartier d'isolement",
+   "réfectoire",
+   "mirador",
+   "atelier",
+   "bureau du directeur"
+  ],
+  "vocabulaire": [
+   "maton",
+   "détenu",
+   "mitard",
+   "fouille au corps",
+   "évasion",
+   "libération conditionnelle",
+   "gamelle",
+   "barreaux",
+   "cavale",
+   "mutinerie",
+   "codétenu",
+   "peine à perpétuité",
+   "ronde de nuit",
+   "shit de contrebande",
+   "compte à rebours de la sortie"
+  ]
+ },
+ "stade": {
+  "sousEspaces": [
+   "pelouse",
+   "vestiaires",
+   "tribune d'honneur",
+   "virage des ultras",
+   "tunnel des joueurs",
+   "salle de presse",
+   "buvette",
+   "parking des bus"
+  ],
+  "vocabulaire": [
+   "arbitre",
+   "carton rouge",
+   "capitaine",
+   "supporter",
+   "sifflet",
+   "prolongations",
+   "tir au but",
+   "banderole",
+   "entraîneur",
+   "vestiaire silencieux",
+   "blessure",
+   "temps additionnel",
+   "brassard",
+   "clameur",
+   "défaite en finale"
+  ]
+ },
+ "refuge_montagne": {
+  "sousEspaces": [
+   "salle commune",
+   "dortoir",
+   "cheminée",
+   "cuisine du gardien",
+   "terrasse enneigée",
+   "réserve de bois",
+   "cave à vivres",
+   "porche gelé"
+  ],
+  "vocabulaire": [
+   "gardien",
+   "tempête de neige",
+   "avalanche",
+   "corde d'assurance",
+   "vivres",
+   "secours en montagne",
+   "piolet",
+   "crampons",
+   "hypothermie",
+   "randonneur égaré",
+   "feu de bois",
+   "col fermé",
+   "talkie-walkie",
+   "couverture de survie",
+   "dernière descente"
+  ]
+ },
+ "banque": {
+  "sousEspaces": [
+   "guichet",
+   "salle des coffres",
+   "bureau du conseiller",
+   "salle d'attente",
+   "hall marbré",
+   "sas de sécurité",
+   "salle de comptage",
+   "bureau du directeur"
+  ],
+  "vocabulaire": [
+   "braquage",
+   "coffre-fort",
+   "lingot",
+   "otage",
+   "caissier",
+   "code secret",
+   "convoyeur de fonds",
+   "alarme silencieuse",
+   "billet marqué",
+   "prêt refusé",
+   "vigile armé",
+   "combinaison du coffre",
+   "liasse",
+   "découvert",
+   "casse du siècle"
+  ]
+ },
+ "aquarium": {
+  "sousEspaces": [
+   "tunnel vitré",
+   "grand bassin",
+   "bassin tactile",
+   "salle des méduses",
+   "coulisses techniques",
+   "quarantaine",
+   "billetterie",
+   "passerelle des soigneurs"
+  ],
+  "vocabulaire": [
+   "requin",
+   "soigneur",
+   "vitre fissurée",
+   "plongeur",
+   "raie",
+   "filtration",
+   "nourrissage",
+   "banc de poissons",
+   "murène",
+   "fuite d'eau",
+   "épuisette",
+   "récif artificiel",
+   "bulle d'air",
+   "aquariologiste",
+   "prédateur en liberté"
+  ]
+ },
+ "avion": {
+  "sousEspaces": [
+   "cockpit",
+   "cabine première classe",
+   "classe économique",
+   "galley",
+   "toilettes exiguës",
+   "soute",
+   "issue de secours",
+   "coin des hôtesses"
+  ],
+  "vocabulaire": [
+   "commandant de bord",
+   "hôtesse de l'air",
+   "turbulences",
+   "masque à oxygène",
+   "ceinture bouclée",
+   "atterrissage forcé",
+   "pilote automatique",
+   "boîte noire",
+   "trou d'air",
+   "gilet de sauvetage",
+   "détournement",
+   "altitude de croisière",
+   "chariot repas",
+   "dépressurisation",
+   "tour de contrôle"
+  ]
+ },
+ "port_maritime": {
+  "sousEspaces": [
+   "quai de chargement",
+   "entrepôt",
+   "bureau des douanes",
+   "cale du cargo",
+   "phare",
+   "bar des marins",
+   "grue portuaire",
+   "poste d'amarrage"
+  ],
+  "vocabulaire": [
+   "docker",
+   "conteneur",
+   "contrebande",
+   "marée haute",
+   "capitaine de port",
+   "cargaison",
+   "amarres",
+   "douanier",
+   "clandestin",
+   "sirène de brume",
+   "chargement suspect",
+   "grutier",
+   "chalutier",
+   "trafic",
+   "dernier bateau"
+  ]
+ },
+ "eglise": {
+  "sousEspaces": [
+   "nef",
+   "confessionnal",
+   "autel",
+   "sacristie",
+   "crypte",
+   "clocher",
+   "chapelle latérale",
+   "parvis"
+  ],
+  "vocabulaire": [
+   "curé",
+   "confession",
+   "cierge",
+   "orgue",
+   "bénitier",
+   "sermon",
+   "enterrement",
+   "vitrail",
+   "sacrement",
+   "sonneur de cloches",
+   "hostie",
+   "aveu",
+   "pénitence",
+   "encens",
+   "dernier office"
+  ]
+ },
+ "salle_sport": {
+  "sousEspaces": [
+   "Zone de musculation",
+   "Vestiaires",
+   "Salle de spinning",
+   "Sauna",
+   "Comptoir d'accueil",
+   "Ring de boxe",
+   "Douches collectives",
+   "Local à serviettes"
+  ],
+  "vocabulaire": [
+   "haltère",
+   "coach",
+   "protéines",
+   "abonnement résilié",
+   "transpiration",
+   "miroir",
+   "reps",
+   "casier",
+   "cadenas forcé",
+   "vestiaire homme",
+   "tapis roulant",
+   "carte de membre",
+   "dopant",
+   "brûlure musculaire",
+   "shaker"
+  ]
+ },
+ "foret": {
+  "sousEspaces": [
+   "Clairière",
+   "Sentier envahi",
+   "Cabane du garde",
+   "Berge du ruisseau",
+   "Fourré épais",
+   "Vieux chêne creux",
+   "Poste de chasse",
+   "Ravin"
+  ],
+  "vocabulaire": [
+   "sous-bois",
+   "gibier",
+   "braconnier",
+   "collet",
+   "mousse",
+   "brume",
+   "hurlement",
+   "fusil de chasse",
+   "empreinte",
+   "champignon vénéneux",
+   "hache",
+   "sanglier",
+   "silence",
+   "ronces",
+   "carcasse"
+  ]
+ },
+ "sous_marin": {
+  "sousEspaces": [
+   "Salle des machines",
+   "Poste de commandement",
+   "Coursive étroite",
+   "Cabine du capitaine",
+   "Torpilleur",
+   "Sas d'évacuation",
+   "Sonar",
+   "Couchettes"
+  ],
+  "vocabulaire": [
+   "périscope",
+   "immersion",
+   "sonar",
+   "torpille",
+   "oxygène",
+   "plongée",
+   "coque",
+   "commandant",
+   "avarie",
+   "hublot",
+   "pression",
+   "silence radio",
+   "ballast",
+   "alarme rouge",
+   "profondeur"
+  ]
+ },
+ "metro": {
+  "sousEspaces": [
+   "Quai bondé",
+   "Rame",
+   "Couloir de correspondance",
+   "Guichet abandonné",
+   "Escalator en panne",
+   "Tourniquets",
+   "Bout de tunnel",
+   "Cabine du conducteur"
+  ],
+  "vocabulaire": [
+   "ticket",
+   "rame",
+   "conducteur",
+   "correspondance",
+   "grève",
+   "SDF",
+   "portillon",
+   "musicien",
+   "terminus",
+   "rail",
+   "annonce vocale",
+   "pickpocket",
+   "strapontin",
+   "signal d'alarme",
+   "heure de pointe"
+  ]
+ },
+ "navire_croisiere": {
+  "sousEspaces": [
+   "Pont supérieur",
+   "Cabine avec balcon",
+   "Salle de bal",
+   "Cuisine du bord",
+   "Piscine",
+   "Passerelle de commandement",
+   "Canots de sauvetage",
+   "Cale"
+  ],
+  "vocabulaire": [
+   "commandant",
+   "buffet",
+   "gilet de sauvetage",
+   "escale",
+   "cabine",
+   "hublot",
+   "sirène",
+   "orchestre",
+   "steward",
+   "houle",
+   "pont promenade",
+   "naufrage",
+   "champagne",
+   "SOS",
+   "coursive"
+  ]
+ },
+ "universite": {
+  "sousEspaces": [
+   "Amphithéâtre",
+   "Bibliothèque",
+   "Laboratoire",
+   "Bureau du doyen",
+   "Cafétéria",
+   "Résidence étudiante",
+   "Couloir des casiers",
+   "Salle de partiels"
+  ],
+  "vocabulaire": [
+   "thèse",
+   "professeur",
+   "partiel",
+   "plagiat",
+   "amphi",
+   "bourse",
+   "doyen",
+   "polycopié",
+   "soutenance",
+   "bizutage",
+   "exclusion",
+   "recherche",
+   "diplôme",
+   "harcèlement",
+   "note éliminatoire"
+  ]
+ },
+ "hopital": {
+  "sousEspaces": [
+   "Salle d'attente",
+   "Bloc opératoire",
+   "Chambre du patient",
+   "Réanimation",
+   "Morgue",
+   "Poste des infirmières",
+   "Couloir des urgences",
+   "Salle de garde"
+  ],
+  "vocabulaire": [
+   "scalpel",
+   "perfusion",
+   "diagnostic",
+   "brancard",
+   "chirurgien",
+   "réa",
+   "coma",
+   "sonde",
+   "pronostic vital",
+   "défibrillateur",
+   "blouse",
+   "interne",
+   "arrêt cardiaque",
+   "consentement",
+   "dépouille"
+  ]
+ },
+ "ecole": {
+  "sousEspaces": [
+   "Salle de classe",
+   "Cour de récréation",
+   "Bureau du directeur",
+   "Cantine",
+   "Préau",
+   "Couloir des porte-manteaux",
+   "Salle des maîtres",
+   "Toilettes"
+  ],
+  "vocabulaire": [
+   "cartable",
+   "maîtresse",
+   "récréation",
+   "punition",
+   "carnet",
+   "craie",
+   "bulletin",
+   "surveillant",
+   "cour",
+   "harcèlement",
+   "directeur",
+   "dictée",
+   "renvoi",
+   "goûter",
+   "sonnerie"
+  ]
+ },
+ "supermarche": {
+  "sousEspaces": [
+   "Caisses",
+   "Rayon frais",
+   "Réserve",
+   "Parking souterrain",
+   "Poste de sécurité",
+   "Étalage des fruits",
+   "Chambre froide",
+   "Bureau du gérant"
+  ],
+  "vocabulaire": [
+   "caddie",
+   "code-barres",
+   "vigile",
+   "promotion",
+   "caissière",
+   "vol à l'étalage",
+   "rayon",
+   "date de péremption",
+   "ticket de caisse",
+   "réserve",
+   "gérant",
+   "chariot",
+   "inventaire",
+   "monnaie",
+   "annonce micro"
+  ]
+ },
+ "casino": {
+  "sousEspaces": [
+   "Table de blackjack",
+   "Salle des machines à sous",
+   "Roulette",
+   "Bar feutré",
+   "Salle VIP",
+   "Caisse des jetons",
+   "Poste de vidéosurveillance",
+   "Salon des grosses mises"
+  ],
+  "vocabulaire": [
+   "croupier",
+   "jeton",
+   "mise",
+   "roulette",
+   "tapis vert",
+   "faites vos jeux",
+   "dette de jeu",
+   "bluff",
+   "cave",
+   "videur",
+   "compteur de cartes",
+   "jackpot",
+   "banque",
+   "flambeur",
+   "caméra de sécurité"
+  ]
+ },
+ "theatre": {
+  "sousEspaces": [
+   "Scène",
+   "Coulisses",
+   "Loge d'artiste",
+   "Fosse d'orchestre",
+   "Balcon",
+   "Régie",
+   "Foyer",
+   "Dessous de scène"
+  ],
+  "vocabulaire": [
+   "réplique",
+   "trac",
+   "rideau rouge",
+   "souffleur",
+   "projecteur",
+   "metteur en scène",
+   "doublure",
+   "raccord",
+   "rappel",
+   "costume",
+   "régisseur",
+   "générale",
+   "acte manqué",
+   "applaudissements",
+   "trois coups"
+  ]
+ },
+ "tribunal": {
+  "sousEspaces": [
+   "Salle d'audience",
+   "Box des accusés",
+   "Bureau du juge",
+   "Salle des délibérations",
+   "Couloir des pas perdus",
+   "Cellule de garde",
+   "Greffe",
+   "Banc de la défense"
+  ],
+  "vocabulaire": [
+   "verdict",
+   "avocat",
+   "accusé",
+   "jury",
+   "témoin",
+   "réquisitoire",
+   "plaidoirie",
+   "huissier",
+   "serment",
+   "objection",
+   "acquittement",
+   "menottes",
+   "procureur",
+   "pièce à conviction",
+   "délibéré"
+  ]
+ },
+ "station_service": {
+  "sousEspaces": [
+   "Piste de ravitaillement",
+   "Boutique",
+   "Caisse",
+   "Station de lavage",
+   "Réserve à carburant",
+   "Toilettes extérieures",
+   "Aire de repos",
+   "Atelier"
+  ],
+  "vocabulaire": [
+   "pompe",
+   "essence",
+   "pistolet",
+   "sans-plomb",
+   "caméra",
+   "braquage",
+   "pompiste",
+   "carte grise",
+   "bidon",
+   "gasoil",
+   "café machine",
+   "aire déserte",
+   "néon",
+   "ticket",
+   "fuite d'essence"
+  ]
+ }
+}

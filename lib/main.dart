@@ -8,7 +8,9 @@ import 'application/state/chat_controller.dart';
 import 'application/state/generation_history.dart';
 import 'application/state/guide_content.dart';
 import 'application/state/last_generation_store.dart';
+import 'application/state/location_details.dart';
 import 'application/state/music_controller.dart';
+import 'application/state/relation_cheatsheet.dart';
 import 'application/state/tracking_store.dart';
 import 'application/state/spectacle_controller.dart';
 import 'application/state/spectacle_store.dart';
@@ -98,9 +100,12 @@ Future<void> _boot() async {
   // Détecte une partie de Spectacle en cours (bouton « Reprendre »).
   await spectacleController.loadSavedSession();
 
-  // Briques « univers Destiny » : Guide (référence) + tableaux de suivi.
+  // Briques « univers Destiny » : Guide, tableaux de suivi, antisèche, lieux.
   final guideContent = GuideContent();
   final trackingStore = TrackingStore();
+  final relationCheatsheet = RelationCheatsheet();
+  final locationDetails = LocationDetailsStore();
+  await locationDetails.load();
 
   runApp(DestinyApp(
     controller: controller,
@@ -118,6 +123,8 @@ Future<void> _boot() async {
     spinoffHistory: spinoffHistory,
     guideContent: guideContent,
     trackingStore: trackingStore,
+    relationCheatsheet: relationCheatsheet,
+    locationDetails: locationDetails,
   ));
 }
 
@@ -162,6 +169,8 @@ class DestinyApp extends StatelessWidget {
     required this.spinoffHistory,
     required this.guideContent,
     required this.trackingStore,
+    required this.relationCheatsheet,
+    required this.locationDetails,
     super.key,
   });
 
@@ -180,6 +189,8 @@ class DestinyApp extends StatelessWidget {
   final SpinoffHistory spinoffHistory;
   final GuideContent guideContent;
   final TrackingStore trackingStore;
+  final RelationCheatsheet relationCheatsheet;
+  final LocationDetailsStore locationDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -203,6 +214,8 @@ class DestinyApp extends StatelessWidget {
         spinoffHistory: spinoffHistory,
         guideContent: guideContent,
         trackingStore: trackingStore,
+        relationCheatsheet: relationCheatsheet,
+        locationDetails: locationDetails,
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import '../../application/services/audio_service.dart';
 import '../../application/state/guide_content.dart';
+import '../../application/state/location_details.dart';
 import '../../application/state/story_controller.dart';
 import '../../application/state/tracking_store.dart';
 import '../../application/state/visual_settings.dart';
@@ -13,6 +14,7 @@ import '../visuals/entity_visuals.dart';
 import '../widgets/destiny_cube_animation.dart';
 import '../widgets/film_poster.dart';
 import 'guide_screen.dart';
+import 'location_details_screen.dart';
 import 'tracking_screen.dart';
 
 /// Police manuscrite (seule la phrase « RIEN EST ÉCRIT » l'utilise).
@@ -65,6 +67,7 @@ class TopCountdownScreen extends StatefulWidget {
     this.tracking,
     this.visualSettings,
     this.storyController,
+    this.locationDetails,
     super.key,
   });
 
@@ -73,6 +76,7 @@ class TopCountdownScreen extends StatefulWidget {
   final TrackingStore? tracking;
   final VisualSettings? visualSettings;
   final StoryController? storyController;
+  final LocationDetailsStore? locationDetails;
 
   final String lieu;
   final String danger;
@@ -349,10 +353,24 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
                             builder: (_) => TrackingScreen(
                               store: widget.tracking!,
                               storyController: widget.storyController!,
+                              locationDetails: widget.locationDetails,
                             ),
                           ),
                         ),
                       ),
+                      if (widget.locationDetails != null)
+                        IconButton(
+                          tooltip: 'Détails du lieu',
+                          icon: const Icon(Icons.place_outlined, color: _gold),
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => LocationDetailsScreen(
+                                store: widget.locationDetails!,
+                                locationName: widget.lieu,
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),

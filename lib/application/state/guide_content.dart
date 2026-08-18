@@ -361,5 +361,22 @@ TEST : à chaque scène, est-ce un DONC (conséquence) ou un MAIS (retournement)
 
 LEÇON : un danger, posé tôt, qui monte sans se résoudre et coupe les issues. Palier 2 = une sortie se ferme ; palier 4 = plus rien à perdre, la vérité sort. Si tu sais faire monter UN danger qui enferme, tu sais faire Destiny.''',
     ),
+    const GuideSection(
+      id: 's16',
+      title: '16. Quand tu ne sais plus quoi faire',
+      body: '''Tu ne sais plus quoi dire ? Ne cherche pas une idée neuve. Appuie sur une relation.
+
+En trois temps :
+(1) Va vers une relation qui existe déjà — pas une nouvelle, une que l'Acte 1 a posée.
+(2) Sers-toi du danger pour la faire bouger : le danger qui monte est ta raison d'agir (« le feu bloque la sortie, DONC je ne peux plus me taire, DONC je te dis la vérité »).
+(3) Fais bouger la relation d'un cran : resserre-la, fissure-la, ou révèle quelque chose.
+
+Exemples :
+• Perdu dans une scène ? Regarde qui est en face, ce qu'il représente pour toi, appuie dessus (« Ça fait dix ans que je te couvre, et tu me lâches maintenant ? »).
+• Le danger monte et tu ne sais qu'en faire ? Transforme-le en pression sur un lien (« On va peut-être mourir ici, alors autant que tu saches : c'est moi qui ai payé tes études »).
+• Un blanc dans le groupe ? Ressors une cartouche de l'Acte 1 (« Dis-lui, toi, pourquoi tu n'es pas venu à l'enterrement »).
+
+Règle en une phrase : quand tu es perdu, monte le danger et appuie sur une relation existante. Tu ne te tromperas jamais.''',
+    ),
   ];
 }

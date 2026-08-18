@@ -6,7 +6,9 @@ import '../../application/state/ai_settings.dart';
 import '../../application/state/chat_controller.dart';
 import '../../application/state/generation_history.dart';
 import '../../application/state/guide_content.dart';
+import '../../application/state/location_details.dart';
 import '../../application/state/music_controller.dart';
+import '../../application/state/relation_cheatsheet.dart';
 import '../../application/state/spectacle_controller.dart';
 import '../../application/state/spinoff_history.dart';
 import '../../application/state/story_controller.dart';
@@ -45,6 +47,8 @@ class RootScreen extends StatefulWidget {
     required this.spinoffHistory,
     required this.guideContent,
     required this.trackingStore,
+    required this.relationCheatsheet,
+    required this.locationDetails,
     super.key,
   });
 
@@ -63,6 +67,8 @@ class RootScreen extends StatefulWidget {
   final SpinoffHistory spinoffHistory;
   final GuideContent guideContent;
   final TrackingStore trackingStore;
+  final RelationCheatsheet relationCheatsheet;
+  final LocationDetailsStore locationDetails;
 
   @override
   State<RootScreen> createState() => _RootScreenState();
@@ -77,6 +83,7 @@ class _RootScreenState extends State<RootScreen> {
         builder: (_) => CatalogViewScreen(
           repository: widget.repository,
           visualSettings: widget.visualSettings,
+          locationDetails: widget.locationDetails,
           initialTab: tab,
         ),
       ),
@@ -92,6 +99,8 @@ class _RootScreenState extends State<RootScreen> {
           visualSettings: widget.visualSettings,
           catalogStore: widget.catalogStore,
           aiSettings: widget.aiSettings,
+          relationCheatsheet: widget.relationCheatsheet,
+          locationDetails: widget.locationDetails,
         ),
       ),
     );
@@ -114,6 +123,8 @@ class _RootScreenState extends State<RootScreen> {
         builder: (_) => TrackingScreen(
           store: widget.trackingStore,
           storyController: widget.controller,
+          cheatsheet: widget.relationCheatsheet,
+          locationDetails: widget.locationDetails,
         ),
       ),
     );
@@ -133,6 +144,7 @@ class _RootScreenState extends State<RootScreen> {
         repository: widget.repository,
         guideContent: widget.guideContent,
         trackingStore: widget.trackingStore,
+        locationDetails: widget.locationDetails,
       ),
       DiceScreen(
         audioService: widget.audioService,

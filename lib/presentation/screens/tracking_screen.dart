@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../application/state/location_details.dart';
+import '../../application/state/relation_cheatsheet.dart';
 import '../../application/state/story_controller.dart';
 import '../../application/state/tracking_store.dart';
+import 'location_details_screen.dart';
+import 'relation_cheatsheet_screen.dart';
 
 const Color _gold = Color(0xFFFFC24B);
 const Color _green = Color(0xFF3FE08A); // état validé (croix)
@@ -13,11 +17,15 @@ class TrackingScreen extends StatefulWidget {
   const TrackingScreen({
     required this.store,
     required this.storyController,
+    this.cheatsheet,
+    this.locationDetails,
     super.key,
   });
 
   final TrackingStore store;
   final StoryController storyController;
+  final RelationCheatsheet? cheatsheet;
+  final LocationDetailsStore? locationDetails;
 
   @override
   State<TrackingScreen> createState() => _TrackingScreenState();
@@ -56,6 +64,21 @@ class _TrackingScreenState extends State<TrackingScreen> {
     );
     messenger.showSnackBar(
         const SnackBar(content: Text('Joueurs importés depuis l\'histoire.')));
+  }
+
+  void _openLocationDetails() {
+    final details = widget.locationDetails;
+    if (details == null) return;
+    final name = widget.storyController.state.story?.location.name;
+    if (name == null || name.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Aucune histoire générée (pas de lieu).')));
+      return;
+    }
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) =>
+          LocationDetailsScreen(store: details, locationName: name),
+    ));
   }
 
   Future<void> _addRelation() async {
@@ -148,6 +171,12 @@ class _TrackingScreenState extends State<TrackingScreen> {
         appBar: AppBar(
           title: const Text('Suivi de répétition'),
           actions: [
+            if (widget.locationDetails != null)
+              IconButton(
+                tooltip: 'Détails du lieu',
+                icon: const Icon(Icons.place_outlined),
+                onPressed: _openLocationDetails,
+              ),
             IconButton(
               tooltip: 'Importer l\'histoire tirée',
               icon: const Icon(Icons.download),
@@ -319,6 +348,22 @@ class _TrackingScreenState extends State<TrackingScreen> {
             onTap: () => store.cycleAct1Rel(r.id),
             onDelete: () => store.removeRelation(r.id),
           ),
+        // Antisèche de relations (consultation libre, dépliable).
+        if (widget.cheatsheet != null) ...[
+          const SizedBox(height: 16),
+          Card(
+            child: ExpansionTile(
+              leading: const Icon(Icons.menu_book_outlined, color: _gold),
+              title: const Text('Antisèche de relations'),
+              subtitle: const Text('Points de départ optionnels'),
+              childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+              expandedCrossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RelationCheatsheetView(cheatsheet: widget.cheatsheet!),
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }

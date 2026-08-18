@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../application/state/location_details.dart';
 import '../../application/state/visual_settings.dart';
 import '../../domain/entities/archetype.dart' show Archetype;
 import '../../domain/entities/danger.dart';
@@ -18,12 +19,16 @@ class CatalogViewScreen extends StatefulWidget {
   const CatalogViewScreen({
     required this.repository,
     required this.visualSettings,
+    this.locationDetails,
     this.initialTab = CatalogTab.lieux,
     super.key,
   });
 
   final StoryRepository repository;
   final VisualSettings visualSettings;
+
+  /// Sous-espaces + vocabulaire par lieu (affichés dans l'onglet Lieux).
+  final LocationDetailsStore? locationDetails;
 
   /// Onglet ouvert au démarrage (raccourci depuis le menu principal).
   final CatalogTab initialTab;
@@ -205,15 +210,17 @@ class _CatalogViewScreenState extends State<CatalogViewScreen> {
     switch (_filter) {
       case CatalogTab.lieux:
         final items = [..._locations]..sort((a, b) => cmp(a.name, b.name));
-        return items
-            .map((l) => _CatalogTile(
-                  visual: EntityVisuals.forLocation(l),
-                  source: source,
-                  title: l.name,
-                  subtitle: '${l.roles.length} rôles'
-                      '${l.actif ? "" : " · inactif"}',
-                ))
-            .toList();
+        return items.map((l) {
+          final d = widget.locationDetails?.byId(l.id);
+          return _CatalogTile(
+            visual: EntityVisuals.forLocation(l),
+            source: source,
+            title: l.name,
+            subtitle: '${l.roles.length} rôles${l.actif ? "" : " · inactif"}',
+            sousEspaces: d?.sousEspaces ?? const [],
+            vocabulaire: d?.vocabulaire ?? const [],
+          );
+        }).toList();
       case CatalogTab.dangers:
         final items = [..._dangers]..sort((a, b) => cmp(a.name, b.name));
         return items
@@ -249,6 +256,8 @@ class _CatalogTile extends StatelessWidget {
     required this.subtitle,
     this.subtitleRich,
     this.paliers = const [],
+    this.sousEspaces = const [],
+    this.vocabulaire = const [],
   });
 
   final EntityVisual visual;
@@ -259,6 +268,10 @@ class _CatalogTile extends StatelessWidget {
   /// Sous-titre riche (stylé) qui remplace [subtitle] si fourni.
   final Widget? subtitleRich;
   final List<String> paliers;
+
+  /// Détails de lieu (onglet Lieux) : sous-espaces + vocabulaire.
+  final List<String> sousEspaces;
+  final List<String> vocabulaire;
 
   @override
   Widget build(BuildContext context) {
@@ -334,8 +347,48 @@ class _CatalogTile extends StatelessWidget {
                   ),
                 ),
             ],
+            if (sousEspaces.isNotEmpty)
+              _detailChips(context, 'Sous-espaces', sousEspaces),
+            if (vocabulaire.isNotEmpty)
+              _detailChips(context, 'Vocabulaire', vocabulaire),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _detailChips(BuildContext context, String label, List<String> items) {
+    final theme = Theme.of(context);
+    const gold = Color(0xFFFFC24B);
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label,
+              style: theme.textTheme.labelSmall?.copyWith(
+                  color: gold, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 6),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: [
+              for (final it in items)
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: gold.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: gold.withValues(alpha: 0.25)),
+                  ),
+                  child: Text(it,
+                      style: const TextStyle(
+                          color: Colors.white, fontSize: 12.5)),
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }

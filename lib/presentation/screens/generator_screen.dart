@@ -6,6 +6,7 @@ import '../../application/services/spectacle_prompt.dart';
 import '../../application/state/ai_settings.dart';
 import '../../application/state/generation_history.dart';
 import '../../application/state/guide_content.dart';
+import '../../application/state/location_details.dart';
 import '../../application/state/spinoff_history.dart';
 import '../../application/state/story_controller.dart';
 import '../../application/state/tracking_store.dart';
@@ -67,6 +68,7 @@ class GeneratorScreen extends StatefulWidget {
     required this.repository,
     required this.guideContent,
     required this.trackingStore,
+    required this.locationDetails,
     super.key,
   });
 
@@ -80,6 +82,7 @@ class GeneratorScreen extends StatefulWidget {
   final StoryRepository repository;
   final GuideContent guideContent;
   final TrackingStore trackingStore;
+  final LocationDetailsStore locationDetails;
 
   @override
   State<GeneratorScreen> createState() => _GeneratorScreenState();
@@ -296,6 +299,7 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
         tracking: widget.trackingStore,
         visualSettings: widget.visualSettings,
         storyController: widget.controller,
+        locationDetails: widget.locationDetails,
       ),
     ));
   }

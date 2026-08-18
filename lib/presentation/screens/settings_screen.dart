@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../application/state/ai_settings.dart';
+import '../../application/state/location_details.dart';
+import '../../application/state/relation_cheatsheet.dart';
 import '../../application/state/visual_settings.dart';
 import '../../domain/repositories/catalog_store.dart';
 import '../../domain/repositories/combination_memory.dart';
 import '../../domain/repositories/story_repository.dart';
+import 'location_details_screen.dart';
+import 'relation_cheatsheet_screen.dart';
 import 'about_screen.dart';
 import 'ai_config_screen.dart';
 import 'appearance_screen.dart';
@@ -24,6 +28,8 @@ class SettingsScreen extends StatelessWidget {
     required this.visualSettings,
     required this.catalogStore,
     required this.aiSettings,
+    required this.relationCheatsheet,
+    required this.locationDetails,
     super.key,
   });
 
@@ -32,6 +38,8 @@ class SettingsScreen extends StatelessWidget {
   final VisualSettings visualSettings;
   final CatalogStore catalogStore;
   final AiSettings aiSettings;
+  final RelationCheatsheet relationCheatsheet;
+  final LocationDetailsStore locationDetails;
 
   void _push(BuildContext context, Widget screen) {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
@@ -70,6 +78,22 @@ class SettingsScreen extends StatelessWidget {
             ),
             _item(
               context,
+              icon: Icons.place_outlined,
+              title: 'Détails des lieux',
+              subtitle: 'Sous-espaces et vocabulaire par lieu.',
+              onTap: () => _push(
+                  context, LocationDetailsListScreen(store: locationDetails)),
+            ),
+            _item(
+              context,
+              icon: Icons.diversity_3,
+              title: 'Antisèche de relations',
+              subtitle: 'Liens génériques (points de départ), éditables.',
+              onTap: () => _push(context,
+                  RelationCheatsheetScreen(cheatsheet: relationCheatsheet)),
+            ),
+            _item(
+              context,
               icon: Icons.balance,
               title: 'Dilemmes par danger',
               subtitle: 'Ajouter, modifier, supprimer des dilemmes (mode Dilemme).',
@@ -84,7 +108,9 @@ class SettingsScreen extends StatelessWidget {
               onTap: () => _push(
                   context,
                   CatalogViewScreen(
-                      repository: repository, visualSettings: visualSettings)),
+                      repository: repository,
+                      visualSettings: visualSettings,
+                      locationDetails: locationDetails)),
             ),
             _item(
               context,
