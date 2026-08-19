@@ -423,11 +423,15 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
           for (final h in widget.heroes)
             Padding(
               padding: EdgeInsets.only(bottom: 4 * scale),
-              // FittedBox : chaque héros tient TOUJOURS sur une seule ligne
-              // (le texte se réduit au besoin plutôt que de passer à la ligne).
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text.rich(
+              // Row + Expanded → largeur STRICTE ; FittedBox réduit le texte
+              // pour que chaque héros tienne TOUJOURS sur une seule ligne.
+              child: Row(
+                children: [
+                  Expanded(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.center,
+                      child: Text.rich(
                 TextSpan(children: [
                   TextSpan(
                       text:
@@ -459,10 +463,14 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
                             fontSize: 15 * scale,
                             fontWeight: FontWeight.w800)),
                 ]),
-                maxLines: 1,
-                softWrap: false,
-                textAlign: TextAlign.center,
-              ),
+                        maxLines: 1,
+                        softWrap: false,
+                        overflow: TextOverflow.visible,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
         ] else if (widget.cast.isNotEmpty) ...[
