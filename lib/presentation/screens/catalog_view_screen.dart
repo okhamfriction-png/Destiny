@@ -11,6 +11,7 @@ import '../../domain/entities/location.dart';
 import '../../domain/repositories/story_repository.dart';
 import '../visuals/entity_visuals.dart';
 import '../widgets/entity_image.dart';
+import '../widgets/location_detail_section.dart';
 
 enum CatalogTab { lieux, dangers, archetypes }
 
@@ -218,6 +219,7 @@ class _CatalogViewScreenState extends State<CatalogViewScreen> {
             title: l.name,
             subtitle: '${l.roles.length} rôles${l.actif ? "" : " · inactif"}',
             sousEspaces: d?.sousEspaces ?? const [],
+            fonctions: d?.fonctions ?? const [],
             vocabulaire: d?.vocabulaire ?? const [],
           );
         }).toList();
@@ -257,6 +259,7 @@ class _CatalogTile extends StatelessWidget {
     this.subtitleRich,
     this.paliers = const [],
     this.sousEspaces = const [],
+    this.fonctions = const [],
     this.vocabulaire = const [],
   });
 
@@ -269,8 +272,9 @@ class _CatalogTile extends StatelessWidget {
   final Widget? subtitleRich;
   final List<String> paliers;
 
-  /// Détails de lieu (onglet Lieux) : sous-espaces + vocabulaire.
+  /// Détails de lieu (onglet Lieux) : sous-espaces + fonctions + vocabulaire.
   final List<String> sousEspaces;
+  final List<String> fonctions;
   final List<String> vocabulaire;
 
   @override
@@ -347,51 +351,27 @@ class _CatalogTile extends StatelessWidget {
                   ),
                 ),
             ],
-            if (sousEspaces.isNotEmpty)
-              _detailChips(context, 'Sous-espaces', sousEspaces),
-            if (vocabulaire.isNotEmpty)
-              _detailChips(context, 'Vocabulaire', vocabulaire),
+            if (sousEspaces.isNotEmpty || fonctions.isNotEmpty ||
+                vocabulaire.isNotEmpty)
+              const SizedBox(height: 10),
+            LocationDetailSection(
+                kind: LocationDetailKind.sousEspaces,
+                items: sousEspaces,
+                dense: true),
+            LocationDetailSection(
+                kind: LocationDetailKind.fonctions,
+                items: fonctions,
+                dense: true),
+            LocationDetailSection(
+                kind: LocationDetailKind.vocabulaire,
+                items: vocabulaire,
+                dense: true),
           ],
         ),
       ),
     );
   }
 
-  Widget _detailChips(BuildContext context, String label, List<String> items) {
-    final theme = Theme.of(context);
-    const gold = Color(0xFFFFC24B);
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label,
-              style: theme.textTheme.labelSmall?.copyWith(
-                  color: gold, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 6),
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: [
-              for (final it in items)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: gold.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: gold.withValues(alpha: 0.25)),
-                  ),
-                  child: Text(it,
-                      style: const TextStyle(
-                          color: Colors.white, fontSize: 12.5)),
-                ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 /// Sous-titre stylé d'un archétype : tempérament · *port* (italique) ·

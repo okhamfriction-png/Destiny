@@ -7,25 +7,31 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Détails d'un lieu : sous-espaces jouables + vocabulaire propre au lieu.
 class LocationDetails {
   const LocationDetails({
-    required this.sousEspaces,
-    required this.vocabulaire,
+    this.sousEspaces = const [],
+    this.fonctions = const [],
+    this.vocabulaire = const [],
   });
 
   final List<String> sousEspaces;
+  final List<String> fonctions;
   final List<String> vocabulaire;
 
-  bool get isEmpty => sousEspaces.isEmpty && vocabulaire.isEmpty;
+  bool get isEmpty =>
+      sousEspaces.isEmpty && fonctions.isEmpty && vocabulaire.isEmpty;
 
-  Map<String, dynamic> toJson() =>
-      {'sousEspaces': sousEspaces, 'vocabulaire': vocabulaire};
+  Map<String, dynamic> toJson() => {
+        'sousEspaces': sousEspaces,
+        'fonctions': fonctions,
+        'vocabulaire': vocabulaire,
+      };
+
+  static List<String> _list(dynamic v) =>
+      (v as List<dynamic>? ?? const []).map((e) => '$e').toList();
 
   factory LocationDetails.fromJson(Map<String, dynamic> j) => LocationDetails(
-        sousEspaces: (j['sousEspaces'] as List<dynamic>? ?? [])
-            .map((e) => '$e')
-            .toList(),
-        vocabulaire: (j['vocabulaire'] as List<dynamic>? ?? [])
-            .map((e) => '$e')
-            .toList(),
+        sousEspaces: _list(j['sousEspaces']),
+        fonctions: _list(j['fonctions']),
+        vocabulaire: _list(j['vocabulaire']),
       );
 }
 

@@ -10,6 +10,14 @@
    "piste de nuit",
    "zone de transit"
   ],
+  "fonctions": [
+   "aiguilleur du ciel",
+   "agent de piste bagagiste",
+   "commandant de bord",
+   "agent de sûreté aéroportuaire",
+   "hôtesse au sol d'embarquement",
+   "douanier"
+  ],
   "vocabulaire": [
    "embarquement",
    "escale",
@@ -25,7 +33,28 @@
    "liste noire",
    "passeport périmé",
    "annonce au micro",
-   "dernier appel"
+   "dernier appel",
+   "tarmac",
+   "aérogare",
+   "passerelle télescopique",
+   "carrousel à bagages",
+   "tour de contrôle",
+   "plan de vol",
+   "créneau de décollage",
+   "roulage",
+   "point d'attente",
+   "badge PIF",
+   "zone sous douane",
+   "détecteur de traces d'explosifs",
+   "porte d'embarquement",
+   "carte d'embarquement",
+   "chariot à bagages",
+   "piste balisée",
+   "duty free",
+   "transit",
+   "correspondance ratée",
+   "boîte noire",
+   "consigne de sécurité"
   ]
  },
  "laboratoire": {
@@ -38,6 +67,14 @@
    "sas de décontamination",
    "salle des serveurs",
    "stock de réactifs"
+  ],
+  "fonctions": [
+   "chercheur principal",
+   "technicien de paillasse",
+   "doctorant",
+   "responsable qualité",
+   "animalier",
+   "directeur de thèse"
   ],
   "vocabulaire": [
    "éprouvette",
@@ -54,7 +91,27 @@
    "résultats truqués",
    "quarantaine",
    "financement",
-   "fuite de données"
+   "fuite de données",
+   "paillasse",
+   "sorbonne aspirante",
+   "hotte à flux laminaire",
+   "pipette graduée",
+   "boîte de Petri",
+   "autoclave",
+   "réactif",
+   "témoin négatif",
+   "protocole expérimental",
+   "cahier de laboratoire",
+   "gants nitrile",
+   "microscope confocal",
+   "culture cellulaire",
+   "échantillon congelé à moins quatre-vingts",
+   "publication à comité de lecture",
+   "revue par les pairs",
+   "confinement biologique niveau trois",
+   "biais expérimental",
+   "spectromètre",
+   "aliquote"
   ]
  },
  "hotel_luxe": {
@@ -67,6 +124,14 @@
    "loge du concierge",
    "ascenseur privé",
    "cave à vin"
+  ],
+  "fonctions": [
+   "concierge Clefs d'Or",
+   "gouvernante d'étage",
+   "voiturier",
+   "maître d'hôtel",
+   "chef de réception",
+   "majordome"
   ],
   "vocabulaire": [
    "voiturier",
@@ -83,7 +148,25 @@
    "escorte",
    "réservation annulée",
    "chambre 1207",
-   "discrétion"
+   "discrétion",
+   "suite présidentielle",
+   "conciergerie",
+   "turndown du soir",
+   "surclassement",
+   "chariot de ménage",
+   "carte magnétique",
+   "coffre en chambre",
+   "peignoir monogrammé",
+   "minibar",
+   "no-show",
+   "surbooking",
+   "note de séjour",
+   "check-out tardif",
+   "lobby",
+   "bagagerie",
+   "chocolat sur l'oreiller",
+   "chasseur en livrée",
+   "registre des arrivées"
   ]
  },
  "ferme": {
@@ -96,6 +179,14 @@
    "puits",
    "hangar à tracteur",
    "verger"
+  ],
+  "fonctions": [
+   "exploitant agricole",
+   "vacher trayeur",
+   "ouvrier saisonnier",
+   "vétérinaire rural",
+   "maréchal-ferrant",
+   "berger"
   ],
   "vocabulaire": [
    "fourche",
@@ -112,7 +203,26 @@
    "héritage",
    "voisin envieux",
    "clôture",
-   "fusil de chasse"
+   "fusil de chasse",
+   "étable",
+   "traite matinale",
+   "salle de traite",
+   "pis",
+   "lisier",
+   "silo à grain",
+   "botteleuse",
+   "fenaison",
+   "estive",
+   "gestation",
+   "traite mécanique",
+   "abreuvoir",
+   "clôture électrique",
+   "épandage",
+   "tracteur",
+   "grange à foin",
+   "poulailler",
+   "cheptel",
+   "coopérative laitière"
   ]
  },
  "bunker_militaire": {
@@ -125,6 +235,14 @@
    "cellule d'isolement",
    "salle radio",
    "galerie d'évacuation"
+  ],
+  "fonctions": [
+   "officier de garde",
+   "opérateur radar",
+   "sapeur télécommunications",
+   "médecin militaire",
+   "artificier démineur",
+   "sentinelle"
   ],
   "vocabulaire": [
    "code de lancement",
@@ -141,7 +259,28 @@
    "détonateur",
    "silo",
    "ordre secret",
-   "survivant"
+   "survivant",
+   "sas de décontamination",
+   "salle de commandement",
+   "PC opérationnel",
+   "générateur de secours",
+   "filtration NBC",
+   "réserve de rations",
+   "coordonnées de tir",
+   "brouillage radio",
+   "code d'authentification",
+   "niveau d'alerte DEFCON",
+   "porte blindée",
+   "périscope",
+   "réseau de ventilation",
+   "protocole de lancement",
+   "double clé de sécurité",
+   "abri antiatomique",
+   "guetteur",
+   "ligne cryptée",
+   "rationnement d'eau",
+   "consigne de repli",
+   "munitions"
   ]
  },
  "bibliotheque": {
@@ -154,6 +293,14 @@
    "cabine de silence",
    "atelier de reliure",
    "rayon interdit"
+  ],
+  "fonctions": [
+   "bibliothécaire en chef",
+   "archiviste paléographe",
+   "relieur restaurateur",
+   "documentaliste de référence",
+   "magasinier des réserves",
+   "conservateur du fonds ancien"
   ],
   "vocabulaire": [
    "cote",
@@ -170,7 +317,24 @@
    "vol de livre",
    "bibliothécaire",
    "marque-page",
-   "chuchotement"
+   "chuchotement",
+   "classification Dewey",
+   "fonds ancien",
+   "salle de lecture",
+   "magasin fermé",
+   "incunable",
+   "manuscrit enluminé",
+   "reliure en cuir",
+   "réserve précieuse",
+   "catalogue",
+   "rayonnage mobile",
+   "silence de la salle",
+   "pupitre de consultation",
+   "microfiche",
+   "dépôt légal",
+   "ex-libris",
+   "gants de coton",
+   "restauration de parchemin"
   ]
  },
  "usine": {
@@ -183,6 +347,14 @@
    "entrepôt",
    "quai de chargement",
    "chaufferie"
+  ],
+  "fonctions": [
+   "chef d'atelier",
+   "opérateur sur ligne",
+   "régleur de machine",
+   "cariste",
+   "contrôleur qualité",
+   "délégué syndical"
   ],
   "vocabulaire": [
    "cadence",
@@ -199,7 +371,25 @@
    "licenciement",
    "casque",
    "mise à pied",
-   "fonte"
+   "fonte",
+   "chaîne de montage",
+   "poste de travail",
+   "trois-huit",
+   "atelier",
+   "presse hydraulique",
+   "chariot élévateur",
+   "palette",
+   "bon de production",
+   "arrêt machine",
+   "maintenance préventive",
+   "casque anti-bruit",
+   "chaussures de sécurité",
+   "consignes de sécurité",
+   "défaut de série",
+   "rebut",
+   "grève sur le tas",
+   "établi",
+   "manutention"
   ]
  },
  "restaurant_gastronomique": {
@@ -212,6 +402,14 @@
    "réserve sèche",
    "terrasse",
    "bureau de réservation"
+  ],
+  "fonctions": [
+   "chef de cuisine",
+   "chef de partie",
+   "sommelier",
+   "maître d'hôtel",
+   "commis de cuisine",
+   "plongeur"
   ],
   "vocabulaire": [
    "dressage",
@@ -228,7 +426,22 @@
    "note de dégustation",
    "réduction",
    "chef doublé",
-   "service en salle"
+   "service en salle",
+   "passe",
+   "mise en place",
+   "bon de commande",
+   "chaud devant",
+   "cuisson à cœur",
+   "émulsion",
+   "nappe",
+   "service à la française",
+   "accord mets-vins",
+   "étoile au guide",
+   "carte du jour",
+   "chariot de fromages",
+   "addition",
+   "réservation",
+   "fond de sauce"
   ]
  },
  "commissariat": {
@@ -241,6 +454,14 @@
    "vestiaire",
    "sous-sol des scellés",
    "salle d'archives"
+  ],
+  "fonctions": [
+   "lieutenant de police judiciaire",
+   "gardien de la paix",
+   "légiste",
+   "avocat commis d'office",
+   "indic",
+   "gardé à vue"
   ],
   "vocabulaire": [
    "menottes",
@@ -257,7 +478,23 @@
    "témoin",
    "planque",
    "corruption",
-   "matraque"
+   "matraque",
+   "cellule de dégrisement",
+   "interrogatoire",
+   "mandat d'arrêt",
+   "main courante",
+   "salle d'audition",
+   "empreintes digitales",
+   "fouille au corps",
+   "aveux",
+   "commission rogatoire",
+   "filature",
+   "brigade des stups",
+   "mis en examen",
+   "confrontation",
+   "scellés",
+   "casier judiciaire",
+   "garde à vue prolongée"
   ]
  },
  "centre_commercial": {
@@ -270,6 +507,14 @@
    "poste de sécurité",
    "escalator central",
    "toilettes publiques"
+  ],
+  "fonctions": [
+   "directeur de galerie",
+   "hôtesse d'accueil",
+   "agent d'entretien",
+   "chef de rayon",
+   "démonstrateur promotionnel",
+   "gardien de nuit"
   ],
   "vocabulaire": [
    "vitrine",
@@ -286,7 +531,24 @@
    "antivol",
    "flux client",
    "liquidation",
-   "escalier mécanique"
+   "escalier mécanique",
+   "galerie marchande",
+   "food court",
+   "réserve du magasin",
+   "démarque inconnue",
+   "portique de sécurité",
+   "tête de gondole",
+   "soldes flottants",
+   "aire de livraison",
+   "réassort",
+   "cabine d'essayage",
+   "liquidation totale",
+   "hôtesse de caisse",
+   "chariot",
+   "point de retrait",
+   "parking souterrain",
+   "kiosque central",
+   "défilé d'ouverture"
   ]
  },
  "zoo": {
@@ -299,6 +561,14 @@
    "coulisses des soigneurs",
    "bassin des phoques",
    "réserve de nourriture"
+  ],
+  "fonctions": [
+   "soigneur animalier",
+   "vétérinaire de faune sauvage",
+   "responsable pédagogique",
+   "capteur d'animaux évadés",
+   "conservateur des espèces",
+   "fauconnier"
   ],
   "vocabulaire": [
    "soigneur",
@@ -315,7 +585,28 @@
    "abattage",
    "dresseur",
    "barreaux",
-   "carcasse"
+   "carcasse",
+   "vivarium",
+   "fauverie",
+   "enrichissement du milieu",
+   "nourrissage",
+   "quarantaine sanitaire",
+   "fléchette anesthésiante",
+   "programme d'élevage",
+   "espèce en captivité",
+   "fosse aux ours",
+   "volière",
+   "bassin des phoques",
+   "loge de nuit",
+   "sas de sécurité",
+   "gardien d'enclos",
+   "reproduction en captivité",
+   "empreinte comportementale",
+   "ration alimentaire",
+   "transfert d'animal",
+   "identification par puce",
+   "soins vétérinaires",
+   "espèce menacée"
   ]
  },
  "musee": {
@@ -328,6 +619,14 @@
    "poste de surveillance",
    "salle des coffres",
    "auditorium"
+  ],
+  "fonctions": [
+   "conservateur",
+   "restaurateur d'œuvres",
+   "commissaire d'exposition",
+   "médiateur culturel",
+   "régisseur des collections",
+   "gardien de salle"
   ],
   "vocabulaire": [
    "toile",
@@ -344,7 +643,24 @@
    "cambriolage",
    "provenance",
    "vitrine blindée",
-   "legs"
+   "legs",
+   "cimaise",
+   "réserve muséale",
+   "hygrométrie contrôlée",
+   "vitrine climatisée",
+   "provenance de l'œuvre",
+   "acquisition",
+   "prêt inter-musées",
+   "scénographie",
+   "salle d'exposition permanente",
+   "authentification",
+   "faux avéré",
+   "accrochage",
+   "catalogue raisonné",
+   "éclairage muséographique",
+   "dépôt",
+   "conservation préventive",
+   "billetterie"
   ]
  },
  "camping": {
@@ -357,6 +673,14 @@
    "aire de jeux",
    "épicerie du camping",
    "sentier boisé"
+  ],
+  "fonctions": [
+   "gérant de camping",
+   "animateur de club",
+   "surveillant de baignade",
+   "agent d'entretien des sanitaires",
+   "réceptionniste d'accueil",
+   "gardien de nuit"
   ],
   "vocabulaire": [
    "tente",
@@ -373,7 +697,28 @@
    "sac à dos",
    "point de vue",
    "gérant",
-   "nuit blanche"
+   "nuit blanche",
+   "emplacement",
+   "mobil-home",
+   "sanitaires",
+   "bloc douche",
+   "borne électrique",
+   "tente igloo",
+   "auvent",
+   "réchaud à gaz",
+   "sardine de tente",
+   "matelas gonflable",
+   "aire de services",
+   "vidange des eaux usées",
+   "club enfants",
+   "soirée mousse",
+   "état des lieux",
+   "duvet",
+   "feu de camp interdit",
+   "piscine chauffée",
+   "caution des clés",
+   "haut-parleur d'animation",
+   "carte de séjour"
   ]
  },
  "plateau_tele": {
@@ -386,6 +731,14 @@
    "salle de rédaction",
    "gradins du public",
    "bureau du producteur"
+  ],
+  "fonctions": [
+   "réalisateur",
+   "cadreur",
+   "présentateur vedette",
+   "chargé de production",
+   "ingénieur du son",
+   "régisseur plateau"
   ],
   "vocabulaire": [
    "direct",
@@ -402,7 +755,25 @@
    "producteur",
    "caméra 2",
    "temps d'antenne",
-   "scandale à l'écran"
+   "scandale à l'écran",
+   "régie",
+   "chef opérateur",
+   "fond vert",
+   "grille des programmes",
+   "faux départ",
+   "générique",
+   "oreillette",
+   "top départ",
+   "silence plateau",
+   "moteur",
+   "gril d'éclairage",
+   "perche son",
+   "loge maquillage",
+   "lancement de sujet",
+   "conducteur d'émission",
+   "public chauffé",
+   "cabine de mixage",
+   "hors antenne"
   ]
  },
  "boite_nuit": {
@@ -415,6 +786,14 @@
    "loge du DJ",
    "toilettes bondées",
    "arrière-salle"
+  ],
+  "fonctions": [
+   "DJ résident",
+   "Physionomiste",
+   "Barman",
+   "Serveur de carré VIP",
+   "Régisseur lumière",
+   "Vestiairiste"
   ],
   "vocabulaire": [
    "videur",
@@ -431,7 +810,27 @@
    "vigile",
    "liste d'invités",
    "billet froissé",
-   "dernier verre"
+   "dernier verre",
+   "platines",
+   "table de mixage",
+   "calage tempo",
+   "crossfader",
+   "drop",
+   "caisson de basse",
+   "retour DJ",
+   "warm-up",
+   "tête laser",
+   "gobo",
+   "machine à fumée",
+   "boule à facettes",
+   "consommation minimum",
+   "bouteille au magnum",
+   "tampon UV",
+   "corde de séparation",
+   "jigger",
+   "doseur",
+   "shaker",
+   "sortie de secours condamnée"
   ]
  },
  "base_spatiale": {
@@ -444,6 +843,14 @@
    "coupole d'observation",
    "baie médicale",
    "réserve d'oxygène"
+  ],
+  "fonctions": [
+   "Commandant de bord",
+   "Ingénieur systèmes",
+   "Spécialiste de mission",
+   "Médecin de l'espace",
+   "Opérateur de bras robotique",
+   "Technicien support-vie"
   ],
   "vocabulaire": [
    "gravité zéro",
@@ -460,7 +867,29 @@
    "ingénieur de vol",
    "signal de détresse",
    "recyclage d'eau",
-   "compte à rebours"
+   "compte à rebours",
+   "sas",
+   "écoutille",
+   "sortie extra-véhiculaire",
+   "scaphandre",
+   "microgravité",
+   "propulseur d'attitude",
+   "gyrodyne",
+   "épurateur de CO2",
+   "recycleur d'eau",
+   "amarrage",
+   "poutre-treillis",
+   "désorbitation",
+   "coupole d'observation",
+   "main courante",
+   "sangle de couchage",
+   "tapis roulant à sangles",
+   "télémétrie",
+   "checklist de dépressurisation",
+   "panneau solaire orientable",
+   "rotation d'équipage",
+   "purge de la boucle",
+   "velcro de fixation"
   ]
  },
  "bureau": {
@@ -473,6 +902,14 @@
    "archives",
    "ascenseur",
    "parking souterrain"
+  ],
+  "fonctions": [
+   "Manager",
+   "Assistant de direction",
+   "Commercial",
+   "Comptable",
+   "Technicien support informatique",
+   "Responsable RH"
   ],
   "vocabulaire": [
    "dossier confidentiel",
@@ -489,7 +926,26 @@
    "démission",
    "boîte mail",
    "clé USB",
-   "pot de départ"
+   "pot de départ",
+   "open space",
+   "parapheur",
+   "note de frais",
+   "chrono du courrier",
+   "reporting",
+   "KPI",
+   "organigramme",
+   "point hebdomadaire",
+   "agrafeuse",
+   "massicot",
+   "relieuse",
+   "badgeuse",
+   "ticket d'incident",
+   "ligne budgétaire",
+   "bon de commande",
+   "relance impayé",
+   "photocopieuse en panne",
+   "séminaire",
+   "avenant"
   ]
  },
  "palais_presidentiel": {
@@ -502,6 +958,14 @@
    "bunker de commandement",
    "appartements privés",
    "salle de presse"
+  ],
+  "fonctions": [
+   "Chef de l'État",
+   "Secrétaire général",
+   "Conseiller en communication",
+   "Officier de sécurité",
+   "Chef du protocole",
+   "Intendant"
   ],
   "vocabulaire": [
    "chef d'État",
@@ -518,7 +982,27 @@
    "trahison d'État",
    "sceau présidentiel",
    "chef de cabinet",
-   "discours à la nation"
+   "discours à la nation",
+   "conseil des ministres",
+   "allocution à la nation",
+   "préséance",
+   "huissier",
+   "aide de camp",
+   "salon d'honneur",
+   "perron",
+   "tapis rouge",
+   "note blanche",
+   "cellule de crise",
+   "cortège officiel",
+   "sceau de l'État",
+   "revue des troupes",
+   "accréditation presse",
+   "lettres de créance",
+   "chancellerie",
+   "communiqué",
+   "levée du secret",
+   "sas de sécurité",
+   "malle diplomatique"
   ]
  },
  "manoir_abandonne": {
@@ -531,6 +1015,14 @@
    "grenier",
    "jardin envahi",
    "passage dérobé"
+  ],
+  "fonctions": [
+   "Urbexeur",
+   "Médium",
+   "Héritier",
+   "Notaire",
+   "Gardien des lieux",
+   "Antiquaire chineur"
   ],
   "vocabulaire": [
    "draps blancs",
@@ -547,7 +1039,28 @@
    "coffre scellé",
    "cheminée éteinte",
    "notaire",
-   "dernier héritage"
+   "dernier héritage",
+   "lambris",
+   "parquet grinçant",
+   "housse de meuble",
+   "lustre poussiéreux",
+   "cave voûtée",
+   "passage dérobé",
+   "portrait d'ancêtre",
+   "escalier de service",
+   "salpêtre",
+   "vitrail brisé",
+   "gond rouillé",
+   "bougeoir",
+   "chandelier",
+   "grenier",
+   "testament olographe",
+   "planchette Ouija",
+   "courant d'air froid",
+   "volet battant",
+   "gargouille",
+   "ronces envahissantes",
+   "cheminée condamnée"
   ]
  },
  "prison": {
@@ -560,6 +1073,14 @@
    "mirador",
    "atelier",
    "bureau du directeur"
+  ],
+  "fonctions": [
+   "Surveillant pénitentiaire",
+   "Directeur de détention",
+   "Détenu",
+   "Aumônier",
+   "Conseiller d'insertion",
+   "Infirmier"
   ],
   "vocabulaire": [
    "maton",
@@ -576,7 +1097,23 @@
    "peine à perpétuité",
    "ronde de nuit",
    "shit de contrebande",
-   "compte à rebours de la sortie"
+   "compte à rebours de la sortie",
+   "coursive",
+   "parloir",
+   "cantine",
+   "œilleton",
+   "matricule",
+   "mirador",
+   "permission de sortir",
+   "remise de peine",
+   "extraction judiciaire",
+   "quartier d'isolement",
+   "promenade",
+   "levée d'écrou",
+   "portique de détection",
+   "trousseau de clés",
+   "guichet de cellule",
+   "yoyo"
   ]
  },
  "stade": {
@@ -589,6 +1126,14 @@
    "salle de presse",
    "buvette",
    "parking des bus"
+  ],
+  "fonctions": [
+   "Joueur",
+   "Arbitre",
+   "Entraîneur",
+   "Kinésithérapeute",
+   "Steward",
+   "Commentateur"
   ],
   "vocabulaire": [
    "arbitre",
@@ -605,7 +1150,26 @@
    "temps additionnel",
    "brassard",
    "clameur",
-   "défaite en finale"
+   "défaite en finale",
+   "tifo",
+   "fumigène",
+   "virage",
+   "kop",
+   "corner",
+   "hors-jeu",
+   "assistance vidéo",
+   "prolongation",
+   "tacle glissé",
+   "transversale",
+   "coup franc",
+   "remise en jeu",
+   "feuille de match",
+   "quatrième arbitre",
+   "échauffement",
+   "main courante",
+   "vestiaire visiteur",
+   "tourniquet d'entrée",
+   "banc de touche"
   ]
  },
  "refuge_montagne": {
@@ -618,6 +1182,14 @@
    "réserve de bois",
    "cave à vivres",
    "porche gelé"
+  ],
+  "fonctions": [
+   "Gardien de refuge",
+   "Guide de haute montagne",
+   "Secouriste PGHM",
+   "Alpiniste",
+   "Cuisinier du refuge",
+   "Aspirant guide"
   ],
   "vocabulaire": [
    "gardien",
@@ -634,7 +1206,27 @@
    "col fermé",
    "talkie-walkie",
    "couverture de survie",
-   "dernière descente"
+   "dernière descente",
+   "dortoir",
+   "encordement",
+   "mousqueton",
+   "baudrier",
+   "névé",
+   "moraine",
+   "crevasse",
+   "sérac",
+   "cairn",
+   "bivouac",
+   "mal aigu des montagnes",
+   "détecteur de victimes d'avalanche",
+   "sonde à neige",
+   "via ferrata",
+   "dénivelé",
+   "topo d'itinéraire",
+   "rappel",
+   "hélitreuillage",
+   "groupe électrogène",
+   "eau non potable"
   ]
  },
  "banque": {
@@ -647,6 +1239,14 @@
    "sas de sécurité",
    "salle de comptage",
    "bureau du directeur"
+  ],
+  "fonctions": [
+   "Conseiller clientèle",
+   "Guichetier",
+   "Directeur d'agence",
+   "Gestionnaire de patrimoine",
+   "Convoyeur de fonds",
+   "Analyste crédit"
   ],
   "vocabulaire": [
    "braquage",
@@ -663,7 +1263,29 @@
    "combinaison du coffre",
    "liasse",
    "découvert",
-   "casse du siècle"
+   "casse du siècle",
+   "chambre forte",
+   "salle des coffres",
+   "sas tourniquet",
+   "encaisse",
+   "ligne de caisse",
+   "découvert autorisé",
+   "agios",
+   "taux nominal",
+   "échéancier",
+   "nantissement",
+   "hypothèque",
+   "caution solidaire",
+   "mainlevée",
+   "scoring",
+   "liasse fiduciaire",
+   "provision insuffisante",
+   "prélèvement",
+   "virement SEPA",
+   "opposition sur chèque",
+   "plafond de retrait",
+   "bordereau de remise",
+   "distributeur"
   ]
  },
  "aquarium": {
@@ -676,6 +1298,14 @@
    "quarantaine",
    "billetterie",
    "passerelle des soigneurs"
+  ],
+  "fonctions": [
+   "Aquariologiste",
+   "Plongeur d'entretien",
+   "Biologiste marin",
+   "Médiateur scientifique",
+   "Vétérinaire",
+   "Technicien de filtration"
   ],
   "vocabulaire": [
    "requin",
@@ -692,7 +1322,29 @@
    "récif artificiel",
    "bulle d'air",
    "aquariologiste",
-   "prédateur en liberté"
+   "prédateur en liberté",
+   "bac de quarantaine",
+   "vitre acrylique",
+   "tunnel immersif",
+   "écumeur",
+   "cycle de l'azote",
+   "salinité",
+   "réfractomètre",
+   "siphonnage",
+   "osmoseur",
+   "nourrissage à la pince",
+   "méduserie",
+   "bassin tactile",
+   "décor en résine",
+   "stérilisateur UV",
+   "oxygénation",
+   "biotope récifal",
+   "épuisette de contention",
+   "pompe de brassage",
+   "requin nourrice",
+   "raie pastenague",
+   "paramètres de l'eau",
+   "sas d'observation"
   ]
  },
  "avion": {
@@ -705,6 +1357,14 @@
    "soute",
    "issue de secours",
    "coin des hôtesses"
+  ],
+  "fonctions": [
+   "Commandant de bord",
+   "Copilote",
+   "Chef de cabine",
+   "Personnel navigant commercial",
+   "Agent de sûreté en vol",
+   "Mécanicien navigant"
   ],
   "vocabulaire": [
    "commandant de bord",
@@ -721,7 +1381,24 @@
    "altitude de croisière",
    "chariot repas",
    "dépressurisation",
-   "tour de contrôle"
+   "tour de contrôle",
+   "cockpit",
+   "manche",
+   "gouverne de profondeur",
+   "volets hypersustentateurs",
+   "train d'atterrissage",
+   "pressurisation",
+   "toboggan d'évacuation",
+   "galley",
+   "chariot de service",
+   "transpondeur",
+   "badin",
+   "checklist avant décollage",
+   "briefing sécurité",
+   "issue de secours",
+   "turbulences claires",
+   "poussée inversée",
+   "remise des gaz"
   ]
  },
  "port_maritime": {
@@ -734,6 +1411,14 @@
    "bar des marins",
    "grue portuaire",
    "poste d'amarrage"
+  ],
+  "fonctions": [
+   "Docker",
+   "Grutier portiqueur",
+   "Officier de port",
+   "Pilote lamaneur",
+   "Douanier",
+   "Agent consignataire"
   ],
   "vocabulaire": [
    "docker",
@@ -750,7 +1435,29 @@
    "grutier",
    "chalutier",
    "trafic",
-   "dernier bateau"
+   "dernier bateau",
+   "bollard",
+   "aussière",
+   "portique à conteneurs",
+   "conteneur EVP",
+   "tirant d'eau",
+   "chenal d'accès",
+   "môle",
+   "brise-lames",
+   "remorqueur",
+   "drague",
+   "ducs-d'Albe",
+   "connaissement",
+   "manifeste de cargaison",
+   "coefficient de marée",
+   "écluse",
+   "ballast",
+   "arrimage",
+   "avitaillement",
+   "mouillage",
+   "pavillon de complaisance",
+   "palan de levage",
+   "débardage"
   ]
  },
  "eglise": {
@@ -763,6 +1470,14 @@
    "clocher",
    "chapelle latérale",
    "parvis"
+  ],
+  "fonctions": [
+   "Curé",
+   "Sacristain",
+   "Organiste",
+   "Enfant de chœur",
+   "Maître de chapelle",
+   "Diacre"
   ],
   "vocabulaire": [
    "curé",
@@ -779,7 +1494,26 @@
    "aveu",
    "pénitence",
    "encens",
-   "dernier office"
+   "dernier office",
+   "nef",
+   "transept",
+   "abside",
+   "calice",
+   "ciboire",
+   "ostensoir",
+   "encensoir",
+   "goupillon",
+   "chasuble",
+   "aube",
+   "étole",
+   "confessionnal",
+   "chaire",
+   "retable",
+   "jubé",
+   "tabernacle",
+   "patène",
+   "sacristie",
+   "eau bénite"
   ]
  },
  "salle_sport": {
@@ -792,6 +1526,14 @@
    "Ring de boxe",
    "Douches collectives",
    "Local à serviettes"
+  ],
+  "fonctions": [
+   "Coach personnel",
+   "Préparateur physique",
+   "Kinésithérapeute du sport",
+   "Réceptionniste d'accueil",
+   "Agent d'entretien des machines",
+   "Diététicienne sportive"
   ],
   "vocabulaire": [
    "haltère",
@@ -808,7 +1550,29 @@
    "carte de membre",
    "dopant",
    "brûlure musculaire",
-   "shaker"
+   "shaker",
+   "développé couché",
+   "soulevé de terre",
+   "rack à squat",
+   "kettlebell",
+   "haltères",
+   "barre olympique",
+   "disques fractionnés",
+   "banc incliné",
+   "poulie vis-à-vis",
+   "tapis de course",
+   "gainage",
+   "répétitions maximales",
+   "séries dégressives",
+   "temps sous tension",
+   "supersets",
+   "échauffement articulaire",
+   "protéine whey",
+   "ceinture de force",
+   "magnésie",
+   "hypertrophie",
+   "récupération active",
+   "cardio à jeun"
   ]
  },
  "foret": {
@@ -821,6 +1585,14 @@
    "Vieux chêne creux",
    "Poste de chasse",
    "Ravin"
+  ],
+  "fonctions": [
+   "Garde forestier",
+   "Bûcheron",
+   "Débardeur au cheval",
+   "Chasseur à l'affût",
+   "Mycologue",
+   "Charbonnier"
   ],
   "vocabulaire": [
    "sous-bois",
@@ -837,7 +1609,28 @@
    "sanglier",
    "silence",
    "ronces",
-   "carcasse"
+   "carcasse",
+   "taillis",
+   "futaie",
+   "layon",
+   "abattage directionnel",
+   "entaille de direction",
+   "tronçonneuse ébrancheuse",
+   "grume",
+   "houppier",
+   "essouchement",
+   "coupe rase",
+   "martelage",
+   "coup de sève",
+   "brame du cerf",
+   "affût",
+   "coulée de gibier",
+   "humus",
+   "litière de feuilles",
+   "cépée",
+   "fourré épineux",
+   "sylviculture",
+   "reboisement"
   ]
  },
  "sous_marin": {
@@ -850,6 +1643,14 @@
    "Sas d'évacuation",
    "Sonar",
    "Couchettes"
+  ],
+  "fonctions": [
+   "Commandant de bord",
+   "Officier de quart",
+   "Sonariste",
+   "Timonier plongée",
+   "Mécanicien nucléaire",
+   "Cuisinier du bord"
   ],
   "vocabulaire": [
    "périscope",
@@ -866,7 +1667,28 @@
    "silence radio",
    "ballast",
    "alarme rouge",
-   "profondeur"
+   "profondeur",
+   "immersion périscopique",
+   "ballasts",
+   "purge des ballasts",
+   "barres de plongée",
+   "assiette",
+   "kiosque",
+   "sas de plongée",
+   "coque épaisse",
+   "détecteur de fuites",
+   "hydrophone",
+   "signature acoustique",
+   "grenadage",
+   "torpille filoguidée",
+   "cote d'immersion",
+   "chasse d'air",
+   "régénération d'oxygène",
+   "épurateur de CO2",
+   "sonar passif",
+   "veille acoustique",
+   "poste de combat",
+   "central opérations"
   ]
  },
  "metro": {
@@ -879,6 +1701,14 @@
    "Tourniquets",
    "Bout de tunnel",
    "Cabine du conducteur"
+  ],
+  "fonctions": [
+   "Conducteur de rame",
+   "Agent de régulation",
+   "Aiguilleur PCC",
+   "Contrôleur de titres",
+   "Agent de station",
+   "Technicien caténaire"
   ],
   "vocabulaire": [
    "ticket",
@@ -895,7 +1725,25 @@
    "pickpocket",
    "strapontin",
    "signal d'alarme",
-   "heure de pointe"
+   "heure de pointe",
+   "quai",
+   "manche à balai",
+   "portes palières",
+   "troisième rail",
+   "frotteur",
+   "cantonnement",
+   "manœuvre de retournement",
+   "voie de garage",
+   "fréquence de passage",
+   "descente voyageurs",
+   "malaise voyageur",
+   "colis suspect",
+   "poste de commandement centralisé",
+   "pantographe",
+   "ballast",
+   "traverse",
+   "interstation",
+   "girouette de destination"
   ]
  },
  "navire_croisiere": {
@@ -908,6 +1756,14 @@
    "Passerelle de commandement",
    "Canots de sauvetage",
    "Cale"
+  ],
+  "fonctions": [
+   "Commandant de bord",
+   "Chef de croisière",
+   "Maître d'hôtel de restaurant",
+   "Steward de cabine",
+   "Officier mécanicien",
+   "Directeur des spectacles"
   ],
   "vocabulaire": [
    "commandant",
@@ -924,7 +1780,25 @@
    "naufrage",
    "champagne",
    "SOS",
-   "coursive"
+   "coursive",
+   "passerelle de navigation",
+   "cabine avec balcon",
+   "suite armateur",
+   "tender",
+   "embarquement des chaloupes",
+   "carré des officiers",
+   "buffet du lido",
+   "gîte",
+   "roulis",
+   "stabilisateurs",
+   "mal de mer",
+   "carte d'embarquement",
+   "muster drill",
+   "purser",
+   "pourboires de fin de croisière",
+   "amarrage à quai",
+   "sirène de brume",
+   "franc-bord"
   ]
  },
  "universite": {
@@ -937,6 +1811,14 @@
    "Résidence étudiante",
    "Couloir des casiers",
    "Salle de partiels"
+  ],
+  "fonctions": [
+   "Professeur des universités",
+   "Maître de conférences",
+   "Doctorant",
+   "Bibliothécaire universitaire",
+   "Secrétaire pédagogique",
+   "Chargé de travaux dirigés"
   ],
   "vocabulaire": [
    "thèse",
@@ -953,7 +1835,26 @@
    "recherche",
    "diplôme",
    "harcèlement",
-   "note éliminatoire"
+   "note éliminatoire",
+   "amphithéâtre",
+   "cours magistral",
+   "travaux dirigés",
+   "travaux pratiques",
+   "rattrapage",
+   "mémoire de master",
+   "soutenance de thèse",
+   "jury de délibération",
+   "unité d'enseignement",
+   "crédits ECTS",
+   "syllabus",
+   "cursus licence-master-doctorat",
+   "vacataire",
+   "campus",
+   "restaurant universitaire",
+   "session d'examens",
+   "bibliographie",
+   "laboratoire de recherche",
+   "conseil d'administration"
   ]
  },
  "hopital": {
@@ -966,6 +1867,14 @@
    "Poste des infirmières",
    "Couloir des urgences",
    "Salle de garde"
+  ],
+  "fonctions": [
+   "Chirurgien",
+   "Infirmière de bloc opératoire",
+   "Anesthésiste-réanimateur",
+   "Brancardier",
+   "Aide-soignante",
+   "Interne de garde"
   ],
   "vocabulaire": [
    "scalpel",
@@ -982,7 +1891,27 @@
    "interne",
    "arrêt cardiaque",
    "consentement",
-   "dépouille"
+   "dépouille",
+   "triage aux urgences",
+   "cathéter",
+   "intubation",
+   "monitoring cardiaque",
+   "constantes vitales",
+   "saturation en oxygène",
+   "garrot",
+   "champ opératoire",
+   "bistouri électrique",
+   "sutures",
+   "salle de réveil",
+   "réanimation",
+   "transfusion sanguine",
+   "prise de sang",
+   "dossier patient",
+   "prescription médicale",
+   "protocole d'asepsie",
+   "code arrêt cardiaque",
+   "chariot d'urgence",
+   "escarre"
   ]
  },
  "ecole": {
@@ -995,6 +1924,14 @@
    "Couloir des porte-manteaux",
    "Salle des maîtres",
    "Toilettes"
+  ],
+  "fonctions": [
+   "Instituteur des écoles",
+   "Directeur d'école",
+   "Agent territorial ATSEM",
+   "Surveillant de cour",
+   "Animateur périscolaire",
+   "Psychologue scolaire"
   ],
   "vocabulaire": [
    "cartable",
@@ -1011,7 +1948,23 @@
    "dictée",
    "renvoi",
    "goûter",
-   "sonnerie"
+   "sonnerie",
+   "ardoise",
+   "table de multiplication",
+   "carnet de correspondance",
+   "livret scolaire",
+   "conseil de classe",
+   "sortie scolaire",
+   "cantine",
+   "préau",
+   "tableau noir",
+   "rang deux par deux",
+   "bulletin de notes",
+   "réunion parents-professeurs",
+   "programme scolaire",
+   "redoublement",
+   "récitation",
+   "porte-manteaux"
   ]
  },
  "supermarche": {
@@ -1024,6 +1977,14 @@
    "Étalage des fruits",
    "Chambre froide",
    "Bureau du gérant"
+  ],
+  "fonctions": [
+   "Chef de rayon",
+   "Hôtesse de caisse",
+   "Employé de mise en rayon",
+   "Boucher du frais",
+   "Réceptionnaire marchandises",
+   "Agent de prévention des vols"
   ],
   "vocabulaire": [
    "caddie",
@@ -1040,7 +2001,25 @@
    "chariot",
    "inventaire",
    "monnaie",
-   "annonce micro"
+   "annonce micro",
+   "facing",
+   "gondole",
+   "tête de gondole",
+   "linéaire",
+   "palette",
+   "transpalette",
+   "démarque inconnue",
+   "date limite de consommation",
+   "rotation des stocks",
+   "douchette",
+   "promotion en prospectus",
+   "rayon frais",
+   "chambre froide",
+   "fond de rayon",
+   "réassort",
+   "monnaie rendue",
+   "carte de fidélité",
+   "balance à peser"
   ]
  },
  "casino": {
@@ -1053,6 +2032,14 @@
    "Caisse des jetons",
    "Poste de vidéosurveillance",
    "Salon des grosses mises"
+  ],
+  "fonctions": [
+   "Croupier",
+   "Chef de table",
+   "Inspecteur de salle",
+   "Caissier de change",
+   "Videur physionomiste",
+   "Directeur des jeux"
   ],
   "vocabulaire": [
    "croupier",
@@ -1069,7 +2056,25 @@
    "jackpot",
    "banque",
    "flambeur",
-   "caméra de sécurité"
+   "caméra de sécurité",
+   "tapis",
+   "jetons",
+   "plaques",
+   "sabot",
+   "banco",
+   "rien ne va plus",
+   "zéro vert",
+   "martingale",
+   "black-jack",
+   "carré d'as",
+   "brelan",
+   "flush royal",
+   "relance",
+   "roulette anglaise",
+   "bille lancée",
+   "cagnotte",
+   "comptage de cartes",
+   "avance de fonds"
   ]
  },
  "theatre": {
@@ -1082,6 +2087,14 @@
    "Régie",
    "Foyer",
    "Dessous de scène"
+  ],
+  "fonctions": [
+   "Metteur en scène",
+   "Comédien",
+   "Régisseur plateau",
+   "Costumier",
+   "Éclairagiste",
+   "Souffleur"
   ],
   "vocabulaire": [
    "réplique",
@@ -1098,7 +2111,24 @@
    "générale",
    "acte manqué",
    "applaudissements",
-   "trois coups"
+   "trois coups",
+   "coulisses",
+   "loges",
+   "cintres",
+   "rideau de fer",
+   "avant-scène",
+   "cour et jardin",
+   "quatrième mur",
+   "filage",
+   "lever de rideau",
+   "tirade",
+   "didascalie",
+   "rampe lumineuse",
+   "projecteur découpe",
+   "gélatine de couleur",
+   "rappel des acteurs",
+   "changement à vue",
+   "pendrillon"
   ]
  },
  "tribunal": {
@@ -1111,6 +2141,14 @@
    "Cellule de garde",
    "Greffe",
    "Banc de la défense"
+  ],
+  "fonctions": [
+   "Juge d'instance",
+   "Procureur de la République",
+   "Avocat de la défense",
+   "Greffier d'audience",
+   "Huissier audiencier",
+   "Juré d'assises"
   ],
   "vocabulaire": [
    "verdict",
@@ -1127,7 +2165,22 @@
    "menottes",
    "procureur",
    "pièce à conviction",
-   "délibéré"
+   "délibéré",
+   "barre des témoins",
+   "box des accusés",
+   "chef d'accusation",
+   "circonstances atténuantes",
+   "présomption d'innocence",
+   "prétoire",
+   "robe noire",
+   "audience à huis clos",
+   "renvoi",
+   "instruction",
+   "mise en examen",
+   "peine assortie du sursis",
+   "pourvoi en cassation",
+   "réclusion criminelle",
+   "partie civile"
   ]
  },
  "station_service": {
@@ -1140,6 +2193,14 @@
    "Toilettes extérieures",
    "Aire de repos",
    "Atelier"
+  ],
+  "fonctions": [
+   "Pompiste",
+   "Caissier de boutique",
+   "Mécanicien dépannage",
+   "Gérant de station",
+   "Laveur automobile",
+   "Chauffeur-livreur de carburant"
   ],
   "vocabulaire": [
    "pompe",
@@ -1156,7 +2217,29 @@
    "aire déserte",
    "néon",
    "ticket",
-   "fuite d'essence"
+   "fuite d'essence",
+   "pistolet à essence",
+   "pompe distributrice",
+   "sans-plomb 95",
+   "gazole",
+   "cuve enterrée",
+   "jauge de niveau",
+   "additif AdBlue",
+   "gonfleur à pneus",
+   "raclette lave-glace",
+   "vidange",
+   "bidon d'huile",
+   "camion-citerne",
+   "dépotage du carburant",
+   "borne de recharge",
+   "aire de ravitaillement",
+   "vapeurs d'hydrocarbures",
+   "coupure d'urgence",
+   "index de compteur",
+   "carte carburant",
+   "lavage haute pression",
+   "trappe à carburant",
+   "flexible de pompe"
   ]
  }
 }

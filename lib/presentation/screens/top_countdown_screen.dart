@@ -405,7 +405,15 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
             style: TextStyle(
                 fontFamily: _kHand, fontSize: 30 * scale, color: _gold)),
         SizedBox(height: 14 * scale),
-        _ContextLine(label: 'LIEU', value: widget.lieu, scale: scale),
+        _ContextLine(
+          label: 'LIEU',
+          value: widget.lieu,
+          scale: scale,
+          onTap: (widget.locationDetails != null && widget.lieu.isNotEmpty)
+              ? () => showLocationDetailsPopup(
+                  context, widget.locationDetails!, widget.lieu)
+              : null,
+        ),
         SizedBox(height: 10 * scale),
         _ContextLine(label: 'DANGER', value: widget.danger, scale: scale),
         if (widget.heroes.isNotEmpty) ...[
@@ -415,7 +423,11 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
           for (final h in widget.heroes)
             Padding(
               padding: EdgeInsets.only(bottom: 4 * scale),
-              child: Text.rich(
+              // FittedBox : chaque héros tient TOUJOURS sur une seule ligne
+              // (le texte se réduit au besoin plutôt que de passer à la ligne).
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text.rich(
                 TextSpan(children: [
                   TextSpan(
                       text:
@@ -447,7 +459,10 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
                             fontSize: 15 * scale,
                             fontWeight: FontWeight.w800)),
                 ]),
+                maxLines: 1,
+                softWrap: false,
                 textAlign: TextAlign.center,
+              ),
               ),
             ),
         ] else if (widget.cast.isNotEmpty) ...[
@@ -767,24 +782,46 @@ class _MiniLabel extends StatelessWidget {
 }
 
 class _ContextLine extends StatelessWidget {
-  const _ContextLine({required this.label, required this.value, this.scale = 1});
+  const _ContextLine(
+      {required this.label, required this.value, this.scale = 1, this.onTap});
   final String label;
   final String value;
   final double scale;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
+    final valueText = Text(value.isEmpty ? '—' : value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            color: Colors.white,
+            fontSize: 22 * scale,
+            fontWeight: FontWeight.w700,
+            height: 1.15));
     return Column(
       children: [
         _MiniLabel(label, scale: scale),
         SizedBox(height: 2 * scale),
-        Text(value.isEmpty ? '—' : value,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 22 * scale,
-                fontWeight: FontWeight.w700,
-                height: 1.15)),
+        if (onTap == null)
+          valueText
+        else
+          InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(10),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: 8 * scale, vertical: 2 * scale),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(child: valueText),
+                  SizedBox(width: 6 * scale),
+                  Icon(Icons.info_outline, size: 17 * scale, color: _gold),
+                ],
+              ),
+            ),
+          ),
       ],
     );
   }

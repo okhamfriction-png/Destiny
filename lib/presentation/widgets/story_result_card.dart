@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../application/state/location_details.dart';
 import '../../application/state/visual_settings.dart';
 import '../../domain/entities/player_assignment.dart';
 import '../../domain/entities/story.dart';
+import '../screens/location_details_screen.dart';
 import '../visuals/entity_visuals.dart';
 import 'entity_image.dart';
 
@@ -12,11 +14,16 @@ class StoryResultCard extends StatelessWidget {
     this.source = VisualSource.ai,
     this.big = false,
     this.full = false,
+    this.locationDetails,
     super.key,
   });
 
   final Story story;
   final VisualSource source;
+
+  /// Détails du lieu (sous-espaces, fonctions, vocabulaire). Si fourni, le lieu
+  /// devient cliquable (popup) et ses fonctions s'affichent près de l'image.
+  final LocationDetailsStore? locationDetails;
 
   /// Images EN GRAND (plein largeur, nom dessous) plutôt qu'à côté (compact).
   final bool big;
@@ -79,6 +86,9 @@ class StoryResultCard extends StatelessWidget {
                   ),
                 ],
               ),
+            if (locationDetails != null)
+              _LieuFonctionsPanel(
+                  story: story, source: source, store: locationDetails!),
             // Héros AVANT les étapes du danger.
             SizedBox(height: full ? 8 : 14),
             Row(
@@ -365,6 +375,111 @@ class _CycleBanner extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Panneau du lieu : image à gauche, FONCTIONS à droite ; tout le panneau est
+/// cliquable et ouvre la popup avec sous-espaces, fonctions et vocabulaire.
+class _LieuFonctionsPanel extends StatelessWidget {
+  const _LieuFonctionsPanel({
+    required this.story,
+    required this.source,
+    required this.store,
+  });
+
+  final Story story;
+  final VisualSource source;
+  final LocationDetailsStore store;
+
+  static const Color _violet = Color(0xFFB79CFF);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final fonctions = store.byName(story.location.name)?.fonctions ?? const [];
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () =>
+              showLocationDetailsPopup(context, store, story.location.name),
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: _violet.withValues(alpha: 0.06),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: _violet.withValues(alpha: 0.22)),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                EntityImage(
+                  visual: EntityVisuals.forLocation(story.location),
+                  source: source,
+                  size: 88,
+                  radius: 14,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.badge_outlined,
+                              size: 16, color: _violet),
+                          const SizedBox(width: 6),
+                          const Text('Fonctions du lieu',
+                              style: TextStyle(
+                                  color: _violet,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 13)),
+                          const Spacer(),
+                          const Icon(Icons.open_in_full,
+                              size: 14, color: Colors.white38),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      if (fonctions.isEmpty)
+                        Text('Toucher pour voir les détails du lieu.',
+                            style: theme.textTheme.bodySmall
+                                ?.copyWith(color: Colors.white54))
+                      else
+                        Wrap(
+                          spacing: 6,
+                          runSpacing: 6,
+                          children: [
+                            for (final f in fonctions)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 9, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: _violet.withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                      color: _violet.withValues(alpha: 0.34)),
+                                ),
+                                child: Text(f,
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 12.5)),
+                              ),
+                          ],
+                        ),
+                      const SizedBox(height: 6),
+                      Text('Toucher pour les sous-espaces & le vocabulaire',
+                          style: theme.textTheme.labelSmall
+                              ?.copyWith(color: Colors.white38)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

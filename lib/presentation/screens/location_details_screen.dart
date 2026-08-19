@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../application/state/location_details.dart';
+import '../widgets/location_detail_section.dart';
 
 /// Liste des lieux (paramètres) : choisir un lieu pour éditer ses détails.
 class LocationDetailsListScreen extends StatefulWidget {
@@ -90,6 +91,80 @@ const BoxDecoration _bg = BoxDecoration(
   ),
 );
 
+/// Popup (dialogue) avec TOUTES les infos d'un lieu : sous-espaces, fonctions,
+/// vocabulaire. Consultation rapide (récap, chrono…).
+Future<void> showLocationDetailsPopup(
+  BuildContext context,
+  LocationDetailsStore store,
+  String locationName,
+) {
+  final details = store.byName(locationName);
+  return showDialog<void>(
+    context: context,
+    builder: (context) {
+      final maxH = MediaQuery.of(context).size.height * 0.82;
+      return Dialog(
+        backgroundColor: const Color(0xFF141029),
+        insetPadding: const EdgeInsets.all(20),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 560, maxHeight: maxH),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 8, 8),
+                child: Row(
+                  children: [
+                    const Icon(Icons.place, color: _gold),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(locationName,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800)),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white70),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(height: 1, color: Colors.white12),
+              Flexible(
+                child: (details == null || details.isEmpty)
+                    ? const Padding(
+                        padding: EdgeInsets.all(28),
+                        child: Text('Aucun détail pour ce lieu.',
+                            style: TextStyle(color: Colors.white54)),
+                      )
+                    : ListView(
+                        padding: const EdgeInsets.all(16),
+                        shrinkWrap: true,
+                        children: [
+                          LocationDetailSection(
+                              kind: LocationDetailKind.sousEspaces,
+                              items: details.sousEspaces),
+                          LocationDetailSection(
+                              kind: LocationDetailKind.fonctions,
+                              items: details.fonctions),
+                          LocationDetailSection(
+                              kind: LocationDetailKind.vocabulaire,
+                              items: details.vocabulaire),
+                        ],
+                      ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
 /// Consultation des détails d'un lieu : sous-espaces jouables + vocabulaire.
 /// Lecture seule (l'édition se fait dans les paramètres).
 class LocationDetailsScreen extends StatelessWidget {
@@ -127,19 +202,16 @@ class LocationDetailsScreen extends StatelessWidget {
             : ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
-                  _section(
-                    context,
-                    icon: Icons.place_outlined,
-                    title: 'Sous-espaces',
-                    subtitle: 'Des endroits jouables à l\'intérieur du lieu.',
+                  LocationDetailSection(
+                    kind: LocationDetailKind.sousEspaces,
                     items: details.sousEspaces,
                   ),
-                  const SizedBox(height: 20),
-                  _section(
-                    context,
-                    icon: Icons.record_voice_over_outlined,
-                    title: 'Vocabulaire',
-                    subtitle: 'Mots, objets et fonctions propres au lieu.',
+                  LocationDetailSection(
+                    kind: LocationDetailKind.fonctions,
+                    items: details.fonctions,
+                  ),
+                  LocationDetailSection(
+                    kind: LocationDetailKind.vocabulaire,
                     items: details.vocabulaire,
                   ),
                 ],
@@ -148,54 +220,9 @@ class LocationDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _section(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required List<String> items,
-  }) {
-    final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(icon, color: _gold, size: 20),
-            const SizedBox(width: 8),
-            Text(title,
-                style: theme.textTheme.titleMedium
-                    ?.copyWith(color: _gold, fontWeight: FontWeight.w800)),
-          ],
-        ),
-        const SizedBox(height: 2),
-        Text(subtitle,
-            style: theme.textTheme.bodySmall?.copyWith(color: Colors.white54)),
-        const SizedBox(height: 10),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            for (final it in items)
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-                decoration: BoxDecoration(
-                  color: _gold.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: _gold.withValues(alpha: 0.3)),
-                ),
-                child: Text(it,
-                    style: const TextStyle(color: Colors.white, fontSize: 14)),
-              ),
-          ],
-        ),
-      ],
-    );
-  }
 }
 
-/// Éditeur des détails d'un lieu (sous-espaces + vocabulaire). Admin.
+/// Éditeur des détails d'un lieu (sous-espaces + fonctions + vocabulaire).
 class LocationDetailsEditScreen extends StatefulWidget {
   const LocationDetailsEditScreen({
     required this.store,
@@ -215,6 +242,7 @@ class LocationDetailsEditScreen extends StatefulWidget {
 
 class _LocationDetailsEditScreenState extends State<LocationDetailsEditScreen> {
   late List<TextEditingController> _sous;
+  late List<TextEditingController> _fonc;
   late List<TextEditingController> _voc;
 
   @override
@@ -222,32 +250,28 @@ class _LocationDetailsEditScreenState extends State<LocationDetailsEditScreen> {
     super.initState();
     final d = widget.store.byId(widget.locationId);
     _sous = [for (final s in d?.sousEspaces ?? const []) TextEditingController(text: s)];
+    _fonc = [for (final s in d?.fonctions ?? const []) TextEditingController(text: s)];
     _voc = [for (final s in d?.vocabulaire ?? const []) TextEditingController(text: s)];
     if (_sous.isEmpty) _sous.add(TextEditingController());
+    if (_fonc.isEmpty) _fonc.add(TextEditingController());
     if (_voc.isEmpty) _voc.add(TextEditingController());
   }
 
   @override
   void dispose() {
-    for (final c in _sous) {
-      c.dispose();
-    }
-    for (final c in _voc) {
+    for (final c in [..._sous, ..._fonc, ..._voc]) {
       c.dispose();
     }
     super.dispose();
   }
 
   Future<void> _save() async {
+    List<String> vals(List<TextEditingController> cs) =>
+        [for (final c in cs) if (c.text.trim().isNotEmpty) c.text.trim()];
     final details = LocationDetails(
-      sousEspaces: [
-        for (final c in _sous)
-          if (c.text.trim().isNotEmpty) c.text.trim()
-      ],
-      vocabulaire: [
-        for (final c in _voc)
-          if (c.text.trim().isNotEmpty) c.text.trim()
-      ],
+      sousEspaces: vals(_sous),
+      fonctions: vals(_fonc),
+      vocabulaire: vals(_voc),
     );
     await widget.store.setDetails(widget.locationId, details);
     if (mounted) Navigator.of(context).pop();
@@ -272,6 +296,13 @@ class _LocationDetailsEditScreenState extends State<LocationDetailsEditScreen> {
               controllers: _sous,
               onAdd: () => setState(() => _sous.add(TextEditingController())),
               onRemove: (i) => setState(() => _sous.removeAt(i).dispose()),
+            ),
+            const SizedBox(height: 20),
+            _editList(
+              title: 'Fonctions',
+              controllers: _fonc,
+              onAdd: () => setState(() => _fonc.add(TextEditingController())),
+              onRemove: (i) => setState(() => _fonc.removeAt(i).dispose()),
             ),
             const SizedBox(height: 20),
             _editList(
