@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'application/services/audio_service.dart';
 import 'application/services/llm_service.dart';
@@ -54,6 +55,12 @@ Future<void> main() async {
 }
 
 Future<void> _boot() async {
+  // Garde l'écran allumé tant que l'app est ouverte (pas de veille pendant
+  // une répétition / un spectacle). Sans effet si non supporté.
+  try {
+    await WakelockPlus.enable();
+  } catch (_) {}
+
   // FFI sur desktop, défaut sur mobile, no-op sur le web.
   configureDatabasePlatform();
 
