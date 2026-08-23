@@ -203,7 +203,7 @@ class DestinyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Destiny',
+      title: 'DestinyStory',
       theme: AppTheme.darkCinematic,
       home: RootScreen(
         controller: controller,

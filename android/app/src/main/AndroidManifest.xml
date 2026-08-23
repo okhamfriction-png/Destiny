@@ -2,7 +2,7 @@
     <!-- Requis pour les appels réseau (IA du Chat) en build release. -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="destiny"
+        android:label="DestinyStory"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

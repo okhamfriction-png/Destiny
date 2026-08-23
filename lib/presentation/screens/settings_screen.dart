@@ -176,7 +176,7 @@ class SettingsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Center(
-              child: Text('Destiny · v1.0.0',
+              child: Text('DestinyStory · v1.3.4',
                   style: theme.textTheme.bodySmall
                       ?.copyWith(color: Colors.white38)),
             ),

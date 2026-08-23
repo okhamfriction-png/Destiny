@@ -7,8 +7,8 @@ class TutorialScreen extends StatelessWidget {
   static const _sections = <({IconData icon, String title, String body})>[
     (
       icon: Icons.auto_awesome,
-      title: 'Bienvenue dans Destiny',
-      body: 'Destiny aide à improviser des situations dramatiques et à vivre '
+      title: 'Bienvenue dans DestinyStory',
+      body: 'DestinyStory aide à improviser des situations dramatiques et à vivre '
           'des histoires guidées par une IA. Voici à quoi servent les 5 onglets '
           'en bas de l\'écran.',
     ),

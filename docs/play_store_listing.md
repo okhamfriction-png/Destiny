@@ -1,4 +1,4 @@
-# Fiche Play Store — Destiny
+# Fiche Play Store — DestinyStory
 
 Textes prêts à copier-coller dans la Google Play Console (onglet **Fiche du store principale**).
 Chaque champ respecte les limites de caractères imposées par Google.
@@ -8,11 +8,10 @@ Chaque champ respecte les limites de caractères imposées par Google.
 ## 1. Nom de l'application  *(max 30 caractères)*
 
 ```
-Destiny — Impro théâtrale
+DestinyStory
 ```
-> 25 caractères. ⚠️ « Destiny » seul ressemble à des marques existantes (jeu vidéo). Le suffixe
-> « Impro théâtrale » limite le risque de rejet/confusion. Si tu veux un nom 100 % unique,
-> envisage « Destiny Impro » ou « RIEN N'EST ÉCRIT ».
+> 12 caractères. Nom retenu — plus distinctif que « Destiny » seul (moindre risque de confusion
+> avec des marques existantes). Variante possible si tu veux préciser : « DestinyStory — Impro ».
 
 ---
 
@@ -30,9 +29,9 @@ Générateur de scènes d'impro : un lieu, un danger, des héros. Rien n'est éc
 ```
 RIEN N'EST ÉCRIT.
 
-Destiny est un générateur de situations pour l'improvisation théâtrale dramatique. En un geste, l'app tire une scène complète et prête à jouer : un LIEU, un DANGER qui menace, et des HÉROS avec leur archétype, leur tempérament, leur façon d'être et leur moteur intérieur. À vous d'écrire la suite, sur scène, en direct.
+DestinyStory est un générateur de situations pour l'improvisation théâtrale dramatique. En un geste, l'app tire une scène complète et prête à jouer : un LIEU, un DANGER qui menace, et des HÉROS avec leur archétype, leur tempérament, leur façon d'être et leur moteur intérieur. À vous d'écrire la suite, sur scène, en direct.
 
-Conçu pour les comédien·nes, les troupes, les ateliers et les professeurs de théâtre, Destiny relance l'inspiration quand la page est blanche et pousse les joueur·ses hors de leurs automatismes.
+Conçu pour les comédien·nes, les troupes, les ateliers et les professeurs de théâtre, DestinyStory relance l'inspiration quand la page est blanche et pousse les joueur·ses hors de leurs automatismes.
 
 ━━━━━━━━━━━━━━━━━━
 CE QUE FAIT L'APP
@@ -104,9 +103,9 @@ Rien n'est écrit. Tout reste à jouer.
 > un Google Sites gratuit, ou un Gist rendu en HTML) et donner l'URL à la Console.
 
 ```
-Politique de confidentialité — Destiny
+Politique de confidentialité — DestinyStory
 
-Destiny ne collecte, ne stocke et ne transmet aucune donnée personnelle.
+DestinyStory ne collecte, ne stocke et ne transmet aucune donnée personnelle.
 Toutes les informations (scènes générées, réglages, historique) restent
 enregistrées localement sur votre appareil et ne sont jamais envoyées à un serveur.
 

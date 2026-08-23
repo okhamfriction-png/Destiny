@@ -33,7 +33,7 @@ android {
 
     defaultConfig {
         // Identifiant unique et définitif de l'app sur le Play Store.
-        applicationId = "com.okhamfriction.destiny"
+        applicationId = "com.okhamfriction.destinystory"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

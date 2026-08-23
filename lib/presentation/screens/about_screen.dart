@@ -67,7 +67,7 @@ class AboutScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            Text('Destiny',
+            Text('DestinyStory',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.headlineMedium),
             const SizedBox(height: 4),

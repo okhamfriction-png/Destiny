@@ -1,6 +1,6 @@
 {
-    "name": "destiny",
-    "short_name": "destiny",
+    "name": "DestinyStory",
+    "short_name": "DestinyStory",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
