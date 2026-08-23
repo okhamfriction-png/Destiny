@@ -22,8 +22,9 @@ class GuideSection {
       );
 }
 
-/// Contenu du Guide Destiny : 15 sections (10 fondamentales + 5 « Le système
-/// par les films »), texte par défaut fourni, éditable (admin) et persisté.
+/// Contenu du Guide Destiny : 16 sections (10 fondamentales + 5 « Le système
+/// par les films » + 1 réflexe d'urgence), texte par défaut fourni, éditable
+/// (admin) et persisté.
 /// C'est la référence permanente pour apprendre / réviser.
 class GuideContent extends ChangeNotifier {
   GuideContent() {
@@ -364,19 +365,32 @@ LEÇON : un danger, posé tôt, qui monte sans se résoudre et coupe les issues.
     const GuideSection(
       id: 's16',
       title: '16. Quand tu ne sais plus quoi faire',
-      body: '''Tu ne sais plus quoi dire ? Ne cherche pas une idée neuve. Appuie sur une relation.
+      body: '''Tu ne sais plus quoi dire ? Ne cherche pas une idée neuve. Fais se percuter deux choses qui existent déjà dans la scène. C'est la collision qui crée, pas l'invention.
 
-En trois temps :
-(1) Va vers une relation qui existe déjà — pas une nouvelle, une que l'Acte 1 a posée.
+LE RÉFLEXE N°1 — TOUJOURS ESSAYER ÇA D'ABORD : LE DANGER × UNE RELATION
+C'est le move de Destiny, celui qui ne trompe jamais.
+(1) Va vers une relation déjà posée à l'Acte 1 — pas une nouvelle.
 (2) Sers-toi du danger pour la faire bouger : le danger qui monte est ta raison d'agir (« le feu bloque la sortie, DONC je ne peux plus me taire, DONC je te dis la vérité »).
 (3) Fais bouger la relation d'un cran : resserre-la, fissure-la, ou révèle quelque chose.
 
-Exemples :
-• Perdu dans une scène ? Regarde qui est en face, ce qu'il représente pour toi, appuie dessus (« Ça fait dix ans que je te couvre, et tu me lâches maintenant ? »).
-• Le danger monte et tu ne sais qu'en faire ? Transforme-le en pression sur un lien (« On va peut-être mourir ici, alors autant que tu saches : c'est moi qui ai payé tes études »).
-• Un blanc dans le groupe ? Ressors une cartouche de l'Acte 1 (« Dis-lui, toi, pourquoi tu n'es pas venu à l'enterrement »).
+SI LA RELATION NE SUFFIT PAS — L'ÉCHELLE DE SECOURS, DANS L'ORDRE
+Prends UN élément déjà présent et sers-toi du danger pour le faire exploser. Du plus fort au plus faible :
+→ UNE CARTOUCHE DE L'ACTE 1. Un secret, une dette, une promesse posée plus tôt. Ressors-la maintenant. (« Dis-lui, toi, pourquoi tu n'es pas venu à l'enterrement. »)
+→ UN OBJET. Un objet déjà là devient l'enjeu ou la preuve. (« Cette clé, tu sais où je l'ai trouvée ? »)
+→ TON OBJECTIF D'ARCHÉTYPE. Ton moteur pousse à l'excès sous la pression. (« Tout brûle, et toi tu veux encore commander ? »)
+→ LE DÉSÉQUILIBRE. Casse l'équilibre en place : quelqu'un change de camp, une alliance se rompt.
 
-Règle en une phrase : quand tu es perdu, monte le danger et appuie sur une relation existante. Tu ne te tromperas jamais.''',
+LA RÈGLE DE TRI — AVANT DE DIRE QUOI QUE CE SOIT, DEMANDE-TOI :
+Est-ce que ce que je vais dire nourrit une relation, un personnage, le lieu, ou le danger ?
+Si oui, dis-le. Si ça n'alimente aucun des quatre (une idée neuve, un univers, une explication), garde-le : ça vole du temps à ce qui compte. Une scène dure deux minutes. Chaque phrase a un coût.
+
+RAPPEL : LE DANGER NE SE FABRIQUE PAS.
+Le danger monte tout seul, il est subi — jamais causé par un personnage. Tu ne le crées pas, tu t'en empares. La seule chose que tu fais monter, c'est la tension entre les gens. Le danger, tu le reçois et tu t'en sers comme levier.
+
+CE QU'ON NE FAIT JAMAIS QUAND ON EST PERDU :
+On n'ajoute pas un élément neuf (un lieu, un lore, un personnage) pour se sauver. Ajouter, c'est fuir. Approfondir, c'est jouer. Dans le doute, on creuse ce qui est là — on n'invente pas ailleurs.
+
+RÈGLE EN UNE PHRASE : quand tu es perdu, sers-toi du danger qui monte pour appuyer sur une relation existante. Tu ne te tromperas jamais.''',
     ),
   ];
 }
