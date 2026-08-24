@@ -20,16 +20,14 @@ import '../../domain/repositories/story_repository.dart';
 import '../social_links.dart';
 import 'catalog_view_screen.dart';
 import 'chat_screen.dart';
-import 'dice_screen.dart';
 import 'generator_screen.dart';
 import 'guide_screen.dart';
 import 'music_screen.dart';
 import 'settings_screen.dart';
 import 'spectacle_screen.dart';
-import 'timer_screen.dart';
 import 'tracking_screen.dart';
 
-/// Shell de navigation : Générateur · Dés · Minuteur · Musique · Chat.
+/// Shell de navigation : Générateur · Musique · Histoire · Scène.
 class RootScreen extends StatefulWidget {
   const RootScreen({
     required this.controller,
@@ -146,11 +144,6 @@ class _RootScreenState extends State<RootScreen> {
         trackingStore: widget.trackingStore,
         locationDetails: widget.locationDetails,
       ),
-      DiceScreen(
-        audioService: widget.audioService,
-        visualSettings: widget.visualSettings,
-      ),
-      TimerScreen(audioService: widget.audioService),
       MusicScreen(controller: widget.musicController),
       ChatScreen(
           controller: widget.chatController,
@@ -261,16 +254,6 @@ class _RootScreenState extends State<RootScreen> {
             icon: Icon(Icons.auto_stories_outlined),
             selectedIcon: Icon(Icons.auto_stories),
             label: 'Générateur',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.casino_outlined),
-            selectedIcon: Icon(Icons.casino),
-            label: 'Dés',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.timer_outlined),
-            selectedIcon: Icon(Icons.timer),
-            label: 'Minuteur',
           ),
           NavigationDestination(
             icon: Icon(Icons.library_music_outlined),
