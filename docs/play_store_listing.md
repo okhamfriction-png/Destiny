@@ -76,7 +76,7 @@ Rien n'est écrit. Tout reste à jouer.
 |---|---|
 | **Catégorie** | Divertissement (ou Art & Design) |
 | **E-mail développeur** | okhamfriction@gmail.com |
-| **Politique de confidentialité** | URL **obligatoire** — voir modèle ci-dessous |
+| **Politique de confidentialité** | ✅ EN LIGNE : https://okhamfriction-png.github.io/Destiny/privacy.html |
 | **Classification du contenu** | À remplir via le questionnaire Google (l'app n'a pas de contenu sensible → visera « Tout public / PEGI 3 ») |
 | **Section Data safety** | Déclarer : aucune donnée collectée/partagée (tout est local sur l'appareil) — à confirmer |
 | **Public cible** | 13 ans et + (ou « tout public » selon ton choix) |
