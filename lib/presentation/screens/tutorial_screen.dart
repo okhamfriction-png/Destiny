@@ -20,18 +20,6 @@ class TutorialScreen extends StatelessWidget {
           'pas se répéter avant d\'avoir tout utilisé.',
     ),
     (
-      icon: Icons.casino_outlined,
-      title: 'Dés',
-      body: 'Lance la pièce BRAVE / SMART (courage ou intelligence) et le dé '
-          'de catégorie. Pratique pour décider en impro. Style 3D, avec son.',
-    ),
-    (
-      icon: Icons.timer,
-      title: 'Minuteur',
-      body: 'Compte à rebours (30 s, 3 min, 5 min ou durée libre) avec le son '
-          'de tempête DestinyStorm joué à la fréquence choisie.',
-    ),
-    (
       icon: Icons.library_music,
       title: 'Musique',
       body: 'Des ambiances, émotions et thèmes musicaux à lancer en fond '

@@ -10,16 +10,6 @@ class AboutScreen extends StatelessWidget {
       'Tire un lieu, un danger et distribue archétypes + rôles. Modes Théâtre (tout) et Rue (enjeux visuels immédiats). Visuels Réaliste (images) ou Vectoriel.'
     ),
     (
-      Icons.casino,
-      'Dés',
-      'Une pièce d\'approche Brave / Smart et un dé catégorie (Danger / Lieu / Archétype), en 3D.'
-    ),
-    (
-      Icons.timer,
-      'Minuteur',
-      'Compte à rebours (30 s · 3 min · 5 min ou personnalisé en tapant dessus), avec le son DestinyStorm à la fréquence choisie.'
-    ),
-    (
       Icons.library_music,
       'Musique',
       'Bibliothèque d\'ambiances et d\'émotions, filtrable, avec lecteur intégré.'
