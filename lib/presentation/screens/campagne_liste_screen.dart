@@ -148,8 +148,12 @@ class CreerCampagneScreen extends StatefulWidget {
 class _CreerCampagneScreenState extends State<CreerCampagneScreen> {
   String _univers = CampagneStore.univers.keys.first;
   String _ton = CampagneStore.tons.keys.first;
+  String _public = 'enfant';
+  String _lore = ''; // '' = aucun
   final _contexte = TextEditingController();
   final _nom = TextEditingController();
+
+  List<String> get _loresDispo => CampagneStore.lores[_univers] ?? const [];
 
   @override
   void initState() {
@@ -176,6 +180,16 @@ class _CreerCampagneScreenState extends State<CreerCampagneScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         children: [
+          const _Label('Public'),
+          SegmentedButton<String>(
+            segments: const [
+              ButtonSegment(value: 'enfant', label: Text('Enfant')),
+              ButtonSegment(value: 'adulte', label: Text('Adulte')),
+            ],
+            selected: {_public},
+            onSelectionChanged: (s) => setState(() => _public = s.first),
+          ),
+          const SizedBox(height: 16),
           const _Label('Univers'),
           DropdownButtonFormField<String>(
             initialValue: _univers,
@@ -187,6 +201,7 @@ class _CreerCampagneScreenState extends State<CreerCampagneScreen> {
             ],
             onChanged: (v) => setState(() {
               _univers = v ?? _univers;
+              _lore = ''; // les lores dépendent de l'univers
               if (_nom.text.isEmpty ||
                   CampagneStore.univers.containsValue(_nom.text)) {
                 _nom.text = CampagneStore.univers[_univers] ?? '';
@@ -204,6 +219,25 @@ class _CreerCampagneScreenState extends State<CreerCampagneScreen> {
                 DropdownMenuItem(value: e.key, child: Text(e.value)),
             ],
             onChanged: (v) => setState(() => _ton = v ?? _ton),
+          ),
+          const SizedBox(height: 16),
+          const _Label('Lore (couche de personnages)'),
+          DropdownButtonFormField<String>(
+            initialValue: _lore,
+            isExpanded: true,
+            decoration: const InputDecoration(border: OutlineInputBorder()),
+            items: [
+              const DropdownMenuItem(value: '', child: Text('Aucun')),
+              for (final l in _loresDispo)
+                DropdownMenuItem(value: l, child: Text(l)),
+            ],
+            onChanged: (v) => setState(() => _lore = v ?? ''),
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'Ajoute l\'ambiance et des personnages inspirés de ce lore '
+            '(surtout quand l\'IA écrit le résumé).',
+            style: TextStyle(color: Colors.white38, fontSize: 12),
           ),
           const SizedBox(height: 16),
           const _Label('Contexte (facultatif)'),
@@ -247,6 +281,8 @@ class _CreerCampagneScreenState extends State<CreerCampagneScreen> {
       nom: nom,
       univers: _univers,
       ton: _ton,
+      public: _public,
+      lore: _lore,
       contexte: _contexte.text.trim(),
     );
     if (mounted) Navigator.of(context).pop(c);
@@ -313,7 +349,9 @@ class _FicheCampagneScreenState extends State<FicheCampagneScreen> {
         children: [
           Text(
             '${CampagneStore.univers[c.univers] ?? c.univers} · '
-            '${CampagneStore.tons[c.ton] ?? c.ton}',
+            '${CampagneStore.tons[c.ton] ?? c.ton} · '
+            '${c.public == 'adulte' ? 'Adulte' : 'Enfant'}'
+            '${c.lore.isEmpty ? '' : ' · ${c.lore}'}',
             style: const TextStyle(color: _lav, fontWeight: FontWeight.w600),
           ),
           if (c.contexte.isNotEmpty) ...[

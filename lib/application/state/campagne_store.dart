@@ -81,6 +81,8 @@ class CampagneStore extends ChangeNotifier {
       ton: CampagneStore.tons[campagne.ton] ?? campagne.ton,
       contexte: campagne.contexte,
       transcription: transcription,
+      public: campagne.public,
+      lore: campagne.lore,
     );
   }
 
@@ -114,6 +116,22 @@ class CampagneStore extends ChangeNotifier {
     'magie': 'Magie',
     'robots': 'Robots',
     'enquete': 'Enquête',
+  };
+
+  /// Les dix lores les plus connus par univers (couche de personnages/ambiance).
+  static const Map<String, List<String>> lores = {
+    'dragon_ball': ['Dragon Ball', 'Naruto', 'One Piece', 'Bleach', 'My Hero Academia', 'Pokémon', 'Saint Seiya', 'Yu-Gi-Oh', 'Fairy Tail', 'Dragon Quest'],
+    'arts_martiaux': ['Kung Fu Panda', 'Karaté Kid', 'Avatar le dernier maître de l\'air', 'Naruto', 'Mulan', 'Cobra Kai', 'Jackie Chan', 'Bruce Lee', 'Tekken', 'Street Fighter'],
+    'animaux': ['Le Roi Lion', 'Zootopie', 'Madagascar', 'Le Livre de la jungle', 'Rox et Rouky', 'Bambi', 'Kung Fu Panda', 'Ratatouille', 'La Ferme se rebelle', 'Robin des Bois (Disney)'],
+    'aventure': ['Indiana Jones', 'Tintin', 'Jumanji', 'Pirates des Caraïbes', 'Uncharted', 'Le Seigneur des Anneaux', 'Astérix', 'Jurassic Park', 'Les Goonies', 'Le Voyage de Chihiro'],
+    'football': ['Captain Tsubasa (Olive et Tom)', 'Inazuma Eleven', 'Blue Lock', 'Shaolin Soccer', 'FIFA', 'Les Légendes du foot', 'Coupe du Monde', 'Ligue des Champions', 'Football Manager', 'Panini'],
+    'espace': ['Star Wars', 'Star Trek', 'Les Gardiens de la Galaxie', 'Wall-E', 'Toy Story (Buzz)', 'Interstellar', 'Valérian', 'Rick et Morty', 'Dune', 'Mass Effect'],
+    'chevaliers': ['Le Seigneur des Anneaux', 'Kaamelott', 'Game of Thrones', 'Excalibur', 'Merlin', 'Donjons & Dragons', 'Warhammer', 'Shrek', 'Zelda', 'Les Chevaliers du Zodiaque'],
+    'pirates': ['One Piece', 'Pirates des Caraïbes', 'Peter Pan', 'L\'Île au trésor', 'Tintin', 'Astérix', 'Monkey Island', 'Assassin\'s Creed', 'Sinbad', 'Barbe Noire'],
+    'dinosaures': ['Jurassic Park', 'Le Petit Dinosaure', 'Denver le dernier dinosaure', 'Dino Riders', 'Dinotopia', 'ARK', 'Primal', 'Gon', 'T-Rex Express', 'Ice Age'],
+    'magie': ['Harry Potter', 'Le Seigneur des Anneaux', 'Le Monde de Narnia', 'Merlin', 'Donjons & Dragons', 'Fairy Tail', 'Kirikou', 'Fantasia (Disney)', 'Warhammer', 'Le Petit Sorcier'],
+    'robots': ['Transformers', 'Wall-E', 'Big Hero 6', 'Astro Boy', 'Gundam', 'Real Steel', 'I, Robot', 'Robots (le film)', 'Portal', 'Terminator'],
+    'enquete': ['Sherlock Holmes', 'Scooby-Doo', 'Détective Conan', 'Cluedo', 'Le Club des Cinq', 'Inspecteur Gadget', 'Agatha Christie', 'Columbo', 'Blake et Mortimer', 'Lovecraft'],
   };
 
   /// Les six tons (id → libellé).
@@ -217,6 +235,8 @@ class CampagneStore extends ChangeNotifier {
     required String nom,
     required String univers,
     required String ton,
+    String public = 'enfant',
+    String lore = '',
     String contexte = '',
   }) async {
     final c = Campagne(
@@ -224,6 +244,8 @@ class CampagneStore extends ChangeNotifier {
         nom: nom,
         univers: univers,
         ton: ton,
+        public: public,
+        lore: lore,
         contexte: contexte);
     _campagnes = [..._campagnes, c];
     await _sauver();
@@ -295,6 +317,8 @@ class CampagneStore extends ChangeNotifier {
         'nom': c.nom,
         'univers': c.univers,
         'ton': c.ton,
+        'public': c.public,
+        'lore': c.lore,
         'contexte': c.contexte,
         'resume': c.resume,
         'accroche': c.accroche,
@@ -306,6 +330,8 @@ class CampagneStore extends ChangeNotifier {
         nom: j['nom'] as String,
         univers: j['univers'] as String,
         ton: j['ton'] as String,
+        public: j['public'] as String? ?? 'enfant',
+        lore: j['lore'] as String? ?? '',
         contexte: j['contexte'] as String? ?? '',
         resume: j['resume'] as String? ?? '',
         accroche: j['accroche'] as String? ?? '',

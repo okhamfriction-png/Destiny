@@ -207,6 +207,8 @@ class Campagne {
     required this.nom,
     required this.univers,
     required this.ton,
+    this.public = 'enfant',
+    this.lore = '',
     this.contexte = '',
     this.resume = '',
     this.accroche = '',
@@ -217,6 +219,13 @@ class Campagne {
   final String nom;
   final String univers;
   final String ton;
+
+  /// Public visé : 'enfant' (contenu doux) ou 'adulte' (ton plus libre).
+  final String public;
+
+  /// Couche de lore ajoutée (ex. « Harry Potter »), ou vide pour aucun.
+  final String lore;
+
   final String contexte;
   final String resume;
   final String accroche;
@@ -233,6 +242,8 @@ class Campagne {
         nom: nom ?? this.nom,
         univers: univers,
         ton: ton,
+        public: public,
+        lore: lore,
         contexte: contexte,
         resume: resume ?? this.resume,
         accroche: accroche ?? this.accroche,

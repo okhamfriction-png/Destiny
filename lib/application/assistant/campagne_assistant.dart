@@ -53,13 +53,24 @@ class MemoireEpisode {
   }
 }
 
-const String _consigne =
+const String _consigneEnfant =
     'Tu suis une histoire de théâtre improvisée entre un parent et ses enfants, '
     'en français. Aucune violence, aucune peur, aucune mort, aucun personnage '
     'humilié. Tu ne commentes ni le jeu, ni les enfants, ni leur comportement : '
     'tu ne parles que des personnages. Aucun jugement, aucune note, aucun '
     'conseil. Tu réponds uniquement par un objet JSON, sans texte autour, de la '
     'forme {"resume": "...", "suite": "..."}. '
+    '"resume" : au plus six phrases courtes, au passé, à la troisième personne, '
+    'sur ce qui est arrivé aux personnages. '
+    '"suite" : deux phrases au présent qui disent où l\'on reprend et ce que le '
+    'méchant a fait depuis — de quoi commencer à jouer sans relire.';
+
+const String _consigneAdulte =
+    'Tu suis une histoire de théâtre improvisée entre adultes, en français. '
+    'Reste respectueux, sans complaisance gratuite. Tu ne commentes ni le jeu '
+    'ni les joueurs : tu ne parles que des personnages. Aucun jugement, aucune '
+    'note, aucun conseil. Tu réponds uniquement par un objet JSON, sans texte '
+    'autour, de la forme {"resume": "...", "suite": "..."}. '
     '"resume" : au plus six phrases courtes, au passé, à la troisième personne, '
     'sur ce qui est arrivé aux personnages. '
     '"suite" : deux phrases au présent qui disent où l\'on reprend et ce que le '
@@ -76,10 +87,16 @@ class CampagneAssistant {
     required String ton,
     required String contexte,
     required String transcription,
+    String public = 'enfant',
+    String lore = '',
   }) async {
     final contenu = StringBuffer()
       ..writeln('Univers : $univers')
       ..writeln('Ton : $ton');
+    if (lore.trim().isNotEmpty) {
+      contenu.writeln(
+          'Lore/ambiance à évoquer (personnages et décor peuvent s\'en inspirer) : ${lore.trim()}');
+    }
     if (contexte.trim().isNotEmpty) {
       contenu.writeln('Contexte : ${contexte.trim()}');
     }
@@ -88,7 +105,7 @@ class CampagneAssistant {
       ..write(transcription.trim());
     final reponse = await _llm.complete(
       settings: settings,
-      system: _consigne,
+      system: public == 'adulte' ? _consigneAdulte : _consigneEnfant,
       messages: [ChatMessage(role: 'user', content: contenu.toString())],
     );
     return MemoireEpisode.depuis(reponse);
