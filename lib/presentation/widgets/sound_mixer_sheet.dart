@@ -23,6 +23,24 @@ Color _categoryColor(String cat) {
   }
 }
 
+/// Icône adaptée à la catégorie de son (à la place d'un bouton lecture).
+IconData _categoryIcon(String cat) {
+  switch (cat) {
+    case 'Émotions':
+      return Icons.favorite;
+    case 'Lieux':
+      return Icons.place;
+    case 'Ambiances':
+      return Icons.landscape;
+    case 'Thèmes':
+      return Icons.movie_creation;
+    case 'Univers':
+      return Icons.auto_awesome;
+    default:
+      return Icons.music_note;
+  }
+}
+
 /// Ouvre le pupitre de régie son (mixeur) : accès à toutes les musiques
 /// pendant le chrono d'histoire, pour lancer une ambiance en direct.
 Future<void> showSoundMixer(BuildContext context, MusicController controller) {
@@ -227,6 +245,7 @@ class _SoundMixerSheetState extends State<SoundMixerSheet> {
                                   _TrackChip(
                                     title: t.title,
                                     color: _categoryColor(cat),
+                                    icon: _categoryIcon(cat),
                                     active: c.current?.file == t.file,
                                     playing:
                                         c.current?.file == t.file && c.playing,
@@ -249,6 +268,7 @@ class _TrackChip extends StatelessWidget {
   const _TrackChip({
     required this.title,
     required this.color,
+    required this.icon,
     required this.active,
     required this.playing,
     required this.onTap,
@@ -256,6 +276,7 @@ class _TrackChip extends StatelessWidget {
 
   final String title;
   final Color color;
+  final IconData icon;
   final bool active;
   final bool playing;
   final VoidCallback onTap;
@@ -278,12 +299,7 @@ class _TrackChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-                playing
-                    ? Icons.pause
-                    : (active ? Icons.play_arrow : Icons.play_circle_outline),
-                size: 18,
-                color: fg),
+            Icon(playing ? Icons.graphic_eq : icon, size: 18, color: fg),
             const SizedBox(width: 6),
             Text(title,
                 style: TextStyle(
