@@ -143,6 +143,7 @@ class _RootScreenState extends State<RootScreen> {
         guideContent: widget.guideContent,
         trackingStore: widget.trackingStore,
         locationDetails: widget.locationDetails,
+        musicController: widget.musicController,
       ),
       MusicScreen(controller: widget.musicController),
       ChatScreen(

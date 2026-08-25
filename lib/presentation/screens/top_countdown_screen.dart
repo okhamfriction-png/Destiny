@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import '../../application/services/audio_service.dart';
 import '../../application/state/guide_content.dart';
+import '../../application/state/music_controller.dart';
 import '../../application/state/location_details.dart';
 import '../../application/state/story_controller.dart';
 import '../../application/state/tracking_store.dart';
@@ -46,6 +47,7 @@ class TopCountdownScreen extends StatefulWidget {
     required this.lieu,
     required this.danger,
     required this.audioService,
+    this.musicController,
     this.filmTitle,
     this.filmYear,
     this.genre,
@@ -81,6 +83,11 @@ class TopCountdownScreen extends StatefulWidget {
   final String lieu;
   final String danger;
   final AudioService audioService;
+
+  /// Musiques scénaristiques du chrono (Commencement au lancement, Conclusion
+  /// 15 s après le 3ᵉ DESTINY). Null = pas de musique.
+  final MusicController? musicController;
+
   final String? filmTitle;
   final String? filmYear;
   final String? genre;
@@ -142,6 +149,7 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
   final Set<int> _fired = {};
   int? _flash; // numéro du DESTINY en cours d'affichage
   Timer? _flashTimer;
+  Timer? _conclusionTimer; // musique de conclusion, 15 s après DESTINY 3
   // Cube animé au lancement du chrono (flourish de départ).
   bool _showLaunchCube = false;
   int _launchToken = 0;
@@ -221,6 +229,7 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
   void dispose() {
     _timer?.cancel();
     _flashTimer?.cancel();
+    _conclusionTimer?.cancel();
     // Restaure les barres système.
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
@@ -244,6 +253,13 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
       _paused = false;
     });
     if (widget.cubeAnimation) widget.audioService.playDice();
+    _conclusionTimer?.cancel();
+    // Musique du Commencement au lancement (mode Histoire, son non coupé).
+    if (widget.destinyEnabled &&
+        widget.musicController != null &&
+        !widget.audioService.muted) {
+      widget.musicController!.playCommencement();
+    }
     _timer = Timer.periodic(const Duration(seconds: 1), _tick);
   }
 
@@ -279,6 +295,15 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
           _flashTimer = Timer(const Duration(milliseconds: 2200), () {
             if (mounted) setState(() => _flash = null);
           });
+          // 3ᵉ (dernier) DESTINY : musique de Conclusion 15 s plus tard.
+          if (i == 2 &&
+              widget.musicController != null &&
+              !widget.audioService.muted) {
+            _conclusionTimer?.cancel();
+            _conclusionTimer = Timer(const Duration(seconds: 15), () {
+              if (mounted) widget.musicController!.playConclusion();
+            });
+          }
         }
       }
       if (_remaining == widget.alertAt && !_alerted) {
@@ -608,9 +633,16 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
   // ----------------------------------------------------------------- run
   Widget _buildRun(BuildContext context) {
     final warning = _remaining <= widget.alertAt;
+    // Après le dernier DESTINY (le 3ᵉ), le chrono vire au rouge : on est dans
+    // l'acte final.
+    final afterLastDestiny = widget.destinyEnabled &&
+        _destiny.isNotEmpty &&
+        _fired.contains(_destiny.length - 1);
     final accent = _done
         ? Colors.white
-        : (warning ? const Color(0xFFFF5252) : const Color(0xFFB9A6FF));
+        : ((warning || afterLastDestiny)
+            ? const Color(0xFFFF5252)
+            : const Color(0xFFB9A6FF));
     final timerSize = _done ? 66.0 : (widget.minutesUnit ? 84.0 : 104.0);
 
     // Contenu à largeur de référence ; un FittedBox le met à l'échelle pour

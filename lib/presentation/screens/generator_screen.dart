@@ -7,6 +7,7 @@ import '../../application/state/ai_settings.dart';
 import '../../application/state/generation_history.dart';
 import '../../application/state/guide_content.dart';
 import '../../application/state/location_details.dart';
+import '../../application/state/music_controller.dart';
 import '../../application/state/spinoff_history.dart';
 import '../../application/state/story_controller.dart';
 import '../../application/state/tracking_store.dart';
@@ -69,6 +70,7 @@ class GeneratorScreen extends StatefulWidget {
     required this.guideContent,
     required this.trackingStore,
     required this.locationDetails,
+    required this.musicController,
     super.key,
   });
 
@@ -83,6 +85,7 @@ class GeneratorScreen extends StatefulWidget {
   final GuideContent guideContent;
   final TrackingStore trackingStore;
   final LocationDetailsStore locationDetails;
+  final MusicController musicController;
 
   @override
   State<GeneratorScreen> createState() => _GeneratorScreenState();
@@ -105,6 +108,13 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
     super.initState();
     widget.controller.addListener(_onStateChanged);
     widget.visualSettings.addListener(_onStateChanged);
+    // L'onglet Dilemme a été retiré : si la dernière scène restaurée était un
+    // dilemme, on repasse en Histoire pour éviter une sélection orpheline.
+    if (widget.controller.state.mode == GeneratorMode.dilemme) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) widget.controller.setMode(GeneratorMode.histoire);
+      });
+    }
     _loadCatalogNames();
   }
 
@@ -276,6 +286,7 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
         lieu: lieu,
         danger: danger,
         audioService: widget.audioService,
+        musicController: widget.musicController,
         filmTitle: title,
         filmYear: year,
         genre: genre,
@@ -288,11 +299,11 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
         weightDanger: widget.visualSettings.destinyWeightDanger,
         weightDestin: widget.visualSettings.destinyWeightDestin,
         destinyEnabled: destinyEnabled,
-        // Histoire : 40 min par défaut, DESTINY à 12 / 25 / 37 min (mm:ss).
+        // Histoire : 30 min par défaut, DESTINY à 10 / 18 / 27 min (mm:ss).
         minutesUnit: destinyEnabled,
         destinyDefaults:
-            destinyEnabled ? const [12 * 60, 25 * 60, 37 * 60] : const [],
-        seconds: destinyEnabled ? 40 * 60 : widget.visualSettings.topSeconds,
+            destinyEnabled ? const [10 * 60, 18 * 60, 27 * 60] : const [],
+        seconds: destinyEnabled ? 30 * 60 : widget.visualSettings.topSeconds,
         cubeAnimation: widget.visualSettings.cubeAnimation,
         // Aides de jeu accessibles pendant le chrono.
         guide: widget.guideContent,
@@ -419,11 +430,13 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
                       value: GeneratorMode.histoire, label: Text('Histoire')),
                   ButtonSegment(value: GeneratorMode.rue, label: Text('Rue')),
                   ButtonSegment(
-                      value: GeneratorMode.dilemme, label: Text('Dilemme')),
-                  ButtonSegment(
                       value: GeneratorMode.spinoff, label: Text('Spin-off')),
                 ],
-                selected: {mode},
+                // Dilemme n'a plus d'onglet : on affiche Histoire le temps que
+                // la garde de initState normalise l'état restauré.
+                selected: {
+                  mode == GeneratorMode.dilemme ? GeneratorMode.histoire : mode
+                },
                 onSelectionChanged: (s) => widget.controller.setMode(s.first),
               ),
             ),
@@ -524,7 +537,7 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
               onPressed: _openTop,
               icon: const Icon(Icons.timer),
               label: Text(mode == GeneratorMode.histoire
-                  ? 'TOP — chrono (40 min, réglable)'
+                  ? 'TOP — chrono (30 min, réglable)'
                   : 'TOP — chrono ${widget.visualSettings.topSeconds} s'),
               style: FilledButton.styleFrom(
                 backgroundColor: const Color(0xFFFFC24B),

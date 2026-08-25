@@ -160,6 +160,22 @@ class MusicController extends ChangeNotifier {
     }
   }
 
+  /// Musique du Commencement, lancée au démarrage du chrono d'histoire.
+  Future<void> playCommencement() =>
+      _playScore('music/01_commencement.m4a', 'Commencement');
+
+  /// Musique de Conclusion, lancée 15 s après le 3ᵉ DESTINY.
+  Future<void> playConclusion() =>
+      _playScore('music/02_conclusionainsique.m4a', 'Conclusion');
+
+  /// Joue une musique scénaristique du chrono (one-shot, sans boucle).
+  Future<void> _playScore(String file, String title) => playTrack(MusicTrack(
+        file: file,
+        title: title,
+        category: 'Chrono',
+        loop: false,
+      ));
+
   Future<void> playTrack(MusicTrack track) async {
     _current = track;
     _position = Duration.zero;
