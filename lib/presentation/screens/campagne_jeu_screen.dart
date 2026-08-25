@@ -50,6 +50,10 @@ class _JeuScreenState extends State<JeuScreen> {
   final Set<int> _tombes = {}; // index des marches d'escalade révélées
   bool _peutSortir = false;
   String _micRaison = ''; // raison si le micro n'a pas démarré
+  // État de combat par personnage (clé stable : 'j0', 'f0', 's0', 'm').
+  final Map<String, EtatPerso> _etats = {};
+
+  EtatPerso _etat(String id) => _etats.putIfAbsent(id, EtatPerso.new);
 
   @override
   void initState() {
@@ -150,6 +154,145 @@ class _JeuScreenState extends State<JeuScreen> {
     return ok ?? false;
   }
 
+  void _ouvrirCombat() {
+    final ep = widget.episode;
+    // (groupe, id, libellé) pour chaque personnage.
+    final persos = <(String, String, String)>[
+      for (var i = 0; i < ep.roles.length; i++)
+        ('Joueurs', 'j$i', '${ep.roles[i].joueur} — ${ep.roles[i].role}'),
+      for (var f = 0; f < ep.figurants.length; f++)
+        ('Figurants', 'f$f', ep.figurants[f].role),
+      ('Méchant & sbires', 'm', ep.mechant.nom),
+      for (var s = 0; s < ep.mechant.sbires.length; s++)
+        ('Méchant & sbires', 's$s', ep.mechant.sbires[s].nom),
+    ];
+    final groupes = <String>[];
+    for (final p in persos) {
+      if (!groupes.contains(p.$1)) groupes.add(p.$1);
+    }
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF120F1E),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(22))),
+      builder: (_) => StatefulBuilder(builder: (context, setSheet) {
+        Widget ligne(String id, String label) {
+          final e = _etat(id);
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(label,
+                      style: TextStyle(
+                          color: e.mort ? Colors.white38 : Colors.white,
+                          decoration:
+                              e.mort ? TextDecoration.lineThrough : null)),
+                ),
+                _btn(e.mort ? Icons.heart_broken : Icons.favorite,
+                    e.mort ? Colors.redAccent : const Color(0xFF66BB6A),
+                    e.mort ? 'Ressusciter' : 'Marquer mort',
+                    () => setSheet(() => e.mort = !e.mort)),
+                _btn(Icons.healing,
+                    e.blesse ? Colors.orangeAccent : Colors.white24,
+                    'Blessé', () => setSheet(() => e.blesse = !e.blesse)),
+                _btn(Icons.remove_circle_outline, Colors.white54, 'Malus',
+                    () => setSheet(() => e.mod--)),
+                SizedBox(
+                  width: 30,
+                  child: Text(
+                      e.mod == 0
+                          ? '0'
+                          : (e.mod > 0 ? '+${e.mod}' : '${e.mod}'),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: e.mod > 0
+                              ? const Color(0xFF66BB6A)
+                              : (e.mod < 0 ? Colors.orangeAccent : Colors.white54),
+                          fontWeight: FontWeight.w700)),
+                ),
+                _btn(Icons.add_circle_outline, Colors.white54, 'Bonus',
+                    () => setSheet(() => e.mod++)),
+              ],
+            ),
+          );
+        }
+
+        return DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: 0.72,
+          minChildSize: 0.4,
+          maxChildSize: 0.94,
+          builder: (context, scroll) => ListView(
+            controller: scroll,
+            padding: const EdgeInsets.fromLTRB(18, 12, 18, 28),
+            children: [
+              Center(
+                child: Container(
+                    width: 42,
+                    height: 4,
+                    decoration: BoxDecoration(
+                        color: Colors.white24,
+                        borderRadius: BorderRadius.circular(2))),
+              ),
+              const SizedBox(height: 12),
+              const Text('Combat',
+                  style: TextStyle(
+                      color: _escC, fontSize: 20, fontWeight: FontWeight.w800)),
+              const SizedBox(height: 4),
+              const Text(
+                  'Vie / mort, blessures, bonus et malus. Le MJ garde la main.',
+                  style: TextStyle(color: Colors.white54, fontSize: 13)),
+              for (final g in groupes) ...[
+                Padding(
+                  padding: const EdgeInsets.only(top: 16, bottom: 4),
+                  child: Text(g.toUpperCase(),
+                      style: const TextStyle(
+                          color: _figC,
+                          letterSpacing: 2,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700)),
+                ),
+                for (final p in persos.where((x) => x.$1 == g))
+                  ligne(p.$2, p.$3),
+              ],
+            ],
+          ),
+        );
+      }),
+    ).then((_) {
+      if (mounted) setState(() {}); // reflète les états sur les cartes
+    });
+  }
+
+  Widget _btn(IconData icon, Color color, String tip, VoidCallback onTap) =>
+      IconButton(
+          visualDensity: VisualDensity.compact,
+          tooltip: tip,
+          icon: Icon(icon, color: color, size: 20),
+          onPressed: onTap);
+
+  /// Petit badge d'état (💀 mort, 🩹 blessé, +n/-n) à côté d'un personnage.
+  Widget _badge(String id) {
+    final e = _etats[id];
+    if (e == null || !e.actif) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(left: 6),
+      child: Text(
+        [
+          if (e.mort) '💀',
+          if (e.blesse) '🩹',
+          if (e.mod != 0) (e.mod > 0 ? '+${e.mod}' : '${e.mod}'),
+        ].join(' '),
+        style: TextStyle(
+            fontSize: 12,
+            color: e.mort ? Colors.redAccent : Colors.orangeAccent,
+            fontWeight: FontWeight.w700),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final ep = widget.episode;
@@ -187,6 +330,11 @@ class _JeuScreenState extends State<JeuScreen> {
                       style: TextStyle(color: _escC, fontSize: 12)),
                 ]),
               ),
+            IconButton(
+              tooltip: 'Combat (vie / blessures / bonus-malus)',
+              icon: const Icon(Icons.shield, color: _escC),
+              onPressed: _ouvrirCombat,
+            ),
             IconButton(
               tooltip: 'Régie son',
               icon: const Icon(Icons.tune, color: _mechC),
@@ -294,29 +442,38 @@ class _JeuScreenState extends State<JeuScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (final f in ep.figurants)
+            for (var fi = 0; fi < ep.figurants.length; fi++)
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(_visages[f.visage % _visages.length],
-                        color: _figC, size: 26),
+                    Icon(
+                        _visages[ep.figurants[fi].visage % _visages.length],
+                        color: _figC,
+                        size: 26),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(f.role,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700)),
-                          Text('${emojiArchetype(f.archetype.id)} ${f.archetype.nom}',
+                          Row(children: [
+                            Flexible(
+                              child: Text(ep.figurants[fi].role,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700)),
+                            ),
+                            _badge('f$fi'),
+                          ]),
+                          Text(
+                              '${emojiArchetype(ep.figurants[fi].archetype.id)} ${ep.figurants[fi].archetype.nom}',
                               style: TextStyle(
-                                  color: couleurStatut(f.archetype.statut),
+                                  color: couleurStatut(
+                                      ep.figurants[fi].archetype.statut),
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600)),
-                          Text(f.objectif,
+                          Text(ep.figurants[fi].objectif,
                               style: const TextStyle(
                                   color: _figC, fontSize: 12, height: 1.3)),
                         ],
@@ -335,11 +492,16 @@ class _JeuScreenState extends State<JeuScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(ep.mechant.nom,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w800)),
+            Row(children: [
+              Flexible(
+                child: Text(ep.mechant.nom,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800)),
+              ),
+              _badge('m'),
+            ]),
             const SizedBox(height: 4),
             Text(ep.mechant.description,
                 style: const TextStyle(color: Colors.white60, fontSize: 13)),
@@ -348,9 +510,16 @@ class _JeuScreenState extends State<JeuScreen> {
                 style: const TextStyle(color: Colors.white, height: 1.3)),
             if (ep.mechant.sbires.isNotEmpty) ...[
               const SizedBox(height: 8),
-              for (final s in ep.mechant.sbires)
-                Text('· ${s.nom} — ${s.description}',
-                    style: const TextStyle(color: Colors.white54, fontSize: 13)),
+              for (var si = 0; si < ep.mechant.sbires.length; si++)
+                Row(children: [
+                  Flexible(
+                    child: Text(
+                        '· ${ep.mechant.sbires[si].nom} — ${ep.mechant.sbires[si].description}',
+                        style: const TextStyle(
+                            color: Colors.white54, fontSize: 13)),
+                  ),
+                  _badge('s$si'),
+                ]),
             ],
           ],
         ),
@@ -407,30 +576,40 @@ class _JeuScreenState extends State<JeuScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (final r in ep.roles)
+            for (var i = 0; i < ep.roles.length; i++)
               Padding(
                 padding: const EdgeInsets.only(bottom: 6),
-                child: Text.rich(TextSpan(children: [
-                  TextSpan(
-                      text: '${r.joueur} — ',
-                      style: const TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w700)),
-                  TextSpan(
-                      text: r.role,
-                      style: const TextStyle(color: Colors.white70)),
-                  TextSpan(
-                      text: '  ${emojiArchetype(r.archetype.id)} ',
-                      style: const TextStyle(fontSize: 14)),
-                  TextSpan(
-                      text: r.archetype.nom,
-                      style: TextStyle(
-                          color: couleurStatut(r.archetype.statut),
-                          fontWeight: FontWeight.w700,
-                          fontSize: 13)),
-                  TextSpan(
-                      text: ' · ${r.archetype.moteur}',
-                      style: const TextStyle(color: Colors.white54, fontSize: 13)),
-                ])),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text.rich(TextSpan(children: [
+                        TextSpan(
+                            text: '${ep.roles[i].joueur} — ',
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700)),
+                        TextSpan(
+                            text: ep.roles[i].role,
+                            style: const TextStyle(color: Colors.white70)),
+                        TextSpan(
+                            text: '  ${emojiArchetype(ep.roles[i].archetype.id)} ',
+                            style: const TextStyle(fontSize: 14)),
+                        TextSpan(
+                            text: ep.roles[i].archetype.nom,
+                            style: TextStyle(
+                                color: couleurStatut(
+                                    ep.roles[i].archetype.statut),
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13)),
+                        TextSpan(
+                            text: ' · ${ep.roles[i].archetype.moteur}',
+                            style: const TextStyle(
+                                color: Colors.white54, fontSize: 13)),
+                      ])),
+                    ),
+                    _badge('j$i'),
+                  ],
+                ),
               ),
           ],
         ),
@@ -444,4 +623,12 @@ class _JeuScreenState extends State<JeuScreen> {
     Icons.face_5,
     Icons.face_6,
   ];
+}
+
+/// État de combat d'un personnage, tenu par le MJ pendant l'épisode.
+class EtatPerso {
+  bool mort = false;
+  bool blesse = false;
+  int mod = 0; // bonus (+) / malus (-)
+  bool get actif => mort || blesse || mod != 0;
 }
