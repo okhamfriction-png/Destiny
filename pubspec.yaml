@@ -2,7 +2,7 @@ name: destiny
 description: DestinyStory - generateur de situations d'improvisation theatrale.
 publish_to: "none"
 
-version: 1.5.0+12
+version: 1.5.1+13
 
 environment:
   sdk: ">=3.3.0 <4.0.0"

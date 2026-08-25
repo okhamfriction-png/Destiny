@@ -226,6 +226,9 @@ class Campagne {
     this.resume = '',
     this.accroche = '',
     this.episodesJoues = 0,
+    this.figurantsMorts = const [],
+    this.sbiresMorts = const [],
+    this.mechantsMorts = const [],
   });
 
   final int id;
@@ -244,11 +247,22 @@ class Campagne {
   final String accroche;
   final int episodesJoues;
 
+  /// Continuité : personnages morts, exclus des épisodes suivants.
+  /// - [figurantsMorts] : ids d'archétype des figurants tombés.
+  /// - [sbiresMorts] : noms des sbires tombés.
+  /// - [mechantsMorts] : ids des méchants tombés (on en prend un autre).
+  final List<String> figurantsMorts;
+  final List<String> sbiresMorts;
+  final List<String> mechantsMorts;
+
   Campagne copyWith({
     String? nom,
     String? resume,
     String? accroche,
     int? episodesJoues,
+    List<String>? figurantsMorts,
+    List<String>? sbiresMorts,
+    List<String>? mechantsMorts,
   }) =>
       Campagne(
         id: id,
@@ -261,5 +275,8 @@ class Campagne {
         resume: resume ?? this.resume,
         accroche: accroche ?? this.accroche,
         episodesJoues: episodesJoues ?? this.episodesJoues,
+        figurantsMorts: figurantsMorts ?? this.figurantsMorts,
+        sbiresMorts: sbiresMorts ?? this.sbiresMorts,
+        mechantsMorts: mechantsMorts ?? this.mechantsMorts,
       );
 }

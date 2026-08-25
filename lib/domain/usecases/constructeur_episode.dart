@@ -128,14 +128,40 @@ class ConstructeurEpisode {
     // retrouve exactement les mêmes figurants et le même danger qu'à l'épisode 1.
     final rngStable = Random(campagne.id * 100003);
 
-    final mechant = mechants[campagne.id % mechants.length];
+    // Méchant : on écarte ceux qui sont morts dans un épisode précédent ;
+    // s'il tombe, la campagne continue avec un autre méchant du même univers.
+    final mechantsVivants = mechants
+        .where((m) => !campagne.mechantsMorts.contains(m.id))
+        .toList();
+    final poolMechants = mechantsVivants.isNotEmpty ? mechantsVivants : mechants;
+    final mechantBrut = poolMechants[campagne.id % poolMechants.length];
+    // … et on retire ses sbires tombés.
+    final mechant = MechantHistoire(
+      id: mechantBrut.id,
+      univers: mechantBrut.univers,
+      nom: mechantBrut.nom,
+      description: mechantBrut.description,
+      but: mechantBrut.but,
+      manoeuvres: mechantBrut.manoeuvres,
+      presages: mechantBrut.presages,
+      sbires: mechantBrut.sbires
+          .where((s) => !campagne.sbiresMorts.contains(s.nom))
+          .toList(),
+      origine: mechantBrut.origine,
+    );
     final lieu = lieux[(campagne.id + numero) % lieux.length];
 
     final roles = [...lieu.roles]..shuffle(rng);
 
     // Figurants stables : identité (archétype / objectif / visage) tirée sur la
     // campagne, pas sur l'épisode. Leur rôle s'adapte au lieu du moment.
+    // Un figurant tombé ne réapparaît pas : on prend le suivant disponible.
     final animauxStable = [...archetypes]..shuffle(rngStable);
+    final animauxFigurants = animauxStable
+        .where((a) => !campagne.figurantsMorts.contains(a.id))
+        .toList();
+    final sourceFig =
+        animauxFigurants.isNotEmpty ? animauxFigurants : animauxStable;
     final objs = [...objectifs]..shuffle(rngStable);
     final figurants = <Figurant>[
       for (var f = 0; f < 2; f++)
@@ -143,7 +169,7 @@ class ConstructeurEpisode {
           role: (joueurs.length + f) < roles.length
               ? roles[joueurs.length + f]
               : 'quelqu\'un du coin',
-          archetype: animauxStable[f % animauxStable.length],
+          archetype: sourceFig[f % sourceFig.length],
           objectif: objs[f % objs.length],
           visage: f,
         ),

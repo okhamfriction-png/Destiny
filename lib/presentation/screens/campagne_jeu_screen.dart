@@ -222,14 +222,55 @@ class _JeuScreenState extends State<JeuScreen> {
   void _versBilan() {
     _timer?.cancel();
     widget.transcription?.arreter();
+    final ep = widget.episode;
+    // Issues de combat → récap + continuité (les morts ne reviendront plus).
+    final morts = <String>[];
+    final blesses = <String>[];
+    final figurantsMortsIds = <String>[];
+    final sbiresMortsNoms = <String>[];
+    var mechantMort = false;
+    _etats.forEach((id, e) {
+      if (!e.mort && !e.blesse) return;
+      String? label;
+      if (id == 'm') {
+        label = ep.mechant.nom;
+        if (e.mort) mechantMort = true;
+      } else if (id.startsWith('f')) {
+        final i = int.tryParse(id.substring(1)) ?? -1;
+        if (i < 0 || i >= ep.figurants.length) return;
+        label = ep.figurants[i].role;
+        if (e.mort) figurantsMortsIds.add(ep.figurants[i].archetype.id);
+      } else if (id.startsWith('s')) {
+        final i = int.tryParse(id.substring(1)) ?? -1;
+        if (i < 0 || i >= ep.mechant.sbires.length) return;
+        label = ep.mechant.sbires[i].nom;
+        if (e.mort) sbiresMortsNoms.add(label);
+      } else if (id.startsWith('j')) {
+        final i = int.tryParse(id.substring(1)) ?? -1;
+        if (i < 0 || i >= ep.roles.length) return;
+        final r = ep.roles[i];
+        label = '${r.joueur.isEmpty ? 'Joueur ${i + 1}' : r.joueur} (${r.role})';
+      }
+      if (label == null) return;
+      if (e.mort) {
+        morts.add(label);
+      } else {
+        blesses.add(label);
+      }
+    });
     setState(() => _peutSortir = true);
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (_) => BilanScreen(
         store: widget.store,
         campagne: widget.campagne,
-        episode: widget.episode,
+        episode: ep,
         audioService: widget.audioService,
         transcription: widget.transcription?.texte ?? '',
+        morts: morts,
+        blesses: blesses,
+        figurantsMortsIds: figurantsMortsIds,
+        sbiresMortsNoms: sbiresMortsNoms,
+        mechantMort: mechantMort,
       ),
     ));
   }
@@ -786,10 +827,27 @@ class _JeuScreenState extends State<JeuScreen> {
                                     ep.roles[i].archetype.statut),
                                 fontWeight: FontWeight.w700,
                                 fontSize: 13)),
-                        TextSpan(
-                            text: ' · ${ep.roles[i].archetype.moteur}',
-                            style: const TextStyle(
-                                color: Colors.white54, fontSize: 13)),
+                        // Tous les attributs de l'archétype, comme au catalogue :
+                        // tempérament · port (italique) puis moteur (accent).
+                        if (ep.roles[i].archetype.temperament.isNotEmpty)
+                          TextSpan(
+                              text: ' · ${ep.roles[i].archetype.temperament}',
+                              style: const TextStyle(
+                                  color: Colors.white70, fontSize: 13)),
+                        if (ep.roles[i].archetype.port.isNotEmpty)
+                          TextSpan(
+                              text: ' · ${ep.roles[i].archetype.port}',
+                              style: const TextStyle(
+                                  color: Colors.white54,
+                                  fontSize: 13,
+                                  fontStyle: FontStyle.italic)),
+                        if (ep.roles[i].archetype.moteur.isNotEmpty)
+                          TextSpan(
+                              text: '\n${ep.roles[i].archetype.moteur}',
+                              style: const TextStyle(
+                                  color: _mechC,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w800)),
                       ])),
                     ),
                     _combatInline('j$i'),

@@ -20,6 +20,8 @@ class SeanceJouee {
     this.phrase = '',
     this.ceQuiAMarche = '',
     this.transcription = '',
+    this.morts = const [],
+    this.blesses = const [],
   });
   final int numero;
   final int dateMs;
@@ -29,6 +31,10 @@ class SeanceJouee {
   final String ceQuiAMarche;
   final String transcription;
 
+  /// Récap de combat : libellés des personnages tombés / blessés durant l'épisode.
+  final List<String> morts;
+  final List<String> blesses;
+
   Map<String, dynamic> toJson() => {
         'numero': numero,
         'dateMs': dateMs,
@@ -37,6 +43,8 @@ class SeanceJouee {
         'phrase': phrase,
         'ceQuiAMarche': ceQuiAMarche,
         'transcription': transcription,
+        'morts': morts,
+        'blesses': blesses,
       };
 
   factory SeanceJouee.fromJson(Map<String, dynamic> j) => SeanceJouee(
@@ -47,6 +55,8 @@ class SeanceJouee {
         phrase: j['phrase'] as String? ?? '',
         ceQuiAMarche: j['ceQuiAMarche'] as String? ?? '',
         transcription: j['transcription'] as String? ?? '',
+        morts: [for (final m in (j['morts'] as List? ?? const [])) '$m'],
+        blesses: [for (final b in (j['blesses'] as List? ?? const [])) '$b'],
       );
 }
 
@@ -372,6 +382,11 @@ class CampagneStore extends ChangeNotifier {
     String phrase = '',
     String ceQuiAMarche = '',
     String transcription = '',
+    List<String> morts = const [],
+    List<String> blesses = const [],
+    List<String> figurantsMortsIds = const [],
+    List<String> sbiresMortsNoms = const [],
+    bool mechantMort = false,
   }) async {
     final now = DateTime.now().millisecondsSinceEpoch;
     (_seances[campagne.id] ??= []).add(SeanceJouee(
@@ -382,11 +397,22 @@ class CampagneStore extends ChangeNotifier {
       phrase: phrase,
       ceQuiAMarche: ceQuiAMarche,
       transcription: transcription,
+      morts: morts,
+      blesses: blesses,
     ));
     final i = _campagnes.indexWhere((c) => c.id == campagne.id);
     if (i >= 0) {
-      _campagnes[i] =
-          _campagnes[i].copyWith(episodesJoues: episode.numero);
+      final c = _campagnes[i];
+      // Continuité : on cumule les morts pour les exclure des épisodes suivants.
+      List<String> fusion(List<String> a, List<String> b) =>
+          {...a, ...b}.toList();
+      _campagnes[i] = c.copyWith(
+        episodesJoues: episode.numero,
+        figurantsMorts: fusion(c.figurantsMorts, figurantsMortsIds),
+        sbiresMorts: fusion(c.sbiresMorts, sbiresMortsNoms),
+        mechantsMorts:
+            mechantMort ? fusion(c.mechantsMorts, [episode.mechant.id]) : null,
+      );
     }
     await _sauver();
     notifyListeners();
@@ -422,6 +448,9 @@ class CampagneStore extends ChangeNotifier {
         'resume': c.resume,
         'accroche': c.accroche,
         'episodesJoues': c.episodesJoues,
+        'figurantsMorts': c.figurantsMorts,
+        'sbiresMorts': c.sbiresMorts,
+        'mechantsMorts': c.mechantsMorts,
       };
 
   Campagne _campagneFromJson(Map<String, dynamic> j) => Campagne(
@@ -435,5 +464,14 @@ class CampagneStore extends ChangeNotifier {
         resume: j['resume'] as String? ?? '',
         accroche: j['accroche'] as String? ?? '',
         episodesJoues: (j['episodesJoues'] as num?)?.toInt() ?? 0,
+        figurantsMorts: [
+          for (final m in (j['figurantsMorts'] as List? ?? const [])) '$m'
+        ],
+        sbiresMorts: [
+          for (final m in (j['sbiresMorts'] as List? ?? const [])) '$m'
+        ],
+        mechantsMorts: [
+          for (final m in (j['mechantsMorts'] as List? ?? const [])) '$m'
+        ],
       );
 }

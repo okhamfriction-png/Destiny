@@ -211,6 +211,7 @@ class _PreparationScreenState extends State<PreparationScreen> {
           : ListView(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
               children: [
+                ..._recapPrecedent(),
                 if (c.resume.isNotEmpty) ...[
                   _Bloc(
                     titre: 'DANS L\'ÉPISODE PRÉCÉDENT',
@@ -363,6 +364,19 @@ class _PreparationScreenState extends State<PreparationScreen> {
               ],
             ),
     );
+  }
+
+  /// Tableau récap de l'épisode précédent (affiché dès l'épisode 2) : intitulé,
+  /// morts et blessés — pour que le meneur reprenne le fil.
+  List<Widget> _recapPrecedent() {
+    if (widget.numero < 2) return const [];
+    final seances = widget.store.seancesDe(widget.campagne.id);
+    if (seances.isEmpty) return const [];
+    final prec = seances.reduce((a, b) => b.numero >= a.numero ? b : a);
+    return [
+      _RecapTable(seance: prec),
+      const SizedBox(height: 10),
+    ];
   }
 
   /// Carte d'un joueur : prénom (vide), puis Peuple · Archétype · Fonction.
@@ -560,6 +574,80 @@ class _Bloc extends StatelessWidget {
           ],
         ),
       );
+}
+
+/// Tableau récap de l'épisode précédent (morts / blessés) pour le meneur.
+class _RecapTable extends StatelessWidget {
+  const _RecapTable({required this.seance});
+  final SeanceJouee seance;
+
+  static const Color _corail = Color(0xFFFF8A80);
+
+  @override
+  Widget build(BuildContext context) {
+    Widget ligne(IconData ic, Color col, String label, List<String> vals) =>
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(ic, color: col, size: 18),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 78,
+                child: Text(label,
+                    style: TextStyle(
+                        color: col, fontWeight: FontWeight.w700, fontSize: 13)),
+              ),
+              Expanded(
+                child: Text(vals.isEmpty ? '—' : vals.join(', '),
+                    style: TextStyle(
+                        color: vals.isEmpty ? Colors.white38 : Colors.white,
+                        height: 1.3)),
+              ),
+            ],
+          ),
+        );
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: _corail.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _corail.withValues(alpha: 0.35)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('CE QUI S\'EST PASSÉ — ÉPISODE ${seance.numero}',
+              style: const TextStyle(
+                  color: _corail,
+                  letterSpacing: 2,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700)),
+          const SizedBox(height: 8),
+          Text(seance.intitule,
+              style: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 8),
+          ligne(Icons.heart_broken, Colors.redAccent, 'Morts', seance.morts),
+          ligne(Icons.healing, Colors.orangeAccent, 'Blessés', seance.blesses),
+          if (seance.phrase.trim().isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Text('« ${seance.phrase.trim()} »',
+                  style: const TextStyle(
+                      color: Colors.white54, fontStyle: FontStyle.italic)),
+            ),
+          if (seance.morts.isEmpty && seance.blesses.isEmpty)
+            const Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: Text('Les morts d\'un épisode ne réapparaissent plus.',
+                  style: TextStyle(color: Colors.white38, fontSize: 12)),
+            ),
+        ],
+      ),
+    );
+  }
 }
 
 class _Titre extends StatelessWidget {

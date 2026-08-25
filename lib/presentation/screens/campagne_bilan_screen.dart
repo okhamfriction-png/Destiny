@@ -16,6 +16,11 @@ class BilanScreen extends StatefulWidget {
     required this.episode,
     required this.audioService,
     this.transcription = '',
+    this.morts = const [],
+    this.blesses = const [],
+    this.figurantsMortsIds = const [],
+    this.sbiresMortsNoms = const [],
+    this.mechantMort = false,
     super.key,
   });
   final CampagneStore store;
@@ -23,6 +28,11 @@ class BilanScreen extends StatefulWidget {
   final Episode episode;
   final AudioService audioService;
   final String transcription;
+  final List<String> morts;
+  final List<String> blesses;
+  final List<String> figurantsMortsIds;
+  final List<String> sbiresMortsNoms;
+  final bool mechantMort;
 
   @override
   State<BilanScreen> createState() => _BilanScreenState();
@@ -59,6 +69,11 @@ class _BilanScreenState extends State<BilanScreen> {
       phrase: _phrase.text.trim(),
       ceQuiAMarche: _ceQuiAMarche.text.trim(),
       transcription: widget.transcription,
+      morts: widget.morts,
+      blesses: widget.blesses,
+      figurantsMortsIds: widget.figurantsMortsIds,
+      sbiresMortsNoms: widget.sbiresMortsNoms,
+      mechantMort: widget.mechantMort,
     );
     if (mounted) Navigator.of(context).pop();
   }

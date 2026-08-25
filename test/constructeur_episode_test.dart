@@ -150,4 +150,65 @@ void main() {
       expect(e, isNull);
     });
   });
+
+  group('ConstructeurEpisode — continuité (morts exclus)', () {
+    final lieux = [
+      LieuHistoire(
+          id: 'l0',
+          univers: 'u',
+          nom: 'Lieu 0',
+          description: '',
+          espaces: const [],
+          roles: const ['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7']),
+    ];
+    MechantHistoire mech(String id, {int sbires = 2}) => MechantHistoire(
+          id: id,
+          univers: 'u',
+          nom: 'Boss $id',
+          description: '',
+          but: '',
+          manoeuvres: const ['a', 'b'],
+          presages: const ['p1', 'p2', 'p3', 'p4'],
+          sbires: [
+            for (var i = 0; i < sbires; i++)
+              Sbire(nom: 'Sbire$i', description: '', manoeuvres: const ['x']),
+          ],
+        );
+    final mechants = [mech('m0'), mech('m1')];
+    final archs = [
+      for (var i = 0; i < 16; i++)
+        ArchetypeHistoire(
+            id: 'a$i', nom: 'A$i', temperament: '', port: '', moteur: ''),
+    ];
+    const objs = ['o1', 'o2', 'o3'];
+    const c = ConstructeurEpisode();
+    const base = Campagne(id: 5, nom: 'C', univers: 'u', ton: 'drole');
+
+    Episode build(Campagne camp, int numero) => c.construire(
+        campagne: camp,
+        numero: numero,
+        joueurs: const ['J1', 'J2', 'J3'],
+        lieux: lieux,
+        mechants: mechants,
+        archetypes: archs,
+        objectifs: objs)!;
+
+    test('un figurant mort ne réapparaît pas', () {
+      final e1 = build(base, 1);
+      final mortId = e1.figurants.first.archetype.id;
+      final e2 = build(base.copyWith(figurantsMorts: [mortId]), 2);
+      expect(e2.figurants.map((f) => f.archetype.id), isNot(contains(mortId)));
+    });
+
+    test('un méchant mort est remplacé par un autre', () {
+      final e1 = build(base, 1);
+      final e2 = build(base.copyWith(mechantsMorts: [e1.mechant.id]), 2);
+      expect(e2.mechant.id, isNot(e1.mechant.id));
+    });
+
+    test('un sbire mort ne réapparaît pas', () {
+      final e = build(base.copyWith(sbiresMorts: const ['Sbire0']), 2);
+      expect(e.mechant.sbires.map((s) => s.nom), isNot(contains('Sbire0')));
+    });
+  });
 }
