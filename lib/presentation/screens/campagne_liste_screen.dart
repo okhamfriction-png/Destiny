@@ -148,7 +148,7 @@ class CreerCampagneScreen extends StatefulWidget {
 class _CreerCampagneScreenState extends State<CreerCampagneScreen> {
   String _univers = CampagneStore.univers.keys.first;
   String _ton = CampagneStore.tons.keys.first;
-  String _public = 'enfant';
+  String _public = 'adulte'; // Adulte par défaut
   String _lore = ''; // '' = aucun
   final _contexte = TextEditingController();
   final _nom = TextEditingController();
