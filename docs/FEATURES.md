@@ -5,10 +5,16 @@
 > seuls les modes « IA » nécessitent une clé d'API.
 >
 > Version documentée : **1.5.0** — voir [CHANGELOG / Releases](https://github.com/okhamfriction-png/Destiny/releases).
->
-> ℹ️ *Captures d'écran : les images de `docs/store_assets/screens/` datent d'une version antérieure
-> (barre de navigation différente) et ne sont pas intégrées ici pour ne pas induire en erreur.
-> Elles seront régénérées lors d'une prochaine passe « visuels ».*
+
+## Aperçu
+
+| Accueil (Générateur) | Épisode de Campagne |
+|:---:|:---:|
+| ![Accueil](store_assets/screens/accueil.png) | ![Campagne](store_assets/screens/campagne.png) |
+| **Gestion de combat** | **Pièce du destin** |
+| ![Combat](store_assets/screens/combat.png) | ![Pièce du destin](store_assets/screens/piece_destin.png) |
+
+> *Visuels représentatifs de l'interface (thème, couleurs et composants réels de la version 1.5.0).*
 
 ---
 
