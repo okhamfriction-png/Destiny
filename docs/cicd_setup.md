@@ -69,6 +69,23 @@ Pour viser une autre piste (ex. `production`), lance-le manuellement :
 
 ---
 
+## Upload local direct (sans GitHub Actions ni runner)
+
+Si le Mac est allumé, tu peux uploader une `.aab` directement, sans le pipeline, avec
+[`tool/play_upload.py`](../tool/play_upload.py) et la clé de compte de service (Étape A) :
+
+```bash
+pip3 install google-api-python-client google-auth
+# trouver le nom exact de la piste de test fermé
+python3 tool/play_upload.py ~/destinystory-play-key.json --list
+# uploader sur internal + le test fermé (un seul upload)
+python3 tool/play_upload.py ~/destinystory-play-key.json \
+    build/app/outputs/bundle/release/app-release.aab internal alpha
+```
+
+Le script crée un *edit*, upload le bundle, l'assigne aux pistes et *commit*. Même clé JSON
+que le secret `PLAY_SERVICE_ACCOUNT_JSON` du workflow ; **ne committe pas la clé**.
+
 ## Notes importantes
 
 - **Production** : le verrou des **12 testeurs / 14 jours** (test fermé) s'applique toujours
