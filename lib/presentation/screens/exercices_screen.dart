@@ -11,15 +11,26 @@ import '../../domain/entities/exercice.dart';
 const Color _gold = Color(0xFFFFC24B);
 const Color _lav = Color(0xFFB9A6FF);
 
-/// Couleur d'accent par catégorie d'exercice.
+/// Ordre des thèmes (le premier est l'onglet par défaut).
+const List<String> _themes = [
+  'Échauffement',
+  'Statut',
+  'Spontanéité',
+  'Écoute',
+  'Imagination',
+];
+
+/// Couleur d'accent par thème d'exercice.
 Color _categorieColor(String cat) {
   switch (cat) {
-    case 'Corps':
+    case 'Échauffement':
       return const Color(0xFFFF8A80);
-    case 'Voix':
+    case 'Statut':
       return const Color(0xFFFFC24B);
-    case 'Écoute':
+    case 'Spontanéité':
       return const Color(0xFF5EE0C4);
+    case 'Écoute':
+      return const Color(0xFF64B5F6);
     case 'Imagination':
       return const Color(0xFFB79CFF);
     default:
@@ -29,10 +40,12 @@ Color _categorieColor(String cat) {
 
 IconData _categorieIcon(String cat) {
   switch (cat) {
-    case 'Corps':
-      return Icons.accessibility_new;
-    case 'Voix':
-      return Icons.record_voice_over;
+    case 'Échauffement':
+      return Icons.local_fire_department;
+    case 'Statut':
+      return Icons.swap_vert;
+    case 'Spontanéité':
+      return Icons.bolt;
     case 'Écoute':
       return Icons.hearing;
     case 'Imagination':
@@ -83,87 +96,110 @@ class _ExercicesScreenState extends State<ExercicesScreen> {
     return _principes[jour % _principes.length];
   }
 
-  List<String> get _categories {
-    final seen = <String>[];
-    for (final e in _exercices) {
-      if (!seen.contains(e.categorie)) seen.add(e.categorie);
-    }
-    return seen;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF0A0818),
-      appBar: AppBar(
-        title: const Text('Exercices'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-      children: [
-        // Principe du jour.
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: _gold.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: _gold.withValues(alpha: 0.35)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('PRINCIPE DU JOUR',
-                  style: TextStyle(
-                      color: _gold,
-                      letterSpacing: 2,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700)),
-              const SizedBox(height: 8),
-              Text(_principeDuJour,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      height: 1.35,
-                      fontWeight: FontWeight.w600)),
+    if (_loading) {
+      return Scaffold(
+        backgroundColor: const Color(0xFF0A0818),
+        appBar: AppBar(
+            title: const Text('Exercices'),
+            backgroundColor: Colors.transparent,
+            elevation: 0),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+    // Thèmes présents, dans l'ordre voulu (Échauffement d'abord) ; inconnus à la fin.
+    final themes = [
+      for (final t in _themes)
+        if (_exercices.any((e) => e.categorie == t)) t,
+    ];
+    for (final e in _exercices) {
+      if (!themes.contains(e.categorie)) themes.add(e.categorie);
+    }
+    return DefaultTabController(
+      length: themes.length,
+      child: Scaffold(
+        backgroundColor: const Color(0xFF0A0818),
+        appBar: AppBar(
+          title: const Text('Exercices'),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          bottom: TabBar(
+            isScrollable: true,
+            tabAlignment: TabAlignment.start,
+            indicatorColor: _gold,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white54,
+            tabs: [
+              for (final t in themes)
+                Tab(
+                    icon: Icon(_categorieIcon(t), color: _categorieColor(t)),
+                    text: t),
             ],
           ),
         ),
-        const SizedBox(height: 8),
-        for (final cat in _categories) ...[
-          Padding(
-            padding: const EdgeInsets.only(top: 18, bottom: 8),
-            child: Row(
-              children: [
-                Icon(_categorieIcon(cat),
-                    color: _categorieColor(cat), size: 20),
-                const SizedBox(width: 8),
-                Text(cat.toUpperCase(),
-                    style: TextStyle(
-                        color: _categorieColor(cat),
-                        letterSpacing: 2,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700)),
-              ],
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 2),
+              child: _principeBanner(),
             ),
-          ),
-          for (final ex in _exercices.where((e) => e.categorie == cat))
-            _ExerciceTile(
-              exercice: ex,
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                fullscreenDialog: true,
-                builder: (_) => ExerciceRunScreen(
-                    exercice: ex, audioService: widget.audioService),
-              )),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  for (final t in themes)
+                    ListView(
+                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+                      children: [
+                        for (final ex
+                            in _exercices.where((e) => e.categorie == t))
+                          _ExerciceTile(
+                            exercice: ex,
+                            onTap: () =>
+                                Navigator.of(context).push(MaterialPageRoute(
+                              fullscreenDialog: true,
+                              builder: (_) => ExerciceRunScreen(
+                                  exercice: ex,
+                                  audioService: widget.audioService),
+                            )),
+                          ),
+                      ],
+                    ),
+                ],
+              ),
             ),
-        ],
-      ],
-            ),
+          ],
+        ),
+      ),
     );
   }
+
+  Widget _principeBanner() => Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: _gold.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: _gold.withValues(alpha: 0.35)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('PRINCIPE DU JOUR',
+                style: TextStyle(
+                    color: _gold,
+                    letterSpacing: 2,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700)),
+            const SizedBox(height: 6),
+            Text(_principeDuJour,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    height: 1.35,
+                    fontWeight: FontWeight.w600)),
+          ],
+        ),
+      );
 }
 
 class _ExerciceTile extends StatelessWidget {

@@ -35,7 +35,7 @@ class PreparationScreen extends StatefulWidget {
 class _PreparationScreenState extends State<PreparationScreen> {
   int _nbJoueurs = 3;
   late List<TextEditingController> _noms;
-  int _dureeMin = 12;
+  int _dureeMin = 30;
   List<int> _horairesMin = const []; // horaires des dangers, en minutes
   Episode? _episode;
 

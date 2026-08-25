@@ -102,36 +102,71 @@ class CampagneStore extends ChangeNotifier {
 
   int _prochainId = 1;
 
-  /// Les douze univers livrés (id → libellé lisible).
-  static const Map<String, String> univers = {
-    'dragon_ball': 'Dragon Ball',
-    'arts_martiaux': 'Arts martiaux',
-    'animaux': 'Animaux',
-    'aventure': 'Aventure',
-    'football': 'Football',
-    'espace': 'Espace',
-    'chevaliers': 'Chevaliers',
-    'pirates': 'Pirates',
-    'dinosaures': 'Dinosaures',
-    'magie': 'Magie',
-    'robots': 'Robots',
-    'enquete': 'Enquête',
+  /// Univers du mode Adulte (identiques au mode Histoire IA).
+  static const Map<String, String> universAdulte = {
+    'contemporain': 'Contemporain',
+    'policier': 'Policier',
+    'high_fantasy': 'High Fantasy',
+    'shonen': 'Shonen',
+    'science_fiction': 'Science-Fiction',
+    'dark_fantasy': 'Dark Fantasy',
+    'cyberpunk': 'Cyberpunk',
+    'horreur': 'Horreur',
+    'post_apo': 'Post-apocalyptique',
+    'steampunk': 'Steampunk',
+    'super_heros': 'Super-héros',
+    'historique': 'Historique',
   };
+
+  /// Univers du mode Enfant (identiques au mode Histoire IA).
+  static const Map<String, String> universEnfant = {
+    'conte_fees': 'Conte de fées',
+    'dessin_anime': 'Dessin animé',
+    'manga_rigolo': 'Manga rigolo',
+    'animaux_parlent': 'Animaux qui parlent',
+    'super_heros': 'Super-héros',
+    'pirates': 'Pirates',
+    'espace_rigolo': 'Espace rigolo',
+    'monde_magique': 'Monde magique',
+    'sous_la_mer': 'Sous la mer',
+    'chevaliers_dragons': 'Chevaliers & dragons',
+  };
+
+  /// Tous les univers (pour les recherches de libellé).
+  static final Map<String, String> univers = {
+    ...universAdulte,
+    ...universEnfant,
+  };
+
+  /// Les univers proposés selon le public.
+  static Map<String, String> universPour(String public) =>
+      public == 'adulte' ? universAdulte : universEnfant;
 
   /// Les dix lores les plus connus par univers (couche de personnages/ambiance).
   static const Map<String, List<String>> lores = {
-    'dragon_ball': ['Dragon Ball', 'Naruto', 'One Piece', 'Bleach', 'My Hero Academia', 'Pokémon', 'Saint Seiya', 'Yu-Gi-Oh', 'Fairy Tail', 'Dragon Quest'],
-    'arts_martiaux': ['Kung Fu Panda', 'Karaté Kid', 'Avatar le dernier maître de l\'air', 'Naruto', 'Mulan', 'Cobra Kai', 'Jackie Chan', 'Bruce Lee', 'Tekken', 'Street Fighter'],
-    'animaux': ['Le Roi Lion', 'Zootopie', 'Madagascar', 'Le Livre de la jungle', 'Rox et Rouky', 'Bambi', 'Kung Fu Panda', 'Ratatouille', 'La Ferme se rebelle', 'Robin des Bois (Disney)'],
-    'aventure': ['Indiana Jones', 'Tintin', 'Jumanji', 'Pirates des Caraïbes', 'Uncharted', 'Le Seigneur des Anneaux', 'Astérix', 'Jurassic Park', 'Les Goonies', 'Le Voyage de Chihiro'],
-    'football': ['Captain Tsubasa (Olive et Tom)', 'Inazuma Eleven', 'Blue Lock', 'Shaolin Soccer', 'FIFA', 'Les Légendes du foot', 'Coupe du Monde', 'Ligue des Champions', 'Football Manager', 'Panini'],
-    'espace': ['Star Wars', 'Star Trek', 'Les Gardiens de la Galaxie', 'Wall-E', 'Toy Story (Buzz)', 'Interstellar', 'Valérian', 'Rick et Morty', 'Dune', 'Mass Effect'],
-    'chevaliers': ['Le Seigneur des Anneaux', 'Kaamelott', 'Game of Thrones', 'Excalibur', 'Merlin', 'Donjons & Dragons', 'Warhammer', 'Shrek', 'Zelda', 'Les Chevaliers du Zodiaque'],
-    'pirates': ['One Piece', 'Pirates des Caraïbes', 'Peter Pan', 'L\'Île au trésor', 'Tintin', 'Astérix', 'Monkey Island', 'Assassin\'s Creed', 'Sinbad', 'Barbe Noire'],
-    'dinosaures': ['Jurassic Park', 'Le Petit Dinosaure', 'Denver le dernier dinosaure', 'Dino Riders', 'Dinotopia', 'ARK', 'Primal', 'Gon', 'T-Rex Express', 'Ice Age'],
-    'magie': ['Harry Potter', 'Le Seigneur des Anneaux', 'Le Monde de Narnia', 'Merlin', 'Donjons & Dragons', 'Fairy Tail', 'Kirikou', 'Fantasia (Disney)', 'Warhammer', 'Le Petit Sorcier'],
-    'robots': ['Transformers', 'Wall-E', 'Big Hero 6', 'Astro Boy', 'Gundam', 'Real Steel', 'I, Robot', 'Robots (le film)', 'Portal', 'Terminator'],
-    'enquete': ['Sherlock Holmes', 'Scooby-Doo', 'Détective Conan', 'Cluedo', 'Le Club des Cinq', 'Inspecteur Gadget', 'Agatha Christie', 'Columbo', 'Blake et Mortimer', 'Lovecraft'],
+    // Adulte
+    'contemporain': ['Breaking Bad', 'Peaky Blinders', 'The Wire', 'Les Soprano', 'Better Call Saul', 'Narcos', 'Gomorra', 'Succession', 'Le Parrain', 'Scarface'],
+    'policier': ['Sherlock Holmes', 'True Detective', 'Columbo', 'Les Experts', 'Engrenages', 'Fargo', 'Seven', 'Mindhunter', 'Agatha Christie', 'Blake et Mortimer'],
+    'high_fantasy': ['Le Seigneur des Anneaux', 'Game of Thrones', 'The Witcher', 'Donjons & Dragons', 'Warhammer', 'Le Monde de Narnia', 'Elden Ring', 'Dragon Age', 'Kaamelott', 'Harry Potter'],
+    'shonen': ['Dragon Ball', 'Naruto', 'One Piece', 'Bleach', 'My Hero Academia', 'Demon Slayer', 'L\'Attaque des Titans', 'Hunter x Hunter', 'Jujutsu Kaisen', 'Fairy Tail'],
+    'science_fiction': ['Star Wars', 'Star Trek', 'Dune', 'Blade Runner', 'The Expanse', 'Fondation', 'Alien', 'Mass Effect', 'Interstellar', 'Matrix'],
+    'dark_fantasy': ['The Witcher', 'Berserk', 'Dark Souls', 'Bloodborne', 'Elden Ring', 'Warhammer', 'Game of Thrones', 'Castlevania', 'Diablo', 'Hellboy'],
+    'cyberpunk': ['Cyberpunk 2077', 'Blade Runner', 'Ghost in the Shell', 'Deus Ex', 'Akira', 'Neuromancer', 'Matrix', 'Altered Carbon', 'Shadowrun', 'Watch Dogs'],
+    'horreur': ['Lovecraft', 'Stranger Things', 'The Thing', 'Alien', 'Silent Hill', 'Resident Evil', 'Ça (It)', 'Scream', 'The Walking Dead', 'Conjuring'],
+    'post_apo': ['Mad Max', 'Fallout', 'The Last of Us', 'The Walking Dead', 'Metro', 'La Route', 'Snowpiercer', 'Le Livre d\'Eli', 'Je suis une légende', 'Waterworld'],
+    'steampunk': ['Arcane', 'Bioshock', 'Dishonored', 'Le Château ambulant', 'Les Mystérieuses Cités d\'or', '20000 lieues sous les mers', 'Wild Wild West', 'Sherlock Holmes (Guy Ritchie)', 'Fullmetal Alchemist', 'Girl Genius'],
+    'super_heros': ['Marvel (Avengers)', 'DC (Justice League)', 'Spider-Man', 'Batman', 'X-Men', 'The Boys', 'Invincible', 'Watchmen', 'Hellboy', 'My Hero Academia'],
+    'historique': ['Rome', 'Vikings', 'Gladiator', 'Kingdom', 'Braveheart', 'Assassin\'s Creed', 'Napoléon', 'Les Trois Mousquetaires', 'Peaky Blinders', 'Versailles'],
+    // Enfant
+    'conte_fees': ['La Belle au bois dormant', 'Cendrillon', 'Blanche-Neige', 'Raiponce', 'La Reine des Neiges', 'Shrek', 'Les frères Grimm', 'Andersen', 'La Belle et la Bête', 'Peter Pan'],
+    'dessin_anime': ['Tom et Jerry', 'Les Simpson', 'Bob l\'éponge', 'Scooby-Doo', 'Les Razmoket', 'Astérix', 'Kirikou', 'Pat\' Patrouille', 'Miraculous', 'Oggy et les cafards'],
+    'manga_rigolo': ['Doraemon', 'Pokémon', 'Dr. Slump', 'Crayon Shin-chan', 'Beyblade', 'Digimon', 'Yo-kai Watch', 'Bakugan', 'Chi une vie de chat', 'Hamtaro'],
+    'animaux_parlent': ['Le Roi Lion', 'Zootopie', 'Madagascar', 'Le Livre de la jungle', 'La Ferme se rebelle', 'Kung Fu Panda', 'Robin des Bois (Disney)', 'Ratatouille', 'Rox et Rouky', 'Bambi'],
+    'pirates': ['One Piece', 'Pirates des Caraïbes', 'Peter Pan', 'L\'Île au trésor', 'Tintin', 'Astérix', 'Jake et les Pirates', 'Sinbad', 'Vaiana', 'Barbe Rouge'],
+    'espace_rigolo': ['Toy Story (Buzz)', 'Wall-E', 'Buzz l\'Éclair', 'Planète 51', 'Les Gardiens de la Galaxie', 'E.T.', 'Star Wars', 'Lightyear', 'Astro Boy', 'Les Minions'],
+    'monde_magique': ['Harry Potter', 'Le Monde de Narnia', 'Merlin', 'Kirikou', 'Fantasia', 'Raiponce', 'La Reine des Neiges', 'Aladdin', 'Winx', 'Le Petit Sorcier'],
+    'sous_la_mer': ['Le Monde de Nemo', 'La Petite Sirène', 'Vaiana', 'Bob l\'éponge', 'Atlantide', 'Bubulle Guppies', 'Aquaman', 'Océane', 'Splash', '20000 lieues sous les mers'],
+    'chevaliers_dragons': ['Dragons (Krokmou)', 'Shrek', 'Merlin', 'Le Seigneur des Anneaux', 'Kaamelott', 'Zelda', 'Excalibur', 'Les Chevaliers du Zodiaque', 'Mulan', 'Rebelle'],
   };
 
   /// Les six tons (id → libellé).

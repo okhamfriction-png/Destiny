@@ -146,14 +146,25 @@ class CreerCampagneScreen extends StatefulWidget {
 }
 
 class _CreerCampagneScreenState extends State<CreerCampagneScreen> {
-  String _univers = CampagneStore.univers.keys.first;
-  String _ton = CampagneStore.tons.keys.first;
   String _public = 'adulte'; // Adulte par défaut
+  String _univers = CampagneStore.universAdulte.keys.first;
+  String _ton = CampagneStore.tons.keys.first;
   String _lore = ''; // '' = aucun
   final _contexte = TextEditingController();
   final _nom = TextEditingController();
 
   List<String> get _loresDispo => CampagneStore.lores[_univers] ?? const [];
+
+  void _changerPublic(String p) => setState(() {
+        _public = p;
+        // Les univers dépendent du public : on revient au premier valide.
+        final dispo = CampagneStore.universPour(_public);
+        if (!dispo.containsKey(_univers)) {
+          _univers = dispo.keys.first;
+          _lore = '';
+          _nom.text = dispo[_univers] ?? '';
+        }
+      });
 
   @override
   void initState() {
@@ -187,16 +198,17 @@ class _CreerCampagneScreenState extends State<CreerCampagneScreen> {
               ButtonSegment(value: 'adulte', label: Text('Adulte')),
             ],
             selected: {_public},
-            onSelectionChanged: (s) => setState(() => _public = s.first),
+            onSelectionChanged: (s) => _changerPublic(s.first),
           ),
           const SizedBox(height: 16),
           const _Label('Univers'),
           DropdownButtonFormField<String>(
+            key: ValueKey('univers_$_public'),
             initialValue: _univers,
             isExpanded: true,
             decoration: const InputDecoration(border: OutlineInputBorder()),
             items: [
-              for (final e in CampagneStore.univers.entries)
+              for (final e in CampagneStore.universPour(_public).entries)
                 DropdownMenuItem(value: e.key, child: Text(e.value)),
             ],
             onChanged: (v) => setState(() {
@@ -240,13 +252,39 @@ class _CreerCampagneScreenState extends State<CreerCampagneScreen> {
             style: TextStyle(color: Colors.white38, fontSize: 12),
           ),
           const SizedBox(height: 16),
-          const _Label('Contexte (facultatif)'),
+          Row(
+            children: [
+              const _Label('Contexte'),
+              const SizedBox(width: 8),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: _lav.withValues(alpha: 0.18),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Text('IA seulement',
+                    style: TextStyle(
+                        color: _lav,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700)),
+              ),
+            ],
+          ),
           TextField(
             controller: _contexte,
             maxLines: 3,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               hintText: 'Un détail à garder d\'un épisode à l\'autre…',
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(top: 4),
+            child: Text(
+              'Utilisé uniquement quand l\'IA écrit (résumé, accroche). Sans clé '
+              'IA, ce champ n\'a pas d\'effet.',
+              style: TextStyle(color: Colors.white38, fontSize: 12),
             ),
           ),
           const SizedBox(height: 16),
