@@ -29,6 +29,37 @@ class EntityVisual {
 class EntityVisuals {
   EntityVisuals._();
 
+  // --- Statut de jeu d'un archétype (couleur du nom) ---
+  /// Ambre : statut haut (domine, occupe l'espace).
+  static const Color statutHaut = Color(0xFFFFB74D);
+
+  /// Bleu : statut bas (se soumet, cherche l'abri).
+  static const Color statutBas = Color(0xFF64B5F6);
+
+  /// Couleur du nom d'un archétype selon son statut ('haut' / 'bas' / neutre).
+  static Color colorForStatut(String statut) {
+    switch (statut) {
+      case 'haut':
+        return statutHaut;
+      case 'bas':
+        return statutBas;
+      default:
+        return Colors.white;
+    }
+  }
+
+  /// Libellé lisible d'un statut.
+  static String labelForStatut(String statut) {
+    switch (statut) {
+      case 'haut':
+        return 'Statut haut';
+      case 'bas':
+        return 'Statut bas';
+      default:
+        return 'Statut neutre';
+    }
+  }
+
   // --- Palettes de dégradés pour les lieux (choisies par hash de l'id) ---
   static const List<List<Color>> _locationPalettes = [
     [Color(0xFF2E3192), Color(0xFF1BFFFF)],

@@ -314,7 +314,10 @@ class _PlayerRow extends StatelessWidget {
                             ?.copyWith(color: theme.colorScheme.primary)),
                     const SizedBox(width: 6),
                     Text(player.archetype.name,
-                        style: theme.textTheme.titleSmall),
+                        style: theme.textTheme.titleSmall?.copyWith(
+                            color: EntityVisuals.colorForStatut(
+                                player.archetype.statut),
+                            fontWeight: FontWeight.w700)),
                   ],
                 ),
                 const SizedBox(height: 2),

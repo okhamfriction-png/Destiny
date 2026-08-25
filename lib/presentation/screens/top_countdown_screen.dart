@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import '../../application/services/audio_service.dart';
 import '../../application/state/guide_content.dart';
 import '../../application/state/music_controller.dart';
+import '../../domain/entities/archetype.dart';
 import '../../application/state/location_details.dart';
 import '../../application/state/story_controller.dart';
 import '../../application/state/tracking_store.dart';
@@ -22,6 +23,15 @@ import 'tracking_screen.dart';
 /// Police manuscrite (seule la phrase « RIEN EST ÉCRIT » l'utilise).
 const String _kHand = 'PatrickHand';
 const Color _gold = Color(0xFFFFC24B);
+
+/// Un héros affiché dans le chrono (archétype + traits + statut de jeu).
+typedef HeroRec = ({
+  String archetype,
+  String temperament,
+  String port,
+  String moteur,
+  String statut,
+});
 
 /// Les 24 archétypes (repli si le catalogue n'est pas encore chargé).
 const List<String> _kArchetypes = [
@@ -56,6 +66,7 @@ class TopCountdownScreen extends StatefulWidget {
     this.heroes = const [],
     this.paliers = const [],
     this.allArchetypes = const [],
+    this.allArchetypeData = const [],
     this.allDangers = const [],
     this.destinyEnabled = false,
     this.destinyDefaults = const [],
@@ -96,20 +107,18 @@ class TopCountdownScreen extends StatefulWidget {
   /// Distribution simple (texte + antagoniste) — modes non-Histoire.
   final List<({String text, bool antagoniste})> cast;
 
-  /// Héros détaillés (archétype + tempérament / port / moteur) — mode Histoire.
-  final List<
-      ({
-        String archetype,
-        String temperament,
-        String port,
-        String moteur
-      })> heroes;
+  /// Héros détaillés (archétype + tempérament / port / moteur / statut) — Histoire.
+  final List<HeroRec> heroes;
 
   /// Étapes du danger (paliers).
   final List<String> paliers;
 
   /// Noms des archétypes et dangers du catalogue (pour le tirage du DESTINY).
   final List<String> allArchetypes;
+
+  /// Catalogue complet des archétypes (pour modifier un héros avant le chrono).
+  final List<Archetype> allArchetypeData;
+
   final List<String> allDangers;
 
   /// Active la config du chrono + les 3 DESTINY (mode Histoire uniquement).
@@ -142,6 +151,8 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
   late bool _setup = widget.destinyEnabled;
   late int _duration = widget.seconds;
   late List<int> _destiny;
+  // Héros modifiables avant le lancement (copie locale ; éléments remplaçables).
+  late final List<HeroRec> _heroes = List.of(widget.heroes);
 
   int _remaining = 0;
   Timer? _timer;
@@ -151,6 +162,7 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
   int? _flash; // numéro du DESTINY en cours d'affichage
   Timer? _flashTimer;
   Timer? _conclusionTimer; // musique de conclusion, 15 s après DESTINY 3
+  Timer? _lieuTimer; // ambiance du lieu, 15 s après DESTINY 2
   // Cube animé au lancement du chrono (flourish de départ).
   bool _showLaunchCube = false;
   int _launchToken = 0;
@@ -231,6 +243,7 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
     _timer?.cancel();
     _flashTimer?.cancel();
     _conclusionTimer?.cancel();
+    _lieuTimer?.cancel();
     // Restaure les barres système.
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
@@ -255,6 +268,7 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
     });
     if (widget.cubeAnimation) widget.audioService.playDice();
     _conclusionTimer?.cancel();
+    _lieuTimer?.cancel();
     // Musique du Commencement au lancement (mode Histoire, son non coupé).
     if (widget.destinyEnabled &&
         widget.musicController != null &&
@@ -296,6 +310,17 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
           _flashTimer = Timer(const Duration(milliseconds: 2200), () {
             if (mounted) setState(() => _flash = null);
           });
+          // 2ᵉ DESTINY : ambiance du lieu 15 s plus tard (son du lieu généré).
+          if (i == 1 &&
+              widget.musicController != null &&
+              !widget.audioService.muted) {
+            _lieuTimer?.cancel();
+            _lieuTimer = Timer(const Duration(seconds: 15), () {
+              if (mounted) {
+                widget.musicController!.playLocationAmbience(widget.lieu);
+              }
+            });
+          }
           // 3ᵉ (dernier) DESTINY : musique de Conclusion 15 s plus tard.
           if (i == 2 &&
               widget.musicController != null &&
@@ -451,6 +476,93 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
       );
   }
 
+  /// Une ligne héros : nom coloré par statut ; modifiable pendant la config.
+  Widget _heroRow(int index, double scale) {
+    final h = _heroes[index];
+    final canEdit = _setup && widget.allArchetypeData.isNotEmpty;
+    final text = Text.rich(
+      TextSpan(children: [
+        TextSpan(
+            text:
+                '${EntityVisuals.emojiForArchetypeName(h.archetype) ?? '🎭'}  ',
+            style: TextStyle(fontSize: 18 * scale)),
+        TextSpan(
+            text: h.archetype,
+            style: TextStyle(
+                color: EntityVisuals.colorForStatut(h.statut),
+                fontSize: 18 * scale,
+                fontWeight: FontWeight.w700)),
+        if (h.temperament.isNotEmpty)
+          TextSpan(
+              text: '  ·  ${h.temperament}',
+              style: TextStyle(color: Colors.white54, fontSize: 15 * scale)),
+        if (h.port.isNotEmpty)
+          TextSpan(
+              text: '  ·  ${h.port}',
+              style: TextStyle(
+                  color: Colors.white54,
+                  fontSize: 15 * scale,
+                  fontStyle: FontStyle.italic)),
+        if (h.moteur.isNotEmpty)
+          TextSpan(
+              text: '  ·  ${h.moteur}',
+              style: TextStyle(
+                  color: const Color(0xFFFF5252),
+                  fontSize: 15 * scale,
+                  fontWeight: FontWeight.w800)),
+      ]),
+      maxLines: 1,
+      softWrap: false,
+      overflow: TextOverflow.visible,
+      textAlign: TextAlign.center,
+    );
+    // Row + Expanded → largeur STRICTE ; FittedBox réduit pour tenir sur 1 ligne.
+    final row = Row(
+      children: [
+        Expanded(
+          child: FittedBox(
+              fit: BoxFit.scaleDown, alignment: Alignment.center, child: text),
+        ),
+        if (canEdit) ...[
+          SizedBox(width: 6 * scale),
+          Icon(Icons.edit, size: 15 * scale, color: _gold),
+        ],
+      ],
+    );
+    return Padding(
+      padding: EdgeInsets.only(bottom: 4 * scale),
+      child: canEdit
+          ? InkWell(onTap: () => _editHero(index), child: row)
+          : row,
+    );
+  }
+
+  /// Ouvre le sélecteur d'archétype et remplace le héros choisi.
+  Future<void> _editHero(int index) async {
+    final chosen = await showModalBottomSheet<Archetype>(
+      context: context,
+      backgroundColor: const Color(0xFF120F1E),
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
+      builder: (_) => _ArchetypePicker(
+        archetypes: widget.allArchetypeData,
+        currentName: _heroes[index].archetype,
+      ),
+    );
+    if (chosen == null || !mounted) return;
+    setState(() {
+      _heroes[index] = (
+        archetype: chosen.name,
+        temperament: chosen.temperament,
+        port: chosen.port,
+        moteur: chosen.moteur,
+        statut: chosen.statut,
+      );
+    });
+  }
+
   // --------------------------------------------------------------- infos
   Widget _infoBlock(BuildContext context, {double scale = 1}) {
     final theme = Theme.of(context);
@@ -473,63 +585,11 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
         ),
         SizedBox(height: 10 * scale),
         _ContextLine(label: 'DANGER', value: widget.danger, scale: scale),
-        if (widget.heroes.isNotEmpty) ...[
+        if (_heroes.isNotEmpty) ...[
           SizedBox(height: 12 * scale),
           _MiniLabel('HÉROS', scale: scale),
           SizedBox(height: 4 * scale),
-          for (final h in widget.heroes)
-            Padding(
-              padding: EdgeInsets.only(bottom: 4 * scale),
-              // Row + Expanded → largeur STRICTE ; FittedBox réduit le texte
-              // pour que chaque héros tienne TOUJOURS sur une seule ligne.
-              child: Row(
-                children: [
-                  Expanded(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.center,
-                      child: Text.rich(
-                TextSpan(children: [
-                  TextSpan(
-                      text:
-                          '${EntityVisuals.emojiForArchetypeName(h.archetype) ?? '🎭'}  ',
-                      style: TextStyle(fontSize: 18 * scale)),
-                  TextSpan(
-                      text: h.archetype,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18 * scale,
-                          fontWeight: FontWeight.w700)),
-                  if (h.temperament.isNotEmpty)
-                    TextSpan(
-                        text: '  ·  ${h.temperament}',
-                        style: TextStyle(
-                            color: Colors.white54, fontSize: 15 * scale)),
-                  if (h.port.isNotEmpty)
-                    TextSpan(
-                        text: '  ·  ${h.port}',
-                        style: TextStyle(
-                            color: Colors.white54,
-                            fontSize: 15 * scale,
-                            fontStyle: FontStyle.italic)),
-                  if (h.moteur.isNotEmpty)
-                    TextSpan(
-                        text: '  ·  ${h.moteur}',
-                        style: TextStyle(
-                            color: const Color(0xFFFF5252),
-                            fontSize: 15 * scale,
-                            fontWeight: FontWeight.w800)),
-                ]),
-                        maxLines: 1,
-                        softWrap: false,
-                        overflow: TextOverflow.visible,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          for (var hi = 0; hi < _heroes.length; hi++) _heroRow(hi, scale),
         ] else if (widget.cast.isNotEmpty) ...[
           SizedBox(height: 12 * scale),
           _MiniLabel('QUI', scale: scale),
@@ -838,6 +898,100 @@ class _DestinyFlash extends StatelessWidget {
         holdAtEnd: true,
       );
     });
+  }
+}
+
+/// Sélecteur d'archétype (bottom sheet) groupé et coloré par statut de jeu.
+class _ArchetypePicker extends StatelessWidget {
+  const _ArchetypePicker(
+      {required this.archetypes, required this.currentName});
+  final List<Archetype> archetypes;
+  final String currentName;
+
+  @override
+  Widget build(BuildContext context) {
+    List<Archetype> byStatut(String s) =>
+        archetypes.where((a) => a.statut == s).toList()
+          ..sort((a, b) => a.name.compareTo(b.name));
+
+    Widget group(String statut, String title) {
+      final list = byStatut(statut);
+      if (list.isEmpty) return const SizedBox.shrink();
+      final c = EntityVisuals.colorForStatut(statut);
+      final headerColor = c == Colors.white ? const Color(0xFFB9A6FF) : c;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 16, bottom: 8),
+            child: Text(title.toUpperCase(),
+                style: TextStyle(
+                    color: headerColor,
+                    letterSpacing: 2,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700)),
+          ),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final a in list)
+                InkWell(
+                  onTap: () => Navigator.of(context).pop(a),
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: a.name == currentName
+                          ? c.withValues(alpha: 0.18)
+                          : Colors.white10,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                          color: a.name == currentName ? c : Colors.white24,
+                          width: a.name == currentName ? 1.5 : 1),
+                    ),
+                    child: Text(
+                      '${EntityVisuals.emojiForArchetypeName(a.name) ?? '🎭'}  ${a.name}',
+                      style: TextStyle(
+                          color: EntityVisuals.colorForStatut(a.statut),
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      );
+    }
+
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.72,
+      minChildSize: 0.4,
+      maxChildSize: 0.94,
+      builder: (context, scroll) => ListView(
+        controller: scroll,
+        padding: const EdgeInsets.fromLTRB(18, 12, 18, 28),
+        children: [
+          Center(
+            child: Container(
+                width: 42,
+                height: 4,
+                decoration: BoxDecoration(
+                    color: Colors.white24,
+                    borderRadius: BorderRadius.circular(2))),
+          ),
+          const SizedBox(height: 12),
+          const Text('Changer d\'archétype',
+              style: TextStyle(
+                  color: _gold, fontSize: 20, fontWeight: FontWeight.w800)),
+          group('haut', 'Statut haut'),
+          group('neutre', 'Statut neutre'),
+          group('bas', 'Statut bas'),
+        ],
+      ),
+    );
   }
 }
 

@@ -6,10 +6,14 @@ class Archetype {
     this.temperament = '',
     this.port = '',
     this.moteur = '',
+    this.statut = 'neutre',
   });
 
   final String id;
   final String name;
+
+  /// Statut de jeu : 'haut', 'bas' ou 'neutre' (couleur du nom à l'affichage).
+  final String statut;
 
   /// Description condensée (rétro-compat + contexte IA) : tempérament · port · moteur.
   final String traits;
@@ -51,6 +55,9 @@ class Archetype {
       temperament: temperament.isNotEmpty ? temperament : (legacy ?? ''),
       port: port,
       moteur: moteur,
+      statut: (json['statut'] as String?)?.trim().isNotEmpty == true
+          ? (json['statut'] as String).trim()
+          : 'neutre',
     );
   }
 
@@ -60,5 +67,6 @@ class Archetype {
         'temperament': temperament,
         'port': port,
         'moteur': moteur,
+        'statut': statut,
       };
 }

@@ -1,4 +1,5 @@
 import '../../application/services/random_picker_service.dart';
+import '../entities/archetype.dart';
 import '../entities/player_assignment.dart';
 import '../entities/story.dart';
 import '../repositories/combination_memory.dart';
@@ -83,11 +84,8 @@ class GenerateStoryUseCase {
 
     final usedCount = totalDangers - remaining.length + 1;
 
-    final pickedArchetypes = _randomPickerService.pickMany(
-      archetypes,
-      playerCount,
-      avoidDuplicates: true,
-    );
+    final pickedArchetypes =
+        _pickArchetypesWithVariety(archetypes, playerCount);
 
     final pickedRoles = _randomPickerService.pickMany(
       location.roles,
@@ -113,5 +111,43 @@ class GenerateStoryUseCase {
       usedCount: usedCount,
       totalCombos: totalDangers,
     );
+  }
+
+  /// Tire [count] archétypes en garantissant, quand c'est possible, un mélange
+  /// de statuts (haut / bas / neutre) — « à chaque histoire, on a de tout ».
+  List<Archetype> _pickArchetypesWithVariety(
+      List<Archetype> archetypes, int count) {
+    final byStatut = <String, List<Archetype>>{};
+    for (final a in archetypes) {
+      (byStatut[a.statut] ??= <Archetype>[]).add(a);
+    }
+    // Variété impossible (1 seul joueur ou 1 seul statut) : tirage normal.
+    if (count <= 1 || byStatut.length < 2) {
+      return _randomPickerService.pickMany(archetypes, count,
+          avoidDuplicates: true);
+    }
+    final chosen = <Archetype>[];
+    final chosenIds = <String>{};
+    // 1) Un archétype de chaque statut présent (haut, bas, neutre), dans la
+    //    limite de count : garantit la diversité.
+    for (final s in const ['haut', 'bas', 'neutre']) {
+      if (chosen.length >= count) break;
+      final pool =
+          (byStatut[s] ?? const <Archetype>[]).where((a) => !chosenIds.contains(a.id)).toList();
+      if (pool.isEmpty) continue;
+      final a = _randomPickerService.pickOne(pool);
+      chosen.add(a);
+      chosenIds.add(a.id);
+    }
+    // 2) Complète avec des archétypes aléatoires (tous statuts), sans doublon.
+    final rest = archetypes.where((a) => !chosenIds.contains(a.id)).toList();
+    if (chosen.length < count && rest.isNotEmpty) {
+      chosen.addAll(_randomPickerService.pickMany(rest, count - chosen.length,
+          avoidDuplicates: true));
+    }
+    // 3) Mélange l'ordre pour que le statut ne colle pas aux positions.
+    final shuffled = _randomPickerService.pickMany(chosen, chosen.length,
+        avoidDuplicates: true);
+    return shuffled.take(count).toList(growable: false);
   }
 }

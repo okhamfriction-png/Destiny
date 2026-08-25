@@ -102,6 +102,8 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
   // Noms du catalogue pour le dé du DESTINY (mode Histoire).
   List<String> _dangerNames = const [];
   List<String> _archetypeNames = const [];
+  // Catalogue complet des archétypes (pour modifier un héros avant le chrono).
+  List<Archetype> _archetypes = const [];
 
   @override
   void initState() {
@@ -126,6 +128,7 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
       setState(() {
         _dangerNames = [for (final x in d) x.name];
         _archetypeNames = [for (final x in a) x.name];
+        _archetypes = a;
       });
     } catch (_) {}
   }
@@ -241,7 +244,8 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
           String archetype,
           String temperament,
           String port,
-          String moteur
+          String moteur,
+          String statut
         })>[];
     var paliers = <String>[];
     var destinyEnabled = false;
@@ -267,6 +271,7 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
               temperament: p.archetype.temperament,
               port: p.archetype.port,
               moteur: p.archetype.moteur,
+              statut: p.archetype.statut,
             ),
         ];
         paliers = state.story!.danger.paliers;
@@ -294,6 +299,7 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
         heroes: heroes,
         paliers: paliers,
         allArchetypes: _archetypeNames,
+        allArchetypeData: _archetypes,
         allDangers: _dangerNames,
         weightArchetype: widget.visualSettings.destinyWeightArchetype,
         weightDanger: widget.visualSettings.destinyWeightDanger,

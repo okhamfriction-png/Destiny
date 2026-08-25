@@ -30,6 +30,35 @@ class SoundMixerSheet extends StatefulWidget {
 }
 
 class _SoundMixerSheetState extends State<SoundMixerSheet> {
+  // Catégories repliées (masquées) par le régisseur.
+  final Set<String> _collapsed = {};
+  bool _initCollapse = false;
+
+  // Ordre d'affichage voulu ; le reste est ajouté à la fin, alphabétiquement.
+  static const List<String> _order = [
+    'Émotions',
+    'Lieux',
+    'Ambiances',
+    'Thèmes',
+    'Univers',
+  ];
+  // Catégories dépliées par défaut à l'ouverture.
+  static const Set<String> _openByDefault = {'Émotions', 'Lieux'};
+
+  List<String> _ordered(List<String> cats) {
+    int idx(String s) {
+      final i = _order.indexOf(s);
+      return i < 0 ? 999 : i;
+    }
+
+    final list = [...cats];
+    list.sort((a, b) {
+      final d = idx(a).compareTo(idx(b));
+      return d != 0 ? d : a.compareTo(b);
+    });
+    return list;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -49,11 +78,19 @@ class _SoundMixerSheetState extends State<SoundMixerSheet> {
   @override
   Widget build(BuildContext context) {
     final c = widget.controller;
+    final cats = _ordered(c.categories);
+    // Première ouverture : on ne déplie qu'Émotions et Lieux, le reste masqué.
+    if (!_initCollapse && !c.loading && cats.isNotEmpty) {
+      _initCollapse = true;
+      for (final cat in cats) {
+        if (!_openByDefault.contains(cat)) _collapsed.add(cat);
+      }
+    }
     return DraggableScrollableSheet(
       expand: false,
-      initialChildSize: 0.72,
-      minChildSize: 0.4,
-      maxChildSize: 0.94,
+      initialChildSize: 0.94,
+      minChildSize: 0.5,
+      maxChildSize: 0.96,
       builder: (context, scroll) {
         return Column(
           children: [
@@ -128,30 +165,55 @@ class _SoundMixerSheetState extends State<SoundMixerSheet> {
                       controller: scroll,
                       padding: const EdgeInsets.fromLTRB(16, 4, 16, 28),
                       children: [
-                        for (final cat in c.categories) ...[
-                          Padding(
-                            padding: const EdgeInsets.only(top: 14, bottom: 8),
-                            child: Text(cat.toUpperCase(),
-                                style: const TextStyle(
-                                    color: _lav,
-                                    letterSpacing: 2,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700)),
+                        for (final cat in cats) ...[
+                          // En-tête repliable : tap pour masquer/afficher.
+                          InkWell(
+                            onTap: () => setState(() {
+                              if (!_collapsed.remove(cat)) _collapsed.add(cat);
+                            }),
+                            borderRadius: BorderRadius.circular(8),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 14, bottom: 8),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                      _collapsed.contains(cat)
+                                          ? Icons.chevron_right
+                                          : Icons.expand_more,
+                                      color: _lav,
+                                      size: 18),
+                                  const SizedBox(width: 4),
+                                  Text(cat.toUpperCase(),
+                                      style: const TextStyle(
+                                          color: _lav,
+                                          letterSpacing: 2,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700)),
+                                  const SizedBox(width: 8),
+                                  Text('${c.tracksOf(cat).length}',
+                                      style: TextStyle(
+                                          color: _lav.withValues(alpha: 0.6),
+                                          fontSize: 12)),
+                                ],
+                              ),
+                            ),
                           ),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              for (final t in c.tracksOf(cat))
-                                _TrackChip(
-                                  title: t.title,
-                                  active: c.current?.file == t.file,
-                                  playing:
-                                      c.current?.file == t.file && c.playing,
-                                  onTap: () => c.toggle(t),
-                                ),
-                            ],
-                          ),
+                          if (!_collapsed.contains(cat))
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                for (final t in c.tracksOf(cat))
+                                  _TrackChip(
+                                    title: t.title,
+                                    active: c.current?.file == t.file,
+                                    playing:
+                                        c.current?.file == t.file && c.playing,
+                                    onTap: () => c.toggle(t),
+                                  ),
+                              ],
+                            ),
                         ],
                       ],
                     ),

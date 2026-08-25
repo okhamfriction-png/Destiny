@@ -242,6 +242,7 @@ class _CatalogViewScreenState extends State<CatalogViewScreen> {
                   visual: EntityVisuals.forArchetype(a),
                   source: source,
                   title: a.name,
+                  titleColor: EntityVisuals.colorForStatut(a.statut),
                   subtitle: a.traits,
                   subtitleRich: _ArchetypeSubtitle(archetype: a),
                 ))
@@ -256,6 +257,7 @@ class _CatalogTile extends StatelessWidget {
     required this.source,
     required this.title,
     required this.subtitle,
+    this.titleColor,
     this.subtitleRich,
     this.paliers = const [],
     this.sousEspaces = const [],
@@ -267,6 +269,7 @@ class _CatalogTile extends StatelessWidget {
   final VisualSource source;
   final String title;
   final String subtitle;
+  final Color? titleColor;
 
   /// Sous-titre riche (stylé) qui remplace [subtitle] si fourni.
   final Widget? subtitleRich;
@@ -296,7 +299,9 @@ class _CatalogTile extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(title, style: theme.textTheme.titleMedium),
+                      Text(title,
+                          style: theme.textTheme.titleMedium
+                              ?.copyWith(color: titleColor)),
                       const SizedBox(height: 2),
                       subtitleRich ??
                           Text(subtitle,

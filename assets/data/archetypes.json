@@ -1,28 +1,196 @@
 {
   "archetypes": [
-    { "id": "aigle",   "name": "Aigle",   "temperament": "Fier, compétiteur",   "port": "_droit_",             "moteur": "**Le sommet**" },
-    { "id": "cerf",    "name": "Cerf",    "temperament": "Honorable, fier",     "port": "_droit, raide_",      "moteur": "**L'honneur**" },
-    { "id": "chat",    "name": "Chat",    "temperament": "Charmeur, secret",    "port": "_feutré, glissant_",  "moteur": "**La fascination**" },
-    { "id": "chien",   "name": "Chien",   "temperament": "Loyal, franc",        "port": "_vif_",               "moteur": "**La fidélité**" },
-    { "id": "coq",     "name": "Coq",     "temperament": "Vaniteux, matamore",  "port": "_bombé_",             "moteur": "**La conquête**" },
-    { "id": "corbeau", "name": "Corbeau", "temperament": "Sombre, secret",      "port": "_feutré_",            "moteur": "**Qu'on le craigne**" },
-    { "id": "fourmi",  "name": "Fourmi",  "temperament": "Sérieuse, tenace",    "port": "_affairé_",           "moteur": "**L'ordre**" },
-    { "id": "hibou",   "name": "Hibou",   "temperament": "Savant, exigeant",    "port": "_posé_",              "moteur": "**Avoir raison**" },
-    { "id": "hyene",   "name": "Hyène",   "temperament": "Opportuniste, mauvais","port": "_rôdeur_",           "moteur": "**La curée**" },
-    { "id": "lapin",   "name": "Lapin",   "temperament": "Avenant, tendre",     "port": "_fuyant_",            "moteur": "**Plaire à tous**" },
-    { "id": "lion",    "name": "Lion",    "temperament": "Charismatique, sûr",  "port": "_ample_",             "moteur": "**Le règne**" },
-    { "id": "loup",    "name": "Loup",    "temperament": "Loyal, méfiant",      "port": "_en retrait_",        "moteur": "**La meute**" },
-    { "id": "mouton",  "name": "Mouton",  "temperament": "Prudent, suiveur",    "port": "_grégaire_",          "moteur": "**L'abri du plus fort**" },
-    { "id": "ours",    "name": "Ours",    "temperament": "Placide, fort",       "port": "_lourd_",             "moteur": "**Protéger les siens**" },
-    { "id": "paon",    "name": "Paon",    "temperament": "Frivole, sociable",   "port": "_paradant_",          "moteur": "**La gloire**" },
-    { "id": "porc",    "name": "Porc",    "temperament": "Jouisseur, gras",     "port": "_envahissant_",       "moteur": "**La jouissance**" },
-    { "id": "rat",     "name": "Rat",     "temperament": "Avare, retors",       "port": "_fuyant_",            "moteur": "**Le profit**" },
-    { "id": "renard",  "name": "Renard",  "temperament": "Rusé, séducteur",     "port": "_souple_",            "moteur": "**Le jeu qui gagne**" },
-    { "id": "serpent", "name": "Serpent", "temperament": "Froid, calculateur",  "port": "_glissant_",          "moteur": "**Le contrôle**" },
-    { "id": "singe",   "name": "Singe",   "temperament": "Agile, moqueur",      "port": "_remuant_",           "moteur": "**Le rire**" },
-    { "id": "souris",  "name": "Souris",  "temperament": "Enjouée, vaillante",  "port": "_menu, vif_",         "moteur": "**Oser malgré tout**" },
-    { "id": "taureau", "name": "Taureau", "temperament": "Massif, entier",      "port": "_frontal_",           "moteur": "**S'imposer**" },
-    { "id": "vautour", "name": "Vautour", "temperament": "Cynique, patient",    "port": "_nonchalant_",        "moteur": "**Ce qui reste**" },
-    { "id": "ane",     "name": "Âne",     "temperament": "Tranquille, têtu",    "port": "_planté_",            "moteur": "**La paix, à son rythme**" }
+    {
+      "id": "aigle",
+      "name": "Aigle",
+      "temperament": "Fier, compétiteur",
+      "port": "_droit_",
+      "moteur": "**Le sommet**",
+      "statut": "haut"
+    },
+    {
+      "id": "cerf",
+      "name": "Cerf",
+      "temperament": "Honorable, fier",
+      "port": "_droit, raide_",
+      "moteur": "**L'honneur**",
+      "statut": "haut"
+    },
+    {
+      "id": "chat",
+      "name": "Chat",
+      "temperament": "Charmeur, secret",
+      "port": "_feutré, glissant_",
+      "moteur": "**La fascination**",
+      "statut": "neutre"
+    },
+    {
+      "id": "chien",
+      "name": "Chien",
+      "temperament": "Loyal, franc",
+      "port": "_vif_",
+      "moteur": "**La fidélité**",
+      "statut": "bas"
+    },
+    {
+      "id": "coq",
+      "name": "Coq",
+      "temperament": "Vaniteux, matamore",
+      "port": "_bombé_",
+      "moteur": "**La conquête**",
+      "statut": "haut"
+    },
+    {
+      "id": "corbeau",
+      "name": "Corbeau",
+      "temperament": "Sombre, secret",
+      "port": "_feutré_",
+      "moteur": "**Qu'on le craigne**",
+      "statut": "haut"
+    },
+    {
+      "id": "fourmi",
+      "name": "Fourmi",
+      "temperament": "Sérieuse, tenace",
+      "port": "_affairé_",
+      "moteur": "**L'ordre**",
+      "statut": "bas"
+    },
+    {
+      "id": "hibou",
+      "name": "Hibou",
+      "temperament": "Savant, exigeant",
+      "port": "_posé_",
+      "moteur": "**Avoir raison**",
+      "statut": "haut"
+    },
+    {
+      "id": "hyene",
+      "name": "Hyène",
+      "temperament": "Opportuniste, mauvais",
+      "port": "_rôdeur_",
+      "moteur": "**La curée**",
+      "statut": "neutre"
+    },
+    {
+      "id": "lapin",
+      "name": "Lapin",
+      "temperament": "Avenant, tendre",
+      "port": "_fuyant_",
+      "moteur": "**Plaire à tous**",
+      "statut": "bas"
+    },
+    {
+      "id": "lion",
+      "name": "Lion",
+      "temperament": "Charismatique, sûr",
+      "port": "_ample_",
+      "moteur": "**Le règne**",
+      "statut": "haut"
+    },
+    {
+      "id": "loup",
+      "name": "Loup",
+      "temperament": "Loyal, méfiant",
+      "port": "_en retrait_",
+      "moteur": "**La meute**",
+      "statut": "neutre"
+    },
+    {
+      "id": "mouton",
+      "name": "Mouton",
+      "temperament": "Prudent, suiveur",
+      "port": "_grégaire_",
+      "moteur": "**L'abri du plus fort**",
+      "statut": "bas"
+    },
+    {
+      "id": "ours",
+      "name": "Ours",
+      "temperament": "Placide, fort",
+      "port": "_lourd_",
+      "moteur": "**Protéger les siens**",
+      "statut": "haut"
+    },
+    {
+      "id": "paon",
+      "name": "Paon",
+      "temperament": "Frivole, sociable",
+      "port": "_paradant_",
+      "moteur": "**La gloire**",
+      "statut": "haut"
+    },
+    {
+      "id": "porc",
+      "name": "Porc",
+      "temperament": "Jouisseur, gras",
+      "port": "_envahissant_",
+      "moteur": "**La jouissance**",
+      "statut": "neutre"
+    },
+    {
+      "id": "rat",
+      "name": "Rat",
+      "temperament": "Avare, retors",
+      "port": "_fuyant_",
+      "moteur": "**Le profit**",
+      "statut": "bas"
+    },
+    {
+      "id": "renard",
+      "name": "Renard",
+      "temperament": "Rusé, séducteur",
+      "port": "_souple_",
+      "moteur": "**Le jeu qui gagne**",
+      "statut": "neutre"
+    },
+    {
+      "id": "serpent",
+      "name": "Serpent",
+      "temperament": "Froid, calculateur",
+      "port": "_glissant_",
+      "moteur": "**Le contrôle**",
+      "statut": "neutre"
+    },
+    {
+      "id": "singe",
+      "name": "Singe",
+      "temperament": "Agile, moqueur",
+      "port": "_remuant_",
+      "moteur": "**Le rire**",
+      "statut": "neutre"
+    },
+    {
+      "id": "souris",
+      "name": "Souris",
+      "temperament": "Enjouée, vaillante",
+      "port": "_menu, vif_",
+      "moteur": "**Oser malgré tout**",
+      "statut": "bas"
+    },
+    {
+      "id": "taureau",
+      "name": "Taureau",
+      "temperament": "Massif, entier",
+      "port": "_frontal_",
+      "moteur": "**S'imposer**",
+      "statut": "haut"
+    },
+    {
+      "id": "vautour",
+      "name": "Vautour",
+      "temperament": "Cynique, patient",
+      "port": "_nonchalant_",
+      "moteur": "**Ce qui reste**",
+      "statut": "neutre"
+    },
+    {
+      "id": "ane",
+      "name": "Âne",
+      "temperament": "Tranquille, têtu",
+      "port": "_planté_",
+      "moteur": "**La paix, à son rythme**",
+      "statut": "bas"
+    }
   ]
 }

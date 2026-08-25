@@ -176,6 +176,18 @@ class MusicController extends ChangeNotifier {
         loop: false,
       ));
 
+  /// Joue l'ambiance du lieu (catégorie « Lieux ») dont le titre correspond.
+  /// Sans effet si aucune ambiance ne correspond.
+  Future<void> playLocationAmbience(String locationName) async {
+    final t = locationName.trim().toLowerCase();
+    for (final track in _tracks) {
+      if (track.category == 'Lieux' && track.title.trim().toLowerCase() == t) {
+        await playTrack(track);
+        return;
+      }
+    }
+  }
+
   Future<void> playTrack(MusicTrack track) async {
     _current = track;
     _position = Duration.zero;
