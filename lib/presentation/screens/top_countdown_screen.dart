@@ -838,6 +838,22 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
                 label: Text(
                     widget.destinyEnabled ? 'Régler / relancer' : 'Relancer'),
               ),
+              // Beau bouton Régie son, mis en évidence, à droite.
+              if (widget.musicController != null)
+                FilledButton.icon(
+                  onPressed: () =>
+                      showSoundMixer(context, widget.musicController!),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: const Color(0xFFB79CFF),
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    textStyle: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.w800),
+                  ),
+                  icon: const Icon(Icons.tune, size: 20),
+                  label: const Text('Régie son'),
+                ),
             ],
           ),
         ],

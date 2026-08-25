@@ -59,6 +59,24 @@ class MusicController extends ChangeNotifier {
   Duration _duration = Duration.zero;
   Duration get duration => _duration;
 
+  // Volume global (0..1) et lecture en boucle par défaut (régie).
+  double _volume = 0.8;
+  double get volume => _volume;
+  Future<void> setVolume(double v) async {
+    _volume = v.clamp(0.0, 1.0);
+    try {
+      await _player.setVolume(_volume);
+    } catch (_) {}
+    notifyListeners();
+  }
+
+  bool _boucle = true;
+  bool get boucle => _boucle;
+  void setBoucle(bool b) {
+    _boucle = b;
+    notifyListeners();
+  }
+
   /// Sens du tri alphabétique des pistes (A→Z si vrai, Z→A sinon).
   bool _ascending = true;
   bool get ascending => _ascending;
@@ -188,17 +206,20 @@ class MusicController extends ChangeNotifier {
     }
   }
 
-  Future<void> playTrack(MusicTrack track) async {
+  /// Joue une piste. [forceLoop] force la lecture en boucle (régie).
+  Future<void> playTrack(MusicTrack track, {bool forceLoop = false}) async {
     _current = track;
     _position = Duration.zero;
     notifyListeners();
     await _player.setReleaseMode(
-      track.loop ? ReleaseMode.loop : ReleaseMode.release,
+      (forceLoop || track.loop) ? ReleaseMode.loop : ReleaseMode.release,
     );
     await _player.stop();
+    await _player.setVolume(_volume);
     await _player.play(AssetSource(track.file));
   }
 
+  /// Lecture/pause d'une piste depuis la régie (boucle selon le réglage).
   Future<void> toggle(MusicTrack track) async {
     if (_current?.file == track.file) {
       if (_playing) {
@@ -207,7 +228,7 @@ class MusicController extends ChangeNotifier {
         await _player.resume();
       }
     } else {
-      await playTrack(track);
+      await playTrack(track, forceLoop: _boucle);
     }
   }
 

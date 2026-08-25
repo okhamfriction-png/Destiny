@@ -162,6 +162,53 @@ class _SoundMixerSheetState extends State<SoundMixerSheet> {
                 ],
               ),
             ),
+            // Contrôles simplifiés du régisseur : boucle + volume.
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
+              child: Row(
+                children: [
+                  InkWell(
+                    onTap: () => c.setBoucle(!c.boucle),
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: c.boucle
+                            ? _gold.withValues(alpha: 0.16)
+                            : Colors.white10,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                            color: c.boucle ? _gold : Colors.white24),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.repeat,
+                              size: 16,
+                              color: c.boucle ? _gold : Colors.white54),
+                          const SizedBox(width: 4),
+                          Text('Boucle',
+                              style: TextStyle(
+                                  color: c.boucle ? _gold : Colors.white54,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  const Icon(Icons.volume_down, color: Colors.white54, size: 18),
+                  Expanded(
+                    child: Slider(
+                      value: c.volume,
+                      onChanged: (v) => c.setVolume(v),
+                    ),
+                  ),
+                  const Icon(Icons.volume_up, color: Colors.white54, size: 18),
+                ],
+              ),
+            ),
             // Bandeau « en cours ».
             if (c.current != null)
               Container(
