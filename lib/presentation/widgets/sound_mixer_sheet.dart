@@ -5,6 +5,24 @@ import '../../application/state/music_controller.dart';
 const Color _gold = Color(0xFFFFC24B);
 const Color _lav = Color(0xFFB9A6FF);
 
+/// Couleur d'accent par catégorie de son (repère visuel dans la régie).
+Color _categoryColor(String cat) {
+  switch (cat) {
+    case 'Émotions':
+      return const Color(0xFFFF8A80); // corail
+    case 'Lieux':
+      return const Color(0xFF5EE0C4); // teal
+    case 'Ambiances':
+      return const Color(0xFF64B5F6); // bleu
+    case 'Thèmes':
+      return const Color(0xFFFFC24B); // or
+    case 'Univers':
+      return const Color(0xFFB79CFF); // violet
+    default:
+      return _lav;
+  }
+}
+
 /// Ouvre le pupitre de régie son (mixeur) : accès à toutes les musiques
 /// pendant le chrono d'histoire, pour lancer une ambiance en direct.
 Future<void> showSoundMixer(BuildContext context, MusicController controller) {
@@ -181,19 +199,20 @@ class _SoundMixerSheetState extends State<SoundMixerSheet> {
                                       _collapsed.contains(cat)
                                           ? Icons.chevron_right
                                           : Icons.expand_more,
-                                      color: _lav,
+                                      color: _categoryColor(cat),
                                       size: 18),
                                   const SizedBox(width: 4),
                                   Text(cat.toUpperCase(),
-                                      style: const TextStyle(
-                                          color: _lav,
+                                      style: TextStyle(
+                                          color: _categoryColor(cat),
                                           letterSpacing: 2,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w700)),
                                   const SizedBox(width: 8),
                                   Text('${c.tracksOf(cat).length}',
                                       style: TextStyle(
-                                          color: _lav.withValues(alpha: 0.6),
+                                          color: _categoryColor(cat)
+                                              .withValues(alpha: 0.6),
                                           fontSize: 12)),
                                 ],
                               ),
@@ -207,6 +226,7 @@ class _SoundMixerSheetState extends State<SoundMixerSheet> {
                                 for (final t in c.tracksOf(cat))
                                   _TrackChip(
                                     title: t.title,
+                                    color: _categoryColor(cat),
                                     active: c.current?.file == t.file,
                                     playing:
                                         c.current?.file == t.file && c.playing,
@@ -228,29 +248,31 @@ class _SoundMixerSheetState extends State<SoundMixerSheet> {
 class _TrackChip extends StatelessWidget {
   const _TrackChip({
     required this.title,
+    required this.color,
     required this.active,
     required this.playing,
     required this.onTap,
   });
 
   final String title;
+  final Color color;
   final bool active;
   final bool playing;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final color = active ? _gold : Colors.white70;
+    final fg = active ? color : Colors.white70;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: active ? _gold.withValues(alpha: 0.16) : Colors.white10,
+          color: active ? color.withValues(alpha: 0.16) : Colors.white10,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-              color: active ? _gold : Colors.white24,
+              color: active ? color : Colors.white24,
               width: active ? 1.5 : 1),
         ),
         child: Row(
@@ -261,11 +283,11 @@ class _TrackChip extends StatelessWidget {
                     ? Icons.pause
                     : (active ? Icons.play_arrow : Icons.play_circle_outline),
                 size: 18,
-                color: color),
+                color: fg),
             const SizedBox(width: 6),
             Text(title,
                 style: TextStyle(
-                    color: color,
+                    color: fg,
                     fontWeight: active ? FontWeight.w700 : FontWeight.w500)),
           ],
         ),
