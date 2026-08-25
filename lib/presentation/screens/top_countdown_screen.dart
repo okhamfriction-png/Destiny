@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../application/services/audio_service.dart';
+import '../../application/services/transcription_service.dart';
 import '../../application/state/guide_content.dart';
 import '../../application/state/music_controller.dart';
 import '../../domain/entities/archetype.dart';
@@ -163,6 +164,10 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
   Timer? _flashTimer;
   Timer? _conclusionTimer; // musique de conclusion, 15 s après DESTINY 3
   Timer? _lieuTimer; // ambiance du lieu, 15 s après DESTINY 2
+  // Transcription optionnelle de la scène.
+  final TranscriptionService _transcription = TranscriptionService();
+  bool _micDispo = false;
+  bool _transcrire = false;
   // Cube animé au lancement du chrono (flourish de départ).
   bool _showLaunchCube = false;
   int _launchToken = 0;
@@ -224,6 +229,12 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
         : (widget.destinyDefaults.length == 3
             ? [...widget.destinyDefaults]
             : _defaultDestiny(_duration));
+    // La transcription n'est proposée que dans le flux Histoire (écran de config).
+    if (widget.destinyEnabled) {
+      _transcription.disponible().then((d) {
+        if (mounted) setState(() => _micDispo = d);
+      });
+    }
     if (!widget.destinyEnabled) _start();
   }
 
@@ -244,6 +255,7 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
     _flashTimer?.cancel();
     _conclusionTimer?.cancel();
     _lieuTimer?.cancel();
+    _transcription.arreter();
     // Restaure les barres système.
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
@@ -274,6 +286,16 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
         widget.musicController != null &&
         !widget.audioService.muted) {
       widget.musicController!.playCommencement();
+    }
+    // Transcription (ne bloque jamais le chrono : garde interne au service).
+    if (_transcrire && _micDispo) {
+      _transcription.demarrer(
+        onPhrase: (_) {},
+        onChangement: () {
+          if (mounted) setState(() {});
+        },
+        dureeMax: Duration(seconds: _duration + 60),
+      );
     }
     _timer = Timer.periodic(const Duration(seconds: 1), _tick);
   }
@@ -341,6 +363,7 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
         _done = true;
         t.cancel();
         widget.audioService.playCrack();
+        _transcription.arreter(); // fige le texte pour l'afficher
       }
     });
   }
@@ -703,6 +726,20 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
                 ],
               );
             }),
+          if (_micDispo) ...[
+            const SizedBox(height: 8),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              activeThumbColor: _gold,
+              value: _transcrire,
+              onChanged: (v) => setState(() => _transcrire = v),
+              title: const Text('Transcrire la scène',
+                  style: TextStyle(color: Colors.white)),
+              subtitle: const Text(
+                  'Le texte reste sur l\'appareil, aucun son n\'est gardé.',
+                  style: TextStyle(color: Colors.white54)),
+            ),
+          ],
           const SizedBox(height: 8),
           SizedBox(
             width: double.infinity,
@@ -771,6 +808,29 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
             Text('DESTINY à ${_destiny.map(_moment).join(" · ")}',
                 style: const TextStyle(color: _gold, fontSize: 13)),
           ],
+          if (_transcription.ecoute) ...[
+            const SizedBox(height: 6),
+            const Text('🎙 transcription…',
+                style: TextStyle(color: Color(0xFFFF8A80), fontSize: 12)),
+          ],
+          if (_done && _transcription.texte.trim().isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Container(
+              constraints: const BoxConstraints(maxHeight: 130),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: Colors.white10,
+                  borderRadius: BorderRadius.circular(10)),
+              child: SingleChildScrollView(
+                child: Text(_transcription.texte,
+                    style: const TextStyle(
+                        color: Colors.white60, fontSize: 12, height: 1.4)),
+              ),
+            ),
+            const SizedBox(height: 4),
+            const Text('Transcription gardée sur l\'appareil.',
+                style: TextStyle(color: Colors.white38, fontSize: 11)),
+          ],
           // Résultats du dé (un par DESTINY passé).
           if (_rolls.isNotEmpty) ...[
             const SizedBox(height: 12),
@@ -805,13 +865,14 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
               ),
           ],
           const SizedBox(height: 16),
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            alignment: WrapAlignment.center,
+          // Pause · Régler/relancer · Régie son — toujours sur la même ligne
+          // (le FittedBox met le tout à l'échelle pour rentrer en largeur).
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Pause / Reprendre (uniquement pendant que le chrono tourne).
-              if (!_done)
+              if (!_done) ...[
                 FilledButton.icon(
                   onPressed: _togglePause,
                   style: FilledButton.styleFrom(
@@ -825,6 +886,8 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
                   icon: Icon(_paused ? Icons.play_arrow : Icons.pause, size: 20),
                   label: Text(_paused ? 'Reprendre' : 'Pause'),
                 ),
+                const SizedBox(width: 12),
+              ],
               OutlinedButton.icon(
                 onPressed: widget.destinyEnabled
                     ? () {
@@ -839,7 +902,8 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
                     widget.destinyEnabled ? 'Régler / relancer' : 'Relancer'),
               ),
               // Beau bouton Régie son, mis en évidence, à droite.
-              if (widget.musicController != null)
+              if (widget.musicController != null) ...[
+                const SizedBox(width: 12),
                 FilledButton.icon(
                   onPressed: () =>
                       showSoundMixer(context, widget.musicController!),
@@ -854,6 +918,7 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
                   icon: const Icon(Icons.tune, size: 20),
                   label: const Text('Régie son'),
                 ),
+              ],
             ],
           ),
         ],
@@ -904,16 +969,21 @@ class _DestinyFlash extends StatelessWidget {
     }
     // Animation activée : le cube DESTINY surgit et tourne, puis reste affiché
     // (holdAtEnd) jusqu'à ce que le parent retire le flash.
-    return LayoutBuilder(builder: (context, c) {
-      final double size =
-          (c.biggest.shortestSide * 0.55).clamp(200.0, 380.0).toDouble();
-      return DestinyCubeAnimation(
-        size: size,
-        label: 'DESTINY $number',
-        fullscreenScrim: true,
-        holdAtEnd: true,
-      );
-    });
+    //
+    // DestinyCubeAnimation renvoie un Positioned.fill (mode plein écran) : il
+    // DOIT rester enfant direct du Stack. L'emballer dans un LayoutBuilder
+    // plaçait son Positioned sous un non-Stack → crash (ParentDataWidget) au
+    // lancement du chrono / à chaque DESTINY quand l'animation cube est activée.
+    final double size =
+        (MediaQuery.of(context).size.shortestSide * 0.55)
+            .clamp(200.0, 380.0)
+            .toDouble();
+    return DestinyCubeAnimation(
+      size: size,
+      label: 'DESTINY $number',
+      fullscreenScrim: true,
+      holdAtEnd: true,
+    );
   }
 }
 

@@ -169,7 +169,65 @@ class CampagneStore extends ChangeNotifier {
     'chevaliers_dragons': ['Dragons (Krokmou)', 'Shrek', 'Merlin', 'Le Seigneur des Anneaux', 'Kaamelott', 'Zelda', 'Excalibur', 'Les Chevaliers du Zodiaque', 'Mulan', 'Rebelle'],
   };
 
-  /// Les six tons (id → libellé).
+  /// Peuples proposés par univers (couche « origine / espèce » du personnage).
+  /// Le premier de la liste est le plus évident → proposé par défaut.
+  static const Map<String, List<String>> peuplesParUnivers = {
+    // Adulte
+    'contemporain': ['Civils', 'Policiers', 'Truands', 'Notables', 'Marginaux', 'Journalistes'],
+    'policier': ['Enquêteurs', 'Témoins', 'Suspects', 'Notables', 'Petites frappes', 'Légistes'],
+    'high_fantasy': ['Humains', 'Elfes', 'Nains', 'Halfelins', 'Orcs', 'Gobelins', 'Fées'],
+    'shonen': ['Humains', 'Guerriers', 'Ninjas', 'Mages', 'Esprits', 'Démons', 'Créatures'],
+    'science_fiction': ['Humains', 'Androïdes', 'Extraterrestres', 'Cyborgs', 'Clones', 'Mutants'],
+    'dark_fantasy': ['Humains', 'Sorciers', 'Morts-vivants', 'Démons', 'Chasseurs', 'Maudits', 'Bêtes'],
+    'cyberpunk': ['Humains', 'Cyborgs', 'Hackers', 'Corpos', 'Androïdes', 'Gangs des rues'],
+    'horreur': ['Survivants', 'Villageois', 'Possédés', 'Monstres', 'Cultistes', 'Fantômes'],
+    'post_apo': ['Survivants', 'Pillards', 'Mutants', 'Charognards', 'Colons', 'Nomades'],
+    'steampunk': ['Humains', 'Ingénieurs', 'Aristocrates', 'Automates', 'Aviateurs', 'Bas-fonds'],
+    'super_heros': ['Humains', 'Super-héros', 'Super-vilains', 'Mutants', 'Extraterrestres', 'Androïdes'],
+    'historique': ['Roturiers', 'Nobles', 'Soldats', 'Marchands', 'Clergé', 'Artisans', 'Hors-la-loi'],
+    // Enfant
+    'conte_fees': ['Humains', 'Fées', 'Princes et princesses', 'Lutins', 'Ogres', 'Sorcières', 'Animaux enchantés'],
+    'dessin_anime': ['Enfants', 'Animaux rigolos', 'Voisins', 'Héros du quartier', 'Farceurs', 'Robots'],
+    'manga_rigolo': ['Enfants', 'Créatures de poche', 'Écoliers', 'Robots', 'Petits monstres', 'Mascottes'],
+    'animaux_parlent': ['Animaux de la savane', 'Animaux de la ferme', 'Animaux de la jungle', 'Animaux de la forêt', 'Animaux de la ville'],
+    'pirates': ['Pirates', 'Marins', 'Habitants des îles', 'Corsaires', 'Sirènes', 'Chasseurs de trésor'],
+    'espace_rigolo': ['Astronautes', 'Petits aliens', 'Robots', 'Explorateurs', 'Cosmonautes'],
+    'monde_magique': ['Apprentis sorciers', 'Fées', 'Créatures magiques', 'Magiciens', 'Lutins', 'Elfes'],
+    'sous_la_mer': ['Poissons', 'Sirènes', 'Créatures des récifs', 'Crustacés', 'Dauphins', 'Peuples des abysses'],
+    'chevaliers_dragons': ['Chevaliers', 'Dragons', 'Villageois', 'Magiciens', 'Écuyers', 'Princesses'],
+  };
+
+  /// Surcharges de peuples propres à certains lores (plus fin que l'univers).
+  /// La clé est le nom exact du lore ; sinon on retombe sur l'univers.
+  static const Map<String, List<String>> peuplesParLore = {
+    // animaux_parlent — le décor animalier change selon l'histoire
+    'Le Roi Lion': ['Lions', 'Hyènes', 'Suricates', 'Éléphants', 'Zèbres', 'Oiseaux'],
+    'Le Livre de la jungle': ['Loups', 'Panthères', 'Ours', 'Singes', 'Serpents', 'Éléphants'],
+    'La Ferme se rebelle': ['Vaches', 'Cochons', 'Poules', 'Chevaux', 'Moutons', 'Chiens'],
+    'Zootopie': ['Prédateurs', 'Proies', 'Animaux de la ville', 'Renards', 'Lapins', 'Fauves'],
+    'Madagascar': ['Lions', 'Zèbres', 'Girafes', 'Hippopotames', 'Lémuriens', 'Pingouins'],
+    'Ratatouille': ['Rats', 'Humains', 'Cuisiniers'],
+    // shonen — grandes factions
+    'One Piece': ['Pirates', 'Marines', 'Humains', 'Hommes-poissons', 'Géants'],
+    'Naruto': ['Ninjas', 'Villageois', 'Clans', 'Bêtes à queues', 'Sages'],
+    // pirates
+    'Peter Pan': ['Enfants perdus', 'Pirates', 'Fées', 'Sirènes', 'Indiens'],
+    // sous_la_mer
+    'Le Monde de Nemo': ['Poissons', 'Requins', 'Tortues', 'Crustacés', 'Méduses'],
+    // super_heros / science_fiction restent au niveau univers
+  };
+
+  /// Peuples cohérents avec l'univers ET le lore choisis. Le premier est le
+  /// plus évident (proposé par défaut). Retombe sur l'univers, puis un défaut.
+  static List<String> peuplesPour(String univers, String lore) {
+    final parLore = peuplesParLore[lore.trim()];
+    if (parLore != null && parLore.isNotEmpty) return parLore;
+    final parUniv = peuplesParUnivers[univers];
+    if (parUniv != null && parUniv.isNotEmpty) return parUniv;
+    return const ['Habitants', 'Voyageurs', 'Notables', 'Marginaux'];
+  }
+
+  /// Les tons proposés (id → libellé).
   static const Map<String, String> tons = {
     'drole': 'Drôle',
     'aventureux': 'Aventureux',
@@ -177,6 +235,10 @@ class CampagneStore extends ChangeNotifier {
     'epique': 'Épique',
     'tendre': 'Tendre',
     'tranquille': 'Tranquille',
+    'sombre': 'Sombre',
+    'dramatique': 'Dramatique',
+    'burlesque': 'Burlesque',
+    'mysterieux': 'Mystérieux',
   };
 
   Future<void> load() async {

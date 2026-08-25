@@ -10,6 +10,7 @@ import 'campagne_jeu_screen.dart';
 
 const Color _gold = Color(0xFFFFC24B);
 const Color _lav = Color(0xFFB9A6FF);
+const Color _lieuC = Color(0xFF5EE0C4); // teal (peuple)
 
 /// Écran de préparation : tout se règle AVANT de lancer. Une fois l'épisode
 /// commencé, plus personne n'y touche.
@@ -39,8 +40,10 @@ class _PreparationScreenState extends State<PreparationScreen> {
   // Horaires des dangers 2, 3, 4 (le danger 1 démarre l'épisode), en minutes.
   List<int> _horairesMin = const [];
   Episode? _episode;
-  // Archétypes des joueurs, modifiables (copie locale).
-  List<ArchetypeHistoire> _archs = const [];
+  // Copies locales modifiables, une entrée par joueur.
+  List<ArchetypeHistoire> _archs = const []; // archétype (animal)
+  List<String> _peuples = const []; // peuple (origine/espèce)
+  List<String> _fonctions = const []; // fonction dans le lieu
 
   final TranscriptionService _transcription = TranscriptionService();
   bool _micDispo = false;
@@ -50,9 +53,8 @@ class _PreparationScreenState extends State<PreparationScreen> {
   @override
   void initState() {
     super.initState();
-    _noms = [
-      for (var i = 0; i < 5; i++) TextEditingController(text: 'Joueur ${i + 1}')
-    ];
+    // Le champ prénom est vide par défaut (le meneur le remplit s'il veut).
+    _noms = [for (var i = 0; i < 5; i++) TextEditingController()];
     _composer();
     _transcription.disponible().then((d) {
       if (mounted) {
@@ -77,7 +79,15 @@ class _PreparationScreenState extends State<PreparationScreen> {
 
   void _composer() {
     _episode = widget.store.composer(widget.campagne, widget.numero, _joueurs);
-    _archs = [for (final r in (_episode?.roles ?? const [])) r.archetype];
+    final roles = _episode?.roles ?? const <RoleJoueur>[];
+    _archs = [for (final r in roles) r.archetype];
+    // Fonction par défaut = celle du lieu déjà renseignée dans l'appli.
+    _fonctions = [for (final r in roles) r.role];
+    // Peuple par défaut = le plus évident pour l'univers + le lore choisis.
+    final dispo = CampagneStore.peuplesPour(
+        widget.campagne.univers, widget.campagne.lore);
+    final defaut = dispo.isNotEmpty ? dispo.first : '';
+    _peuples = [for (final _ in roles) defaut];
     _recalerHoraires();
   }
 
@@ -120,6 +130,62 @@ class _PreparationScreenState extends State<PreparationScreen> {
     if (chosen != null && mounted) {
       setState(() => _archs[index] = chosen);
     }
+  }
+
+  /// Choix du peuple : options cohérentes avec l'univers ET le lore.
+  Future<void> _changerPeuple(int index) async {
+    final options = CampagneStore.peuplesPour(
+        widget.campagne.univers, widget.campagne.lore);
+    final chosen = await _choisirOption(
+      titre: 'Peuple',
+      couleur: _lieuC,
+      options: options,
+      courant: index < _peuples.length ? _peuples[index] : '',
+    );
+    if (chosen != null && mounted) {
+      setState(() => _peuples[index] = chosen);
+    }
+  }
+
+  /// Choix de la fonction : les fonctions du lieu, ou une saisie libre.
+  Future<void> _changerFonction(int index) async {
+    final lieuRoles = _episode?.lieu.roles ?? const <String>[];
+    final chosen = await _choisirOption(
+      titre: 'Fonction dans le lieu',
+      couleur: _lav,
+      options: lieuRoles,
+      courant: index < _fonctions.length ? _fonctions[index] : '',
+      libre: true, // « Autre… » : saisie personnalisée
+    );
+    if (chosen != null && mounted) {
+      setState(() => _fonctions[index] = chosen);
+    }
+  }
+
+  /// Feuille de sélection générique (peuple / fonction). Si [libre], propose une
+  /// saisie personnalisée « Autre… ».
+  Future<String?> _choisirOption({
+    required String titre,
+    required Color couleur,
+    required List<String> options,
+    required String courant,
+    bool libre = false,
+  }) {
+    return showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: const Color(0xFF120F1E),
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
+      builder: (_) => _OptionPicker(
+        titre: titre,
+        couleur: couleur,
+        options: options,
+        courant: courant,
+        libre: libre,
+      ),
+    );
   }
 
   @override
@@ -197,55 +263,8 @@ class _PreparationScreenState extends State<PreparationScreen> {
                   ],
                 ),
                 const SizedBox(height: 6),
-                for (var i = 0; i < _nbJoueurs; i++)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _noms[i],
-                            decoration: const InputDecoration(
-                                isDense: true, border: OutlineInputBorder()),
-                            onChanged: (_) => setState(() {}),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(i < ep.roles.length ? ep.roles[i].role : '',
-                                  style: const TextStyle(
-                                      color: _lav, fontSize: 13)),
-                              if (i < _archs.length)
-                                InkWell(
-                                  onTap: () => _changerArchetype(i),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text('${emojiArchetype(_archs[i].id)} ',
-                                          style: const TextStyle(fontSize: 15)),
-                                      Flexible(
-                                        child: Text(_archs[i].nom,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                color: couleurStatut(
-                                                    _archs[i].statut),
-                                                fontWeight: FontWeight.w700)),
-                                      ),
-                                      const SizedBox(width: 4),
-                                      const Icon(Icons.edit,
-                                          size: 14, color: _gold),
-                                    ],
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                const SizedBox(height: 4),
+                for (var i = 0; i < _nbJoueurs; i++) _carteJoueur(i, ep),
                 const SizedBox(height: 12),
                 const _Titre('Le temps'),
                 Text('Durée de l\'épisode : $_dureeMin min',
@@ -346,6 +365,135 @@ class _PreparationScreenState extends State<PreparationScreen> {
     );
   }
 
+  /// Carte d'un joueur : prénom (vide), puis Peuple · Archétype · Fonction.
+  Widget _carteJoueur(int i, Episode ep) {
+    final arch = i < _archs.length ? _archs[i] : null;
+    final peuple = i < _peuples.length ? _peuples[i] : '';
+    final fonction = i < _fonctions.length ? _fonctions[i] : '';
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.03),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.white12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Prénom (réduit) + Peuple · Archétype · Fonction : tout sur une ligne.
+          Row(
+            children: [
+              SizedBox(
+                width: 92,
+                child: TextField(
+                  controller: _noms[i],
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                    border: const OutlineInputBorder(),
+                    hintText: 'Joueur ${i + 1}',
+                    hintStyle:
+                        const TextStyle(color: Colors.white24, fontSize: 13),
+                  ),
+                  style: const TextStyle(fontSize: 14),
+                  onChanged: (_) => setState(() {}),
+                ),
+              ),
+              const SizedBox(width: 8),
+              // Puces : sur une ligne quand ça tient, sinon elles passent à la
+              // ligne (Wrap) — aucune puce n'est masquée par un scroll caché.
+              Expanded(
+                child: Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: [
+                    _champChip(
+                      lead: const Icon(Icons.public, size: 15, color: _lieuC),
+                      label: peuple.isEmpty ? 'Peuple' : peuple,
+                      color: _lieuC,
+                      onTap: () => _changerPeuple(i),
+                    ),
+                    if (arch != null)
+                      _champChip(
+                        lead: Text(emojiArchetype(arch.id),
+                            style: const TextStyle(fontSize: 15)),
+                        label: arch.nom,
+                        color: couleurStatut(arch.statut),
+                        onTap: () => _changerArchetype(i),
+                      ),
+                    _champChip(
+                      lead: const Icon(Icons.badge_outlined,
+                          size: 15, color: _lav),
+                      label: fonction.isEmpty ? 'Fonction' : fonction,
+                      color: _lav,
+                      onTap: () => _changerFonction(i),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          // Détail de l'archétype : tempérament · port · moteur.
+          if (arch != null && _detailArchetype(arch).isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 6, left: 2),
+              child: Text(
+                _detailArchetype(arch),
+                style: const TextStyle(
+                    color: Colors.white54, fontSize: 12, height: 1.25),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  /// « tempérament · port · moteur » de l'archétype (parties vides ignorées).
+  String _detailArchetype(ArchetypeHistoire a) => [
+        a.temperament,
+        a.port,
+        a.moteur,
+      ].where((s) => s.trim().isNotEmpty).join(' · ');
+
+  /// Puce éditable (peuple / archétype / fonction) avec icône de crayon.
+  Widget _champChip({
+    required Widget lead,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.10),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: color.withValues(alpha: 0.5)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            lead,
+            const SizedBox(width: 6),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 150),
+              child: Text(label,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: color, fontWeight: FontWeight.w700, fontSize: 13)),
+            ),
+            const SizedBox(width: 4),
+            Icon(Icons.edit, size: 13, color: color.withValues(alpha: 0.8)),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _commencer() {
     final ep = _episode;
     if (ep == null) return;
@@ -354,8 +502,9 @@ class _PreparationScreenState extends State<PreparationScreen> {
       for (var i = 0; i < ep.roles.length; i++)
         RoleJoueur(
           joueur: i < _noms.length ? _noms[i].text.trim() : ep.roles[i].joueur,
-          role: ep.roles[i].role,
+          role: i < _fonctions.length ? _fonctions[i] : ep.roles[i].role,
           archetype: i < _archs.length ? _archs[i] : ep.roles[i].archetype,
+          peuple: i < _peuples.length ? _peuples[i] : '',
         ),
     ];
     final epFinal = Episode(
@@ -510,6 +659,135 @@ class _ArchetypePicker extends StatelessWidget {
           groupe('haut', 'Statut haut'),
           groupe('neutre', 'Statut neutre'),
           groupe('bas', 'Statut bas'),
+        ],
+      ),
+    );
+  }
+}
+
+/// Sélecteur générique (peuple / fonction) : une liste de puces + option de
+/// saisie libre « Autre… » quand [libre] est vrai.
+class _OptionPicker extends StatelessWidget {
+  const _OptionPicker({
+    required this.titre,
+    required this.couleur,
+    required this.options,
+    required this.courant,
+    required this.libre,
+  });
+  final String titre;
+  final Color couleur;
+  final List<String> options;
+  final String courant;
+  final bool libre;
+
+  Future<void> _saisirLibre(BuildContext context) async {
+    final ctrl = TextEditingController(text: courant);
+    final saisi = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1530),
+        title: Text(titre, style: const TextStyle(color: Colors.white)),
+        content: TextField(
+          controller: ctrl,
+          autofocus: true,
+          style: const TextStyle(color: Colors.white),
+          decoration: const InputDecoration(
+              hintText: 'Saisie personnalisée',
+              hintStyle: TextStyle(color: Colors.white38),
+              border: OutlineInputBorder()),
+          onSubmitted: (v) => Navigator.of(ctx).pop(v.trim()),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('Annuler')),
+          FilledButton(
+              onPressed: () => Navigator.of(ctx).pop(ctrl.text.trim()),
+              child: const Text('OK')),
+        ],
+      ),
+    );
+    if (saisi != null && saisi.isNotEmpty && context.mounted) {
+      Navigator.of(context).pop(saisi);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.6,
+      minChildSize: 0.35,
+      maxChildSize: 0.92,
+      builder: (context, scroll) => ListView(
+        controller: scroll,
+        padding: const EdgeInsets.fromLTRB(18, 12, 18, 28),
+        children: [
+          Center(
+            child: Container(
+                width: 42,
+                height: 4,
+                decoration: BoxDecoration(
+                    color: Colors.white24,
+                    borderRadius: BorderRadius.circular(2))),
+          ),
+          const SizedBox(height: 12),
+          Text(titre,
+              style: TextStyle(
+                  color: couleur, fontSize: 20, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 14),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final o in options)
+                InkWell(
+                  onTap: () => Navigator.of(context).pop(o),
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: o == courant
+                          ? couleur.withValues(alpha: 0.18)
+                          : Colors.white10,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                          color: o == courant ? couleur : Colors.white24,
+                          width: o == courant ? 1.5 : 1),
+                    ),
+                    child: Text(o,
+                        style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w600)),
+                  ),
+                ),
+              if (libre)
+                InkWell(
+                  onTap: () => _saisirLibre(context),
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white10,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: couleur.withValues(alpha: 0.6)),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.edit, size: 15, color: couleur),
+                        const SizedBox(width: 6),
+                        Text('Autre…',
+                            style: TextStyle(
+                                color: couleur, fontWeight: FontWeight.w700)),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ],
       ),
     );

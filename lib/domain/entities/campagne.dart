@@ -158,13 +158,19 @@ class Figurant {
   final int visage; // rang → icône de visage distincte
 }
 
-/// L'attribution d'un joueur : son rôle dans le lieu et son archétype.
+/// L'attribution d'un joueur : son rôle dans le lieu, son peuple et son
+/// archétype. Le peuple (origine/espèce) dépend de l'univers et du lore.
 class RoleJoueur {
-  const RoleJoueur(
-      {required this.joueur, required this.role, required this.archetype});
+  const RoleJoueur({
+    required this.joueur,
+    required this.role,
+    required this.archetype,
+    this.peuple = '',
+  });
   final String joueur;
   final String role;
   final ArchetypeHistoire archetype;
+  final String peuple;
 }
 
 /// Une marche d'escalade : qui agit, ce qu'il fait, ce que ça produit.

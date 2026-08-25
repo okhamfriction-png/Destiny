@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 
 import '../../application/services/audio_service.dart';
 import '../../application/services/transcription_service.dart';
@@ -8,6 +10,8 @@ import '../../application/state/campagne_store.dart';
 import '../../application/state/music_controller.dart';
 import '../../domain/entities/campagne.dart';
 import '../visuals/campagne_visuals.dart';
+import '../widgets/destiny_cube_animation.dart';
+import '../widgets/piece_destin_flip.dart';
 import '../widgets/sound_mixer_sheet.dart';
 import 'campagne_bilan_screen.dart';
 
@@ -55,6 +59,94 @@ class _JeuScreenState extends State<JeuScreen> {
 
   EtatPerso _etat(String id) => _etats.putIfAbsent(id, EtatPerso.new);
 
+  int? _flash; // numéro du danger en cours d'animation (dé)
+  Timer? _flashTimer;
+
+  // Pièce du destin (BRAVE / SMART), lancée à la demande par le MJ.
+  bool _piece = false;
+  bool _pieceBrave = true;
+  int _pieceNo = 0; // incrémenté à chaque lancer → relance l'animation
+  final Random _rng = Random();
+
+  /// Le MJ lance la pièce du destin : tirage aléatoire + animation de flip.
+  void _lancerPiece() {
+    if (_piece) return; // une pièce à la fois
+    HapticFeedback.mediumImpact();
+    widget.audioService.playCoin();
+    setState(() {
+      _pieceBrave = _rng.nextBool();
+      _pieceNo++;
+      _piece = true;
+    });
+  }
+
+  /// L'emblème Destiny en « mode pièce » : disque cerclé d'or (icône du bouton).
+  Widget _pieceDestin() => Container(
+        width: 26,
+        height: 26,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: const Color(0xFF0A0818),
+          border: Border.all(color: _mechC, width: 2),
+        ),
+        padding: const EdgeInsets.all(3),
+        child: Image.asset('assets/images/destiny_cube.png', fit: BoxFit.contain),
+      );
+
+  /// Bouton outil du MJ, coloré. [vedette] = fond plein, mis en avant (la pièce).
+  Widget _boutonMJ({
+    IconData? icon,
+    Widget? customLead,
+    required String label,
+    required Color couleur,
+    required VoidCallback onTap,
+    bool vedette = false,
+  }) {
+    // Tailles identiques quel que soit le statut : seul le style (fond/halo/
+    // couleur de texte) change avec [vedette] → les deux boutons font la
+    // même taille.
+    final child = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        customLead ??
+            Icon(icon, size: 24, color: vedette ? Colors.black : couleur),
+        const SizedBox(height: 4),
+        Text(label,
+            style: TextStyle(
+                color: vedette ? Colors.black : couleur,
+                fontWeight: FontWeight.w800,
+                fontSize: 14)),
+      ],
+    );
+    return Material(
+      color: vedette ? couleur : couleur.withValues(alpha: 0.12),
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+                color: vedette ? couleur : couleur.withValues(alpha: 0.5),
+                width: vedette ? 0 : 1),
+            boxShadow: vedette
+                ? [
+                    BoxShadow(
+                        color: couleur.withValues(alpha: 0.45),
+                        blurRadius: 14,
+                        spreadRadius: 1)
+                  ]
+                : null,
+          ),
+          alignment: Alignment.center,
+          child: child,
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -87,6 +179,7 @@ class _JeuScreenState extends State<JeuScreen> {
   @override
   void dispose() {
     _timer?.cancel();
+    _flashTimer?.cancel();
     // arreter() attrape ses exceptions : une exception ici emporterait la
     // fermeture de l'écran pour un micro qu'on éteignait de toute façon.
     widget.transcription?.arreter();
@@ -102,7 +195,13 @@ class _JeuScreenState extends State<JeuScreen> {
       for (var i = 0; i < widget.horairesMs.length; i++) {
         if (!_tombes.contains(i + 1) && ecoule >= widget.horairesMs[i]) {
           _tombes.add(i + 1);
-          widget.audioService.playShine(); // son court et net
+          widget.audioService.playStorm(); // coup de tonnerre (montée du danger)
+          // Animation du dé : le cube surgit avec « DANGER N ».
+          _flash = i + 2; // le danger 1 démarre l'épisode, on est aux 2/3/4
+          _flashTimer?.cancel();
+          _flashTimer = Timer(const Duration(milliseconds: 2400), () {
+            if (mounted) setState(() => _flash = null);
+          });
         }
       }
       if (_resteMs <= 0) {
@@ -154,143 +253,148 @@ class _JeuScreenState extends State<JeuScreen> {
     return ok ?? false;
   }
 
-  void _ouvrirCombat() {
-    final ep = widget.episode;
-    // (groupe, id, libellé) pour chaque personnage.
-    final persos = <(String, String, String)>[
-      for (var i = 0; i < ep.roles.length; i++)
-        ('Joueurs', 'j$i', '${ep.roles[i].joueur} — ${ep.roles[i].role}'),
-      for (var f = 0; f < ep.figurants.length; f++)
-        ('Figurants', 'f$f', ep.figurants[f].role),
-      ('Méchant & sbires', 'm', ep.mechant.nom),
-      for (var s = 0; s < ep.mechant.sbires.length; s++)
-        ('Méchant & sbires', 's$s', ep.mechant.sbires[s].nom),
-    ];
-    final groupes = <String>[];
-    for (final p in persos) {
-      if (!groupes.contains(p.$1)) groupes.add(p.$1);
-    }
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: const Color(0xFF120F1E),
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(22))),
-      builder: (_) => StatefulBuilder(builder: (context, setSheet) {
-        Widget ligne(String id, String label) {
-          final e = _etat(id);
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(label,
-                      style: TextStyle(
-                          color: e.mort ? Colors.white38 : Colors.white,
-                          decoration:
-                              e.mort ? TextDecoration.lineThrough : null)),
-                ),
-                _btn(e.mort ? Icons.heart_broken : Icons.favorite,
-                    e.mort ? Colors.redAccent : const Color(0xFF66BB6A),
-                    e.mort ? 'Ressusciter' : 'Marquer mort',
-                    () => setSheet(() => e.mort = !e.mort)),
-                _btn(Icons.healing,
-                    e.blesse ? Colors.orangeAccent : Colors.white24,
-                    'Blessé', () => setSheet(() => e.blesse = !e.blesse)),
-                _btn(Icons.remove_circle_outline, Colors.white54, 'Malus',
-                    () => setSheet(() => e.mod--)),
-                SizedBox(
-                  width: 30,
-                  child: Text(
-                      e.mod == 0
-                          ? '0'
-                          : (e.mod > 0 ? '+${e.mod}' : '${e.mod}'),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: e.mod > 0
-                              ? const Color(0xFF66BB6A)
-                              : (e.mod < 0 ? Colors.orangeAccent : Colors.white54),
-                          fontWeight: FontWeight.w700)),
-                ),
-                _btn(Icons.add_circle_outline, Colors.white54, 'Bonus',
-                    () => setSheet(() => e.mod++)),
-              ],
-            ),
-          );
-        }
-
-        return DraggableScrollableSheet(
-          expand: false,
-          initialChildSize: 0.72,
-          minChildSize: 0.4,
-          maxChildSize: 0.94,
-          builder: (context, scroll) => ListView(
-            controller: scroll,
-            padding: const EdgeInsets.fromLTRB(18, 12, 18, 28),
+  /// Légende simple des icônes de combat (bouton « i » de la barre du haut).
+  void _expliquerCombat() {
+    Widget ligne(IconData ic, Color col, String titre, String texte) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Container(
-                    width: 42,
-                    height: 4,
-                    decoration: BoxDecoration(
-                        color: Colors.white24,
-                        borderRadius: BorderRadius.circular(2))),
+              Icon(ic, color: col, size: 22),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text.rich(TextSpan(children: [
+                  TextSpan(
+                      text: '$titre — ',
+                      style: TextStyle(
+                          color: col, fontWeight: FontWeight.w800)),
+                  TextSpan(
+                      text: texte,
+                      style: const TextStyle(color: Colors.white70)),
+                ])),
               ),
-              const SizedBox(height: 12),
-              const Text('Combat',
-                  style: TextStyle(
-                      color: _escC, fontSize: 20, fontWeight: FontWeight.w800)),
-              const SizedBox(height: 4),
-              const Text(
-                  'Vie / mort, blessures, bonus et malus. Le MJ garde la main.',
-                  style: TextStyle(color: Colors.white54, fontSize: 13)),
-              for (final g in groupes) ...[
-                Padding(
-                  padding: const EdgeInsets.only(top: 16, bottom: 4),
-                  child: Text(g.toUpperCase(),
-                      style: const TextStyle(
-                          color: _figC,
-                          letterSpacing: 2,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700)),
-                ),
-                for (final p in persos.where((x) => x.$1 == g))
-                  ligne(p.$2, p.$3),
-              ],
             ],
           ),
         );
-      }),
-    ).then((_) {
-      if (mounted) setState(() {}); // reflète les états sur les cartes
-    });
-  }
-
-  Widget _btn(IconData icon, Color color, String tip, VoidCallback onTap) =>
-      IconButton(
-          visualDensity: VisualDensity.compact,
-          tooltip: tip,
-          icon: Icon(icon, color: color, size: 20),
-          onPressed: onTap);
-
-  /// Petit badge d'état (💀 mort, 🩹 blessé, +n/-n) à côté d'un personnage.
-  Widget _badge(String id) {
-    final e = _etats[id];
-    if (e == null || !e.actif) return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.only(left: 6),
-      child: Text(
-        [
-          if (e.mort) '💀',
-          if (e.blesse) '🩹',
-          if (e.mod != 0) (e.mod > 0 ? '+${e.mod}' : '${e.mod}'),
-        ].join(' '),
-        style: TextStyle(
-            fontSize: 12,
-            color: e.mort ? Colors.redAccent : Colors.orangeAccent,
-            fontWeight: FontWeight.w700),
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1530),
+        title: const Text('Le combat, en un coup d\'œil',
+            style: TextStyle(color: Colors.white, fontSize: 18)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+                'Tapez une icône à côté d\'un personnage pour changer son état.',
+                style: TextStyle(color: Colors.white54, fontSize: 13)),
+            const SizedBox(height: 8),
+            ligne(Icons.favorite, Colors.redAccent, 'Cœur rouge',
+                'en forme. Tapez pour passer blessé, puis mort, puis de nouveau en forme.'),
+            ligne(Icons.heart_broken, Colors.orangeAccent, 'Cœur brisé',
+                'le personnage est blessé.'),
+            ligne(Icons.favorite_border, Colors.white38, 'Cœur vidé',
+                'le personnage est mort (son nom est barré).'),
+            ligne(Icons.remove_circle_outline, Colors.orangeAccent, 'Moins',
+                'malus : le personnage est affaibli (−1, −2…).'),
+            ligne(Icons.add_circle_outline, const Color(0xFF66BB6A), 'Plus',
+                'bonus : le personnage est renforcé (+1, +2…).'),
+          ],
+        ),
+        actions: [
+          FilledButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('Compris')),
+        ],
       ),
     );
+  }
+
+  /// Contrôles de combat d'un personnage, tous sur UNE ligne, à côté de lui :
+  /// cœur (en forme → blessé → mort) · − malus · valeur · + bonus.
+  Widget _combatInline(String id) {
+    final e = _etat(id);
+    // Zone tactile de 40×40 (confort de tap), icône visuelle plus petite au
+    // centre. Un léger retour haptique confirme chaque action.
+    Widget mini(IconData ic, Color col, bool on, VoidCallback mut) => InkWell(
+          onTap: () {
+            HapticFeedback.selectionClick();
+            setState(mut);
+          },
+          borderRadius: BorderRadius.circular(20),
+          child: SizedBox(
+            width: 40,
+            height: 40,
+            child: Icon(ic,
+                size: 20,
+                color: on ? col : Colors.white.withValues(alpha: 0.32)),
+          ),
+        );
+    // Cœur à 3 états, distincts PAR LA FORME (et pas seulement la couleur) :
+    // plein rouge (en forme) → brisé orange (blessé) → contour éteint (mort).
+    final IconData coeurIcon;
+    final Color coeurColor;
+    if (e.mort) {
+      coeurIcon = Icons.favorite_border; // contour = vidé / éteint
+      coeurColor = Colors.white38;
+    } else if (e.blesse) {
+      coeurIcon = Icons.heart_broken; // brisé
+      coeurColor = Colors.orangeAccent;
+    } else {
+      coeurIcon = Icons.favorite; // plein, rouge, en forme
+      coeurColor = Colors.redAccent;
+    }
+    final modColor = e.mod > 0
+        ? const Color(0xFF66BB6A)
+        : (e.mod < 0 ? Colors.orangeAccent : Colors.white38);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        InkWell(
+          onTap: () {
+            HapticFeedback.selectionClick();
+            setState(() => _cyclerSante(e));
+          },
+          borderRadius: BorderRadius.circular(20),
+          child: SizedBox(
+            width: 40,
+            height: 40,
+            child: Icon(coeurIcon, size: 20, color: coeurColor),
+          ),
+        ),
+        mini(Icons.remove_circle_outline, Colors.orangeAccent, e.mod < 0,
+            () => e.mod--),
+        SizedBox(
+          width: 22,
+          child: Text(
+              e.mod == 0 ? '0' : (e.mod > 0 ? '+${e.mod}' : '${e.mod}'),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: modColor,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800)),
+        ),
+        mini(Icons.add_circle_outline, const Color(0xFF66BB6A), e.mod > 0,
+            () => e.mod++),
+      ],
+    );
+  }
+
+  /// Raye le nom d'un personnage mort (barré). Sinon aucune décoration.
+  TextDecoration? _rayeSiMort(String id) =>
+      (_etats[id]?.mort ?? false) ? TextDecoration.lineThrough : null;
+
+  /// Fait avancer l'état de santé du cœur : en forme → blessé → mort → en forme.
+  void _cyclerSante(EtatPerso e) {
+    if (!e.blesse && !e.mort) {
+      e.blesse = true; // en forme → blessé
+    } else if (e.blesse && !e.mort) {
+      e.blesse = false;
+      e.mort = true; // blessé → mort
+    } else {
+      e.mort = false;
+      e.blesse = false; // mort → en forme
+    }
   }
 
   @override
@@ -331,18 +435,14 @@ class _JeuScreenState extends State<JeuScreen> {
                 ]),
               ),
             IconButton(
-              tooltip: 'Combat (vie / blessures / bonus-malus)',
-              icon: const Icon(Icons.shield, color: _escC),
-              onPressed: _ouvrirCombat,
-            ),
-            IconButton(
-              tooltip: 'Régie son',
-              icon: const Icon(Icons.tune, color: _mechC),
-              onPressed: () => showSoundMixer(context, widget.musicController),
+              tooltip: 'À quoi servent les icônes de combat ?',
+              icon: const Icon(Icons.info_outline, color: Colors.white54),
+              onPressed: _expliquerCombat,
             ),
           ],
         ),
-        body: ListView(
+        body: Stack(children: [
+          ListView(
           padding: const EdgeInsets.fromLTRB(12, 4, 12, 24),
           children: [
             if (_micRaison.isNotEmpty)
@@ -360,17 +460,30 @@ class _JeuScreenState extends State<JeuScreen> {
                   style: const TextStyle(color: Colors.white70, fontSize: 12),
                 ),
               ),
-            // Lieu + figurants côte à côte.
-            IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+            // Lieu + figurants : côte à côte sur écran large, empilés sur
+            // téléphone (sinon la carte figurants + ses contrôles se tassent
+            // et le texte se replie mot par mot).
+            LayoutBuilder(builder: (context, c) {
+              if (c.maxWidth >= 560) {
+                return IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: _carteLieu(ep)),
+                      const SizedBox(width: 10),
+                      Expanded(child: _carteFigurants(ep)),
+                    ],
+                  ),
+                );
+              }
+              return Column(
                 children: [
-                  Expanded(child: _carteLieu(ep)),
-                  const SizedBox(width: 10),
-                  Expanded(child: _carteFigurants(ep)),
+                  _carteLieu(ep),
+                  const SizedBox(height: 10),
+                  _carteFigurants(ep),
                 ],
-              ),
-            ),
+              );
+            }),
             const SizedBox(height: 10),
             _carteMechant(ep),
             const SizedBox(height: 10),
@@ -378,13 +491,75 @@ class _JeuScreenState extends State<JeuScreen> {
             const SizedBox(height: 10),
             _carteRoles(ep),
             const SizedBox(height: 16),
+            // Outils du MJ : la Pièce du destin (vedette) et la Régie son.
+            // (Le combat se gère directement à côté de chaque personnage.)
+            // IntrinsicHeight + stretch → les deux boutons ont la même taille.
+            IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: _boutonMJ(
+                      customLead: _pieceDestin(),
+                      label: 'Destin',
+                      couleur: _roleC,
+                      onTap: _lancerPiece,
+                      vedette: true, // la pièce, mise en avant (couleur/halo)
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _boutonMJ(
+                      icon: Icons.tune,
+                      label: 'Régie',
+                      couleur: _mechC,
+                      onTap: () =>
+                          showSoundMixer(context, widget.musicController),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
             OutlinedButton.icon(
               onPressed: _versBilan,
               icon: const Icon(Icons.flag_outlined),
               label: const Text('On arrête là'),
             ),
           ],
-        ),
+          ),
+          // DestinyCubeAnimation renvoie un Positioned.fill (mode scrim) : il
+          // DOIT être un enfant direct du Stack. L'emballer dans un
+          // Positioned.fill/LayoutBuilder plantait l'écran (ParentDataWidget)
+          // au déclenchement du danger minuté.
+          if (_flash != null)
+            DestinyCubeAnimation(
+              key: ValueKey('danger_$_flash'),
+              size: (MediaQuery.of(context).size.shortestSide * 0.55)
+                  .clamp(180.0, 360.0)
+                  .toDouble(),
+              label: 'DANGER $_flash',
+              fullscreenScrim: true,
+              holdAtEnd: true,
+            ),
+          if (_piece)
+            Positioned.fill(
+              child: LayoutBuilder(builder: (context, c) {
+                final size = (c.biggest.shortestSide * 0.6)
+                    .clamp(180.0, 320.0)
+                    .toDouble();
+                return PieceDestinFlip(
+                  // Clé unique par tirage → l'animation se relance à chaque fois.
+                  key: ValueKey(_pieceNo),
+                  brave: _pieceBrave,
+                  size: size,
+                  onFini: () {
+                    if (mounted) setState(() => _piece = false);
+                  },
+                );
+              }),
+            ),
+        ]),
       ),
     );
   }
@@ -457,15 +632,11 @@ class _JeuScreenState extends State<JeuScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(children: [
-                            Flexible(
-                              child: Text(ep.figurants[fi].role,
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700)),
-                            ),
-                            _badge('f$fi'),
-                          ]),
+                          Text(ep.figurants[fi].role,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                  decoration: _rayeSiMort('f$fi'))),
                           Text(
                               '${emojiArchetype(ep.figurants[fi].archetype.id)} ${ep.figurants[fi].archetype.nom}',
                               style: TextStyle(
@@ -479,6 +650,8 @@ class _JeuScreenState extends State<JeuScreen> {
                         ],
                       ),
                     ),
+                    // Contrôles de combat à droite, en fin de ligne (comme les joueurs).
+                    _combatInline('f$fi'),
                   ],
                 ),
               ),
@@ -493,14 +666,15 @@ class _JeuScreenState extends State<JeuScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: [
-              Flexible(
+              Expanded(
                 child: Text(ep.mechant.nom,
-                    style: const TextStyle(
+                    style: TextStyle(
                         color: Colors.white,
                         fontSize: 17,
-                        fontWeight: FontWeight.w800)),
+                        fontWeight: FontWeight.w800,
+                        decoration: _rayeSiMort('m'))),
               ),
-              _badge('m'),
+              _combatInline('m'),
             ]),
             const SizedBox(height: 4),
             Text(ep.mechant.description,
@@ -512,13 +686,15 @@ class _JeuScreenState extends State<JeuScreen> {
               const SizedBox(height: 8),
               for (var si = 0; si < ep.mechant.sbires.length; si++)
                 Row(children: [
-                  Flexible(
+                  Expanded(
                     child: Text(
                         '· ${ep.mechant.sbires[si].nom} — ${ep.mechant.sbires[si].description}',
-                        style: const TextStyle(
-                            color: Colors.white54, fontSize: 13)),
+                        style: TextStyle(
+                            color: Colors.white54,
+                            fontSize: 13,
+                            decoration: _rayeSiMort('s$si'))),
                   ),
-                  _badge('s$si'),
+                  _combatInline('s$si'),
                 ]),
             ],
           ],
@@ -584,13 +760,22 @@ class _JeuScreenState extends State<JeuScreen> {
                     Expanded(
                       child: Text.rich(TextSpan(children: [
                         TextSpan(
-                            text: '${ep.roles[i].joueur} — ',
-                            style: const TextStyle(
+                            text:
+                                '${ep.roles[i].joueur.isEmpty ? 'Joueur ${i + 1}' : ep.roles[i].joueur} — ',
+                            style: TextStyle(
                                 color: Colors.white,
-                                fontWeight: FontWeight.w700)),
+                                fontWeight: FontWeight.w700,
+                                decoration: _rayeSiMort('j$i'))),
                         TextSpan(
                             text: ep.roles[i].role,
                             style: const TextStyle(color: Colors.white70)),
+                        if (ep.roles[i].peuple.isNotEmpty)
+                          TextSpan(
+                              text: ' · ${ep.roles[i].peuple}',
+                              style: const TextStyle(
+                                  color: _lieuC,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600)),
                         TextSpan(
                             text: '  ${emojiArchetype(ep.roles[i].archetype.id)} ',
                             style: const TextStyle(fontSize: 14)),
@@ -607,7 +792,7 @@ class _JeuScreenState extends State<JeuScreen> {
                                 color: Colors.white54, fontSize: 13)),
                       ])),
                     ),
-                    _badge('j$i'),
+                    _combatInline('j$i'),
                   ],
                 ),
               ),

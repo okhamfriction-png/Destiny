@@ -69,7 +69,7 @@ class HistoireHubScreen extends StatelessWidget {
           title: 'Campagne',
           subtitle:
               'Des épisodes qui se suivent dans un même monde, avec un méchant '
-              'qui revient : 12 univers, cartes, escalade et chrono. Sans IA.',
+              'qui revient : 21 univers, cartes, escalade et chrono. Sans IA.',
           onTap: () => Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => CampagneListeScreen(
               store: campagneStore,

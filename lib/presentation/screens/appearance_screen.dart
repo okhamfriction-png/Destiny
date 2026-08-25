@@ -295,23 +295,6 @@ class AppearanceScreen extends StatelessWidget {
                   value: visualSettings.destinyWeightDestin,
                   onChanged: visualSettings.setDestinyWeightDestin,
                 ),
-                const SizedBox(height: 20),
-                const Divider(height: 1),
-                const SizedBox(height: 8),
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  value: visualSettings.cubeAnimation,
-                  onChanged: visualSettings.setCubeAnimation,
-                  secondary:
-                      Icon(Icons.view_in_ar, color: theme.colorScheme.primary),
-                  title: const Text('Animation du cube'),
-                  subtitle: Text(
-                    'Cube doré animé au lancer des dés et au lancement du '
-                    'chrono d\'histoire. Désactivée par défaut.',
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: Colors.white38),
-                  ),
-                ),
               ],
             );
           },
