@@ -986,6 +986,32 @@ class _ArchetypePicker extends StatelessWidget {
           const Text('Changer d\'archétype',
               style: TextStyle(
                   color: _gold, fontSize: 20, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.white24),
+            ),
+            child: const Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(Icons.info_outline, size: 18, color: Color(0xFFB9A6FF)),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Les statuts ne sont ni figés ni déterminés : juste un axe de '
+                    'clarté pour entrer dans le personnage. Un archétype « haut » '
+                    'peut jouer « bas » dans la scène — c\'est la fiction qui fait '
+                    'bouger le statut.',
+                    style: TextStyle(
+                        color: Colors.white70, fontSize: 12.5, height: 1.35),
+                  ),
+                ),
+              ],
+            ),
+          ),
           group('haut', 'Statut haut'),
           group('neutre', 'Statut neutre'),
           group('bas', 'Statut bas'),
