@@ -14,6 +14,7 @@ import '../../application/state/visual_settings.dart';
 import '../visuals/entity_visuals.dart';
 import '../widgets/destiny_cube_animation.dart';
 import '../widgets/film_poster.dart';
+import '../widgets/sound_mixer_sheet.dart';
 import 'guide_screen.dart';
 import 'location_details_screen.dart';
 import 'tracking_screen.dart';
@@ -335,13 +336,36 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
             SafeArea(
               child: Align(
                 alignment: Alignment.topRight,
-                child: IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white70),
-                  onPressed: () {
-                    SystemChrome.setEnabledSystemUIMode(
-                        SystemUiMode.edgeToEdge);
-                    Navigator.of(context).pop();
-                  },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Coupe / active le son (effets + musique), à gauche de la croix.
+                    Builder(builder: (context) {
+                      final on = !widget.audioService.muted ||
+                          (widget.musicController?.playing ?? false);
+                      return IconButton(
+                        tooltip: on ? 'Couper le son' : 'Activer le son',
+                        icon: Icon(on ? Icons.volume_up : Icons.volume_off,
+                            color: Colors.white70),
+                        onPressed: () => setState(() {
+                          if (on) {
+                            widget.audioService.setMuted(true);
+                            widget.musicController?.stop();
+                          } else {
+                            widget.audioService.setMuted(false);
+                          }
+                        }),
+                      );
+                    }),
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white70),
+                      onPressed: () {
+                        SystemChrome.setEnabledSystemUIMode(
+                            SystemUiMode.edgeToEdge);
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -395,6 +419,14 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
                               ),
                             ),
                           ),
+                        ),
+                      // Pupitre de régie son : lancer une musique en direct.
+                      if (widget.musicController != null)
+                        IconButton(
+                          tooltip: 'Régie son (musiques)',
+                          icon: const Icon(Icons.tune, color: _gold),
+                          onPressed: () =>
+                              showSoundMixer(context, widget.musicController!),
                         ),
                     ],
                   ),
