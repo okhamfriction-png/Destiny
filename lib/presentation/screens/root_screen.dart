@@ -23,8 +23,8 @@ import 'chat_screen.dart';
 import 'generator_screen.dart';
 import 'guide_screen.dart';
 import 'music_screen.dart';
+import 'scene_hub_screen.dart';
 import 'settings_screen.dart';
-import 'spectacle_screen.dart';
 import 'tracking_screen.dart';
 
 /// Shell de navigation : Générateur · Musique · Histoire · Scène.
@@ -151,7 +151,10 @@ class _RootScreenState extends State<RootScreen> {
           audioService: widget.audioService,
           visualSettings: widget.visualSettings,
           musicController: widget.musicController),
-      SpectacleScreen(controller: widget.spectacleController),
+      SceneHubScreen(
+        spectacleController: widget.spectacleController,
+        audioService: widget.audioService,
+      ),
     ];
 
     return Scaffold(

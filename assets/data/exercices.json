@@ -1,0 +1,140 @@
+{
+  "principes": [
+    "Accepter l'offre : quoi que l'autre propose, on dit oui, et on ajoute.",
+    "Faire briller son partenaire plutôt que soi-même.",
+    "Le premier choix est souvent le bon : on ne cherche pas l'idée maligne.",
+    "Montrer, ne pas raconter : on joue l'action plutôt que de la décrire.",
+    "Une erreur est une offre : on l'intègre au lieu de la corriger.",
+    "Rester dans l'ici et maintenant : on réagit à ce qui vient d'arriver.",
+    "Donner à voir où l'on est : l'espace se construit par les gestes.",
+    "Ralentir : on prend le temps de vivre chaque instant."
+  ],
+  "exercices": [
+    {
+      "id": "machine",
+      "nom": "La machine collective",
+      "consigne": "Un joueur lance un geste et un son répétés. Chacun s'ajoute jusqu'à former une seule machine qui respire.",
+      "duree": 180,
+      "categorie": "Corps"
+    },
+    {
+      "id": "miroir",
+      "nom": "Le miroir",
+      "consigne": "Deux joueurs face à face : l'un mène, l'autre suit sans décalage. On inverse le meneur sans prévenir.",
+      "duree": 180,
+      "categorie": "Corps"
+    },
+    {
+      "id": "marche_etats",
+      "nom": "La marche des états",
+      "consigne": "On marche dans l'espace. À chaque signal, on change d'émotion et on la met dans tout le corps.",
+      "duree": 240,
+      "categorie": "Corps"
+    },
+    {
+      "id": "sept_huit",
+      "nom": "Le huit compté",
+      "consigne": "On secoue chaque membre en comptant à voix haute, de huit à un. À chaque tour, plus vite.",
+      "duree": 120,
+      "categorie": "Corps"
+    },
+    {
+      "id": "grommelot",
+      "nom": "Le grommelot",
+      "consigne": "On raconte une histoire passionnée dans une langue inventée, rien qu'avec la musique de la voix.",
+      "duree": 180,
+      "categorie": "Voix"
+    },
+    {
+      "id": "orchestre",
+      "nom": "L'orchestre vocal",
+      "consigne": "Un chef désigne les joueurs, qui produisent chacun un son. Il les fait monter, descendre et se taire.",
+      "duree": 210,
+      "categorie": "Voix"
+    },
+    {
+      "id": "phrase_elastique",
+      "nom": "La phrase élastique",
+      "consigne": "On dit une même phrase très lentement, puis très vite, puis chuchotée, puis clamée.",
+      "duree": 150,
+      "categorie": "Voix"
+    },
+    {
+      "id": "echo_deforme",
+      "nom": "L'écho déformé",
+      "consigne": "Un joueur lance un son court. Le suivant le répète en l'exagérant, et ainsi de suite autour du cercle.",
+      "duree": 150,
+      "categorie": "Voix"
+    },
+    {
+      "id": "oui_et",
+      "nom": "Oui, et…",
+      "consigne": "On construit une histoire à deux. Chaque réplique commence par accepter la précédente, puis ajoute.",
+      "duree": 240,
+      "categorie": "Écoute"
+    },
+    {
+      "id": "un_mot",
+      "nom": "L'histoire à un mot",
+      "consigne": "Le groupe raconte une histoire ; chacun ne dit qu'un seul mot à son tour, sans hésiter.",
+      "duree": 210,
+      "categorie": "Écoute"
+    },
+    {
+      "id": "chef_secret",
+      "nom": "Le chef d'orchestre secret",
+      "consigne": "Un joueur mène des gestes que le groupe copie. Un chercheur, sorti puis revenu, doit deviner qui mène.",
+      "duree": 240,
+      "categorie": "Écoute"
+    },
+    {
+      "id": "meme_mot",
+      "nom": "Le même mot",
+      "consigne": "Deux joueurs comptent jusqu'à trois puis disent un mot ensemble. À chaque tour, ils visent le même.",
+      "duree": 180,
+      "categorie": "Écoute"
+    },
+    {
+      "id": "objet_transforme",
+      "nom": "L'objet transformé",
+      "consigne": "On se passe un objet imaginaire qui devient autre chose à chaque main. On le rend clair par le geste.",
+      "duree": 180,
+      "categorie": "Imagination"
+    },
+    {
+      "id": "machine_ecrire",
+      "nom": "La machine à écrire",
+      "consigne": "Un joueur narre une scène ; les autres jouent tout ce qu'il décrit, à la seconde.",
+      "duree": 240,
+      "categorie": "Imagination"
+    },
+    {
+      "id": "statues",
+      "nom": "Statues et titres",
+      "consigne": "Deux joueurs forment une statue figée. Le groupe lui invente un titre d'exposition, puis elle s'anime.",
+      "duree": 210,
+      "categorie": "Imagination"
+    },
+    {
+      "id": "trois_cadeaux",
+      "nom": "Les trois cadeaux",
+      "consigne": "On mime offrir un cadeau. Celui qui reçoit nomme ce que c'est et remercie précisément.",
+      "duree": 180,
+      "categorie": "Imagination"
+    },
+    {
+      "id": "point_de_vue",
+      "nom": "Le point de vue",
+      "consigne": "On décrit une même scène banale à tour de rôle, chaque fois du point de vue d'un objet différent.",
+      "duree": 210,
+      "categorie": "Imagination"
+    },
+    {
+      "id": "remplacement",
+      "nom": "Le remplacement",
+      "consigne": "Deux joueurs jouent une scène. À « top », un troisième remplace l'un d'eux et continue sans rupture.",
+      "duree": 300,
+      "categorie": "Imagination"
+    }
+  ]
+}
