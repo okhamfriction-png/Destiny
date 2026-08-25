@@ -19,9 +19,9 @@ import '../../domain/repositories/combination_memory.dart';
 import '../../domain/repositories/story_repository.dart';
 import '../social_links.dart';
 import 'catalog_view_screen.dart';
-import 'chat_screen.dart';
 import 'generator_screen.dart';
 import 'guide_screen.dart';
+import 'histoire_hub_screen.dart';
 import 'music_screen.dart';
 import 'scene_hub_screen.dart';
 import 'settings_screen.dart';
@@ -146,11 +146,12 @@ class _RootScreenState extends State<RootScreen> {
         musicController: widget.musicController,
       ),
       MusicScreen(controller: widget.musicController),
-      ChatScreen(
-          controller: widget.chatController,
-          audioService: widget.audioService,
-          visualSettings: widget.visualSettings,
-          musicController: widget.musicController),
+      HistoireHubScreen(
+        chatController: widget.chatController,
+        audioService: widget.audioService,
+        visualSettings: widget.visualSettings,
+        musicController: widget.musicController,
+      ),
       SceneHubScreen(
         spectacleController: widget.spectacleController,
         audioService: widget.audioService,
