@@ -117,6 +117,13 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
         if (mounted) widget.controller.setMode(GeneratorMode.histoire);
       });
     }
+    // Minimum 3 joueurs (pour garantir un haut + un bas + un neutre) : on
+    // remonte un état restauré à 2.
+    if (widget.controller.state.playerCount < 3) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) widget.controller.updatePlayerCount(3);
+      });
+    }
     _loadCatalogNames();
   }
 
@@ -709,7 +716,7 @@ class _PlayerStepper extends StatelessWidget {
   final bool enabled;
   final ValueChanged<int> onChanged;
 
-  static const int _min = 2;
+  static const int _min = 3;
   static const int _max = 10;
 
   @override

@@ -16,7 +16,7 @@ class StoryState {
 
   factory StoryState.initial() {
     return const StoryState(
-      playerCount: 2,
+      playerCount: 3,
       status: StoryStatus.idle,
     );
   }
