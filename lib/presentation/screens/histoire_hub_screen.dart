@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../application/services/audio_service.dart';
+import '../../application/state/campagne_store.dart';
 import '../../application/state/chat_controller.dart';
 import '../../application/state/music_controller.dart';
 import '../../application/state/visual_settings.dart';
 import '../widgets/mode_card.dart';
+import 'campagne_liste_screen.dart';
 import 'chat_screen.dart';
 
 const Color _gold = Color(0xFFFFC24B);
@@ -19,6 +21,7 @@ class HistoireHubScreen extends StatelessWidget {
     required this.audioService,
     required this.visualSettings,
     required this.musicController,
+    required this.campagneStore,
     super.key,
   });
 
@@ -26,6 +29,7 @@ class HistoireHubScreen extends StatelessWidget {
   final AudioService audioService;
   final VisualSettings visualSettings;
   final MusicController musicController;
+  final CampagneStore campagneStore;
 
   @override
   Widget build(BuildContext context) {
@@ -56,15 +60,20 @@ class HistoireHubScreen extends StatelessWidget {
           )),
         ),
         const SizedBox(height: 12),
-        const ModeCard(
+        ModeCard(
           icon: Icons.auto_stories,
           color: _gold,
           title: 'Campagne',
           subtitle:
               'Des épisodes qui se suivent dans un même monde, avec un méchant '
-              'qui revient : catalogue, cartes, escalade et chrono. Bientôt.',
-          onTap: null,
-          badge: 'Bientôt',
+              'qui revient : 12 univers, cartes, escalade et chrono. Sans IA.',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => CampagneListeScreen(
+              store: campagneStore,
+              audioService: audioService,
+              musicController: musicController,
+            ),
+          )),
         ),
       ],
     );

@@ -5,6 +5,7 @@ import 'application/services/audio_service.dart';
 import 'application/services/llm_service.dart';
 import 'application/services/random_picker_service.dart';
 import 'application/state/ai_settings.dart';
+import 'application/state/campagne_store.dart';
 import 'application/state/chat_controller.dart';
 import 'application/state/generation_history.dart';
 import 'application/state/guide_content.dart';
@@ -113,6 +114,8 @@ Future<void> _boot() async {
   final relationCheatsheet = RelationCheatsheet();
   final locationDetails = LocationDetailsStore();
   await locationDetails.load();
+  final campagneStore = CampagneStore();
+  await campagneStore.load();
 
   runApp(DestinyApp(
     controller: controller,
@@ -132,6 +135,7 @@ Future<void> _boot() async {
     trackingStore: trackingStore,
     relationCheatsheet: relationCheatsheet,
     locationDetails: locationDetails,
+    campagneStore: campagneStore,
   ));
 }
 
@@ -178,6 +182,7 @@ class DestinyApp extends StatelessWidget {
     required this.trackingStore,
     required this.relationCheatsheet,
     required this.locationDetails,
+    required this.campagneStore,
     super.key,
   });
 
@@ -198,6 +203,7 @@ class DestinyApp extends StatelessWidget {
   final TrackingStore trackingStore;
   final RelationCheatsheet relationCheatsheet;
   final LocationDetailsStore locationDetails;
+  final CampagneStore campagneStore;
 
   @override
   Widget build(BuildContext context) {
@@ -223,6 +229,7 @@ class DestinyApp extends StatelessWidget {
         trackingStore: trackingStore,
         relationCheatsheet: relationCheatsheet,
         locationDetails: locationDetails,
+        campagneStore: campagneStore,
       ),
     );
   }

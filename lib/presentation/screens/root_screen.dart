@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../application/services/audio_service.dart';
 import '../../application/services/llm_service.dart';
 import '../../application/state/ai_settings.dart';
+import '../../application/state/campagne_store.dart';
 import '../../application/state/chat_controller.dart';
 import '../../application/state/generation_history.dart';
 import '../../application/state/guide_content.dart';
@@ -47,6 +48,7 @@ class RootScreen extends StatefulWidget {
     required this.trackingStore,
     required this.relationCheatsheet,
     required this.locationDetails,
+    required this.campagneStore,
     super.key,
   });
 
@@ -67,6 +69,7 @@ class RootScreen extends StatefulWidget {
   final TrackingStore trackingStore;
   final RelationCheatsheet relationCheatsheet;
   final LocationDetailsStore locationDetails;
+  final CampagneStore campagneStore;
 
   @override
   State<RootScreen> createState() => _RootScreenState();
@@ -151,6 +154,7 @@ class _RootScreenState extends State<RootScreen> {
         audioService: widget.audioService,
         visualSettings: widget.visualSettings,
         musicController: widget.musicController,
+        campagneStore: widget.campagneStore,
       ),
       SceneHubScreen(
         spectacleController: widget.spectacleController,

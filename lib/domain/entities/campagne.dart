@@ -1,6 +1,6 @@
-/// Entités du module Histoire → Campagne (théâtre improvisé en famille).
-/// Vocabulaire PbtA adapté aux enfants : but (impulsion), manœuvres, présages,
-/// sbires. Aucun contenu violent : le danger est un problème jouable.
+// Entités du module Histoire → Campagne (théâtre improvisé en famille).
+// Vocabulaire PbtA adapté aux enfants : but (impulsion), manœuvres, présages,
+// sbires. Aucun contenu violent : le danger est un problème jouable.
 
 /// Un sous-espace nommé d'un lieu (« La place du marché », son détail).
 class EspaceLieu {
