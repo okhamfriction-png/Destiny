@@ -6,6 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/entities/campagne.dart';
 import '../../domain/usecases/constructeur_episode.dart';
+import '../assistant/campagne_assistant.dart';
+import '../services/llm_service.dart';
+import 'ai_settings.dart';
 
 /// Un épisode joué et gardé (pour « Ce qui s'est passé »).
 class SeanceJouee {
@@ -16,6 +19,7 @@ class SeanceJouee {
     required this.amorceId,
     this.phrase = '',
     this.ceQuiAMarche = '',
+    this.transcription = '',
   });
   final int numero;
   final int dateMs;
@@ -23,6 +27,7 @@ class SeanceJouee {
   final String amorceId;
   final String phrase;
   final String ceQuiAMarche;
+  final String transcription;
 
   Map<String, dynamic> toJson() => {
         'numero': numero,
@@ -31,6 +36,7 @@ class SeanceJouee {
         'amorceId': amorceId,
         'phrase': phrase,
         'ceQuiAMarche': ceQuiAMarche,
+        'transcription': transcription,
       };
 
   factory SeanceJouee.fromJson(Map<String, dynamic> j) => SeanceJouee(
@@ -40,16 +46,43 @@ class SeanceJouee {
         amorceId: j['amorceId'] as String? ?? '',
         phrase: j['phrase'] as String? ?? '',
         ceQuiAMarche: j['ceQuiAMarche'] as String? ?? '',
+        transcription: j['transcription'] as String? ?? '',
       );
 }
 
 /// Catalogue livré + campagnes de l'utilisateur, persistées localement.
 class CampagneStore extends ChangeNotifier {
+  CampagneStore({LlmService? llm, AiSettings? aiSettings})
+      : _aiSettings = aiSettings,
+        _assistant = llm == null ? null : CampagneAssistant(llm);
+
   static const _kCampagnes = 'campagnes_v1';
   static const _kSeances = 'campagne_seances_v1';
   static const _kProchainId = 'campagne_prochain_id_v1';
 
   final ConstructeurEpisode _constructeur = const ConstructeurEpisode();
+  final AiSettings? _aiSettings;
+  final CampagneAssistant? _assistant;
+
+  /// L'IA est-elle configurée (clé) et disponible pour résumer ?
+  bool get iaConfiguree => _assistant != null && (_aiSettings?.configured ?? false);
+
+  /// Demande à l'IA un résumé + une accroche (le texte est déjà validé/nettoyé).
+  Future<MemoireEpisode> resumer({
+    required Campagne campagne,
+    required String transcription,
+  }) async {
+    if (_assistant == null || _aiSettings == null) {
+      return const MemoireEpisode();
+    }
+    return _assistant.resumer(
+      settings: _aiSettings,
+      univers: CampagneStore.univers[campagne.univers] ?? campagne.univers,
+      ton: CampagneStore.tons[campagne.ton] ?? campagne.ton,
+      contexte: campagne.contexte,
+      transcription: transcription,
+    );
+  }
 
   List<LieuHistoire> _lieux = const [];
   List<MechantHistoire> _mechants = const [];
@@ -217,6 +250,7 @@ class CampagneStore extends ChangeNotifier {
     Episode episode, {
     String phrase = '',
     String ceQuiAMarche = '',
+    String transcription = '',
   }) async {
     final now = DateTime.now().millisecondsSinceEpoch;
     (_seances[campagne.id] ??= []).add(SeanceJouee(
@@ -226,6 +260,7 @@ class CampagneStore extends ChangeNotifier {
       amorceId: episode.amorceId,
       phrase: phrase,
       ceQuiAMarche: ceQuiAMarche,
+      transcription: transcription,
     ));
     final i = _campagnes.indexWhere((c) => c.id == campagne.id);
     if (i >= 0) {

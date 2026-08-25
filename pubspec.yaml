@@ -21,6 +21,7 @@ dependencies:
   url_launcher: ^6.3.0
   font_awesome_flutter: ^10.7.0
   wakelock_plus: ^1.2.8
+  speech_to_text: ^7.4.0
 
 dev_dependencies:
   flutter_test:

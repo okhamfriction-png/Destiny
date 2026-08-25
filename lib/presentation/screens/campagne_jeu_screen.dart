@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../application/services/audio_service.dart';
+import '../../application/services/transcription_service.dart';
 import '../../application/state/campagne_store.dart';
 import '../../application/state/music_controller.dart';
 import '../../domain/entities/campagne.dart';
 import '../widgets/sound_mixer_sheet.dart';
+import 'campagne_bilan_screen.dart';
 
 const Color _lieuC = Color(0xFF5EE0C4);
 const Color _figC = Color(0xFFB79CFF);
@@ -25,6 +27,7 @@ class JeuScreen extends StatefulWidget {
     required this.horairesMs,
     required this.audioService,
     required this.musicController,
+    this.transcription,
     super.key,
   });
   final CampagneStore store;
@@ -34,6 +37,7 @@ class JeuScreen extends StatefulWidget {
   final List<int> horairesMs;
   final AudioService audioService;
   final MusicController musicController;
+  final TranscriptionService? transcription;
 
   @override
   State<JeuScreen> createState() => _JeuScreenState();
@@ -44,16 +48,36 @@ class _JeuScreenState extends State<JeuScreen> {
   Timer? _timer;
   final Set<int> _tombes = {}; // index des marches d'escalade révélées
   bool _peutSortir = false;
+  String _micRaison = ''; // raison si le micro n'a pas démarré
 
   @override
   void initState() {
     super.initState();
     _timer = Timer.periodic(const Duration(seconds: 1), _battement);
+    _demarrerMicro();
+  }
+
+  Future<void> _demarrerMicro() async {
+    final t = widget.transcription;
+    if (t == null) return;
+    // Le micro ne doit JAMAIS empêcher un épisode de commencer : l'échec est un
+    // simple bandeau, la séance continue.
+    final echec = await t.demarrer(
+      onPhrase: (_) {},
+      onChangement: () {
+        if (mounted) setState(() {});
+      },
+      dureeMax: const Duration(minutes: 12),
+    );
+    if (!echec.ok && mounted) setState(() => _micRaison = echec.message);
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    // arreter() attrape ses exceptions : une exception ici emporterait la
+    // fermeture de l'écran pour un micro qu'on éteignait de toute façon.
+    widget.transcription?.arreter();
     super.dispose();
   }
 
@@ -85,6 +109,7 @@ class _JeuScreenState extends State<JeuScreen> {
 
   void _versBilan() {
     _timer?.cancel();
+    widget.transcription?.arreter();
     setState(() => _peutSortir = true);
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (_) => BilanScreen(
@@ -92,6 +117,7 @@ class _JeuScreenState extends State<JeuScreen> {
         campagne: widget.campagne,
         episode: widget.episode,
         audioService: widget.audioService,
+        transcription: widget.transcription?.texte ?? '',
       ),
     ));
   }
@@ -139,6 +165,16 @@ class _JeuScreenState extends State<JeuScreen> {
               style: const TextStyle(
                   fontSize: 26, fontWeight: FontWeight.w900, letterSpacing: 2)),
           actions: [
+            if (widget.transcription?.ecoute ?? false)
+              const Padding(
+                padding: EdgeInsets.only(right: 4),
+                child: Row(children: [
+                  Icon(Icons.mic, color: _escC, size: 18),
+                  SizedBox(width: 4),
+                  Text('transcription',
+                      style: TextStyle(color: _escC, fontSize: 12)),
+                ]),
+              ),
             IconButton(
               tooltip: 'Régie son',
               icon: const Icon(Icons.tune, color: _mechC),
@@ -149,6 +185,21 @@ class _JeuScreenState extends State<JeuScreen> {
         body: ListView(
           padding: const EdgeInsets.fromLTRB(12, 4, 12, 24),
           children: [
+            if (_micRaison.isNotEmpty)
+              Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: _escC.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  'Le micro n\'a pas démarré ($_micRaison). L\'épisode continue '
+                  'normalement ; l\'autorisation se donne dans les réglages du '
+                  'téléphone.',
+                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                ),
+              ),
             // Lieu + figurants côte à côte.
             IntrinsicHeight(
               child: Row(
@@ -370,107 +421,4 @@ class _JeuScreenState extends State<JeuScreen> {
     Icons.face_5,
     Icons.face_6,
   ];
-}
-
-/// Bilan de fin d'épisode : le carnet, puis on enregistre.
-class BilanScreen extends StatefulWidget {
-  const BilanScreen({
-    required this.store,
-    required this.campagne,
-    required this.episode,
-    required this.audioService,
-    super.key,
-  });
-  final CampagneStore store;
-  final Campagne campagne;
-  final Episode episode;
-  final AudioService audioService;
-
-  @override
-  State<BilanScreen> createState() => _BilanScreenState();
-}
-
-class _BilanScreenState extends State<BilanScreen> {
-  final _ceQuiAMarche = TextEditingController();
-  final _phrase = TextEditingController();
-  bool _enregistre = false;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.audioService.playShine();
-  }
-
-  @override
-  void dispose() {
-    _ceQuiAMarche.dispose();
-    _phrase.dispose();
-    super.dispose();
-  }
-
-  Future<void> _terminer() async {
-    if (_enregistre) return;
-    _enregistre = true;
-    await widget.store.enregistrerSeance(
-      widget.campagne,
-      widget.episode,
-      phrase: _phrase.text.trim(),
-      ceQuiAMarche: _ceQuiAMarche.text.trim(),
-    );
-    if (mounted) Navigator.of(context).pop();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF0A0818),
-      appBar: AppBar(
-        title: const Text('Bravo !'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-      ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-        children: [
-          Text('Épisode ${widget.episode.numero} — ${widget.episode.intitule}',
-              style: const TextStyle(color: Colors.white70)),
-          const SizedBox(height: 20),
-          const Text('CE QUI A MARCHÉ',
-              style: TextStyle(
-                  color: _mechC, letterSpacing: 2, fontSize: 12,
-                  fontWeight: FontWeight.w700)),
-          const SizedBox(height: 8),
-          TextField(
-            controller: _ceQuiAMarche,
-            maxLines: 2,
-            decoration: const InputDecoration(border: OutlineInputBorder()),
-          ),
-          const SizedBox(height: 18),
-          const Text('LA PHRASE QU\'ON GARDE',
-              style: TextStyle(
-                  color: _mechC, letterSpacing: 2, fontSize: 12,
-                  fontWeight: FontWeight.w700)),
-          const SizedBox(height: 8),
-          TextField(
-            controller: _phrase,
-            decoration: const InputDecoration(border: OutlineInputBorder()),
-          ),
-          const SizedBox(height: 24),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              onPressed: _terminer,
-              style: FilledButton.styleFrom(
-                backgroundColor: _mechC,
-                foregroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-              ),
-              child: const Text('Terminer'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

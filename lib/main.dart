@@ -114,7 +114,8 @@ Future<void> _boot() async {
   final relationCheatsheet = RelationCheatsheet();
   final locationDetails = LocationDetailsStore();
   await locationDetails.load();
-  final campagneStore = CampagneStore();
+  final campagneStore =
+      CampagneStore(llm: llmService, aiSettings: aiSettings);
   await campagneStore.load();
 
   runApp(DestinyApp(

@@ -2,9 +2,14 @@ import 'package:destiny/application/services/audio_service.dart';
 import 'package:destiny/application/services/llm_service.dart';
 import 'package:destiny/application/services/random_picker_service.dart';
 import 'package:destiny/application/state/ai_settings.dart';
+import 'package:destiny/application/state/campagne_store.dart';
 import 'package:destiny/application/state/chat_controller.dart';
 import 'package:destiny/application/state/generation_history.dart';
+import 'package:destiny/application/state/guide_content.dart';
+import 'package:destiny/application/state/location_details.dart';
 import 'package:destiny/application/state/music_controller.dart';
+import 'package:destiny/application/state/relation_cheatsheet.dart';
+import 'package:destiny/application/state/tracking_store.dart';
 import 'package:destiny/application/state/spectacle_controller.dart';
 import 'package:destiny/application/state/spinoff_history.dart';
 import 'package:destiny/application/state/story_controller.dart';
@@ -94,6 +99,11 @@ void main() {
         spectacleController: spectacleController,
         llm: llmService,
         spinoffHistory: SpinoffHistory(),
+        guideContent: GuideContent(),
+        trackingStore: TrackingStore(),
+        relationCheatsheet: RelationCheatsheet(),
+        locationDetails: LocationDetailsStore(),
+        campagneStore: CampagneStore(),
       ),
     );
 

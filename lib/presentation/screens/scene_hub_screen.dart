@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../application/services/audio_service.dart';
 import '../../application/state/spectacle_controller.dart';
+import '../widgets/ecran_sombre.dart';
 import '../widgets/mode_card.dart';
 import 'exercices_screen.dart';
 import 'spectacle_screen.dart';
@@ -42,7 +43,8 @@ class SceneHubScreen extends StatelessWidget {
               'Une partie solo menée par une IA : elle joue les partenaires, '
               'le régisseur et le coach. Nécessite une clé IA (Paramètres).',
           onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (_) => SpectacleScreen(controller: spectacleController),
+            builder: (_) =>
+                EcranSombre(child: SpectacleScreen(controller: spectacleController)),
           )),
         ),
         const SizedBox(height: 12),

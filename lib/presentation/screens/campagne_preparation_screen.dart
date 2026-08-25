@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../application/services/audio_service.dart';
+import '../../application/services/transcription_service.dart';
 import '../../application/state/campagne_store.dart';
 import '../../application/state/music_controller.dart';
 import '../../domain/entities/campagne.dart';
@@ -38,6 +39,11 @@ class _PreparationScreenState extends State<PreparationScreen> {
   List<int> _horairesMin = const []; // horaires des dangers, en minutes
   Episode? _episode;
 
+  final TranscriptionService _transcription = TranscriptionService();
+  bool _micDispo = false;
+  String _micRaison = '';
+  bool _transcrire = false;
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +51,14 @@ class _PreparationScreenState extends State<PreparationScreen> {
       for (var i = 0; i < 5; i++) TextEditingController(text: 'Joueur ${i + 1}')
     ];
     _composer();
+    _transcription.disponible().then((d) {
+      if (mounted) {
+        setState(() {
+          _micDispo = d;
+          if (!d) _micRaison = 'Aucun moteur de reconnaissance sur cet appareil.';
+        });
+      }
+    });
   }
 
   @override
@@ -217,6 +231,34 @@ class _PreparationScreenState extends State<PreparationScreen> {
                 const SizedBox(height: 4),
                 const Text('Une fois l\'épisode lancé, plus personne n\'y touche.',
                     style: TextStyle(color: Colors.white38, fontSize: 13)),
+                const SizedBox(height: 16),
+                const _Titre('Le micro'),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  activeThumbColor: _gold,
+                  value: _transcrire && _micDispo,
+                  onChanged: _micDispo
+                      ? (v) => setState(() => _transcrire = v)
+                      : null,
+                  title: const Text('Transcrire l\'épisode',
+                      style: TextStyle(color: Colors.white)),
+                  subtitle: Text(
+                    _micDispo
+                        ? 'Pour que l\'histoire se souvienne d\'elle-même.'
+                        : _micRaison,
+                    style: const TextStyle(color: Colors.white54),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 4),
+                  child: Text(
+                    'Le téléphone écoute et écrit le texte. Aucun son n\'est '
+                    'conservé. Le texte reste sur l\'appareil : à la fin, vous '
+                    'pourrez en demander un résumé — vous verrez exactement ce '
+                    'qui part, et vous pourrez le corriger.',
+                    style: TextStyle(color: Colors.white38, fontSize: 12, height: 1.35),
+                  ),
+                ),
                 const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
@@ -254,6 +296,7 @@ class _PreparationScreenState extends State<PreparationScreen> {
         horairesMs: horairesMs,
         audioService: widget.audioService,
         musicController: widget.musicController,
+        transcription: _transcrire && _micDispo ? _transcription : null,
       ),
     ));
   }

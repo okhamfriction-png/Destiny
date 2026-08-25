@@ -5,6 +5,7 @@ import '../../application/state/campagne_store.dart';
 import '../../application/state/chat_controller.dart';
 import '../../application/state/music_controller.dart';
 import '../../application/state/visual_settings.dart';
+import '../widgets/ecran_sombre.dart';
 import '../widgets/mode_card.dart';
 import 'campagne_liste_screen.dart';
 import 'chat_screen.dart';
@@ -51,11 +52,13 @@ class HistoireHubScreen extends StatelessWidget {
               'Une histoire interactive menée par l\'IA : elle propose, tu '
               'décides. Une partie par choix. Nécessite une clé IA (Paramètres).',
           onTap: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (_) => ChatScreen(
-              controller: chatController,
-              audioService: audioService,
-              visualSettings: visualSettings,
-              musicController: musicController,
+            builder: (_) => EcranSombre(
+              child: ChatScreen(
+                controller: chatController,
+                audioService: audioService,
+                visualSettings: visualSettings,
+                musicController: musicController,
+              ),
             ),
           )),
         ),
