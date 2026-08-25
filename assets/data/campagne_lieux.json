@@ -1,0 +1,692 @@
+{
+ "lieux": [
+  {
+   "id": "db_village_tortue",
+   "univers": "dragon_ball",
+   "nom": "Le village de la Tortue Géniale",
+   "description": "Un petit village au bord de la mer où l'on s'entraîne en rigolant et où l'on mange plein de riz.",
+   "espaces": [
+    {
+     "nom": "La plage aux coquillages",
+     "detail": "On y ramasse des coquillages qui brillent et on fait des courses dans le sable."
+    },
+    {
+     "nom": "Le dojo en bambou",
+     "detail": "Une grande salle où l'on apprend les mouvements rigolos de la Tortue."
+    },
+    {
+     "nom": "Le puits magique",
+     "detail": "Un vieux puits où l'eau fait des bulles quand on chante."
+    },
+    {
+     "nom": "Le marché coloré",
+     "detail": "Des étals pleins de fruits, de bonbons et de chapeaux amusants."
+    },
+    {
+     "nom": "Le grand arbre à câlins",
+     "detail": "Un arbre immense où les enfants grimpent et se cachent."
+    }
+   ],
+   "roles": "la Tortue Géniale, le marchand de bonbons, la grand-mère au chapeau, l'enfant qui court partout, le pêcheur rigolo, la vendeuse de fruits, le petit dragon apprivoisé, le cuisinier de riz"
+  },
+  {
+   "id": "db_montagne_nuage",
+   "univers": "dragon_ball",
+   "nom": "La montagne du Nuage Magique",
+   "description": "Une grande montagne dans les nuages où l'on vole sur un petit nuage doré tout doux.",
+   "espaces": [
+    {
+     "nom": "Le sommet des nuages",
+     "detail": "Un endroit tout blanc et moelleux où l'on rebondit comme sur un trampoline."
+    },
+    {
+     "nom": "La cascade arc-en-ciel",
+     "detail": "Une cascade qui change de couleur quand on rit fort."
+    },
+    {
+     "nom": "La grotte aux échos",
+     "detail": "Une grotte qui répète tout ce qu'on dit en rigolant."
+    },
+    {
+     "nom": "Le jardin des baies magiques",
+     "detail": "Des petites baies qui redonnent de l'énergie et le sourire."
+    },
+    {
+     "nom": "Le pont de corde branlant",
+     "detail": "Un pont qui balance et fait des chatouilles au ventre."
+    }
+   ],
+   "roles": "le gardien du nuage, la fée des baies, l'enfant explorateur, le vieux sage rigolo, le petit singe farceur, la marchande de nuages, le musicien de la montagne, l'oiseau parleur"
+  },
+  {
+   "id": "am_dojo_bambou",
+   "univers": "arts_martiaux",
+   "nom": "Le dojo des Bambous Dansants",
+   "description": "Un dojo entouré de bambous où l'on apprend à bouger comme le vent en s'amusant.",
+   "espaces": [
+    {
+     "nom": "Le tatami moelleux",
+     "detail": "Un grand tapis où l'on fait des roulades et des sauts rigolos."
+    },
+    {
+     "nom": "Le mur des ceintures",
+     "detail": "Un mur plein de ceintures de toutes les couleurs à gagner."
+    },
+    {
+     "nom": "La fontaine de la concentration",
+     "detail": "Une petite fontaine où l'on respire calmement en écoutant l'eau."
+    },
+    {
+     "nom": "Le jardin de pierres",
+     "detail": "Un jardin de cailloux où l'on marche en équilibre comme un flamant rose."
+    },
+    {
+     "nom": "Le coin des lanternes",
+     "detail": "Un coin plein de lanternes en papier qui font des ombres amusantes."
+    }
+   ],
+   "roles": "le maître au grand sourire, l'élève débutant, la championne des roulades, le gardien des ceintures, la cuisinière du thé, le petit frère curieux, le balayeur du dojo, la joueuse de tambour"
+  },
+  {
+   "id": "am_temple_montagne",
+   "univers": "arts_martiaux",
+   "nom": "Le temple de la Montagne Paisible",
+   "description": "Un vieux temple perché sur une montagne où les moines rigolent en faisant des acrobaties.",
+   "espaces": [
+    {
+     "nom": "La cour aux mille marches",
+     "detail": "Un grand escalier où l'on monte en comptant très fort."
+    },
+    {
+     "nom": "La cloche géante",
+     "detail": "Une énorme cloche qui fait un DONG rigolo quand on la touche."
+    },
+    {
+     "nom": "Le potager des moines",
+     "detail": "Un potager plein de légumes rigolos et de citrouilles géantes."
+    },
+    {
+     "nom": "La salle de méditation",
+     "detail": "Une salle toute calme où l'on ferme les yeux et on imagine des choses jolies."
+    },
+    {
+     "nom": "Le pont des carpes",
+     "detail": "Un petit pont au-dessus d'un bassin plein de poissons colorés."
+    }
+   ],
+   "roles": "le vieux moine farceur, l'apprenti maladroit, la jardinière du temple, le sonneur de cloche, l'enfant pèlerin, la marchande de thé, le gardien des carpes, le calligraphe distrait"
+  },
+  {
+   "id": "animaux_clairiere",
+   "univers": "animaux",
+   "nom": "La Grande Clairière des Copains",
+   "description": "Une clairière ensoleillée où tous les animaux de la forêt se retrouvent pour jouer et goûter.",
+   "espaces": [
+    {
+     "nom": "Le vieux chêne à câlins",
+     "detail": "Un arbre énorme et doux dont le tronc est plein de petites cachettes rigolotes."
+    },
+    {
+     "nom": "La mare aux nénuphars",
+     "detail": "Une flaque brillante où les grenouilles font des concours de plus grand plouf."
+    },
+    {
+     "nom": "Le tapis de fleurs",
+     "detail": "Un coin tout coloré où l'on peut se rouler et se chatouiller le nez avec les pétales."
+    },
+    {
+     "nom": "La cabane de brindilles",
+     "detail": "Un petit abri construit par les écureuils, avec une porte qui grince joliment."
+    },
+    {
+     "nom": "Le rocher des histoires",
+     "detail": "Une grosse pierre plate et tiède parfaite pour raconter des blagues à tout le monde."
+    }
+   ],
+   "roles": "l'écureuil bavard, la grenouille sauteuse, le hérisson timide, la coccinelle rapide, le lapin gourmand, la chouette qui sait plein de choses, le renardeau farceur, la tortue tranquille, l'oiseau chanteur"
+  },
+  {
+   "id": "animaux_terrier",
+   "univers": "animaux",
+   "nom": "Le Grand Terrier Douillet",
+   "description": "Un réseau de tunnels tout doux sous la colline où les animaux dorment et se racontent des rêves.",
+   "espaces": [
+    {
+     "nom": "La salle des coussins de mousse",
+     "detail": "Une pièce ronde remplie de mousse verte si moelleuse qu'on rebondit dessus."
+    },
+    {
+     "nom": "Le garde-manger de noisettes",
+     "detail": "Un placard bien rangé où sont empilées les provisions pour l'hiver."
+    },
+    {
+     "nom": "Le tunnel qui chatouille",
+     "detail": "Un couloir plein de racines douces qui frôlent les moustaches quand on passe."
+    },
+    {
+     "nom": "La fenêtre-racine",
+     "detail": "Un petit trou vers l'extérieur d'où l'on voit les étoiles briller la nuit."
+    },
+    {
+     "nom": "Le coin des devinettes",
+     "detail": "Un renfoncement tout rond où l'on s'assoit en cercle pour poser des colles rigolotes."
+    }
+   ],
+   "roles": "la taupe ingénieuse, le mulot rêveur, le blaireau bricoleur, la souris curieuse, le ver de terre poète, la chauve-souris rieuse, le lombric musicien, l'escargot lent, le campagnol chatouilleux"
+  },
+  {
+   "id": "aventure_port",
+   "univers": "aventure",
+   "nom": "Le Port des Mille Voiles",
+   "description": "Un port joyeux et animé où les petits bateaux partent chercher des trésors rigolos.",
+   "espaces": [
+    {
+     "nom": "Le ponton qui craque",
+     "detail": "Une passerelle de bois qui chante des couics rigolos sous les pas."
+    },
+    {
+     "nom": "Le phare à rayures",
+     "detail": "Une haute tour rouge et blanche d'où l'on voit toute la mer scintiller."
+    },
+    {
+     "nom": "Le marché aux poissons rieurs",
+     "detail": "Des étals colorés où les marchands crient des blagues plus fort que les mouettes."
+    },
+    {
+     "nom": "La caverne des coquillages",
+     "detail": "Une grotte remplie de coquillages qui font un bruit de mer quand on les écoute."
+    },
+    {
+     "nom": "Le grand voilier de bois",
+     "detail": "Un bateau majestueux avec des voiles rapiécées et une roue de barre trop grande."
+    }
+   ],
+   "roles": "le petit mousse courageux, la capitaine au grand chapeau, le cuisinier du bord, la vigie perchée, le marchand de cartes, la plongeuse aux perles, le charpentier de bateau, la mouette apprivoisée, le vieux marin conteur"
+  },
+  {
+   "id": "aventure_jungle",
+   "univers": "aventure",
+   "nom": "La Jungle des Trésors Cachés",
+   "description": "Une jungle verte et pleine de surprises où chaque liane mène à une découverte amusante.",
+   "espaces": [
+    {
+     "nom": "Le pont de lianes",
+     "detail": "Une passerelle qui se balance en rigolant au-dessus d'un ruisseau clair."
+    },
+    {
+     "nom": "La cascade arc-en-ciel",
+     "detail": "Une chute d'eau où le soleil dessine toutes les couleurs dans les éclaboussures."
+    },
+    {
+     "nom": "Le temple aux singes",
+     "detail": "De vieilles pierres couvertes de mousse où les singes jouent à cache-cache."
+    },
+    {
+     "nom": "La clairière aux fruits géants",
+     "detail": "Un espace ouvert où poussent des fruits énormes et bien sucrés."
+    },
+    {
+     "nom": "Le tronc creux secret",
+     "detail": "Un arbre géant et vide où l'on chuchote pour se dire des plans d'explorateurs."
+    }
+   ],
+   "roles": "l'exploratrice à la loupe, le porteur de sac, la dessinatrice de cartes, le guetteur de perroquets, le grimpeur agile, la botaniste curieuse, le tambour du campement, le pisteur d'empreintes, la gardienne des gourdes"
+  },
+  {
+   "id": "foot_stade",
+   "univers": "football",
+   "nom": "Le Grand Stade Rigolo",
+   "description": "Un immense stade tout vert où les supporters chantent et les ballons rebondissent partout.",
+   "espaces": [
+    {
+     "nom": "La pelouse",
+     "detail": "L'herbe est si douce qu'on a envie de faire des roulades dessus."
+    },
+    {
+     "nom": "Les tribunes",
+     "detail": "Des milliers de coussins colorés où les fans agitent des drapeaux."
+    },
+    {
+     "nom": "Le vestiaire",
+     "detail": "Une pièce pleine de casiers rigolos et de chaussettes qui sentent le savon à la banane."
+    },
+    {
+     "nom": "La buvette",
+     "detail": "On y sert de la limonade qui pétille et des frites en forme d'étoile."
+    },
+    {
+     "nom": "Le tunnel des joueurs",
+     "detail": "Un couloir qui fait écho quand on crie et où les crampons font toc-toc."
+    }
+   ],
+   "roles": "gardien de but, attaquant vedette, arbitre à sifflet, entraîneur gentil, supporter avec tambour, vendeur de limonade, ramasseur de ballons, mascotte en peluche, journaliste sportif"
+  },
+  {
+   "id": "foot_terrain_ecole",
+   "univers": "football",
+   "nom": "Le Terrain de l'École",
+   "description": "Un petit terrain dans la cour de récré où les enfants jouent après la classe.",
+   "espaces": [
+    {
+     "nom": "Les buts en craie",
+     "detail": "Deux traits de craie dessinés sur le mur qui servent de cage."
+    },
+    {
+     "nom": "Le banc des remplaçants",
+     "detail": "Un vieux banc en bois où on attend son tour en tapant du pied."
+    },
+    {
+     "nom": "Le grand arbre",
+     "detail": "Un chêne géant qui fait de l'ombre et attrape parfois le ballon dans ses branches."
+    },
+    {
+     "nom": "La flaque magique",
+     "detail": "Une petite flaque qui fait plouf et éclabousse tout le monde quand on saute dedans."
+    },
+    {
+     "nom": "Le portail rouillé",
+     "detail": "Un portail qui grince gnii-gnii et par où arrivent les copains en retard."
+    }
+   ],
+   "roles": "capitaine d'équipe, gardien intrépide, meneuse de jeu, surveillant de récré, copain qui compte les points, dribbleur farceur, porteur de gourde, dessinateur de lignes, encourageur en chef"
+  },
+  {
+   "id": "espace_fusee",
+   "univers": "espace",
+   "nom": "La Fusée Arc-en-Ciel",
+   "description": "Une fusée toute brillante qui file entre les étoiles en laissant une traînée colorée.",
+   "espaces": [
+    {
+     "nom": "Le cockpit",
+     "detail": "Une cabine remplie de boutons qui clignotent et font bip-bip-boup."
+    },
+    {
+     "nom": "Le hublot géant",
+     "detail": "Une grande fenêtre ronde d'où on voit danser les planètes."
+    },
+    {
+     "nom": "La salle des repas flottants",
+     "detail": "Une pièce où les petits pois volent et où on attrape sa soupe en bulle."
+    },
+    {
+     "nom": "Le placard à combinaisons",
+     "detail": "Un grand coffre plein de scaphandres brillants et de casques rigolos."
+    },
+    {
+     "nom": "Le toboggan zéro-gravité",
+     "detail": "Un tube où on glisse en flottant d'un étage à l'autre en riant."
+    }
+   ],
+   "roles": "capitaine de fusée, pilote aux commandes, astronaute exploratrice, ingénieur des boutons, cuisinier de l'espace, gardien du robot, observateur d'étoiles, jardinier de la serre spatiale, radio-communicateur"
+  },
+  {
+   "id": "espace_planete_bonbon",
+   "univers": "espace",
+   "nom": "La Planète Bonbon",
+   "description": "Une planète toute rose et rebondissante où le sol sent la fraise et la barbe à papa.",
+   "espaces": [
+    {
+     "nom": "Les montagnes en guimauve",
+     "detail": "Des collines toutes molles où on saute comme sur un trampoline."
+    },
+    {
+     "nom": "La rivière de sirop",
+     "detail": "Un ruisseau qui coule doucement et fait gloup-gloup en couleur orange."
+    },
+    {
+     "nom": "La forêt de sucettes",
+     "detail": "Des arbres avec des sucettes géantes qui brillent au soleil violet."
+    },
+    {
+     "nom": "Le cratère rebondissant",
+     "detail": "Un grand trou tout rond où on rebondit boing-boing jusqu'aux nuages."
+    },
+    {
+     "nom": "Le nuage de sucre",
+     "detail": "Un petit nuage tout doux sur lequel on peut s'asseoir pour goûter."
+    }
+   ],
+   "roles": "exploratrice de bonbons, cartographe de la planète, cuisinier goûteur, gardien des sucettes, sauteur de cratère, scientifique curieuse, ami extraterrestre tout mignon, collecteur d'échantillons, guide touristique de l'espace"
+  },
+  {
+   "id": "chev_chateau",
+   "univers": "chevaliers",
+   "nom": "Le Château Rigolo",
+   "description": "Un grand château tout en pierres dorées où l'on organise des tournois pour rire et des fêtes de gâteaux.",
+   "espaces": [
+    {
+     "nom": "La grande salle du trône",
+     "detail": "Un fauteuil énorme avec des coussins moelleux et une couronne un peu de travers."
+    },
+    {
+     "nom": "La cuisine du festin",
+     "detail": "Des marmites géantes qui sentent la soupe aux étoiles et la tarte aux pommes."
+    },
+    {
+     "nom": "La cour du tournoi",
+     "detail": "Un terrain plein de rubans colorés où les chevaliers font des courses sur des chevaux à bascule."
+    },
+    {
+     "nom": "La tour aux hiboux",
+     "detail": "Une tour ronde d'où l'on envoie des lettres roulées attachées à de gentils hiboux."
+    },
+    {
+     "nom": "Le jardin des dragons câlins",
+     "detail": "Un jardin fleuri où de petits dragons tout doux soufflent des bulles au lieu du feu."
+    }
+   ],
+   "roles": "le roi rigolo, la reine maligne, le petit chevalier courageux, la chevaliere rapide, le cuisinier du festin, le jardinier des dragons, le heraut qui annonce tout, le page espiegle, la magicienne des bulles"
+  },
+  {
+   "id": "chev_foret",
+   "univers": "chevaliers",
+   "nom": "La Forêt Enchantée",
+   "description": "Une forêt pleine d'arbres qui chuchotent des blagues et de sentiers qui mènent à des surprises.",
+   "espaces": [
+    {
+     "nom": "La clairière des fées",
+     "detail": "Un rond d'herbe brillante où des fées farceuses cachent des trésors de bonbons."
+    },
+    {
+     "nom": "Le pont de bois qui craque",
+     "detail": "Un petit pont au-dessus d'une rivière où sautent des poissons arc-en-ciel."
+    },
+    {
+     "nom": "La cabane du sage renard",
+     "detail": "Une cabane dans un tronc où un renard malin donne des devinettes rigolotes."
+    },
+    {
+     "nom": "Le champ de champignons géants",
+     "detail": "Des champignons rouges à pois blancs assez grands pour servir de trampolines."
+    }
+   ],
+   "roles": "la fee farceuse, le sage renard, le chevalier explorateur, la chevaliere grimpeuse, le lutin des champignons, la gardienne du pont, le troubadour chanteur, l'ecureuil messager, la cueilleuse de bonbons"
+  },
+  {
+   "id": "pir_ile",
+   "univers": "pirates",
+   "nom": "L'Île au Trésor Rigolote",
+   "description": "Une île pleine de palmiers, de sable doré et de cartes au trésor pleines de surprises amusantes.",
+   "espaces": [
+    {
+     "nom": "La plage aux coquillages",
+     "detail": "Un sable tout doux où les coquillages chantent quand on les met à l'oreille."
+    },
+    {
+     "nom": "La grotte scintillante",
+     "detail": "Une grotte remplie de cristaux qui brillent comme des étoiles quand on rit dedans."
+    },
+    {
+     "nom": "Le grand cocotier",
+     "detail": "Un palmier immense d'où l'on voit toute la mer et où pousse une noix de coco magique."
+    },
+    {
+     "nom": "La mare aux perroquets",
+     "detail": "Une petite mare bleue où des perroquets bavards répètent toutes les blagues."
+    },
+    {
+     "nom": "Le pont de lianes",
+     "detail": "Un pont qui se balance au-dessus de la jungle, plein de fleurs qui font des chatouilles."
+    }
+   ],
+   "roles": "le capitaine rigolo, la capitaine astucieuse, le moussaillon courageux, la vigie aux yeux perçants, le cuisinier du bateau, la chercheuse de tresor, le perroquet bavard, le cartographe curieux, la plongeuse aux coquillages"
+  },
+  {
+   "id": "pir_bateau",
+   "univers": "pirates",
+   "nom": "Le Bateau Farceur",
+   "description": "Un grand voilier joyeux avec des voiles colorées qui vogue de blague en blague sur la mer turquoise.",
+   "espaces": [
+    {
+     "nom": "Le pont principal",
+     "detail": "Un grand plancher de bois où l'on danse la gigue et où l'on hisse les voiles à rayures."
+    },
+    {
+     "nom": "La cabine du capitaine",
+     "detail": "Une jolie pièce avec une longue-vue, une carte géante et un hamac balançoire."
+    },
+    {
+     "nom": "La cale aux provisions",
+     "detail": "Un endroit rempli de tonneaux de limonade et de biscuits en forme d'étoile."
+    },
+    {
+     "nom": "La cuisine du navire",
+     "detail": "Une petite cuisine qui sent la soupe de poisson rigolote et le gâteau au miel."
+    }
+   ],
+   "roles": "le capitaine farceur, la capitaine navigatrice, le moussaillon danseur, la timoniere adroite, le cuisinier joyeux, le gardien des provisions, la vigie chanteuse, le mousse grimpeur, la conteuse d'histoires"
+  },
+  {
+   "id": "dino_vallee",
+   "univers": "dinosaures",
+   "nom": "La Vallée des Câlins Géants",
+   "description": "Une grande vallée toute verte où les dinosaures gentils se dandinent au soleil en mangeant des feuilles.",
+   "espaces": [
+    {
+     "nom": "La mare aux bulles",
+     "detail": "Un étang tout doux où les dinos font des bulles avec leur nez pour rigoler."
+    },
+    {
+     "nom": "La colline aux fougères",
+     "detail": "Une petite colline couverte de fougères géantes parfaites pour jouer à cache-cache."
+    },
+    {
+     "nom": "Le nid des oeufs pois-chiches",
+     "detail": "Un grand nid douillet rempli d'oeufs tachetés qui font parfois hip !"
+    },
+    {
+     "nom": "Le toboggan de boue",
+     "detail": "Une pente glissante où les petits dinos descendent en riant et éclaboussent tout le monde."
+    },
+    {
+     "nom": "Le buffet de feuilles",
+     "detail": "Un coin d'arbres tendres où on croque des feuilles sucrées à volonté."
+    }
+   ],
+   "roles": "un bébé dino curieux, une maman diplodocus câline, un tricératops chatouilleux, un ptérodactyle facteur, un petit dino qui adore chanter, un dino cuisinier de salades, une tortue très très lente, un dino explorateur avec sa loupe, un dino gardien des oeufs"
+  },
+  {
+   "id": "dino_plage",
+   "univers": "dinosaures",
+   "nom": "La Plage des Coquillages Musicaux",
+   "description": "Une plage dorée où les dinosaures ramassent des coquillages qui font de la musique quand on souffle dedans.",
+   "espaces": [
+    {
+     "nom": "Le rocher chantant",
+     "detail": "Un gros rocher percé de trous qui siffle une jolie chanson quand le vent passe."
+    },
+    {
+     "nom": "La flaque à crabes",
+     "detail": "Une petite flaque d'eau tiède où des crabes rigolos jouent à la course."
+    },
+    {
+     "nom": "Le château de sable géant",
+     "detail": "Un immense château fait par les dinos avec des tours plus hautes qu'eux."
+    },
+    {
+     "nom": "Le ponton en bois",
+     "detail": "Un vieux ponton où les dinos pêchent des algues pour faire des colliers."
+    },
+    {
+     "nom": "La grotte aux étoiles de mer",
+     "detail": "Une grotte fraîche remplie d'étoiles de mer colorées qui brillent un peu."
+    }
+   ],
+   "roles": "un dino surfeur débutant, une maman dino qui ramasse des coquillages, un petit crabe bavard, un dino pêcheur d'algues, un dino qui construit des châteaux, un ptérodactyle plongeur, un bébé tortue de mer, un dino musicien de coquillages, un dino marchand de glaces aux fruits"
+  },
+  {
+   "id": "magie_ecole",
+   "univers": "magie",
+   "nom": "L'École des Petits Sorciers Rigolos",
+   "description": "Une école pleine de tours branlantes où des enfants apprennent des sorts tout doux et un peu maladroits.",
+   "espaces": [
+    {
+     "nom": "La salle des baguettes",
+     "detail": "Une pièce où les baguettes flottent et font des étincelles de toutes les couleurs."
+    },
+    {
+     "nom": "La bibliothèque qui parle",
+     "detail": "Une bibliothèque où les livres racontent leurs histoires tout seuls à voix haute."
+    },
+    {
+     "nom": "Le jardin des plantes farceuses",
+     "detail": "Un jardin où les fleurs éternuent des paillettes et les citrouilles font des blagues."
+    },
+    {
+     "nom": "La cuisine à potions",
+     "detail": "Une cuisine où mijotent des potions qui sentent la fraise et font pouffer de rire."
+    },
+    {
+     "nom": "La tour aux hiboux",
+     "detail": "Une tour tout en haut où des hiboux dodus distribuent le courrier magique."
+    }
+   ],
+   "roles": "un apprenti sorcier maladroit, une petite sorcière très douée, un professeur de sortilèges distrait, un balai magique un peu paresseux, un hibou messager rigolo, un chat magique qui change de couleur, une fée bibliothécaire, un jardinier des plantes farceuses, un cuisinier de potions à la fraise"
+  },
+  {
+   "id": "magie_foret",
+   "univers": "magie",
+   "nom": "La Forêt des Lucioles Enchantées",
+   "description": "Une forêt scintillante où des lucioles éclairent les sentiers et où les champignons servent de petites maisons.",
+   "espaces": [
+    {
+     "nom": "La clairière aux lucioles",
+     "detail": "Un rond d'herbe où des milliers de lucioles dansent et forment des dessins dans le noir."
+    },
+    {
+     "nom": "Le village champignon",
+     "detail": "Un groupe de gros champignons transformés en maisons douillettes avec des portes rondes."
+    },
+    {
+     "nom": "Le ruisseau à souhaits",
+     "detail": "Un petit ruisseau qui gargouille et exauce parfois un tout petit voeu rigolo."
+    },
+    {
+     "nom": "L'arbre à bonbons",
+     "detail": "Un vieil arbre magique dont les branches font pousser des bonbons de fruits."
+    },
+    {
+     "nom": "Le pont des grenouilles",
+     "detail": "Un pont de bois où des grenouilles vertes coassent une chanson à chaque saut."
+    }
+   ],
+   "roles": "une fée des lucioles, un lutin farceur gentil, un petit hérisson magique, une grenouille chanteuse, un elfe cueilleur de bonbons, un gardien de l'arbre magique, un écureuil messager, une sorcière herboriste, un enfant perdu tout curieux"
+  },
+  {
+   "id": "robots_usine",
+   "univers": "robots",
+   "nom": "L'Usine à Bidouilles",
+   "description": "Une grande usine pleine de tapis roulants où les robots se fabriquent tout seuls dans un joyeux tintamarre.",
+   "espaces": [
+    {
+     "nom": "Le tapis roulant",
+     "detail": "Il transporte des boulons, des ressorts et parfois un robot endormi."
+    },
+    {
+     "nom": "La boîte à pièces",
+     "detail": "Un immense bac rempli de vis, d'écrous et de roues qui roulent partout."
+    },
+    {
+     "nom": "Le tableau de boutons",
+     "detail": "Des centaines de boutons colorés qui font des bruits rigolos quand on appuie."
+    },
+    {
+     "nom": "Le coin des robots neufs",
+     "detail": "Là où les petits robots ouvrent les yeux pour la première fois."
+    },
+    {
+     "nom": "La grue pince-tout",
+     "detail": "Un bras géant qui attrape les objets et les dépose... presque au bon endroit."
+    }
+   ],
+   "roles": "robot bricoleur, robot livreur, chef d'usine rigolo, petit robot tout neuf, robot nettoyeur, robot chanteur, mécanicienne curieuse, robot facteur, robot gardien de boulons"
+  },
+  {
+   "id": "robots_jardin",
+   "univers": "robots",
+   "nom": "Le Jardin des Robots-Fleurs",
+   "description": "Un jardin étonnant où des robots arrosent des fleurs métalliques qui font de la musique au soleil.",
+   "espaces": [
+    {
+     "nom": "La serre brillante",
+     "detail": "Une bulle de verre où poussent des tournesols en aluminium."
+    },
+    {
+     "nom": "La fontaine à huile",
+     "detail": "Elle chante glou-glou et sert de goûter aux robots assoiffés."
+    },
+    {
+     "nom": "Le potager de boulons",
+     "detail": "On y plante des vis qui deviennent de grandes tiges argentées."
+    },
+    {
+     "nom": "La cabane à outils",
+     "detail": "Pleine d'arrosoirs, de pelles et de gants trop grands."
+    },
+    {
+     "nom": "L'arbre à ampoules",
+     "detail": "Ses fruits sont des lampes qui s'allument quand on rit."
+    }
+   ],
+   "roles": "robot jardinier, robot arroseur, fleur-robot chantante, papillon mécanique, robot semeur, robot d'entretien, apprentie jardinière, robot porteur d'eau, escargot à roulettes"
+  },
+  {
+   "id": "enquete_manoir",
+   "univers": "enquete",
+   "nom": "Le Manoir des Chaussettes Perdues",
+   "description": "Une grande maison rigolote où il manque toujours une chaussette et où chaque pièce cache une petite énigme.",
+   "espaces": [
+    {
+     "nom": "Le grand salon",
+     "detail": "Des fauteuils moelleux et une pendule qui fait tic-tac trop fort."
+    },
+    {
+     "nom": "La cuisine du goûter",
+     "detail": "Il y flotte une odeur de gâteau et il manque justement une part."
+    },
+    {
+     "nom": "La bibliothèque poussiéreuse",
+     "detail": "Des livres empilés jusqu'au plafond et une loupe oubliée."
+    },
+    {
+     "nom": "Le grenier aux malles",
+     "detail": "Rempli de vieux coffres, de chapeaux et de secrets amusants."
+    },
+    {
+     "nom": "Le jardin d'hiver",
+     "detail": "Des plantes rigolotes et un banc parfait pour réfléchir."
+    }
+   ],
+   "roles": "détective en herbe, majordome distrait, cuisinier gourmand, grand-mère maligne, jardinier bavard, jeune assistant, chat renifleur d'indices, facteur curieux, voisine observatrice"
+  },
+  {
+   "id": "enquete_musee",
+   "univers": "enquete",
+   "nom": "Le Petit Musée Rigolo",
+   "description": "Un musée plein de trésors amusants où un objet se met parfois à disparaître pour jouer à cache-cache.",
+   "espaces": [
+    {
+     "nom": "La salle des tableaux",
+     "detail": "Des peintures de bananes et de chapeaux accrochées de travers."
+    },
+    {
+     "nom": "La vitrine aux trésors",
+     "detail": "Une couronne en carton doré brille sous une petite lampe."
+    },
+    {
+     "nom": "L'accueil du musée",
+     "detail": "Un comptoir avec un plan, des tickets et une cloche qui tinte."
+    },
+    {
+     "nom": "La salle des statues",
+     "detail": "Des statues rigolotes qui semblent faire des grimaces."
+    },
+    {
+     "nom": "La réserve secrète",
+     "detail": "Une pièce pleine de cartons où l'on range les objets endormis."
+    }
+   ],
+   "roles": "détective malin, gardienne du musée, guide enthousiaste, visiteur curieux, restauratrice de tableaux, jeune stagiaire, agent d'accueil, artiste peintre, chien renifleur"
+  }
+ ]
+}

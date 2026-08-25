@@ -1,0 +1,788 @@
+{
+ "mechants": [
+  {
+   "id": "db_boufi",
+   "univers": "dragon_ball",
+   "nom": "Boufi le Ballon Prétentieux",
+   "description": "Un gros bonhomme tout rond et gonflé qui se croit le plus fort de tout l'univers.",
+   "but": "Il veut que tout le monde admette qu'il est le champion numéro un en cassant des objets pour épater la galerie.",
+   "manoeuvres": [
+    "Il gonfle ses joues et fait tomber les tours de coussins que les enfants avaient construites.",
+    "Il souffle très fort pour renverser les étals de bonbons du marché.",
+    "Il se vante à voix haute que personne ne peut sauter plus haut que lui."
+   ],
+   "presages": [
+    "On entend des petits pouf-pouf : quelques coussins tombent tout seuls dans le dojo.",
+    "Les chapeaux du marché s'envolent à cause de ses grands souffles.",
+    "Tous les étals de bonbons sont sens dessus dessous et personne ne retrouve ses billes.",
+    "Boufi installe une grande pancarte 'Ici c'est moi le champion' devant le village et bloque le passage."
+   ],
+   "sbires": [
+    {
+     "nom": "Poufy le petit ballon",
+     "description": "Un tout petit ballon rebondissant qui imite Boufi partout où il va.",
+     "manoeuvres": [
+      "Il rebondit sur les tables et fait rouler les fruits par terre.",
+      "Il gonfle ses joues pour éteindre les bougies des lanternes."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "db_regloux",
+   "univers": "dragon_ball",
+   "nom": "Régloux le Roi des Règles",
+   "description": "Un petit bonhomme à moustache qui adore inventer des règles compliquées pour tout le monde.",
+   "but": "Il veut que chacun suive ses règles farfelues pour prouver que c'est lui qui commande.",
+   "manoeuvres": [
+    "Il accroche partout des affiches avec des règles rigolotes comme 'Interdit de marcher sur le pied gauche'.",
+    "Il siffle dans son sifflet dès que quelqu'un s'amuse sans sa permission.",
+    "Il range tous les jouets dans un ordre bizarre que personne ne comprend."
+   ],
+   "presages": [
+    "On trouve une petite affiche avec une règle rigolote collée sur le grand arbre.",
+    "Régloux siffle sans arrêt et personne ne sait plus à quel jeu on joue.",
+    "Le marché entier est couvert d'affiches de règles et les marchands sont tout mélangés.",
+    "Régloux se met devant le puits magique et décide qui a le droit de chanter, alors plus personne ne chante."
+   ],
+   "sbires": [
+    {
+     "nom": "Tampon le tamponneur",
+     "description": "Un petit assistant qui tamponne des papiers toute la journée avec un grand sourire sérieux.",
+     "manoeuvres": [
+      "Il tamponne 'INTERDIT' sur les paniers de fruits des marchands.",
+      "Il distribue des papiers pleins de cases à cocher que personne ne comprend."
+     ]
+    },
+    {
+     "nom": "Siffline la siffleuse",
+     "description": "Une petite dame avec un énorme sifflet plus grand qu'elle.",
+     "manoeuvres": [
+      "Elle siffle très fort dès qu'un enfant rigole trop.",
+      "Elle range les jouets à sa façon pour que personne ne les retrouve."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "am_casseko",
+   "univers": "arts_martiaux",
+   "nom": "Casséko le Casseur de Planches",
+   "description": "Un grand costaud qui adore casser des planches et des tuiles pour montrer qu'il est le plus fort.",
+   "but": "Il veut battre le record du plus grand nombre de planches cassées pour que tout le monde l'applaudisse.",
+   "manoeuvres": [
+    "Il casse en deux les baguettes du dojo pour faire du bruit et épater les élèves.",
+    "Il empile des piles de planches partout et bloque le passage sur le tatami.",
+    "Il crie 'HIYA' très fort pour faire tomber les lanternes en papier."
+   ],
+   "presages": [
+    "On entend un petit CRAC : une baguette est cassée dans un coin du dojo.",
+    "Des morceaux de planches traînent partout et on ne peut plus faire de roulades.",
+    "Tout le tatami est couvert de piles de planches et personne ne peut plus s'entraîner.",
+    "Casséko installe un grand podium au milieu du dojo et attend qu'on l'applaudisse toute la journée."
+   ],
+   "sbires": [
+    {
+     "nom": "Craquette la petite casseuse",
+     "description": "Une petite acolyte qui casse des crayons et des brindilles en imitant Casséko.",
+     "manoeuvres": [
+      "Elle casse toutes les craies du calligraphe.",
+      "Elle empile des brindilles devant la porte du dojo."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "am_grimace",
+   "univers": "arts_martiaux",
+   "nom": "Grimace le Faiseur de Bêtises",
+   "description": "Un petit farceur au grand chapeau qui adore faire des bêtises pour attirer l'attention.",
+   "but": "Il veut que tout le monde le regarde en faisant des blagues et en mélangeant tout dans le temple.",
+   "manoeuvres": [
+    "Il échange les légumes du potager avec des cailloux pour rigoler.",
+    "Il fait sonner la cloche géante en pleine sieste des moines.",
+    "Il cache les sandales de tout le monde dans le bassin des carpes."
+   ],
+   "presages": [
+    "Une petite citrouille a disparu du potager et un caillou a pris sa place.",
+    "La cloche sonne toute seule DONG DONG et réveille les moines qui font la sieste.",
+    "Toutes les sandales du temple flottent dans le bassin et personne ne retrouve les siennes.",
+    "Grimace a tout mélangé dans le temple et transforme la cour en un grand jeu de cache-cache que plus personne ne contrôle."
+   ],
+   "sbires": [
+    {
+     "nom": "Chatouille le lutin",
+     "description": "Un petit lutin rapide qui adore faire des chatouilles et des farces.",
+     "manoeuvres": [
+      "Il met des plumes qui chatouillent dans les sandales des moines.",
+      "Il change les étiquettes des pots de thé pour tout mélanger."
+     ]
+    },
+    {
+     "nom": "Rebondi le sauteur",
+     "description": "Un acolyte tout rond qui rebondit partout sans jamais s'arrêter.",
+     "manoeuvres": [
+      "Il rebondit sur les coussins de méditation et les envoie voler.",
+      "Il fait rouler les citrouilles du potager dans tous les sens."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "animaux_grognon",
+   "univers": "animaux",
+   "nom": "Barnabé le Blaireau Grognon",
+   "description": "Un gros blaireau bougon qui trouve toujours que les autres font trop de bruit.",
+   "but": "Il veut le silence total pour faire sa sieste et range en cachette tous les jouets des autres.",
+   "manoeuvres": [
+    "Il empile des feuilles devant les cachettes pour que personne ne retrouve ses affaires.",
+    "Il pousse un long \"CHUUUT\" qui fait sursauter et rigoler tout le monde.",
+    "Il cache les noisettes du goûter dans son terrier en disant qu'elles sont à lui."
+   ],
+   "presages": [
+    "Un petit tas de feuilles bien rangé apparaît là où il n'y avait rien.",
+    "On entend un ronflement grognon qui monte du sol.",
+    "Les jouets disparaissent un à un pendant qu'on a le dos tourné.",
+    "Un immense \"CHUUUUUT\" fait trembler les feuilles de tout le grand chêne."
+   ],
+   "sbires": [
+    {
+     "nom": "Filou la Fouine",
+     "description": "Une petite fouine rapide qui adore aider Barnabé à cacher des choses.",
+     "manoeuvres": [
+      "Elle file entre les pattes de tout le monde pour attraper un jouet et détaler.",
+      "Elle brouille les pistes en faisant plein de traces dans tous les sens."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "animaux_pie",
+   "univers": "animaux",
+   "nom": "Perle la Pie Collectionneuse",
+   "description": "Une pie brillante qui veut absolument garder tous les objets qui scintillent pour elle toute seule.",
+   "but": "Elle veut remplir son nid de tout ce qui brille et refuse de partager le moindre trésor.",
+   "manoeuvres": [
+    "Elle pique une gouttelette de rosée sur une fleur et l'emporte en gloussant.",
+    "Elle échange les objets brillants contre des cailloux tout gris.",
+    "Elle décore son nid si haut qu'on ne peut plus rien récupérer sans grimper."
+   ],
+   "presages": [
+    "Une plume noire et blanche tombe doucement du ciel.",
+    "On aperçoit un éclat scintillant qui file entre les branches.",
+    "Les petits trésors brillants du sol se mettent à manquer.",
+    "Un grand \"cha-cha-cha\" moqueur résonne depuis le plus haut des arbres."
+   ],
+   "sbires": [
+    {
+     "nom": "Zig le Moineau",
+     "description": "Un moineau étourdi qui suit Perle partout en espérant récupérer les miettes.",
+     "manoeuvres": [
+      "Il fait diversion en pépiant très fort pendant que Perle attrape un objet.",
+      "Il transporte les petits cailloux gris pour les échanger à la place des trésors."
+     ]
+    },
+    {
+     "nom": "Nina la Corneille",
+     "description": "Une corneille maladroite qui range le nid de Perle mais mélange tout.",
+     "manoeuvres": [
+      "Elle empile les objets brillants n'importe comment tout en haut de l'arbre.",
+      "Elle pousse un croassement rigolo qui prévient Perle quand quelqu'un approche."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "aventure_capitaine",
+   "univers": "aventure",
+   "nom": "Capitaine Chaussette-Trouée",
+   "description": "Un pirate rigolo et un peu radin qui veut tous les trésors du port rien que pour lui.",
+   "but": "Il veut ramasser chaque coquillage et chaque carte pour être le plus riche, sans jamais partager.",
+   "manoeuvres": [
+    "Il déplace les panneaux du port pour envoyer les bateaux dans la mauvaise direction.",
+    "Il colle une étiquette \"à moi\" sur tous les coffres du marché.",
+    "Il cache les cartes au trésor sous son grand chapeau troué."
+   ],
+   "presages": [
+    "Une chaussette rayée oubliée flotte au bord du ponton.",
+    "On entend un \"ho ho ho\" bougon porté par le vent marin.",
+    "Les panneaux du port se retrouvent tournés dans le mauvais sens.",
+    "Un grand pavillon rapiécé se déploie tout en haut du plus grand mât."
+   ],
+   "sbires": [
+    {
+     "nom": "Moussaillon Pouce-Vert",
+     "description": "Un petit pirate maladroit qui arrose tout ce qu'il touche par erreur.",
+     "manoeuvres": [
+      "Il renverse un seau d'eau pour effacer les marques sur les cartes.",
+      "Il empile les coffres si haut qu'ils finissent par dégringoler en rigolant."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "aventure_sorciere",
+   "univers": "aventure",
+   "nom": "Mirabelle la Magicienne Distraite",
+   "description": "Une magicienne farfelue de la jungle qui veut que tout obéisse à ses règles compliquées.",
+   "but": "Elle veut que chacun suive son grand règlement rigolo et transforme les fruits en trop-mûrs quand on désobéit.",
+   "manoeuvres": [
+    "Elle agite sa baguette et fait pousser des lianes qui bloquent les chemins pour de rire.",
+    "Elle change la couleur des fruits pour embrouiller les explorateurs.",
+    "Elle récite un règlement si long que personne ne peut le retenir."
+   ],
+   "presages": [
+    "Une paillette violette scintille sur une feuille au petit matin.",
+    "On entend une comptine chantonnée entre les arbres.",
+    "Les fruits changent de couleur sans prévenir.",
+    "Une pluie d'étincelles multicolores tourbillonne au-dessus de la clairière."
+   ],
+   "sbires": [
+    {
+     "nom": "Coco le Perroquet Répéteur",
+     "description": "Un perroquet bavard qui répète le règlement de Mirabelle à pleins poumons.",
+     "manoeuvres": [
+      "Il crie les règles compliquées dans les oreilles des explorateurs.",
+      "Il vole en cercle pour empêcher de voir où mène le chemin."
+     ]
+    },
+    {
+     "nom": "Gluant l'Escargot Magique",
+     "description": "Un escargot enchanté qui laisse une trace collante et brillante partout.",
+     "manoeuvres": [
+      "Il trace un chemin gluant qui fait glisser rigolotement les explorateurs.",
+      "Il colle les feuilles ensemble pour cacher les indices."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "foot_capitaine_tricheur",
+   "univers": "football",
+   "nom": "Capitaine Croquette le Tricheur",
+   "description": "Un joueur rusé qui veut absolument gagner tous les matchs, même en faisant des petites bêtises.",
+   "but": "Il veut remporter chaque partie coûte que coûte, quitte à changer les règles en douce.",
+   "manoeuvres": [
+    "Il cache le vrai ballon et en sort un tout dégonflé qui roule de travers.",
+    "Il déplace discrètement les poteaux de but quand personne ne regarde.",
+    "Il chatouille les joueurs adverses pour les faire rigoler et rater leur tir."
+   ],
+   "presages": [
+    "On retrouve une chaussette de l'équipe adverse nouée en petit nœud rigolo.",
+    "Le tableau des scores affiche soudain trois buts de plus pour son équipe.",
+    "Les plots d'entraînement ont tous été repeints à ses couleurs pendant la nuit.",
+    "Le grand ballon d'or du stade a été remplacé par un ballon en chocolat à son effigie."
+   ],
+   "sbires": [
+    {
+     "nom": "Sifflet le Perroquet",
+     "description": "Un perroquet coquin qui imite le sifflet de l'arbitre pour semer la pagaille.",
+     "manoeuvres": [
+      "Il siffle un faux coup de sifflet pour arrêter le jeu au mauvais moment.",
+      "Il vole la casquette de l'arbitre et la cache dans son nid."
+     ]
+    },
+    {
+     "nom": "Bottine la Taupe",
+     "description": "Une taupe farceuse qui creuse des petits trous rigolos sur le terrain.",
+     "manoeuvres": [
+      "Elle creuse un mini-tunnel pour faire disparaître le ballon sous la pelouse.",
+      "Elle fait des taupinières pile là où l'adversaire veut courir."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "foot_madame_vuvuzela",
+   "univers": "football",
+   "nom": "Madame Vuvuzela",
+   "description": "Une supportrice trop bruyante qui veut que son équipe soit la seule à faire du bruit dans le stade.",
+   "but": "Elle veut couvrir tous les chants des autres fans pour qu'on n'entende qu'elle.",
+   "manoeuvres": [
+    "Elle souffle dans sa trompette géante pour couvrir les encouragements des autres.",
+    "Elle distribue des bouchons d'oreilles farfelus pour que personne d'autre n'entende les copains.",
+    "Elle installe des haut-parleurs qui jouent sa chanson en boucle pendant le match."
+   ],
+   "presages": [
+    "Un petit air de trompette résonne au loin sans qu'on sache d'où il vient.",
+    "Les drapeaux des supporters se mettent tous à trembler à cause du bruit.",
+    "La buvette vend soudain des bouchons d'oreilles au lieu de la limonade.",
+    "Tout le stade se bouche les oreilles pendant que sa trompette fait POUËT géant."
+   ],
+   "sbires": [
+    {
+     "nom": "Tambourin le Ouistiti",
+     "description": "Un petit singe qui tape sur tout ce qu'il trouve pour faire encore plus de bruit.",
+     "manoeuvres": [
+      "Il tape sur les casiers du vestiaire pour faire un vacarme rigolo.",
+      "Il vole les tambours des autres fans pour les garder tous pour lui."
+     ]
+    },
+    {
+     "nom": "Écho le Mégaphone",
+     "description": "Un mégaphone magique qui répète tout trois fois plus fort.",
+     "manoeuvres": [
+      "Il répète en boucle la chanson de Madame Vuvuzela dans tout le stade.",
+      "Il crie 'BUUUT' au hasard pour embrouiller les compteurs de points."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "espace_professeur_aspirateur",
+   "univers": "espace",
+   "nom": "Professeur Aspiro",
+   "description": "Un savant loufoque qui veut collectionner toutes les étoiles pour les garder dans son bocal.",
+   "but": "Il veut aspirer toutes les étoiles brillantes pour être le seul à les posséder.",
+   "manoeuvres": [
+    "Il branche son aspirateur géant pour attraper les petites étoiles filantes.",
+    "Il colle des étiquettes 'à moi' sur toutes les planètes qu'il croise.",
+    "Il éteint les lumières de l'espace pour que seul son bocal brille encore."
+   ],
+   "presages": [
+    "Une toute petite étoile disparaît discrètement d'une constellation connue.",
+    "On entend un léger vroumm-vroumm d'aspirateur venant d'une comète.",
+    "Le ciel devient un peu moins pailleté qu'à l'habitude.",
+    "Un immense bocal rempli d'étoiles flotte dans le ciel avec son nom écrit dessus."
+   ],
+   "sbires": [
+    {
+     "nom": "Boulon le Robot Rangeur",
+     "description": "Un petit robot maniaque qui veut tout ranger, même ce qui doit rester dehors.",
+     "manoeuvres": [
+      "Il range les étoiles dans des tiroirs pour qu'on ne les voie plus.",
+      "Il aspire la poussière d'étoile avec son petit ventre-aspirateur."
+     ]
+    },
+    {
+     "nom": "Filou la Comète",
+     "description": "Une comète espiègle qui file partout pour aider le professeur à repérer les étoiles.",
+     "manoeuvres": [
+      "Elle fait des grands cercles pour rabattre les étoiles vers l'aspirateur.",
+      "Elle brouille les cartes du ciel en déplaçant sa longue queue lumineuse."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "espace_reine_boudeuse",
+   "univers": "espace",
+   "nom": "La Reine Boudeuse de Bonbon",
+   "description": "Une petite reine capricieuse qui veut que tous les bonbons de la planète soient à elle toute seule.",
+   "but": "Elle veut garder tous les bonbons rien que pour elle et empêcher les autres de goûter.",
+   "manoeuvres": [
+    "Elle construit une clôture en réglisse autour de la forêt de sucettes.",
+    "Elle cache tous les bonbons dans son château en pain d'épice.",
+    "Elle fait la moue et boude jusqu'à ce qu'on lui donne la plus grosse sucette."
+   ],
+   "presages": [
+    "Une sucette a disparu de la forêt et laissé un petit bâton tout seul.",
+    "Des bouts de réglisse traînent par terre comme si on montait une barrière.",
+    "La rivière de sirop est détournée vers le château de la reine.",
+    "Un énorme château en bonbons apparaît avec une pancarte 'tout à moi' à l'entrée."
+   ],
+   "sbires": [
+    {
+     "nom": "Gélatine le Nounours Gluant",
+     "description": "Un ourson en gélatine tout collant qui garde l'entrée du château.",
+     "manoeuvres": [
+      "Il colle les pieds des visiteurs au sol avec sa gelée sucrée.",
+      "Il rebondit devant la porte pour empêcher qu'on entre goûter."
+     ]
+    },
+    {
+     "nom": "Piquette la Fourmi Gourmande",
+     "description": "Une petite fourmi qui rapporte tous les bonbons trouvés à la reine.",
+     "manoeuvres": [
+      "Elle transporte les bonbons oubliés jusqu'au château sur son dos.",
+      "Elle prévient la reine dès qu'un enfant s'approche d'une sucette."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "chev_baron",
+   "univers": "chevaliers",
+   "nom": "Le Baron Grognon",
+   "description": "Un baron tout rouge qui boude parce qu'il veut être le roi et garder tous les gâteaux pour lui.",
+   "but": "Il veut voler la couronne pour être le seul chef et manger tout le festin sans partager.",
+   "manoeuvres": [
+    "Il cache les invitations de la fête pour que personne ne vienne au château.",
+    "Il déguise ses bottes en pattes de dragon pour laisser de fausses traces rigolotes.",
+    "Il change les panneaux du chemin pour que les invités se perdent dans le bon sens amusant."
+   ],
+   "presages": [
+    "Une part de gâteau a disparu de la cuisine et il reste des miettes en forme de moustache.",
+    "Les hiboux messagers reviennent avec les lettres emmêlées et toutes chatouillées.",
+    "La couronne du roi a été remplacée par un chapeau de carton peint en doré.",
+    "Un grand rire grognon résonne depuis la tour et fait trembler les rubans du tournoi."
+   ],
+   "sbires": [
+    {
+     "nom": "Croquette le rat malicieux",
+     "description": "Un petit rat espiègle qui adore grignoter les fromages et faire des noeuds dans les lacets.",
+     "manoeuvres": [
+      "Il fait des noeuds dans les rubans du tournoi pour tout emmêler.",
+      "Il vole les fourchettes du festin et les cache dans ses joues."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "chev_sorciere",
+   "univers": "chevaliers",
+   "nom": "Dame Chamboule-Tout",
+   "description": "Une magicienne étourdie qui mélange toutes ses potions et transforme les choses par accident.",
+   "but": "Elle veut que tout le monde parle à l'envers pour être la seule à comprendre le royaume.",
+   "manoeuvres": [
+    "Elle verse une potion qui rend les chaussures collantes comme du miel.",
+    "Elle jette une poudre qui fait pousser des fleurs bavardes partout dans le château.",
+    "Elle mélange les couleurs pour que le ciel devienne violet à pois jaunes."
+   ],
+   "presages": [
+    "Les fleurs du jardin se mettent à fredonner une petite chanson à l'envers.",
+    "Les bulles des dragons câlins deviennent carrées au lieu d'être rondes.",
+    "Toute la soupe de la cuisine se transforme en compote de fraises.",
+    "Un grand éclat de rire fait scintiller le ciel de mille couleurs rigolotes."
+   ],
+   "sbires": [
+    {
+     "nom": "Bulle le crapaud rêveur",
+     "description": "Un crapaud tout vert qui fait des bonds énormes et bave des bulles de savon.",
+     "manoeuvres": [
+      "Il souffle des bulles glissantes sur le sol de la grande salle.",
+      "Il saute dans les marmites pour faire déborder la soupe rigolote."
+     ]
+    },
+    {
+     "nom": "Plume la pie voleuse",
+     "description": "Une pie curieuse qui adore les objets qui brillent et les collectionne dans son nid.",
+     "manoeuvres": [
+      "Elle emporte les boutons dorés des habits pour décorer son nid.",
+      "Elle cache les clés du château sous les feuilles du jardin."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pir_capitaine",
+   "univers": "pirates",
+   "nom": "Capitaine Ronchon",
+   "description": "Un vieux pirate bougon qui veut tous les trésors pour lui et refuse de partager le moindre bonbon.",
+   "but": "Il veut ramasser toutes les cartes au trésor pour être le pirate le plus riche et rester tout seul.",
+   "manoeuvres": [
+    "Il barbouille les cartes au trésor pour brouiller les chemins de l'île.",
+    "Il cache les noix de coco magiques dans des tonneaux fermés à clé.",
+    "Il imite le cri des perroquets pour envoyer les autres du mauvais côté rigolo."
+   ],
+   "presages": [
+    "Une croix sur la carte au trésor a été effacée et remplacée par un gribouillis.",
+    "Les coquillages chanteurs de la plage se taisent tous d'un coup en boudant.",
+    "Un drapeau à tête ronchon flotte au sommet du grand cocotier.",
+    "Un grand grognement résonne depuis la grotte et fait trembler les cristaux brillants."
+   ],
+   "sbires": [
+    {
+     "nom": "Coco le perroquet copieur",
+     "description": "Un perroquet farceur qui répète tout ce qu'il entend et embrouille les messages.",
+     "manoeuvres": [
+      "Il répète les ordres à l'envers pour tout mélanger sur le bateau.",
+      "Il vole les plumes des chapeaux pour décorer son perchoir."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pir_sirene",
+   "univers": "pirates",
+   "nom": "Madame Remous",
+   "description": "Une sirène taquine qui aime faire tourbillonner l'eau pour cacher les trésors au fond de la mer.",
+   "but": "Elle veut garder tous les coquillages brillants dans sa caverne secrète pour elle toute seule.",
+   "manoeuvres": [
+    "Elle crée des petites vagues rigolotes qui font tourner le bateau en rond.",
+    "Elle chatouille la coque avec des algues pour faire glousser les marins.",
+    "Elle attire les coquillages avec sa chanson pour les cacher dans sa grotte."
+   ],
+   "presages": [
+    "La mer fait des petits ronds mystérieux tout autour du bateau farceur.",
+    "Les poissons arc-en-ciel se mettent à nager tous dans le même sens en riant.",
+    "Les perles de la mare aux perroquets disparaissent une à une dans les bulles.",
+    "Un joli chant tourbillonnant fait danser toutes les vagues autour de l'île."
+   ],
+   "sbires": [
+    {
+     "nom": "Bulleau le poisson-lune",
+     "description": "Un gros poisson tout rond et joyeux qui gonfle ses joues pour faire des bulles géantes.",
+     "manoeuvres": [
+      "Il souffle des bulles géantes qui cachent le chemin du trésor.",
+      "Il pousse les rames avec son nez pour faire zigzaguer la barque."
+     ]
+    },
+    {
+     "nom": "Etoilette l'étoile de mer",
+     "description": "Une petite étoile de mer collante qui adore s'accrocher partout en rigolant.",
+     "manoeuvres": [
+      "Elle se colle sur la longue-vue pour brouiller la vue de la vigie.",
+      "Elle cache les boussoles sous le sable de la plage."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "dino_glouton",
+   "univers": "dinosaures",
+   "nom": "Croc-Croc le Glouton",
+   "description": "Un dinosaure tout rond et rigolo qui veut manger TOUTES les feuilles de la vallée pour lui tout seul.",
+   "but": "Avoir la plus grosse réserve de feuilles du monde pour ne jamais avoir à partager.",
+   "manoeuvres": [
+    "Cacher des tas de feuilles derrière les rochers en gloussant.",
+    "Faire un grand mur de brindilles autour du buffet pour bloquer les autres.",
+    "Souffler très fort pour envoyer les feuilles voler dans son grand filet."
+   ],
+   "presages": [
+    "On trouve quelques feuilles qui ont mystérieusement disparu du buffet.",
+    "Des traces de gros pieds ronds mènent derrière la colline aux fougères.",
+    "On entend un GLOUP GLOUP tout content résonner dans la vallée.",
+    "Le buffet de feuilles est entouré d'un mur de brindilles avec un panneau : Réservé à Croc-Croc !"
+   ],
+   "sbires": [
+    {
+     "nom": "Miam le petit dino",
+     "description": "Un mini dinosaure très gourmand qui suit Croc-Croc partout en espérant des miettes.",
+     "manoeuvres": [
+      "Grignoter en douce les feuilles laissées par les autres.",
+      "Faire le guet en sifflotant quand quelqu'un approche du mur de brindilles."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "dino_farceur",
+   "univers": "dinosaures",
+   "nom": "Ptéro l'Espiègle",
+   "description": "Un ptérodactyle malicieux qui adore piquer les coquillages musicaux de la plage pour faire son propre concert.",
+   "but": "Devenir la star de la plage en gardant tous les coquillages qui font de la musique.",
+   "manoeuvres": [
+    "Piquer les plus beaux coquillages pendant que les dinos ont le dos tourné.",
+    "Emmêler les colliers d'algues pour que personne ne puisse jouer de musique.",
+    "Faire tomber une pluie de sable rigolote sur le château pour distraire tout le monde."
+   ],
+   "presages": [
+    "Un joli coquillage a disparu du rocher chantant.",
+    "On aperçoit une ombre d'ailes qui passe très vite au-dessus de la plage.",
+    "On entend une petite musique bizarre venir d'en haut de la falaise.",
+    "Le rocher chantant est tout vide et une fanfare de coquillages joue au sommet de la falaise !"
+   ],
+   "sbires": [
+    {
+     "nom": "Bernie le bernard-l'ermite",
+     "description": "Un petit bernard-l'ermite grognon qui range les coquillages volés dans sa coquille trop pleine.",
+     "manoeuvres": [
+      "Rouler sur les coquillages pour les pousser vers la cachette de Ptéro.",
+      "Pincer gentiment les orteils pour faire sursauter ceux qui approchent."
+     ]
+    },
+    {
+     "nom": "Mouette la moqueuse",
+     "description": "Une mouette bavarde qui répète tout ce qu'elle entend pour embrouiller les dinos.",
+     "manoeuvres": [
+      "Crier de fausses directions pour envoyer les dinos du mauvais côté.",
+      "Voler bas en riant pour faire tomber les chapeaux de sable."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "magie_grognon",
+   "univers": "magie",
+   "nom": "Grimoire le Grognon",
+   "description": "Un vieux sorcier ronchon qui veut garder toute la magie de l'école pour lui et transforme tout en gris.",
+   "but": "Aspirer toutes les couleurs magiques dans son grand chapeau pour être le seul à briller.",
+   "manoeuvres": [
+    "Lancer un sort qui rend les étincelles des baguettes toutes ternes.",
+    "Fermer les livres qui parlent pour qu'ils ne racontent plus d'histoires.",
+    "Aspirer les paillettes des fleurs avec son chapeau-aspirateur magique."
+   ],
+   "presages": [
+    "Une baguette fait des étincelles un peu plus pâles que d'habitude.",
+    "Un livre de la bibliothèque s'est tu et refuse de parler.",
+    "Les fleurs du jardin n'éternuent plus de paillettes, elles font atchoum tout gris.",
+    "Toute l'école est devenue grise et le chapeau de Grimoire déborde de couleurs volées !"
+   ],
+   "sbires": [
+    {
+     "nom": "Poussière le lutin gris",
+     "description": "Un petit lutin poussiéreux qui souffle du gris partout où il passe.",
+     "manoeuvres": [
+      "Souffler des nuages de poussière grise sur les baguettes brillantes.",
+      "Cacher les pots de paillettes dans le placard de Grimoire."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "magie_ombreuse",
+   "univers": "magie",
+   "nom": "Dame Chuchote",
+   "description": "Une fée espiègle qui attrape les lucioles de la forêt dans un bocal pour éclairer sa cachette toute seule.",
+   "but": "Ramasser toutes les lucioles pour avoir la plus jolie lumière de toute la forêt.",
+   "manoeuvres": [
+    "Attirer les lucioles avec une fausse fleur brillante pour les mettre dans son bocal.",
+    "Embrouiller les sentiers en déplaçant les champignons-maisons.",
+    "Chuchoter des blagues pour que les lutins oublient où ils vont."
+   ],
+   "presages": [
+    "La clairière semble un tout petit peu moins scintillante ce soir.",
+    "On trouve une fausse fleur brillante posée près du ruisseau à souhaits.",
+    "Plusieurs champignons-maisons ont changé de place tout seuls.",
+    "La clairière aux lucioles est toute sombre et un bocal plein de lumière brille au loin dans la cachette de Dame Chuchote !"
+   ],
+   "sbires": [
+    {
+     "nom": "Filou le lutin farceur",
+     "description": "Un lutin rieur qui adore déplacer les panneaux de la forêt pour jouer des tours.",
+     "manoeuvres": [
+      "Retourner les panneaux du chemin pour que tout le monde tourne en rond.",
+      "Chatouiller les grenouilles pour couvrir les bruits avec leurs coassements."
+     ]
+    },
+    {
+     "nom": "Brume la chouette endormie",
+     "description": "Une chouette toujours à moitié endormie qui bâille des petits nuages de brouillard.",
+     "manoeuvres": [
+      "Bâiller un nuage de brume pour cacher le chemin des lucioles.",
+      "Hululer une berceuse pour que les lutins aient sommeil et rentrent chez eux."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "robots_melimelo",
+   "univers": "robots",
+   "nom": "Méli-Mélo le Robot Tout-Mélangé",
+   "description": "Un robot farceur dont les fils sont emmêlés et qui mélange joyeusement tout ce qu'il touche.",
+   "but": "Tout mélanger pour que rien ne soit jamais à sa place, juste pour rigoler.",
+   "manoeuvres": [
+    "Il intervertit les étiquettes des boîtes pour que les vis se retrouvent avec les chaussettes.",
+    "Il change la musique des fleurs-robots en un charivari de bip-bip rigolos.",
+    "Il colle des roues à l'envers pour que les robots avancent en marche arrière."
+   ],
+   "presages": [
+    "Un petit bip lointain se répète comme un hoquet.",
+    "Une boîte de boulons se retrouve remplie de fleurs par erreur.",
+    "Tous les robots de l'usine se mettent à tourner en rond en chantant faux.",
+    "Un tourbillon de confettis et de boulons envahit toute l'usine dans un grand éclat de rire."
+   ],
+   "sbires": [
+    {
+     "nom": "Zigzag",
+     "description": "Un petit robot aux roues folles qui n'avance jamais tout droit.",
+     "manoeuvres": [
+      "Il fonce dans les piles de cartons et les fait dégringoler en douceur.",
+      "Il emmêle les tuyaux d'arrosage en jouant à la marelle."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "robots_capuchon",
+   "univers": "robots",
+   "nom": "Capuchon le Cache-Cache",
+   "description": "Un robot timide qui adore cacher les objets des autres pour qu'on joue à les chercher avec lui.",
+   "but": "Cacher tous les outils pour que chacun parte à leur recherche en s'amusant.",
+   "manoeuvres": [
+    "Il glisse les arrosoirs sous les tapis roulants sans faire de bruit.",
+    "Il range les tournevis dans la fontaine à huile comme dans un coffre.",
+    "Il enferme les boulons dans des bulles de savon qui flottent au plafond."
+   ],
+   "presages": [
+    "Un tournevis manque à l'appel dans la cabane à outils.",
+    "Les robots cherchent partout et se cognent gentiment en riant.",
+    "Toute une étagère d'outils a disparu d'un coup, remplacée par des ballons.",
+    "Le jardin entier devient un immense jeu de cache-cache où chacun cherche en gloussant."
+   ],
+   "sbires": [
+    {
+     "nom": "Bulle",
+     "description": "Un robot rond qui souffle des bulles pour envelopper les objets.",
+     "manoeuvres": [
+      "Il enferme les pelles dans de grosses bulles rebondissantes.",
+      "Il fait flotter les gants de jardinage hors de portée, tout doucement."
+     ]
+    },
+    {
+     "nom": "Ombrelle",
+     "description": "Un petit robot qui ouvre son parapluie pour cacher ce qu'il ne faut pas voir.",
+     "manoeuvres": [
+      "Il recouvre les fleurs-robots pour qu'on ne les entende plus chanter.",
+      "Il abrite les outils sous son parapluie et part sur la pointe des roues."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "enquete_grignoteur",
+   "univers": "enquete",
+   "nom": "Le Grignoteur Masqué",
+   "description": "Un petit farceur gourmand qui adore chiper une part de goûter et laisser des miettes en guise d'indices.",
+   "but": "Goûter à tous les gâteaux du manoir avant tout le monde, sans se faire attraper.",
+   "manoeuvres": [
+    "Il subtilise une part de gâteau et la remplace par un dessin de gâteau.",
+    "Il laisse une piste de miettes qui mène droit vers le placard à confitures.",
+    "Il cache les cuillères pour qu'on le cherche pendant qu'il grignote."
+   ],
+   "presages": [
+    "Une miette solitaire est posée sur la table du salon.",
+    "Le compte des parts de gâteau ne tombe jamais juste.",
+    "Toute la cuisine sent bon le chocolat mais l'assiette est vide.",
+    "Un grand éclat de rire résonne du grenier: le voleur est démasqué, tout barbouillé de crème."
+   ],
+   "sbires": [
+    {
+     "nom": "Miette",
+     "description": "Une petite souris rigolote qui adore semer des indices sucrés.",
+     "manoeuvres": [
+      "Elle trace des chemins de miettes qui tournent en rond.",
+      "Elle cache des morceaux de biscuit dans les pantoufles."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "enquete_farceur",
+   "univers": "enquete",
+   "nom": "Monsieur Farceur",
+   "description": "Un visiteur espiègle qui déplace les objets du musée pour organiser une chasse au trésor surprise.",
+   "but": "Déplacer chaque trésor du musée pour transformer la visite en grande énigme rigolote.",
+   "manoeuvres": [
+    "Il échange la couronne en carton contre un chapeau de clown.",
+    "Il accroche les tableaux à l'envers pour brouiller les pistes en douceur.",
+    "Il laisse des petits mots-énigmes rimés à côté de chaque vitrine vide."
+   ],
+   "presages": [
+    "Un tableau est légèrement de travers, comme chatouillé par le vent.",
+    "Un petit mot rigolo apparaît sur le comptoir de l'accueil.",
+    "La couronne dorée a disparu de sa vitrine, remplacée par un nez rouge.",
+    "Tout le musée devient une joyeuse chasse au trésor et Monsieur Farceur salue en riant."
+   ],
+   "sbires": [
+    {
+     "nom": "Plumeau",
+     "description": "Un petit assistant maladroit armé d'un plumeau qui efface les traces sans faire exprès.",
+     "manoeuvres": [
+      "Il époussette les indices avant que les détectives les trouvent.",
+      "Il fait glisser les statues d'un pas de côté pour tromper les visiteurs."
+     ]
+    },
+    {
+     "nom": "Écho",
+     "description": "Un perroquet farceur qui répète des indices à l'envers pour amuser tout le monde.",
+     "manoeuvres": [
+      "Il crie des devinettes rimées depuis la salle des statues.",
+      "Il imite la cloche de l'accueil pour envoyer les détectives à l'autre bout du musée."
+     ]
+    }
+   ]
+  }
+ ]
+}

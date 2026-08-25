@@ -43,6 +43,9 @@ flutter:
     - assets/data/locations.json
     - assets/data/location_details.json
     - assets/data/exercices.json
+    - assets/data/campagne_lieux.json
+    - assets/data/campagne_mechants.json
+    - assets/data/campagne_archetypes.json
     - assets/data/dangers.json
     - assets/data/archetypes.json
     - assets/data/dilemmas.json
