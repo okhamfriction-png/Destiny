@@ -7,6 +7,7 @@ import '../../application/services/transcription_service.dart';
 import '../../application/state/campagne_store.dart';
 import '../../application/state/music_controller.dart';
 import '../../domain/entities/campagne.dart';
+import '../visuals/campagne_visuals.dart';
 import '../widgets/sound_mixer_sheet.dart';
 import 'campagne_bilan_screen.dart';
 
@@ -53,9 +54,16 @@ class _JeuScreenState extends State<JeuScreen> {
   @override
   void initState() {
     super.initState();
+    // Le danger 1 démarre l'épisode : il est révélé d'emblée (pas minuté).
+    if (widget.episode.escalade.isNotEmpty) _tombes.add(0);
     _timer = Timer.periodic(const Duration(seconds: 1), _battement);
     _demarrerMicro();
   }
+
+  /// Le dernier danger est tombé → l'acte final, le chrono vire au rouge.
+  bool get _rouge =>
+      _tombes.contains(widget.episode.escalade.length - 1) &&
+      widget.episode.escalade.isNotEmpty;
 
   Future<void> _demarrerMicro() async {
     final t = widget.transcription;
@@ -86,9 +94,10 @@ class _JeuScreenState extends State<JeuScreen> {
     setState(() {
       _resteMs -= 1000;
       final ecoule = widget.dureeMs - _resteMs;
+      // horairesMs[i] correspond au danger d'escalade d'index i+1 (le 1 est déjà là).
       for (var i = 0; i < widget.horairesMs.length; i++) {
-        if (!_tombes.contains(i) && ecoule >= widget.horairesMs[i]) {
-          _tombes.add(i);
+        if (!_tombes.contains(i + 1) && ecoule >= widget.horairesMs[i]) {
+          _tombes.add(i + 1);
           widget.audioService.playShine(); // son court et net
         }
       }
@@ -162,8 +171,11 @@ class _JeuScreenState extends State<JeuScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text(_fmt,
-              style: const TextStyle(
-                  fontSize: 26, fontWeight: FontWeight.w900, letterSpacing: 2)),
+              style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 2,
+                  color: _rouge ? const Color(0xFFFF5252) : null)),
           actions: [
             if (widget.transcription?.ecoute ?? false)
               const Padding(
@@ -299,9 +311,11 @@ class _JeuScreenState extends State<JeuScreen> {
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w700)),
-                          Text(f.archetype.nom,
-                              style: const TextStyle(
-                                  color: Colors.white54, fontSize: 12)),
+                          Text('${emojiArchetype(f.archetype.id)} ${f.archetype.nom}',
+                              style: TextStyle(
+                                  color: couleurStatut(f.archetype.statut),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600)),
                           Text(f.objectif,
                               style: const TextStyle(
                                   color: _figC, fontSize: 12, height: 1.3)),
@@ -405,8 +419,17 @@ class _JeuScreenState extends State<JeuScreen> {
                       text: r.role,
                       style: const TextStyle(color: Colors.white70)),
                   TextSpan(
-                      text: '  (${r.archetype.nom} · ${r.archetype.moteur})',
-                      style: const TextStyle(color: _roleC, fontSize: 13)),
+                      text: '  ${emojiArchetype(r.archetype.id)} ',
+                      style: const TextStyle(fontSize: 14)),
+                  TextSpan(
+                      text: r.archetype.nom,
+                      style: TextStyle(
+                          color: couleurStatut(r.archetype.statut),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13)),
+                  TextSpan(
+                      text: ' · ${r.archetype.moteur}',
+                      style: const TextStyle(color: Colors.white54, fontSize: 13)),
                 ])),
               ),
           ],

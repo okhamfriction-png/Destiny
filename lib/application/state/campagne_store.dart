@@ -250,6 +250,8 @@ class CampagneStore extends ChangeNotifier {
   }
 
   // --- Catalogue ---
+  List<ArchetypeHistoire> get archetypes => List.unmodifiable(_archetypes);
+
   List<LieuHistoire> lieuxDe(String univers) =>
       _lieux.where((l) => l.univers == univers).toList();
   List<MechantHistoire> mechantsDe(String univers) =>

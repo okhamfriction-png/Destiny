@@ -5,7 +5,7 @@ import '../../application/services/transcription_service.dart';
 import '../../application/state/campagne_store.dart';
 import '../../application/state/music_controller.dart';
 import '../../domain/entities/campagne.dart';
-import '../../domain/usecases/constructeur_episode.dart';
+import '../visuals/campagne_visuals.dart';
 import 'campagne_jeu_screen.dart';
 
 const Color _gold = Color(0xFFFFC24B);
@@ -36,8 +36,11 @@ class _PreparationScreenState extends State<PreparationScreen> {
   int _nbJoueurs = 3;
   late List<TextEditingController> _noms;
   int _dureeMin = 30;
-  List<int> _horairesMin = const []; // horaires des dangers, en minutes
+  // Horaires des dangers 2, 3, 4 (le danger 1 démarre l'épisode), en minutes.
+  List<int> _horairesMin = const [];
   Episode? _episode;
+  // Archétypes des joueurs, modifiables (copie locale).
+  List<ArchetypeHistoire> _archs = const [];
 
   final TranscriptionService _transcription = TranscriptionService();
   bool _micDispo = false;
@@ -73,19 +76,50 @@ class _PreparationScreenState extends State<PreparationScreen> {
       [for (var i = 0; i < _nbJoueurs; i++) _noms[i].text.trim()];
 
   void _composer() {
-    _episode = widget.store
-        .composer(widget.campagne, widget.numero, _joueurs);
+    _episode = widget.store.composer(widget.campagne, widget.numero, _joueurs);
+    _archs = [for (final r in (_episode?.roles ?? const [])) r.archetype];
     _recalerHoraires();
   }
 
   void _recalerHoraires() {
-    final n = _episode?.escalade.length ?? 0;
-    if (n == 0) {
+    // Le danger 1 démarre l'épisode : on ne minute que les dangers 2, 3, 4…
+    final timed = (_episode?.escalade.length ?? 0) - 1;
+    if (timed <= 0) {
       _horairesMin = const [];
       return;
     }
-    final ms = horairesDesPresages(_dureeMin * 60000, n);
-    _horairesMin = [for (final h in ms) (h / 60000).round().clamp(1, _dureeMin - 1)];
+    // Par défaut à 30 %, 60 %, 90 % de la durée (le chrono vire au rouge après
+    // le dernier). Pour un autre nombre, répartition régulière équivalente.
+    _horairesMin = [
+      for (var i = 0; i < timed; i++)
+        (((i + 1) / (timed + 1)) * _dureeMin).round().clamp(1, _dureeMin - 1),
+    ];
+    // Cas standard (3 dangers minutés) : 30 / 60 / 90 %.
+    if (timed == 3) {
+      _horairesMin = [
+        (_dureeMin * 0.30).round().clamp(1, _dureeMin - 1),
+        (_dureeMin * 0.60).round().clamp(1, _dureeMin - 1),
+        (_dureeMin * 0.90).round().clamp(1, _dureeMin - 1),
+      ];
+    }
+  }
+
+  Future<void> _changerArchetype(int index) async {
+    final chosen = await showModalBottomSheet<ArchetypeHistoire>(
+      context: context,
+      backgroundColor: const Color(0xFF120F1E),
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
+      builder: (_) => _ArchetypePicker(
+        archetypes: widget.store.archetypes,
+        currentId: _archs[index].id,
+      ),
+    );
+    if (chosen != null && mounted) {
+      setState(() => _archs[index] = chosen);
+    }
   }
 
   @override
@@ -178,9 +212,35 @@ class _PreparationScreenState extends State<PreparationScreen> {
                         ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: Text(
-                            '— ${i < ep.roles.length ? ep.roles[i].role : ''}',
-                            style: const TextStyle(color: _lav),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(i < ep.roles.length ? ep.roles[i].role : '',
+                                  style: const TextStyle(
+                                      color: _lav, fontSize: 13)),
+                              if (i < _archs.length)
+                                InkWell(
+                                  onTap: () => _changerArchetype(i),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text('${emojiArchetype(_archs[i].id)} ',
+                                          style: const TextStyle(fontSize: 15)),
+                                      Flexible(
+                                        child: Text(_archs[i].nom,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                color: couleurStatut(
+                                                    _archs[i].statut),
+                                                fontWeight: FontWeight.w700)),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      const Icon(Icons.edit,
+                                          size: 14, color: _gold),
+                                    ],
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
                       ],
@@ -202,12 +262,18 @@ class _PreparationScreenState extends State<PreparationScreen> {
                   }),
                 ),
                 const SizedBox(height: 4),
+                const Text(
+                  'Le danger 1 démarre l\'épisode. Les suivants tombent aux '
+                  'moments réglés ; le chrono vire au rouge après le dernier.',
+                  style: TextStyle(color: Colors.white38, fontSize: 12),
+                ),
+                const SizedBox(height: 8),
                 for (var i = 0; i < _horairesMin.length; i++)
                   Row(
                     children: [
                       SizedBox(
                           width: 90,
-                          child: Text('Danger ${i + 1}',
+                          child: Text('Danger ${i + 2}',
                               style: const TextStyle(color: _gold))),
                       Expanded(
                         child: Slider(
@@ -283,15 +349,30 @@ class _PreparationScreenState extends State<PreparationScreen> {
   void _commencer() {
     final ep = _episode;
     if (ep == null) return;
-    // Horaires ordonnés et distincts, en ms.
-    final horairesMs = [
-      for (final m in _horairesMin) m * 60000
-    ]..sort();
+    // Reconstruit avec les archétypes choisis et les prénoms actuels.
+    final rolesJoueurs = <RoleJoueur>[
+      for (var i = 0; i < ep.roles.length; i++)
+        RoleJoueur(
+          joueur: i < _noms.length ? _noms[i].text.trim() : ep.roles[i].joueur,
+          role: ep.roles[i].role,
+          archetype: i < _archs.length ? _archs[i] : ep.roles[i].archetype,
+        ),
+    ];
+    final epFinal = Episode(
+      numero: ep.numero,
+      lieu: ep.lieu,
+      mechant: ep.mechant,
+      roles: rolesJoueurs,
+      figurants: ep.figurants,
+      escalade: ep.escalade,
+    );
+    // Horaires des dangers 2, 3, 4 (le danger 1 démarre l'épisode), en ms.
+    final horairesMs = [for (final m in _horairesMin) m * 60000]..sort();
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (_) => JeuScreen(
         store: widget.store,
         campagne: widget.campagne,
-        episode: ep,
+        episode: epFinal,
         dureeMs: _dureeMin * 60000,
         horairesMs: horairesMs,
         audioService: widget.audioService,
@@ -342,4 +423,95 @@ class _Titre extends StatelessWidget {
             style: const TextStyle(
                 color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)),
       );
+}
+
+/// Sélecteur d'archétype (bottom sheet) groupé et coloré par statut.
+class _ArchetypePicker extends StatelessWidget {
+  const _ArchetypePicker({required this.archetypes, required this.currentId});
+  final List<ArchetypeHistoire> archetypes;
+  final String currentId;
+
+  @override
+  Widget build(BuildContext context) {
+    List<ArchetypeHistoire> par(String s) =>
+        archetypes.where((a) => a.statut == s).toList()
+          ..sort((a, b) => a.nom.compareTo(b.nom));
+
+    Widget groupe(String statut, String titre) {
+      final list = par(statut);
+      if (list.isEmpty) return const SizedBox.shrink();
+      final c = couleurStatut(statut);
+      final header = c == Colors.white ? _lav : c;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 16, bottom: 8),
+            child: Text(titre.toUpperCase(),
+                style: TextStyle(
+                    color: header,
+                    letterSpacing: 2,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700)),
+          ),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final a in list)
+                InkWell(
+                  onTap: () => Navigator.of(context).pop(a),
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: a.id == currentId
+                          ? c.withValues(alpha: 0.18)
+                          : Colors.white10,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                          color: a.id == currentId ? c : Colors.white24,
+                          width: a.id == currentId ? 1.5 : 1),
+                    ),
+                    child: Text('${emojiArchetype(a.id)}  ${a.nom}',
+                        style: TextStyle(
+                            color: couleurStatut(a.statut),
+                            fontWeight: FontWeight.w600)),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      );
+    }
+
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.72,
+      minChildSize: 0.4,
+      maxChildSize: 0.94,
+      builder: (context, scroll) => ListView(
+        controller: scroll,
+        padding: const EdgeInsets.fromLTRB(18, 12, 18, 28),
+        children: [
+          Center(
+            child: Container(
+                width: 42,
+                height: 4,
+                decoration: BoxDecoration(
+                    color: Colors.white24,
+                    borderRadius: BorderRadius.circular(2))),
+          ),
+          const SizedBox(height: 12),
+          const Text('Changer d\'archétype',
+              style: TextStyle(
+                  color: _gold, fontSize: 20, fontWeight: FontWeight.w800)),
+          groupe('haut', 'Statut haut'),
+          groupe('neutre', 'Statut neutre'),
+          groupe('bas', 'Statut bas'),
+        ],
+      ),
+    );
+  }
 }

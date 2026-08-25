@@ -122,39 +122,45 @@ class ConstructeurEpisode {
   }) {
     if (lieux.isEmpty || mechants.isEmpty || archetypes.isEmpty) return null;
 
-    // Déterministe par épisode : rouvrir l'épisode montre la même composition.
+    // Déterministe par épisode (le lieu, les rôles joueurs) …
     final rng = Random(campagne.id * 100003 + numero);
+    // … et STABLE sur toute la campagne (figurants, méchant) : à l'épisode 2 on
+    // retrouve exactement les mêmes figurants et le même danger qu'à l'épisode 1.
+    final rngStable = Random(campagne.id * 100003);
 
-    // Le méchant revient (stable) ; le lieu change (formule).
     final mechant = mechants[campagne.id % mechants.length];
     final lieu = lieux[(campagne.id + numero) % lieux.length];
 
     final roles = [...lieu.roles]..shuffle(rng);
-    final animaux = [...archetypes]..shuffle(rng);
-    final objs = [...objectifs]..shuffle(rng);
 
-    // Un rôle et un archétype par joueur (joueur i ← animaux[i]).
-    final rolesJoueurs = <RoleJoueur>[
-      for (var i = 0; i < joueurs.length; i++)
-        RoleJoueur(
-          joueur: joueurs[i],
-          role: i < roles.length ? roles[i] : 'quelqu\'un du coin',
-          archetype: animaux[i % animaux.length],
-        ),
-    ];
-
-    // Deux figurants : ils prennent les rôles non joués ; leur archétype est
-    // décalé de joueurs.length pour ne jamais coïncider avec un joueur ; leur
-    // visage est distinct (par le rang).
+    // Figurants stables : identité (archétype / objectif / visage) tirée sur la
+    // campagne, pas sur l'épisode. Leur rôle s'adapte au lieu du moment.
+    final animauxStable = [...archetypes]..shuffle(rngStable);
+    final objs = [...objectifs]..shuffle(rngStable);
     final figurants = <Figurant>[
       for (var f = 0; f < 2; f++)
         Figurant(
           role: (joueurs.length + f) < roles.length
               ? roles[joueurs.length + f]
               : 'quelqu\'un du coin',
-          archetype: animaux[(joueurs.length + f) % animaux.length],
+          archetype: animauxStable[f % animauxStable.length],
           objectif: objs[f % objs.length],
           visage: f,
+        ),
+    ];
+    final idsFigurants = {for (final fg in figurants) fg.archetype.id};
+
+    // Archétypes des joueurs : parité des statuts (haut / bas / neutre), sans
+    // jamais reprendre l'archétype d'un figurant.
+    final dispo =
+        archetypes.where((a) => !idsFigurants.contains(a.id)).toList();
+    final animauxJoueurs = _pickAvecParite(dispo, joueurs.length, rng);
+    final rolesJoueurs = <RoleJoueur>[
+      for (var i = 0; i < joueurs.length; i++)
+        RoleJoueur(
+          joueur: joueurs[i],
+          role: i < roles.length ? roles[i] : 'quelqu\'un du coin',
+          archetype: animauxJoueurs[i % animauxJoueurs.length],
         ),
     ];
 
@@ -166,5 +172,34 @@ class ConstructeurEpisode {
       figurants: figurants,
       escalade: orchestrer(mechant),
     );
+  }
+
+  /// Tire [count] archétypes en garantissant, si possible, un mélange de statuts
+  /// (au moins un haut, un bas, un neutre dès 3 joueurs).
+  List<ArchetypeHistoire> _pickAvecParite(
+      List<ArchetypeHistoire> dispo, int count, Random rng) {
+    final byStatut = <String, List<ArchetypeHistoire>>{};
+    for (final a in dispo) {
+      (byStatut[a.statut] ??= <ArchetypeHistoire>[]).add(a);
+    }
+    if (count <= 1 || byStatut.length < 2) {
+      return ([...dispo]..shuffle(rng)).take(count).toList();
+    }
+    final chosen = <ArchetypeHistoire>[];
+    final ids = <String>{};
+    for (final s in const ['haut', 'bas', 'neutre']) {
+      if (chosen.length >= count) break;
+      final pool = (byStatut[s] ?? const <ArchetypeHistoire>[])
+          .where((a) => !ids.contains(a.id))
+          .toList()
+        ..shuffle(rng);
+      if (pool.isEmpty) continue;
+      chosen.add(pool.first);
+      ids.add(pool.first.id);
+    }
+    final rest = dispo.where((a) => !ids.contains(a.id)).toList()..shuffle(rng);
+    chosen.addAll(rest.take(count - chosen.length));
+    chosen.shuffle(rng);
+    return chosen.take(count).toList();
   }
 }

@@ -120,6 +120,7 @@ class ArchetypeHistoire {
     required this.temperament,
     required this.port,
     required this.moteur,
+    this.statut = 'neutre',
   });
 
   final String id;
@@ -128,12 +129,18 @@ class ArchetypeHistoire {
   final String port;
   final String moteur;
 
+  /// Statut de jeu : 'haut', 'bas' ou 'neutre'.
+  final String statut;
+
   factory ArchetypeHistoire.fromJson(Map<String, dynamic> j) => ArchetypeHistoire(
         id: j['id'] as String,
         nom: j['nom'] as String,
         temperament: j['temperament'] as String? ?? '',
         port: j['port'] as String? ?? '',
         moteur: j['moteur'] as String? ?? '',
+        statut: (j['statut'] as String?)?.trim().isNotEmpty == true
+            ? (j['statut'] as String).trim()
+            : 'neutre',
       );
 }
 

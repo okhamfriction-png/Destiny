@@ -1,21 +1,133 @@
 {
   "archetypes": [
-    {"id": "aigle", "nom": "L'aigle", "temperament": "Fier et sûr de lui", "port": "droit, menton haut", "moteur": "arriver le premier"},
-    {"id": "tortue", "nom": "La tortue", "temperament": "Calme et patiente", "port": "lent, posé", "moteur": "avancer à son rythme"},
-    {"id": "renard", "nom": "Le renard", "temperament": "Malin et curieux", "port": "souple, vif", "moteur": "trouver l'astuce"},
-    {"id": "ours", "nom": "L'ours", "temperament": "Fort et protecteur", "port": "lourd, large", "moteur": "protéger les plus petits"},
-    {"id": "souris", "nom": "La souris", "temperament": "Discrète et attentive", "port": "menue, rapide", "moteur": "passer sans qu'on la voie"},
-    {"id": "lion", "nom": "Le lion", "temperament": "Courageux et généreux", "port": "ample, tête haute", "moteur": "mener le groupe"},
-    {"id": "chat", "nom": "Le chat", "temperament": "Indépendant et gracieux", "port": "feutré, souple", "moteur": "faire à sa façon"},
-    {"id": "chien", "nom": "Le chien", "temperament": "Fidèle et joyeux", "port": "vif, remuant", "moteur": "aider ses amis"},
-    {"id": "singe", "nom": "Le singe", "temperament": "Farceur et agile", "port": "sautillant", "moteur": "faire rire tout le monde"},
-    {"id": "hibou", "nom": "Le hibou", "temperament": "Sage et réfléchi", "port": "posé, immobile", "moteur": "comprendre avant d'agir"},
-    {"id": "lapin", "nom": "Le lapin", "temperament": "Vif et un peu timide", "port": "sur le qui-vive", "moteur": "se faire des amis"},
-    {"id": "dauphin", "nom": "Le dauphin", "temperament": "Joueur et gentil", "port": "ondulant", "moteur": "que tout le monde s'amuse"},
-    {"id": "elephant", "nom": "L'éléphant", "temperament": "Doux et costaud", "port": "lent, sûr", "moteur": "se souvenir de tout"},
-    {"id": "pie", "nom": "La pie", "temperament": "Bavarde et curieuse", "port": "sautillante", "moteur": "collectionner de jolies choses"},
-    {"id": "loup", "nom": "Le loup", "temperament": "Loyal et sûr", "port": "souple, attentif", "moteur": "rester avec les siens"},
-    {"id": "paon", "nom": "Le paon", "temperament": "Fier et éclatant", "port": "paradant", "moteur": "être admiré"}
+    {
+      "id": "aigle",
+      "nom": "L'aigle",
+      "temperament": "Fier et sûr de lui",
+      "port": "droit, menton haut",
+      "moteur": "arriver le premier",
+      "statut": "haut"
+    },
+    {
+      "id": "tortue",
+      "nom": "La tortue",
+      "temperament": "Calme et patiente",
+      "port": "lent, posé",
+      "moteur": "avancer à son rythme",
+      "statut": "bas"
+    },
+    {
+      "id": "renard",
+      "nom": "Le renard",
+      "temperament": "Malin et curieux",
+      "port": "souple, vif",
+      "moteur": "trouver l'astuce",
+      "statut": "neutre"
+    },
+    {
+      "id": "ours",
+      "nom": "L'ours",
+      "temperament": "Fort et protecteur",
+      "port": "lourd, large",
+      "moteur": "protéger les plus petits",
+      "statut": "haut"
+    },
+    {
+      "id": "souris",
+      "nom": "La souris",
+      "temperament": "Discrète et attentive",
+      "port": "menue, rapide",
+      "moteur": "passer sans qu'on la voie",
+      "statut": "bas"
+    },
+    {
+      "id": "lion",
+      "nom": "Le lion",
+      "temperament": "Courageux et généreux",
+      "port": "ample, tête haute",
+      "moteur": "mener le groupe",
+      "statut": "haut"
+    },
+    {
+      "id": "chat",
+      "nom": "Le chat",
+      "temperament": "Indépendant et gracieux",
+      "port": "feutré, souple",
+      "moteur": "faire à sa façon",
+      "statut": "neutre"
+    },
+    {
+      "id": "chien",
+      "nom": "Le chien",
+      "temperament": "Fidèle et joyeux",
+      "port": "vif, remuant",
+      "moteur": "aider ses amis",
+      "statut": "bas"
+    },
+    {
+      "id": "singe",
+      "nom": "Le singe",
+      "temperament": "Farceur et agile",
+      "port": "sautillant",
+      "moteur": "faire rire tout le monde",
+      "statut": "neutre"
+    },
+    {
+      "id": "hibou",
+      "nom": "Le hibou",
+      "temperament": "Sage et réfléchi",
+      "port": "posé, immobile",
+      "moteur": "comprendre avant d'agir",
+      "statut": "haut"
+    },
+    {
+      "id": "lapin",
+      "nom": "Le lapin",
+      "temperament": "Vif et un peu timide",
+      "port": "sur le qui-vive",
+      "moteur": "se faire des amis",
+      "statut": "bas"
+    },
+    {
+      "id": "dauphin",
+      "nom": "Le dauphin",
+      "temperament": "Joueur et gentil",
+      "port": "ondulant",
+      "moteur": "que tout le monde s'amuse",
+      "statut": "neutre"
+    },
+    {
+      "id": "elephant",
+      "nom": "L'éléphant",
+      "temperament": "Doux et costaud",
+      "port": "lent, sûr",
+      "moteur": "se souvenir de tout",
+      "statut": "neutre"
+    },
+    {
+      "id": "pie",
+      "nom": "La pie",
+      "temperament": "Bavarde et curieuse",
+      "port": "sautillante",
+      "moteur": "collectionner de jolies choses",
+      "statut": "neutre"
+    },
+    {
+      "id": "loup",
+      "nom": "Le loup",
+      "temperament": "Loyal et sûr",
+      "port": "souple, attentif",
+      "moteur": "rester avec les siens",
+      "statut": "neutre"
+    },
+    {
+      "id": "paon",
+      "nom": "Le paon",
+      "temperament": "Fier et éclatant",
+      "port": "paradant",
+      "moteur": "être admiré",
+      "statut": "haut"
+    }
   ],
   "objectifs": [
     "Récupérer ce qu'on lui a pris.",
