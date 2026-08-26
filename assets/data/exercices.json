@@ -184,6 +184,55 @@
       "consigne": "Deux joueurs jouent une scène. À « top », un troisième remplace l'un d'eux et continue sans rupture.",
       "duree": 300,
       "categorie": "Imagination"
+    },
+    {
+      "id": "phrase_chacun",
+      "nom": "Une phrase chacun",
+      "consigne": "À deux, racontez une histoire en n'ajoutant qu'UNE phrase à tour de rôle. Personne ne double : le temps de parole reste strictement 50/50.",
+      "duree": 180,
+      "categorie": "Dialogue"
+    },
+    {
+      "id": "dernier_mot",
+      "nom": "Le dernier mot",
+      "consigne": "Chaque réplique commence par le dernier mot de la précédente. On s'écoute vraiment, et l'échange reste équilibré.",
+      "duree": 180,
+      "categorie": "Dialogue"
+    },
+    {
+      "id": "gardien_5050",
+      "nom": "Le gardien du 50/50",
+      "consigne": "Un observateur veille : si un joueur monopolise la parole, il claque des mains. But : équilibrer le temps de parole à deux.",
+      "duree": 180,
+      "categorie": "Dialogue"
+    },
+    {
+      "id": "trois_repliques",
+      "nom": "Scène en trois répliques",
+      "consigne": "Une scène complète en trois répliques seulement : qui, où, quoi. Chaque ligne doit porter — on va droit au but.",
+      "duree": 180,
+      "categorie": "Dialogue"
+    },
+    {
+      "id": "joute_verbale",
+      "nom": "La joute verbale",
+      "consigne": "À deux, échangez des répliques qui claquent, de plus en plus fortes. But : la percussion — chaque phrase doit toucher.",
+      "duree": 120,
+      "categorie": "Dialogue"
+    },
+    {
+      "id": "repliques_une_phrase",
+      "nom": "Répliques d'une phrase",
+      "consigne": "Interdit de faire plus d'une phrase par réplique. On coupe le gras, on ne garde que le percutant.",
+      "duree": 180,
+      "categorie": "Dialogue"
+    },
+    {
+      "id": "demi_vie",
+      "nom": "La demi-vie",
+      "consigne": "Jouez une scène d'une minute, puis rejouez-la en 30 s, puis en 15 s. On garde l'essence, on gagne en impact.",
+      "duree": 300,
+      "categorie": "Dialogue"
     }
   ],
   "virelangues": [

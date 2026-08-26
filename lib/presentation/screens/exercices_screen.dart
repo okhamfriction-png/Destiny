@@ -17,6 +17,7 @@ const List<String> _themes = [
   'Statut',
   'Spontanéité',
   'Écoute',
+  'Dialogue',
   'Imagination',
 ];
 
@@ -33,6 +34,8 @@ Color _categorieColor(String cat) {
       return const Color(0xFF64B5F6);
     case 'Imagination':
       return const Color(0xFFB79CFF);
+    case 'Dialogue':
+      return const Color(0xFF4DD0E1); // cyan dialogue
     case 'Solo':
       return const Color(0xFFF48FB1); // rose diction
     default:
@@ -52,6 +55,8 @@ IconData _categorieIcon(String cat) {
       return Icons.hearing;
     case 'Imagination':
       return Icons.auto_awesome;
+    case 'Dialogue':
+      return Icons.forum;
     case 'Solo':
       return Icons.record_voice_over;
     default:
