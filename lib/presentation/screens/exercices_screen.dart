@@ -33,6 +33,8 @@ Color _categorieColor(String cat) {
       return const Color(0xFF64B5F6);
     case 'Imagination':
       return const Color(0xFFB79CFF);
+    case 'Solo':
+      return const Color(0xFFF48FB1); // rose diction
     default:
       return _lav;
   }
@@ -50,6 +52,8 @@ IconData _categorieIcon(String cat) {
       return Icons.hearing;
     case 'Imagination':
       return Icons.auto_awesome;
+    case 'Solo':
+      return Icons.record_voice_over;
     default:
       return Icons.sports_kabaddi;
   }
@@ -68,6 +72,7 @@ class ExercicesScreen extends StatefulWidget {
 class _ExercicesScreenState extends State<ExercicesScreen> {
   List<Exercice> _exercices = const [];
   List<String> _principes = const [];
+  List<String> _virelangues = const [];
   bool _loading = true;
 
   @override
@@ -85,6 +90,9 @@ class _ExercicesScreenState extends State<ExercicesScreen> {
           .toList();
       _principes =
           (data['principes'] as List).map((e) => e as String).toList();
+      _virelangues = [
+        for (final v in (data['virelangues'] as List? ?? const [])) v as String
+      ];
     } catch (_) {}
     if (mounted) setState(() => _loading = false);
   }
@@ -116,6 +124,8 @@ class _ExercicesScreenState extends State<ExercicesScreen> {
     for (final e in _exercices) {
       if (!themes.contains(e.categorie)) themes.add(e.categorie);
     }
+    // Onglet Solo (diction / virelangues), à part du reste.
+    if (_virelangues.isNotEmpty) themes.add('Solo');
     return DefaultTabController(
       length: themes.length,
       child: Scaffold(
@@ -148,23 +158,26 @@ class _ExercicesScreenState extends State<ExercicesScreen> {
               child: TabBarView(
                 children: [
                   for (final t in themes)
-                    ListView(
-                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-                      children: [
-                        for (final ex
-                            in _exercices.where((e) => e.categorie == t))
-                          _ExerciceTile(
-                            exercice: ex,
-                            onTap: () =>
-                                Navigator.of(context).push(MaterialPageRoute(
-                              fullscreenDialog: true,
-                              builder: (_) => ExerciceRunScreen(
-                                  exercice: ex,
-                                  audioService: widget.audioService),
-                            )),
-                          ),
-                      ],
-                    ),
+                    if (t == 'Solo')
+                      _DictionTab(virelangues: _virelangues)
+                    else
+                      ListView(
+                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+                        children: [
+                          for (final ex
+                              in _exercices.where((e) => e.categorie == t))
+                            _ExerciceTile(
+                              exercice: ex,
+                              onTap: () =>
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                fullscreenDialog: true,
+                                builder: (_) => ExerciceRunScreen(
+                                    exercice: ex,
+                                    audioService: widget.audioService),
+                              )),
+                            ),
+                        ],
+                      ),
                 ],
               ),
             ),
@@ -261,6 +274,154 @@ class _ExerciceTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Onglet Solo — Diction : les 50 virelangues les plus populaires, avec un
+/// tirage « au hasard » et un affichage en grand pour s'entraîner à voix haute.
+class _DictionTab extends StatefulWidget {
+  const _DictionTab({required this.virelangues});
+  final List<String> virelangues;
+
+  @override
+  State<_DictionTab> createState() => _DictionTabState();
+}
+
+class _DictionTabState extends State<_DictionTab> {
+  static const Color _rose = Color(0xFFF48FB1);
+  final Random _rng = Random();
+  final ScrollController _scroll = ScrollController();
+  int? _sel;
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  void _hasard() {
+    if (widget.virelangues.isEmpty) return;
+    setState(() => _sel = _rng.nextInt(widget.virelangues.length));
+    if (_scroll.hasClients) {
+      _scroll.animateTo(0,
+          duration: const Duration(milliseconds: 250), curve: Curves.easeOut);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final total = widget.virelangues.length;
+    final courant = _sel == null ? null : widget.virelangues[_sel!];
+    return ListView(
+      controller: _scroll,
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+      children: [
+        const Row(children: [
+          Icon(Icons.record_voice_over, color: _rose, size: 18),
+          SizedBox(width: 8),
+          Text('DICTION — VIRELANGUES',
+              style: TextStyle(
+                  color: _rose,
+                  letterSpacing: 2,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700)),
+        ]),
+        const SizedBox(height: 4),
+        Text('Les $total plus populaires. Articule, accélère, recommence.',
+            style: const TextStyle(color: Colors.white54, fontSize: 13)),
+        const SizedBox(height: 12),
+        // Carte du virelangue en cours (grande, lisible à voix haute).
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: _rose.withValues(alpha: 0.10),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: _rose.withValues(alpha: 0.4)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (courant != null)
+                Text('N° ${_sel! + 1} / $total',
+                    style: const TextStyle(
+                        color: _rose,
+                        fontSize: 12,
+                        letterSpacing: 1.5,
+                        fontWeight: FontWeight.w700)),
+              const SizedBox(height: 8),
+              Text(
+                courant ?? 'Touche « Au hasard », ou choisis un virelangue dans la liste.',
+                style: TextStyle(
+                    color: courant == null ? Colors.white54 : Colors.white,
+                    fontSize: courant == null ? 16 : 24,
+                    height: 1.35,
+                    fontWeight:
+                        courant == null ? FontWeight.w500 : FontWeight.w800),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          width: double.infinity,
+          child: FilledButton.icon(
+            onPressed: _hasard,
+            icon: const Icon(Icons.casino),
+            label: const Text('Au hasard'),
+            style: FilledButton.styleFrom(
+              backgroundColor: _rose,
+              foregroundColor: Colors.black,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              textStyle:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+            ),
+          ),
+        ),
+        const SizedBox(height: 18),
+        const Text('TOUS LES VIRELANGUES',
+            style: TextStyle(
+                color: Colors.white38,
+                letterSpacing: 2,
+                fontSize: 11,
+                fontWeight: FontWeight.w700)),
+        const SizedBox(height: 8),
+        for (var i = 0; i < total; i++)
+          InkWell(
+            onTap: () => setState(() => _sel = i),
+            borderRadius: BorderRadius.circular(10),
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: _sel == i
+                    ? _rose.withValues(alpha: 0.14)
+                    : Colors.white.withValues(alpha: 0.03),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                    color: _sel == i ? _rose : Colors.white12),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 28,
+                    child: Text('${i + 1}',
+                        style: TextStyle(
+                            color: _rose.withValues(alpha: 0.8),
+                            fontWeight: FontWeight.w700)),
+                  ),
+                  Expanded(
+                    child: Text(widget.virelangues[i],
+                        style: const TextStyle(
+                            color: Colors.white, height: 1.3)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

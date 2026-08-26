@@ -10,34 +10,232 @@
     "Ralentir : on prend le temps de vivre chaque instant."
   ],
   "exercices": [
-    {"id": "machine", "nom": "La machine collective", "consigne": "Un joueur lance un geste et un son répétés. Chacun s'ajoute jusqu'à former une seule machine qui respire.", "duree": 180, "categorie": "Échauffement"},
-    {"id": "marche_etats", "nom": "La marche des états", "consigne": "On marche dans l'espace. À chaque signal, on change d'émotion et on la met dans tout le corps.", "duree": 240, "categorie": "Échauffement"},
-    {"id": "sept_huit", "nom": "Le huit compté", "consigne": "On secoue chaque membre en comptant à voix haute, de huit à un. À chaque tour, plus vite.", "duree": 120, "categorie": "Échauffement"},
-    {"id": "grommelot", "nom": "Le grommelot", "consigne": "On raconte une histoire passionnée dans une langue inventée, rien qu'avec la musique de la voix.", "duree": 180, "categorie": "Échauffement"},
-    {"id": "orchestre", "nom": "L'orchestre vocal", "consigne": "Un chef désigne les joueurs, qui produisent chacun un son. Il les fait monter, descendre et se taire.", "duree": 210, "categorie": "Échauffement"},
-    {"id": "phrase_elastique", "nom": "La phrase élastique", "consigne": "On dit une même phrase très lentement, puis très vite, puis chuchotée, puis clamée.", "duree": 150, "categorie": "Échauffement"},
-
-    {"id": "jeu_statuts", "nom": "Le jeu des statuts", "consigne": "Deux joueurs discutent ; l'un joue haut, l'autre bas. À « top », ils inversent sans changer de sujet.", "duree": 240, "categorie": "Statut"},
-    {"id": "file_attente", "nom": "La file d'attente", "consigne": "Chacun entre avec un statut différent, du plus haut au plus bas, et le montre sans jamais le dire.", "duree": 210, "categorie": "Statut"},
-    {"id": "maitre_valet", "nom": "Le maître et le valet", "consigne": "Une scène entre un statut haut et un statut bas. Le bas cherche, l'air de rien, à prendre le pouvoir.", "duree": 240, "categorie": "Statut"},
-    {"id": "les_chaises", "nom": "Les chaises", "consigne": "On occupe l'espace et les chaises selon son statut. Le plus haut prend la meilleure place, sans un mot.", "duree": 180, "categorie": "Statut"},
-
-    {"id": "tac_au_tac", "nom": "Le tac au tac", "consigne": "Deux joueurs se répondent du tac au tac, une phrase chacun, sans jamais hésiter ni réfléchir.", "duree": 180, "categorie": "Spontanéité"},
-    {"id": "conference", "nom": "La conférence de presse", "consigne": "Un joueur répond à des questions sur un sujet qu'il découvre à l'instant, comme un expert sûr de lui.", "duree": 210, "categorie": "Spontanéité"},
-    {"id": "une_emotion", "nom": "Une réplique, une émotion", "consigne": "On dit une phrase neutre. À chaque « top », on la rejoue avec une nouvelle émotion tirée au hasard.", "duree": 180, "categorie": "Spontanéité"},
-    {"id": "objets_detournes", "nom": "Objets détournés", "consigne": "On sort un objet imaginaire et on l'utilise pour tout autre chose, le plus vite possible, à tour de rôle.", "duree": 180, "categorie": "Spontanéité"},
-
-    {"id": "oui_et", "nom": "Oui, et…", "consigne": "On construit une histoire à deux. Chaque réplique commence par accepter la précédente, puis ajoute.", "duree": 240, "categorie": "Écoute"},
-    {"id": "un_mot", "nom": "L'histoire à un mot", "consigne": "Le groupe raconte une histoire ; chacun ne dit qu'un seul mot à son tour, sans hésiter.", "duree": 210, "categorie": "Écoute"},
-    {"id": "chef_secret", "nom": "Le chef d'orchestre secret", "consigne": "Un joueur mène des gestes que le groupe copie. Un chercheur, sorti puis revenu, doit deviner qui mène.", "duree": 240, "categorie": "Écoute"},
-    {"id": "meme_mot", "nom": "Le même mot", "consigne": "Deux joueurs comptent jusqu'à trois puis disent un mot ensemble. À chaque tour, ils visent le même.", "duree": 180, "categorie": "Écoute"},
-    {"id": "miroir", "nom": "Le miroir", "consigne": "Deux joueurs face à face : l'un mène, l'autre suit sans décalage. On inverse le meneur sans prévenir.", "duree": 180, "categorie": "Écoute"},
-
-    {"id": "objet_transforme", "nom": "L'objet transformé", "consigne": "On se passe un objet imaginaire qui devient autre chose à chaque main. On le rend clair par le geste.", "duree": 180, "categorie": "Imagination"},
-    {"id": "machine_ecrire", "nom": "La machine à écrire", "consigne": "Un joueur narre une scène ; les autres jouent tout ce qu'il décrit, à la seconde.", "duree": 240, "categorie": "Imagination"},
-    {"id": "statues", "nom": "Statues et titres", "consigne": "Deux joueurs forment une statue figée. Le groupe lui invente un titre d'exposition, puis elle s'anime.", "duree": 210, "categorie": "Imagination"},
-    {"id": "trois_cadeaux", "nom": "Les trois cadeaux", "consigne": "On mime offrir un cadeau. Celui qui reçoit nomme ce que c'est et remercie précisément.", "duree": 180, "categorie": "Imagination"},
-    {"id": "point_de_vue", "nom": "Le point de vue", "consigne": "On décrit une même scène banale à tour de rôle, chaque fois du point de vue d'un objet différent.", "duree": 210, "categorie": "Imagination"},
-    {"id": "remplacement", "nom": "Le remplacement", "consigne": "Deux joueurs jouent une scène. À « top », un troisième remplace l'un d'eux et continue sans rupture.", "duree": 300, "categorie": "Imagination"}
+    {
+      "id": "machine",
+      "nom": "La machine collective",
+      "consigne": "Un joueur lance un geste et un son répétés. Chacun s'ajoute jusqu'à former une seule machine qui respire.",
+      "duree": 180,
+      "categorie": "Échauffement"
+    },
+    {
+      "id": "marche_etats",
+      "nom": "La marche des états",
+      "consigne": "On marche dans l'espace. À chaque signal, on change d'émotion et on la met dans tout le corps.",
+      "duree": 240,
+      "categorie": "Échauffement"
+    },
+    {
+      "id": "sept_huit",
+      "nom": "Le huit compté",
+      "consigne": "On secoue chaque membre en comptant à voix haute, de huit à un. À chaque tour, plus vite.",
+      "duree": 120,
+      "categorie": "Échauffement"
+    },
+    {
+      "id": "grommelot",
+      "nom": "Le grommelot",
+      "consigne": "On raconte une histoire passionnée dans une langue inventée, rien qu'avec la musique de la voix.",
+      "duree": 180,
+      "categorie": "Échauffement"
+    },
+    {
+      "id": "orchestre",
+      "nom": "L'orchestre vocal",
+      "consigne": "Un chef désigne les joueurs, qui produisent chacun un son. Il les fait monter, descendre et se taire.",
+      "duree": 210,
+      "categorie": "Échauffement"
+    },
+    {
+      "id": "phrase_elastique",
+      "nom": "La phrase élastique",
+      "consigne": "On dit une même phrase très lentement, puis très vite, puis chuchotée, puis clamée.",
+      "duree": 150,
+      "categorie": "Échauffement"
+    },
+    {
+      "id": "jeu_statuts",
+      "nom": "Le jeu des statuts",
+      "consigne": "Deux joueurs discutent ; l'un joue haut, l'autre bas. À « top », ils inversent sans changer de sujet.",
+      "duree": 240,
+      "categorie": "Statut"
+    },
+    {
+      "id": "file_attente",
+      "nom": "La file d'attente",
+      "consigne": "Chacun entre avec un statut différent, du plus haut au plus bas, et le montre sans jamais le dire.",
+      "duree": 210,
+      "categorie": "Statut"
+    },
+    {
+      "id": "maitre_valet",
+      "nom": "Le maître et le valet",
+      "consigne": "Une scène entre un statut haut et un statut bas. Le bas cherche, l'air de rien, à prendre le pouvoir.",
+      "duree": 240,
+      "categorie": "Statut"
+    },
+    {
+      "id": "les_chaises",
+      "nom": "Les chaises",
+      "consigne": "On occupe l'espace et les chaises selon son statut. Le plus haut prend la meilleure place, sans un mot.",
+      "duree": 180,
+      "categorie": "Statut"
+    },
+    {
+      "id": "tac_au_tac",
+      "nom": "Le tac au tac",
+      "consigne": "Deux joueurs se répondent du tac au tac, une phrase chacun, sans jamais hésiter ni réfléchir.",
+      "duree": 180,
+      "categorie": "Spontanéité"
+    },
+    {
+      "id": "conference",
+      "nom": "La conférence de presse",
+      "consigne": "Un joueur répond à des questions sur un sujet qu'il découvre à l'instant, comme un expert sûr de lui.",
+      "duree": 210,
+      "categorie": "Spontanéité"
+    },
+    {
+      "id": "une_emotion",
+      "nom": "Une réplique, une émotion",
+      "consigne": "On dit une phrase neutre. À chaque « top », on la rejoue avec une nouvelle émotion tirée au hasard.",
+      "duree": 180,
+      "categorie": "Spontanéité"
+    },
+    {
+      "id": "objets_detournes",
+      "nom": "Objets détournés",
+      "consigne": "On sort un objet imaginaire et on l'utilise pour tout autre chose, le plus vite possible, à tour de rôle.",
+      "duree": 180,
+      "categorie": "Spontanéité"
+    },
+    {
+      "id": "oui_et",
+      "nom": "Oui, et…",
+      "consigne": "On construit une histoire à deux. Chaque réplique commence par accepter la précédente, puis ajoute.",
+      "duree": 240,
+      "categorie": "Écoute"
+    },
+    {
+      "id": "un_mot",
+      "nom": "L'histoire à un mot",
+      "consigne": "Le groupe raconte une histoire ; chacun ne dit qu'un seul mot à son tour, sans hésiter.",
+      "duree": 210,
+      "categorie": "Écoute"
+    },
+    {
+      "id": "chef_secret",
+      "nom": "Le chef d'orchestre secret",
+      "consigne": "Un joueur mène des gestes que le groupe copie. Un chercheur, sorti puis revenu, doit deviner qui mène.",
+      "duree": 240,
+      "categorie": "Écoute"
+    },
+    {
+      "id": "meme_mot",
+      "nom": "Le même mot",
+      "consigne": "Deux joueurs comptent jusqu'à trois puis disent un mot ensemble. À chaque tour, ils visent le même.",
+      "duree": 180,
+      "categorie": "Écoute"
+    },
+    {
+      "id": "miroir",
+      "nom": "Le miroir",
+      "consigne": "Deux joueurs face à face : l'un mène, l'autre suit sans décalage. On inverse le meneur sans prévenir.",
+      "duree": 180,
+      "categorie": "Écoute"
+    },
+    {
+      "id": "objet_transforme",
+      "nom": "L'objet transformé",
+      "consigne": "On se passe un objet imaginaire qui devient autre chose à chaque main. On le rend clair par le geste.",
+      "duree": 180,
+      "categorie": "Imagination"
+    },
+    {
+      "id": "machine_ecrire",
+      "nom": "La machine à écrire",
+      "consigne": "Un joueur narre une scène ; les autres jouent tout ce qu'il décrit, à la seconde.",
+      "duree": 240,
+      "categorie": "Imagination"
+    },
+    {
+      "id": "statues",
+      "nom": "Statues et titres",
+      "consigne": "Deux joueurs forment une statue figée. Le groupe lui invente un titre d'exposition, puis elle s'anime.",
+      "duree": 210,
+      "categorie": "Imagination"
+    },
+    {
+      "id": "trois_cadeaux",
+      "nom": "Les trois cadeaux",
+      "consigne": "On mime offrir un cadeau. Celui qui reçoit nomme ce que c'est et remercie précisément.",
+      "duree": 180,
+      "categorie": "Imagination"
+    },
+    {
+      "id": "point_de_vue",
+      "nom": "Le point de vue",
+      "consigne": "On décrit une même scène banale à tour de rôle, chaque fois du point de vue d'un objet différent.",
+      "duree": 210,
+      "categorie": "Imagination"
+    },
+    {
+      "id": "remplacement",
+      "nom": "Le remplacement",
+      "consigne": "Deux joueurs jouent une scène. À « top », un troisième remplace l'un d'eux et continue sans rupture.",
+      "duree": 300,
+      "categorie": "Imagination"
+    }
+  ],
+  "virelangues": [
+    "Un chasseur sachant chasser doit savoir chasser sans son chien.",
+    "Les chaussettes de l'archiduchesse sont-elles sèches, archi-sèches ?",
+    "Je veux et j'exige d'exquises excuses.",
+    "Si six scies scient six cyprès, six cent scies scient six cent cyprès.",
+    "Trois tortues trottaient sur un trottoir très étroit.",
+    "Un dragon gradé dégrade un gradé dragon.",
+    "Didon dîna, dit-on, du dos d'un dodu dindon.",
+    "Cinq chiens chassent six chats.",
+    "La roue sur la rue roule, la rue sous la roue reste.",
+    "Pauvre petit pêcheur, prends patience pour pouvoir prendre plusieurs petits poissons.",
+    "Ton thé t'a-t-il ôté ta toux ?",
+    "Napoléon cédant Sedan céda ses dents.",
+    "Suis-je bien chez ce cher Serge ?",
+    "Un ver de terre vert qui va vers un verre vert.",
+    "Fruits frais, fruits frits, fruits cuits, fruits crus.",
+    "Si mon tonton tond ton tonton, ton tonton sera tondu.",
+    "Le mur murant Paris rend Paris murmurant.",
+    "Douze douzaines de draps doux.",
+    "Six saucisses sèches.",
+    "Seize chaises sèchent.",
+    "Ces six saucissons-ci sont si secs qu'on ne sait si c'en sont.",
+    "Un plein plat de blé pilé.",
+    "Où niche la pie ? La pie niche haut. Où niche l'oie ? L'oie niche bas.",
+    "Le poivre fait fièvre à la pauvre pieuvre.",
+    "Chat vit rôt, rôt tenta chat, chat mit patte à rôt, rôt brûla patte à chat.",
+    "Ces Basques se passent ce masque jusqu'à ce que ce masque se casse.",
+    "Trois gros rats gris dans trois gros trous ronds rongent trois gros croûtons ronds.",
+    "Un généreux déjeuner régénérerait des généraux dégénérés.",
+    "Le ver vert va vers le verre vert.",
+    "Trois tortues têtues trottent en trottinette.",
+    "Cette taxe fixe excessive est fixée exprès à Aix par le fisc.",
+    "Poisson sans boisson, c'est poison.",
+    "Tonton, ton thé t'a-t-il ôté ta toux ?",
+    "Pruneau cuit, pruneau cru.",
+    "Trois petites truites cuites, trois petites truites crues.",
+    "Kiki la cocotte aimait Coco le concasseur de cacao.",
+    "La pie niche haut, l'oie niche bas, l'hibou niche ni haut ni bas.",
+    "Nathan n'attend pas Tania.",
+    "Ta Katie t'a quitté.",
+    "Papier, panier, piano.",
+    "Ces cyprès sont si loin qu'on ne sait s'ils sont.",
+    "Le riz tenta le rat, le rat tenté tâta le riz tentant.",
+    "Un grand gras rat gris grignote.",
+    "Sachez, mon cher Sacha, que Natacha n'attacha pas son chat.",
+    "Cinq gros rats grillent dans la grosse graisse grasse.",
+    "Douze douzaines de saucisses sèches.",
+    "Les vers verts levèrent le verre vert vers le ver vert.",
+    "Bonjour Madame Sans-Souci, combien sont ces six saucissons-ci ?",
+    "Lili lit le livre dans le lit.",
+    "Blés brûlés, bruns blés brûlés."
   ]
 }
