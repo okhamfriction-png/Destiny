@@ -9,6 +9,7 @@ import '../../application/services/transcription_service.dart';
 import '../../application/state/guide_content.dart';
 import '../../application/state/music_controller.dart';
 import '../../domain/entities/archetype.dart';
+import '../../domain/entities/danger.dart';
 import '../../application/state/location_details.dart';
 import '../../application/state/story_controller.dart';
 import '../../application/state/tracking_store.dart';
@@ -310,6 +311,48 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
     }
   }
 
+  /// Bulle d'info du danger : les 4 stades communs (Signale → Enferme → Envahit
+  /// → Supprime) et leur déclinaison concrète pour ce danger.
+  void _montrerEscalade(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1530),
+        title: Text(widget.danger,
+            style: const TextStyle(color: Colors.white, fontSize: 18)),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (var i = 0; i < widget.paliers.length; i++) ...[
+                if (i < kStadesEscalade.length) ...[
+                  Text(kStadesEscalade[i].mot,
+                      style: const TextStyle(
+                          color: _gold, fontWeight: FontWeight.w800)),
+                  Text(kStadesEscalade[i].sens,
+                      style: const TextStyle(
+                          color: Colors.white54,
+                          fontStyle: FontStyle.italic,
+                          height: 1.2)),
+                  const SizedBox(height: 2),
+                ],
+                Text(widget.paliers[i],
+                    style: const TextStyle(color: Colors.white70, height: 1.3)),
+                const SizedBox(height: 12),
+              ],
+            ],
+          ),
+        ),
+        actions: [
+          FilledButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('Compris')),
+        ],
+      ),
+    );
+  }
+
   void _tick(Timer t) {
     if (!mounted) return;
     setState(() {
@@ -588,7 +631,6 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
 
   // --------------------------------------------------------------- infos
   Widget _infoBlock(BuildContext context, {double scale = 1}) {
-    final theme = Theme.of(context);
     final isFilm = (widget.filmTitle ?? '').isNotEmpty;
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -607,7 +649,13 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
               : null,
         ),
         SizedBox(height: 10 * scale),
-        _ContextLine(label: 'DANGER', value: widget.danger, scale: scale),
+        _ContextLine(
+          label: 'DANGER',
+          value: widget.danger,
+          scale: scale,
+          // Bulle d'info : la grammaire des 4 stades + les étapes de CE danger.
+          onTap: widget.paliers.isEmpty ? null : () => _montrerEscalade(context),
+        ),
         if (_heroes.isNotEmpty) ...[
           SizedBox(height: 12 * scale),
           _MiniLabel('HÉROS', scale: scale),
@@ -629,29 +677,39 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
           SizedBox(height: 12 * scale),
           _MiniLabel('ÉTAPES DU DANGER', scale: scale),
           SizedBox(height: 4 * scale),
-          // Étape en cours (avance à chaque DESTINY) : gras blanc, plus grande.
+          // Le stade (l'étape) en gras ; sous lui, la phrase du danger en petite
+          // italique. L'étape en cours (avance à chaque DESTINY) ressort.
           for (var i = 0; i < widget.paliers.length; i++)
             Builder(builder: (context) {
               final current = _setup
                   ? -1
                   : _fired.length.clamp(0, widget.paliers.length - 1);
               final active = i == current;
+              final stade =
+                  i < kStadesEscalade.length ? kStadesEscalade[i].mot : '${i + 1}';
               return Padding(
-                padding: EdgeInsets.only(bottom: (active ? 6 : 3) * scale),
-                child: Text('${i + 1}. ${widget.paliers[i]}',
-                    textAlign: TextAlign.center,
-                    style: active
-                        ? TextStyle(
-                            color: Colors.white,
+                padding: EdgeInsets.only(bottom: (active ? 8 : 5) * scale),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(stade,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: active
+                                ? _gold
+                                : _gold.withValues(alpha: 0.55),
                             fontWeight: FontWeight.w800,
-                            fontSize: 19 * scale,
-                            height: 1.3)
-                        : theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.white38,
-                            height: 1.2,
-                            fontSize:
-                                (theme.textTheme.bodySmall?.fontSize ?? 12) *
-                                    scale)),
+                            fontSize: (active ? 19 : 15) * scale,
+                            height: 1.15)),
+                    Text(widget.paliers[i],
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: active ? Colors.white70 : Colors.white30,
+                            fontStyle: FontStyle.italic,
+                            fontSize: (active ? 11 : 9.5) * scale,
+                            height: 1.15)),
+                  ],
+                ),
               );
             }),
         ],

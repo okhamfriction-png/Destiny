@@ -1,3 +1,20 @@
+/// Un stade de la grammaire commune d'escalade d'un danger : un mot (le stade)
+/// et ce qu'il fait. Les 4 paliers concrets d'un danger suivent cet ordre.
+class StadeEscalade {
+  const StadeEscalade(this.mot, this.sens);
+  final String mot;
+  final String sens;
+}
+
+/// La grammaire commune à tous les dangers : Signale → Enferme → Envahit →
+/// Supprime. Chaque danger décline ces 4 stades avec ses propres paliers.
+const List<StadeEscalade> kStadesEscalade = [
+  StadeEscalade('Signale', 'le danger se manifeste, extérieur et diffus'),
+  StadeEscalade('Enferme', 'il coupe les sorties : on ne sort plus'),
+  StadeEscalade('Envahit', 'il entre et transforme le lieu, touche les corps'),
+  StadeEscalade('Supprime', 'il détruit le dernier refuge : survivre ou mourir'),
+];
+
 class Danger {
   const Danger({
     required this.id,

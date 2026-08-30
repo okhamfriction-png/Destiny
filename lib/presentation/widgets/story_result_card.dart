@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../application/state/location_details.dart';
 import '../../application/state/visual_settings.dart';
+import '../../domain/entities/danger.dart';
 import '../../domain/entities/player_assignment.dart';
 import '../../domain/entities/story.dart';
 import '../screens/location_details_screen.dart';
@@ -241,7 +242,7 @@ class _DangerSteps extends StatelessWidget {
           const SizedBox(height: 6),
           for (var i = 0; i < paliers.length; i++)
             Padding(
-              padding: const EdgeInsets.only(bottom: 4),
+              padding: const EdgeInsets.only(bottom: 8),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -260,9 +261,28 @@ class _DangerSteps extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(paliers[i],
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: Colors.white70, height: 1.3)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Grammaire commune : le stade (gras) + ce qu'il fait (italique).
+                        if (i < kStadesEscalade.length) ...[
+                          Text(kStadesEscalade[i].mot,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.primary,
+                                  fontWeight: FontWeight.w800)),
+                          Text(kStadesEscalade[i].sens,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                  color: Colors.white54,
+                                  fontStyle: FontStyle.italic,
+                                  height: 1.2)),
+                          const SizedBox(height: 2),
+                        ],
+                        // Déclinaison concrète pour CE danger.
+                        Text(paliers[i],
+                            style: theme.textTheme.bodySmall
+                                ?.copyWith(color: Colors.white70, height: 1.3)),
+                      ],
+                    ),
                   ),
                 ],
               ),
