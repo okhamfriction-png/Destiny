@@ -94,6 +94,43 @@ class AudioService {
   /// Révélation d'archétype : tambour + coup de foudre.
   Future<void> playReveal() => _restart(_beast, revealAsset);
 
+  /// Effets sélectionnables (clé → libellé) pour les sons du chrono.
+  static const Map<String, String> effets = {
+    'storm': 'Tonnerre Destiny',
+    'thunder': 'Tonnerre',
+    'dice': 'Dé',
+    'coin': 'Pièce',
+    'crack': 'Fissure',
+    'shine': 'Éclat',
+    'story': 'Épique',
+    'reveal': 'Révélation',
+    'aucun': 'Aucun',
+  };
+
+  /// Joue l'effet identifié par sa clé (voir [effets]). 'aucun' ne joue rien.
+  Future<void> playEffet(String key) {
+    switch (key) {
+      case 'storm':
+        return playStorm();
+      case 'thunder':
+        return playThunder();
+      case 'dice':
+        return playDice();
+      case 'coin':
+        return playCoin();
+      case 'crack':
+        return playCrack();
+      case 'shine':
+        return playShine();
+      case 'story':
+        return playStory();
+      case 'reveal':
+        return playReveal();
+      default:
+        return Future<void>.value();
+    }
+  }
+
   Future<void> stopStorm() => _storm.stop();
 
   void dispose() {

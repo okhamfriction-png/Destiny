@@ -80,6 +80,8 @@ class TopCountdownScreen extends StatefulWidget {
     this.seconds = 30,
     this.alertAt = 10,
     this.cubeAnimation = false,
+    this.sonDebut = 'dice',
+    this.sonDestiny = 'storm',
     this.guide,
     this.tracking,
     this.visualSettings,
@@ -144,6 +146,10 @@ class TopCountdownScreen extends StatefulWidget {
   /// Active l'animation du cube doré (lancement du chrono + DESTINY).
   /// Désactivée par défaut.
   final bool cubeAnimation;
+
+  /// Sons du chrono (clés de AudioService.effets ; 'aucun' = silence).
+  final String sonDebut;
+  final String sonDestiny;
 
   @override
   State<TopCountdownScreen> createState() => _TopCountdownScreenState();
@@ -280,7 +286,8 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
       _launchToken++;
       _paused = false;
     });
-    if (widget.cubeAnimation) widget.audioService.playDice();
+    // Son du début du chrono (paramétrable ; 'aucun' = silence, mute respecté).
+    widget.audioService.playEffet(widget.sonDebut);
     _conclusionTimer?.cancel();
     _lieuTimer?.cancel();
     // Musique du Commencement au lancement (mode Histoire, son non coupé).
@@ -371,7 +378,8 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
             text: roll.text,
             emoji: roll.emoji
           ));
-          widget.audioService.playStorm(); // vrai son Destiny (DestinyStorm)
+          // Son du DESTINY (paramétrable ; 'aucun' = silence, mute respecté).
+          widget.audioService.playEffet(widget.sonDestiny);
           _flashTimer?.cancel();
           _flashTimer = Timer(const Duration(milliseconds: 2200), () {
             if (mounted) setState(() => _flash = null);

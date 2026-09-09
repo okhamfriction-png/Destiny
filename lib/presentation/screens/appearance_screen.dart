@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../../application/services/audio_service.dart';
 import '../../application/state/visual_settings.dart';
 
 /// Réglage de l'apparence : taille du texte de l'application.
 class AppearanceScreen extends StatelessWidget {
-  const AppearanceScreen({required this.visualSettings, super.key});
+  const AppearanceScreen(
+      {required this.visualSettings, required this.audioService, super.key});
 
   final VisualSettings visualSettings;
+  final AudioService audioService;
 
   static const _presets = <({String label, double value})>[
     (label: 'Petit', value: 0.85),
@@ -295,10 +298,95 @@ class AppearanceScreen extends StatelessWidget {
                   value: visualSettings.destinyWeightDestin,
                   onChanged: visualSettings.setDestinyWeightDestin,
                 ),
+                const SizedBox(height: 20),
+                const Divider(height: 1),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(Icons.graphic_eq, color: theme.colorScheme.primary),
+                    const SizedBox(width: 10),
+                    Text('Sons du chrono',
+                        style: theme.textTheme.titleMedium),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Text('Le son déclenché au lancement du chrono et à chaque DESTINY.',
+                    style: theme.textTheme.bodySmall
+                        ?.copyWith(color: Colors.white54)),
+                const SizedBox(height: 8),
+                _SonRow(
+                  label: 'Au début du chrono',
+                  value: visualSettings.sonDebut,
+                  onChanged: visualSettings.setSonDebut,
+                  audioService: audioService,
+                ),
+                _SonRow(
+                  label: 'À chaque DESTINY',
+                  value: visualSettings.sonDestiny,
+                  onChanged: visualSettings.setSonDestiny,
+                  audioService: audioService,
+                ),
               ],
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+/// Sélecteur d'un son du chrono, avec bouton d'aperçu.
+class _SonRow extends StatelessWidget {
+  const _SonRow({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+    required this.audioService,
+  });
+  final String label;
+  final String value;
+  final ValueChanged<String> onChanged;
+  final AudioService audioService;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cur = AudioService.effets.containsKey(value) ? value : 'aucun';
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(label,
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(color: Colors.white)),
+          ),
+          DropdownButton<String>(
+            value: cur,
+            dropdownColor: const Color(0xFF1A1530),
+            underline: const SizedBox.shrink(),
+            style: TextStyle(color: theme.colorScheme.primary, fontSize: 15),
+            items: [
+              for (final e in AudioService.effets.entries)
+                DropdownMenuItem(value: e.key, child: Text(e.value)),
+            ],
+            onChanged: (v) {
+              if (v == null) return;
+              onChanged(v);
+              if (v != 'aucun') audioService.playEffet(v); // aperçu
+            },
+          ),
+          IconButton(
+            tooltip: 'Écouter',
+            icon: Icon(Icons.play_circle_outline,
+                color: cur == 'aucun'
+                    ? Colors.white24
+                    : theme.colorScheme.primary),
+            onPressed: cur == 'aucun'
+                ? null
+                : () => audioService.playEffet(cur),
+          ),
+        ],
       ),
     );
   }

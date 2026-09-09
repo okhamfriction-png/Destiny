@@ -63,6 +63,8 @@ class VisualSettings extends ChangeNotifier {
   static const _kWDang = 'destiny_w_dang';
   static const _kWDest = 'destiny_w_dest';
   static const _kAdmin = 'admin_mode';
+  static const _kSonDebut = 'son_debut';
+  static const _kSonDestiny = 'son_destiny';
 
   VisualSource _source = VisualSource.ai;
   double _textScale = 1.0;
@@ -76,8 +78,35 @@ class VisualSettings extends ChangeNotifier {
   // Mode admin : autorise l'édition du Guide et de la config. Désactivé par défaut
   // (les comédiens sont en lecture seule sur le Guide).
   bool _adminMode = false;
+  // Sons du chrono (clés de AudioService.effets ; 'aucun' = silence).
+  String _sonDebut = 'dice';
+  String _sonDestiny = 'storm';
 
   VisualSource get source => _source;
+
+  /// Son joué au lancement du chrono d'histoire.
+  String get sonDebut => _sonDebut;
+  Future<void> setSonDebut(String value) async {
+    if (value == _sonDebut) return;
+    _sonDebut = value;
+    notifyListeners();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_kSonDebut, _sonDebut);
+    } catch (_) {}
+  }
+
+  /// Son joué à chaque DESTINY.
+  String get sonDestiny => _sonDestiny;
+  Future<void> setSonDestiny(String value) async {
+    if (value == _sonDestiny) return;
+    _sonDestiny = value;
+    notifyListeners();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_kSonDestiny, _sonDestiny);
+    } catch (_) {}
+  }
 
   /// Mode admin : déverrouille l'édition du Guide et la configuration des
   /// tableaux. Désactivé par défaut.
@@ -222,6 +251,8 @@ class VisualSettings extends ChangeNotifier {
       _wDang = prefs.getInt(_kWDang) ?? 2;
       _wDest = prefs.getInt(_kWDest) ?? 7;
       _adminMode = prefs.getBool(_kAdmin) ?? false;
+      _sonDebut = prefs.getString(_kSonDebut) ?? 'dice';
+      _sonDestiny = prefs.getString(_kSonDestiny) ?? 'storm';
       notifyListeners();
     } catch (_) {
       // Valeurs par défaut conservées.

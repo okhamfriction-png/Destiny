@@ -96,7 +96,14 @@
       "temperament": "Sérieuse, tenace",
       "port": "_affairé_",
       "moteur": "**L'ordre**",
-      "statut": "bas"
+      "statut": "bas",
+      "intention": "ordonner, ranger, tout mettre en règle",
+      "niveaux": [
+        "sérieuse, méthodique, ponctuelle, aime que les choses soient à leur place.",
+        "corrige, planifie, s'agace du désordre et de l'imprévu, veut cadrer le groupe.",
+        "impose sa méthode à tous, vérifie tout, une seule bonne façon de faire — la sienne.",
+        "obsessionnelle, rigidité maniaque, tout doit être contrôlé et rangé, panique ou tyrannie devant le chaos."
+      ]
     },
     {
       "id": "hibou",

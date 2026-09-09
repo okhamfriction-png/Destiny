@@ -318,6 +318,8 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
             destinyEnabled ? const [10 * 60, 18 * 60, 27 * 60] : const [],
         seconds: destinyEnabled ? 30 * 60 : widget.visualSettings.topSeconds,
         cubeAnimation: widget.visualSettings.cubeAnimation,
+        sonDebut: widget.visualSettings.sonDebut,
+        sonDestiny: widget.visualSettings.sonDestiny,
         // Aides de jeu accessibles pendant le chrono.
         guide: widget.guideContent,
         tracking: widget.trackingStore,

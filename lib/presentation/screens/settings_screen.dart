@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../application/services/audio_service.dart';
 import '../../application/state/ai_settings.dart';
 import '../../application/state/location_details.dart';
 import '../../application/state/relation_cheatsheet.dart';
@@ -30,6 +31,7 @@ class SettingsScreen extends StatelessWidget {
     required this.aiSettings,
     required this.relationCheatsheet,
     required this.locationDetails,
+    required this.audioService,
     super.key,
   });
 
@@ -40,6 +42,7 @@ class SettingsScreen extends StatelessWidget {
   final AiSettings aiSettings;
   final RelationCheatsheet relationCheatsheet;
   final LocationDetailsStore locationDetails;
+  final AudioService audioService;
 
   void _push(BuildContext context, Widget screen) {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
@@ -118,7 +121,10 @@ class SettingsScreen extends StatelessWidget {
               title: 'Apparence',
               subtitle: 'Taille du texte, écriture, visuels des cartes.',
               onTap: () => _push(
-                  context, AppearanceScreen(visualSettings: visualSettings)),
+                  context,
+                  AppearanceScreen(
+                      visualSettings: visualSettings,
+                      audioService: audioService)),
             ),
             Card(
               margin: const EdgeInsets.symmetric(vertical: 4),
