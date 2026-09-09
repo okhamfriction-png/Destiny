@@ -6,7 +6,14 @@
       "temperament": "Fier, compétiteur",
       "port": "_droit_",
       "moteur": "**Le sommet**",
-      "statut": "haut"
+      "statut": "haut",
+      "intention": "dominer, être le meilleur, viser le sommet",
+      "niveaux": [
+        "sûr de lui, ambitieux, un peu au-dessus. « Je sais ce que je vaux. »",
+        "compétitif, il veut prendre la tête, se compare, supporte mal d'être dépassé.",
+        "écrase les rivaux, ne tolère aucun supérieur, tout devient conquête.",
+        "mégalomane, il veut régner sur tout, prêt à sacrifier n'importe qui pour rester au sommet."
+      ]
     },
     {
       "id": "cerf",
@@ -14,7 +21,14 @@
       "temperament": "Honorable, fier",
       "port": "_droit, raide_",
       "moteur": "**L'honneur**",
-      "statut": "haut"
+      "statut": "haut",
+      "intention": "rester digne, refuser de s'abaisser, tenir son honneur",
+      "niveaux": [
+        "droit, courtois, une certaine noblesse tranquille.",
+        "raidit sur ses principes, refuse les compromis, se cabre au manque de respect.",
+        "préfère perdre que se salir, juge durement ceux qui plient.",
+        "se sacrifie ou sacrifie les autres au nom de l'honneur, jusqu'à l'absurde et la mort."
+      ]
     },
     {
       "id": "chat",
@@ -22,7 +36,14 @@
       "temperament": "Charmeur, secret",
       "port": "_feutré, glissant_",
       "moteur": "**La fascination**",
-      "statut": "neutre"
+      "statut": "neutre",
+      "intention": "faire à sa guise, n'appartenir à personne",
+      "niveaux": [
+        "indépendant, charmant, un peu distant, va et vient.",
+        "refuse les contraintes, se dérobe, séduit puis s'échappe.",
+        "n'obéit à rien ni personne, imprévisible, joue avec les autres.",
+        "totalement insaisissable et amoral, trahit sans état d'âme pour sa liberté."
+      ]
     },
     {
       "id": "chien",
@@ -30,7 +51,14 @@
       "temperament": "Loyal, franc",
       "port": "_vif_",
       "moteur": "**La fidélité**",
-      "statut": "bas"
+      "statut": "bas",
+      "intention": "servir et défendre celui qu'il aime",
+      "niveaux": [
+        "loyal, franc, dévoué, chaleureux.",
+        "se met au service de son maître/ami, le défend.",
+        "loyauté aveugle, obéit sans juger, se sacrifie pour l'autre.",
+        "dépendance totale, prêt à tout — y compris le pire — pour celui qu'il sert."
+      ]
     },
     {
       "id": "coq",
@@ -38,7 +66,14 @@
       "temperament": "Vaniteux, matamore",
       "port": "_bombé_",
       "moteur": "**La conquête**",
-      "statut": "haut"
+      "statut": "haut",
+      "intention": "séduire et conquérir, gagner les gens à soi",
+      "niveaux": [
+        "charmeur, avenant, sociable, drague un peu.",
+        "veut plaire à tout prix, transforme chaque échange en conquête.",
+        "manipule par la séduction, collectionne, se lasse vite, provoque.",
+        "débauché sans limite, use et jette, ne connaît plus que la transgression."
+      ]
     },
     {
       "id": "corbeau",
@@ -46,7 +81,14 @@
       "temperament": "Sombre, secret",
       "port": "_feutré_",
       "moteur": "**Qu'on le craigne**",
-      "statut": "haut"
+      "statut": "haut",
+      "intention": "inspirer la terreur, qu'on le craigne",
+      "niveaux": [
+        "sombre, silencieux, une présence inquiétante mais discrète.",
+        "joue de la menace, laisse planer le malaise, intimide.",
+        "fait régner la peur, se nourrit de l'effroi des autres.",
+        "cruauté froide, terrorise pour le plaisir, sadique dans l'intimidation."
+      ]
     },
     {
       "id": "fourmi",
@@ -62,7 +104,14 @@
       "temperament": "Savant, exigeant",
       "port": "_posé_",
       "moteur": "**Avoir raison**",
-      "statut": "haut"
+      "statut": "haut",
+      "intention": "étaler son savoir pour convaincre, avoir raison",
+      "niveaux": [
+        "posé, cultivé, aime expliquer, un peu supérieur.",
+        "corrige les autres, impose son analyse, supporte mal la contradiction.",
+        "doit avoir raison sur tout, écrase par le savoir, méprise les ignorants.",
+        "fanatique de sa vérité, transforme tout contradicteur en ennemi."
+      ]
     },
     {
       "id": "hyene",
@@ -70,7 +119,14 @@
       "temperament": "Opportuniste, mauvais",
       "port": "_rôdeur_",
       "moteur": "**La curée**",
-      "statut": "neutre"
+      "statut": "neutre",
+      "intention": "se jeter sur le faible, achever ce qui tombe",
+      "niveaux": [
+        "opportuniste discret, rôde, guette.",
+        "s'en prend aux plus fragiles, teste où est la faille.",
+        "s'acharne sur ceux qui tombent, cruauté opportuniste.",
+        "achève sans pitié, se repaît de la faiblesse, prédateur charognard."
+      ]
     },
     {
       "id": "lapin",
@@ -78,7 +134,14 @@
       "temperament": "Avenant, tendre",
       "port": "_fuyant_",
       "moteur": "**Plaire à tous**",
-      "statut": "bas"
+      "statut": "bas",
+      "intention": "se faire aimer, éviter tout conflit",
+      "niveaux": [
+        "avenant, tendre, cherche à plaire, conciliant.",
+        "fuit les tensions, dit oui à tout, quête l'approbation.",
+        "panique dès qu'on ne l'aime pas, se renie pour être accepté.",
+        "se dévalorise entièrement, prêt à toutes les bassesses pour ne pas être rejeté."
+      ]
     },
     {
       "id": "lion",
@@ -86,7 +149,14 @@
       "temperament": "Charismatique, sûr",
       "port": "_ample_",
       "moteur": "**Le règne**",
-      "statut": "haut"
+      "statut": "haut",
+      "intention": "régner, commander, mener",
+      "niveaux": [
+        "charismatique, sûr, autorité naturelle, rassurant.",
+        "prend les commandes, veut être suivi, décide pour tous.",
+        "exige l'obéissance, sévère, tolère mal qu'on discute.",
+        "tyran, veut tout contrôler, soumet par la peur, sans pitié."
+      ]
     },
     {
       "id": "loup",
@@ -94,7 +164,14 @@
       "temperament": "Loyal, méfiant",
       "port": "_en retrait_",
       "moteur": "**La meute**",
-      "statut": "neutre"
+      "statut": "neutre",
+      "intention": "protéger son groupe, tenir sa place dans la meute",
+      "niveaux": [
+        "loyal, en retrait, observe, veille sur les siens.",
+        "défend le groupe, se méfie de la menace, jauge le chef.",
+        "prêt à défier le chef pour protéger la meute, ou à tout pour la tenir soudée.",
+        "se sacrifie ou sacrifie tout au nom du groupe ; la meute avant la vie."
+      ]
     },
     {
       "id": "mouton",
@@ -102,7 +179,14 @@
       "temperament": "Prudent, suiveur",
       "port": "_grégaire_",
       "moteur": "**L'abri du plus fort**",
-      "statut": "bas"
+      "statut": "bas",
+      "intention": "se ranger derrière le plus puissant",
+      "niveaux": [
+        "prudent, suiveur, se fond dans le groupe.",
+        "cherche activement la protection du plus fort, se cache dans le nombre.",
+        "se soumet à qui domine, incapable de décider seul.",
+        "esclave volontaire, obéit à tout, trahit les faibles pour rester du côté du fort."
+      ]
     },
     {
       "id": "ours",
@@ -110,7 +194,14 @@
       "temperament": "Placide, fort",
       "port": "_lourd_",
       "moteur": "**Protéger les siens**",
-      "statut": "haut"
+      "statut": "haut",
+      "intention": "faire rempart, protéger les siens par la force",
+      "niveaux": [
+        "placide, solide, tranquille, veille sur son monde.",
+        "se dresse dès qu'on menace un proche, protecteur.",
+        "devient possessif, étouffe ceux qu'il protège pour les garder.",
+        "enferme et contrôle au nom de la protection ; « c'est pour ton bien » devient une prison."
+      ]
     },
     {
       "id": "paon",
@@ -118,7 +209,14 @@
       "temperament": "Frivole, sociable",
       "port": "_paradant_",
       "moteur": "**La gloire**",
-      "statut": "haut"
+      "statut": "haut",
+      "intention": "briller, être admiré, obtenir la validation de l'autre",
+      "niveaux": [
+        "soigné, sociable, aime être remarqué, cherche les regards.",
+        "quête la validation, se met en avant, souffre si on l'ignore.",
+        "ne supporte pas qu'on regarde ailleurs, dramatise tout, se donne en spectacle.",
+        "narcissique absolu, le monde entier doit tourner autour de lui, effondrement si on le prive du regard."
+      ]
     },
     {
       "id": "porc",
@@ -126,7 +224,14 @@
       "temperament": "Jouisseur, gras",
       "port": "_envahissant_",
       "moteur": "**La jouissance**",
-      "statut": "neutre"
+      "statut": "neutre",
+      "intention": "prendre son plaisir tout de suite, se servir de l'autre",
+      "niveaux": [
+        "jouisseur, bon vivant, sans-gêne bon enfant.",
+        "se sert avant les autres, envahit l'espace, cède à la tentation.",
+        "consomme les gens et les choses sans égard, insatiable.",
+        "prédateur, l'autre n'est qu'un objet de plaisir à user et jeter."
+      ]
     },
     {
       "id": "rat",
@@ -134,7 +239,14 @@
       "temperament": "Avare, retors",
       "port": "_fuyant_",
       "moteur": "**Le profit**",
-      "statut": "bas"
+      "statut": "bas",
+      "intention": "gratter, réclamer son dû, soutirer",
+      "niveaux": [
+        "économe, prudent, un peu radin, discret.",
+        "réclame, marchande, ne lâche rien de ce qui lui revient.",
+        "soutire par tous les moyens, tout devient calcul d'intérêt.",
+        "obsédé par son profit, prêt à trahir et voler, l'avidité avant tout."
+      ]
     },
     {
       "id": "renard",
@@ -142,7 +254,14 @@
       "temperament": "Rusé, séducteur",
       "port": "_souple_",
       "moteur": "**Le jeu qui gagne**",
-      "statut": "neutre"
+      "statut": "neutre",
+      "intention": "ruser pour obtenir, puis filer",
+      "niveaux": [
+        "malin, diplomate, aimable, un peu joueur.",
+        "manœuvre, arrange la vérité, place ses coups en douce.",
+        "ment et double avec aisance, chacun est un pion dans son jeu.",
+        "fourbe sans limite, trahit tout le monde et disparaît avec le butin."
+      ]
     },
     {
       "id": "serpent",
@@ -150,7 +269,14 @@
       "temperament": "Froid, calculateur",
       "port": "_glissant_",
       "moteur": "**Le contrôle**",
-      "statut": "neutre"
+      "statut": "neutre",
+      "intention": "manipuler, tout maîtriser",
+      "niveaux": [
+        "calme, lisse, posé, un peu trop maître de lui.",
+        "oriente les autres, distille le doute, tire des ficelles discrètes.",
+        "manipule ouvertement, contrôle la situation et les gens.",
+        "machiavélique, sacrifie qui il veut, la manipulation est sa nature même."
+      ]
     },
     {
       "id": "singe",
@@ -158,7 +284,14 @@
       "temperament": "Agile, moqueur",
       "port": "_remuant_",
       "moteur": "**Le rire**",
-      "statut": "neutre"
+      "statut": "neutre",
+      "intention": "faire rire, tourner tout en dérision",
+      "niveaux": [
+        "drôle, léger, détend l'atmosphère, sympathique.",
+        "utilise l'humour pour nier le danger, refuse le sérieux.",
+        "rire grinçant et déplacé, met les autres mal à l'aise, dérision cynique.",
+        "rit face à l'horreur, chaos, folie ; le rire devient une arme et un gouffre."
+      ]
     },
     {
       "id": "souris",
@@ -166,7 +299,14 @@
       "temperament": "Enjouée, vaillante",
       "port": "_menu, vif_",
       "moteur": "**Oser malgré tout**",
-      "statut": "bas"
+      "statut": "bas",
+      "intention": "oser, se dépasser malgré la peur",
+      "niveaux": [
+        "menu, effacé, timide, mais présent.",
+        "trouve le courage de parler, ose un premier pas.",
+        "se dépasse sous la pression, révèle une bravoure inattendue.",
+        "bascule — soit l'héroïsme qui étonne tous, soit la casse (la peur qui explose en acte désespéré)."
+      ]
     },
     {
       "id": "taureau",
@@ -174,7 +314,14 @@
       "temperament": "Massif, entier",
       "port": "_frontal_",
       "moteur": "**S'imposer**",
-      "statut": "haut"
+      "statut": "haut",
+      "intention": "foncer, imposer par la force",
+      "niveaux": [
+        "entier, franc, direct, un peu massif.",
+        "va au conflit frontal, hausse le ton, pousse.",
+        "répond à tout par la force, écarte les obstacles physiquement.",
+        "brutal, cogne pour se faire respecter, la violence devient sa seule langue."
+      ]
     },
     {
       "id": "vautour",
@@ -182,7 +329,14 @@
       "temperament": "Cynique, patient",
       "port": "_nonchalant_",
       "moteur": "**Ce qui reste**",
-      "statut": "neutre"
+      "statut": "neutre",
+      "intention": "semer la zizanie et récupérer les restes",
+      "niveaux": [
+        "patient, nonchalant, en observateur, un peu cynique.",
+        "attise discrètement les tensions, se place pour profiter.",
+        "monte ouvertement les gens les uns contre les autres, récolte.",
+        "provoque l'effondrement pour tout rafler, jouit du désastre qu'il a créé."
+      ]
     },
     {
       "id": "ane",
@@ -190,7 +344,14 @@
       "temperament": "Tranquille, têtu",
       "port": "_planté_",
       "moteur": "**La paix, à son rythme**",
-      "statut": "bas"
+      "statut": "bas",
+      "intention": "camper sur ses positions, ne rien céder",
+      "niveaux": [
+        "tranquille, placide, va à son rythme.",
+        "se braque, refuse de bouger, résiste passivement.",
+        "entêtement total, bloque le groupe, ne cède sur rien.",
+        "obstination suicidaire, préfère tout faire échouer (et se perdre) que céder d'un pouce."
+      ]
     }
   ]
 }

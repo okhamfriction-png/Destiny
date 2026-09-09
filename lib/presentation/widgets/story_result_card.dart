@@ -8,6 +8,7 @@ import '../../domain/entities/story.dart';
 import '../screens/location_details_screen.dart';
 import '../visuals/entity_visuals.dart';
 import 'entity_image.dart';
+import 'moteur_info.dart';
 
 class StoryResultCard extends StatelessWidget {
   const StoryResultCard({
@@ -366,6 +367,21 @@ class _PlayerRow extends StatelessWidget {
               ],
             ),
           ),
+          // Bulle d'info : le moteur de l'archétype et son escalade.
+          if (player.archetype.aEscalade)
+            IconButton(
+              visualDensity: VisualDensity.compact,
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+              tooltip: 'Moteur',
+              icon: Icon(Icons.info_outline,
+                  size: full ? 16 : 18,
+                  color: EntityVisuals.colorForStatut(player.archetype.statut)
+                      .withValues(alpha: 0.8)),
+              onPressed: () => showMoteurInfo(context, player.archetype,
+                  accent:
+                      EntityVisuals.colorForStatut(player.archetype.statut)),
+            ),
         ],
       ),
     );

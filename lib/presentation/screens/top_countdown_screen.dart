@@ -17,6 +17,7 @@ import '../../application/state/visual_settings.dart';
 import '../visuals/entity_visuals.dart';
 import '../widgets/destiny_cube_animation.dart';
 import '../widgets/film_poster.dart';
+import '../widgets/moteur_info.dart';
 import '../widgets/sound_mixer_sheet.dart';
 import 'guide_screen.dart';
 import 'location_details_screen.dart';
@@ -546,6 +547,15 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
   Widget _heroRow(int index, double scale) {
     final h = _heroes[index];
     final canEdit = _setup && widget.allArchetypeData.isNotEmpty;
+    // Archétype complet (avec sa grille de moteur) pour la bulle d'info.
+    Archetype? arch;
+    for (final a in widget.allArchetypeData) {
+      if (a.name == h.archetype) {
+        arch = a;
+        break;
+      }
+    }
+    final aMoteur = arch != null && arch.aEscalade;
     final text = Text.rich(
       TextSpan(children: [
         TextSpan(
@@ -589,6 +599,22 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
           child: FittedBox(
               fit: BoxFit.scaleDown, alignment: Alignment.center, child: text),
         ),
+        // Bulle d'info moteur (indépendante du tap d'édition).
+        if (aMoteur) ...[
+          SizedBox(width: 6 * scale),
+          InkWell(
+            onTap: () => showMoteurInfo(context, arch!,
+                accent: EntityVisuals.colorForStatut(h.statut)),
+            borderRadius: BorderRadius.circular(20),
+            child: Padding(
+              padding: EdgeInsets.all(3 * scale),
+              child: Icon(Icons.info_outline,
+                  size: 16 * scale,
+                  color: EntityVisuals.colorForStatut(h.statut)
+                      .withValues(alpha: 0.85)),
+            ),
+          ),
+        ],
         if (canEdit) ...[
           SizedBox(width: 6 * scale),
           Icon(Icons.edit, size: 15 * scale, color: _gold),

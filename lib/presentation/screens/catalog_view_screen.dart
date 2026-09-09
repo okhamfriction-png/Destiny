@@ -11,6 +11,7 @@ import '../../domain/entities/location.dart';
 import '../../domain/repositories/story_repository.dart';
 import '../visuals/entity_visuals.dart';
 import '../widgets/entity_image.dart';
+import '../widgets/moteur_info.dart' show kNiveauxMoteur;
 import '../widgets/location_detail_section.dart';
 
 enum CatalogTab { lieux, dangers, archetypes }
@@ -245,6 +246,9 @@ class _CatalogViewScreenState extends State<CatalogViewScreen> {
                   titleColor: EntityVisuals.colorForStatut(a.statut),
                   subtitle: a.traits,
                   subtitleRich: _ArchetypeSubtitle(archetype: a),
+                  intention: a.intention,
+                  niveaux: a.niveaux,
+                  accent: EntityVisuals.colorForStatut(a.statut),
                 ))
             .toList();
     }
@@ -260,6 +264,9 @@ class _CatalogTile extends StatelessWidget {
     this.titleColor,
     this.subtitleRich,
     this.paliers = const [],
+    this.intention = '',
+    this.niveaux = const [],
+    this.accent,
     this.sousEspaces = const [],
     this.fonctions = const [],
     this.vocabulaire = const [],
@@ -274,6 +281,11 @@ class _CatalogTile extends StatelessWidget {
   /// Sous-titre riche (stylé) qui remplace [subtitle] si fourni.
   final Widget? subtitleRich;
   final List<String> paliers;
+
+  /// Moteur (onglet Archétypes) : intention + escalade en 4 niveaux.
+  final String intention;
+  final List<String> niveaux;
+  final Color? accent;
 
   /// Détails de lieu (onglet Lieux) : sous-espaces + fonctions + vocabulaire.
   final List<String> sousEspaces;
@@ -351,6 +363,71 @@ class _CatalogTile extends StatelessWidget {
                         child: Text(paliers[i],
                             style: theme.textTheme.bodySmall
                                 ?.copyWith(color: Colors.white70)),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+            if (niveaux.length == 4) ...[
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.psychology,
+                      size: 14, color: accent ?? theme.colorScheme.primary),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text.rich(TextSpan(children: [
+                      TextSpan(
+                          text: 'Moteur',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                              color: accent ?? theme.colorScheme.primary,
+                              fontWeight: FontWeight.w700)),
+                      if (intention.isNotEmpty)
+                        TextSpan(
+                            text: '  ·  $intention',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                                color: Colors.white54,
+                                fontStyle: FontStyle.italic)),
+                    ])),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              for (var i = 0; i < niveaux.length; i++)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 20,
+                        height: 20,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: (accent ?? theme.colorScheme.primary)
+                              .withValues(alpha: 0.18),
+                        ),
+                        child: Text('$i',
+                            style: theme.textTheme.labelSmall?.copyWith(
+                                color: accent ?? theme.colorScheme.primary,
+                                fontWeight: FontWeight.w800)),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text.rich(TextSpan(children: [
+                          TextSpan(
+                              text: i < kNiveauxMoteur.length
+                                  ? '${kNiveauxMoteur[i]} — '
+                                  : '',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                  color: accent ?? theme.colorScheme.primary,
+                                  fontWeight: FontWeight.w800)),
+                          TextSpan(
+                              text: niveaux[i],
+                              style: theme.textTheme.bodySmall
+                                  ?.copyWith(color: Colors.white70, height: 1.3)),
+                        ])),
                       ),
                     ],
                   ),

@@ -7,6 +7,8 @@ class Archetype {
     this.port = '',
     this.moteur = '',
     this.statut = 'neutre',
+    this.intention = '',
+    this.niveaux = const [],
   });
 
   final String id;
@@ -26,6 +28,17 @@ class Archetype {
 
   /// Moteur : l'objectif nominal (rendu en gras).
   final String moteur;
+
+  /// Intention dirigée vers l'autre (le moteur « en jeu »), ex. « dominer, être
+  /// le meilleur ». Vide si non renseignée.
+  final String intention;
+
+  /// Escalade du moteur en 4 niveaux, calée sur les paliers du danger :
+  /// [Masqué, Affleure, Domine, Extrême]. Vide si non renseignée.
+  final List<String> niveaux;
+
+  /// Vrai si l'archétype a une grille d'escalade (intention + 4 niveaux).
+  bool get aEscalade => niveaux.length == 4;
 
   /// Retire les marqueurs markdown (`_…_` italique, `**…**` gras).
   static String _clean(Object? v) {
@@ -58,6 +71,10 @@ class Archetype {
       statut: (json['statut'] as String?)?.trim().isNotEmpty == true
           ? (json['statut'] as String).trim()
           : 'neutre',
+      intention: (json['intention'] as String? ?? '').trim(),
+      niveaux: [
+        for (final n in (json['niveaux'] as List? ?? const [])) '$n'.trim()
+      ],
     );
   }
 
@@ -68,5 +85,7 @@ class Archetype {
         'port': port,
         'moteur': moteur,
         'statut': statut,
+        if (intention.isNotEmpty) 'intention': intention,
+        if (niveaux.isNotEmpty) 'niveaux': niveaux,
       };
 }
