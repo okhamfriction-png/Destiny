@@ -2,7 +2,7 @@ name: destiny
 description: DestinyStory - generateur de situations d'improvisation theatrale.
 publish_to: "none"
 
-version: 1.5.6+18
+version: 1.5.7+19
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
@@ -22,6 +22,7 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   wakelock_plus: ^1.2.8
   speech_to_text: ^7.4.0
+  file_picker: ^13.0.0
 
 dev_dependencies:
   flutter_test:

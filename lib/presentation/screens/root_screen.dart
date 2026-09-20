@@ -103,6 +103,7 @@ class _RootScreenState extends State<RootScreen> {
           relationCheatsheet: widget.relationCheatsheet,
           locationDetails: widget.locationDetails,
           audioService: widget.audioService,
+          musicController: widget.musicController,
         ),
       ),
     );

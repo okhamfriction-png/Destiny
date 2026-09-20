@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../../application/services/audio_service.dart';
+import '../../application/state/music_controller.dart';
 import '../../application/state/visual_settings.dart';
 
 /// Réglage de l'apparence : taille du texte de l'application.
 class AppearanceScreen extends StatelessWidget {
   const AppearanceScreen(
-      {required this.visualSettings, required this.audioService, super.key});
+      {required this.visualSettings,
+      required this.audioService,
+      required this.musicController,
+      super.key});
 
   final VisualSettings visualSettings;
   final AudioService audioService;
+  final MusicController musicController;
 
   static const _presets = <({String label, double value})>[
     (label: 'Petit', value: 0.85),
@@ -326,6 +331,33 @@ class AppearanceScreen extends StatelessWidget {
                   onChanged: visualSettings.setSonDestiny,
                   audioService: audioService,
                 ),
+                const SizedBox(height: 20),
+                const Divider(height: 1),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(Icons.library_music,
+                        color: theme.colorScheme.primary),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text('Musique à chaque DESTINY',
+                          style: theme.textTheme.titleMedium),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Importez vos propres musiques : l\'une d\'elles se lance à '
+                  'chaque DESTINY, par-dessus l\'ambiance. Choisissez-en une, ou '
+                  '« Au hasard » pour varier.',
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: Colors.white54),
+                ),
+                const SizedBox(height: 8),
+                _MusiqueDestinySection(
+                  visualSettings: visualSettings,
+                  musicController: musicController,
+                ),
               ],
             );
           },
@@ -387,6 +419,180 @@ class _SonRow extends StatelessWidget {
                 : () => audioService.playEffet(cur),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Bibliothèque des musiques de DESTINY importées par le meneur.
+///
+/// Importer (copie dans l'app), choisir celle qui se lance à chaque DESTINY
+/// (ou « Au hasard »), écouter et supprimer.
+class _MusiqueDestinySection extends StatelessWidget {
+  const _MusiqueDestinySection({
+    required this.visualSettings,
+    required this.musicController,
+  });
+
+  final VisualSettings visualSettings;
+  final MusicController musicController;
+
+  Future<void> _importer(BuildContext context) async {
+    final n = await musicController.importerMusiques();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(n == 0
+            ? 'Aucune musique ajoutée.'
+            : '$n musique${n > 1 ? 's' : ''} ajoutée${n > 1 ? 's' : ''}.'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  Future<void> _supprimer(
+      BuildContext context, MusiqueImportee m) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (c) => AlertDialog(
+        title: const Text('Supprimer la musique ?'),
+        content: Text('« ${m.nom} » sera retirée de l\'application.'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(c, false),
+              child: const Text('Annuler')),
+          FilledButton(
+              onPressed: () => Navigator.pop(c, true),
+              child: const Text('Supprimer')),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    // Si la musique supprimée était la sélection active, on revient à « Aucune ».
+    if (visualSettings.sonDestinyMusique == m.fichier) {
+      await visualSettings.setSonDestinyMusique('aucune');
+    }
+    await musicController.retirerImportee(m);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return ListenableBuilder(
+      listenable: musicController,
+      builder: (context, _) {
+        final musiques = musicController.importees;
+        final sel = visualSettings.sonDestinyMusique;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Wrap(
+              spacing: 8,
+              children: [
+                ChoiceChip(
+                  label: const Text('Aucune'),
+                  selected: sel == 'aucune',
+                  onSelected: (_) =>
+                      visualSettings.setSonDestinyMusique('aucune'),
+                ),
+                ChoiceChip(
+                  label: const Text('Au hasard'),
+                  selected: sel == 'aleatoire',
+                  onSelected: musiques.isEmpty
+                      ? null
+                      : (_) =>
+                          visualSettings.setSonDestinyMusique('aleatoire'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            if (musiques.isEmpty)
+              Text(
+                'Aucune musique importée pour l\'instant.',
+                style: theme.textTheme.bodySmall
+                    ?.copyWith(color: Colors.white38),
+              )
+            else
+              for (final m in musiques)
+                _MusiqueRow(
+                  musique: m,
+                  selected: sel == m.fichier,
+                  onSelect: () =>
+                      visualSettings.setSonDestinyMusique(m.fichier),
+                  onPreview: () => musicController.apercuImportee(m),
+                  onDelete: () => _supprimer(context, m),
+                ),
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              onPressed: () => _importer(context),
+              icon: const Icon(Icons.add),
+              label: const Text('Importer une musique'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// Une ligne de la bibliothèque : sélection, écoute, suppression.
+class _MusiqueRow extends StatelessWidget {
+  const _MusiqueRow({
+    required this.musique,
+    required this.selected,
+    required this.onSelect,
+    required this.onPreview,
+    required this.onDelete,
+  });
+
+  final MusiqueImportee musique;
+  final bool selected;
+  final VoidCallback onSelect;
+  final VoidCallback onPreview;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return InkWell(
+      onTap: onSelect,
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          children: [
+            Icon(
+              selected
+                  ? Icons.radio_button_checked
+                  : Icons.radio_button_unchecked,
+              color: selected ? theme.colorScheme.primary : Colors.white38,
+              size: 22,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                musique.nom,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(color: Colors.white),
+              ),
+            ),
+            IconButton(
+              tooltip: 'Écouter',
+              visualDensity: VisualDensity.compact,
+              icon: Icon(Icons.play_circle_outline,
+                  color: theme.colorScheme.primary),
+              onPressed: onPreview,
+            ),
+            IconButton(
+              tooltip: 'Supprimer',
+              visualDensity: VisualDensity.compact,
+              icon: const Icon(Icons.delete_outline, color: Colors.white38),
+              onPressed: onDelete,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -65,6 +65,7 @@ class VisualSettings extends ChangeNotifier {
   static const _kAdmin = 'admin_mode';
   static const _kSonDebut = 'son_debut';
   static const _kSonDestiny = 'son_destiny';
+  static const _kSonDestinyMusique = 'son_destiny_musique';
 
   VisualSource _source = VisualSource.ai;
   double _textScale = 1.0;
@@ -81,6 +82,9 @@ class VisualSettings extends ChangeNotifier {
   // Sons du chrono (clés de AudioService.effets ; 'aucun' = silence).
   String _sonDebut = 'dice';
   String _sonDestiny = 'storm';
+  // Musique importée jouée à chaque DESTINY ('aucune' = silence,
+  // 'aleatoire' = une au hasard, sinon le nom de fichier d'une musique).
+  String _sonDestinyMusique = 'aucune';
 
   VisualSource get source => _source;
 
@@ -105,6 +109,19 @@ class VisualSettings extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_kSonDestiny, _sonDestiny);
+    } catch (_) {}
+  }
+
+  /// Musique importée jouée à chaque DESTINY ('aucune', 'aleatoire' ou le nom
+  /// de fichier d'une musique de la bibliothèque du meneur).
+  String get sonDestinyMusique => _sonDestinyMusique;
+  Future<void> setSonDestinyMusique(String value) async {
+    if (value == _sonDestinyMusique) return;
+    _sonDestinyMusique = value;
+    notifyListeners();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_kSonDestinyMusique, _sonDestinyMusique);
     } catch (_) {}
   }
 
@@ -253,6 +270,7 @@ class VisualSettings extends ChangeNotifier {
       _adminMode = prefs.getBool(_kAdmin) ?? false;
       _sonDebut = prefs.getString(_kSonDebut) ?? 'dice';
       _sonDestiny = prefs.getString(_kSonDestiny) ?? 'storm';
+      _sonDestinyMusique = prefs.getString(_kSonDestinyMusique) ?? 'aucune';
       notifyListeners();
     } catch (_) {
       // Valeurs par défaut conservées.

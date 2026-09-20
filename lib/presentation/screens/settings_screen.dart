@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../application/services/audio_service.dart';
 import '../../application/state/ai_settings.dart';
+import '../../application/state/music_controller.dart';
 import '../../application/state/location_details.dart';
 import '../../application/state/relation_cheatsheet.dart';
 import '../../application/state/visual_settings.dart';
@@ -32,6 +33,7 @@ class SettingsScreen extends StatelessWidget {
     required this.relationCheatsheet,
     required this.locationDetails,
     required this.audioService,
+    required this.musicController,
     super.key,
   });
 
@@ -43,6 +45,7 @@ class SettingsScreen extends StatelessWidget {
   final RelationCheatsheet relationCheatsheet;
   final LocationDetailsStore locationDetails;
   final AudioService audioService;
+  final MusicController musicController;
 
   void _push(BuildContext context, Widget screen) {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
@@ -124,7 +127,8 @@ class SettingsScreen extends StatelessWidget {
                   context,
                   AppearanceScreen(
                       visualSettings: visualSettings,
-                      audioService: audioService)),
+                      audioService: audioService,
+                      musicController: musicController)),
             ),
             Card(
               margin: const EdgeInsets.symmetric(vertical: 4),

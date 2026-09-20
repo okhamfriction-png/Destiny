@@ -82,6 +82,7 @@ class TopCountdownScreen extends StatefulWidget {
     this.cubeAnimation = false,
     this.sonDebut = 'dice',
     this.sonDestiny = 'storm',
+    this.sonDestinyMusique = 'aucune',
     this.guide,
     this.tracking,
     this.visualSettings,
@@ -150,6 +151,10 @@ class TopCountdownScreen extends StatefulWidget {
   /// Sons du chrono (clés de AudioService.effets ; 'aucun' = silence).
   final String sonDebut;
   final String sonDestiny;
+
+  /// Musique importée jouée à chaque DESTINY ('aucune', 'aleatoire' ou le nom
+  /// de fichier d'une musique de la bibliothèque du meneur).
+  final String sonDestinyMusique;
 
   @override
   State<TopCountdownScreen> createState() => _TopCountdownScreenState();
@@ -380,6 +385,10 @@ class _TopCountdownScreenState extends State<TopCountdownScreen> {
           ));
           // Son du DESTINY (paramétrable ; 'aucun' = silence, mute respecté).
           widget.audioService.playEffet(widget.sonDestiny);
+          // Musique importée par le meneur, superposée au lit sonore.
+          if (widget.musicController != null && !widget.audioService.muted) {
+            widget.musicController!.jouerDestiny(widget.sonDestinyMusique);
+          }
           _flashTimer?.cancel();
           _flashTimer = Timer(const Duration(milliseconds: 2200), () {
             if (mounted) setState(() => _flash = null);

@@ -320,6 +320,7 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
         cubeAnimation: widget.visualSettings.cubeAnimation,
         sonDebut: widget.visualSettings.sonDebut,
         sonDestiny: widget.visualSettings.sonDestiny,
+        sonDestinyMusique: widget.visualSettings.sonDestinyMusique,
         // Aides de jeu accessibles pendant le chrono.
         guide: widget.guideContent,
         tracking: widget.trackingStore,

@@ -1,8 +1,28 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+/// Une musique importée par le meneur, copiée dans le dossier de l'app.
+///
+/// [chemin] est un chemin de fichier local (lecture via [DeviceFileSource]).
+/// [nom] est le titre affiché, sans extension.
+class MusiqueImportee {
+  const MusiqueImportee({required this.nom, required this.chemin});
+
+  final String nom;
+  final String chemin;
+
+  /// Nom du fichier sur le disque (identifiant stable dans les réglages).
+  String get fichier => p.basename(chemin);
+}
 
 /// Une piste musicale décrite dans assets/music/manifest.json.
 class MusicTrack {
@@ -37,9 +57,23 @@ class MusicController extends ChangeNotifier {
   MusicController() {
     _wire();
     _load();
+    _chargerImportees();
   }
 
   final AudioPlayer _player = AudioPlayer();
+
+  /// Lecteur dédié aux musiques de DESTINY : il se superpose au lit sonore
+  /// (ambiance / commencement) sans le couper.
+  final AudioPlayer _destinyPlayer = AudioPlayer();
+
+  /// Sous-dossier du répertoire de l'app où sont copiées les musiques importées.
+  static const String _dossierMusiques = 'musiques_destiny';
+  static const String _kMusiquesImportees = 'destiny_musiques_importees';
+
+  List<MusiqueImportee> _importees = const [];
+
+  /// Musiques importées par le meneur, jouables à chaque DESTINY.
+  List<MusiqueImportee> get importees => _importees;
 
   List<MusicTrack> _tracks = const [];
   List<MusicTrack> get tracks => _tracks;
@@ -194,6 +228,147 @@ class MusicController extends ChangeNotifier {
         loop: false,
       ));
 
+  // ---------------------------------------------------------------------------
+  // Musiques de DESTINY importées par le meneur.
+  // ---------------------------------------------------------------------------
+
+  Future<Directory> _dossierImportees() async {
+    final base = await getApplicationDocumentsDirectory();
+    final dir = Directory(p.join(base.path, _dossierMusiques));
+    if (!await dir.exists()) await dir.create(recursive: true);
+    return dir;
+  }
+
+  /// Recharge la liste des musiques importées depuis le disque.
+  ///
+  /// La source de vérité est le dossier lui-même : on liste les fichiers
+  /// présents et on récupère leur titre affichable dans les préférences. Ainsi
+  /// une musique supprimée à la main disparaît, et rien ne casse si le chemin
+  /// du dossier change d'une installation à l'autre.
+  Future<void> _chargerImportees() async {
+    try {
+      final dir = await _dossierImportees();
+      final titres = <String, String>{};
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final raw = prefs.getString(_kMusiquesImportees);
+        if (raw != null) {
+          for (final e in jsonDecode(raw) as List<dynamic>) {
+            final m = e as Map<String, dynamic>;
+            titres[m['fichier'] as String] = m['nom'] as String;
+          }
+        }
+      } catch (_) {}
+      final liste = <MusiqueImportee>[];
+      for (final f in dir.listSync().whereType<File>()) {
+        final base = p.basename(f.path);
+        liste.add(MusiqueImportee(
+          nom: titres[base] ?? p.basenameWithoutExtension(f.path),
+          chemin: f.path,
+        ));
+      }
+      liste.sort((a, b) => a.nom.toLowerCase().compareTo(b.nom.toLowerCase()));
+      _importees = liste;
+      notifyListeners();
+    } catch (_) {}
+  }
+
+  Future<void> _persisterImportees() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final data = _importees
+          .map((m) => {'fichier': m.fichier, 'nom': m.nom})
+          .toList();
+      await prefs.setString(_kMusiquesImportees, jsonEncode(data));
+    } catch (_) {}
+  }
+
+  /// Ouvre le sélecteur de fichiers et copie les musiques choisies dans l'app.
+  /// Renvoie le nombre de musiques réellement ajoutées.
+  Future<int> importerMusiques() async {
+    final choisies = await FilePicker.pickFiles(type: FileType.audio);
+    if (choisies.isEmpty) return 0;
+    final dir = await _dossierImportees();
+    var ajoutees = 0;
+    for (final f in choisies) {
+      final src = f.path;
+      if (src == null) continue;
+      // Nom de fichier unique et lisible (garde l'extension d'origine).
+      final ext = p.extension(f.name);
+      final tige = p
+          .basenameWithoutExtension(f.name)
+          .replaceAll(RegExp(r'[^A-Za-z0-9À-ÿ _-]'), '_')
+          .trim();
+      var cible = p.join(dir.path, '$tige$ext');
+      var n = 2;
+      while (await File(cible).exists()) {
+        cible = p.join(dir.path, '$tige ($n)$ext');
+        n++;
+      }
+      try {
+        await File(src).copy(cible);
+        ajoutees++;
+      } catch (_) {}
+    }
+    if (ajoutees > 0) {
+      await _chargerImportees();
+      await _persisterImportees();
+    }
+    return ajoutees;
+  }
+
+  /// Supprime une musique importée (fichier + entrée).
+  Future<void> retirerImportee(MusiqueImportee m) async {
+    try {
+      final f = File(m.chemin);
+      if (await f.exists()) await f.delete();
+    } catch (_) {}
+    await _chargerImportees();
+    await _persisterImportees();
+  }
+
+  /// Résout un choix de réglage ('aucune' / 'aleatoire' / nom de fichier) vers
+  /// une musique importée. Renvoie null si rien ne doit jouer.
+  MusiqueImportee? _resoudreDestiny(String selection) {
+    if (_importees.isEmpty || selection == 'aucune' || selection.isEmpty) {
+      return null;
+    }
+    if (selection == 'aleatoire') {
+      return _importees[Random().nextInt(_importees.length)];
+    }
+    for (final m in _importees) {
+      if (m.fichier == selection) return m;
+    }
+    return null;
+  }
+
+  /// Joue la musique de DESTINY correspondant au réglage, en superposition du
+  /// lit sonore. 'aucune' ou une musique introuvable ne joue rien.
+  Future<void> jouerDestiny(String selection) async {
+    final m = _resoudreDestiny(selection);
+    if (m == null) return;
+    await _jouerFichier(m.chemin);
+  }
+
+  /// Écoute une musique importée (aperçu depuis les réglages).
+  Future<void> apercuImportee(MusiqueImportee m) => _jouerFichier(m.chemin);
+
+  Future<void> _jouerFichier(String chemin) async {
+    try {
+      await _destinyPlayer.setReleaseMode(ReleaseMode.release);
+      await _destinyPlayer.stop();
+      await _destinyPlayer.setVolume(_volume);
+      await _destinyPlayer.play(DeviceFileSource(chemin));
+    } catch (_) {}
+  }
+
+  /// Coupe la musique de DESTINY en cours (le lit sonore continue).
+  Future<void> stopDestiny() async {
+    try {
+      await _destinyPlayer.stop();
+    } catch (_) {}
+  }
+
   /// Joue l'ambiance du lieu (catégorie « Lieux ») dont le titre correspond.
   /// Sans effet si aucune ambiance ne correspond.
   Future<void> playLocationAmbience(String locationName) async {
@@ -243,6 +418,7 @@ class MusicController extends ChangeNotifier {
 
   Future<void> stop() async {
     await _player.stop();
+    await _destinyPlayer.stop();
     _playing = false;
     _position = Duration.zero;
     notifyListeners();
@@ -253,6 +429,7 @@ class MusicController extends ChangeNotifier {
   @override
   void dispose() {
     _player.dispose();
+    _destinyPlayer.dispose();
     super.dispose();
   }
 }
