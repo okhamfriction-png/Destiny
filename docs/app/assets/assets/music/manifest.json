@@ -1,0 +1,250 @@
+{
+  "tracks": [
+    {
+      "file": "music/atm_blizzard.m4a",
+      "title": "Blizzard",
+      "category": "Ambiances",
+      "loop": true
+    },
+    {
+      "file": "music/atm_forest.m4a",
+      "title": "Forêt",
+      "category": "Ambiances",
+      "loop": true
+    },
+    {
+      "file": "music/atm_cave.m4a",
+      "title": "Grotte",
+      "category": "Ambiances",
+      "loop": true
+    },
+    {
+      "file": "music/atm_swamp.m4a",
+      "title": "Marais",
+      "category": "Ambiances",
+      "loop": true
+    },
+    {
+      "file": "music/atm_ship.m4a",
+      "title": "Navire",
+      "category": "Ambiances",
+      "loop": true
+    },
+    {
+      "file": "music/atm_thunderstorm.m4a",
+      "title": "Orage",
+      "category": "Ambiances",
+      "loop": true
+    },
+    {
+      "file": "music/atm_beach.m4a",
+      "title": "Plage",
+      "category": "Ambiances",
+      "loop": true
+    },
+    {
+      "file": "music/atm_tavern.m4a",
+      "title": "Taverne",
+      "category": "Ambiances",
+      "loop": true
+    },
+    {
+      "file": "music/atm_city.m4a",
+      "title": "Ville",
+      "category": "Ambiances",
+      "loop": true
+    },
+    {
+      "file": "music/atm_volcano.m4a",
+      "title": "Volcan",
+      "category": "Ambiances",
+      "loop": true
+    },
+    {
+      "file": "music/atm_sewers.m4a",
+      "title": "Égouts",
+      "category": "Ambiances",
+      "loop": true
+    },
+    {
+      "file": "music/emo_climax1.m4a",
+      "title": "Climax 1",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_climax2.m4a",
+      "title": "Climax 2",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_colere1.m4a",
+      "title": "Colère 1",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_colere2.m4a",
+      "title": "Colère 2",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_joie1.m4a",
+      "title": "Joie 1",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_joie2.m4a",
+      "title": "Joie 2",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_mystere1.m4a",
+      "title": "Mystère 1",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_mystere2.m4a",
+      "title": "Mystère 2",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_nostalgie1.m4a",
+      "title": "Nostalgie 1",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_nostalgie2.m4a",
+      "title": "Nostalgie 2",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_peur1.m4a",
+      "title": "Peur 1",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_peur2.m4a",
+      "title": "Peur 2",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_receuillement1.m4a",
+      "title": "Recueillement 1",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_receuillement2.m4a",
+      "title": "Recueillement 2",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_surprise1.m4a",
+      "title": "Surprise 1",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_surprise2.m4a",
+      "title": "Surprise 2",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_tension1.m4a",
+      "title": "Tension 1",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_tension2.m4a",
+      "title": "Tension 2",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_trahison1.m4a",
+      "title": "Trahison 1",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_trahison2.m4a",
+      "title": "Trahison 2",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_traque1.m4a",
+      "title": "Traque 1",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_traque2.m4a",
+      "title": "Traque 2",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_tristesse1.m4a",
+      "title": "Tristesse 1",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_tristesse2.m4a",
+      "title": "Tristesse 2",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_emerveillement1.m4a",
+      "title": "Émerveillement 1",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/emo_emerveillement2.m4a",
+      "title": "Émerveillement 2",
+      "category": "Émotions",
+      "loop": false
+    },
+    {
+      "file": "music/ashen_oath_ai_music.m4a",
+      "title": "Ashen Oath",
+      "category": "Thèmes",
+      "loop": false
+    },
+    {
+      "file": "music/01_commencement.m4a",
+      "title": "Commencement",
+      "category": "Thèmes",
+      "loop": false
+    },
+    {
+      "file": "music/02_conclusionainsique.m4a",
+      "title": "Conclusion",
+      "category": "Thèmes",
+      "loop": false
+    },
+    {
+      "file": "music/destinystorm.m4a",
+      "title": "Destiny Storm",
+      "category": "Thèmes",
+      "loop": false
+    }
+  ]
+}

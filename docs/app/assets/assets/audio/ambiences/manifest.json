@@ -1,0 +1,204 @@
+{
+  "ambiences": [
+    {
+      "file": "audio/ambiences/aquarium.m4a",
+      "title": "Aquarium",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/avion.m4a",
+      "title": "Avion en vol",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/aeroport.m4a",
+      "title": "Aéroport",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/banque.m4a",
+      "title": "Banque",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/bibliotheque.m4a",
+      "title": "Bibliothèque",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/boite_nuit.m4a",
+      "title": "Boîte de nuit",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/bunker_militaire.m4a",
+      "title": "Bunker militaire",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/bureau.m4a",
+      "title": "Bureau",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/camping.m4a",
+      "title": "Camping",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/casino.m4a",
+      "title": "Casino",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/centre_commercial.m4a",
+      "title": "Centre commercial",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/commissariat.m4a",
+      "title": "Commissariat",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/ferme.m4a",
+      "title": "Ferme",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/foret.m4a",
+      "title": "Forêt",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/hopital.m4a",
+      "title": "Hôpital",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/hotel_luxe.m4a",
+      "title": "Hôtel de luxe",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/laboratoire.m4a",
+      "title": "Laboratoire de recherche",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/manoir_abandonne.m4a",
+      "title": "Manoir abandonné",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/musee.m4a",
+      "title": "Musée",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/metro.m4a",
+      "title": "Métro",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/navire_croisiere.m4a",
+      "title": "Navire de croisière",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/palais_presidentiel.m4a",
+      "title": "Palais présidentiel",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/plateau_tele.m4a",
+      "title": "Plateau télé",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/port_maritime.m4a",
+      "title": "Port maritime",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/prison.m4a",
+      "title": "Prison",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/refuge_montagne.m4a",
+      "title": "Refuge de montagne",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/restaurant_gastronomique.m4a",
+      "title": "Restaurant gastronomique",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/salle_sport.m4a",
+      "title": "Salle de sport",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/sous_marin.m4a",
+      "title": "Sous-marin",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/stade.m4a",
+      "title": "Stade",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/base_spatiale.m4a",
+      "title": "Station spatiale",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/station_service.m4a",
+      "title": "Station-service",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/supermarche.m4a",
+      "title": "Supermarché",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/theatre.m4a",
+      "title": "Théâtre",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/tribunal.m4a",
+      "title": "Tribunal",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/universite.m4a",
+      "title": "Université",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/usine.m4a",
+      "title": "Usine",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/zoo.m4a",
+      "title": "Zoo",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/ecole.m4a",
+      "title": "École",
+      "loop": true
+    },
+    {
+      "file": "audio/ambiences/eglise.m4a",
+      "title": "Église",
+      "loop": true
+    }
+  ]
+}

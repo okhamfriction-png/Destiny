@@ -1,0 +1,92 @@
+{
+  "dilemmes": [
+    { "id": "robots_rebelle", "nom": "Le robot buggé", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "robots_rebelle", "situation": "Le robot qui vient de te sauver a un bug qui va tuer tout le monde.", "choix_a": "Le débrancher.", "choix_b": "Lui laisser une dernière chance." },
+    { "id": "robots_rebelle_2", "nom": "Le marché des robots", "source_reelle": "", "moteur": "Confiance/Trahison", "danger_lie": "robots_rebelle", "situation": "Deux robots te proposent chacun un marché : en accepter un trahit le groupe qui te fait confiance.", "choix_a": "Trahir pour ta sécurité.", "choix_b": "Tenir parole." },
+
+    { "id": "air_irrespirable", "nom": "Le seul masque", "source_reelle": "", "moteur": "Ressource rare", "danger_lie": "air_irrespirable", "situation": "Un seul masque, et ton collègue en a plus besoin que toi.", "choix_a": "Le lui donner.", "choix_b": "Le garder." },
+    { "id": "air_irrespirable_2", "nom": "Le masque à vendre", "source_reelle": "", "moteur": "Tout ou rien", "danger_lie": "air_irrespirable", "situation": "Un inconnu t'offre cent mille euros pour ton masque.", "choix_a": "Vendre.", "choix_b": "Refuser." },
+
+    { "id": "siege_arme", "nom": "Franchir la ligne", "source_reelle": "", "moteur": "Tout ou rien", "danger_lie": "siege_arme", "situation": "Franchir la ligne sauve ta famille de l'autre côté, mais expose ta position.", "choix_a": "Traverser maintenant.", "choix_b": "Attendre la nuit, au risque qu'il soit trop tard." },
+
+    { "id": "bombe_retardement", "nom": "Rester ou fuir", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "bombe_retardement", "situation": "Tenter de tout arrêter sauve ceux à l'intérieur ; fuir sauve ta vie.", "choix_a": "Rester pour tout arrêter.", "choix_b": "Fuir seul." },
+
+    { "id": "noir_total", "nom": "La main dans le noir", "source_reelle": "", "moteur": "Confiance/Trahison", "danger_lie": "noir_total", "situation": "Une main te touche dans le noir et chuchote « fais-moi confiance ».", "choix_a": "La suivre.", "choix_b": "Reculer." },
+
+    { "id": "soleil_grossit", "nom": "Le dernier bidon", "source_reelle": "", "moteur": "Ressource rare", "danger_lie": "soleil_grossit", "situation": "Le dernier bidon d'eau fraîche ne suffit qu'à une personne.", "choix_a": "Toi.", "choix_b": "L'enfant qui a arrêté de transpirer." },
+    { "id": "soleil_grossit_2", "nom": "La place à l'ombre", "source_reelle": "", "moteur": "Ressource rare", "danger_lie": "soleil_grossit", "situation": "Un inconnu vend sa place à l'ombre contre tout ce que tu as sur toi.", "choix_a": "Payer.", "choix_b": "Rester au soleil." },
+
+    { "id": "soleil_eteint", "nom": "Le seul manteau", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "soleil_eteint", "situation": "Un seul manteau contre le gel.", "choix_a": "Toi.", "choix_b": "Ta grand-mère à côté de toi." },
+    { "id": "soleil_eteint_2", "nom": "Le bois en commun", "source_reelle": "", "moteur": "Confiance/Trahison", "danger_lie": "soleil_eteint", "situation": "Vous avez chacun du bois. Le mettre en commun réchauffe plus longtemps, mais si l'un triche, l'autre meurt de froid.", "choix_a": "Partager.", "choix_b": "Garder le tien." },
+
+    { "id": "murs_referment", "nom": "La fenêtre étroite", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "murs_referment", "situation": "Une seule fenêtre reste assez large pour un corps.", "choix_a": "Toi.", "choix_b": "Ton ami, trop corpulent pour passer ailleurs." },
+
+    { "id": "traques", "nom": "Se séparer", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "traques", "situation": "Vous séparer double les chances de ta copine ; rester ensemble, vous risquez de tomber tous les deux.", "choix_a": "La laisser fuir seule.", "choix_b": "Rester ensemble." },
+    { "id": "traques_2", "nom": "La montre en or", "source_reelle": "", "moteur": "Ressource rare", "danger_lie": "traques", "situation": "Un inconnu propose de vous cacher contre la montre en or de ton père.", "choix_a": "Payer.", "choix_b": "Continuer de fuir." },
+
+    { "id": "perdus_nature", "nom": "Le point d'eau", "source_reelle": "", "moteur": "Ressource rare", "danger_lie": "perdus_nature", "situation": "Le seul point d'eau appartient à un groupe hostile, et ton enfant a soif.", "choix_a": "Y aller, au risque du conflit.", "choix_b": "Attendre." },
+    { "id": "perdus_nature_2", "nom": "Le portefeuille", "source_reelle": "", "moteur": "Tout ou rien", "danger_lie": "perdus_nature", "situation": "Vous trouvez un portefeuille avec dix mille euros. Le garder vous ralentit, le laisser prive quelqu'un d'une aide future.", "choix_a": "L'emporter.", "choix_b": "Le laisser." },
+
+    { "id": "verrouillage", "nom": "Le dernier code", "source_reelle": "", "moteur": "Tout ou rien", "danger_lie": "verrouillage", "situation": "Ta dernière tentative de code avant le blocage total.", "choix_a": "La tenter maintenant.", "choix_b": "Attendre d'être sûr." },
+
+    { "id": "braquage", "nom": "Rendre l'argent", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "braquage", "situation": "Rendre l'argent calme la situation pour tous ; le garder peut te sauver toi.", "choix_a": "Le rendre.", "choix_b": "Le garder." },
+
+    { "id": "brume_etrange", "nom": "La voix dans la brume", "source_reelle": "", "moteur": "Vérité/Mensonge", "danger_lie": "brume_etrange", "situation": "Le brouillard imite la voix de ta femme qui t'appelle à l'aide.", "choix_a": "La suivre.", "choix_b": "Avancer sans te retourner." },
+
+    { "id": "crash_exterieur", "nom": "Sortir des décombres", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "crash_exterieur", "situation": "Tu ne peux dégager qu'une personne de l'épave avant que tout prenne feu.", "choix_a": "Toi.", "choix_b": "La personne âgée coincée à côté de toi." },
+
+    { "id": "essaim", "nom": "Attirer l'essaim", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "essaim", "situation": "Agiter les bras attire l'essaim sur toi et sauve ton fils.", "choix_a": "Le faire : tu t'exposes.", "choix_b": "Rester immobile." },
+
+    { "id": "nuage_toxique", "nom": "Le masque à gaz", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "nuage_toxique", "situation": "Un seul masque à gaz.", "choix_a": "Toi.", "choix_b": "L'inconnu qui vient de te prévenir du danger." },
+
+    { "id": "gouffre", "nom": "La main de ta fille", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "gouffre", "situation": "Le rebord ne supporte qu'un poids. Tu tiens la main de ta fille.", "choix_a": "La remonter en premier, au risque de basculer.", "choix_b": "Te sauver toi-même." },
+    { "id": "gouffre_2", "nom": "L'enfant ou la fortune", "source_reelle": "", "moteur": "Tout ou rien", "danger_lie": "gouffre", "situation": "Un homme riche te propose sa fortune si tu le sauves avant un enfant qui tombe aussi.", "choix_a": "Sauver l'enfant.", "choix_b": "Sauver l'homme riche." },
+
+    { "id": "incendie", "nom": "La seule sortie", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "incendie", "situation": "Une seule sortie libre.", "choix_a": "Toi.", "choix_b": "L'enfant coincé de l'autre côté du couloir en flammes." },
+    { "id": "incendie_2", "nom": "Le passage secret", "source_reelle": "", "moteur": "Vérité/Mensonge", "danger_lie": "incendie", "situation": "Ton voisin dit connaître un passage secret ; le suivre te fait perdre du temps s'il ment.", "choix_a": "Le croire.", "choix_b": "Foncer vers la sortie visible." },
+
+    { "id": "jeu_mortel", "nom": "Le dernier survivant", "source_reelle": "", "moteur": "Confiance/Trahison", "danger_lie": "jeu_mortel", "situation": "Un seul sort vivant du jeu.", "choix_a": "Trahir ton partenaire maintenant.", "choix_b": "Attendre, au risque de perdre les deux." },
+
+    { "id": "monstre_geant", "nom": "L'enfant trop lent", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "monstre_geant", "situation": "Porter l'enfant qui ne court pas assez vite te ralentit.", "choix_a": "Le porter.", "choix_b": "Le laisser." },
+    { "id": "monstre_geant_2", "nom": "L'or de l'inconnu", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "monstre_geant", "situation": "Le monstre semble attiré par l'or d'un inconnu. Le prévenir le sauve, mais vous ralentit tous.", "choix_a": "Parler.", "choix_b": "Te taire." },
+
+    { "id": "naufrage", "nom": "La place de trop", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "naufrage", "situation": "Le canot a une place de trop.", "choix_a": "Toi.", "choix_b": "La femme enceinte à côté de toi." },
+
+    { "id": "raz_de_maree", "nom": "Le point haut", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "raz_de_maree", "situation": "Le point haut ne tient qu'un poids limité.", "choix_a": "Toi.", "choix_b": "Ton meilleur ami." },
+
+    { "id": "pacte_ancien", "nom": "Le prix du pacte", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "pacte_ancien", "situation": "Le pacte réclame qu'une personne se lie à lui pour libérer les autres.", "choix_a": "Te lier toi-même.", "choix_b": "Laisser un autre s'y lier." },
+    { "id": "pacte_ancien_2", "nom": "L'offrande", "source_reelle": "", "moteur": "Tout ou rien", "danger_lie": "pacte_ancien", "situation": "Le pacte t'offre de sauver tout le monde en échange de dix ans de ta vie.", "choix_a": "Payer le prix.", "choix_b": "Refuser et affronter la malédiction." },
+
+    { "id": "tremblement_terre", "nom": "Le mur qui tombe", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "tremblement_terre", "situation": "Le mur va s'effondrer. Tu ne peux pousser qu'une seule personne.", "choix_a": "Ton frère.", "choix_b": "L'inconnue à côté de lui." },
+
+    { "id": "tueur_en_serie", "nom": "Le volontaire", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "tueur_en_serie", "situation": "Il épargne le groupe si quelqu'un se désigne. Ton ami se porte volontaire avant toi.", "choix_a": "Le laisser faire.", "choix_b": "Prendre sa place." },
+
+    { "id": "volcan", "nom": "Dix secondes", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "volcan", "situation": "Un chemin plus court passe au-dessus de ton ami tombé ; l'aider coûte dix secondes précieuses.", "choix_a": "L'aider.", "choix_b": "Courir." },
+
+    { "id": "ia_controle", "nom": "Le pacte de l'IA", "source_reelle": "", "moteur": "Tout ou rien", "danger_lie": "ia_controle", "situation": "Elle t'offre cent millions d'euros contre le contrôle du pays.", "choix_a": "Accepter.", "choix_b": "Refuser." },
+    { "id": "ia_controle_2", "nom": "Dénoncer les résistants", "source_reelle": "", "moteur": "Confiance/Trahison", "danger_lie": "ia_controle", "situation": "Elle épargne ta famille si tu dénonces les autres résistants.", "choix_a": "Parler.", "choix_b": "Te taire." },
+
+    { "id": "invasion_creature", "nom": "La voix de ta mère", "source_reelle": "", "moteur": "Vérité/Mensonge", "danger_lie": "invasion_creature", "situation": "La créature imite la voix de ta mère pour t'attirer.", "choix_a": "Répondre.", "choix_b": "Avancer sans te retourner." },
+
+    { "id": "reaction_chimique", "nom": "Couper le gaz", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "reaction_chimique", "situation": "Couper l'arrivée sauve l'immeuble, mais te prive des dernières secondes pour fuir.", "choix_a": "Couper.", "choix_b": "Fuir." },
+
+    { "id": "inondation", "nom": "À bout de bras", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "inondation", "situation": "Tu portes ta mère dans l'eau qui monte ; la lâcher te fait nager plus vite.", "choix_a": "La lâcher.", "choix_b": "Couler ensemble." },
+
+    { "id": "zombies", "nom": "Fermer la porte", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "zombies", "situation": "La porte ne se ferme que si quelqu'un reste dehors une seconde de trop.", "choix_a": "Toi.", "choix_b": "Ton collègue derrière toi." },
+
+    { "id": "invasion_alien", "nom": "Sortir ou se cacher", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "invasion_alien", "situation": "Te cacher te sauve ; sortir peut sauver la famille qui cherche un abri.", "choix_a": "Sortir.", "choix_b": "Rester caché." },
+
+    { "id": "meute", "nom": "Se jeter devant la meute", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "meute", "situation": "Te jeter devant la meute sauve ton ami ; fuir ensemble risque de vous perdre tous les deux.", "choix_a": "Te sacrifier.", "choix_b": "Fuir ensemble." },
+
+    { "id": "prise_otage", "nom": "S'accuser à tort", "source_reelle": "", "moteur": "Vérité/Mensonge", "danger_lie": "prise_otage", "situation": "T'accuser à tort libère les autres otages.", "choix_a": "Mentir pour les sauver.", "choix_b": "Te taire." },
+
+    { "id": "tempete", "nom": "L'arbre solide", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "tempete", "situation": "Le seul arbre solide ne protège qu'une personne du vent.", "choix_a": "Toi.", "choix_b": "Le vieil homme qui ne peut plus courir." },
+
+    { "id": "tornade", "nom": "L'abri pour deux", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "tornade", "situation": "L'abri ne tient qu'à deux ; vous êtes trois : toi, ton frère, un inconnu.", "choix_a": "Laisser l'inconnu dehors.", "choix_b": "Rester dehors toi-même." },
+
+    { "id": "emeute_hostile", "nom": "Se fondre dans la foule", "source_reelle": "", "moteur": "Confiance/Trahison", "danger_lie": "emeute_hostile", "situation": "Te fondre dans la foule t'épargne ; rester avec ton ami l'expose.", "choix_a": "Te fondre dans la foule.", "choix_b": "Rester avec lui." },
+    { "id": "emeute_hostile_2", "nom": "La place à prix d'or", "source_reelle": "", "moteur": "Ressource rare", "danger_lie": "emeute_hostile", "situation": "Un vendeur profite du chaos pour vendre sa dernière place en sécurité à prix d'or.", "choix_a": "Payer tout.", "choix_b": "Risquer la foule sans payer." },
+
+    { "id": "maladie_contagieuse", "nom": "Le seul vaccin", "source_reelle": "", "moteur": "Sacrifice", "danger_lie": "maladie_contagieuse", "situation": "Un seul vaccin.", "choix_a": "Ton enfant.", "choix_b": "L'inconnu à côté, qui va mourir sans lui." },
+    { "id": "maladie_contagieuse_2", "nom": "Les symptômes cachés", "source_reelle": "", "moteur": "Confiance/Trahison", "danger_lie": "maladie_contagieuse", "situation": "Ton ami cache peut-être des symptômes ; le dénoncer protège tout le monde mais le trahit.", "choix_a": "Parler.", "choix_b": "Te taire." }
+  ]
+}
