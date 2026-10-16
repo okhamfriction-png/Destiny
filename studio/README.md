@@ -30,6 +30,9 @@ studio/
 │       ├── propose.rs       propositions de shorts, pics de rétention YouTube
 │       └── ingest.rs        classement, ffprobe, proxies, planches contact, projet initial
 ├── crates/destiny-cli/      binaire `destiny-cli`
+│       ├── render_b/        moteur B : project.json → composition HTML/GSAP + plaques ffmpeg (trailers, reels)
+│       └── moments.rs       moments forts (rires, cris, « Destin ! »)
+├── renderer/                rendu headless Chromium image par image (Node + playwright-core)
 ├── src-tauri/               shell Tauri 2 (commandes, jobs avec progression, « Demander à Claude »)
 ├── src/                     front Svelte 5 / SvelteKit (SPA) ; src/lib/bindings = types générés
 ├── assets/fonts/            Anton, Montserrat SemiBold, Cinzel (OFL)
@@ -54,6 +57,7 @@ cargo build --release -p destiny-cli --features metal   # whisper sur le GPU
 ## Commandes
 
 ```sh
+(cd renderer && npm install)                 # moteur B (trailers) ; Chrome/Chromium requis (DESTINY_CHROMIUM)
 cargo test                                   # cœur + CLI (régénère src/lib/bindings/*.ts)
 cargo build --release -p destiny-cli         # la CLI
 npm install && npm run tauri dev             # l'application
@@ -75,12 +79,16 @@ destiny-cli snapshot ~/DestinyStudio/8-octobre/serpent.json --at 1,15,40
 destiny-cli render   ~/DestinyStudio/8-octobre/serpent.json --out /tmp/serpent.mp4
 destiny-cli export   ~/DestinyStudio/8-octobre/serpent.json                # livraison + NAS (reprise, md5)
 destiny-cli peaks    project.json --csv retention.csv --offset 4570 --transcript t.json --out-dir pics/
+destiny-cli render   examples/trailer/project.json --out /tmp/trailer.mp4  # moteur B (trailer_v/h, reel_bm)
+destiny-cli compose  examples/trailer/project.json --out-dir /tmp/comp     # composition HTML seule (aperçu live)
+destiny-cli moments  project.json --from 5200 --to 5400 --transcript t.json  # rires, cris, « Destin ! »
 destiny-cli music    "Music/Ritual Pulse.m4a"                              # coups, creux, coup le plus fort
 destiny-cli patch    serpent.json patch.json                               # patch RFC 6902 validé
 ```
 
 Variables d'environnement : `DESTINY_NAS_ROOT` (défaut `/Volumes/ShikaZero`), `DESTINY_FONTS`,
-`DESTINY_FFMPEG` / `DESTINY_FFPROBE`, `DESTINY_SILERO`, `DESTINY_CLAUDE_BIN`, `DESTINY_ROOT`.
+`DESTINY_FFMPEG` / `DESTINY_FFPROBE`, `DESTINY_SILERO`, `DESTINY_CLAUDE_BIN`, `DESTINY_ROOT`,
+`DESTINY_CHROMIUM`, `DESTINY_RENDERER`, `DESTINY_NODE`, `DESTINY_RENDER_WORKERS` (1 = rendu bit à bit reproductible).
 
 ## Tester sans les vrais rushes
 

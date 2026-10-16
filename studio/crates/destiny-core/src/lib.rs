@@ -15,6 +15,7 @@ pub mod nas;
 pub mod project;
 pub mod propose;
 pub mod render_a;
+pub mod render_b;
 pub mod ass;
 pub mod style;
 pub mod sync;

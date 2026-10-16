@@ -1,0 +1,13 @@
+{
+  "name": "destiny-renderer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Moteur B de Destiny Studio : rendu image par image d'une composition HTML/GSAP en Chromium headless (calque graphique transparent).",
+  "type": "module",
+  "bin": { "destiny-render": "render.mjs" },
+  "scripts": { "render": "node render.mjs" },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "playwright-core": "1.56.1"
+  }
+}

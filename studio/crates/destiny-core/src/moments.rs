@@ -66,7 +66,7 @@ pub fn audience_moments(samples: &[f32], sr: u32, t0: f64) -> Vec<Moment> {
     sorted.sort_by(f32::total_cmp);
     let median = sorted[sorted.len() / 2];
     let flat: Vec<f32> = samples.chunks(hop).map(|c| if c.len() >= 256 { spectral_flatness(c) } else { 0.0 }).collect();
-    let mut out = Vec::new();
+    let mut out: Vec<Moment> = Vec::new();
     let mut k = 0;
     while k < db.len() {
         if db[k] < median + 8.0 {
@@ -82,12 +82,20 @@ pub fn audience_moments(samples: &[f32], sr: u32, t0: f64) -> Vec<Moment> {
         let mean_flat = flat[s..k].iter().sum::<f32>() / (k - s) as f32;
         let kind = if dur >= 0.8 && mean_flat > 0.25 {
             MomentKind::Laugh
-        } else if dur <= 2.0 && peak >= 12.0 {
+        } else if (0.3..=2.0).contains(&dur) && peak >= 12.0 {
             MomentKind::Shout
         } else {
             continue;
         };
-        out.push(Moment { start: t0 + s as f64 * HOP, end: t0 + k as f64 * HOP, kind, score: peak });
+        let m = Moment { start: t0 + s as f64 * HOP, end: t0 + k as f64 * HOP, kind, score: peak };
+        // Deux événements de même nature à moins de 0,5 s n'en font qu'un.
+        match out.last_mut() {
+            Some(last) if last.kind == kind && m.start - last.end < 0.5 => {
+                last.end = m.end;
+                last.score = last.score.max(m.score);
+            }
+            _ => out.push(m),
+        }
     }
     out
 }

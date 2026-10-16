@@ -8,6 +8,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{bail, Context, Result};
 use clap::{Parser, Subcommand, ValueEnum};
 use destiny_core::render_a::{self, Quality};
+use destiny_core::render_b;
 use destiny_core::{asr, ingest, mics, music, nas, propose, sync, verify, Preset, Project};
 
 #[derive(Parser)]
@@ -113,6 +114,16 @@ enum Cmd {
         #[arg(long)]
         out_dir: PathBuf,
     },
+    /// Moments forts sur [from, to] : rires/cris (audio caméra) et « Destin ! » (transcription).
+    Moments {
+        project: PathBuf,
+        #[arg(long)]
+        from: f64,
+        #[arg(long)]
+        to: f64,
+        #[arg(long)]
+        transcript: Option<PathBuf>,
+    },
     /// Fixe les gates micros depuis un JSON de présence {"m1": [[a,b],…]}.
     Gates { project: PathBuf, presence: PathBuf },
     /// Rend la vidéo (moteur A) puis vérifie durée et son.
@@ -137,6 +148,17 @@ enum Cmd {
         /// Remplace les cibles du projet.
         #[arg(long)]
         target: Vec<String>,
+    },
+    /// Écrit seulement la composition HTML/GSAP d'un trailer (moteur B) pour l'aperçu live.
+    Compose {
+        project: PathBuf,
+        #[arg(long)]
+        out_dir: Option<PathBuf>,
+        #[arg(long, value_enum, default_value = "preview")]
+        quality: Q,
+        /// Extrait aussi les plaques vidéo (fond de l'aperçu live).
+        #[arg(long)]
+        plates: bool,
     },
     /// Applique un patch JSON (RFC 6902), valide, et journalise l'historique.
     Patch { project: PathBuf, patch: PathBuf },
@@ -193,10 +215,19 @@ fn resolved(project: &Path, p: &Project) -> Project {
     r
 }
 
+/// Moteur B (HTML/GSAP) pour les trailers et reels, moteur A (ffmpeg + ASS) sinon.
+fn engine_render(p: &Project, base: &Path, work: &Path, out: &Path, q: Quality) -> Result<render_a::RenderJob> {
+    if render_b::handles(p.preset) {
+        render_b::render(p, base, work, out, q, None, progress)
+    } else {
+        render_a::render(p, base, work, out, q, None, progress)
+    }
+}
+
 fn render_checked(project: &Path, p: &Project, out: &Path, q: Quality) -> Result<verify::Report> {
     let base = project_dir(project);
     let work = cache_dir(project).join("render").join(project_name(project, p));
-    let job = render_a::render(p, &base, &work, out, q, None, progress)?;
+    let job = engine_render(p, &base, &work, out, q)?;
     let report = verify::check(out, job.duration, Some((p.format.w, p.format.h)))?;
     Ok(report)
 }
@@ -332,6 +363,23 @@ fn main() -> Result<()> {
             }
             print_json(&outs)?;
         }
+        Cmd::Moments { project, from, to, transcript } => {
+            let p = Project::load(&project)?;
+            let r = resolved(&project, &p);
+            let mut out = Vec::new();
+            for piece in sync::split_master_range(&r.sources, from, to) {
+                let s = r.source(&piece.src).unwrap();
+                let path = s.proxy.as_deref().unwrap_or(&s.path);
+                let pcm = destiny_core::ffmpeg::load_audio(path, Some((piece.t_in, piece.t_out)), 8000)?;
+                out.extend(destiny_core::moments::audience_moments(&pcm.samples, pcm.sr, piece.master));
+            }
+            if let Some(t) = transcript {
+                let t = asr::Transcript::load(&t)?;
+                out.extend(destiny_core::moments::destiny_calls(&t).into_iter().filter(|m| m.end > from && m.start < to));
+            }
+            out.sort_by(|a, b| a.start.total_cmp(&b.start));
+            print_json(&out)?;
+        }
         Cmd::Gates { project, presence } => {
             let mut p = Project::load(&project)?;
             let pres: BTreeMap<String, Vec<[f64; 2]>> = serde_json::from_str(&std::fs::read_to_string(&presence)?)?;
@@ -370,7 +418,7 @@ fn main() -> Result<()> {
             if !preview.exists() {
                 let base = project_dir(&project);
                 let work = cache.join("render").join(project_name(&project, &p));
-                render_a::render(&p, &base, &work, &preview, Quality::Preview, None, progress)?;
+                engine_render(&p, &base, &work, &preview, Quality::Preview)?;
             }
             let mut files = Vec::new();
             for t in at {
@@ -400,6 +448,19 @@ fn main() -> Result<()> {
                 copies.push(serde_json::json!({ "dest": dst, "result": format!("{r:?}") }));
             }
             print_json(&serde_json::json!({ "file": file, "report": report, "copies": copies }))?;
+        }
+        Cmd::Compose { project, out_dir, quality, plates } => {
+            let p = Project::load(&project)?;
+            let q = match quality {
+                Q::Preview => Quality::Preview,
+                Q::Delivery => Quality::Delivery,
+            };
+            let dir = out_dir.unwrap_or_else(|| cache_dir(&project).join("compose").join(project_name(&project, &p)));
+            let c = render_b::compose(&p, &project_dir(&project), &dir, q, plates, None, |x| progress("plates", x))?;
+            print_json(&serde_json::json!({
+                "index": c.index, "duration": c.duration, "frames": c.frames,
+                "clips": c.clips, "safe_zone": c.issues,
+            }))?;
         }
         Cmd::Patch { project, patch } => {
             let mut p = Project::load(&project)?;

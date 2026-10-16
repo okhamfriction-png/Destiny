@@ -9,7 +9,8 @@ use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 
 use destiny_core::history::History;
-use destiny_core::render_a::{self, Quality};
+use destiny_core::render_a::{self, Quality, RenderJob};
+use destiny_core::render_b;
 use destiny_core::{asr, ingest, mics, music, nas, propose, verify, Project};
 use serde::Serialize;
 use serde_json::Value;
@@ -310,6 +311,23 @@ fn analyze(from: f64, to: f64, model: Option<String>, app: AppHandle, jobs: Stat
 
 // ---------------------------------------------------------------- rendu
 
+/// Moteur A (shorts, ffmpeg + ASS) ou moteur B (trailers et reels, HTML/GSAP) selon le preset.
+fn engine_render(
+    p: &Project,
+    base: &Path,
+    work: &Path,
+    out: &Path,
+    q: Quality,
+    cancel: Option<&destiny_core::ffmpeg::Cancel>,
+    progress: impl FnMut(&str, f64),
+) -> anyhow::Result<RenderJob> {
+    if render_b::handles(p.preset) {
+        render_b::render(p, base, work, out, q, cancel, progress)
+    } else {
+        render_a::render(p, base, work, out, q, cancel, progress)
+    }
+}
+
 fn render_project(
     path: &Path,
     p: &Project,
@@ -319,7 +337,7 @@ fn render_project(
 ) -> anyhow::Result<verify::Report> {
     let base = project_dir(path);
     let work = cache_dir(path).join("render").join(name_of(path, p));
-    let job = render_a::render(p, &base, &work, out, q, Some(&ctx.cancel), |stage, x| ctx.progress(stage, x))?;
+    let job = engine_render(p, &base, &work, out, q, Some(&ctx.cancel), |stage, x| ctx.progress(stage, x))?;
     verify::check(out, job.duration, Some((p.format.w, p.format.h)))
 }
 
@@ -349,7 +367,7 @@ async fn snapshot(t: f64, state: State<'_, AppState>) -> CmdResult<String> {
         let preview = cache.join(format!("preview_{:016x}.mp4", h.finish()));
         if !preview.exists() {
             let work = cache.join("render").join(name_of(&path, &p));
-            render_a::render(&p, &project_dir(&path), &work, &preview, Quality::Preview, None, |_, _| {})?;
+            engine_render(&p, &project_dir(&path), &work, &preview, Quality::Preview, None, |_, _| {})?;
         }
         let png = cache.join("snapshots").join(format!("{}_{t:07.3}.png", name_of(&path, &p)));
         std::fs::create_dir_all(png.parent().unwrap())?;

@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "format": { "w": 1080, "h": 1920, "fps": 30 },
+  "preset": "trailer_v",
+  "sources": [
+    { "id": "cam", "path": "media/DJI_20261008201106_0001_D_P004.MP4", "proxy": "media/DJI_20261008201106_0001_D_P004.LRF", "rec": 0 },
+    { "id": "stage", "path": "media/stage.mp4", "rec": 0 }
+  ],
+  "tracks": [
+    { "id": "v0", "kind": "video", "items": [
+      { "id": "s1", "src": "stage", "in": 2.0, "out": 4.4, "at": 0.0 },
+      { "id": "s2", "src": "cam", "in": 12.0, "out": 14.4, "at": 2.4, "fx": { "flash": true } },
+      { "id": "s3", "src": "cam", "in": 30.0, "out": 33.2, "at": 4.8, "crop": { "cx": 0.7, "cy": 0.5, "zoom": 1.2 }, "fx": { "flash": true, "punch": true } },
+      { "id": "s4", "src": "stage", "in": 20.0, "out": 21.8, "at": 8.0 }
+    ] },
+    { "id": "a_music", "kind": "music", "items": [
+      { "file": "media/music.m4a", "at": 0.0, "offset": 10.5, "gain_env": [[0, 0.6], [9.8, 1.0]] }
+    ] },
+    { "id": "g_text", "kind": "graphics", "items": [
+      { "type": "quotes", "at": 0.0, "dur": 2.4, "items": ["C’est pour toi ? Y a quelqu’un ?", "Le bâtiment s’effondre !"] },
+      { "type": "constellation", "at": 2.4, "dur": 2.4, "names": ["Le Lion", "Le Corbeau", "La Louve", "Le Serpent", "Le Hibou", "La Biche", "Le Renard"] },
+      { "type": "lower", "at": 4.8, "dur": 2.2, "name": "Marouene", "role": "Créateur de Destiny" },
+      { "type": "ring", "at": 7.0, "dur": 1.0 },
+      { "type": "card", "at": 8.0, "dur": 1.8, "lines": ["UNE SOIRÉE.", "UNE SEULE FOIS."], "style": "fade" },
+      { "type": "end_card", "at": 9.8, "dur": 4.0, "variant": "dated", "lines": ["JEUDI 22 OCTOBRE · 19H30", "2 rue Saulnier · Paris 9e", "NEUF EUROS · TRENTE PLACES"] }
+    ] }
+  ],
+  "markers": { "music_hits": [9.8], "cuts": [] },
+  "export": { "targets": [], "name": "showcase" }
+}
