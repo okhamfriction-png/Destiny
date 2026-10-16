@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/destiny-core", "crates/destiny-cli"]
+members = ["crates/destiny-core", "crates/destiny-cli", "src-tauri"]
 # src-tauri nécessite webkit2gtk (Linux) / WebKit (macOS) : `cargo test` à la racine
 # ne compile que le cœur et la CLI.
 default-members = ["crates/destiny-core", "crates/destiny-cli"]

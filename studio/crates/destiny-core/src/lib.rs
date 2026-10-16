@@ -9,6 +9,7 @@ pub mod history;
 pub mod ingest;
 pub mod mics;
 pub mod mixer;
+pub mod moments;
 pub mod music;
 pub mod nas;
 pub mod project;

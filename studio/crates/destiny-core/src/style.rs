@@ -27,6 +27,17 @@ pub const FONT_CINZEL: &str = "Cinzel";
 /// Étalonnage commun appliqué à toutes les images caméra (filtre ffmpeg exact).
 pub const GRADE: &str = "split[g0][g1];[g1]curves=all='0/0 0.72/0 1/1',gblur=sigma=26,colorchannelmixer=rr=1:gg=0.6:bb=0.25[h];[g0][h]blend=all_mode=screen:all_opacity=0.18,curves=all='0/0 0.10/0.03 0.30/0.20 0.55/0.50 0.80/0.82 1/0.97',colorbalance=rs=-0.08:gs=-0.01:bs=0.08:rm=0.03:bm=-0.03:rh=0.08:gh=0.02:bh=-0.08,eq=saturation=0.9,vignette=angle=PI/3.6";
 
+/// Étalonnage `GRADE` avec des étiquettes uniques (`{p}g0`, …) pour l'insérer plusieurs fois
+/// dans un même filtergraph, et un flou de halo `sigma` adapté à la résolution traitée
+/// (26 à pleine résolution ; 6,5 sur une image 4× plus petite).
+pub fn grade(prefix: &str, sigma: f64) -> String {
+    GRADE
+        .replace("[g0]", &format!("[{prefix}g0]"))
+        .replace("[g1]", &format!("[{prefix}g1]"))
+        .replace("[h]", &format!("[{prefix}h]"))
+        .replace("gblur=sigma=26", &format!("gblur=sigma={sigma}"))
+}
+
 /// Grain léger à l'export.
 pub const GRAIN: &str = "noise=alls=3:allf=t";
 
@@ -92,5 +103,7 @@ mod tests {
         assert_eq!(super::ass_color("#e6b446", 0), "&H0046B4E6");
         assert_eq!(super::ass_rgb("#e6b446"), "&H46B4E6&");
         assert_eq!(super::ff_color("#fff3dc"), "0xfff3dc");
+        assert_eq!(super::grade("", 26.0), super::GRADE);
+        assert!(super::grade("c3", 6.5).contains("[c3h];[c3g0][c3h]blend") && super::grade("c3", 6.5).contains("sigma=6.5"));
     }
 }

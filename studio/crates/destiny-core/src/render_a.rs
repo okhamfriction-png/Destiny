@@ -153,24 +153,29 @@ pub fn build(p: &Project, base: &Path, work: &Path, out: &Path, quality: Quality
                     let _ = writeln!(
                         graph,
                         ",split=2[bg{k}][fg{k}];\
-[bg{k}]scale=270:480:force_original_aspect_ratio=increase,crop=270:480,boxblur=10:2,scale={w}:{h},eq=brightness={}:saturation={}[bgb{k}];\
-[fg{k}]scale={zw}:{zh}:force_original_aspect_ratio=increase,crop={zw}:{zh},zoompan=z='{z}':x='{px}':y='{py}':d=1:s={band_w}x{band_h}:fps={fps}[band{k}];\
+[bg{k}]scale=270:480:force_original_aspect_ratio=increase,crop=270:480,{gbg},boxblur=10:2,scale={w}:{h},eq=brightness={}:saturation={}[bgb{k}];\
+[fg{k}]scale={zw}:{zh}:force_original_aspect_ratio=increase,crop={zw}:{zh},zoompan=z='{z}':x='{px}':y='{py}':d=1:s={band_w}x{band_h}:fps={fps},{gfg}[band{k}];\
 [bgb{k}][band{k}]overlay=x=0:y={top}:shortest=1[s{k}];",
-                        short::BG_BRIGHTNESS, short::BG_SATURATION, top = lay.band_top
+                        short::BG_BRIGHTNESS, short::BG_SATURATION, top = lay.band_top,
+                        gbg = style::grade(&format!("b{k}"), 26.0 * 270.0 / 1080.0),
+                        gfg = style::grade(&format!("f{k}"), 26.0 * band_w as f64 / 1080.0),
                     );
                 } else {
                     let _ = writeln!(
                         graph,
-                        ",scale={zw}:{zh}:force_original_aspect_ratio=increase,crop={zw}:{zh},zoompan=z='{z}':x='{px}':y='{py}':d=1:s={w}x{h}:fps={fps}[s{k}];"
+                        ",scale={zw}:{zh}:force_original_aspect_ratio=increase,crop={zw}:{zh},zoompan=z='{z}':x='{px}':y='{py}':d=1:s={w}x{h}:fps={fps},{g}[s{k}];",
+                        g = style::grade(&format!("f{k}"), 26.0 * w as f64 / 1920.0),
                     );
                 }
             }
         }
         labels.push(format!("[s{k}]"));
     }
+    // L'étalonnage est appliqué plan par plan, à la résolution utile (bande et fond flou
+    // séparément) : 3× moins de pixels que l'image 1080×1920 entière, et le noir des trous
+    // n'est pas « étalonné ».
     let _ = writeln!(graph, "{}concat=n={}:v=1:a=0[cat];", labels.join(""), labels.len());
-    let _ = writeln!(graph, "[cat]{}[graded];", style::GRADE);
-    let mut cur = "graded".to_string();
+    let mut cur = "cat".to_string();
     let mut n = 0;
     let mut chain = |graph: &mut String, filter: String| {
         let next = format!("p{n}");

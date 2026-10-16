@@ -148,10 +148,18 @@ fn print_json(v: &impl serde::Serialize) -> Result<()> {
 }
 
 fn progress(stage: &str, x: f64) {
-    eprint!("\r{stage:>8} {:5.1} %", x * 100.0);
-    if x >= 1.0 {
+    // Une ligne par étape, réécrite au plus une fois par point de pourcentage.
+    static LAST: std::sync::Mutex<(String, i64)> = std::sync::Mutex::new((String::new(), -1));
+    let pct = (x * 100.0).floor() as i64;
+    let mut last = LAST.lock().unwrap();
+    if last.0 == stage && last.1 == pct {
+        return;
+    }
+    if last.0 != stage && last.1 >= 0 {
         eprintln!();
     }
+    *last = (stage.to_string(), pct);
+    eprint!("\r{stage:>8} {pct:3} %");
     let _ = std::io::stderr().flush();
 }
 

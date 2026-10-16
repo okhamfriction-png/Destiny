@@ -1,0 +1,26 @@
+[package]
+name = "destiny-studio"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+
+[lib]
+name = "destiny_studio_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[features]
+asr = ["destiny-core/asr"]
+metal = ["destiny-core/metal"]
+
+[dependencies]
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+json-patch.workspace = true
+destiny-core.workspace = true
+tauri = { version = "2", features = ["protocol-asset"] }
+tauri-plugin-dialog = "2"
+dirs = "6"

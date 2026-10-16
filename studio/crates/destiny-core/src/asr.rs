@@ -208,7 +208,7 @@ mod whisper {
 
 #[cfg(feature = "asr")]
 mod silero {
-    //! Silero VAD v5 (entrée 512 échantillons à 16 kHz, état 2×1×128).
+    //! Silero VAD v5/v6 (trames de 512 échantillons à 16 kHz précédées de 64 de contexte, état 2×1×128).
     use std::path::{Path, PathBuf};
 
     use anyhow::Result;
@@ -221,15 +221,30 @@ mod silero {
         std::env::var_os("DESTINY_SILERO").map(PathBuf::from).filter(|p| p.exists())
     }
 
+    /// onnxruntime n'accepte qu'un environnement par processus.
+    fn environment() -> Result<&'static ort::environment::Environment> {
+        static ENV: std::sync::OnceLock<ort::environment::Environment> = std::sync::OnceLock::new();
+        if let Some(e) = ENV.get() {
+            return Ok(e);
+        }
+        let e = ort::environment::init().with_name("destiny-vad").build()?;
+        Ok(ENV.get_or_init(|| e))
+    }
+
     pub fn vad(model: &Path, samples: &[f32], p: VadParams) -> Result<Vec<[f64; 2]>> {
         const WIN: usize = 512;
-        let mut session = Session::builder()?.commit_from_file(model)?;
+        // Silero v5+ attend les 64 derniers échantillons de la trame précédente devant chaque trame.
+        const CTX: usize = 64;
+        let mut session = Session::builder(environment()?)?.commit_from_file(model)?;
         let mut state = vec![0f32; 2 * 128];
         let mut probs = Vec::with_capacity(samples.len() / WIN + 1);
+        let mut context = vec![0f32; CTX];
         for chunk in samples.chunks(WIN) {
-            let mut frame = chunk.to_vec();
-            frame.resize(WIN, 0.0);
-            let input = Tensor::from_array(([1usize, WIN], frame))?;
+            let mut frame = context.clone();
+            frame.extend_from_slice(chunk);
+            frame.resize(CTX + WIN, 0.0);
+            context.copy_from_slice(&frame[WIN..]);
+            let input = Tensor::from_array(([1usize, CTX + WIN], frame))?;
             let st = Tensor::from_array(([2usize, 1, 128], state.clone()))?;
             let sr = Tensor::from_array(([1usize], vec![16_000i64]))?;
             let out = session.run(ort::inputs!["input" => input, "state" => st, "sr" => sr])?;
@@ -257,6 +272,24 @@ mod tests {
         let seg = energy_vad(&s, sr, VadParams::default());
         assert_eq!(seg.len(), 1, "{seg:?}");
         assert!((seg[0][0] - 1.0).abs() < 0.05 && (seg[0][1] - 2.6).abs() < 0.05, "{seg:?}");
+    }
+
+    /// Exécute Silero pour de vrai : `DESTINY_SILERO=…/silero_vad.onnx ORT_DYLIB_PATH=…/libonnxruntime.so
+    /// cargo test -p destiny-core --features asr -- --ignored silero`.
+    #[cfg(feature = "asr")]
+    #[test]
+    #[ignore]
+    fn silero_runs() {
+        let model = silero::model_path().expect("DESTINY_SILERO");
+        // Le silence n'est pas de la parole.
+        assert!(silero::vad(&model, &vec![0.0f32; ASR_SR as usize * 2], VadParams::default()).unwrap().is_empty());
+        // Vraie voix (ex. espeak-ng) si fournie : DESTINY_TEST_SPEECH=fichier.wav
+        if let Some(wav) = std::env::var_os("DESTINY_TEST_SPEECH") {
+            let pcm = crate::ffmpeg::load_audio(std::path::Path::new(&wav), None, ASR_SR).unwrap();
+            let seg = silero::vad(&model, &pcm.samples, VadParams::default()).unwrap();
+            eprintln!("silero : {seg:?}");
+            assert!(!seg.is_empty());
+        }
     }
 
     #[test]

@@ -6,8 +6,12 @@ license.workspace = true
 
 [features]
 default = []
-# Transcription whisper.cpp + VAD Silero (compile whisper.cpp et télécharge onnxruntime).
-asr = ["dep:whisper-rs", "dep:ort", "dep:ndarray"]
+# Transcription whisper.cpp + VAD Silero. whisper.cpp est compilé (cmake) ; onnxruntime
+# est chargé dynamiquement à l'exécution (`brew install onnxruntime`, ORT_DYLIB_PATH),
+# pas téléchargé au build.
+asr = ["dep:whisper-rs", "dep:ort"]
+# Whisper sur le GPU du Mac (Apple Silicon).
+metal = ["asr", "whisper-rs/metal"]
 
 [dependencies]
 anyhow.workspace = true
@@ -21,8 +25,7 @@ hound.workspace = true
 realfft.workspace = true
 md-5.workspace = true
 whisper-rs = { version = "0.16", optional = true }
-ort = { version = "2.0.0-rc.10", optional = true }
-ndarray = { version = "0.16", optional = true }
+ort = { version = "=2.0.0-rc.14", optional = true, default-features = false, features = ["std", "load-dynamic"] }
 
 [dev-dependencies]
 tempfile = "3"

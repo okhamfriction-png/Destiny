@@ -208,6 +208,40 @@ pub fn parse_retention_csv(text: &str) -> Vec<(f64, f64)> {
         .collect()
 }
 
+/// Courbe de rétention lue sur une capture d'écran YouTube Studio : pour chaque
+/// colonne, le pixel de courbe (bleu saturé) le plus haut. L'axe horizontal va de la
+/// première à la dernière colonne où la courbe apparaît (0 → `duration` s) ; la valeur
+/// est la hauteur relative (0–100), suffisante pour repérer les pics.
+pub fn retention_from_rgb(rgb: &[u8], w: usize, h: usize, duration: f64) -> Vec<(f64, f64)> {
+    let is_curve = |x: usize, y: usize| {
+        let i = (y * w + x) * 3;
+        let (r, g, b) = (rgb[i] as i32, rgb[i + 1] as i32, rgb[i + 2] as i32);
+        b >= 150 && b - r >= 70 && g >= 80
+    };
+    let cols: Vec<(usize, usize)> =
+        (0..w).filter_map(|x| (0..h).find(|&y| is_curve(x, y)).map(|y| (x, y))).collect();
+    let (Some(first), Some(last)) = (cols.first(), cols.last()) else { return vec![] };
+    let span = (last.0 - first.0).max(1) as f64;
+    cols.iter()
+        .map(|&(x, y)| ((x - first.0) as f64 / span * duration, (h - y) as f64 / h as f64 * 100.0))
+        .collect()
+}
+
+/// Décode une capture (PNG/JPG) avec ffmpeg et en extrait la courbe de rétention.
+pub fn retention_from_screenshot(path: &std::path::Path, duration: f64) -> Result<Vec<(f64, f64)>> {
+    let pr = crate::ffmpeg::probe(path)?;
+    let (Some(w), Some(h)) = (pr.width, pr.height) else { bail!("image illisible : {}", path.display()) };
+    let out = std::process::Command::new(crate::ffmpeg::ffmpeg_bin())
+        .args(["-v", "error", "-i"])
+        .arg(path)
+        .args(["-frames:v", "1", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"])
+        .output()?;
+    if !out.status.success() || out.stdout.len() < (w * h * 3) as usize {
+        bail!("décodage de {} impossible", path.display());
+    }
+    Ok(retention_from_rgb(&out.stdout, w as usize, h as usize, duration))
+}
+
 /// Repère les `n` pics de rétention : fenêtre = début de la montée → redescente.
 /// `offset` = position de la vidéo publiée dans la timeline maîtresse.
 pub fn retention_peaks(curve: &[(f64, f64)], offset: f64, n: usize) -> Vec<Peak> {
@@ -324,6 +358,24 @@ mod tests {
         assert!(matches!(p.graphics().find(|g| matches!(g, GraphicItem::Cta { .. })), Some(GraphicItem::Cta { at, .. }) if (*at - (total - 4.0)).abs() < 1e-9));
         // les sous-titres ne débordent pas sous le CTA
         assert!(caps.iter().all(|c| c.end <= total - 4.0 + 1e-9));
+    }
+
+    #[test]
+    fn retention_from_pixels() {
+        // Image 100×50 noire, courbe bleue y = 40 − bosse au milieu.
+        let (w, h) = (100usize, 50usize);
+        let mut rgb = vec![0u8; w * h * 3];
+        for x in 10..90 {
+            let y = if (45..55).contains(&x) { 10 } else { 40 };
+            let i = (y * w + x) * 3;
+            rgb[i..i + 3].copy_from_slice(&[62, 166, 255]);
+        }
+        let c = retention_from_rgb(&rgb, w, h, 800.0);
+        assert_eq!(c.len(), 80);
+        assert_eq!(c[0].0, 0.0);
+        assert_eq!(c[79].0, 800.0);
+        let top = c.iter().cloned().fold((0.0, 0.0), |a, b| if b.1 > a.1 { b } else { a });
+        assert!(top.0 > 350.0 && top.0 < 450.0, "{top:?}");
     }
 
     #[test]

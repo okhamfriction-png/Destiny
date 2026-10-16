@@ -10,6 +10,7 @@ path = "src/main.rs"
 
 [features]
 asr = ["destiny-core/asr"]
+metal = ["destiny-core/metal"]
 
 [dependencies]
 anyhow.workspace = true
