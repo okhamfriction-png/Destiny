@@ -35,6 +35,8 @@ Le détail complet (écrans, réglages, confidentialité, etc.) est dans
 - `lib/domain` : entités, repositories abstraits (`StoryRepository`, `CombinationMemory`), use cases.
 - `lib/application` : état UI, services applicatifs (random, audio, transcription, assistants).
 - `lib/infrastructure` : datasource JSON, mémoire SQLite, implémentations de repository.
+- `rust/` : cœur logique en Rust (tirage des histoires, escalade), appelé via
+  flutter_rust_bridge sur Android / iOS — voir [`docs/rust_core.md`](docs/rust_core.md).
 - `lib/presentation` : écrans (générateur, histoire/campagne, scène, réglages…), navigation, widgets,
   visuels et thème.
 

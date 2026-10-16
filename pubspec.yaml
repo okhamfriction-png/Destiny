@@ -23,6 +23,10 @@ dependencies:
   wakelock_plus: ^1.2.8
   speech_to_text: ^7.4.0
   file_picker: ^13.0.0
+  flutter_rust_bridge: 2.11.1
+  # Cœur logique en Rust (rust/), compilé par cargokit pour Android / iOS.
+  rust_lib_destiny:
+    path: rust_builder
 
 dev_dependencies:
   flutter_test:

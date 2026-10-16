@@ -3,7 +3,6 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'application/services/audio_service.dart';
 import 'application/services/llm_service.dart';
-import 'application/services/random_picker_service.dart';
 import 'application/state/ai_settings.dart';
 import 'application/state/campagne_store.dart';
 import 'application/state/chat_controller.dart';
@@ -28,6 +27,8 @@ import 'infrastructure/platform/catalog_store_factory.dart';
 import 'infrastructure/platform/chat_store_factory.dart';
 import 'infrastructure/platform/combination_memory_factory.dart';
 import 'infrastructure/repositories/story_repository_impl.dart';
+import 'infrastructure/rust/rust_core.dart';
+import 'infrastructure/rust/rust_generate_story_usecase.dart';
 import 'presentation/screens/root_screen.dart';
 import 'presentation/theme/app_theme.dart';
 
@@ -72,9 +73,10 @@ Future<void> _boot() async {
     catalogStore: catalogStore,
   );
   final combinationMemory = createCombinationMemory();
-  final useCase = GenerateStoryUseCase(
+  // Tirage par le cœur Rust sur Android / iOS ; repli Dart sur le web.
+  await RustCore.init();
+  final GenerateStoryUseCase useCase = RustGenerateStoryUseCase(
     storyRepository: repository,
-    randomPickerService: RandomPickerService(),
     combinationMemory: combinationMemory,
   );
   final generationHistory = GenerationHistory();
