@@ -255,3 +255,21 @@ sans Marouene, à remettre en question si besoin :
   de masquer la chute ; les sous-titres s'arrêtent au CTA.
 - Transcription : sans la feature `asr`, la VAD d'énergie donne les segments de parole sans texte ; whisper
   et Silero s'activent avec `cargo build --features asr` (modèle ggml passé par `--model`, Silero par `DESTINY_SILERO`).
+
+### Jalons (état au 16 octobre 2026)
+
+| Jalon | État |
+|---|---|
+| 1. Squelette, schéma, CLI | fait (`cargo test`, `npm run check/test`, `npm run tauri dev`) |
+| 2. Ingest, proxies, planches, synchro | fait ; synchro vérifiée sur médias synthétiques (0,37 s retrouvé à 1 ms) |
+| 3. Transcription, carte des micros, dictionnaire | fait ; Silero vérifié, whisper compilé mais pas encore testé avec un modèle |
+| 4. Moteur A | fait sur médias synthétiques ; test de référence « serpent » à rejouer sur le vrai `.mov` |
+| 5. Gates, chuchotements, mesure | fait ; le −15 dB est à mesurer sur la vraie soirée |
+| 6. Éditeur timeline | fait (aperçu approché + « Image exacte » par snapshot) |
+| 7. Moteur B | fait ; mise en page spécifique `reel_bm` (badge 10/10, pastilles de règles) à faire |
+| 8. Mixage musical | fait (coups, ducking, silence, carte sur le coup final) |
+| 9. Propositions | `short_scene` et pics YouTube (CSV ou capture) ; propositions trailer/reel automatiques à faire |
+| 10. « Demander à Claude », export NAS | fait |
+
+Reste aussi : forme d'onde musique et présence en scène dans l'UI, seuils des moments forts à
+calibrer sur un vrai spectacle, renderer Node à embarquer dans le bundle macOS.
