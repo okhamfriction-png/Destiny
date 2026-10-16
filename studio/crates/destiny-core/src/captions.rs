@@ -142,7 +142,8 @@ pub fn blocks(words: &[Word]) -> Vec<Block> {
     };
     for w in words {
         if let Some(prev) = cur.last() {
-            let len = cur.iter().map(|x| x.text.chars().count() + 1).sum::<usize>() + w.text.chars().count() - 1;
+            // Longueur du bloc si on y ajoute `w` (mots joints par une espace).
+            let len = cur.iter().map(|x| x.text.chars().count() + 1).sum::<usize>() + w.text.chars().count();
             if w.start - prev.end > SUB_PAUSE || cur.len() >= SUB_MAX_WORDS || len > SUB_MAX_CHARS || ends_with_punct(&prev.text) {
                 flush(&mut cur, &mut out);
             }
@@ -212,5 +213,11 @@ mod tests {
         let texts: Vec<String> = b.iter().map(|x| x.text()).collect();
         assert_eq!(texts, vec!["C'est pour toi\u{a0}?", "Y a quelqu'un", "Immense"]);
         assert!(b.iter().all(|x| x.text().chars().count() <= 16));
+        // 17 caractères : coupé en deux blocs.
+        let w2: Vec<Word> = [(0.0, 0.5, "immensément"), (0.5, 0.9, "grand")]
+            .iter()
+            .map(|(a, b, t)| Word { start: *a, end: *b, text: t.to_string() })
+            .collect();
+        assert_eq!(blocks(&w2).len(), 2);
     }
 }
