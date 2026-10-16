@@ -1,0 +1,9 @@
+{
+  "segments": [
+    { "start": 5.0, "end": 8.6, "text": "Un immense serpent aux yeux verts !", "mic": "m1", "db": -21.0 },
+    { "start": 9.1, "end": 12.4, "text": "C'est pour toi ? Y a quelqu'un ?", "mic": "m1", "db": -22.0 },
+    { "start": 23.0, "end": 27.5, "text": "Attention, il a une morture au cou.", "mic": "m2", "db": -20.0 },
+    { "start": 28.0, "end": 31.0, "text": "Appuie sur la sonnette d'Allah !", "mic": "m1", "db": -19.0 },
+    { "start": 33.2, "end": 36.0, "text": "On court, on court !", "mic": "m2", "db": -18.0 }
+  ]
+}

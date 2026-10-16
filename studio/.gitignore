@@ -1,0 +1,10 @@
+/target/
+/node_modules/
+/build/
+/.svelte-kit/
+/src-tauri/target/
+/src-tauri/gen/
+.cache/
+/examples/synthetic/media/
+*.json.tmp
+.DS_Store

@@ -1,0 +1,1203 @@
+{
+  "$defs": {
+    "Caption": {
+      "properties": {
+        "emphasis": {
+          "description": "Mots-clés d'emphase (affichés en rouge).",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "end": {
+          "format": "double",
+          "type": "number"
+        },
+        "start": {
+          "format": "double",
+          "type": "number"
+        },
+        "text": {
+          "type": "string"
+        },
+        "words": {
+          "description": "Calage mot à mot ; calculé au rendu s'il est absent.",
+          "items": {
+            "$ref": "#/$defs/Word"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "start",
+        "end",
+        "text"
+      ],
+      "type": "object"
+    },
+    "CardStyle": {
+      "enum": [
+        "fade",
+        "stamp"
+      ],
+      "type": "string"
+    },
+    "Crop": {
+      "properties": {
+        "cx": {
+          "description": "Centre horizontal normalisé (0 = gauche, 1 = droite).",
+          "format": "double",
+          "type": "number"
+        },
+        "cy": {
+          "format": "double",
+          "type": "number"
+        },
+        "zoom": {
+          "description": "Zoom appliqué en plus du zoom de base du preset.",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "cx",
+        "cy",
+        "zoom"
+      ],
+      "type": "object"
+    },
+    "EndCardVariant": {
+      "enum": [
+        "dated",
+        "undated"
+      ],
+      "type": "string"
+    },
+    "ExportCfg": {
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "targets": {
+          "default": [],
+          "description": "Destinations : chemin local ou `nas:/chemin/relatif/au/NAS/`.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "Format": {
+      "properties": {
+        "fps": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "h": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "w": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "w",
+        "h",
+        "fps"
+      ],
+      "type": "object"
+    },
+    "Fx": {
+      "properties": {
+        "flash": {
+          "description": "Flash blanc chaud de 0,22 s à l'entrée du plan.",
+          "type": "boolean"
+        },
+        "punch": {
+          "description": "« Punch » d'entrée : échelle 1,09 → 1 en 0,6 s.",
+          "type": "boolean"
+        },
+        "punch_in": {
+          "description": "Punch-in (zoom 1,2) entre ces deux instants, relatifs au début du plan.",
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "push": {
+          "description": "Zoom continu sur la durée du plan (0,06 → 1 à 1,06). `None` = défaut du preset.",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "GraphicItem": {
+      "description": "Éléments graphiques. Les shorts (moteur A) utilisent kicker/hook/tag/cta/progress ;\nles trailers (moteur B) la bibliothèque de scènes complète.",
+      "oneOf": [
+        {
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "text": {
+              "type": "string"
+            },
+            "type": {
+              "const": "kicker",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur",
+            "text"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "lines": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": {
+              "const": "hook",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur",
+            "lines"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "text": {
+              "type": "string"
+            },
+            "type": {
+              "const": "tag",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur",
+            "text"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "lines": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": {
+              "const": "cta",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur",
+            "lines"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "type": {
+              "const": "progress",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Citations d'avis stylisées `[texte, auteur]`.",
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "items": {
+              "items": {
+                "maxItems": 2,
+                "minItems": 2,
+                "prefixItems": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "type": "array"
+              },
+              "type": "array"
+            },
+            "type": {
+              "const": "reviews_txt",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur",
+            "items"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Vraies captures d'avis (chemins d'images), une à une.",
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "images": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": {
+              "const": "reviews",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur",
+            "images"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "items": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": {
+              "const": "quotes",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur",
+            "items"
+          ],
+          "type": "object"
+        },
+        {
+          "description": "Les trois cartes du public (lieu / danger / archétypes).",
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "background": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "cards": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "type": {
+              "const": "mech",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur",
+            "cards"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "lines": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": {
+              "const": "dice",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur",
+            "lines"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "names": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": {
+              "const": "constellation",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur",
+            "names"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "lines": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "style": {
+              "$ref": "#/$defs/CardStyle",
+              "default": "fade"
+            },
+            "type": {
+              "const": "card",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur",
+            "lines"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "items": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": {
+              "const": "tags",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur",
+            "items"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "name": {
+              "type": "string"
+            },
+            "role": {
+              "type": "string"
+            },
+            "type": {
+              "const": "lower",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur",
+            "name",
+            "role"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "type": {
+              "const": "ring",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "text": {
+              "type": "string"
+            },
+            "type": {
+              "const": "fin",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur",
+            "text"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "type": {
+              "const": "black",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "lines": {
+              "description": "Lignes de date/lieu pour la variante datée.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": {
+              "const": "end_card",
+              "type": "string"
+            },
+            "variant": {
+              "$ref": "#/$defs/EndCardVariant",
+              "default": "undated"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "at": {
+              "format": "double",
+              "type": "number"
+            },
+            "dur": {
+              "format": "double",
+              "type": "number"
+            },
+            "type": {
+              "const": "flash",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "at",
+            "dur"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "Markers": {
+      "properties": {
+        "cuts": {
+          "default": [],
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "music_hits": {
+          "default": [],
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "Mic": {
+      "properties": {
+        "actor": {
+          "description": "Comédien porteur du micro (identifiant libre : « pink_jacket », « Jean »…).",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "duration": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "rec": {
+          "default": 0.0,
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "path"
+      ],
+      "type": "object"
+    },
+    "MusicItem": {
+      "properties": {
+        "at": {
+          "format": "double",
+          "type": "number"
+        },
+        "dur": {
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "file": {
+          "type": "string"
+        },
+        "gain_env": {
+          "description": "Enveloppe de gain `[temps vidéo, gain]`, interpolée linéairement.",
+          "items": {
+            "items": {
+              "format": "double",
+              "type": "number"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "type": "array"
+        },
+        "offset": {
+          "default": 0.0,
+          "description": "Position dans le fichier musique correspondant à `at`.",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "file",
+        "at"
+      ],
+      "type": "object"
+    },
+    "Preset": {
+      "enum": [
+        "short_scene",
+        "reel_bm",
+        "trailer_v",
+        "trailer_h",
+        "retention_peaks"
+      ],
+      "type": "string"
+    },
+    "SfxItem": {
+      "properties": {
+        "at": {
+          "format": "double",
+          "type": "number"
+        },
+        "gain": {
+          "default": 1.0,
+          "format": "double",
+          "type": "number"
+        },
+        "type": {
+          "$ref": "#/$defs/SfxKind"
+        }
+      },
+      "required": [
+        "type",
+        "at"
+      ],
+      "type": "object"
+    },
+    "SfxKind": {
+      "enum": [
+        "snap",
+        "whoosh",
+        "tom",
+        "gong",
+        "braam",
+        "sub_drop",
+        "impact"
+      ],
+      "type": "string"
+    },
+    "Source": {
+      "properties": {
+        "duration": {
+          "description": "Durée du fichier en secondes (renseignée par l'ingest).",
+          "format": "double",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "path": {
+          "description": "Fichier pleine résolution (4K), utilisé uniquement à l'export final.",
+          "type": "string"
+        },
+        "proxy": {
+          "description": "Proxy synchrone (`.LRF` DJI ou proxy 720p généré) pour analyse et aperçu.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rec": {
+          "default": 0.0,
+          "description": "Frame de début sur la timeline maîtresse (25 i/s, fractionnaire après auto-sync).",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "path"
+      ],
+      "type": "object"
+    },
+    "Track": {
+      "oneOf": [
+        {
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "items": {
+              "items": {
+                "$ref": "#/$defs/VideoItem"
+              },
+              "type": "array"
+            },
+            "kind": {
+              "const": "video",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "id",
+            "items"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "items": {
+              "items": {
+                "$ref": "#/$defs/VoiceItem"
+              },
+              "type": "array"
+            },
+            "kind": {
+              "const": "voice",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "id",
+            "items"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "items": {
+              "items": {
+                "$ref": "#/$defs/MusicItem"
+              },
+              "type": "array"
+            },
+            "kind": {
+              "const": "music",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "id",
+            "items"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "items": {
+              "items": {
+                "$ref": "#/$defs/SfxItem"
+              },
+              "type": "array"
+            },
+            "kind": {
+              "const": "sfx",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "id",
+            "items"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "items": {
+              "items": {
+                "$ref": "#/$defs/GraphicItem"
+              },
+              "type": "array"
+            },
+            "kind": {
+              "const": "graphics",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "id",
+            "items"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "items": {
+              "items": {
+                "$ref": "#/$defs/Caption"
+              },
+              "type": "array"
+            },
+            "kind": {
+              "const": "captions",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "id",
+            "items"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "VideoItem": {
+      "properties": {
+        "at": {
+          "format": "double",
+          "type": "number"
+        },
+        "crop": {
+          "$ref": "#/$defs/Crop",
+          "default": {
+            "cx": 0.5,
+            "cy": 0.5,
+            "zoom": 1.0
+          }
+        },
+        "fx": {
+          "$ref": "#/$defs/Fx",
+          "default": {}
+        },
+        "id": {
+          "type": "string"
+        },
+        "in": {
+          "format": "double",
+          "type": "number"
+        },
+        "out": {
+          "format": "double",
+          "type": "number"
+        },
+        "src": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "src",
+        "in",
+        "out",
+        "at"
+      ],
+      "type": "object"
+    },
+    "VoiceItem": {
+      "description": "Découpe voix : même découpe que la vidéo, la voix vient des micros gatés.",
+      "properties": {
+        "at": {
+          "format": "double",
+          "type": "number"
+        },
+        "camera_audio": {
+          "description": "Utiliser l'audio caméra plutôt que les micros (ex. cri du public).",
+          "type": "boolean"
+        },
+        "gain": {
+          "format": "double",
+          "type": "number"
+        },
+        "id": {
+          "type": "string"
+        },
+        "in": {
+          "format": "double",
+          "type": "number"
+        },
+        "out": {
+          "format": "double",
+          "type": "number"
+        },
+        "src": {
+          "description": "Source de référence pour `in`/`out` (convertie en timeline maîtresse via `rec`).",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "src",
+        "in",
+        "out",
+        "at"
+      ],
+      "type": "object"
+    },
+    "Word": {
+      "properties": {
+        "end": {
+          "format": "double",
+          "type": "number"
+        },
+        "start": {
+          "format": "double",
+          "type": "number"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end",
+        "text"
+      ],
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "dictionary": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Corrections ASR propres au projet (« sonnette d'Allah » → « sonnette d'alarme »).",
+      "type": "object"
+    },
+    "export": {
+      "$ref": "#/$defs/ExportCfg",
+      "default": {
+        "targets": []
+      }
+    },
+    "format": {
+      "$ref": "#/$defs/Format"
+    },
+    "markers": {
+      "$ref": "#/$defs/Markers",
+      "default": {
+        "cuts": [],
+        "music_hits": []
+      }
+    },
+    "mic_gates": {
+      "additionalProperties": {
+        "items": {
+          "items": {
+            "format": "double",
+            "type": "number"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "type": "array"
+      },
+      "default": {},
+      "description": "Intervalles où chaque micro est ouvert (secondes de la timeline maîtresse).\nUn micro absent de la table est ouvert partout ; une liste vide le ferme.",
+      "type": "object"
+    },
+    "mics": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Mic"
+      },
+      "type": "array"
+    },
+    "preset": {
+      "$ref": "#/$defs/Preset"
+    },
+    "sources": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Source"
+      },
+      "type": "array"
+    },
+    "tracks": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Track"
+      },
+      "type": "array"
+    },
+    "version": {
+      "format": "uint32",
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "version",
+    "format",
+    "preset"
+  ],
+  "title": "Project",
+  "type": "object"
+}

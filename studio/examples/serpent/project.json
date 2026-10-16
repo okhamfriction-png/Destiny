@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "format": { "w": 1080, "h": 1920, "fps": 30 },
+  "preset": "short_scene",
+  "sources": [
+    {
+      "id": "soiree",
+      "path": "/Volumes/ShikaZero/Spectacle/8 Octobre 2026/Spectacle 8 octbre 2026.mov",
+      "rec": 0,
+      "duration": 7920
+    }
+  ],
+  "tracks": [
+    { "id": "v0", "kind": "video", "items": [
+      { "id": "c1", "src": "soiree", "in": 5264.6, "out": 5327.1, "at": 0.0,
+        "crop": { "cx": 0.5, "cy": 0.5, "zoom": 1.0 },
+        "fx": { "punch": true, "punch_in": [0.4, 2.4] } },
+      { "id": "c2", "src": "soiree", "in": 5327.1, "out": 5331.1, "at": 62.5,
+        "crop": { "cx": 0.5, "cy": 0.5, "zoom": 1.0 } }
+    ] },
+    { "id": "a_voice", "kind": "voice", "items": [
+      { "id": "v1", "src": "soiree", "in": 5264.6, "out": 5331.1, "at": 0.0, "camera_audio": true }
+    ] },
+    { "id": "g_text", "kind": "graphics", "items": [
+      { "type": "kicker", "at": 0, "dur": 66.5, "text": "SCÈNE 4/25" },
+      { "type": "hook", "at": 0, "dur": 66.5, "lines": ["UN IMMENSE SERPENT", "AUX YEUX VERTS"] },
+      { "type": "tag", "at": 0, "dur": 6, "text": "AUCUNE DE CES RÉPLIQUES N'A ÉTÉ ÉCRITE" },
+      { "type": "tag", "at": 6, "dur": 56.5, "text": "IMPRO DESTINY · RIEN N'EST ÉCRIT" },
+      { "type": "cta", "at": 62.5, "dur": 4, "lines": ["VIENS VOIR DESTINY", "LIEN EN BIO"] },
+      { "type": "progress", "at": 0, "dur": 66.5 }
+    ] },
+    { "id": "subs", "kind": "captions", "items": [
+      { "start": 0.4, "end": 2.4, "text": "Un immense serpent aux yeux verts !", "emphasis": ["serpent"] }
+    ] }
+  ],
+  "dictionary": {
+    "sonnette d'Allah": "sonnette d'alarme",
+    "morture": "morsure"
+  },
+  "export": {
+    "targets": ["nas:/Spectacle/8 Octobre 2026/Shorts/"],
+    "name": "serpent_aux_yeux_verts"
+  }
+}
