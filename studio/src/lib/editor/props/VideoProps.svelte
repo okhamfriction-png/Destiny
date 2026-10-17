@@ -51,20 +51,20 @@
 	<Slider label="Centre vertical (cy)" value={item.crop.cy} min={0} max={1} oninput={(v) => crop('cy', v, false)} onchange={(v) => crop('cy', v, true)} />
 	<Slider label="Zoom" value={item.crop.zoom} min={0.5} max={3} oninput={(v) => crop('zoom', v, false)} onchange={(v) => crop('zoom', v, true)} />
 	<div class="auto">
-		<button class="primary" onclick={() => reframeClips([item.id])} title="Détecte les comédiens et les visages dans ce plan et cadre sur eux">◎ Recadrer sur les comédiens</button>
-		<button onclick={() => reframeClips(null)} title="Même chose pour tous les plans du montage">Tous les plans</button>
+		<button class="primary" onclick={() => reframeClips([item.id])} title="Détecte les comédiens et les visages dans ce plan (quelques images analysées) et cadre sur eux : tout le groupe dans l'image, têtes vers le haut. Annulable avec ⌘Z ; les curseurs restent réglables.">◎ Recadrer sur les comédiens</button>
+		<button onclick={() => reframeClips(null)} title="Recadre tous les plans du montage sur les comédiens détectés. Annulable avec ⌘Z.">Tous les plans</button>
 	</div>
 	<label class="det"><input type="checkbox" bind:checked={editor.showDetections} /> Montrer ce qui est détecté (à l'arrêt)</label>
-	<button class="ghost reset" onclick={() => set((c) => (c.crop = { cx: 0.5, cy: 0.5, zoom: 1 }), 'Recadrage')}>Plan large (réinitialiser)</button>
+	<button class="ghost reset" onclick={() => set((c) => (c.crop = { cx: 0.5, cy: 0.5, zoom: 1 }), 'Recadrage')} title="Revenir au plan large : image entière, centrée, sans zoom.">Plan large (réinitialiser)</button>
 </section>
 
 <section>
 	<h3>Effets</h3>
 	<div class="toggles">
-		<button class:on={item.fx.punch} onclick={() => fx({ punch: !item.fx.punch }, 'Punch')}>Punch d'entrée</button>
-		<button class:on={item.fx.flash} onclick={() => fx({ flash: !item.fx.flash }, 'Flash')}>Flash</button>
-		<button class:on={item.fx.push != null} onclick={() => fx({ push: item.fx.push != null ? null : DEFAULT_PUSH }, 'Push')}>Push</button>
-		<button class:on={!!item.fx.punch_in} onclick={() => fx({ punch_in: item.fx.punch_in ? null : [0, Math.min(2, dur)] }, 'Punch-in')}>Punch-in</button>
+		<button class:on={item.fx.punch} onclick={() => fx({ punch: !item.fx.punch }, 'Punch')} title="Punch d'entrée : le plan démarre légèrement zoomé (×1,09) et se détend en 0,6 s. Marqué « punch » sur la timeline.">Punch d'entrée</button>
+		<button class:on={item.fx.flash} onclick={() => fx({ flash: !item.fx.flash }, 'Flash')} title="Flash : éclair blanc chaud de 0,22 s à l'entrée du plan (pas sur le premier plan). Marqué « flash » sur la timeline.">Flash</button>
+		<button class:on={item.fx.push != null} onclick={() => fx({ push: item.fx.push != null ? null : DEFAULT_PUSH }, 'Push')} title="Push : zoom continu et lent sur toute la durée du plan (réglable ci-dessous). Ligne pointillée montante sur la timeline.">Push</button>
+		<button class:on={!!item.fx.punch_in} onclick={() => fx({ punch_in: item.fx.punch_in ? null : [0, Math.min(2, dur)] }, 'Punch-in')} title="Punch-in : zoom ×1,2 sur un moment fort, entre les deux instants réglés ci-dessous. Zone rouge hachurée sur la timeline.">Punch-in</button>
 	</div>
 	{#if item.fx.push != null}
 		<Slider label="Zoom continu (push)" value={item.fx.push} min={0} max={0.2} digits={3} step={0.005}

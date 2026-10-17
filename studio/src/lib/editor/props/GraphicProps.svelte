@@ -118,10 +118,10 @@
 				<div class="line">
 					<input value={line} oninput={(e) => setLine(i, e.currentTarget.value)} />
 					{#if item.type === 'hook'}<span class="mono count" class:over={n > HOOK_MAX_CHARS}>{n}</span>{/if}
-					<button class="icon ghost" title="Supprimer la ligne" onclick={() => removeLine(i)}>✕</button>
+					<button class="icon ghost" title="Supprimer cette ligne de texte." onclick={() => removeLine(i)}>✕</button>
 				</div>
 			{/each}
-			{#if list.length < maxLines}<button class="ghost add" onclick={addLine}>+ Ligne</button>{/if}
+			{#if list.length < maxLines}<button class="ghost add" onclick={addLine} title="Ajouter une ligne de texte à ce graphisme.">+ Ligne</button>{/if}
 		</div>
 	{/if}
 

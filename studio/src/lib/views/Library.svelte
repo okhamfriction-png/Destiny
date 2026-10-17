@@ -58,8 +58,8 @@
 		{#if show}<span class="dim showname">{show}</span>{/if}
 		<span class="dim meta">{m.duration > 0 ? duration(m.duration) : '—'}</span>
 		<span class="dim meta">{when(m.modified)}</span>
-		{#if !m.master}<button class="ghost" onclick={() => duplicate(m)} title="Créer une variante sans toucher à l'original">Dupliquer</button>{/if}
-		<button class:primary={studio.path === m.path} onclick={() => studio.open(m.path)}>
+		{#if !m.master}<button class="ghost" onclick={() => duplicate(m)} title="Dupliquer : crée une copie de ce montage (nom_2, nom_3…) pour essayer une variante sans toucher à l'original.">Dupliquer</button>{/if}
+		<button class:primary={studio.path === m.path} onclick={() => studio.open(m.path)} title="Ouvrir ce montage dans la page Montage (timeline).">
 			{studio.path === m.path ? 'Ouvert · Reprendre' : 'Ouvrir'}
 		</button>
 	</li>
@@ -72,8 +72,8 @@
 	</div>
 	<span class="mono dim root" title="Dossier de travail">{studio.root}</span>
 	<input class="search" placeholder="Filtrer…" bind:value={filter} />
-	<button onclick={() => studio.refreshLibrary()}>Actualiser</button>
-	<button class="primary" onclick={() => (ingesting = true)}>Ingérer un dossier</button>
+	<button onclick={() => studio.refreshLibrary()} title="Relire le dossier de travail : nouveaux montages, analyses et spectacles ingérés.">Actualiser</button>
+	<button class="primary" onclick={() => (ingesting = true)} title="Ingérer un dossier de spectacle (caméras, micros, musiques) : classement, synchronisation et création du projet. Les rushes restent sur le NAS, rien n'y est écrit.">Ingérer un dossier</button>
 </header>
 
 <div class="list scroll">
@@ -108,8 +108,8 @@
 					<span class="dim date">modifié le {date(show.modified)}</span>
 				</div>
 				<div class="actions">
-					<button disabled={!show.hasIngest} onclick={() => go(show, 'explorer')}>Explorer</button>
-					<button disabled={!show.hasIngest} onclick={() => go(show, 'proposals')}>Proposer un short</button>
+					<button disabled={!show.hasIngest} onclick={() => go(show, 'explorer')} title="Explorer ce spectacle : transcription, carte des micros, moments forts.">Explorer</button>
+					<button disabled={!show.hasIngest} onclick={() => go(show, 'proposals')} title="Proposer un short à partir d'un passage de ce spectacle (recadré automatiquement sur les comédiens).">Proposer un short</button>
 				</div>
 			</div>
 

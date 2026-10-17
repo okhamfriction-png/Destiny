@@ -55,8 +55,8 @@
 		<h1>File de rendus</h1>
 	</div>
 	<div class="grow"></div>
-	<button disabled={!p} onclick={preview}>Aperçu rapide</button>
-	<button class="primary" disabled={!p} onclick={deliver}>Exporter (livraison + NAS)</button>
+	<button disabled={!p} onclick={preview} title="Aperçu rapide : rendu basse qualité, plus rapide, pour vérifier le montage avant la livraison.">Aperçu rapide</button>
+	<button class="primary" disabled={!p} onclick={deliver} title="Rendu final en qualité livraison depuis les fichiers 4K, vérifications (durée, son non muet, volume) puis copie sur le NAS avec reprise et contrôle md5.">Exporter (livraison + NAS)</button>
 </header>
 
 <div class="body">

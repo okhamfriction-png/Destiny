@@ -47,9 +47,9 @@
 		<div class="markers">
 			<span class="label">{title}</span>
 			{#each p.markers[kind] as t (t)}
-				<button class="chip" title="Supprimer" onclick={() => removeMarker(kind, t)}>{clock(t, 2)} ✕</button>
+				<button class="chip" title="Supprimer ce marqueur (sert à l'aimantation et au calage de la musique)." onclick={() => removeMarker(kind, t)}>{clock(t, 2)} ✕</button>
 			{/each}
-			<button class="ghost" onclick={() => addMarker(kind)}>+ à la tête de lecture</button>
+			<button class="ghost" onclick={() => addMarker(kind)} title="Ajouter un marqueur à la position de la tête de lecture ; les plans s'y aimantent en glissant.">+ à la tête de lecture</button>
 		</div>
 	{/each}
 </section>
@@ -63,7 +63,7 @@
 				<span class="wrong">{wrong}</span>
 				<span class="dim">→</span>
 				<span class="right">{right}</span>
-				<button class="icon ghost" title="Supprimer" onclick={() => studio.edit(removeDictionaryEntry(p, wrong), `Dictionnaire : retirer ${wrong}`)}>✕</button>
+				<button class="icon ghost" title="Retirer cette correction du dictionnaire. Annulable avec ⌘Z." onclick={() => studio.edit(removeDictionaryEntry(p, wrong), `Dictionnaire : retirer ${wrong}`)}>✕</button>
 			</li>
 		{/each}
 	</ul>

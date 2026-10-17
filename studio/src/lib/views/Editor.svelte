@@ -8,7 +8,7 @@
 	import Properties from '$lib/editor/Properties.svelte';
 	import ClaudeDialog from '$lib/editor/ClaudeDialog.svelte';
 	import { editor } from '$lib/editor.svelte';
-	import { editPoints, linkedRefs, removeGroup, splitGroup } from '$lib/edit';
+	import { closeGaps, editPoints, linkedRefs, removeGroup, splitAll, splitGroup } from '$lib/edit';
 	import { basename } from '$lib/format';
 	import { clipAt, findTrack, itemLabel, type ItemRef } from '$lib/project';
 	import { studio } from '$lib/state.svelte';
@@ -60,19 +60,24 @@
 		return null;
 	}
 
-	function split() {
-		const ref = splitTarget();
-		if (!ref) return;
+	/** S : coupe toutes les pistes non verrouillées à la tête de lecture (vidéo, voix,
+	 * musique), comme le ⌘B de DaVinci. Avec ⇧ : seulement le plan sélectionné (et sa voix). */
+	function split(onlySelection = false) {
 		const p = studio.project!;
-		if (editor.locked[findTrack(p, ref.track)!.kind]) return;
-		const next = splitGroup(p, group(ref), editor.playhead);
+		const t = editor.playhead;
+		let next: typeof p;
+		if (onlySelection) {
+			const ref = splitTarget();
+			if (!ref || editor.locked[findTrack(p, ref.track)!.kind]) return;
+			next = splitGroup(p, group(ref), t);
+		} else {
+			next = splitAll(p, t, editor.locked);
+		}
 		if (next === p) {
-			studio.info('Placez la tête de lecture à l’intérieur du plan pour le couper.');
+			studio.info('Rien à couper ici : placez la tête de lecture à l’intérieur d’un plan.');
 			return;
 		}
-		const t = findTrack(p, ref.track)!;
-		studio.edit(next, `Couper ${itemLabel(t.kind, t.items[ref.index])}`);
-		editor.selection = ref;
+		studio.edit(next, onlySelection ? `Couper la sélection à ${t.toFixed(2)} s` : `Couper toutes les pistes à ${t.toFixed(2)} s`);
 	}
 
 	function remove(ripple: boolean) {
@@ -82,7 +87,9 @@
 		const t = findTrack(p, ref.track);
 		if (!t || editor.locked[t.kind]) return;
 		const name = itemLabel(t.kind, t.items[ref.index]).slice(0, 40);
-		studio.edit(removeGroup(p, group(ref), ripple), `${ripple ? 'Supprimer avec raccord' : 'Supprimer'} ${name}`);
+		// Magnétique : la place du plan se referme, et les trous restants de V1 aussi.
+		const next = removeGroup(p, group(ref), ripple);
+		studio.edit(ripple ? closeGaps(next) : next, `${ripple ? 'Supprimer et refermer' : 'Supprimer (trou)'} ${name}`);
 		editor.selection = null;
 	}
 
@@ -127,6 +134,13 @@
 		if (mod && e.key === '-') {
 			e.preventDefault();
 			editor.pps = Math.max(2, editor.pps / 1.4);
+			return;
+		}
+		// ⌥X : efface les points d'entrée et de sortie du visualiseur source (comme DaVinci).
+		if (e.altKey && e.code === 'KeyX' && editor.source) {
+			e.preventDefault();
+			editor.source.in = null;
+			editor.source.out = null;
 			return;
 		}
 		if (mod || e.altKey) return;
@@ -215,12 +229,20 @@
 			case 's':
 			case 'S':
 				e.preventDefault();
-				split();
+				split(e.shiftKey);
+				break;
+			case 'R':
+				// ⇧R : montage magnétique activé / désactivé.
+				if (e.shiftKey) {
+					editor.ripple = !editor.ripple;
+					studio.info(editor.ripple ? 'Montage magnétique activé : plus de trous.' : 'Montage magnétique désactivé : les suppressions laissent un trou.');
+				}
 				break;
 			case 'Delete':
 			case 'Backspace':
 				e.preventDefault();
-				remove(e.shiftKey);
+				// Magnétique : ⌫ referme la place, ⇧⌫ laisse un trou (et l'inverse sans le mode).
+				remove(editor.ripple !== e.shiftKey);
 				break;
 			case 'Escape':
 				editor.selection = null;
@@ -250,12 +272,11 @@
 />
 
 {#snippet actions()}
-	<button onclick={split} title="Couper à la tête de lecture (S)">Couper</button>
-	<button disabled={!editor.selection} onclick={() => remove(false)} title="Supprimer (Suppr)">Supprimer</button>
-	<button disabled={!editor.selection} onclick={() => remove(true)} title="Supprimer et refermer le trou (Maj+Suppr)">Raccord</button>
+	<button onclick={() => split(false)} title="Couper toutes les pistes (vidéo, voix, musique) à la tête de lecture, sauf les pistes verrouillées. Raccourci : S. Avec ⇧S : seulement le plan sélectionné et sa voix.">Couper</button>
+	<button disabled={!editor.selection} onclick={() => remove(editor.ripple)} title={editor.ripple ? 'Supprimer le plan sélectionné (et sa voix) et refermer la place : tout ce qui suit recule. Raccourci : ⌫ (⇧⌫ pour laisser un trou).' : 'Supprimer le plan sélectionné (et sa voix) en laissant un trou. Raccourci : ⌫ (⇧⌫ pour refermer la place).'}>Supprimer</button>
 	<span class="sep"></span>
-	<button class="claude" onclick={() => (asking = true)}>✦ Demander à Claude</button>
-	<button class="primary" onclick={() => (studio.view = 'export')}>Exporter…</button>
+	<button class="claude" onclick={() => (asking = true)} title="Décrire une modification en français (« raccourcis l'intro », « mets le hook en deux lignes »…) : Claude propose un changement du montage, que vous acceptez ou non. Annulable avec ⌘Z.">✦ Demander à Claude</button>
+	<button class="primary" onclick={() => (studio.view = 'export')} title="Aller à la page Livraison : rendu final en haute qualité, vérifications (durée, son, volume) et copie sur le NAS.">Exporter…</button>
 {/snippet}
 
 {#if studio.project}
@@ -265,10 +286,10 @@
 			<div class="viewer">
 				<div class="vhead">
 					<div class="vswitch">
-						<button class:on={inSource} disabled={!editor.source} onclick={() => (editor.viewer = 'source')} title="Rush ouvert depuis les Médias (Q)">Source</button>
-						<button class:on={!inSource} onclick={() => (editor.viewer = 'timeline')} title="Montage (Q)">Timeline</button>
+						<button class:on={inSource} disabled={!editor.source} onclick={() => (editor.viewer = 'source')} title="Visualiseur Source : le rush cliqué dans les Médias, pour choisir un morceau (I / O) et l'insérer (F9) ou l'écraser (F10). Raccourci : Q pour basculer.">Source</button>
+						<button class:on={!inSource} onclick={() => (editor.viewer = 'timeline')} title="Visualiseur Timeline : le montage tel qu'il sera rendu, à la tête de lecture. Raccourci : Q pour basculer.">Timeline</button>
 					</div>
-					<button class="ghost pooltoggle" class:on={showPool} onclick={() => (showPool = !showPool)} title="Afficher / masquer les médias">
+					<button class="ghost pooltoggle" class:on={showPool} onclick={() => (showPool = !showPool)} title="Afficher ou masquer le panneau Médias (rushes et autres montages du spectacle).">
 						<svg viewBox="0 0 24 24" width="14" height="14"><path d="M3 5h7v14H3zM13 5h8M13 10h8M13 15h8" /></svg>
 					</button>
 					<b class="name">{studio.path ? basename(studio.path).replace(/\.json$/, '') : ''}</b>
@@ -293,7 +314,7 @@
 	<div class="empty">
 		<h1>Aucun montage ouvert</h1>
 		<p class="dim">Ouvrez un montage depuis la page Médias ou les propositions.</p>
-		<button class="primary" onclick={() => (studio.view = 'library')}>Médias</button>
+		<button class="primary" onclick={() => (studio.view = 'library')} title="Aller à la page Médias pour ouvrir un montage.">Médias</button>
 	</div>
 {/if}
 

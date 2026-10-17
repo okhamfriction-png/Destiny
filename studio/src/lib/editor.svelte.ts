@@ -16,6 +16,9 @@ class EditorState {
 	pps = $state(24);
 	magnet = $state(true);
 	tool = $state<Tool>('select');
+	/** Montage magnétique (« ripple » de DaVinci), actif par défaut : supprimer ou rogner un
+	 * plan referme ou ouvre la place, toutes pistes comprises — jamais de trou. */
+	ripple = $state(true);
 	/** Sélection liée : un plan vidéo entraîne la voix de même découpe. */
 	linked = $state(true);
 	/** Pistes verrouillées : ni sélection ni modification à la souris. */

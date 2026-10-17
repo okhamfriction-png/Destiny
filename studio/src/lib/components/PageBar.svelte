@@ -11,6 +11,14 @@
 		{ view: 'export', label: 'Livraison', icon: 'M12 3v12M7 10l5 5 5-5M4 19h16' }
 	];
 
+	const HINT: Record<View, string> = {
+		library: 'Médias : tous les projets et les spectacles (ingérer un dossier, ouvrir, dupliquer).',
+		explorer: 'Analyse : transcription, carte des micros et moments forts d\'un spectacle.',
+		proposals: 'Propositions : générer un short à partir d\'un passage du spectacle.',
+		editor: 'Montage : timeline, visualiseur et inspecteur du montage ouvert.',
+		export: 'Livraison : rendu final, vérifications et copie sur le NAS.'
+	};
+
 	const running = $derived(studio.jobs.filter((j) => !j.done).length);
 </script>
 
@@ -23,7 +31,7 @@
 				class:active={studio.view === pg.view}
 				disabled={pg.view === 'editor' && !studio.project}
 				onclick={() => (studio.view = pg.view)}
-				title={pg.label}
+				title={HINT[pg.view]}
 			>
 				<svg viewBox="0 0 24 24" width="18" height="18"><path d={pg.icon} /></svg>
 				<span>{pg.label}</span>

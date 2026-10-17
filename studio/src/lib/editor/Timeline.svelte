@@ -8,7 +8,7 @@
 	import type { VideoItem } from '$lib/bindings/VideoItem';
 	import type { VoiceItem } from '$lib/bindings/VoiceItem';
 	import { editor } from '$lib/editor.svelte';
-	import { linkedRefs, moveGroup, snap, snapSpan, snapTargets, splitGroup, trimGroup } from '$lib/edit';
+	import { closeGaps, linkedRefs, moveGroup, rippleTrimGroup, snap, snapSpan, snapTargets, splitGroup, trimGroup } from '$lib/edit';
 	import { clock } from '$lib/format';
 	import {
 		itemLabel,
@@ -173,7 +173,8 @@
 				t = r.t;
 				guide = r.target;
 			}
-			next = trimGroup(d.base, d.group, d.mode, t);
+			// Magnétique : la suite suit le bord rogné (pas de trou) ; Alt garde l'ancien comportement.
+			next = editor.ripple && !e.altKey ? rippleTrimGroup(d.base, d.group, d.mode, t) : trimGroup(d.base, d.group, d.mode, t);
 		}
 		editor.snapGuide = guide;
 		studio.project = next;
@@ -186,7 +187,7 @@
 		if (!d || !d.moved) return;
 		const tr = d.base.tracks.find((t) => t.id === d.ref.track)!;
 		const name = itemLabel(tr.kind, tr.items[d.ref.index]);
-		studio.edit(studio.project!, `${d.mode === 'move' ? 'Déplacer' : 'Rogner'} ${name.slice(0, 40)}`);
+		studio.edit(studio.project!, `${d.mode === 'move' ? 'Déplacer' : editor.ripple ? 'Rogner (magnétique)' : 'Rogner'} ${name.slice(0, 40)}`);
 	}
 
 	// Trait rouge de la lame qui suit la souris.
@@ -286,38 +287,51 @@
 		dropAt = null;
 	}
 
+	function fillGaps() {
+		const next = closeGaps(p);
+		if (next === p) studio.info('Aucun trou dans V1.');
+		else studio.edit(next, 'Fermer les trous de V1');
+	}
+
 	const toggle = (rec: Partial<Record<TrackKind, boolean>>, k: TrackKind) => ({ ...rec, [k]: !rec[k] });
 </script>
 
 <div class="timeline" class:blade={editor.tool === 'blade'}>
 	<div class="tools">
 		<div class="group" role="radiogroup" aria-label="Outil">
-			<button class="tool" class:on={editor.tool === 'select'} onclick={() => (editor.tool = 'select')} title="Sélection : déplacer, rogner par les bords (A)">
+			<button class="tool" class:on={editor.tool === 'select'} onclick={() => (editor.tool = 'select')} title="Outil Sélection : cliquer pour sélectionner un plan, le glisser pour le déplacer, tirer ses bords pour le rogner. Raccourci : A.">
 				<svg viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-3 6z" /></svg>
 			</button>
-			<button class="tool" class:on={editor.tool === 'blade'} onclick={() => (editor.tool = 'blade')} title="Lame : cliquer sur un plan pour le couper (B)">
+			<button class="tool" class:on={editor.tool === 'blade'} onclick={() => (editor.tool = 'blade')} title="Outil Lame : cliquer sur un plan le coupe en deux à l'endroit du clic, à l'image près (avec sa voix liée). Raccourci : B. Échap revient à la Sélection.">
 				<svg viewBox="0 0 24 24"><path d="M4 20L15 9M14 4l6 6-5 1-2-2z" /></svg>
 			</button>
 		</div>
 		<span class="sep"></span>
-		<button class="tool" class:on={editor.magnet} onclick={() => (editor.magnet = !editor.magnet)} title="Aimantation (N ; Alt pendant le geste pour l'ignorer)">
+		<button class="tool" class:on={editor.ripple} onclick={() => (editor.ripple = !editor.ripple)} title="Montage magnétique (ripple) — activé : supprimer ou rogner un plan referme la place sur toutes les pistes, jamais de trou. Désactivé : il reste un trou. Raccourci : ⇧R. Pendant un rognage, ⌥ ignore le mode magnétique.">
+			<svg viewBox="0 0 24 24"><path d="M3 8h6v8H3zM15 8h6v8h-6zM10 12h4M12 10l2 2-2 2" /></svg>
+		</button>
+		<button class="tool" onclick={fillGaps} title="Fermer les trous : recolle tous les plans de V1 les uns aux autres, et tout ce qui suit un trou recule d'autant (toutes pistes).">
+			<svg viewBox="0 0 24 24"><path d="M4 7h5v10H4zM15 7h5v10h-5zM9 12h6M11 10l-2 2 2 2M13 10l2 2-2 2" /></svg>
+		</button>
+		<span class="sep"></span>
+		<button class="tool" class:on={editor.magnet} onclick={() => (editor.magnet = !editor.magnet)} title="Aimantation : en glissant, les plans s'accrochent aux bords des autres plans, à la tête de lecture et aux coups de musique. Raccourci : N. Maintenir ⌥ pendant le geste pour l'ignorer.">
 			<svg viewBox="0 0 24 24"><path d="M6 3v9a6 6 0 0 0 12 0V3h-4v9a2 2 0 0 1-4 0V3z" /></svg>
 		</button>
-		<button class="tool" class:on={editor.linked} onclick={() => (editor.linked = !editor.linked)} title="Sélection liée : la voix suit son plan vidéo (Ctrl+Maj+L)">
+		<button class="tool" class:on={editor.linked} onclick={() => (editor.linked = !editor.linked)} title="Sélection liée : un plan vidéo et sa voix (même découpe) se déplacent, se rognent, se coupent et se suppriment ensemble. Raccourci : ⌘⇧L.">
 			<svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" /></svg>
 		</button>
 		<span class="sep"></span>
-		<button class="tool" disabled={!studio.server?.canUndo} onclick={() => studio.undo()} title="Annuler {studio.server?.undoLabel ?? ''} (Cmd+Z)">
+		<button class="tool" disabled={!studio.server?.canUndo} onclick={() => studio.undo()} title="Annuler la dernière action{studio.server?.undoLabel ? ` : « ${studio.server.undoLabel} »` : ''}. Raccourci : ⌘Z.">
 			<svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3" /></svg>
 		</button>
-		<button class="tool" disabled={!studio.server?.canRedo} onclick={() => studio.redo()} title="Rétablir {studio.server?.redoLabel ?? ''} (Cmd+Maj+Z)">
+		<button class="tool" disabled={!studio.server?.canRedo} onclick={() => studio.redo()} title="Rétablir l'action annulée{studio.server?.redoLabel ? ` : « ${studio.server.redoLabel} »` : ''}. Raccourci : ⇧⌘Z.">
 			<svg viewBox="0 0 24 24"><path d="M15 14l5-5-5-5M20 9H10a6 6 0 0 0 0 12h3" /></svg>
 		</button>
 		<span class="sep"></span>
-		<button class="tool" onclick={() => zoomTo(editor.pps / 1.4)} title="Dézoomer (Cmd+−)">−</button>
-		<input type="range" min="2" max="400" step="1" value={editor.pps} oninput={(e) => zoomTo(+e.currentTarget.value)} title="Zoom (Cmd + molette)" />
-		<button class="tool" onclick={() => zoomTo(editor.pps * 1.4)} title="Zoomer (Cmd+=)">+</button>
-		<button onclick={fit} title="Toute la timeline dans la fenêtre (Maj+Z)">Ajuster</button>
+		<button class="tool" onclick={() => zoomTo(editor.pps / 1.4)} title="Dézoomer la timeline (voir plus de temps). Raccourci : ⌘− ou ⌘ + molette vers le bas.">−</button>
+		<input type="range" min="2" max="400" step="1" value={editor.pps} oninput={(e) => zoomTo(+e.currentTarget.value)} title="Zoom de la timeline. Raccourcis : ⌘= / ⌘−, ou ⌘ + molette (pincement sur le trackpad)." />
+		<button class="tool" onclick={() => zoomTo(editor.pps * 1.4)} title="Zoomer la timeline (voir plus de détail). Raccourci : ⌘= ou ⌘ + molette vers le haut.">+</button>
+		<button onclick={fit} title="Ajuster : toute la durée du montage tient dans la largeur de la timeline. Raccourci : ⇧Z.">Ajuster</button>
 		<div class="grow"></div>
 		{@render actions?.()}
 	</div>
@@ -351,14 +365,14 @@
 						<span class="tname">{TRACK_LABEL[kind]}</span>
 						<span class="count dim">{row.track?.items.length ?? 0}</span>
 						<span class="btns">
-							<button class="mini" class:on={editor.off[kind]} onclick={() => (editor.off = toggle(editor.off, kind))} title={visual ? 'Masquer dans le visualiseur' : 'Couper le son dans le visualiseur'}>
+							<button class="mini" class:on={editor.off[kind]} onclick={() => (editor.off = toggle(editor.off, kind))} title={visual ? `Masquer ${TRACK_LABEL[kind]} dans le visualiseur (n'agit pas sur le rendu final).` : `Couper le son de ${TRACK_LABEL[kind]} dans le visualiseur (n'agit pas sur le rendu final).`}>
 								{#if visual}
 									<svg viewBox="0 0 24 24"><path d={editor.off[kind] ? 'M3 3l18 18M10.6 6.1A9 9 0 0 1 21 12a14 14 0 0 1-2.6 3.3M6.6 6.6A14 14 0 0 0 3 12s3.5 6 9 6a8 8 0 0 0 4-1' : 'M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'} /></svg>
 								{:else}
 									<b>M</b>
 								{/if}
 							</button>
-							<button class="mini" class:on={editor.locked[kind]} onclick={() => (editor.locked = toggle(editor.locked, kind))} title="Verrouiller la piste">
+							<button class="mini" class:on={editor.locked[kind]} onclick={() => (editor.locked = toggle(editor.locked, kind))} title={`Verrouiller ${TRACK_LABEL[kind]} : ses éléments ne peuvent plus être sélectionnés, déplacés, rognés ni coupés (S et la Lame l'ignorent).`}>
 								<svg viewBox="0 0 24 24"><path d={editor.locked[kind] ? 'M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4' : 'M6 11h12v10H6zM8 11V7a4 4 0 0 1 7.5-2'} /></svg>
 							</button>
 						</span>

@@ -72,7 +72,7 @@
 				{#if studio.suspects.some((s) => s.mic === m.id && s.end > span[0] && s.start < span[1])}
 					<span class="chip warn" title="Chuchotement de coulisses détecté">suspect</span>
 				{/if}
-				<button class="gate {st}" onclick={() => toggle(m.id)} title="Basculer sur tout l'intervalle du clip">{STATE_LABEL[st]}</button>
+				<button class="gate {st}" onclick={() => toggle(m.id)} title="Ouvrir ou fermer ce micro sur toute la durée du clip : un micro fermé n'est pas mixé (utile pour les chuchotements des comédiens en coulisses).">{STATE_LABEL[st]}</button>
 			</li>
 		{/each}
 	</ul>

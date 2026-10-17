@@ -25,26 +25,26 @@
 </script>
 
 <div class="transport">
-	<button class="icon ghost" title="Début (Origine)" onclick={() => editor.seek(0)}>⏮</button>
-	<button class="icon ghost" title="−1 s (Maj+←)" onclick={() => editor.step(-editor.fps)}>«</button>
-	<button class="icon ghost" title="Image précédente (←)" onclick={() => editor.step(-1)}>‹</button>
-	<button class="icon play" title="Lecture / pause (Espace)" onclick={() => editor.toggle()}>
+	<button class="icon ghost" title="Aller au début du montage. Raccourci : ↖ (Origine, fn ← sur un clavier Mac compact)." onclick={() => editor.seek(0)}>⏮</button>
+	<button class="icon ghost" title="Reculer d'une seconde. Raccourcis : ⇧← ou J." onclick={() => editor.step(-editor.fps)}>«</button>
+	<button class="icon ghost" title="Reculer d'une image. Raccourci : ←." onclick={() => editor.step(-1)}>‹</button>
+	<button class="icon play" title="Lire ou mettre en pause le montage. Raccourcis : Espace, ou L pour lire et K pour arrêter." onclick={() => editor.toggle()}>
 		{#if editor.playing}
 			<svg viewBox="0 0 24 24" width="14" height="14"><path d="M6 4h4v16H6zM14 4h4v16h-4z" /></svg>
 		{:else}
 			<svg viewBox="0 0 24 24" width="14" height="14"><path d="M7 4l13 8-13 8z" /></svg>
 		{/if}
 	</button>
-	<button class="icon ghost" title="Image suivante (→)" onclick={() => editor.step(1)}>›</button>
-	<button class="icon ghost" title="+1 s (Maj+→)" onclick={() => editor.step(editor.fps)}>»</button>
-	<button class="icon ghost" title="Fin (Fin)" onclick={() => editor.seek(editor.duration)}>⏭</button>
+	<button class="icon ghost" title="Avancer d'une image. Raccourci : →." onclick={() => editor.step(1)}>›</button>
+	<button class="icon ghost" title="Avancer d'une seconde. Raccourci : ⇧→." onclick={() => editor.step(editor.fps)}>»</button>
+	<button class="icon ghost" title="Aller à la fin du montage. Raccourci : ↘ (Fin, fn → sur un clavier Mac compact)." onclick={() => editor.seek(editor.duration)}>⏭</button>
 
 	<div class="tc mono">
 		<b>{timecode(editor.playhead, editor.fps)}</b>
 		<span>/ {timecode(editor.duration, editor.fps)}</span>
 	</div>
 
-	<button class:on={!!editor.snapshotUrl} disabled={shooting} onclick={() => (editor.snapshotUrl ? editor.clearSnapshot() : exactFrame())}>
+	<button class:on={!!editor.snapshotUrl} disabled={shooting} onclick={() => (editor.snapshotUrl ? editor.clearSnapshot() : exactFrame())} title="Image exacte : calcule l'image à la tête de lecture avec le vrai moteur de rendu (couleurs, effets, textes définitifs) et l'affiche par-dessus l'aperçu. Recliquer pour la masquer. Prend quelques secondes la première fois.">
 		{shooting ? 'Rendu…' : editor.snapshotUrl ? 'Masquer l’image exacte' : 'Image exacte'}
 	</button>
 </div>

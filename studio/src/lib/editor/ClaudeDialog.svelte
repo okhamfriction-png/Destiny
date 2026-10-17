@@ -53,11 +53,11 @@
 
 	{#snippet footer()}
 		{#if answer}
-			<button onclick={() => (answer = null)}>Annuler</button>
-			<button class="primary" disabled={answer.patch.length === 0} onclick={apply}>Appliquer</button>
+			<button onclick={() => (answer = null)} title="Refuser la proposition de Claude : rien n'est modifié.">Annuler</button>
+			<button class="primary" disabled={answer.patch.length === 0} onclick={apply} title="Appliquer la proposition de Claude au montage. Annulable avec ⌘Z.">Appliquer</button>
 		{:else}
-			<button onclick={onclose}>Fermer</button>
-			<button class="primary" disabled={busy || !instruction.trim()} onclick={ask}>{busy ? 'Claude réfléchit…' : 'Envoyer'}</button>
+			<button onclick={onclose} title="Fermer sans rien demander. Raccourci : Échap.">Fermer</button>
+			<button class="primary" disabled={busy || !instruction.trim()} onclick={ask} title="Envoyer la consigne à Claude, qui propose une modification du montage. Raccourci : ⌘↩.">{busy ? 'Claude réfléchit…' : 'Envoyer'}</button>
 		{/if}
 	{/snippet}
 </Modal>

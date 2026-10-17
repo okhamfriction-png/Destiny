@@ -123,7 +123,7 @@
 		</div>
 		<div class="foot">
 			<span class="mono dim out">{out}</span>
-			<button class="primary" type="submit" disabled={busy || !show || to <= from}>{busy ? 'Proposition…' : 'Proposer'}</button>
+			<button class="primary" type="submit" disabled={busy || !show || to <= from} title="Créer un nouveau montage (short) sur ce passage : plans coupés aux silences, sous-titres, accroche, recadrage sur les comédiens. Raccourci : ↩ dans un champ.">{busy ? 'Proposition…' : 'Proposer'}</button>
 		</div>
 	</form>
 
@@ -152,7 +152,7 @@
 					{:else}
 						<span class="dim">Chargement…</span>
 					{/if}
-					<button class="primary" onclick={() => studio.open(p)}>Ouvrir dans l'éditeur</button>
+					<button class="primary" onclick={() => studio.open(p)} title="Ouvrir ce montage dans la page Montage.">Ouvrir dans l'éditeur</button>
 				</div>
 			</article>
 		{:else}

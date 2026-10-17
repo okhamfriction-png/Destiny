@@ -74,7 +74,7 @@
 	{#if correction && !known}
 		<div class="dict">
 			<span>Correction détectée : <b>« {correction.wrong} »</b> → <b>« {correction.right} »</b></span>
-			<button class="primary" onclick={addToDictionary}>Ajouter au dictionnaire</button>
+			<button class="primary" onclick={addToDictionary} title="Ajouter cette correction au dictionnaire du projet : elle sera appliquée à tous les sous-titres, présents et futurs (ex. « morture » → « morsure »).">Ajouter au dictionnaire</button>
 		</div>
 	{:else if correction && known}
 		<div class="dim small">« {correction.wrong} » → « {correction.right} » est dans le dictionnaire.</div>
@@ -85,7 +85,7 @@
 	<h3>Mots d'emphase <span class="dim small">cliquer pour basculer (rouge)</span></h3>
 	<div class="words">
 		{#each words as w, i (i)}
-			<button class="word" class:emph={emphasis.has(normalizeWord(w))} onclick={() => toggleEmphasis(w)}>{w}</button>
+			<button class="word" class:emph={emphasis.has(normalizeWord(w))} onclick={() => toggleEmphasis(w)} title="Mot d'emphase : cliquer pour l'afficher en rouge dans les sous-titres (recliquer pour l'enlever).">{w}</button>
 		{/each}
 	</div>
 </section>

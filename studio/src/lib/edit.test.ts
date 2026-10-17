@@ -6,6 +6,9 @@ import type { Caption } from './bindings/Caption';
 import type { GraphicItem } from './bindings/GraphicItem';
 import {
 	addDictionaryEntry,
+	closeGaps,
+	rippleTrimGroup,
+	splitAll,
 	editPoints,
 	linkedRefs,
 	moveGroup,
@@ -292,5 +295,88 @@ describe('ajout de rush (placeClip)', () => {
 		p.tracks = p.tracks.filter((t) => t.kind !== 'video' && t.kind !== 'voice');
 		const { project: q } = placeClip(p, rush(base()), 0, 'overwrite');
 		expect(q.tracks.filter((t) => t.kind === 'video' || t.kind === 'voice').map((t) => t.items.length)).toEqual([1, 1]);
+	});
+});
+
+describe('montage magnétique (ripple)', () => {
+	const linked = (): Project => {
+		const p = base();
+		const voice = findTrack(p, 'a_voice')!;
+		voice.items = video(p).map((c, i) => ({ id: `v${i + 1}`, src: c.src, in: c.in, out: c.out, at: c.at }));
+		return p;
+	};
+
+	it('supprimer referme le trou et raccourcit les habillages', () => {
+		const p = linked();
+		const cut = splitGroup(p, linkedRefs(p, { track: 'v0', index: 0 }), 20);
+		const d0 = projectDuration(cut);
+		const q = removeGroup(cut, linkedRefs(cut, { track: 'v0', index: 1 }), true);
+		// Le plan de 20 à 62,5 disparaît : tout recule de 42,5 s, plus de trou.
+		expect(video(q).map((c) => c.at)).toEqual([0, 20]);
+		expect(projectDuration(q)).toBeCloseTo(d0 - 42.5);
+		// L'accroche, qui couvrait tout le short, suit la nouvelle durée.
+		const hook = gfx(q).find((g) => g.type === 'hook')!;
+		expect(hook.at + hook.dur).toBeCloseTo(projectDuration(q));
+	});
+
+	it('raccourcir un plan rapproche la suite (pas de trou)', () => {
+		const p = linked();
+		const refs = linkedRefs(p, { track: 'v0', index: 0 });
+		const q = rippleTrimGroup(p, refs, 'end', 50);
+		expect(video(q)[0]).toMatchObject({ at: 0, in: 5264.6 });
+		expect(video(q)[0].out).toBeCloseTo(5314.6);
+		expect(video(q)[1].at).toBeCloseTo(50);
+		expect((findTrack(q, 'a_voice')!.items[1] as VideoItem).at).toBeCloseTo(50);
+		// Rogner le début garde la place du plan et change son image de départ.
+		const r = rippleTrimGroup(p, refs, 'start', 10);
+		expect(video(r)[0]).toMatchObject({ at: 0 });
+		expect(video(r)[0].in).toBeCloseTo(5274.6);
+		expect(video(r)[1].at).toBeCloseTo(52.5);
+		// Rallonger pousse la suite.
+		const g = rippleTrimGroup(r, linkedRefs(r, { track: 'v0', index: 0 }), 'end', 55);
+		expect(video(g)[1].at).toBeCloseTo(55);
+	});
+
+	it('S coupe vidéo, voix et musique ensemble, sauf pistes verrouillées', () => {
+		const p = linked();
+		p.tracks.push({ kind: 'music', id: 'a_music', items: [{ file: 'm.m4a', at: 0, offset: 2, dur: 60 }] });
+		const q = splitAll(p, 30);
+		expect(video(q)).toHaveLength(3);
+		expect(findTrack(q, 'a_voice')!.items).toHaveLength(3);
+		const music = findTrack(q, 'a_music')!.items as { at: number; offset: number; dur: number }[];
+		expect(music).toEqual([
+			{ file: 'm.m4a', at: 0, offset: 2, dur: 30 },
+			{ file: 'm.m4a', at: 30, offset: 32, dur: 30 }
+		]);
+		// Sous-titres et graphismes ne sont pas coupés ; piste voix verrouillée : intacte.
+		expect(caps(q)).toHaveLength(caps(p).length);
+		expect(findTrack(splitAll(p, 30, { voice: true }), 'a_voice')!.items).toHaveLength(2);
+	});
+
+	it('fermer les trous de V1', () => {
+		const p = linked();
+		const q = moveGroup(p, linkedRefs(p, { track: 'v0', index: 1 }), 5); // trou de 5 s
+		expect(video(q)[1].at).toBeCloseTo(67.5);
+		const r = closeGaps(q);
+		expect(video(r)[1].at).toBeCloseTo(62.5);
+		expect(closeGaps(r)).toBe(r);
+	});
+});
+
+describe('ripple : habillages qui commencent dans la partie retirée', () => {
+	it('le 2e bandeau qui démarrait dans le plan supprimé démarre à la coupe et finit avec le montage', () => {
+		const p = base();
+		const voice = findTrack(p, 'a_voice')!;
+		voice.items = video(p).map((c, i) => ({ id: `v${i + 1}`, src: c.src, in: c.in, out: c.out, at: c.at }));
+		// Coupe à 3 s et 11 s : le plan du milieu (3 → 11) contient le début du 2e bandeau (6 s).
+		let q = splitGroup(p, linkedRefs(p, { track: 'v0', index: 0 }), 3);
+		q = splitGroup(q, linkedRefs(q, { track: 'v0', index: 1 }), 11);
+		const r = removeGroup(q, linkedRefs(q, { track: 'v0', index: 1 }), true);
+		const total = projectDuration(r);
+		expect(total).toBeCloseTo(projectDuration(p) - 8);
+		const tags = gfx(r).filter((g) => g.type === 'tag');
+		// Aucun habillage ne dépasse la fin du montage.
+		for (const g of gfx(r)) expect(g.at + g.dur).toBeLessThanOrEqual(total + 1e-6);
+		expect(tags.some((g) => Math.abs(g.at - 3) < 1e-6)).toBe(true);
 	});
 });

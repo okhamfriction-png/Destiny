@@ -30,7 +30,7 @@
 <ol class="segments scroll">
 	{#each segments as s, i (i)}
 		<li>
-			<button class="ghost seg" class:active={inRange(s)} onclick={(e) => pick(s, e)}>
+			<button class="ghost seg" class:active={inRange(s)} onclick={(e) => pick(s, e)} title="Choisir cette réplique comme passage. ⇧-clic : étendre le passage jusqu'à cette réplique.">
 				<span class="mono t">{clock(s.start)}</span>
 				<span class="mic">{mics.find((m) => m.id === s.mic)?.actor ?? s.mic}</span>
 				<span class="text">{s.text ? applyDictionary(s.text, dictionary) : '(parole sans texte)'}</span>

@@ -212,6 +212,189 @@ function shiftAfter(p: Project, from: number, delta: number): void {
 	p.markers = { music_hits: shift(p.markers.music_hits), cuts: shift(p.markers.cuts) };
 }
 
+/** Retire le temps `[a, b]` de la vidéo finale (montage magnétique, « ripple » de DaVinci) :
+ * ce qui commence après `b` recule de `b − a` sur toutes les pistes ; les graphismes et la
+ * musique qui enjambent l'intervalle raccourcissent d'autant (l'accroche, le sur-titre et la
+ * barre de progression d'un short gardent la durée du montage) ; les sous-titres entièrement
+ * dedans disparaissent, ceux qui débordent sont rognés. Les plans vidéo/voix qui chevauchent
+ * ne sont pas touchés (c'est à l'appelant de les avoir retirés ou rognés). Modifie `p`. */
+function rippleClose(p: Project, a: number, b: number): void {
+	const d = b - a;
+	if (d <= EPS) return;
+	for (const track of p.tracks) {
+		if (track.kind === 'captions') {
+			const caps = track.items as Caption[];
+			for (let i = caps.length - 1; i >= 0; i--) {
+				const c = caps[i];
+				if (c.start >= b - EPS || c.end <= a + EPS) continue;
+				const r = clip(c.start, c.end, a, b);
+				if (!r) caps.splice(i, 1);
+				else {
+					c.start = r[0];
+					c.end = r[1];
+					c.words = undefined;
+				}
+			}
+		} else if (track.kind === 'graphics') {
+			const gs = track.items as GraphicItem[];
+			for (let i = gs.length - 1; i >= 0; i--) {
+				const g = gs[i];
+				if (g.at >= b - EPS || g.at + g.dur <= a + EPS) continue;
+				const r = clip(g.at, g.at + g.dur, a, b);
+				if (!r) gs.splice(i, 1);
+				else {
+					g.at = r[0];
+					g.dur = r3(r[1] - r[0]);
+				}
+			}
+		} else if (track.kind === 'music') {
+			for (const m of track.items as MusicItem[]) {
+				if (m.dur == null || m.at >= b - EPS || m.at + m.dur <= a + EPS) continue;
+				const r = clip(m.at, m.at + m.dur, a, b);
+				if (!r) continue;
+				// La musique qui commençait dans le trou reprend plus loin dans le fichier.
+				if (m.at > a) m.offset = r3(m.offset + (Math.min(b, m.at + m.dur) - m.at));
+				m.at = r[0];
+				m.dur = r3(r[1] - r[0]);
+			}
+		}
+	}
+	shiftAfter(p, b, -d);
+}
+
+/** `[s, e]` privé de `[a, b]` (qui le chevauche) : la partie avant `a` plus la partie après
+ * `b` ramenée à `a`. `null` si l'élément était entièrement dedans. */
+function clip(s: number, e: number, a: number, b: number): [number, number] | null {
+	if (s >= a - EPS && e <= b + EPS) return null;
+	const ns = Math.min(s, a);
+	const ne = ns + Math.max(0, Math.min(e, a) - s) + Math.max(0, e - Math.max(b, s));
+	return [r3(ns), r3(Math.max(ns + MIN_DUR, ne))];
+}
+
+/** Ouvre `d` secondes à l'instant `a` (rallonge magnétique) : ce qui commence à `a` ou après
+ * avance de `d`, les graphismes et la musique qui enjambent `a` s'allongent d'autant. */
+function rippleOpen(p: Project, a: number, d: number): void {
+	if (d <= EPS) return;
+	for (const track of p.tracks) {
+		if (track.kind === 'graphics') {
+			for (const g of track.items as GraphicItem[]) if (g.at < a - EPS && g.at + g.dur > a - EPS) g.dur = r3(g.dur + d);
+		} else if (track.kind === 'music') {
+			for (const m of track.items as MusicItem[]) if (m.dur != null && m.at < a - EPS && m.at + m.dur > a - EPS) m.dur = r3(m.dur + d);
+		}
+	}
+	shiftAfter(p, a, d);
+}
+
+/** Rogne un groupe de plans en mode magnétique : le plan garde sa place, et tout ce qui le
+ * suit se rapproche ou s'écarte pour qu'il n'y ait ni trou ni chevauchement. Bord gauche :
+ * l'image de départ change (comme le trim « ripple » de DaVinci), pas la position du plan. */
+export function rippleTrimGroup(p: Project, refs: ItemRef[], edge: 'start' | 'end', t: number): Project {
+	const first = findTrack(p, refs[0]?.track ?? '');
+	const it = first?.items[refs[0].index];
+	if (!first || !it || (first.kind !== 'video' && first.kind !== 'voice' && first.kind !== 'music')) return trimGroup(p, refs, edge, t);
+	const [s, e] = itemSpan(first.kind, it, p);
+	// Nouvelle durée voulue, puis rognage par la fin (le début reste en place).
+	const want = edge === 'end' ? t - s : e - t;
+	let next = clone(p);
+	let applied = 0;
+	for (const r of refs) {
+		const tr = findTrack(next, r.track);
+		const x = tr?.items[r.index];
+		if (!tr || !x) continue;
+		if (tr.kind === 'video' || tr.kind === 'voice') {
+			const c = x as VideoItem | VoiceItem;
+			const srcDur = next.sources.find((q) => q.id === c.src)?.duration ?? Infinity;
+			const len = c.out - c.in;
+			const nl = clamp(want, MIN_DUR, edge === 'end' ? srcDur - c.in : c.out);
+			if (edge === 'end') c.out = r3(c.in + nl);
+			else c.in = r3(c.out - nl);
+			applied = nl - len;
+		} else if (tr.kind === 'music') {
+			const m = x as MusicItem;
+			const len = (m.dur ?? e - s);
+			const nl = Math.max(MIN_DUR, want);
+			if (edge === 'start') m.offset = r3(Math.max(0, m.offset + (len - nl)));
+			m.dur = r3(nl);
+			applied = nl - len;
+		}
+	}
+	if (applied < -EPS) rippleCloseExcept(next, e + applied, e, refs);
+	else if (applied > EPS) rippleOpenExcept(next, e, applied, refs);
+	return next;
+}
+
+/** `rippleClose` / `rippleOpen` sans toucher au groupe qu'on vient de rogner. */
+function rippleCloseExcept(p: Project, a: number, b: number, keep: ItemRef[]): void {
+	withHeld(p, keep, () => rippleClose(p, a, b));
+}
+function rippleOpenExcept(p: Project, a: number, d: number, keep: ItemRef[]): void {
+	withHeld(p, keep, () => rippleOpen(p, a, d));
+}
+/** Sort temporairement les éléments `keep` du projet pendant `fn` (ils ne bougent pas). */
+function withHeld(p: Project, keep: ItemRef[], fn: () => void): void {
+	const held = [...keep].sort((x, y) => y.index - x.index).map((r) => {
+		const t = findTrack(p, r.track)!;
+		return { t, index: r.index, item: t.items.splice(r.index, 1)[0] };
+	});
+	fn();
+	for (const h of held.reverse()) (h.t.items as AnyItem[]).splice(h.index, 0, h.item);
+}
+
+/** Coupe toutes les pistes à l'instant `t` (S, comme le ⌘B de DaVinci) : plans vidéo, voix
+ * et musique qui enjambent `t`, sauf sur les pistes de `skip` (verrouillées). Les sous-titres
+ * et graphismes, qui sont des habillages, ne sont pas coupés. */
+export function splitAll(p: Project, t: number, skip: Partial<Record<string, boolean>> = {}): Project {
+	let next = p;
+	for (const track of p.tracks) {
+		if (skip[track.kind]) continue;
+		if (track.kind !== 'video' && track.kind !== 'voice' && track.kind !== 'music') continue;
+		const index = track.items.findIndex((it) => {
+			const [s, e] = itemSpan(track.kind, it, p);
+			return s < t - MIN_DUR + EPS && e > t + MIN_DUR - EPS;
+		});
+		if (index < 0) continue;
+		if (track.kind === 'music') {
+			next = clone(next);
+			const tr = findTrack(next, track.id)!;
+			const m = tr.items[index] as MusicItem;
+			const [s, e] = itemSpan('music', m, next);
+			const second: MusicItem = { ...clone(m), at: r3(t), offset: r3(m.offset + (t - s)), dur: m.dur != null ? r3(e - t) : null };
+			if (m.gain_env) second.gain_env = m.gain_env.filter(([x]) => x >= t);
+			m.dur = r3(t - s);
+			if (m.gain_env) m.gain_env = m.gain_env.filter(([x]) => x <= t);
+			(tr.items as MusicItem[]).splice(index + 1, 0, second);
+		} else {
+			next = splitItem(next, { track: track.id, index }, t);
+		}
+	}
+	return next;
+}
+
+/** Ferme les trous de V1 : chaque plan vidéo est recollé au précédent, et tout ce qui suit
+ * un trou (toutes pistes) recule d'autant. */
+export function closeGaps(p: Project): Project {
+	const next = clone(p);
+	const v = next.tracks.find((t) => t.kind === 'video');
+	if (!v) return p;
+	let changed = false;
+	for (;;) {
+		const spans = (v.items as VideoItem[]).map((c) => [c.at, c.at + c.out - c.in]).sort((x, y) => x[0] - y[0]);
+		let end = 0;
+		let gap: [number, number] | null = null;
+		for (const [s, e] of spans) {
+			if (s > end + 0.01) {
+				gap = [end, s];
+				break;
+			}
+			end = Math.max(end, e);
+		}
+		if (!gap) break;
+		rippleClose(next, gap[0], gap[1]);
+		changed = true;
+	}
+	return changed ? next : p;
+}
+
 /** Supprime avec raccord : l'élément disparaît et tout ce qui commence après sa fin
  * (toutes pistes confondues, pour garder voix, sous-titres et graphismes synchrones)
  * recule de sa durée. */
@@ -280,7 +463,7 @@ export function removeGroup(p: Project, refs: ItemRef[], ripple = false): Projec
 	// Indices décroissants : retirer un élément ne décale pas les suivants à retirer.
 	const sorted = [...refs].sort((a, b) => b.index - a.index);
 	const next = sorted.reduce((q, r) => removeItem(q, r), p);
-	if (ripple) shiftAfter(next, e, -(e - s));
+	if (ripple) rippleClose(next, s, e);
 	return next;
 }
 

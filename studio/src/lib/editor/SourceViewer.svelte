@@ -120,30 +120,30 @@
 	</div>
 
 	<div class="controls">
-		<button class="icon ghost" onclick={() => step(-1)} title="Image précédente (←)">‹</button>
-		<button class="icon play" onclick={toggle} title="Lecture / pause (Espace)">
+		<button class="icon ghost" onclick={() => step(-1)} title="Reculer d'une image dans le rush. Raccourcis : ← (⇧← : 1 s).">‹</button>
+		<button class="icon play" onclick={toggle} title="Lire ou mettre en pause le rush. Raccourcis : Espace, K ou L.">
 			{#if playing}
 				<svg viewBox="0 0 24 24" width="13" height="13"><path d="M6 4h4v16H6zM14 4h4v16h-4z" /></svg>
 			{:else}
 				<svg viewBox="0 0 24 24" width="13" height="13"><path d="M7 4l13 8-13 8z" /></svg>
 			{/if}
 		</button>
-		<button class="icon ghost" onclick={() => step(1)} title="Image suivante (→)">›</button>
+		<button class="icon ghost" onclick={() => step(1)} title="Avancer d'une image dans le rush. Raccourcis : → (⇧→ : 1 s).">›</button>
 		<span class="tc mono"><b>{timecode(s.t, FPS)}</b> / {timecode(dur, FPS)}</span>
 		<span class="sep"></span>
-		<button onclick={markIn} title="Point d'entrée (I)">I · {s.in != null ? timecode(s.in, FPS) : '—'}</button>
-		<button onclick={markOut} title="Point de sortie (O)">O · {s.out != null ? timecode(s.out, FPS) : '—'}</button>
+		<button onclick={markIn} title="Point d'entrée : le morceau à poser commencera à cette image. Raccourci : I.">I · {s.in != null ? timecode(s.in, FPS) : '—'}</button>
+		<button onclick={markOut} title="Point de sortie : le morceau à poser finira à cette image. Sans sortie, on prend 10 s. Raccourci : O.">O · {s.out != null ? timecode(s.out, FPS) : '—'}</button>
 		{#if s.in != null || s.out != null}
-			<button class="ghost" onclick={() => editor.source && ((editor.source.in = null), (editor.source.out = null))} title="Effacer les marques (Alt+X)">✕</button>
+			<button class="ghost" onclick={() => editor.source && ((editor.source.in = null), (editor.source.out = null))} title="Effacer les points d'entrée et de sortie. Raccourci : ⌥X.">✕</button>
 		{/if}
 		<span class="dim len">{clip ? duration(clip.out - clip.in) : ''}{s.out == null && clip ? ' (sans sortie : 10 s)' : ''}</span>
 	</div>
 
 	<div class="put">
-		<button disabled={!clip} onclick={() => put('insert')} title="Insérer à la tête de lecture : tout ce qui suit est décalé (F9)">Insérer <kbd>F9</kbd></button>
-		<button disabled={!clip} class="primary" onclick={() => put('overwrite')} title="Écraser à la tête de lecture (F10)">Écraser <kbd>F10</kbd></button>
-		<button disabled={!clip} onclick={() => put('append')} title="Ajouter après le dernier plan">À la fin</button>
-		<button class="ghost back" onclick={() => (editor.viewer = 'timeline')} title="Revenir au visualiseur de la timeline (Q)">Timeline ↩</button>
+		<button disabled={!clip} onclick={() => put('insert')} title="Insérer le morceau marqué à la tête de lecture de la timeline : on coupe à cet endroit et tout ce qui suit recule de la durée du morceau (toutes pistes). Raccourci : F9 (fn F9 si les touches F contrôlent le Mac).">Insérer <kbd>F9</kbd></button>
+		<button disabled={!clip} class="primary" onclick={() => put('overwrite')} title="Écraser : poser le morceau marqué à la tête de lecture en remplaçant ce qui s'y trouve (vidéo et voix), sans décaler la suite. Raccourci : F10 (fn F10 si les touches F contrôlent le Mac).">Écraser <kbd>F10</kbd></button>
+		<button disabled={!clip} onclick={() => put('append')} title="Ajouter le morceau marqué après le dernier plan du montage.">À la fin</button>
+		<button class="ghost back" onclick={() => (editor.viewer = 'timeline')} title="Revenir au visualiseur de la timeline (le montage). Raccourci : Q.">Timeline ↩</button>
 	</div>
 </div>
 

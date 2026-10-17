@@ -117,8 +117,8 @@
 		<span>Modèle whisper</span>
 		<input placeholder="défaut" bind:value={model} style:width="110px" />
 	</label>
-	<button class="primary" disabled={!range || (!!job && !job.done)} onclick={analyze}>Analyser</button>
-	<button disabled={!range} onclick={() => (studio.view = 'proposals')}>Proposer un short…</button>
+	<button class="primary" disabled={!range || (!!job && !job.done)} onclick={analyze} title="Analyser le passage choisi : transcription des micros, carte de qui parle, chuchotements de coulisses.">Analyser</button>
+	<button disabled={!range} onclick={() => (studio.view = 'proposals')} title="Proposer un short sur le passage choisi (page Propositions).">Proposer un short…</button>
 </header>
 
 {#if job && !job.done}<div class="jobline"><JobProgress {job} /></div>{/if}
@@ -155,7 +155,7 @@
 				<h3>Musique</h3>
 				<input list="musics" placeholder="Fichier musique (.m4a, .wav…)" bind:value={musicFile} class="file" />
 				<datalist id="musics">{#each musics as m (m.path)}<option value={m.path}>{basename(m.path)}</option>{/each}</datalist>
-				<button disabled={!musicFile} onclick={analyzeMusic}>Analyser la musique</button>
+				<button disabled={!musicFile} onclick={analyzeMusic} title="Analyser la musique : coups forts, creux et coup le plus fort (pour caler la carte finale).">Analyser la musique</button>
 			</div>
 			<div class="pad">
 				{#if music}<MusicViewer analysis={music} />{:else}<p class="dim">Choisissez une musique pour voir son énergie, ses coups et ses creux.</p>{/if}

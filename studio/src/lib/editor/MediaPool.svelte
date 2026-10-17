@@ -92,8 +92,8 @@
 
 <div class="pool">
 	<div class="tabs">
-		<button class:on={tab === 'rushes'} onclick={() => (tab = 'rushes')}>Rushes <span class="dim">{rushes.length}</span></button>
-		<button class:on={tab === 'montages'} onclick={() => (tab = 'montages')}>Montages <span class="dim">{montages.length}</span></button>
+		<button class:on={tab === 'rushes'} onclick={() => (tab = 'rushes')} title="Rushes du spectacle : cliquer pour l'ouvrir dans le visualiseur Source, glisser sur la timeline pour le poser (⇧ en lâchant : insérer).">Rushes <span class="dim">{rushes.length}</span></button>
+		<button class:on={tab === 'montages'} onclick={() => (tab = 'montages')} title="Les autres montages du même spectacle : un clic ouvre le montage.">Montages <span class="dim">{montages.length}</span></button>
 	</div>
 	<div class="list scroll">
 		{#if tab === 'rushes'}
@@ -105,7 +105,7 @@
 					class:open={editor.viewer === 'source' && editor.source?.source.path === s.path}
 					onpointerdown={(e) => down(e, s)}
 					onpointerup={() => up(s)}
-					title={s.path}
+					title={`${s.path}\nCliquer : ouvrir dans le visualiseur Source (I / O pour marquer, F9 / F10 pour poser). Glisser sur la timeline : écraser à l'endroit du lâcher, ⇧ en lâchant pour insérer.`}
 				>
 					<div class="cover">
 						{#if covers[s.path]}<img src={covers[s.path]} alt="" draggable="false" />{:else}<span class="mono dim">{s.id}</span>{/if}
@@ -122,7 +122,7 @@
 			{/each}
 		{:else}
 			{#each montages as m (m.path)}
-				<button class="row" class:current={m.path === studio.path} onclick={() => m.path !== studio.path && studio.open(m.path)}>
+				<button class="row" class:current={m.path === studio.path} onclick={() => m.path !== studio.path && studio.open(m.path)} title={m.path === studio.path ? 'Montage ouvert.' : `Ouvrir le montage « ${m.name} » dans la timeline (le montage actuel est déjà enregistré).`}>
 					<b>{m.name}</b>
 					<span class="dim mono">{m.duration > 0 ? duration(m.duration) : '—'}</span>
 				</button>

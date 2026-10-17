@@ -47,8 +47,8 @@
 	{#if job}<JobProgress {job} />{/if}
 
 	{#snippet footer()}
-		<button onclick={onclose}>{job?.done ? 'Fermer' : 'Annuler'}</button>
-		<button class="primary" disabled={!dir || (!!job && !job.done)} onclick={start}>Lancer l'ingest</button>
+		<button onclick={onclose} title="Fermer cette fenêtre (l'ingest en cours continue en arrière-plan). Raccourci : Échap.">{job?.done ? 'Fermer' : 'Annuler'}</button>
+		<button class="primary" disabled={!dir || (!!job && !job.done)} onclick={start} title="Lancer l'ingest : lecture des fichiers, proxies et planches contact si demandés, synchronisation des micros.">Lancer l'ingest</button>
 	{/snippet}
 </Modal>
 
