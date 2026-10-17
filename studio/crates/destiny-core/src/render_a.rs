@@ -33,6 +33,12 @@ pub fn resolve(base: &Path, p: &str) -> PathBuf {
     if pb.is_absolute() { pb } else { base.join(pb) }
 }
 
+/// Fin de chaque segment avant `concat` : même format de pixels et pixels carrés partout.
+/// Sinon un trou dans V1 (rempli de noir par `color`) ne se raccorde pas aux plans filmés
+/// (vraie soirée : « Failed to configure output pad on Parsed_concat »), ce que les médias
+/// synthétiques, sans trou, ne montraient pas.
+const SEG_NORM: &str = "format=yuv420p,setsar=1";
+
 /// Dossier des polices embarquées (`assets/fonts`), surchargeable par `DESTINY_FONTS`.
 pub fn fonts_dir() -> PathBuf {
     if let Ok(d) = std::env::var("DESTINY_FONTS") {
@@ -125,7 +131,7 @@ pub fn build(p: &Project, base: &Path, work: &Path, out: &Path, quality: Quality
     for (k, seg) in timeline_segments(p).into_iter().enumerate() {
         match seg {
             Seg::Black(d) => {
-                let _ = writeln!(graph, "color=c=black:s={w}x{h}:r={fps}:d={}[s{k}];", f(d));
+                let _ = writeln!(graph, "color=c=black:s={w}x{h}:r={fps}:d={},{SEG_NORM}[s{k}];", f(d));
             }
             Seg::Clip { item, skip, dur } => {
                 let src = p.source(&item.src).context("source")?;
@@ -155,7 +161,7 @@ pub fn build(p: &Project, base: &Path, work: &Path, out: &Path, quality: Quality
                         ",split=2[bg{k}][fg{k}];\
 [bg{k}]scale=270:480:force_original_aspect_ratio=increase,crop=270:480,{gbg},boxblur=10:2,scale={w}:{h},eq=brightness={}:saturation={}[bgb{k}];\
 [fg{k}]scale={zw}:{zh}:force_original_aspect_ratio=increase,crop={zw}:{zh},zoompan=z='{z}':x='{px}':y='{py}':d=1:s={band_w}x{band_h}:fps={fps},{gfg}[band{k}];\
-[bgb{k}][band{k}]overlay=x=0:y={top}:shortest=1[s{k}];",
+[bgb{k}][band{k}]overlay=x=0:y={top}:shortest=1,{SEG_NORM}[s{k}];",
                         short::BG_BRIGHTNESS, short::BG_SATURATION, top = lay.band_top,
                         gbg = style::grade(&format!("b{k}"), 26.0 * 270.0 / 1080.0),
                         gfg = style::grade(&format!("f{k}"), 26.0 * band_w as f64 / 1080.0),
@@ -163,7 +169,7 @@ pub fn build(p: &Project, base: &Path, work: &Path, out: &Path, quality: Quality
                 } else {
                     let _ = writeln!(
                         graph,
-                        ",scale={zw}:{zh}:force_original_aspect_ratio=increase,crop={zw}:{zh},zoompan=z='{z}':x='{px}':y='{py}':d=1:s={w}x{h}:fps={fps},{g}[s{k}];",
+                        ",scale={zw}:{zh}:force_original_aspect_ratio=increase,crop={zw}:{zh},zoompan=z='{z}':x='{px}':y='{py}':d=1:s={w}x{h}:fps={fps},{g},{SEG_NORM}[s{k}];",
                         g = style::grade(&format!("f{k}"), 26.0 * w as f64 / 1920.0),
                     );
                 }

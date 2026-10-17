@@ -440,7 +440,10 @@ async fn snapshot(t: f64, state: State<'_, AppState>) -> CmdResult<String> {
         let preview = cache.join(format!("preview_{:016x}.mp4", h.finish()));
         if !preview.exists() {
             let work = cache.join("render").join(name_of(&path, &p));
-            engine_render(&p, &project_dir(&path), &work, &preview, Quality::Preview, None, |_, _| {})?;
+            // Renommé seulement après un rendu réussi (un échec ne doit pas rester en cache).
+            let part = preview.with_extension("part.mp4");
+            engine_render(&p, &project_dir(&path), &work, &part, Quality::Preview, None, |_, _| {})?;
+            std::fs::rename(&part, &preview)?;
         }
         let png = cache.join("snapshots").join(format!("{}_{t:07.3}.png", name_of(&path, &p)));
         std::fs::create_dir_all(png.parent().unwrap())?;

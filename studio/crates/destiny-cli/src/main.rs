@@ -418,7 +418,11 @@ fn main() -> Result<()> {
             if !preview.exists() {
                 let base = project_dir(&project);
                 let work = cache.join("render").join(project_name(&project, &p));
-                engine_render(&p, &base, &work, &preview, Quality::Preview)?;
+                // Rendu dans un fichier à part, renommé seulement s'il a réussi : un rendu
+                // raté laissait un aperçu vide en cache, réutilisé ensuite (« moov atom not found »).
+                let part = preview.with_extension("part.mp4");
+                engine_render(&p, &base, &work, &part, Quality::Preview)?;
+                std::fs::rename(&part, &preview)?;
             }
             let mut files = Vec::new();
             for t in at {
