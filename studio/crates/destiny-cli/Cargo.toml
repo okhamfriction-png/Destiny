@@ -10,7 +10,9 @@ path = "src/main.rs"
 
 [features]
 asr = ["destiny-core/asr"]
-metal = ["destiny-core/metal"]
+# metal implique asr ici aussi : sinon `--features metal` compile whisper dans le cœur mais la
+# CLI garde son garde-fou `cfg(not(feature = "asr"))` et refuse `--model`.
+metal = ["asr", "destiny-core/metal"]
 
 [dependencies]
 anyhow.workspace = true
