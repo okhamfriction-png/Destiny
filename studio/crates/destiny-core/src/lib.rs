@@ -7,6 +7,7 @@ pub mod captions;
 pub mod ffmpeg;
 pub mod history;
 pub mod ingest;
+pub mod media;
 pub mod mics;
 pub mod mixer;
 pub mod moments;

@@ -479,6 +479,43 @@ fn cancel_job(id: String, jobs: State<Jobs>) {
     jobs.cancel(&id);
 }
 
+// ---------------------------------------------------------------- médias de la timeline
+
+/// Dossier de cache médias du projet ouvert (sinon dossier temporaire) et chemin résolu.
+fn media_paths(state: &State<AppState>, path: &str) -> (PathBuf, PathBuf) {
+    let o = state.open.lock().unwrap();
+    let base = o.path.as_deref().map(project_dir);
+    let file = match &base {
+        Some(b) => render_a::resolve(b, path),
+        None => PathBuf::from(path),
+    };
+    let cache = base.map(|b| destiny_core::media::cache_dir(&b)).unwrap_or_else(|| std::env::temp_dir().join("destiny-media"));
+    (file, cache)
+}
+
+/// Vignettes d'un plan (temps source) pour la bande d'images de la timeline.
+#[tauri::command]
+async fn thumbs(path: String, from: f64, to: f64, step: f64, height: u32, state: State<'_, AppState>) -> CmdResult<Vec<destiny_core::media::Thumb>> {
+    let (file, cache) = media_paths(&state, &path);
+    tauri::async_runtime::spawn_blocking(move || destiny_core::media::thumbs(&file, from, to, step, height, &cache.join("thumbs")))
+        .await
+        .map_err(err)?
+        .map_err(err)
+}
+
+/// Forme d'onde (0..1) de `[from, to]` secondes du fichier, en `buckets` cases.
+#[tauri::command]
+async fn waveform(path: String, from: f64, to: f64, buckets: usize, state: State<'_, AppState>) -> CmdResult<Vec<f32>> {
+    let (file, cache) = media_paths(&state, &path);
+    tauri::async_runtime::spawn_blocking(move || {
+        let env = destiny_core::media::envelope(&file, &cache.join("wave"))?;
+        Ok::<_, anyhow::Error>(destiny_core::media::slice(&env, from, to, buckets))
+    })
+    .await
+    .map_err(err)?
+    .map_err(err)
+}
+
 // ---------------------------------------------------------------- aperçu live (moteur B)
 
 /// Écrit la composition HTML/GSAP du projet ouvert dans `.cache/live/` pour l'aperçu de
@@ -608,6 +645,8 @@ pub fn run() {
             export_project,
             cancel_job,
             compose_preview,
+            thumbs,
+            waveform,
             ask_claude,
         ])
         .run(tauri::generate_context!())
