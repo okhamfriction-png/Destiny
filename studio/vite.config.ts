@@ -8,7 +8,9 @@ export default defineConfig({
 	server: {
 		port: 1420,
 		strictPort: true,
-		watch: { ignored: ['**/src-tauri/**', '**/target/**', '**/crates/**'] },
+		// .cache/ (rendus, aperçus, compositions du moteur B) et médias d'exemple : écrits pendant
+		// un rendu lancé depuis l'app, ils déclenchaient un rechargement complet de la page.
+		watch: { ignored: ['**/src-tauri/**', '**/target/**', '**/crates/**', '**/.cache/**', '**/examples/*/media/**'] },
 		// examples/ est servi au mock (import JSON) ; rien d'autre hors de studio/.
 		fs: { allow: ['examples'] }
 	},
