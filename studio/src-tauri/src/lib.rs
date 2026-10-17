@@ -307,7 +307,13 @@ fn propose_short(
 ) -> CmdResult<String> {
     let (_, p) = current(&state)?;
     let t = transcript.map(|t| asr::Transcript::load(Path::new(&t))).transpose().map_err(err)?;
-    let s = propose::short_scene(&p, t.as_ref(), from, to, &opts).map_err(err)?;
+    let mut s = propose::short_scene(&p, t.as_ref(), from, to, &opts).map_err(err)?;
+    // Comme la CLI : proposition recadrée sur les comédiens (Vision) ; un échec garde le plan large.
+    if destiny_core::vision::available() {
+        let (path, _) = current(&state)?;
+        let z = base_zoom(&s);
+        let _ = destiny_core::vision::reframe(&mut s, &project_dir(&path), &cache_dir(&path).join("media").join("vision"), z, None);
+    }
     let out = free_path(Path::new(&out));
     s.save(&out).map_err(err)?;
     Ok(out.display().to_string())
@@ -519,6 +525,44 @@ async fn waveform(path: String, from: f64, to: f64, buckets: usize, state: State
     .map_err(err)
 }
 
+// ---------------------------------------------------------------- comédiens (Vision)
+
+/// Zoom de base du preset : la bande 16:9 des shorts est déjà zoomée à 1,2.
+fn base_zoom(p: &Project) -> f64 {
+    if p.format.h > p.format.w { destiny_core::style::short::BAND_ZOOM } else { 1.0 }
+}
+
+#[derive(Serialize)]
+struct ReframeResult {
+    project: Project,
+    clips: Vec<destiny_core::vision::Reframed>,
+}
+
+/// Recadre les plans (tous, ou `ids`) sur les comédiens détectés. Renvoie le projet modifié
+/// sans l'enregistrer : le front le valide comme une édition (annulable).
+#[tauri::command]
+async fn reframe(ids: Option<Vec<String>>, state: State<'_, AppState>) -> CmdResult<ReframeResult> {
+    let (path, mut p) = current(&state)?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let z = base_zoom(&p);
+        let clips = destiny_core::vision::reframe(&mut p, &project_dir(&path), &cache_dir(&path).join("media").join("vision"), z, ids.as_deref())?;
+        Ok::<_, anyhow::Error>(ReframeResult { project: p, clips })
+    })
+    .await
+    .map_err(err)?
+    .map_err(err)
+}
+
+/// Visages et personnes détectés sur l'image `t` (temps fichier) d'une vidéo.
+#[tauri::command]
+async fn detect_frame(path: String, t: f64, state: State<'_, AppState>) -> CmdResult<destiny_core::vision::Detections> {
+    let (file, cache) = media_paths(&state, &path);
+    tauri::async_runtime::spawn_blocking(move || destiny_core::vision::detect_at(&file, (t * 2.0).round() / 2.0, &cache.join("vision")))
+        .await
+        .map_err(err)?
+        .map_err(err)
+}
+
 // ---------------------------------------------------------------- aperçu live (moteur B)
 
 /// Écrit la composition HTML/GSAP du projet ouvert dans `.cache/live/` pour l'aperçu de
@@ -650,6 +694,8 @@ pub fn run() {
             compose_preview,
             thumbs,
             waveform,
+            reframe,
+            detect_frame,
             ask_claude,
         ])
         .run(tauri::generate_context!())

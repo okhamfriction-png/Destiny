@@ -396,6 +396,16 @@ export function createMockBackend(): Backend {
 			);
 		},
 
+		async reframe() {
+			// Pas de détecteur dans le navigateur : cadrage inchangé.
+			await delay(200);
+			return { project: deepClone(current()), clips: [] };
+		},
+
+		async detectFrame() {
+			return { faces: [], people: [] };
+		},
+
 		async thumbs() {
 			// Pas de décodage vidéo dans le navigateur : la bande reste unie.
 			return [];

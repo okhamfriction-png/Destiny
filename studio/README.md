@@ -26,6 +26,8 @@ studio/
 │       ├── mixer.rs         mixage Rust (voix gatées, musique + ducking, SFX procéduraux)
 │       ├── verify.rs        contrôles après rendu (durée, son non muet, loudness)
 │       ├── nas.rs           copie NAS avec reprise + md5
+│       ├── vision.rs        visages et comédiens (Vision d'Apple, vision/detect.swift) → recadrage auto
+│       ├── media.rs         vignettes et formes d'onde de la timeline (cache disque)
 │       ├── history.rs       undo/redo et patchs RFC 6902
 │       ├── propose.rs       propositions de shorts, pics de rétention YouTube
 │       └── ingest.rs        classement, ffprobe, proxies, planches contact, projet initial
@@ -81,6 +83,7 @@ destiny-cli propose ~/DestinyStudio/8-octobre/project.json --from 5264.6 --to 53
     --transcript ~/DestinyStudio/8-octobre/.cache/transcript_5200-5400.json \
     --kicker "SCÈNE 4/25" --hook "UN IMMENSE SERPENT AUX YEUX VERTS" --punch-at 5266 \
     --out ~/DestinyStudio/8-octobre/serpent.json
+destiny-cli reframe  ~/DestinyStudio/8-octobre/serpent.json --write       # recadre sur les comédiens (Vision, Mac)
 destiny-cli snapshot ~/DestinyStudio/8-octobre/serpent.json --at 1,15,40
 destiny-cli render   ~/DestinyStudio/8-octobre/serpent.json --out /tmp/serpent.mp4
 destiny-cli export   ~/DestinyStudio/8-octobre/serpent.json                # livraison + NAS (reprise, md5)

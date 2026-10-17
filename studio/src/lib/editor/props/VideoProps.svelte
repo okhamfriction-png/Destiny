@@ -7,6 +7,8 @@
 	import { DEFAULT_PUSH } from '$lib/layout';
 	import type { ItemRef } from '$lib/project';
 	import { studio } from '$lib/state.svelte';
+	import { editor } from '$lib/editor.svelte';
+	import { reframeClips } from '../reframe';
 
 	let { ref, item }: { ref: ItemRef; item: VideoItem } = $props();
 
@@ -48,7 +50,12 @@
 	<Slider label="Centre horizontal (cx)" value={item.crop.cx} min={0} max={1} oninput={(v) => crop('cx', v, false)} onchange={(v) => crop('cx', v, true)} />
 	<Slider label="Centre vertical (cy)" value={item.crop.cy} min={0} max={1} oninput={(v) => crop('cy', v, false)} onchange={(v) => crop('cy', v, true)} />
 	<Slider label="Zoom" value={item.crop.zoom} min={0.5} max={3} oninput={(v) => crop('zoom', v, false)} onchange={(v) => crop('zoom', v, true)} />
-	<button class="ghost reset" onclick={() => set((c) => (c.crop = { cx: 0.5, cy: 0.5, zoom: 1 }), 'Recadrage')}>Réinitialiser</button>
+	<div class="auto">
+		<button class="primary" onclick={() => reframeClips([item.id])} title="Détecte les comédiens et les visages dans ce plan et cadre sur eux">◎ Recadrer sur les comédiens</button>
+		<button onclick={() => reframeClips(null)} title="Même chose pour tous les plans du montage">Tous les plans</button>
+	</div>
+	<label class="det"><input type="checkbox" bind:checked={editor.showDetections} /> Montrer ce qui est détecté (à l'arrêt)</label>
+	<button class="ghost reset" onclick={() => set((c) => (c.crop = { cx: 0.5, cy: 0.5, zoom: 1 }), 'Recadrage')}>Plan large (réinitialiser)</button>
 </section>
 
 <section>
@@ -74,3 +81,20 @@
 		</div>
 	{/if}
 </section>
+
+<style>
+	.auto {
+		display: flex;
+		gap: 6px;
+		flex-wrap: wrap;
+		margin: 8px 0 4px;
+	}
+	.det {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 11px;
+		color: var(--text-dim);
+		margin: 4px 0;
+	}
+</style>

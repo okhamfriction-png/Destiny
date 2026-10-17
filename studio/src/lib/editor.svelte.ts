@@ -28,6 +28,8 @@ class EditorState {
 	source = $state<{ source: Source; t: number; in: number | null; out: number | null } | null>(null);
 	/** Morceau de rush en cours de glisser-déposer vers la timeline (suit le pointeur). */
 	drag = $state<{ clip: SourceClip; x: number; y: number } | null>(null);
+	/** Cadres des comédiens et visages détectés, dessinés sur l'aperçu (à l'arrêt). */
+	showDetections = $state(false);
 	/** Incrémenté pour demander « toute la timeline dans la fenêtre » (Maj+Z). */
 	fitTick = $state(0);
 	/** Instant de la dernière cible d'aimantation atteinte (guide vertical). */

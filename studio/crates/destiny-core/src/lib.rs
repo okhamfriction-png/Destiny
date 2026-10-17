@@ -21,5 +21,6 @@ pub mod ass;
 pub mod style;
 pub mod sync;
 pub mod verify;
+pub mod vision;
 
 pub use project::*;

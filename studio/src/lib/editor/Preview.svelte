@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ShortOverlay from './ShortOverlay.svelte';
 	import { api } from '$lib/api';
+	import type { Detections } from '$lib/bindings/Detections';
 	import type { VideoItem } from '$lib/bindings/VideoItem';
 	import { editor } from '$lib/editor.svelte';
 	import { updateItem } from '$lib/edit';
@@ -53,6 +54,24 @@
 		for (const s of starts) if (t >= s && t < s + FLASH_DUR) a = Math.max(a, 1 - (t - s) / FLASH_DUR);
 		return a;
 	});
+	// --- Détections (visages, comédiens) sur l'image affichée, à l'arrêt ---------------
+	let dets = $state<Detections | null>(null);
+	$effect(() => {
+		if (!editor.showDetections || editor.playing || !clip || !source) {
+			dets = null;
+			return;
+		}
+		const path = resolveMedia(studio.path, source.proxy ?? source.path);
+		const tt = srcTime;
+		const id = setTimeout(() => {
+			api.detectFrame({ path, t: tt }).then(
+				(d) => (dets = d),
+				(e) => studio.errorOnce(e)
+			);
+		}, 250);
+		return () => clearTimeout(id);
+	});
+
 	// --- Musique (A2) : jouée dans le visualiseur, calée sur la tête de lecture -------
 	const musics = $derived(
 		p.tracks.flatMap((tr) =>
@@ -227,6 +246,14 @@
 								</div>
 							</div>
 						{/if}
+						{#if dets}
+							{#each dets.people as b, i (i)}
+								<div class="dbox person" style:left="{b[0] * 100}%" style:top="{b[1] * 100}%" style:width="{b[2] * 100}%" style:height="{b[3] * 100}%"></div>
+							{/each}
+							{#each dets.faces as b, i (i)}
+								<div class="dbox face" style:left="{b[0] * 100}%" style:top="{b[1] * 100}%" style:width="{b[2] * 100}%" style:height="{b[3] * 100}%"></div>
+							{/each}
+						{/if}
 					</div>
 					{#if selectedClip}
 						<div class="crosshair" style:left="{place!.left + clip.crop.cx * place!.width}px" style:top="{place!.top + clip.crop.cy * place!.height}px"></div>
@@ -291,6 +318,18 @@
 		transform-origin: 0 0;
 		background: #000;
 		overflow: hidden;
+	}
+	.dbox {
+		position: absolute;
+		pointer-events: none;
+		box-sizing: border-box;
+	}
+	.dbox.person {
+		border: 4px dashed rgba(247, 220, 138, 0.9);
+	}
+	.dbox.face {
+		border: 4px solid #fff;
+		box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
 	}
 	.comp {
 		position: absolute;

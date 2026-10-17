@@ -282,5 +282,11 @@ Lame, sélection liée vidéo + voix), vignettes et formes d'onde calculées en 
 Visualiseur source : rush ouvert depuis les Médias, points I/O, F9 insérer, F10 écraser, glisser sur la
 timeline (lâcher = écraser, Maj = insérer) ; plan vidéo + voix liés, source ajoutée au montage au besoin.
 
+Recadrage automatique (17 octobre 2026) : framework Vision d'Apple (petit programme Swift compilé par
+`build.rs`, embarqué) — personnes et visages sur quelques images par plan, cadrage = tout le groupe avec
+40 % d'air, têtes à 20 % du haut, zoom 1–2,5 compensé du punch/push. Appliqué aux propositions (CLI et app),
+bouton « Recadrer sur les comédiens » et cadres de détection dans l'aperçu ; sans swiftc, désactivé.
+Choix par défaut Mac aussi : sur la vraie soirée, le `.mov` DaVinci commence au début de cam1 (maître = .mov + 2817 s).
+
 Reste aussi : présence en scène dans l'UI, seuils des moments forts à
 calibrer sur un vrai spectacle, renderer Node à embarquer dans le bundle macOS.

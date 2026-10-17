@@ -9,7 +9,7 @@ use anyhow::{bail, Context, Result};
 use clap::{Parser, Subcommand, ValueEnum};
 use destiny_core::render_a::{self, Quality};
 use destiny_core::render_b;
-use destiny_core::{asr, ingest, mics, music, nas, propose, sync, verify, Preset, Project};
+use destiny_core::{asr, ingest, mics, music, nas, propose, sync, verify, vision, Preset, Project};
 
 #[derive(Parser)]
 #[command(name = "destiny-cli", version, about = "Destiny Studio — montage semi-automatique des spectacles Destiny")]
@@ -98,6 +98,18 @@ enum Cmd {
         punch_at: Option<f64>,
         #[arg(long)]
         emphasis: Vec<String>,
+        /// Garde le plan large (pas de recadrage automatique sur les comédiens).
+        #[arg(long)]
+        no_reframe: bool,
+    },
+    /// Recadre les plans sur les comédiens détectés (Vision, Mac) ; `--clip c2` pour un seul plan.
+    Reframe {
+        project: PathBuf,
+        #[arg(long)]
+        clip: Vec<String>,
+        /// Écrit le résultat dans le projet (sinon affiche seulement les cadrages).
+        #[arg(long)]
+        write: bool,
     },
     /// Shorts sur les pics de rétention YouTube (CSV temps,valeur).
     Peaks {
@@ -162,6 +174,26 @@ enum Cmd {
     },
     /// Applique un patch JSON (RFC 6902), valide, et journalise l'historique.
     Patch { project: PathBuf, patch: PathBuf },
+}
+
+/// Zoom de base du preset : la bande 16:9 des shorts est déjà zoomée à 1,2.
+fn base_zoom(p: &Project) -> f64 {
+    if p.format.h > p.format.w { destiny_core::style::short::BAND_ZOOM } else { 1.0 }
+}
+
+/// Recadrage automatique d'une proposition sur les comédiens (Vision, Mac). Un échec ne
+/// bloque pas la proposition : le plan large reste, avec un avertissement.
+fn auto_reframe(s: &mut Project, source_project: &std::path::Path) {
+    if !vision::available() {
+        return;
+    }
+    let base = project_dir(source_project);
+    let cache = cache_dir(source_project).join("media").join("vision");
+    let z = base_zoom(s);
+    match vision::reframe(s, &base, &cache, z, None) {
+        Ok(rep) => eprintln!("recadrage : {} plan(s) sur {} recadré(s)", rep.iter().filter(|r| r.crop.is_some()).count(), rep.len()),
+        Err(e) => eprintln!("recadrage automatique impossible : {e:#}"),
+    }
 }
 
 fn print_json(v: &impl serde::Serialize) -> Result<()> {
@@ -331,13 +363,27 @@ fn main() -> Result<()> {
             a.env.clear(); // l'enveloppe complète n'est utile qu'à l'UI
             print_json(&a)?;
         }
-        Cmd::Propose { project, from, to, out, transcript, kicker, hook, punch_at, emphasis } => {
+        Cmd::Propose { project, from, to, out, transcript, kicker, hook, punch_at, emphasis, no_reframe } => {
             let p = Project::load(&project)?;
             let t = transcript.map(|t| asr::Transcript::load(&t)).transpose()?;
             let opts = propose::ShortOpts { kicker, hook, punch_at, emphasis, ..Default::default() };
-            let s = propose::short_scene(&p, t.as_ref(), from, to, &opts)?;
+            let mut s = propose::short_scene(&p, t.as_ref(), from, to, &opts)?;
+            if !no_reframe {
+                auto_reframe(&mut s, &project);
+            }
             s.save(&out)?;
             print_json(&serde_json::json!({ "project": out, "duration": s.duration() }))?;
+        }
+        Cmd::Reframe { project, clip, write } => {
+            let mut p = Project::load(&project)?;
+            let only = (!clip.is_empty()).then_some(clip.as_slice());
+            let base = project_dir(&project);
+            let z = base_zoom(&p);
+            let rep = vision::reframe(&mut p, &base, &cache_dir(&project).join("media").join("vision"), z, only)?;
+            if write {
+                p.save(&project)?;
+            }
+            print_json(&rep)?;
         }
         Cmd::Peaks { project, csv, offset, transcript, count, out_dir } => {
             let p = Project::load(&project)?;
@@ -357,6 +403,7 @@ fn main() -> Result<()> {
                 };
                 let mut s = propose::short_scene(&p, t.as_ref(), a, b, &opts)?;
                 s.preset = Preset::RetentionPeaks;
+                auto_reframe(&mut s, &project);
                 let path = out_dir.join(format!("pic_{}.json", i + 1));
                 s.save(&path)?;
                 outs.push(serde_json::json!({ "project": path, "peak": pk, "from": a, "to": b }));
