@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Nav from '$lib/components/Nav.svelte';
+	import PageBar from '$lib/components/PageBar.svelte';
 	import Toasts from '$lib/components/Toasts.svelte';
 	import Library from '$lib/views/Library.svelte';
 	import Explorer from '$lib/views/Explorer.svelte';
@@ -15,7 +15,6 @@
 </script>
 
 <div class="app">
-	<Nav />
 	<main>
 		{#if studio.view === 'library'}
 			<Library />
@@ -29,13 +28,15 @@
 			<Export />
 		{/if}
 	</main>
+	<PageBar />
 	<Toasts />
 </div>
 
 <style>
 	.app {
 		display: grid;
-		grid-template-columns: 72px minmax(0, 1fr);
+		/* Pages en bas, comme DaVinci : tout l'écran au-dessus pour le travail. */
+		grid-template-rows: minmax(0, 1fr) 46px;
 		height: 100vh;
 	}
 	main {

@@ -108,6 +108,10 @@ export interface Backend {
 	/** Aperçu live du moteur B (trailers, reels) : URL de la composition HTML/GSAP du
 	 * projet ouvert, réécrite à chaque appel ; `null` pour les shorts ou hors Tauri. */
 	composePreview(): Promise<string | null>;
+	/** Vignettes d'un fichier vidéo aux multiples de `step` dans `[from, to]` (temps fichier). */
+	thumbs(args: { path: string; from: number; to: number; step: number; height: number }): Promise<{ t: number; path: string }[]>;
+	/** Forme d'onde 0..1 (échelle dB) de `[from, to]` secondes du fichier, en `buckets` cases. */
+	waveform(args: { path: string; from: number; to: number; buckets: number }): Promise<number[]>;
 	exportProject(targets: string[] | null): Promise<string>;
 	cancelJob(id: string): Promise<void>;
 	askClaude(instruction: string): Promise<ClaudeAnswer>;
@@ -152,6 +156,8 @@ async function tauriBackend(): Promise<Backend> {
 		analyze: (args) => call('analyze', { ...args }),
 		render: (args) => call('render', { ...args }),
 		snapshot: (t) => call('snapshot', { t }),
+		thumbs: (args) => call('thumbs', { ...args }),
+		waveform: (args) => call('waveform', { ...args }),
 		composePreview: async () => {
 			const v = await call<string | null>('compose_preview');
 			if (!v) return null;

@@ -210,3 +210,10 @@ export function normalizeProject(raw: unknown): Project {
 export function clone<T>(v: T): T {
 	return structuredClone(v);
 }
+
+/** Chemin absolu d'un média : les chemins relatifs (« media/… », écrits à la main ou par
+ * Claude Code) partent du dossier du project.json, comme `render_a::resolve` côté Rust. */
+export function resolveMedia(projectPath: string | null, f: string): string {
+	const dir = projectPath?.replace(/\/[^/]*$/, '') ?? '';
+	return f.startsWith('/') || !dir ? f : `${dir}/${f}`;
+}

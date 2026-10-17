@@ -225,6 +225,79 @@ export function rippleDelete(p: Project, ref: ItemRef): Project {
 }
 
 // ---------------------------------------------------------------------------
+// Plans liés (sélection liée de DaVinci)
+// ---------------------------------------------------------------------------
+
+const near = (a: number, b: number) => Math.abs(a - b) < 0.02;
+
+/** Le plan visé et ses plans liés : un plan vidéo et la voix de même découpe (même
+ * source, même `in`/`out`, même position), comme les propositions les génèrent. Ils se
+ * déplacent, se rognent, se coupent et se suppriment ensemble. */
+export function linkedRefs(p: Project, ref: ItemRef): ItemRef[] {
+	const track = findTrack(p, ref.track);
+	const item = track?.items[ref.index];
+	if (!track || !item || (track.kind !== 'video' && track.kind !== 'voice')) return [ref];
+	const c = item as VideoItem | VoiceItem;
+	const other = track.kind === 'video' ? 'voice' : 'video';
+	const out = [ref];
+	for (const t of p.tracks) {
+		if (t.kind !== other) continue;
+		t.items.forEach((x, index) => {
+			const o = x as VideoItem | VoiceItem;
+			if (o.src === c.src && near(o.at, c.at) && near(o.in, c.in) && near(o.out, c.out)) out.push({ track: t.id, index });
+		});
+	}
+	return out;
+}
+
+/** Déplace un groupe de plans du même `delta` (secondes), chacun depuis sa position. */
+export function moveGroup(p: Project, refs: ItemRef[], delta: number): Project {
+	// Le groupe bute à 0 ensemble : aucun plan ne se décale par rapport aux autres.
+	const starts = refs.map((r) => {
+		const t = findTrack(p, r.track);
+		return t ? itemSpan(t.kind, t.items[r.index], p)[0] : 0;
+	});
+	const d = Math.max(delta, -Math.min(...starts));
+	return refs.reduce((q, r, i) => moveItem(q, r, starts[i] + d), p);
+}
+
+/** Rogne tous les plans du groupe au même bord. */
+export function trimGroup(p: Project, refs: ItemRef[], edge: 'start' | 'end', t: number): Project {
+	return refs.reduce((q, r) => trimItem(q, r, edge, t), p);
+}
+
+/** Coupe tous les plans du groupe à l'instant `t` (chacun sur sa piste). */
+export function splitGroup(p: Project, refs: ItemRef[], t: number): Project {
+	return refs.reduce((q, r) => splitItem(q, r, t), p);
+}
+
+/** Supprime le groupe ; avec `ripple`, tout ce qui suit recule de la durée du premier. */
+export function removeGroup(p: Project, refs: ItemRef[], ripple = false): Project {
+	const first = findTrack(p, refs[0]?.track ?? '');
+	if (!first || !first.items[refs[0].index]) return p;
+	const [s, e] = itemSpan(first.kind, first.items[refs[0].index], p);
+	// Indices décroissants : retirer un élément ne décale pas les suivants à retirer.
+	const sorted = [...refs].sort((a, b) => b.index - a.index);
+	const next = sorted.reduce((q, r) => removeItem(q, r), p);
+	if (ripple) shiftAfter(next, e, -(e - s));
+	return next;
+}
+
+/** Points de montage (débuts et fins de plans vidéo), triés : ↑/↓ y sautent. */
+export function editPoints(p: Project): number[] {
+	const pts = new Set<number>([0]);
+	for (const t of p.tracks) {
+		if (t.kind !== 'video') continue;
+		for (const it of t.items) {
+			const [a, b] = itemSpan(t.kind, it, p);
+			pts.add(r3(a));
+			pts.add(r3(b));
+		}
+	}
+	return [...pts].sort((a, b) => a - b);
+}
+
+// ---------------------------------------------------------------------------
 // Aimantation
 // ---------------------------------------------------------------------------
 

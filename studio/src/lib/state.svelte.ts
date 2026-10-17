@@ -19,6 +19,23 @@ export interface Toast {
 	text: string;
 }
 
+const LAST_KEY = 'destiny.lastProject';
+// Préférence de confort : stockage du navigateur, protégé (fenêtre privée, accès refusé).
+function readLast(): string | null {
+	try {
+		return localStorage.getItem(LAST_KEY);
+	} catch {
+		return null;
+	}
+}
+function writeLast(path: string): void {
+	try {
+		localStorage.setItem(LAST_KEY, path);
+	} catch {
+		/* sans importance */
+	}
+}
+
 /** Délai de regroupement des frappes clavier en un seul commit. */
 export const TYPING_DEBOUNCE_MS = 400;
 
@@ -63,6 +80,9 @@ class Studio {
 		} catch (e) {
 			this.error(e);
 		}
+		// Comme DaVinci : on retrouve le dernier montage ouvert, directement sur sa timeline.
+		const last = readLast();
+		if (last && this.library.some((s) => s.projects.includes(last))) await this.open(last);
 	}
 
 	async refreshLibrary(): Promise<void> {
@@ -87,6 +107,7 @@ class Studio {
 		try {
 			this.#adopt(await api.openProject(path), true);
 			this.view = 'editor';
+			writeLast(path);
 		} catch (e) {
 			this.error(e);
 		}

@@ -1,41 +1,82 @@
 <script lang="ts">
-	import TimelineItem from './TimelineItem.svelte';
+	import type { Snippet } from 'svelte';
+	import TimelineItem, { type ItemMedia } from './TimelineItem.svelte';
 	import { packLanes, rulerStep, type DragMode } from './lanes';
+	import type { MusicItem } from '$lib/bindings/MusicItem';
 	import type { Project } from '$lib/bindings/Project';
+	import type { Track } from '$lib/bindings/Track';
+	import type { VideoItem } from '$lib/bindings/VideoItem';
 	import type { VoiceItem } from '$lib/bindings/VoiceItem';
 	import { editor } from '$lib/editor.svelte';
-	import { moveItem, snap, snapSpan, snapTargets, trimItem } from '$lib/edit';
+	import { linkedRefs, moveGroup, snap, snapSpan, snapTargets, splitGroup, trimGroup } from '$lib/edit';
 	import { clock } from '$lib/format';
 	import {
 		itemLabel,
 		itemSpan,
 		refSpan,
+		resolveMedia,
 		sameRef,
 		sourceOffset,
 		TRACK_LABEL,
-		TRACK_ORDER,
-		type ItemRef
+		type AnyItem,
+		type ItemRef,
+		type TrackKind
 	} from '$lib/project';
 	import { studio } from '$lib/state.svelte';
 
-	const HEAD = 128;
-	const LANE = 26;
-	const PAD = 4;
-	const RULER = 26;
+	/** Boutons d'action de l'éditeur, posés à droite de la barre d'outils. */
+	let { actions }: { actions?: Snippet } = $props();
+
+	const HEAD = 190;
+	const PAD = 3;
+	const RULER = 28;
 	/** Seuil d'aimantation en pixels. */
 	const SNAP_PX = 8;
 
+	/** Pistes dans l'ordre de DaVinci : vidéo en haut (sous-titres et graphismes par-dessus
+	 * l'image), audio en dessous. Toujours affichées, même vides : on voit où va chaque chose. */
+	const LAYOUT: { kind: TrackKind; code: string; lane: number }[] = [
+		{ kind: 'captions', code: 'ST1', lane: 26 },
+		{ kind: 'graphics', code: 'V2', lane: 24 },
+		{ kind: 'video', code: 'V1', lane: 62 },
+		{ kind: 'voice', code: 'A1', lane: 46 },
+		{ kind: 'music', code: 'A2', lane: 46 },
+		{ kind: 'sfx', code: 'A3', lane: 28 }
+	];
+	const VISUAL: TrackKind[] = ['captions', 'graphics', 'video'];
+
 	const p = $derived(studio.project!);
 
-	const rows = $derived.by(() =>
-		p.tracks
-			.map((track) => {
+	const rows = $derived(
+		LAYOUT.flatMap((def) => {
+			const tracks = p.tracks.filter((t) => t.kind === def.kind);
+			if (!tracks.length) return [{ def, code: def.code, track: null as Track | null, spans: [] as [number, number][], lane: [] as number[], height: def.lane + PAD * 2 }];
+			return tracks.map((track, i) => {
 				const spans = track.items.map((it) => itemSpan(track.kind, it, p));
 				const { lane, count } = packLanes(spans);
-				return { track, spans, lane, height: count * LANE + PAD * 2 };
-			})
-			.sort((a, b) => TRACK_ORDER.indexOf(a.track.kind) - TRACK_ORDER.indexOf(b.track.kind))
+				return { def, code: tracks.length > 1 ? `${def.code}.${i + 1}` : def.code, track, spans, lane, height: count * def.lane + PAD * 2 };
+			});
+		})
 	);
+
+	/** Sélection et plans liés (surlignés ensemble). */
+	const selected = $derived(editor.selection ? (editor.linked ? linkedRefs(p, editor.selection) : [editor.selection]) : []);
+
+	/** Ce que le clip montre sous son nom : bande d'images ou forme d'onde (calculées par Rust). */
+	function mediaOf(kind: TrackKind, item: AnyItem, span: [number, number]): ItemMedia | null {
+		if (kind === 'video' || kind === 'voice') {
+			const c = item as VideoItem | VoiceItem;
+			const s = p.sources.find((x) => x.id === c.src);
+			if (!s) return null;
+			const path = resolveMedia(studio.path, s.proxy ?? s.path);
+			return { kind: kind === 'video' ? 'film' : 'wave', path, from: c.in, to: c.out };
+		}
+		if (kind === 'music') {
+			const m = item as MusicItem;
+			return { kind: 'wave', path: resolveMedia(studio.path, m.file), from: m.offset, to: m.offset + span[1] - span[0] };
+		}
+		return null;
+	}
 
 	let scroller = $state<HTMLDivElement>();
 	let viewW = $state(800);
@@ -56,10 +97,13 @@
 	// --- Conversion écran → temps --------------------------------------------
 	let ruler = $state<HTMLDivElement>();
 	const timeAt = (clientX: number) => (clientX - ruler!.getBoundingClientRect().left) / editor.pps;
+	/** Arrondi à l'image : une coupe tombe toujours entre deux images. */
+	const toFrame = (t: number) => Math.round(t * editor.fps) / editor.fps;
 
-	// --- Glisser / rogner -----------------------------------------------------
+	// --- Glisser / rogner / lame ---------------------------------------------
 	interface Drag {
 		ref: ItemRef;
+		group: ItemRef[];
 		mode: DragMode;
 		base: Project;
 		span: [number, number];
@@ -69,20 +113,35 @@
 	}
 	let drag: Drag | null = null;
 
-	function down(e: PointerEvent, ref: ItemRef, mode: DragMode) {
-		if (e.button !== 0) return;
+	function down(e: PointerEvent, ref: ItemRef, kind: TrackKind, mode: DragMode) {
+		if (e.button !== 0 || editor.locked[kind]) return;
 		e.stopPropagation();
+		const group = editor.linked ? linkedRefs(p, ref) : [ref];
+		if (editor.tool === 'blade') {
+			if (kind !== 'video' && kind !== 'voice') return;
+			const t = toFrame(timeAt(e.clientX));
+			const next = splitGroup(p, group, t);
+			if (next !== p) {
+				const tr = p.tracks.find((x) => x.id === ref.track)!;
+				studio.edit(next, `Lame ${itemLabel(tr.kind, tr.items[ref.index])} à ${clock(t, 2)}`);
+				editor.selection = ref;
+			}
+			return;
+		}
 		(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
 		editor.selection = ref;
 		const span = refSpan(p, ref);
 		if (!span) return;
+		// Les bords du groupe ne sont pas des cibles : sinon le plan colle à sa propre place.
+		const own = group.flatMap((r) => refSpan(p, r) ?? []);
 		drag = {
 			ref,
+			group,
 			mode,
 			base: p,
 			span,
 			x0: e.clientX,
-			targets: snapTargets(p, editor.playhead, ref),
+			targets: snapTargets(p, editor.playhead, ref).filter((x) => !own.some((o) => Math.abs(o - x) < 1e-3)),
 			moved: false
 		};
 	}
@@ -96,8 +155,8 @@
 		// Alt désactive l'aimantation le temps du geste.
 		const magnet = editor.magnet && !e.altKey;
 		const thr = SNAP_PX / editor.pps;
-		let next: Project;
 		let guide: number | null = null;
+		let next: Project;
 		if (d.mode === 'move') {
 			let start = d.span[0] + dt;
 			if (magnet) {
@@ -105,7 +164,7 @@
 				start = r.t;
 				guide = r.target;
 			}
-			next = moveItem(d.base, d.ref, start);
+			next = moveGroup(d.base, d.group, start - d.span[0]);
 		} else {
 			let t = d.span[d.mode === 'start' ? 0 : 1] + dt;
 			if (magnet) {
@@ -113,7 +172,7 @@
 				t = r.t;
 				guide = r.target;
 			}
-			next = trimItem(d.base, d.ref, d.mode, t);
+			next = trimGroup(d.base, d.group, d.mode, t);
 		}
 		editor.snapGuide = guide;
 		studio.project = next;
@@ -129,6 +188,12 @@
 		studio.edit(studio.project!, `${d.mode === 'move' ? 'Déplacer' : 'Rogner'} ${name.slice(0, 40)}`);
 	}
 
+	// Trait rouge de la lame qui suit la souris.
+	let bladeX = $state<number | null>(null);
+	function hover(e: PointerEvent) {
+		bladeX = editor.tool === 'blade' && ruler ? Math.max(0, toFrame(timeAt(e.clientX))) : null;
+	}
+
 	// --- Règle : clic / glisser pour déplacer la tête de lecture ---------------
 	let scrubbing = false;
 	function rulerDown(e: PointerEvent) {
@@ -141,7 +206,7 @@
 		if (scrubbing) editor.seek(timeAt(e.clientX));
 	}
 
-	// --- Zoom : Ctrl/Cmd + molette, centré sur le curseur ----------------------
+	// --- Zoom : Ctrl/Cmd + molette (ou pincement), centré sur le curseur -------
 	function wheel(e: WheelEvent) {
 		if (!(e.ctrlKey || e.metaKey) || !scroller) return;
 		e.preventDefault();
@@ -160,6 +225,15 @@
 		if (scroller) scroller.scrollLeft = 0;
 	}
 
+	// Maj+Z (ou bouton) : toute la timeline dans la fenêtre.
+	let lastFit = 0;
+	$effect(() => {
+		if (editor.fitTick !== lastFit) {
+			lastFit = editor.fitTick;
+			fit();
+		}
+	});
+
 	// Nouveau projet : toute la durée tient dans la largeur visible.
 	let fittedPath: string | null = null;
 	$effect(() => {
@@ -177,23 +251,44 @@
 		const visible = viewW - HEAD;
 		if (x < scroller.scrollLeft || x > scroller.scrollLeft + visible - 40) scroller.scrollLeft = x - visible * 0.2;
 	});
+
+	const toggle = (rec: Partial<Record<TrackKind, boolean>>, k: TrackKind) => ({ ...rec, [k]: !rec[k] });
 </script>
 
-<div class="timeline">
+<div class="timeline" class:blade={editor.tool === 'blade'}>
 	<div class="tools">
-		<button class="icon" class:on={editor.magnet} onclick={() => (editor.magnet = !editor.magnet)} title="Aimantation (Alt pendant le geste pour l'ignorer)">
-			<svg viewBox="0 0 24 24" width="14" height="14"><path d="M6 3v9a6 6 0 0 0 12 0V3h-4v9a2 2 0 0 1-4 0V3z" /></svg>
-			Aimant
+		<div class="group" role="radiogroup" aria-label="Outil">
+			<button class="tool" class:on={editor.tool === 'select'} onclick={() => (editor.tool = 'select')} title="Sélection : déplacer, rogner par les bords (A)">
+				<svg viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-3 6z" /></svg>
+			</button>
+			<button class="tool" class:on={editor.tool === 'blade'} onclick={() => (editor.tool = 'blade')} title="Lame : cliquer sur un plan pour le couper (B)">
+				<svg viewBox="0 0 24 24"><path d="M4 20L15 9M14 4l6 6-5 1-2-2z" /></svg>
+			</button>
+		</div>
+		<span class="sep"></span>
+		<button class="tool" class:on={editor.magnet} onclick={() => (editor.magnet = !editor.magnet)} title="Aimantation (N ; Alt pendant le geste pour l'ignorer)">
+			<svg viewBox="0 0 24 24"><path d="M6 3v9a6 6 0 0 0 12 0V3h-4v9a2 2 0 0 1-4 0V3z" /></svg>
+		</button>
+		<button class="tool" class:on={editor.linked} onclick={() => (editor.linked = !editor.linked)} title="Sélection liée : la voix suit son plan vidéo (Ctrl+Maj+L)">
+			<svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" /></svg>
 		</button>
 		<span class="sep"></span>
-		<button class="icon" onclick={() => zoomTo(editor.pps / 1.4)} title="Dézoomer">−</button>
-		<input type="range" min="2" max="400" step="1" value={editor.pps} oninput={(e) => zoomTo(+e.currentTarget.value)} title="Zoom (Ctrl + molette)" />
-		<button class="icon" onclick={() => zoomTo(editor.pps * 1.4)} title="Zoomer">+</button>
-		<button onclick={fit}>Ajuster</button>
-		<span class="dim hint">Ctrl+molette : zoom · S : couper · Suppr : supprimer · Maj+Suppr : avec raccord</span>
+		<button class="tool" disabled={!studio.server?.canUndo} onclick={() => studio.undo()} title="Annuler {studio.server?.undoLabel ?? ''} (Cmd+Z)">
+			<svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3" /></svg>
+		</button>
+		<button class="tool" disabled={!studio.server?.canRedo} onclick={() => studio.redo()} title="Rétablir {studio.server?.redoLabel ?? ''} (Cmd+Maj+Z)">
+			<svg viewBox="0 0 24 24"><path d="M15 14l5-5-5-5M20 9H10a6 6 0 0 0 0 12h3" /></svg>
+		</button>
+		<span class="sep"></span>
+		<button class="tool" onclick={() => zoomTo(editor.pps / 1.4)} title="Dézoomer (Cmd+−)">−</button>
+		<input type="range" min="2" max="400" step="1" value={editor.pps} oninput={(e) => zoomTo(+e.currentTarget.value)} title="Zoom (Cmd + molette)" />
+		<button class="tool" onclick={() => zoomTo(editor.pps * 1.4)} title="Zoomer (Cmd+=)">+</button>
+		<button onclick={fit} title="Toute la timeline dans la fenêtre (Maj+Z)">Ajuster</button>
+		<div class="grow"></div>
+		{@render actions?.()}
 	</div>
 
-	<div class="scroller" bind:this={scroller} bind:clientWidth={viewW} onwheel={wheel}>
+	<div class="scroller" bind:this={scroller} bind:clientWidth={viewW} onwheel={wheel} onpointermove={hover} onpointerleave={() => (bladeX = null)} role="presentation">
 		<div class="content" style:width="{HEAD + contentSec * editor.pps}px">
 			<!-- Règle -->
 			<div class="rrow" style:height="{RULER}px">
@@ -213,31 +308,49 @@
 			</div>
 
 			<!-- Pistes -->
-			{#each rows as row (row.track.id)}
-				<div class="row" style:height="{row.height}px">
-					<div class="head {row.track.kind}">
-						<span class="label">{TRACK_LABEL[row.track.kind]}</span>
-						<span class="mono dim">{row.track.id}</span>
+			{#each rows as row (row.code)}
+				{@const kind = row.def.kind}
+				{@const visual = VISUAL.includes(kind)}
+				<div class="row" class:audio={!visual} class:first-audio={kind === 'voice'} style:height="{row.height}px">
+					<div class="head {kind}">
+						<span class="code">{row.code}</span>
+						<span class="tname">{TRACK_LABEL[kind]}</span>
+						<span class="count dim">{row.track?.items.length ?? 0}</span>
+						<span class="btns">
+							<button class="mini" class:on={editor.off[kind]} onclick={() => (editor.off = toggle(editor.off, kind))} title={visual ? 'Masquer dans le visualiseur' : 'Couper le son dans le visualiseur'}>
+								{#if visual}
+									<svg viewBox="0 0 24 24"><path d={editor.off[kind] ? 'M3 3l18 18M10.6 6.1A9 9 0 0 1 21 12a14 14 0 0 1-2.6 3.3M6.6 6.6A14 14 0 0 0 3 12s3.5 6 9 6a8 8 0 0 0 4-1' : 'M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z'} /></svg>
+								{:else}
+									<b>M</b>
+								{/if}
+							</button>
+							<button class="mini" class:on={editor.locked[kind]} onclick={() => (editor.locked = toggle(editor.locked, kind))} title="Verrouiller la piste">
+								<svg viewBox="0 0 24 24"><path d={editor.locked[kind] ? 'M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4' : 'M6 11h12v10H6zM8 11V7a4 4 0 0 1 7.5-2'} /></svg>
+							</button>
+						</span>
 					</div>
-					<div class="lane" onpointerdown={() => (editor.selection = null)} role="presentation">
-						{#if row.track.kind === 'music'}
+					<div class="lane" class:locked={editor.locked[kind]} class:off={editor.off[kind]} onpointerdown={() => (editor.selection = null)} role="presentation">
+						{#if kind === 'music'}
 							{#each p.markers.music_hits as h (h)}<div class="hitline" style:left="{h * editor.pps}px"></div>{/each}
 						{/if}
-						{#each row.track.items as item, index (index)}
-							{@const ref = { track: row.track.id, index }}
-							<TimelineItem
-								kind={row.track.kind}
-								{item}
-								start={row.spans[index][0]}
-								end={row.spans[index][1]}
-								pps={editor.pps}
-								top={PAD + row.lane[index] * LANE}
-								height={LANE - 3}
-								selected={sameRef(editor.selection, ref)}
-								suspects={row.track.kind === 'voice' ? voiceSuspects(item as VoiceItem) : []}
-								ondown={(e, mode) => down(e, ref, mode)}
-							/>
-						{/each}
+						{#if row.track}
+							{#each row.track.items as item, index (index)}
+								{@const ref = { track: row.track.id, index }}
+								<TimelineItem
+									{kind}
+									{item}
+									start={row.spans[index][0]}
+									end={row.spans[index][1]}
+									pps={editor.pps}
+									top={PAD + row.lane[index] * row.def.lane}
+									height={row.def.lane - 3}
+									selected={selected.some((r) => sameRef(r, ref))}
+									media={mediaOf(kind, item, row.spans[index])}
+									suspects={kind === 'voice' ? voiceSuspects(item as VoiceItem) : []}
+									ondown={(e, mode) => down(e, ref, kind, mode)}
+								/>
+							{/each}
+						{/if}
 					</div>
 				</div>
 			{/each}
@@ -245,6 +358,9 @@
 			<div class="playhead" style:left="{HEAD + editor.playhead * editor.pps}px"></div>
 			{#if editor.snapGuide !== null}
 				<div class="guide" style:left="{HEAD + editor.snapGuide * editor.pps}px"></div>
+			{/if}
+			{#if bladeX !== null}
+				<div class="bladeline" style:left="{HEAD + bladeX * editor.pps}px"></div>
 			{/if}
 		</div>
 	</div>
@@ -257,33 +373,57 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
-		background: var(--bg-1);
+		background: #14110d;
 	}
 	.tools {
 		display: flex;
 		align-items: center;
-		gap: 6px;
-		padding: 5px 10px;
+		gap: 4px;
+		padding: 4px 10px;
 		border-bottom: 1px solid var(--line);
+		background: var(--bg-1);
 	}
-	.tools svg {
+	.group {
+		display: flex;
+		gap: 2px;
+		padding: 2px;
+		border-radius: 5px;
+		background: var(--bg-2);
+	}
+	.tool {
+		min-width: 28px;
+		height: 26px;
+		padding: 0 6px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.tool svg,
+	.mini svg {
+		width: 15px;
+		height: 15px;
 		fill: none;
 		stroke: currentColor;
 		stroke-width: 2;
-		vertical-align: -2px;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+	.tool.on {
+		color: var(--gold-light);
+		background: #2a2111;
+		border-color: #6b5420;
 	}
 	.tools input[type='range'] {
-		width: 120px;
+		width: 110px;
 	}
 	.sep {
 		width: 1px;
 		height: 18px;
 		background: var(--line-2);
-		margin: 0 4px;
+		margin: 0 6px;
 	}
-	.hint {
-		margin-left: auto;
-		font-size: 10px;
+	.grow {
+		flex: 1;
 	}
 	.scroller {
 		flex: 1;
@@ -297,7 +437,13 @@
 	.rrow,
 	.row {
 		display: flex;
-		border-bottom: 1px solid var(--line);
+		border-bottom: 1px solid #241f18;
+	}
+	.row.first-audio {
+		border-top: 2px solid #3a3226;
+	}
+	.row.audio .lane {
+		background: #110f0b;
 	}
 	.rrow {
 		position: sticky;
@@ -309,19 +455,62 @@
 		position: sticky;
 		left: 0;
 		z-index: 3;
-		width: 128px;
+		width: 190px;
 		flex-shrink: 0;
 		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		gap: 2px;
-		padding: 0 10px;
+		align-items: center;
+		gap: 6px;
+		padding: 0 6px 0 8px;
 		background: var(--bg-2);
 		border-right: 1px solid var(--line);
 		border-left: 3px solid transparent;
 	}
-	.head .mono {
+	.code {
+		font-family: var(--mono);
+		font-size: 10px;
+		font-weight: 700;
+		color: var(--text);
+		min-width: 26px;
+	}
+	.tname {
+		font-size: 11px;
+		color: var(--text-dim);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		flex: 1;
+	}
+	.count {
+		font-family: var(--mono);
 		font-size: 9px;
+	}
+	.btns {
+		display: flex;
+		gap: 2px;
+	}
+	.mini {
+		width: 20px;
+		height: 20px;
+		padding: 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 10px;
+		border-color: transparent;
+		background: transparent;
+		color: var(--text-mute, #8a8070);
+	}
+	.mini:hover {
+		color: var(--text);
+		border-color: var(--line-2);
+	}
+	.mini.on {
+		color: #1a1208;
+		background: var(--gold);
+	}
+	.mini svg {
+		width: 13px;
+		height: 13px;
 	}
 	.head.video {
 		border-left-color: var(--tr-video);
@@ -388,6 +577,18 @@
 		position: relative;
 		flex: 1;
 	}
+	.lane.locked {
+		background-image: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0 6px, transparent 6px 12px);
+	}
+	.lane.locked :global(.item) {
+		cursor: not-allowed;
+	}
+	.lane.off :global(.item) {
+		opacity: 0.4;
+	}
+	.blade .lane :global(.item) {
+		cursor: crosshair;
+	}
 	.hitline {
 		position: absolute;
 		top: 0;
@@ -437,6 +638,14 @@
 		bottom: 0;
 		border-left: 1px solid #7fe0ff;
 		z-index: 2;
+		pointer-events: none;
+	}
+	.bladeline {
+		position: absolute;
+		top: 28px;
+		bottom: 0;
+		border-left: 1px solid #ff5a4f;
+		z-index: 3;
 		pointer-events: none;
 	}
 </style>

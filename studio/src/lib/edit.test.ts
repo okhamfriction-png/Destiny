@@ -6,6 +6,11 @@ import type { Caption } from './bindings/Caption';
 import type { GraphicItem } from './bindings/GraphicItem';
 import {
 	addDictionaryEntry,
+	editPoints,
+	linkedRefs,
+	moveGroup,
+	removeGroup,
+	splitGroup,
 	micState,
 	moveItem,
 	removeItem,
@@ -192,5 +197,50 @@ describe('micros et dictionnaire', () => {
 	it('ajoute une correction au dictionnaire', () => {
 		const q = addDictionaryEntry(base(), 'Osmo', 'Osmô');
 		expect(q.dictionary).toMatchObject({ morture: 'morsure', Osmo: 'Osmô' });
+	});
+});
+
+describe('plans liés', () => {
+	// Une proposition : une voix par plan vidéo, même découpe.
+	const linked = (): Project => {
+		const p = base();
+		const voice = findTrack(p, 'a_voice')!;
+		voice.items = video(p).map((c, i) => ({ id: `v${i + 1}`, src: c.src, in: c.in, out: c.out, at: c.at }));
+		return p;
+	};
+
+	it('trouve la voix de même découpe', () => {
+		expect(linkedRefs(linked(), { track: 'v0', index: 1 })).toEqual([
+			{ track: 'v0', index: 1 },
+			{ track: 'a_voice', index: 1 }
+		]);
+		// Voix qui couvre deux plans (exemple serpent écrit à la main) : pas de lien.
+		expect(linkedRefs(base(), { track: 'v0', index: 0 })).toHaveLength(1);
+	});
+
+	it('déplace vidéo et voix ensemble, sans passer sous zéro', () => {
+		const p = linked();
+		const refs = linkedRefs(p, { track: 'v0', index: 1 });
+		const q = moveGroup(p, refs, 3);
+		expect(video(q)[1].at).toBeCloseTo(65.5);
+		expect((findTrack(q, 'a_voice')!.items[1] as VideoItem).at).toBeCloseTo(65.5);
+		const z = moveGroup(p, linkedRefs(p, { track: 'v0', index: 0 }), -10);
+		expect(video(z)[0].at).toBe(0);
+	});
+
+	it('coupe et supprime le groupe', () => {
+		const p = linked();
+		const cut = splitGroup(p, linkedRefs(p, { track: 'v0', index: 0 }), 20);
+		expect(video(cut)).toHaveLength(3);
+		expect(findTrack(cut, 'a_voice')!.items).toHaveLength(3);
+		const del = removeGroup(cut, linkedRefs(cut, { track: 'v0', index: 1 }), true);
+		expect(video(del)).toHaveLength(2);
+		expect(findTrack(del, 'a_voice')!.items).toHaveLength(2);
+		// Raccord : le dernier plan recule de la durée supprimée (62,5 − 20).
+		expect(video(del)[1].at).toBeCloseTo(20);
+	});
+
+	it('points de montage triés', () => {
+		expect(editPoints(base())).toEqual([0, 62.5, 66.5]);
 	});
 });

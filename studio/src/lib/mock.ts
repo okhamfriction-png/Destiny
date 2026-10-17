@@ -396,6 +396,21 @@ export function createMockBackend(): Backend {
 			);
 		},
 
+		async thumbs() {
+			// Pas de décodage vidéo dans le navigateur : la bande reste unie.
+			return [];
+		},
+
+		async waveform({ from, to, buckets }) {
+			// Voix simulée : phrases de 1,5 à 4 s séparées de silences, reproductible.
+			return Array.from({ length: buckets }, (_, i) => {
+				const t = from + ((to - from) * (i + 0.5)) / buckets;
+				const phrase = Math.sin(t * 1.7) + Math.sin(t * 0.43) > -0.2;
+				const r = rng(Math.floor(t * 50))();
+				return phrase ? 0.45 + 0.45 * r : 0.05 + 0.08 * r;
+			});
+		},
+
 		async composePreview() {
 			// Pas de moteur B dans le navigateur : l'aperçu garde ses étiquettes de scènes.
 			return null;

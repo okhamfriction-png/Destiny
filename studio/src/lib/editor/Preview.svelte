@@ -5,7 +5,7 @@
 	import { editor } from '$lib/editor.svelte';
 	import { updateItem } from '$lib/edit';
 	import { timecode } from '$lib/format';
-	import { clipAt, findTrack, graphics, itemLabel, sameRef, type ItemRef } from '$lib/project';
+	import { clipAt, findTrack, graphics, itemLabel, itemSpan, resolveMedia, sameRef, type ItemRef } from '$lib/project';
 	import { BAND_ZOOM, clipZoom, cropPlacement, FLASH_DUR, isVertical, LETTERBOX, shortLayout } from '$lib/layout';
 	import { studio } from '$lib/state.svelte';
 
@@ -38,11 +38,7 @@
 	const local = $derived(clip ? t - clip.at : 0);
 	const srcTime = $derived(clip ? clip.in + local : 0);
 	const source = $derived(clip ? p.sources.find((s) => s.id === clip.src) : undefined);
-	// Chemins relatifs (projets écrits à la main ou par Claude Code : « media/… ») résolus
-	// par rapport au dossier du project.json, comme `render_a::resolve` côté Rust.
-	const projectDir = $derived(studio.path?.replace(/\/[^/]*$/, '') ?? '');
-	const absPath = (f: string) => (f.startsWith('/') || !projectDir ? f : `${projectDir}/${f}`);
-	const url = $derived(source ? api.fileSrc(absPath(source.proxy ?? source.path)) : '');
+	const url = $derived(source ? api.fileSrc(resolveMedia(studio.path, source.proxy ?? source.path)) : '');
 	const zoom = $derived(clip ? clipZoom(clip, local, baseZoom) : 1);
 	const place = $derived(clip ? cropPlacement(clip.crop, zoom, W, band.height) : null);
 	const selectedClip = $derived(!!clipRef && sameRef(clipRef, editor.selection));
@@ -57,6 +53,40 @@
 		for (const s of starts) if (t >= s && t < s + FLASH_DUR) a = Math.max(a, 1 - (t - s) / FLASH_DUR);
 		return a;
 	});
+	// --- Musique (A2) : jouée dans le visualiseur, calée sur la tête de lecture -------
+	const musics = $derived(
+		p.tracks.flatMap((tr) =>
+			tr.kind === 'music' ? tr.items.map((m, i) => ({ m, key: `${tr.id}:${i}`, span: itemSpan('music', m, p) })) : []
+		)
+	);
+	let audios = $state<Record<string, HTMLAudioElement>>({});
+
+	/** Gain de l'enveloppe à l'instant `x` (interpolation linéaire, 1 sans enveloppe). */
+	function gainAt(env: [number, number][] | undefined, x: number): number {
+		if (!env?.length) return 1;
+		if (x <= env[0][0]) return env[0][1];
+		for (let i = 1; i < env.length; i++) {
+			const [t1, g1] = env[i];
+			const [t0, g0] = env[i - 1];
+			if (x <= t1) return g0 + ((g1 - g0) * (x - t0)) / Math.max(1e-6, t1 - t0);
+		}
+		return env[env.length - 1][1];
+	}
+
+	$effect(() => {
+		for (const { m, key, span } of musics) {
+			const a = audios[key];
+			if (!a) continue;
+			const on = t >= span[0] && t < span[1] && !editor.off.music;
+			const want = m.offset + (t - span[0]);
+			a.volume = Math.min(1, Math.max(0, gainAt(m.gain_env, t)));
+			if (on && editor.playing) {
+				if (Math.abs(a.currentTime - want) > 0.25) a.currentTime = want;
+				if (a.paused) a.play().catch(() => {});
+			} else if (!a.paused) a.pause();
+		}
+	});
+
 	// --- Moteur B (trailers, reels) : la vraie composition HTML/GSAP en iframe ----------
 	// Réécrite par Rust 350 ms après la dernière édition (pas à chaque pixel d'un glisser),
 	// puis pilotée image par image par postMessage. Hors Tauri : étiquettes de scènes.
@@ -125,7 +155,8 @@
 	}
 
 	$effect(() => {
-		sync(video, 0.3, false);
+		// A1 coupée dans la timeline (M) : le son du proxy se tait.
+		sync(video, 0.3, !!editor.off.voice);
 		sync(bgVideo, 0.5, true);
 	});
 
@@ -161,10 +192,14 @@
 	}
 </script>
 
+{#each musics as x (x.key)}
+	<audio bind:this={audios[x.key]} src={api.fileSrc(resolveMedia(studio.path, x.m.file))} preload="auto"></audio>
+{/each}
+
 <div class="box" bind:clientWidth={boxW} bind:clientHeight={boxH}>
 	<div class="frame" style:width="{W * scale}px" style:height="{H * scale}px">
 		<div class="stage" style:width="{W}px" style:height="{H}px" style:transform="scale({scale})">
-			{#if clip}
+			{#if clip && !editor.off.video}
 				{#if vertical}
 					<!-- Fond : même image, floutée et assombrie -->
 					<div class="bg">
@@ -207,9 +242,9 @@
 			{/if}
 
 			{#if isShort}
-				<ShortOverlay project={p} {t} />
+				<ShortOverlay project={p} {t} showGraphics={!editor.off.graphics} showCaptions={!editor.off.captions} />
 			{:else}
-				{#if compUrl}
+				{#if compUrl && !editor.off.graphics}
 					<iframe
 						class="comp"
 						class:ready={compReady}

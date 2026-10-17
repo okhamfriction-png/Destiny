@@ -1,4 +1,16 @@
+<script module lang="ts">
+	/** Média dessiné dans le bloc : bande d'images (vidéo) ou forme d'onde (audio), en temps fichier. */
+	export interface ItemMedia {
+		kind: 'film' | 'wave';
+		path: string;
+		from: number;
+		to: number;
+	}
+</script>
+
 <script lang="ts">
+	import Filmstrip from './Filmstrip.svelte';
+	import Waveform from './Waveform.svelte';
 	import type { GraphicItem } from '$lib/bindings/GraphicItem';
 	import type { MusicItem } from '$lib/bindings/MusicItem';
 	import type { VideoItem } from '$lib/bindings/VideoItem';
@@ -18,6 +30,7 @@
 		height,
 		selected,
 		suspects = [],
+		media = null,
 		ondown
 	}: {
 		kind: TrackKind;
@@ -30,6 +43,7 @@
 		selected: boolean;
 		/** Intervalles suspects (temps final) à surligner en orange. */
 		suspects?: [number, number][];
+		media?: ItemMedia | null;
 		ondown: (e: PointerEvent, mode: DragMode) => void;
 	} = $props();
 
@@ -75,6 +89,11 @@
 	onpointerdown={(e) => ondown(e, 'move')}
 	role="presentation"
 >
+	{#if media?.kind === 'film'}
+		<Filmstrip path={media.path} from={media.from} to={media.to} {pps} height={Math.max(10, height - 15)} />
+	{:else if media?.kind === 'wave'}
+		<Waveform path={media.path} from={media.from} to={media.to} {width} {height} color={kind === 'music' ? 'rgba(235,215,255,0.75)' : 'rgba(225,255,230,0.75)'} />
+	{/if}
 	{#each suspects as [a, b] (a)}
 		<div class="suspect" style:left="{(a - start) * pps}px" style:width="{(b - a) * pps}px"></div>
 	{/each}
@@ -174,8 +193,12 @@
 	.video {
 		align-items: flex-start;
 	}
+	/* Nom sur un bandeau sombre au-dessus de la bande d'images. */
 	.video .name {
-		padding-top: 1px;
+		height: 15px;
+		line-height: 15px;
+		background: rgba(10, 18, 30, 0.75);
+		flex: 1;
 	}
 	.fx {
 		position: absolute;

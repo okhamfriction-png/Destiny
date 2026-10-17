@@ -1,7 +1,10 @@
 // État de l'éditeur : tête de lecture, lecture, sélection, zoom de la timeline.
 
 import { studio } from './state.svelte';
-import { projectDuration, type ItemRef } from './project';
+import { projectDuration, type ItemRef, type TrackKind } from './project';
+
+/** Outils de la timeline, comme DaVinci : sélection (A) et lame (B). */
+export type Tool = 'select' | 'blade';
 
 class EditorState {
 	playhead = $state(0);
@@ -10,6 +13,15 @@ class EditorState {
 	/** Pixels par seconde dans la timeline. */
 	pps = $state(24);
 	magnet = $state(true);
+	tool = $state<Tool>('select');
+	/** Sélection liée : un plan vidéo entraîne la voix de même découpe. */
+	linked = $state(true);
+	/** Pistes verrouillées : ni sélection ni modification à la souris. */
+	locked = $state<Partial<Record<TrackKind, boolean>>>({});
+	/** Pistes masquées (image) ou coupées (son) dans le visualiseur ; le rendu n'est pas touché. */
+	off = $state<Partial<Record<TrackKind, boolean>>>({});
+	/** Incrémenté pour demander « toute la timeline dans la fenêtre » (Maj+Z). */
+	fitTick = $state(0);
 	/** Instant de la dernière cible d'aimantation atteinte (guide vertical). */
 	snapGuide = $state<number | null>(null);
 	/** Image exacte (PNG du moteur de rendu) affichée par-dessus l'aperçu. */

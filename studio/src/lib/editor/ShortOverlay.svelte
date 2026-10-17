@@ -7,11 +7,17 @@
 
 	/** Habillage des shorts « scène » (moteur A), en pixels du format final :
 	 * kicker, bandeau hook, tag, sous-titres dynamiques, CTA, barre de progression. */
-	let { project, t }: { project: Project; t: number } = $props();
+	let {
+		project,
+		t,
+		showGraphics = true,
+		showCaptions = true
+	}: { project: Project; t: number; showGraphics?: boolean; showCaptions?: boolean } = $props();
 
 	const lay = $derived(shortLayout(project.format.w, project.format.h));
 	const all = $derived(graphics(project));
-	const active = $derived(all.filter((g) => t >= g.at && t < g.at + g.dur));
+	// Pistes V2 / ST1 masquées depuis la timeline (œil) : rien à dessiner.
+	const active = $derived(showGraphics ? all.filter((g) => t >= g.at && t < g.at + g.dur) : []);
 	const ctaStart = $derived(Math.min(Infinity, ...all.filter((g) => g.type === 'cta').map((g) => g.at)));
 
 	// Calage et découpe identiques au rendu : dictionnaire appliqué mot par mot.
@@ -19,7 +25,7 @@
 		blocks(captionWords(captions(project)).map((w) => ({ ...w, text: applyDictionary(w.text, project.dictionary) })))
 	);
 	const emphasis = $derived(new Set(captions(project).flatMap((c) => (c.emphasis ?? []).map(normalizeWord))));
-	const sub = $derived(activeBlock(subBlocks, t, ctaStart));
+	const sub = $derived(showCaptions ? activeBlock(subBlocks, t, ctaStart) : null);
 
 	function of<K extends GraphicItem['type']>(type: K) {
 		return active.filter((g): g is Extract<GraphicItem, { type: K }> => g.type === type);
