@@ -439,6 +439,10 @@ impl Project {
     /// peuvent écrire le même fichier sans jamais lire un JSON tronqué.
     pub fn save(&self, path: impl AsRef<Path>) -> Result<()> {
         let path = path.as_ref();
+        // Premier montage d'un spectacle : `montages/` n'existe pas encore.
+        if let Some(dir) = path.parent().filter(|d| !d.as_os_str().is_empty()) {
+            std::fs::create_dir_all(dir)?;
+        }
         let tmp = path.with_extension("json.tmp");
         std::fs::write(&tmp, self.to_json()?)?;
         std::fs::rename(&tmp, path)?;

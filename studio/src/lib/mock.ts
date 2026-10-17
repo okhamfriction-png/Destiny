@@ -6,7 +6,7 @@
 import { applyPatch, compare, deepClone, type Operation } from 'fast-json-patch';
 import serpent from '../../examples/serpent/project.json';
 import syntheticTranscript from '../../examples/synthetic/transcript.json';
-import type { Backend, ClaudeAnswer, JobEvent, LibraryEntry, ProjectState } from './api';
+import type { Backend, ClaudeAnswer, JobEvent, LibraryEntry, MontageInfo, ProjectState } from './api';
 import type { MicMap } from './bindings/MicMap';
 import type { MusicAnalysis } from './bindings/MusicAnalysis';
 import type { Project } from './bindings/Project';
@@ -149,6 +149,31 @@ function snapshotSvg(p: Project, t: number): string {
 
 export function createMockBackend(): Backend {
 	const projects = new Map<string, Project>([[SERPENT, demoProject()]]);
+	/** Dates de modification simulées (comme le mtime des fichiers côté Rust). */
+	const mtimes = new Map<string, number>([[SERPENT, now() - 3600]]);
+	const store = (path: string, p: Project) => {
+		projects.set(path, p);
+		mtimes.set(path, now());
+	};
+	/** Comme `free_path` côté Rust : jamais d'écrasement, `nom_2.json`, `nom_3.json`… */
+	const freePath = (path: string): string => {
+		if (!projects.has(path)) return path;
+		const m = path.match(/^(.*?)(?:_(\d+))?\.json$/);
+		const root = m ? m[1] : path.replace(/\.json$/, '');
+		for (let k = 2; ; k++) if (!projects.has(`${root}_${k}.json`)) return `${root}_${k}.json`;
+	};
+	const montagesOf = (dir: string): MontageInfo[] =>
+		[...projects.entries()]
+			.filter(([path]) => path.startsWith(`${dir}/`))
+			.map(([path, p]) => ({
+				path,
+				name: path.split('/').pop()!.replace(/\.json$/, ''),
+				preset: p.preset,
+				duration: projectDuration(p),
+				modified: mtimes.get(path) ?? now(),
+				master: path === `${dir}/project.json`
+			}))
+			.toSorted((a, b) => b.modified - a.modified || a.name.localeCompare(b.name));
 	const extraShows: LibraryEntry[] = [];
 	let currentPath: string | null = null;
 	let undoStack: Entry[] = [];
@@ -178,7 +203,7 @@ export function createMockBackend(): Backend {
 		if (compare(before, next).length > 0) {
 			undoStack.push({ label, before, after: deepClone(next) });
 			redoStack = [];
-			projects.set(currentPath!, deepClone(next));
+			store(currentPath!, deepClone(next));
 		}
 		return state();
 	};
@@ -226,12 +251,13 @@ export function createMockBackend(): Backend {
 
 		async library(root) {
 			await delay(120);
-			const serpentProjects = [...projects.keys()].filter((p) => p.startsWith(SHOW));
+			const serpent = montagesOf(SHOW);
 			return [
 				{
 					dir: SHOW,
 					name: '8 Octobre 2026',
-					projects: serpentProjects,
+					projects: serpent.map((m) => m.path),
+					montages: serpent,
 					hasIngest: true,
 					transcripts: [`${SHOW}/.cache/transcript_5250_5350.json`],
 					sheets: [1, 2, 3, 4].map((k) => `${SHOW}/.cache/sheets/sheet_${k}.jpg`),
@@ -241,12 +267,13 @@ export function createMockBackend(): Backend {
 					dir: `${root}/Répétition 1er octobre`,
 					name: 'Répétition 1er octobre',
 					projects: [],
+					montages: [],
 					hasIngest: false,
 					transcripts: [],
 					sheets: [],
 					modified: now() - 86400 * 15
 				},
-				...extraShows
+				...extraShows.map((s) => ({ ...s, montages: montagesOf(s.dir), projects: montagesOf(s.dir).map((m) => m.path) }))
 			];
 		},
 
@@ -324,8 +351,18 @@ export function createMockBackend(): Backend {
 		async proposeShort({ from, to, opts, out }) {
 			await delay(400);
 			const p = proposeFromSerpent(from, to, opts);
-			projects.set(out, p);
-			return out;
+			const path = freePath(out);
+			store(path, p);
+			return path;
+		},
+
+		async duplicateProject(path) {
+			await delay(80);
+			const p = projects.get(path);
+			if (!p) throw `fichier introuvable : ${path}`;
+			const copy = freePath(path);
+			store(copy, deepClone(p));
+			return copy;
 		},
 
 		async ingest({ dir, projectDir, proxies, sheets }) {
@@ -337,7 +374,7 @@ export function createMockBackend(): Backend {
 				const name = projectDir.split('/').filter(Boolean).pop() ?? dir;
 				// Ré-ingérer un spectacle connu ne crée pas de doublon.
 				if (projectDir !== SHOW && !extraShows.some((s) => s.dir === projectDir))
-					extraShows.push({ dir: projectDir, name, projects: [], hasIngest: true, transcripts: [], sheets: [], modified: now() });
+					extraShows.push({ dir: projectDir, name, projects: [], montages: [], hasIngest: true, transcripts: [], sheets: [], modified: now() });
 				return `${projectDir}/.cache/ingest.json`;
 			});
 		},

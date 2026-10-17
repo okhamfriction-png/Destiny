@@ -4,6 +4,7 @@
 
 import type { Operation } from 'fast-json-patch';
 import type { MusicAnalysis } from './bindings/MusicAnalysis';
+import type { Preset } from './bindings/Preset';
 import type { Project } from './bindings/Project';
 import type { Report } from './bindings/Report';
 import type { ShortOpts } from './bindings/ShortOpts';
@@ -12,11 +13,26 @@ import type { Suspect } from './bindings/Suspect';
 export type { Operation };
 
 /** Un spectacle (ou une répétition) dans le dossier de travail. */
+/** Résumé d'un montage pour la vue « Tous les projets ». */
+export interface MontageInfo {
+	path: string;
+	name: string;
+	preset: Preset;
+	/** Durée de la vidéo finale (s). */
+	duration: number;
+	/** Dernière modification (secondes Unix). */
+	modified: number;
+	/** `project.json` de l'ingest : les rushes du spectacle, pas un montage. */
+	master: boolean;
+}
+
 export interface LibraryEntry {
 	dir: string;
 	name: string;
-	/** Chemins absolus des montages `*.json`. */
+	/** Chemins absolus des montages `*.json` (dossier du spectacle et `montages/`). */
 	projects: string[];
+	/** Les mêmes, résumés, du plus récent au plus ancien. */
+	montages: MontageInfo[];
 	hasIngest: boolean;
 	transcripts: string[];
 	/** Planches contact (jpg). */
@@ -70,6 +86,8 @@ export interface Backend {
 	defaultRoot(): Promise<string>;
 	library(root: string): Promise<LibraryEntry[]>;
 	openProject(path: string): Promise<ProjectState>;
+	/** Copie un montage sous un nom libre (`nom_2.json`…) et renvoie son chemin. */
+	duplicateProject(path: string): Promise<string>;
 	commitProject(project: Project, label: string): Promise<ProjectState>;
 	applyPatch(patch: Operation[], label: string): Promise<ProjectState>;
 	undo(): Promise<ProjectState>;
@@ -122,6 +140,7 @@ async function tauriBackend(): Promise<Backend> {
 		defaultRoot: () => call('default_root'),
 		library: (root) => call('library', { root }),
 		openProject: (path) => call('open_project', { path }),
+		duplicateProject: (path) => call('duplicate_project', { path }),
 		commitProject: (project, label) => call('commit_project', { project, label }),
 		applyPatch: (patch, label) => call('apply_patch', { patch, label }),
 		undo: () => call('undo'),

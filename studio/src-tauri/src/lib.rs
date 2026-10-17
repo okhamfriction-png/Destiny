@@ -123,10 +123,73 @@ struct LibraryEntry {
     dir: String,
     name: String,
     projects: Vec<String>,
+    /// Résumé de chaque montage (le plus récent d'abord), pour la vue « Tous les projets ».
+    montages: Vec<MontageInfo>,
     has_ingest: bool,
     transcripts: Vec<String>,
     sheets: Vec<String>,
     modified: u64,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct MontageInfo {
+    path: String,
+    name: String,
+    preset: destiny_core::project::Preset,
+    duration: f64,
+    modified: u64,
+    /// `project.json` de l'ingest : les rushes du spectacle, pas un montage.
+    master: bool,
+}
+
+fn mtime(path: &Path) -> u64 {
+    std::fs::metadata(path)
+        .and_then(|m| m.modified())
+        .ok()
+        .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
+        .map(|d| d.as_secs())
+        .unwrap_or(0)
+}
+
+/// Montages d'un spectacle : `*.json` du dossier et de `montages/` (là où les propositions
+/// sont écrites). Les JSON qui ne sont pas des projets sont ignorés.
+fn montages_of(dir: &Path) -> Vec<MontageInfo> {
+    let mut paths = list_files(dir, |n| n.ends_with(".json"));
+    paths.extend(list_files(&dir.join("montages"), |n| n.ends_with(".json")));
+    let mut v: Vec<MontageInfo> = paths
+        .into_iter()
+        .filter_map(|p| {
+            let path = PathBuf::from(&p);
+            let prj = Project::load(&path).ok()?;
+            Some(MontageInfo {
+                name: path.file_stem()?.to_string_lossy().into_owned(),
+                preset: prj.preset,
+                duration: prj.duration(),
+                modified: mtime(&path),
+                master: path.parent() == Some(dir) && path.file_name().is_some_and(|n| n == "project.json"),
+                path: p,
+            })
+        })
+        .collect();
+    v.sort_by(|a, b| b.modified.cmp(&a.modified).then_with(|| a.name.cmp(&b.name)));
+    v
+}
+
+/// Premier chemin libre : `nom.json`, sinon `nom_2.json`, `nom_3.json`… Un nouveau montage
+/// n'écrase jamais un montage existant.
+fn free_path(path: &Path) -> PathBuf {
+    if !path.exists() {
+        return path.to_path_buf();
+    }
+    let stem = path.file_stem().and_then(|s| s.to_str()).unwrap_or("montage");
+    // Repart de la racine du nom : dupliquer « x_2 » donne « x_3 », pas « x_2_2 ».
+    let root = match stem.rsplit_once('_') {
+        Some((r, n)) if !r.is_empty() && n.parse::<u32>().is_ok() => r,
+        _ => stem,
+    };
+    let dir = path.parent().unwrap_or(Path::new("."));
+    (2..).map(|k| dir.join(format!("{root}_{k}.json"))).find(|p| !p.exists()).unwrap()
 }
 
 fn list_files(dir: &Path, pred: impl Fn(&str) -> bool) -> Vec<String> {
@@ -154,16 +217,13 @@ fn library(root: String) -> CmdResult<Vec<LibraryEntry>> {
             continue;
         }
         let cache = dir.join(".cache");
-        let modified = e
-            .metadata()
-            .and_then(|m| m.modified())
-            .ok()
-            .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
-            .map(|d| d.as_secs())
-            .unwrap_or(0);
+        let montages = montages_of(&dir);
+        // Un spectacle « bouge » quand un de ses montages bouge.
+        let modified = montages.iter().map(|m| m.modified).fold(mtime(&dir), u64::max);
         out.push(LibraryEntry {
             name: dir.file_name().unwrap().to_string_lossy().into_owned(),
-            projects: list_files(&dir, |n| n.ends_with(".json")),
+            projects: montages.iter().map(|m| m.path.clone()).collect(),
+            montages,
             has_ingest: cache.join("ingest.json").exists(),
             transcripts: list_files(&cache, |n| n.starts_with("transcript_") && n.ends_with(".json")),
             sheets: list_files(&cache.join("sheets"), |n| n.ends_with(".jpg")),
@@ -248,8 +308,19 @@ fn propose_short(
     let (_, p) = current(&state)?;
     let t = transcript.map(|t| asr::Transcript::load(Path::new(&t))).transpose().map_err(err)?;
     let s = propose::short_scene(&p, t.as_ref(), from, to, &opts).map_err(err)?;
+    let out = free_path(Path::new(&out));
     s.save(&out).map_err(err)?;
-    Ok(out)
+    Ok(out.display().to_string())
+}
+
+/// Copie d'un montage sous un nom libre (variante sans toucher à l'original).
+#[tauri::command]
+fn duplicate_project(path: String) -> CmdResult<String> {
+    let src = PathBuf::from(&path);
+    let p = Project::load(&src).map_err(err)?;
+    let out = free_path(&src);
+    p.save(&out).map_err(err)?;
+    Ok(out.display().to_string())
 }
 
 #[tauri::command]
@@ -529,6 +600,7 @@ pub fn run() {
             redo,
             music_analysis,
             propose_short,
+            duplicate_project,
             ingest,
             analyze,
             render,
@@ -540,4 +612,23 @@ pub fn run() {
         ])
         .run(tauri::generate_context!())
         .expect("erreur au lancement de Destiny Studio");
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn free_path_never_overwrites() {
+        let dir = std::env::temp_dir().join(format!("destiny-free-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let a = dir.join("serpent.json");
+        assert_eq!(free_path(&a), a);
+        std::fs::write(&a, "{}").unwrap();
+        assert_eq!(free_path(&a), dir.join("serpent_2.json"));
+        std::fs::write(dir.join("serpent_2.json"), "{}").unwrap();
+        // Dupliquer la copie repart de la racine du nom.
+        assert_eq!(free_path(&dir.join("serpent_2.json")), dir.join("serpent_3.json"));
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
 }
