@@ -87,6 +87,9 @@ export interface Backend {
 	analyze(args: { from: number; to: number; model: string | null }): Promise<string>;
 	render(args: { quality: RenderQuality; out: string | null }): Promise<string>;
 	snapshot(t: number): Promise<string>;
+	/** Aperçu live du moteur B (trailers, reels) : URL de la composition HTML/GSAP du
+	 * projet ouvert, réécrite à chaque appel ; `null` pour les shorts ou hors Tauri. */
+	composePreview(): Promise<string | null>;
 	exportProject(targets: string[] | null): Promise<string>;
 	cancelJob(id: string): Promise<void>;
 	askClaude(instruction: string): Promise<ClaudeAnswer>;
@@ -130,6 +133,13 @@ async function tauriBackend(): Promise<Backend> {
 		analyze: (args) => call('analyze', { ...args }),
 		render: (args) => call('render', { ...args }),
 		snapshot: (t) => call('snapshot', { t }),
+		composePreview: async () => {
+			const v = await call<string | null>('compose_preview');
+			if (!v) return null;
+			// Protocole `comp` de src-tauri (Windows l'expose en http://comp.localhost).
+			const base = navigator.userAgent.includes('Windows') ? 'http://comp.localhost' : 'comp://localhost';
+			return `${base}/index.html?overlay=1&v=${v}`;
+		},
 		exportProject: (targets) => call('export_project', { targets }),
 		cancelJob: (id) => call('cancel_job', { id }),
 		askClaude: (instruction) => call('ask_claude', { instruction }),

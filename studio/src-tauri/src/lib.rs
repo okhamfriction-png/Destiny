@@ -35,6 +35,8 @@ struct Open {
 #[derive(Default)]
 struct AppState {
     open: Mutex<Open>,
+    /// Dossier de la composition live du moteur B, servi par le protocole `comp://`.
+    comp: Mutex<Option<PathBuf>>,
 }
 
 #[derive(Serialize)]
@@ -406,6 +408,83 @@ fn cancel_job(id: String, jobs: State<Jobs>) {
     jobs.cancel(&id);
 }
 
+// ---------------------------------------------------------------- aperçu live (moteur B)
+
+/// Écrit la composition HTML/GSAP du projet ouvert dans `.cache/live/` pour l'aperçu de
+/// l'éditeur. Sans plaques vidéo (pas d'ffmpeg lourd) : l'iframe transparente se pose sur
+/// le proxy que l'aperçu lit déjà. Renvoie un jeton qui change à chaque écriture (`None`
+/// pour les shorts, simulés directement en Svelte).
+#[tauri::command]
+async fn compose_preview(state: State<'_, AppState>) -> CmdResult<Option<String>> {
+    let (path, p) = current(&state)?;
+    if !render_b::handles(p.preset) {
+        return Ok(None);
+    }
+    let dir = cache_dir(&path).join("live").join(name_of(&path, &p));
+    let base = project_dir(&path);
+    let d = dir.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        render_b::compose(&resolved(&path, &p), &base, &d, Quality::Preview, false, None, |_| {})
+    })
+    .await
+    .map_err(err)?
+    .map_err(err)?;
+    *state.comp.lock().unwrap() = Some(dir);
+    let ms = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis()).unwrap_or(0);
+    Ok(Some(ms.to_string()))
+}
+
+/// `comp://localhost/<fichier>` → fichier du dossier de composition. Un protocole dédié
+/// plutôt que `asset://` : celui-ci encode le chemin entier dans un seul segment d'URL, ce qui
+/// casse les liens relatifs de `index.html` (style.css, polices, images).
+fn serve_comp(dir: Option<PathBuf>, uri_path: &str) -> tauri::http::Response<Vec<u8>> {
+    let not_found = || tauri::http::Response::builder().status(404).body(Vec::new()).unwrap();
+    let Some(dir) = dir else { return not_found() };
+    let rel = percent_decode(uri_path.trim_start_matches('/'));
+    let rel = if rel.is_empty() { "index.html".to_string() } else { rel };
+    // Pas de sortie du dossier de composition.
+    if Path::new(&rel).components().any(|c| !matches!(c, std::path::Component::Normal(_))) {
+        return not_found();
+    }
+    let Ok(bytes) = std::fs::read(dir.join(&rel)) else { return not_found() };
+    let mime = match Path::new(&rel).extension().and_then(|e| e.to_str()).unwrap_or("") {
+        "html" => "text/html; charset=utf-8",
+        "css" => "text/css; charset=utf-8",
+        "js" => "text/javascript; charset=utf-8",
+        "json" => "application/json",
+        "ttf" => "font/ttf",
+        "png" => "image/png",
+        "jpg" | "jpeg" => "image/jpeg",
+        "webp" => "image/webp",
+        "mp4" => "video/mp4",
+        _ => "application/octet-stream",
+    };
+    tauri::http::Response::builder()
+        .header("Content-Type", mime)
+        // Chaque édition réécrit la composition : jamais de cache.
+        .header("Cache-Control", "no-store")
+        .body(bytes)
+        .unwrap()
+}
+
+fn percent_decode(s: &str) -> String {
+    let b = s.as_bytes();
+    let mut out = Vec::with_capacity(b.len());
+    let mut i = 0;
+    while i < b.len() {
+        if b[i] == b'%' && i + 2 < b.len() {
+            if let Ok(v) = u8::from_str_radix(&s[i + 1..i + 3], 16) {
+                out.push(v);
+                i += 3;
+                continue;
+            }
+        }
+        out.push(b[i]);
+        i += 1;
+    }
+    String::from_utf8_lossy(&out).into_owned()
+}
+
 // ---------------------------------------------------------------- agent
 
 #[tauri::command]
@@ -423,6 +502,10 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .manage(AppState::default())
         .manage(Jobs::default())
+        .register_uri_scheme_protocol("comp", |ctx, req| {
+            let dir = ctx.app_handle().state::<AppState>().comp.lock().unwrap().clone();
+            serve_comp(dir, req.uri().path())
+        })
         .setup(|app| {
             // Polices embarquées (moteur A) : ressources du bundle.
             if std::env::var_os("DESTINY_FONTS").is_none() {
@@ -452,6 +535,7 @@ pub fn run() {
             snapshot,
             export_project,
             cancel_job,
+            compose_preview,
             ask_claude,
         ])
         .run(tauri::generate_context!())

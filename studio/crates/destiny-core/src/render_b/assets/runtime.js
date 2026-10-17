@@ -17,6 +17,8 @@
   'use strict';
   var C = JSON.parse(document.getElementById('comp-data').textContent);
   var RENDER = !!window.__RENDER || /[?&]render=1/.test(location.search);
+  // Calque de l'aperçu de l'éditeur : fond transparent posé sur le proxy vidéo de l'app.
+  var OVERLAY = /[?&]overlay=1/.test(location.search);
   var EPS = 1e-6;
   window.__COMP = C;
   window.__duration = C.duration;
@@ -31,7 +33,7 @@
   root.style.setProperty('--sw', (C.frame.safe[2] - C.frame.safe[0]) + 'px');
   root.style.setProperty('--sh', (C.frame.safe[3] - C.frame.safe[1]) + 'px');
   document.body.classList.add(C.frame.vertical ? 'fmt-v' : 'fmt-h');
-  document.body.classList.add(RENDER ? 'render' : 'live');
+  document.body.classList.add(RENDER ? 'render' : OVERLAY ? 'overlay' : 'live');
 
   var stage = document.getElementById('stage');
   stage.style.transform = 'scale(' + C.frame.k + ')';
@@ -316,4 +318,15 @@
   }).then(function () {
     return window.__seek(0);
   }).then(function () { return true; });
+
+  // Aperçu live dans l'éditeur : l'iframe (protocole comp://) n'a pas la même origine que
+  // l'app, qui ne peut donc pas appeler __seek directement. Messages { seek: t } ; la
+  // composition annonce { compReady: durée } quand elle est prête. Rien de tout ça au rendu.
+  if (!RENDER && window.parent !== window) {
+    window.addEventListener('message', function (e) {
+      var d = e.data || {};
+      if (typeof d.seek === 'number') window.__ready.then(function () { window.__seek(d.seek); });
+    });
+    window.__ready.then(function () { window.parent.postMessage({ compReady: C.duration }, '*'); });
+  }
 })();

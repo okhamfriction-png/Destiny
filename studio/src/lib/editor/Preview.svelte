@@ -38,7 +38,11 @@
 	const local = $derived(clip ? t - clip.at : 0);
 	const srcTime = $derived(clip ? clip.in + local : 0);
 	const source = $derived(clip ? p.sources.find((s) => s.id === clip.src) : undefined);
-	const url = $derived(source ? api.fileSrc(source.proxy ?? source.path) : '');
+	// Chemins relatifs (projets écrits à la main ou par Claude Code : « media/… ») résolus
+	// par rapport au dossier du project.json, comme `render_a::resolve` côté Rust.
+	const projectDir = $derived(studio.path?.replace(/\/[^/]*$/, '') ?? '');
+	const absPath = (f: string) => (f.startsWith('/') || !projectDir ? f : `${projectDir}/${f}`);
+	const url = $derived(source ? api.fileSrc(absPath(source.proxy ?? source.path)) : '');
 	const zoom = $derived(clip ? clipZoom(clip, local, baseZoom) : 1);
 	const place = $derived(clip ? cropPlacement(clip.crop, zoom, W, band.height) : null);
 	const selectedClip = $derived(!!clipRef && sameRef(clipRef, editor.selection));
@@ -53,9 +57,44 @@
 		for (const s of starts) if (t >= s && t < s + FLASH_DUR) a = Math.max(a, 1 - (t - s) / FLASH_DUR);
 		return a;
 	});
-	// Graphismes du moteur B (trailers) : non simulés, simplement signalés.
+	// --- Moteur B (trailers, reels) : la vraie composition HTML/GSAP en iframe ----------
+	// Réécrite par Rust 350 ms après la dernière édition (pas à chaque pixel d'un glisser),
+	// puis pilotée image par image par postMessage. Hors Tauri : étiquettes de scènes.
+	let compUrl = $state<string | null>(null);
+	let compReady = $state(false);
+	let compFrame = $state<HTMLIFrameElement>();
+	$effect(() => {
+		if (isShort) {
+			compUrl = null;
+			return;
+		}
+		void JSON.stringify(p.tracks);
+		void p.format;
+		const id = setTimeout(() => {
+			api.composePreview().then(
+				(u) => {
+					if (u !== compUrl) compReady = false;
+					compUrl = u;
+				},
+				(e) => console.warn('aperçu moteur B :', e)
+			);
+		}, 350);
+		return () => clearTimeout(id);
+	});
+	$effect(() => {
+		const onMsg = (e: MessageEvent) => {
+			if (compFrame && e.source === compFrame.contentWindow && e.data?.compReady != null) compReady = true;
+		};
+		window.addEventListener('message', onMsg);
+		return () => window.removeEventListener('message', onMsg);
+	});
+	$effect(() => {
+		if (compReady) compFrame?.contentWindow?.postMessage({ seek: t }, '*');
+	});
+
+	// Sans composition live : graphismes simplement signalés.
 	const otherGraphics = $derived(
-		isShort ? [] : graphics(p).filter((g) => t >= g.at && t < g.at + g.dur && g.type !== 'flash')
+		isShort || compUrl ? [] : graphics(p).filter((g) => t >= g.at && t < g.at + g.dur && g.type !== 'flash')
 	);
 
 	// --- Mise à l'échelle du cadre dans la zone disponible -------------------
@@ -170,6 +209,17 @@
 			{#if isShort}
 				<ShortOverlay project={p} {t} />
 			{:else}
+				{#if compUrl}
+					<iframe
+						class="comp"
+						class:ready={compReady}
+						bind:this={compFrame}
+						src={compUrl}
+						title="Composition du moteur B"
+						width={W}
+						height={H}
+					></iframe>
+				{/if}
 				{#each otherGraphics as g, i (i)}
 					<div class="scene" style:top="{H / 2 + i * 80}px">{g.type}{'text' in g ? ` · ${g.text}` : ''}{'lines' in g && g.lines ? ` · ${g.lines.join(' / ')}` : ''}</div>
 				{/each}
@@ -206,6 +256,19 @@
 		transform-origin: 0 0;
 		background: #000;
 		overflow: hidden;
+	}
+	.comp {
+		position: absolute;
+		left: 0;
+		top: 0;
+		border: 0;
+		background: transparent;
+		/* Le recadrage à la souris passe à travers le calque graphique. */
+		pointer-events: none;
+		opacity: 0;
+	}
+	.comp.ready {
+		opacity: 1;
 	}
 	.bg {
 		position: absolute;

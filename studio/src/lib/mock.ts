@@ -359,6 +359,11 @@ export function createMockBackend(): Backend {
 			);
 		},
 
+		async composePreview() {
+			// Pas de moteur B dans le navigateur : l'aperçu garde ses étiquettes de scènes.
+			return null;
+		},
+
 		async snapshot(t) {
 			await delay(500);
 			return snapshotSvg(current(), t);
