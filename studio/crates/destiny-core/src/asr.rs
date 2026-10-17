@@ -115,6 +115,28 @@ pub fn energy_vad(samples: &[f32], sr: u32, p: VadParams) -> Vec<[f64; 2]> {
     segments_from_probs(&probs, HOP, 0.5, p)
 }
 
+/// Textes que whisper invente sur du bruit, de la musique ou un son tenu (appris sur des
+/// sous-titres de télé) : en français surtout les génériques de sous-titrage. Observé sur Mac
+/// avec large-v3-turbo : « Sous-titrage Société Radio-Canada », « Sous-titrage ST' 501 », « ... ».
+/// « Merci. » seul n'est pas filtré ici (réplique plausible sur scène) : c'est la probabilité
+/// « pas de parole » de whisper qui l'écarte.
+pub fn is_hallucination(text: &str) -> bool {
+    let t = text.trim().to_lowercase();
+    if !t.chars().any(char::is_alphanumeric) {
+        return true;
+    }
+    const MOTIFS: [&str; 7] = [
+        "sous-titrage",
+        "sous-titres réalisés",
+        "sous-titré par",
+        "radio-canada",
+        "amara.org",
+        "merci d'avoir regardé",
+        "abonnez-vous",
+    ];
+    MOTIFS.iter().any(|m| t.contains(m))
+}
+
 /// Détecte la parole sur un signal 16 kHz (Silero si disponible).
 pub fn vad(samples: &[f32], p: VadParams) -> Result<Vec<[f64; 2]>> {
     #[cfg(feature = "asr")]
@@ -148,9 +170,14 @@ pub fn transcribe_project(project: &Project, a: f64, b: f64, model: Option<&Path
             let i1 = ((e * ASR_SR as f64) as usize).min(pcm.samples.len());
             let chunk = &pcm.samples[i0..i1];
             let db = audio::rms_db(chunk).unwrap_or(audio::DB_FLOOR);
+            // Whisper a jugé que ce n'était pas de la parole (texte vide ou hallucination) : on
+            // jette le segment plutôt que de garder une réplique fantôme dans la timeline.
             #[cfg(feature = "asr")]
             let text = match &engine {
-                Some(en) => en.transcribe(chunk)?,
+                Some(en) => match en.transcribe(chunk)? {
+                    t if is_hallucination(&t) => continue,
+                    t => t,
+                },
                 None => String::new(),
             };
             #[cfg(not(feature = "asr"))]
@@ -196,9 +223,16 @@ mod whisper {
             params.set_print_realtime(false);
             params.set_print_timestamps(false);
             params.set_single_segment(true);
+            // Pas de jetons non vocaux ([musique], (rires)…) ni de sortie vide forcée.
+            params.set_suppress_nst(true);
+            params.set_suppress_blank(true);
             state.full(params, samples)?;
             let mut text = String::new();
             for seg in state.as_iter() {
+                // Seuil 0,6 : celui de whisper.cpp pour décider qu'un segment est silencieux.
+                if seg.no_speech_probability() > 0.6 {
+                    continue;
+                }
                 text.push_str(&seg.to_string());
             }
             Ok(text.trim().to_string())
@@ -272,6 +306,16 @@ mod tests {
         let seg = energy_vad(&s, sr, VadParams::default());
         assert_eq!(seg.len(), 1, "{seg:?}");
         assert!((seg[0][0] - 1.0).abs() < 0.05 && (seg[0][1] - 2.6).abs() < 0.05, "{seg:?}");
+    }
+
+    #[test]
+    fn hallucinations() {
+        for t in ["Sous-titrage Société Radio-Canada", "Sous-titrage ST' 501", "...", "", " ♪ ", "Merci d'avoir regardé cette vidéo !"] {
+            assert!(is_hallucination(t), "{t}");
+        }
+        for t in ["Bonjour à tous.", "Merci.", "Un immense serpent aux yeux verts. Destin."] {
+            assert!(!is_hallucination(t), "{t}");
+        }
     }
 
     /// Exécute Silero pour de vrai : `DESTINY_SILERO=…/silero_vad.onnx ORT_DYLIB_PATH=…/libonnxruntime.so
