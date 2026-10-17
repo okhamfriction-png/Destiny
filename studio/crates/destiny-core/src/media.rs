@@ -7,6 +7,8 @@ use std::hash::{Hash, Hasher};
 use std::io::Write as _;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
+use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::Mutex;
 
 use anyhow::{Context, Result};
 use rayon::prelude::*;
@@ -27,6 +29,13 @@ pub fn file_key(path: &Path) -> String {
         }
     }
     format!("{:016x}", h.finish())
+}
+
+/// Fichier temporaire propre à cet appel (écritures concurrentes du même cache : la
+/// timeline demande souvent plusieurs clips du même rush au même instant).
+fn unique_tmp(path: &Path, ext: &str) -> PathBuf {
+    static N: AtomicUsize = AtomicUsize::new(0);
+    path.with_extension(format!("{}-{}.{ext}", std::process::id(), N.fetch_add(1, Ordering::Relaxed)))
 }
 
 // ---------------------------------------------------------------- vignettes
@@ -66,7 +75,7 @@ pub fn thumbs(video: &Path, from: f64, to: f64, step: f64, height: u32, cache: &
 
 fn extract_frame(video: &Path, t: f64, height: u32, out: &Path) -> Result<()> {
     // Écriture dans un fichier temporaire puis renommage : jamais de JPEG à moitié écrit.
-    let tmp = out.with_extension("tmp.jpg");
+    let tmp = unique_tmp(out, "tmp.jpg");
     let status = Command::new(ffmpeg::ffmpeg_bin())
         .args(["-hide_banner", "-nostdin", "-v", "error", "-y", "-ss", &format!("{t:.3}"), "-i"])
         .arg(video)
@@ -95,13 +104,23 @@ const WAVE_SR: u32 = 8_000;
 /// puis lue depuis `cache/<clé>.f32` (f32 little-endian).
 pub fn envelope(path: &Path, cache: &Path) -> Result<Vec<f32>> {
     let file = cache.join(format!("{}.f32", file_key(path)));
-    if let Ok(bytes) = std::fs::read(&file) {
-        return Ok(bytes.chunks_exact(4).map(|b| f32::from_le_bytes([b[0], b[1], b[2], b[3]])).collect());
+    let read = |f: &Path| {
+        std::fs::read(f).ok().map(|bytes| bytes.chunks_exact(4).map(|b| f32::from_le_bytes([b[0], b[1], b[2], b[3]])).collect())
+    };
+    if let Some(env) = read(&file) {
+        return Ok(env);
+    }
+    // Un seul décodage à la fois : les appels simultanés pour le même rush attendent puis
+    // lisent le cache que le premier vient d'écrire (bug réel : A1 vide sur 2 clips sur 3).
+    static DECODE: Mutex<()> = Mutex::new(());
+    let _guard = DECODE.lock().unwrap_or_else(|e| e.into_inner());
+    if let Some(env) = read(&file) {
+        return Ok(env);
     }
     let pcm = ffmpeg::load_audio(path, None, WAVE_SR)?;
     let env = peak_envelope(&pcm.samples, pcm.sr);
     std::fs::create_dir_all(cache)?;
-    let tmp = file.with_extension("tmp");
+    let tmp = unique_tmp(&file, "tmp");
     let mut f = std::fs::File::create(&tmp)?;
     for v in &env {
         f.write_all(&v.to_le_bytes())?;
@@ -196,4 +215,30 @@ fn media_speed() {
     let _ = envelope(&media.join("TX00_MIC001_20261008_201103_orig.wav"), &cache).unwrap();
     println!("enveloppe depuis le cache en {:?}", t.elapsed());
     let _ = std::fs::remove_dir_all(cache);
+}
+
+#[cfg(test)]
+mod concurrency {
+    use super::*;
+
+    /// Plusieurs clips du même rush demandent la forme d'onde en même temps : tous
+    /// doivent la recevoir (avant, un seul réussissait).
+    #[test]
+    fn envelope_concurrent_calls_all_succeed() {
+        let dir = std::env::temp_dir().join(format!("destiny-env-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let wav = dir.join("a.wav");
+        let spec = hound::WavSpec { channels: 1, sample_rate: 8000, bits_per_sample: 16, sample_format: hound::SampleFormat::Int };
+        let mut w = hound::WavWriter::create(&wav, spec).unwrap();
+        for i in 0..16_000 {
+            w.write_sample(((i as f32 * 0.2).sin() * 12_000.0) as i16).unwrap();
+        }
+        w.finalize().unwrap();
+        let cache = dir.join("wave");
+        let res: Vec<_> = (0..6).map(|_| { let (w, c) = (wav.clone(), cache.clone()); std::thread::spawn(move || envelope(&w, &c)) }).collect();
+        for r in res {
+            assert_eq!(r.join().unwrap().unwrap().len(), 200);
+        }
+        std::fs::remove_dir_all(dir).unwrap();
+    }
 }

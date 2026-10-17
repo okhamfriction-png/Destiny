@@ -158,16 +158,19 @@
 		position: relative;
 		flex: 1;
 		min-height: 0;
+		overflow: hidden;
 		background: #000;
-		display: grid;
-		place-items: center;
 		cursor: grab;
 		touch-action: none;
 	}
+	/* Rempli et contenu dans le cadre : un max-height en % ne se résout pas ici et l'image
+	   débordait sur la barre et les boutons. */
 	video {
-		max-width: 100%;
-		max-height: 100%;
-		display: block;
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
 		pointer-events: none;
 	}
 	.tag {
