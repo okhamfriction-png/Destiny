@@ -7,4 +7,6 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
+    # Outil de build cargokit : paquet Dart à part, avec ses propres dépendances.
+    - rust_builder/**
 include: package:flutter_lints/flutter.yaml
