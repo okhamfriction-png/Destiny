@@ -14,6 +14,15 @@ set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 OUT="${1:-$HERE/media}"
 FONT="$HERE/../../assets/fonts/Montserrat-SemiBold.ttf"
+# drawtext exige un ffmpeg avec freetype : sur Mac, le `ffmpeg` de Homebrew n'en a pas,
+# on prend `ffmpeg-full` (keg-only) s'il est installé, comme destiny-cli.
+FF="${DESTINY_FFMPEG:-}"
+if [ -z "$FF" ]; then
+  for c in /opt/homebrew/opt/ffmpeg-full/bin/ffmpeg /usr/local/opt/ffmpeg-full/bin/ffmpeg ffmpeg; do
+    command -v "$c" >/dev/null && { FF="$c"; break; }
+  done
+fi
+ffmpeg() { "$FF" "$@"; }
 mkdir -p "$OUT"
 cd "$OUT"
 

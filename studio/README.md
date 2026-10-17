@@ -43,7 +43,13 @@ studio/
 ## Prérequis (Mac)
 
 ```sh
-brew install ffmpeg rust node
+# ffmpeg-full et non ffmpeg : la formule ffmpeg de Homebrew (9.x) n'a ni libass ni freetype,
+# donc ni le filtre `ass` (moteur A) ni `drawtext` (planches contact). ffmpeg-full est keg-only :
+# destiny-cli et l'app la trouvent d'eux-mêmes dans $(brew --prefix)/opt/ffmpeg-full.
+brew install ffmpeg-full node
+# Rust : rustup (https://rustup.rs) ou `brew install rust`, pas les deux.
+# Moteur B sans Chrome installé : le Chromium headless de Playwright
+(cd renderer && npm install && npx playwright-core install chromium)
 # transcription locale (features asr / metal) : cmake + un modèle ggml whisper
 brew install cmake onnxruntime
 curl -L -o ~/models/ggml-large-v3-turbo.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin
@@ -57,7 +63,7 @@ cargo build --release -p destiny-cli --features metal   # whisper sur le GPU
 ## Commandes
 
 ```sh
-(cd renderer && npm install)                 # moteur B (trailers) ; Chrome/Chromium requis (DESTINY_CHROMIUM)
+(cd renderer && npm install)                 # moteur B (trailers) ; Chrome/Chromium requis (DESTINY_CHROMIUM, sinon Playwright)
 cargo test                                   # cœur + CLI (régénère src/lib/bindings/*.ts)
 cargo build --release -p destiny-cli         # la CLI
 npm install && npm run tauri dev             # l'application

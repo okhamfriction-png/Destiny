@@ -457,7 +457,7 @@ pub fn renderer_path() -> Result<PathBuf> {
 }
 
 fn node_bin() -> String {
-    std::env::var("DESTINY_NODE").unwrap_or_else(|_| "node".into())
+    ffmpeg::tool_bin("DESTINY_NODE", &["/opt/homebrew/bin/node", "/usr/local/bin/node"], "node")
 }
 
 fn workers() -> usize {

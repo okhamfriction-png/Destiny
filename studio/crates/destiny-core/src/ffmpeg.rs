@@ -14,11 +14,37 @@ use serde::{Deserialize, Serialize};
 
 use crate::audio::Pcm;
 
+/// Résout un outil externe : variable d'environnement, sinon premier chemin absolu existant
+/// (sur Mac, une app lancée depuis le Finder n'hérite pas du PATH du shell, d'où les chemins
+/// Homebrew en dur ; `~/` est développé), sinon le nom nu cherché dans le PATH.
+pub fn tool_bin(env: &str, candidates: &[&str], name: &str) -> String {
+    if let Ok(p) = std::env::var(env) {
+        return p;
+    }
+    let home = std::env::var("HOME").unwrap_or_default();
+    candidates
+        .iter()
+        .map(|c| c.strip_prefix("~/").map(|r| format!("{home}/{r}")).unwrap_or_else(|| c.to_string()))
+        .find(|c| Path::new(c).is_file())
+        .unwrap_or_else(|| name.into())
+}
+
+// Homebrew : la formule `ffmpeg` 9 est compilée sans libass ni freetype, donc sans les filtres
+// `ass` (moteur A) et `drawtext` (planches contact). `ffmpeg-full` les a mais est keg-only
+// (hors PATH) : on la préfère explicitement.
 pub fn ffmpeg_bin() -> String {
-    std::env::var("DESTINY_FFMPEG").unwrap_or_else(|_| "ffmpeg".into())
+    tool_bin(
+        "DESTINY_FFMPEG",
+        &["/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg", "/usr/local/opt/ffmpeg-full/bin/ffmpeg", "/opt/homebrew/bin/ffmpeg", "/usr/local/bin/ffmpeg"],
+        "ffmpeg",
+    )
 }
 pub fn ffprobe_bin() -> String {
-    std::env::var("DESTINY_FFPROBE").unwrap_or_else(|_| "ffprobe".into())
+    tool_bin(
+        "DESTINY_FFPROBE",
+        &["/opt/homebrew/opt/ffmpeg-full/bin/ffprobe", "/usr/local/opt/ffmpeg-full/bin/ffprobe", "/opt/homebrew/bin/ffprobe", "/usr/local/bin/ffprobe"],
+        "ffprobe",
+    )
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]

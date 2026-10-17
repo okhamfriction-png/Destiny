@@ -17,7 +17,12 @@ pub struct Proposal {
 }
 
 fn claude_bin() -> String {
-    std::env::var("DESTINY_CLAUDE_BIN").unwrap_or_else(|_| "claude".into())
+    // Installation native de Claude Code (~/.local/bin), puis npm via Homebrew.
+    destiny_core::ffmpeg::tool_bin(
+        "DESTINY_CLAUDE_BIN",
+        &["~/.local/bin/claude", "/opt/homebrew/bin/claude", "/usr/local/bin/claude"],
+        "claude",
+    )
 }
 
 fn prompt(project: &Project, instruction: &str) -> Result<String> {
