@@ -6,6 +6,7 @@ import type { Caption } from './bindings/Caption';
 import type { GraphicItem } from './bindings/GraphicItem';
 import type { MusicItem } from './bindings/MusicItem';
 import type { Project } from './bindings/Project';
+import type { Source } from './bindings/Source';
 import type { Track } from './bindings/Track';
 import type { VideoItem } from './bindings/VideoItem';
 import type { VoiceItem } from './bindings/VoiceItem';
@@ -295,6 +296,118 @@ export function editPoints(p: Project): number[] {
 		}
 	}
 	return [...pts].sort((a, b) => a - b);
+}
+
+// ---------------------------------------------------------------------------
+// Ajout d'un rush (visualiseur source → timeline), comme F9 / F10 de DaVinci
+// ---------------------------------------------------------------------------
+
+/** Un morceau de rush choisi dans le visualiseur source (temps du fichier). */
+export interface SourceClip {
+	source: Source;
+	in: number;
+	out: number;
+}
+
+export type PlaceMode = 'overwrite' | 'insert';
+
+/** Première piste du genre demandé, créée vide si le montage n'en a pas. */
+function ensureTrack(p: Project, kind: 'video' | 'voice'): Track {
+	let t = p.tracks.find((x) => x.kind === kind);
+	if (!t) {
+		const base = kind === 'video' ? 'v0' : 'a_voice';
+		let id = base;
+		for (let k = 2; p.tracks.some((x) => x.id === id); k++) id = `${base}_${k}`;
+		t = { kind, id, items: [] } as Track;
+		p.tracks.push(t);
+	}
+	return t;
+}
+
+/** Libère `[a, b]` sur une piste vidéo ou voix (modifie `p`) : ce qui est dedans part,
+ * ce qui déborde est rogné, ce qui couvre tout l'intervalle est coupé en deux. */
+function clearRange(p: Project, track: Track, a: number, b: number): void {
+	const items = track.items as (VideoItem | VoiceItem)[];
+	for (let i = items.length - 1; i >= 0; i--) {
+		const c = items[i];
+		const s = c.at;
+		const e = c.at + c.out - c.in;
+		if (e <= a + EPS || s >= b - EPS) continue;
+		if (s >= a - EPS && e <= b + EPS) {
+			items.splice(i, 1);
+		} else if (s < a && e > b) {
+			const right = clone(c);
+			right.id = uniqueId(p, track.kind === 'video' ? 'c' : 'v');
+			right.in = r3(c.in + (b - c.at));
+			right.at = r3(b);
+			if (track.kind === 'video') {
+				delete (right as VideoItem).fx.punch;
+				delete (right as VideoItem).fx.flash;
+				delete (right as VideoItem).fx.punch_in;
+			}
+			c.out = r3(c.in + (a - c.at));
+			items.splice(i + 1, 0, right);
+		} else if (s < a) {
+			c.out = r3(c.in + (a - c.at));
+		} else {
+			c.in = r3(c.in + (b - c.at));
+			c.at = r3(b);
+		}
+	}
+}
+
+/** Fin du dernier plan vidéo (« ajouter à la fin »). */
+export function videoEnd(p: Project): number {
+	let end = 0;
+	for (const t of p.tracks) if (t.kind === 'video') for (const c of t.items) end = Math.max(end, c.at + c.out - c.in);
+	return r3(end);
+}
+
+/** Pose un morceau de rush à l'instant `at` sur V1 et A1 (plan vidéo + voix liés).
+ * `overwrite` remplace ce qui occupe la place ; `insert` coupe à `at` et pousse tout ce
+ * qui suit (toutes pistes) de la durée du morceau. La source est ajoutée au montage si
+ * elle n'y est pas encore. Renvoie le projet et la référence du nouveau plan vidéo. */
+export function placeClip(p: Project, clip: SourceClip, at: number, mode: PlaceMode): { project: Project; ref: ItemRef } {
+	const d = r3(clip.out - clip.in);
+	const t0 = r3(Math.max(0, at));
+	let next = clone(p);
+	// Source : même identifiant et même fichier → réutilisée ; identifiant pris par un autre
+	// fichier → renommée.
+	let src = next.sources.find((s) => s.id === clip.source.id && s.path === clip.source.path);
+	if (!src) {
+		src = clone(clip.source);
+		const base = src.id;
+		for (let k = 2; next.sources.some((s) => s.id === src!.id); k++) src.id = `${base}_${k}`;
+		next.sources.push(src);
+	}
+	if (mode === 'insert') {
+		// Coupe les plans à cheval sur `at`, puis décale tout ce qui commence après.
+		for (const t of next.tracks) {
+			if (t.kind !== 'video' && t.kind !== 'voice') continue;
+			const index = t.items.findIndex((c) => c.at < t0 - EPS && c.at + c.out - c.in > t0 + EPS);
+			if (index >= 0) next = splitItem(next, { track: t.id, index }, t0);
+		}
+		shiftAfter(next, t0, d);
+	}
+	const video = ensureTrack(next, 'video');
+	const voice = ensureTrack(next, 'voice');
+	if (mode === 'overwrite') {
+		clearRange(next, video, t0, t0 + d);
+		clearRange(next, voice, t0, t0 + d);
+	}
+	const base = { src: src.id, in: r3(clip.in), out: r3(clip.out), at: t0 };
+	const v: VideoItem = { id: uniqueId(next, 'c'), ...base, crop: { cx: 0.5, cy: 0.5, zoom: 1 }, fx: {} };
+	const a: VoiceItem = { id: uniqueId(next, 'v'), ...base };
+	// Rangés dans l'ordre chronologique, comme les propositions.
+	const put = <T extends { at: number }>(items: T[], it: T) => {
+		const i = items.findIndex((x) => x.at > t0 + EPS);
+		const index = i < 0 ? items.length : i;
+		items.splice(index, 0, it);
+		return index;
+	};
+	const index = put(video.items as VideoItem[], v);
+	put(voice.items as VoiceItem[], a);
+	return { project: next, ref: { track: video.id, index } };
 }
 
 // ---------------------------------------------------------------------------

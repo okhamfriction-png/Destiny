@@ -23,6 +23,7 @@
 		type TrackKind
 	} from '$lib/project';
 	import { studio } from '$lib/state.svelte';
+	import { place } from './place';
 
 	/** Boutons d'action de l'éditeur, posés à droite de la barre d'outils. */
 	let { actions }: { actions?: Snippet } = $props();
@@ -252,6 +253,39 @@
 		if (x < scroller.scrollLeft || x > scroller.scrollLeft + visible - 40) scroller.scrollLeft = x - visible * 0.2;
 	});
 
+	// --- Dépôt d'un rush glissé depuis les Médias ou le visualiseur source ----------
+	// Lâcher = écraser à cet endroit (comme DaVinci) ; Maj = insérer en poussant la suite.
+	let dropAt = $state<number | null>(null);
+	let dropInsert = $state(false);
+	function dragOver(e: PointerEvent) {
+		const d = editor.drag;
+		if (!d || !scroller || !ruler) {
+			dropAt = null;
+			return;
+		}
+		const r = scroller.getBoundingClientRect();
+		const inside = e.clientX > r.left + HEAD && e.clientX < r.right && e.clientY > r.top + RULER && e.clientY < r.bottom;
+		if (!inside) {
+			dropAt = null;
+			return;
+		}
+		let t = Math.max(0, toFrame(timeAt(e.clientX)));
+		if (editor.magnet && !e.altKey) {
+			const len = d.clip.out - d.clip.in;
+			t = Math.max(0, snapSpan(t, t + len, snapTargets(p, editor.playhead, null), SNAP_PX / editor.pps).t);
+		}
+		dropAt = t;
+		dropInsert = e.shiftKey;
+	}
+	function dropUp(e: PointerEvent) {
+		// Position recalculée au relâchement : un geste très rapide peut n'avoir envoyé aucun
+		// mouvement au-dessus de la timeline.
+		dragOver(e);
+		const d = editor.drag;
+		if (d && dropAt !== null) place(d.clip, dropAt, e.shiftKey ? 'insert' : 'overwrite');
+		dropAt = null;
+	}
+
 	const toggle = (rec: Partial<Record<TrackKind, boolean>>, k: TrackKind) => ({ ...rec, [k]: !rec[k] });
 </script>
 
@@ -359,6 +393,12 @@
 			{#if editor.snapGuide !== null}
 				<div class="guide" style:left="{HEAD + editor.snapGuide * editor.pps}px"></div>
 			{/if}
+			{#if dropAt !== null && editor.drag}
+				{@const len = editor.drag.clip.out - editor.drag.clip.in}
+				<div class="drop" class:insert={dropInsert} style:left="{HEAD + dropAt * editor.pps}px" style:width="{Math.max(2, len * editor.pps)}px">
+					<span>{dropInsert ? 'Insérer' : 'Écraser'} · {clock(dropAt, 2)}</span>
+				</div>
+			{/if}
 			{#if bladeX !== null}
 				<div class="bladeline" style:left="{HEAD + bladeX * editor.pps}px"></div>
 			{/if}
@@ -366,7 +406,7 @@
 	</div>
 </div>
 
-<svelte:window onpointermove={move} onpointerup={up} />
+<svelte:window onpointermove={(e) => (move(e), dragOver(e))} onpointerup={(e) => (up(), dropUp(e))} />
 
 <style>
 	.timeline {
@@ -639,6 +679,32 @@
 		border-left: 1px solid #7fe0ff;
 		z-index: 2;
 		pointer-events: none;
+	}
+	.drop {
+		position: absolute;
+		top: 28px;
+		bottom: 0;
+		z-index: 4;
+		pointer-events: none;
+		background: rgba(91, 137, 185, 0.28);
+		border-left: 2px solid #9cc4ff;
+		border-right: 1px solid #9cc4ff;
+	}
+	.drop.insert {
+		background: rgba(230, 180, 70, 0.25);
+		border-left-color: var(--gold-light);
+		border-right-color: var(--gold);
+	}
+	.drop span {
+		position: absolute;
+		top: 4px;
+		left: 6px;
+		font-size: 10px;
+		white-space: nowrap;
+		color: #fff;
+		background: rgba(0, 0, 0, 0.6);
+		padding: 1px 5px;
+		border-radius: 2px;
 	}
 	.bladeline {
 		position: absolute;

@@ -9,6 +9,8 @@ import {
 	editPoints,
 	linkedRefs,
 	moveGroup,
+	placeClip,
+	videoEnd,
 	removeGroup,
 	splitGroup,
 	micState,
@@ -242,5 +244,53 @@ describe('plans liés', () => {
 
 	it('points de montage triés', () => {
 		expect(editPoints(base())).toEqual([0, 62.5, 66.5]);
+	});
+});
+
+describe('ajout de rush (placeClip)', () => {
+	const rush = (p: Project) => ({ source: p.sources[0], in: 100, out: 110 });
+
+	it('écrase au milieu d’un plan : coupe autour, voix liée posée aussi', () => {
+		const p = base();
+		const { project: q, ref } = placeClip(p, rush(p), 20, 'overwrite');
+		const v = video(q);
+		expect(v.map((c) => [c.at, c.in, c.out])).toEqual([
+			[0, 5264.6, 5284.6],
+			[20, 100, 110],
+			[30, 5294.6, 5327.1],
+			[62.5, 5327.1, 5331.1]
+		]);
+		expect(ref).toEqual({ track: 'v0', index: 1 });
+		// Le nouveau plan et sa voix sont liés.
+		expect(linkedRefs(q, ref)).toHaveLength(2);
+		// La voix longue de l'exemple est découpée de la même façon.
+		const voice = findTrack(q, 'a_voice')!.items as VideoItem[];
+		expect(voice.map((c) => c.at)).toEqual([0, 20, 30]);
+		expect(projectDuration(q)).toBeCloseTo(projectDuration(p));
+	});
+
+	it('insère : tout ce qui suit recule de la durée du morceau', () => {
+		const p = base();
+		const { project: q } = placeClip(p, rush(p), 20, 'insert');
+		const v = video(q);
+		expect(v.map((c) => c.at)).toEqual([0, 20, 30, 72.5]);
+		expect(v[2].in).toBeCloseTo(5284.6);
+		// Les sous-titres après 20 s reculent aussi.
+		expect(caps(q).every((c, i) => c.start === caps(p)[i].start || c.start >= 30 - 1e-6)).toBe(true);
+	});
+
+	it('ajoute la source du rush si le montage ne la connaît pas', () => {
+		const p = base();
+		const other = { ...p.sources[0], id: 'soiree', path: '/autre/fichier.MP4' };
+		const { project: q } = placeClip(p, { source: other, in: 0, out: 4 }, videoEnd(p), 'overwrite');
+		expect(q.sources.map((s) => s.id)).toEqual(['soiree', 'soiree_2']);
+		expect(video(q).at(-1)).toMatchObject({ src: 'soiree_2', at: 66.5 });
+	});
+
+	it('crée les pistes V1/A1 dans un montage vide', () => {
+		const p = base();
+		p.tracks = p.tracks.filter((t) => t.kind !== 'video' && t.kind !== 'voice');
+		const { project: q } = placeClip(p, rush(base()), 0, 'overwrite');
+		expect(q.tracks.filter((t) => t.kind === 'video' || t.kind === 'voice').map((t) => t.items.length)).toEqual([1, 1]);
 	});
 });

@@ -279,6 +279,8 @@ Playwright quand aucun Chrome n'est installé.
 Interface (17 octobre 2026) : disposition de la page Edit de DaVinci — pages en bas, Médias / visualiseur /
 inspecteur, timeline ST1 · V2 · V1 · A1 · A2 · A3 toujours affichée (verrou, masquer/couper, outils Sélection et
 Lame, sélection liée vidéo + voix), vignettes et formes d'onde calculées en Rust (`media.rs`, cache disque).
+Visualiseur source : rush ouvert depuis les Médias, points I/O, F9 insérer, F10 écraser, glisser sur la
+timeline (lâcher = écraser, Maj = insérer) ; plan vidéo + voix liés, source ajoutée au montage au besoin.
 
 Reste aussi : présence en scène dans l'UI, seuils des moments forts à
 calibrer sur un vrai spectacle, renderer Node à embarquer dans le bundle macOS.

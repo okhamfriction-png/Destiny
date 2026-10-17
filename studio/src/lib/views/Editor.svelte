@@ -3,6 +3,8 @@
 	import Transport from '$lib/editor/Transport.svelte';
 	import Timeline from '$lib/editor/Timeline.svelte';
 	import MediaPool from '$lib/editor/MediaPool.svelte';
+	import SourceViewer from '$lib/editor/SourceViewer.svelte';
+	import { place } from '$lib/editor/place';
 	import Properties from '$lib/editor/Properties.svelte';
 	import ClaudeDialog from '$lib/editor/ClaudeDialog.svelte';
 	import { editor } from '$lib/editor.svelte';
@@ -17,6 +19,8 @@
 	let asking = $state(false);
 	let timelineH = $state(Math.round(Math.max(300, (typeof window !== 'undefined' ? window.innerHeight : 900) * 0.42)));
 	let showPool = $state(true);
+	let sv = $state<SourceViewer>();
+	const inSource = $derived(editor.viewer === 'source' && !!editor.source);
 
 	const PRESET: Record<string, string> = {
 		short_scene: 'Short',
@@ -126,6 +130,33 @@
 			return;
 		}
 		if (mod || e.altKey) return;
+		// F9 / F10 : insérer / écraser le morceau du visualiseur source, quel que soit le visualiseur.
+		if ((e.key === 'F9' || e.key === 'F10') && editor.source) {
+			e.preventDefault();
+			const clip = editor.sourceClip();
+			if (clip) place(clip, editor.playhead, e.key === 'F9' ? 'insert' : 'overwrite');
+			return;
+		}
+		if (e.key === 'q' || e.key === 'Q') {
+			if (editor.source) editor.viewer = editor.viewer === 'source' ? 'timeline' : 'source';
+			return;
+		}
+		// Visualiseur source actif : lecture, images et marques portent sur le rush.
+		if (inSource && sv) {
+			const k = e.key.toLowerCase();
+			if (e.key === ' ' || k === 'k' || k === 'l') {
+				e.preventDefault();
+				sv.toggle();
+				return;
+			}
+			if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+				e.preventDefault();
+				sv.step((e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 25 : 1));
+				return;
+			}
+			if (k === 'i') return sv.markIn();
+			if (k === 'o') return sv.markOut();
+		}
 		switch (e.key) {
 			case ' ':
 				e.preventDefault();
@@ -209,7 +240,14 @@
 	}
 </script>
 
-<svelte:window {onkeydown} />
+<!-- Glisser-déposer d'un rush : suivi du pointeur ici, dépôt géré par la timeline. Le
+     glisser n'est effacé qu'au tour suivant : la timeline le lit quel que soit l'ordre
+     des écouteurs du relâchement. -->
+<svelte:window
+	{onkeydown}
+	onpointermove={(e) => editor.drag && (editor.drag = { ...editor.drag, x: e.clientX, y: e.clientY })}
+	onpointerup={() => setTimeout(() => (editor.drag = null))}
+/>
 
 {#snippet actions()}
 	<button onclick={split} title="Couper à la tête de lecture (S)">Couper</button>
@@ -226,6 +264,10 @@
 			{#if showPool}<MediaPool />{/if}
 			<div class="viewer">
 				<div class="vhead">
+					<div class="vswitch">
+						<button class:on={inSource} disabled={!editor.source} onclick={() => (editor.viewer = 'source')} title="Rush ouvert depuis les Médias (Q)">Source</button>
+						<button class:on={!inSource} onclick={() => (editor.viewer = 'timeline')} title="Montage (Q)">Timeline</button>
+					</div>
 					<button class="ghost pooltoggle" class:on={showPool} onclick={() => (showPool = !showPool)} title="Afficher / masquer les médias">
 						<svg viewBox="0 0 24 24" width="14" height="14"><path d="M3 5h7v14H3zM13 5h8M13 10h8M13 15h8" /></svg>
 					</button>
@@ -233,8 +275,12 @@
 					<span class="chip">{PRESET[studio.project.preset] ?? studio.project.preset}</span>
 					<span class="dim mono fmt">{studio.project.format.w}×{studio.project.format.h} · {studio.project.format.fps} i/s</span>
 				</div>
-				<div class="preview"><Preview /></div>
-				<Transport />
+				{#if inSource}
+					<SourceViewer bind:this={sv} />
+				{:else}
+					<div class="preview"><Preview /></div>
+					<Transport />
+				{/if}
 			</div>
 			<aside class="side"><Properties /></aside>
 		</div>
@@ -248,6 +294,14 @@
 		<h1>Aucun montage ouvert</h1>
 		<p class="dim">Ouvrez un montage depuis la page Médias ou les propositions.</p>
 		<button class="primary" onclick={() => (studio.view = 'library')}>Médias</button>
+	</div>
+{/if}
+
+{#if editor.drag}
+	{@const c = editor.drag.clip}
+	<div class="dragchip" style:left="{editor.drag.x + 14}px" style:top="{editor.drag.y + 10}px">
+		<b>{c.source.id}</b> · {(c.out - c.in).toFixed(1).replace('.', ',')} s
+		<span>Lâcher sur la timeline · Maj : insérer</span>
 	</div>
 {/if}
 
@@ -335,6 +389,43 @@
 	.claude {
 		border-color: #6b5420;
 		color: var(--gold-light);
+	}
+	.vswitch {
+		display: flex;
+		gap: 1px;
+		padding: 2px;
+		background: var(--bg-2);
+		border-radius: 4px;
+	}
+	.vswitch button {
+		font-size: 9px;
+		padding: 3px 9px;
+		border-color: transparent;
+		background: transparent;
+	}
+	.vswitch button.on {
+		background: #2a2111;
+		color: var(--gold-light);
+		border-color: #6b5420;
+	}
+	.dragchip {
+		position: fixed;
+		z-index: 50;
+		pointer-events: none;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		padding: 6px 9px;
+		font-size: 11px;
+		background: rgba(30, 60, 100, 0.92);
+		border: 1px solid #5b89b9;
+		border-radius: 4px;
+		color: #fff;
+		box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+	}
+	.dragchip span {
+		font-size: 9px;
+		opacity: 0.8;
 	}
 	.empty {
 		margin: auto;

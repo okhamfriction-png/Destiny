@@ -1,6 +1,8 @@
 // État de l'éditeur : tête de lecture, lecture, sélection, zoom de la timeline.
 
 import { studio } from './state.svelte';
+import type { Source } from './bindings/Source';
+import type { SourceClip } from './edit';
 import { projectDuration, type ItemRef, type TrackKind } from './project';
 
 /** Outils de la timeline, comme DaVinci : sélection (A) et lame (B). */
@@ -20,6 +22,12 @@ class EditorState {
 	locked = $state<Partial<Record<TrackKind, boolean>>>({});
 	/** Pistes masquées (image) ou coupées (son) dans le visualiseur ; le rendu n'est pas touché. */
 	off = $state<Partial<Record<TrackKind, boolean>>>({});
+	/** Visualiseur : la timeline montée, ou le rush ouvert depuis les Médias (comme DaVinci). */
+	viewer = $state<'timeline' | 'source'>('timeline');
+	/** Rush du visualiseur source : position et points d'entrée/sortie (temps du fichier). */
+	source = $state<{ source: Source; t: number; in: number | null; out: number | null } | null>(null);
+	/** Morceau de rush en cours de glisser-déposer vers la timeline (suit le pointeur). */
+	drag = $state<{ clip: SourceClip; x: number; y: number } | null>(null);
 	/** Incrémenté pour demander « toute la timeline dans la fenêtre » (Maj+Z). */
 	fitTick = $state(0);
 	/** Instant de la dernière cible d'aimantation atteinte (guide vertical). */
@@ -82,10 +90,31 @@ class EditorState {
 		this.snapshotAt = null;
 	}
 
+	/** Ouvre un rush dans le visualiseur source (garde ses marques s'il y était déjà). */
+	openSource(source: Source): void {
+		if (this.source?.source.id !== source.id || this.source.source.path !== source.path)
+			this.source = { source, t: 0, in: null, out: null };
+		this.viewer = 'source';
+		this.pause();
+	}
+
+	/** Morceau choisi dans le visualiseur source : entre les marques, ou 10 s depuis la
+	 * position (sans sortie) — jamais le rush entier de 27 min d'un coup. */
+	sourceClip(): SourceClip | null {
+		const s = this.source;
+		if (!s) return null;
+		const dur = s.source.duration ?? Infinity;
+		const a = s.in ?? s.t;
+		const b = s.out != null && s.out > a ? s.out : Math.min(dur, a + 10);
+		return b - a >= 0.1 ? { source: s.source, in: a, out: b } : null;
+	}
+
 	reset(): void {
 		this.pause();
 		this.playhead = 0;
 		this.selection = null;
+		this.viewer = 'timeline';
+		this.drag = null;
 		this.clearSnapshot();
 	}
 }
