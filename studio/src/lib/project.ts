@@ -126,6 +126,30 @@ export function voiceMasterSpan(p: Project, v: VoiceItem): [number, number] {
 	return [off + v.in, off + v.out];
 }
 
+/** Nom en clair de chaque graphisme (timeline, panneau) : Marouene ne doit pas avoir
+ * à connaître les identifiants du schéma. */
+export const GRAPHIC_NAME: Record<GraphicItem['type'], string> = {
+	kicker: 'Sur-titre',
+	hook: 'Accroche',
+	tag: 'Bandeau',
+	cta: 'Appel final',
+	progress: 'Barre de progression',
+	reviews_txt: 'Avis',
+	reviews: "Captures d'avis",
+	quotes: 'Citations',
+	mech: 'Les 3 cartes',
+	dice: 'Le dé',
+	constellation: 'Archétypes',
+	card: 'Carte texte',
+	tags: 'Étiquettes',
+	lower: 'Nom à l’écran',
+	ring: 'Anneau',
+	fin: 'Fin',
+	black: 'Noir',
+	end_card: 'Carte finale',
+	flash: 'Flash'
+};
+
 /** Libellé court d'un élément pour la timeline et l'historique. */
 export function itemLabel(kind: TrackKind, item: AnyItem): string {
 	switch (kind) {
@@ -140,20 +164,21 @@ export function itemLabel(kind: TrackKind, item: AnyItem): string {
 			return (item as Caption).text;
 		case 'graphics': {
 			const g = item as GraphicItem;
+			const name = GRAPHIC_NAME[g.type] ?? g.type;
 			switch (g.type) {
 				case 'kicker':
 				case 'tag':
 				case 'fin':
-					return `${g.type} · ${g.text}`;
+					return `${name} · ${g.text}`;
 				case 'hook':
 				case 'cta':
 				case 'card':
 				case 'dice':
-					return `${g.type} · ${g.lines.join(' / ')}`;
+					return `${name} · ${g.lines.join(' / ')}`;
 				case 'lower':
-					return `lower · ${g.name}`;
+					return `${name} · ${g.name}`;
 				default:
-					return g.type;
+					return name;
 			}
 		}
 	}

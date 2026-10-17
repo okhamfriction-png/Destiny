@@ -1,7 +1,9 @@
 <script lang="ts">
+	import type { GraphicItem } from '$lib/bindings/GraphicItem';
 	import type { MusicItem } from '$lib/bindings/MusicItem';
 	import type { VideoItem } from '$lib/bindings/VideoItem';
 	import { clock } from '$lib/format';
+	import { DEFAULT_PUSH, FLASH_DUR, PUNCH_DUR, PUNCH_IN_ZOOM } from '$lib/layout';
 	import { itemLabel, type AnyItem, type TrackKind } from '$lib/project';
 	import type { DragMode } from './lanes';
 
@@ -34,6 +36,22 @@
 	const width = $derived(Math.max(2, (end - start) * pps));
 	const trimmable = $derived(kind !== 'sfx');
 	const label = $derived(itemLabel(kind, item));
+	const gtype = $derived(kind === 'graphics' ? (item as GraphicItem).type : '');
+
+	// Effets du plan rendus visibles sur le bloc (temps relatifs au début du plan) :
+	// flash et punch à l'entrée, fenêtre de punch-in, rampe du push en filigrane.
+	const fx = $derived.by(() => {
+		if (kind !== 'video') return [];
+		const c = item as VideoItem;
+		const dur = end - start;
+		const out: { cls: string; a: number; b: number; label: string }[] = [];
+		if (c.fx?.flash && start > 0) out.push({ cls: 'flash', a: 0, b: Math.min(FLASH_DUR, dur), label: 'flash' });
+		if (c.fx?.punch) out.push({ cls: 'punch', a: 0, b: Math.min(PUNCH_DUR, dur), label: 'punch' });
+		const pi = c.fx?.punch_in;
+		if (pi) out.push({ cls: 'punchin', a: Math.max(0, pi[0]), b: Math.min(dur, pi[1]), label: `zoom ×${PUNCH_IN_ZOOM}` });
+		return out;
+	});
+	const push = $derived(kind === 'video' ? ((item as VideoItem).fx?.push ?? DEFAULT_PUSH) : 0);
 
 	// Enveloppe de gain de la musique (temps vidéo → gain 0..1,2).
 	const env = $derived.by(() => {
@@ -47,7 +65,7 @@
 </script>
 
 <div
-	class="item {kind}"
+	class="item {kind} {gtype && `g-${gtype}`}"
 	class:selected
 	style:left="{start * pps}px"
 	style:width="{width}px"
@@ -61,6 +79,17 @@
 		<div class="suspect" style:left="{(a - start) * pps}px" style:width="{(b - a) * pps}px"></div>
 	{/each}
 	{#if env}<svg class="env" {width} {height}><path d={env} /></svg>{/if}
+	{#if push > 0 && width > 30}
+		<!-- Rampe du zoom continu : plus elle monte, plus le plan avance vers le sujet. -->
+		<svg class="push" {width} {height} preserveAspectRatio="none">
+			<path d="M0,{height - 3}L{width},{height - 3 - Math.min(1, push / 0.12) * (height - 8)}" />
+		</svg>
+	{/if}
+	{#each fx as f (f.cls)}
+		<div class="fx {f.cls}" style:left="{f.a * pps}px" style:width="{Math.max(3, (f.b - f.a) * pps)}px">
+			{#if (f.b - f.a) * pps > 34}<span>{f.label}</span>{/if}
+		</div>
+	{/each}
 	<span class="name">
 		{#if kind === 'video'}<b>{(item as VideoItem).id}</b> {(item as VideoItem).src} · {clock((item as VideoItem).in)}{:else}{label}{/if}
 	</span>
@@ -103,6 +132,90 @@
 	.captions {
 		background: #3a352d;
 		border-color: #5a5246;
+	}
+	/* Une teinte par famille de graphisme : on repère d'un coup d'œil accroche, bandeau, appel. */
+	.g-hook,
+	.g-card,
+	.g-fin {
+		background: linear-gradient(180deg, #f2d27a, #c99a2e);
+	}
+	.g-kicker,
+	.g-tag,
+	.g-tags,
+	.g-lower {
+		background: linear-gradient(180deg, #f7e7b0, #e2c56e);
+	}
+	.g-cta,
+	.g-end_card {
+		background: linear-gradient(180deg, #ef5b4f, #b8281f);
+		color: #fff;
+	}
+	.g-progress,
+	.g-ring,
+	.g-black {
+		background: #6b5a32;
+		color: #f3ede4;
+	}
+	.g-reviews,
+	.g-reviews_txt,
+	.g-quotes {
+		background: linear-gradient(180deg, #e0b25c, #a87a2a);
+	}
+	.g-mech,
+	.g-dice,
+	.g-constellation {
+		background: linear-gradient(180deg, #c9a2e0, #8a5fb0);
+		color: #fff;
+	}
+	.g-flash {
+		background: #fff3dc;
+	}
+	/* Les effets occupent la moitié basse du plan : le nom reste lisible au-dessus. */
+	.video {
+		align-items: flex-start;
+	}
+	.video .name {
+		padding-top: 1px;
+	}
+	.fx {
+		position: absolute;
+		top: 50%;
+		bottom: 0;
+		pointer-events: none;
+		display: flex;
+		align-items: flex-end;
+		font-family: var(--font-label);
+		font-size: 8px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: #1a1208;
+	}
+	.fx span {
+		padding: 0 3px 1px;
+	}
+	.fx.flash {
+		background: linear-gradient(90deg, rgba(255, 243, 220, 0.95), rgba(255, 243, 220, 0));
+	}
+	.fx.punch {
+		background: linear-gradient(90deg, rgba(247, 220, 138, 0.9), rgba(247, 220, 138, 0));
+	}
+	.fx.punchin {
+		background: repeating-linear-gradient(135deg, rgba(224, 53, 43, 0.75) 0 5px, rgba(224, 53, 43, 0.45) 5px 10px);
+		border-left: 1px solid #f7dc8a;
+		border-right: 1px solid #f7dc8a;
+		color: #fff;
+	}
+	.push {
+		position: absolute;
+		left: 0;
+		top: 0;
+		pointer-events: none;
+	}
+	.push path {
+		stroke: rgba(255, 255, 255, 0.35);
+		stroke-width: 1;
+		stroke-dasharray: 3 3;
+		fill: none;
 	}
 	.selected {
 		outline: 2px solid var(--gold-light);
