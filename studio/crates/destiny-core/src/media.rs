@@ -38,6 +38,37 @@ fn unique_tmp(path: &Path, ext: &str) -> PathBuf {
     path.with_extension(format!("{}-{}.{ext}", std::process::id(), N.fetch_add(1, Ordering::Relaxed)))
 }
 
+/// Vérifie qu'on peut lire `path`, en 10 s au plus. Sur Mac, une app qui ouvre un fichier
+/// d'un volume réseau (le NAS) attend l'autorisation de macOS : sans réponse, ffmpeg restait
+/// bloqué indéfiniment (même `kill -9` n'y peut rien) et la timeline restait vide sans
+/// explication. Une fois un fichier lu avec succès, on ne revérifie plus.
+pub fn ensure_readable(path: &Path) -> Result<()> {
+    use std::collections::HashSet;
+    use std::io::Read;
+    static OK: Mutex<Option<HashSet<PathBuf>>> = Mutex::new(None);
+    if OK.lock().unwrap_or_else(|e| e.into_inner()).get_or_insert_with(HashSet::new).contains(path) {
+        return Ok(());
+    }
+    let (tx, rx) = std::sync::mpsc::channel();
+    let p = path.to_path_buf();
+    std::thread::spawn(move || {
+        let r = std::fs::File::open(&p).and_then(|mut f| f.read(&mut [0u8; 1]).map(|_| ()));
+        let _ = tx.send(r.map_err(|e| e.to_string()));
+    });
+    match rx.recv_timeout(std::time::Duration::from_secs(10)) {
+        Ok(Ok(())) => {
+            OK.lock().unwrap_or_else(|e| e.into_inner()).get_or_insert_with(HashSet::new).insert(path.to_path_buf());
+            Ok(())
+        }
+        Ok(Err(e)) => anyhow::bail!("lecture impossible de {} : {e}", path.display()),
+        Err(_) => anyhow::bail!(
+            "accès bloqué à {} : macOS attend une autorisation. Répondez « Autoriser » au message de macOS, \
+             ou Réglages Système › Confidentialité et sécurité › Fichiers et dossiers › Destiny Studio › Volumes réseau.",
+            path.display()
+        ),
+    }
+}
+
 // ---------------------------------------------------------------- vignettes
 
 #[derive(Debug, Clone, Serialize)]
@@ -62,10 +93,19 @@ pub fn thumbs(video: &Path, from: f64, to: f64, step: f64, height: u32, cache: &
     let k1 = (to / step).ceil() as i64;
     let times: Vec<f64> = (k0..=k1).map(|k| (k as f64 * step * 1000.0).round() / 1000.0).take(MAX_THUMBS).collect();
     let name = |t: f64| dir.join(format!("{:09}.jpg", (t * 1000.0).round() as i64));
-    times.par_iter().filter(|t| !name(**t).exists()).for_each(|&t| {
-        // Une vignette ratée (fin de fichier, image illisible) est simplement absente.
-        let _ = extract_frame(video, t, height, &name(t));
-    });
+    if times.iter().any(|t| !name(*t).exists()) {
+        ensure_readable(video)?;
+    }
+    let errors: Vec<String> = times
+        .par_iter()
+        .filter(|t| !name(**t).exists())
+        .filter_map(|&t| extract_frame(video, t, height, &name(t)).err().map(|e| format!("{e:#}")))
+        .collect();
+    // Une vignette ratée (fin de fichier) est simplement absente ; aucune réussie, c'est que
+    // le fichier est illisible (accès refusé, format) : on le dit au lieu d'une bande vide.
+    if let Some(e) = errors.first().filter(|_| times.iter().all(|t| !name(*t).exists())) {
+        anyhow::bail!("vignettes de {} : {e}", video.display());
+    }
     Ok(times
         .into_iter()
         .filter(|t| name(*t).exists())
@@ -76,21 +116,22 @@ pub fn thumbs(video: &Path, from: f64, to: f64, step: f64, height: u32, cache: &
 fn extract_frame(video: &Path, t: f64, height: u32, out: &Path) -> Result<()> {
     // Écriture dans un fichier temporaire puis renommage : jamais de JPEG à moitié écrit.
     let tmp = unique_tmp(out, "tmp.jpg");
-    let status = Command::new(ffmpeg::ffmpeg_bin())
+    let out_ = Command::new(ffmpeg::ffmpeg_bin())
         .args(["-hide_banner", "-nostdin", "-v", "error", "-y", "-ss", &format!("{t:.3}"), "-i"])
         .arg(video)
         .args(["-frames:v", "1", "-vf", &format!("scale=-2:{height}"), "-q:v", "6"])
         .arg(&tmp)
         .stdout(Stdio::null())
-        .stderr(Stdio::null())
-        .status()
-        .context("ffmpeg introuvable")?;
-    if status.success() && tmp.exists() {
+        .stderr(Stdio::piped())
+        .output()
+        .with_context(|| format!("ffmpeg introuvable ({})", ffmpeg::ffmpeg_bin()))?;
+    if out_.status.success() && tmp.exists() {
         std::fs::rename(&tmp, out)?;
-    } else {
-        let _ = std::fs::remove_file(&tmp);
+        return Ok(());
     }
-    Ok(())
+    let _ = std::fs::remove_file(&tmp);
+    let msg = String::from_utf8_lossy(&out_.stderr);
+    anyhow::bail!("{}", msg.lines().last().unwrap_or("ffmpeg a échoué").trim())
 }
 
 // ---------------------------------------------------------------- formes d'onde
@@ -117,6 +158,7 @@ pub fn envelope(path: &Path, cache: &Path) -> Result<Vec<f32>> {
     if let Some(env) = read(&file) {
         return Ok(env);
     }
+    ensure_readable(path)?;
     let pcm = ffmpeg::load_audio(path, None, WAVE_SR)?;
     let env = peak_envelope(&pcm.samples, pcm.sr);
     std::fs::create_dir_all(cache)?;

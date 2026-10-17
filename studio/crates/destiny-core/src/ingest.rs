@@ -65,7 +65,8 @@ pub fn classify(path: &Path) -> MediaKind {
         "mp4" if name.starts_with("DJI_") => MediaKind::Camera,
         "mov" | "mp4" | "mxf" => MediaKind::Edit,
         "png" | "jpg" | "jpeg" | "webp" => MediaKind::Image,
-        "wav" => MediaKind::Mic,
+        // Un WAV sans nom de micro-cravate (TX…_MIC…) n'est pas un micro : sur la vraie
+        // soirée, 16 fichiers de travail (« A_m2.wav », « B_mix.wav »…) devenaient des micros.
         _ => MediaKind::Other,
     }
 }
@@ -74,7 +75,8 @@ fn walk(dir: &Path, out: &mut Vec<PathBuf>) -> Result<()> {
     for e in std::fs::read_dir(dir).with_context(|| format!("lecture {}", dir.display()))? {
         let p = e?.path();
         let name = p.file_name().and_then(|n| n.to_str()).unwrap_or_default();
-        if name.starts_with('.') {
+        // Cachés, et dossiers de travail (« _shorts_work ») : pas des rushes.
+        if name.starts_with('.') || (name.starts_with('_') && p.is_dir()) {
             continue;
         }
         if p.is_dir() {
@@ -245,6 +247,9 @@ mod tests {
         assert_eq!(classify(Path::new("/x/Spectacle 8 octbre 2026.mov")), MediaKind::Edit);
         assert_eq!(classify(Path::new("/x/Music/Ritual Pulse.m4a")), MediaKind::Music);
         assert_eq!(classify(Path::new("/x/avis1.PNG")), MediaKind::Image);
+        // Fichiers de travail rencontrés sur la vraie soirée : ni micros ni musique.
+        assert_eq!(classify(Path::new("/x/_shorts_work/peaks/aud/A_m2.wav")), MediaKind::Other);
+        assert_eq!(classify(Path::new("/x/_shorts_work/peaks/aA.wav")), MediaKind::Other);
     }
 
     #[test]

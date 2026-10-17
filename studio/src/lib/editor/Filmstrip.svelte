@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { api } from '$lib/api';
+	import { studio } from '$lib/state.svelte';
 
 	/** Bande d'images d'un plan vidéo : vignettes extraites et mises en cache par Rust
 	 * (`media::thumbs`). Le pas suit le zoom pour qu'une vignette couvre toujours sa place. */
@@ -18,7 +19,7 @@
 		const id = setTimeout(() => {
 			api.thumbs(args).then(
 				(list) => (thumbs = list.map((x) => ({ t: x.t, url: api.fileSrc(x.path) }))),
-				() => {}
+				(e) => studio.errorOnce(e)
 			);
 		}, 120);
 		return () => clearTimeout(id);

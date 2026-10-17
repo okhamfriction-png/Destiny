@@ -64,6 +64,10 @@ pub fn short_scene(base: &Project, transcript: Option<&Transcript>, a: f64, b: f
     if b <= a {
         bail!("intervalle vide");
     }
+    // Une réplique = un sous-titre et une coupe : sans échos des micros voisins ni
+    // hallucinations des micros muets (sinon sous-titres en double et plans de 0,3 s).
+    let cleaned = transcript.map(Transcript::clean_for_edit);
+    let transcript = cleaned.as_ref();
     let mut p = Project::new(Preset::ShortScene);
     p.sources = base.sources.clone();
     p.mics = base.mics.clone();

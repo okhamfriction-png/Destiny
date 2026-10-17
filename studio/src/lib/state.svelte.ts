@@ -237,6 +237,16 @@ class Studio {
 		this.#toast('error', typeof e === 'string' ? e : e instanceof Error ? e.message : JSON.stringify(e));
 	}
 
+	/** Erreur de fond (vignettes, formes d'onde) : affichée une seule fois par message,
+	 * sinon chaque clip de la timeline répéterait la même notification. */
+	errorOnce(e: unknown): void {
+		const text = typeof e === 'string' ? e : e instanceof Error ? e.message : JSON.stringify(e);
+		if (this.#seenErrors.has(text)) return;
+		this.#seenErrors.add(text);
+		this.error(text);
+	}
+	#seenErrors = new Set<string>();
+
 	#toast(kind: Toast['kind'], text: string): void {
 		const id = ++this.#toastSeq;
 		this.toasts.push({ id, kind, text });

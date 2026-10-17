@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { api } from '$lib/api';
+	import { studio } from '$lib/state.svelte';
 
 	/** Forme d'onde d'un clip audio : enveloppe calculée et mise en cache par Rust
 	 * (`media::envelope`), dessinée sur un canvas (pas un nœud DOM par barre). */
@@ -23,7 +24,7 @@
 		const id = setTimeout(() => {
 			api.waveform(args).then(
 				(v) => (data = v),
-				() => (data = [])
+				(e) => ((data = []), studio.errorOnce(e))
 			);
 		}, 120);
 		return () => clearTimeout(id);

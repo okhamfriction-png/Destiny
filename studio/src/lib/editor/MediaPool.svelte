@@ -55,7 +55,7 @@
 				(list) => {
 					if (list[0]) covers[s.path] = api.fileSrc(list[0].path);
 				},
-				() => {}
+				(e) => studio.errorOnce(e)
 			);
 		}
 	});
