@@ -41,6 +41,12 @@ class EditorState {
 	duration = $derived(studio.project ? projectDuration(studio.project) : 0);
 	fps = $derived(studio.project?.format.fps ?? 30);
 
+	/** Horloge externe de la lecture (la vidéo de l'aperçu) : renvoie l'instant de la
+	 * timeline qu'elle est en train de montrer, ou `null` hors d'un plan (trou, pas de
+	 * vidéo). Sans elle, la tête de lecture avançait seule et l'aperçu recalait la vidéo
+	 * dès 0,3 s d'écart : une coupure du son à peu près toutes les secondes. */
+	clock: (() => number | null) | null = null;
+
 	#raf = 0;
 	#last = 0;
 
@@ -69,7 +75,8 @@ class EditorState {
 		this.#last = performance.now();
 		const tick = (now: number) => {
 			if (!this.playing) return;
-			const t = this.playhead + (now - this.#last) / 1000;
+			const ext = this.clock?.() ?? null;
+			const t = ext ?? this.playhead + (now - this.#last) / 1000;
 			this.#last = now;
 			if (t >= this.duration) {
 				this.playhead = this.duration;

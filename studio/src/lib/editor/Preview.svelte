@@ -100,7 +100,8 @@
 			const want = m.offset + (t - span[0]);
 			a.volume = Math.min(1, Math.max(0, gainAt(m.gain_env, t)));
 			if (on && editor.playing) {
-				if (Math.abs(a.currentTime - want) > 0.25) a.currentTime = want;
+				// Même règle que la vidéo : on ne repositionne la musique que pour un vrai écart.
+				if (Math.abs(a.currentTime - want) > 0.5) a.currentTime = want;
 				if (a.paused) a.play().catch(() => {});
 			} else if (!a.paused) a.pause();
 		}
@@ -161,10 +162,35 @@
 		failed = false;
 	});
 
+	// Pendant la lecture, la vidéo est l'horloge : la tête de lecture la suit (au lieu de
+	// la recaler sans cesse, ce qui coupait le son). Tant qu'elle charge ou se repositionne,
+	// la tête de lecture attend.
+	// Garde-fou : une vidéo qui n'avance plus depuis 3 s (fichier illisible) rend la main
+	// à l'horloge de l'éditeur plutôt que de figer la lecture.
+	let lastVT = -1;
+	let lastMove = 0;
+	$effect(() => {
+		editor.clock = () => {
+			if (!video || !clip || failed || !url) return null;
+			const now = performance.now();
+			if (video.currentTime !== lastVT) {
+				lastVT = video.currentTime;
+				lastMove = now;
+			} else if (now - lastMove > 3000) {
+				return null;
+			}
+			if (video.seeking || video.readyState < 3 || video.paused) return editor.playhead;
+			return clip.at + video.currentTime - clip.in;
+		};
+		return () => (editor.clock = null);
+	});
+
 	function sync(v: HTMLVideoElement | undefined, tolerance: number, muted: boolean) {
 		if (!v || !url || failed || !clip) return;
 		v.muted = muted;
 		if (editor.playing) {
+			// Recalage seulement pour un vrai saut : changement de plan non contigu, clic
+			// dans la règle pendant la lecture.
 			if (Math.abs(v.currentTime - srcTime) > tolerance) v.currentTime = srcTime;
 			if (v.paused) v.play().catch(() => {});
 		} else {
@@ -175,8 +201,8 @@
 
 	$effect(() => {
 		// A1 coupée dans la timeline (M) : le son du proxy se tait.
-		sync(video, 0.3, !!editor.off.voice);
-		sync(bgVideo, 0.5, true);
+		sync(video, 0.5, !!editor.off.voice);
+		sync(bgVideo, 1.0, true);
 	});
 
 	// --- Recadrage direct : glisser l'image déplace le centre (cx, cy) ---------
