@@ -7,17 +7,13 @@ import 'application/services/random_picker_service.dart';
 import 'application/state/ai_settings.dart';
 import 'application/state/campagne_store.dart';
 import 'application/state/chat_controller.dart';
-import 'application/state/generation_history.dart';
-import 'application/state/guide_content.dart';
-import 'application/state/last_generation_store.dart';
 import 'application/state/location_details.dart';
 import 'application/state/music_controller.dart';
+import 'application/state/reglages_destiny.dart';
 import 'application/state/relation_cheatsheet.dart';
-import 'application/state/tracking_store.dart';
 import 'application/state/spectacle_controller.dart';
 import 'application/state/spectacle_store.dart';
-import 'application/state/spinoff_history.dart';
-import 'application/state/story_controller.dart';
+import 'application/state/troupe_store.dart';
 import 'application/state/visual_settings.dart';
 import 'domain/repositories/catalog_store.dart';
 import 'domain/repositories/combination_memory.dart';
@@ -29,8 +25,8 @@ import 'infrastructure/platform/catalog_store_factory.dart';
 import 'infrastructure/platform/chat_store_factory.dart';
 import 'infrastructure/platform/combination_memory_factory.dart';
 import 'infrastructure/repositories/story_repository_impl.dart';
-import 'presentation/screens/root_screen.dart';
 import 'presentation/destiny/donnees.dart';
+import 'presentation/screens/root_screen.dart';
 import 'presentation/theme/destiny_theme.dart';
 
 Future<void> main() async {
@@ -82,16 +78,6 @@ Future<void> _boot() async {
     randomPickerService: RandomPickerService(),
     combinationMemory: combinationMemory,
   );
-  final generationHistory = GenerationHistory();
-  final spinoffHistory = SpinoffHistory();
-  final lastGenerationStore = LastGenerationStore();
-  final controller = StoryController(
-    generateStoryUseCase: useCase,
-    history: generationHistory,
-    lastStore: lastGenerationStore,
-  );
-  // Restaure la dernière scène générée (histoire / rue / dilemme).
-  await controller.restoreLast();
   final audioService = AudioService();
   final visualSettings = VisualSettings();
   final musicController = MusicController();
@@ -113,19 +99,18 @@ Future<void> _boot() async {
   // Détecte une partie de Spectacle en cours (bouton « Reprendre »).
   await spectacleController.loadSavedSession();
 
-  // Briques « univers Destiny » : Guide, tableaux de suivi, antisèche, lieux.
-  final guideContent = GuideContent();
-  final trackingStore = TrackingStore();
   final relationCheatsheet = RelationCheatsheet();
   final locationDetails = LocationDetailsStore();
   await locationDetails.load();
-  final campagneStore =
-      CampagneStore(llm: llmService, aiSettings: aiSettings);
+  final campagneStore = CampagneStore(llm: llmService, aiSettings: aiSettings);
   await campagneStore.load();
+  final reglages = ReglagesDestiny();
+  await reglages.charger();
+  final troupeStore = TroupeStore();
+  await troupeStore.charger();
 
   runApp(DestinyApp(
     grammaire: grammaire,
-    controller: controller,
     audioService: audioService,
     visualSettings: visualSettings,
     musicController: musicController,
@@ -134,18 +119,17 @@ Future<void> _boot() async {
     catalogStore: catalogStore,
     aiSettings: aiSettings,
     chatController: chatController,
-    generationHistory: generationHistory,
     spectacleController: spectacleController,
-    llm: llmService,
-    spinoffHistory: spinoffHistory,
-    guideContent: guideContent,
-    trackingStore: trackingStore,
     relationCheatsheet: relationCheatsheet,
     locationDetails: locationDetails,
     campagneStore: campagneStore,
+    troupeStore: troupeStore,
+    reglages: reglages,
   ));
 }
 
+/// Écran de secours si le démarrage échoue (affiche l'erreur au lieu d'un
+/// écran blanc).
 class _BootError extends StatelessWidget {
   const _BootError(this.message);
   final String message;
@@ -173,7 +157,6 @@ class _BootError extends StatelessWidget {
 class DestinyApp extends StatelessWidget {
   const DestinyApp({
     required this.grammaire,
-    required this.controller,
     required this.audioService,
     required this.visualSettings,
     required this.musicController,
@@ -182,21 +165,17 @@ class DestinyApp extends StatelessWidget {
     required this.catalogStore,
     required this.aiSettings,
     required this.chatController,
-    required this.generationHistory,
     required this.spectacleController,
-    required this.llm,
-    required this.spinoffHistory,
-    required this.guideContent,
-    required this.trackingStore,
     required this.relationCheatsheet,
     required this.locationDetails,
     required this.campagneStore,
+    required this.troupeStore,
+    required this.reglages,
     super.key,
   });
 
   /// La grammaire de Destiny et les textes de l'appli.
   final GrammaireChargee grammaire;
-  final StoryController controller;
   final AudioService audioService;
   final VisualSettings visualSettings;
   final MusicController musicController;
@@ -205,15 +184,12 @@ class DestinyApp extends StatelessWidget {
   final CatalogStore catalogStore;
   final AiSettings aiSettings;
   final ChatController chatController;
-  final GenerationHistory generationHistory;
   final SpectacleController spectacleController;
-  final LlmService llm;
-  final SpinoffHistory spinoffHistory;
-  final GuideContent guideContent;
-  final TrackingStore trackingStore;
   final RelationCheatsheet relationCheatsheet;
   final LocationDetailsStore locationDetails;
   final CampagneStore campagneStore;
+  final TroupeStore troupeStore;
+  final ReglagesDestiny reglages;
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +205,6 @@ class DestinyApp extends StatelessWidget {
         child: child ?? const SizedBox.shrink(),
       ),
       home: RootScreen(
-        controller: controller,
         audioService: audioService,
         visualSettings: visualSettings,
         musicController: musicController,
@@ -238,15 +213,12 @@ class DestinyApp extends StatelessWidget {
         catalogStore: catalogStore,
         aiSettings: aiSettings,
         chatController: chatController,
-        generationHistory: generationHistory,
         spectacleController: spectacleController,
-        llm: llm,
-        spinoffHistory: spinoffHistory,
-        guideContent: guideContent,
-        trackingStore: trackingStore,
         relationCheatsheet: relationCheatsheet,
         locationDetails: locationDetails,
         campagneStore: campagneStore,
+        troupeStore: troupeStore,
+        reglages: reglages,
       ),
     );
   }

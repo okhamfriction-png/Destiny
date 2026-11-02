@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import 'dice_3d.dart' show DestinyOmen;
 
 /// La « Pièce du destin » : BRAVE (éclair) ou SMART (masque).
 /// Overlay lancé par le MJ ; tourne sur elle-même puis retombe sur [brave].
@@ -190,4 +189,21 @@ class _Piece extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Les couleurs des deux faces de la pièce du destin.
+class DestinyOmen {
+  DestinyOmen._();
+
+  static const List<Color> braveGradient = [
+    Color(0xFFFFB347),
+    Color(0xFFF57C00),
+    Color(0xFF7A3A00),
+  ];
+
+  static const List<Color> smartGradient = [
+    Color(0xFFB388FF),
+    Color(0xFF7E3FF2),
+    Color(0xFF2A1259),
+  ];
 }

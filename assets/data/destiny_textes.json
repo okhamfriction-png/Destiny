@@ -223,12 +223,24 @@
         "titre": "Série"
       },
       "faire_la_suite": "Faire la suite",
-      "note": "Les descriptions de l'épisode, de la saison et de la série viennent de la grammaire (clé « serie »)."
+      "note": "Les descriptions de l'épisode, de la saison et de la série viennent de la grammaire (clé « serie »).",
+      "ouvrir": "Mes séries"
     },
     "ia": {
       "titre": "Avec l'IA",
-      "sous_titre": "L'IA mène le jeu : elle raconte, fait monter le danger et joue les autres personnages."
-    }
+      "sous_titre": "L'IA mène le jeu : elle raconte, fait monter le danger et joue les autres personnages.",
+      "histoire": {
+        "titre": "Une histoire avec l'IA",
+        "texte": "L'IA est le maître du destin : elle raconte, tu décides."
+      },
+      "spectacle": {
+        "titre": "Un spectacle avec l'IA",
+        "texte": "Tu joues un personnage ; l'IA joue les partenaires, la régie et le coach."
+      },
+      "cle": "Il faut une clé d'IA (Réglages)."
+    },
+    "titre": "Jouer",
+    "sous_titre": "Le jeu de rôle Destiny : avec tes amis, ou avec l'IA."
   },
   "statuts": {
     "haut": "statut haut",
@@ -415,5 +427,163 @@
   "modes_pnj": {
     "figurant": "Figurant",
     "sbire": "Sbire"
+  },
+  "navigation": {
+    "jouer": "Jouer",
+    "troupe": "Troupe",
+    "exercices": "Exercices",
+    "bibliotheque": "Bibliothèque",
+    "reglages": "Réglages",
+    "musique": "Musique",
+    "regie_son": "Régie son",
+    "son": "Couper ou remettre le son"
+  },
+  "troupe": {
+    "titre": "Troupe",
+    "sous_titre": "Préparer, jouer et débriefer un spectacle.",
+    "regle_du_jour": "La règle d'or du jour",
+    "replique_du_jour": "La réplique du jour",
+    "preparer": "Préparer un spectacle",
+    "reprendre": "Reprendre : {etape}",
+    "etapes": {
+      "preparation": "la distribution",
+      "echauffement": "l'échauffement",
+      "miseEnPlace": "la mise en place",
+      "regie": "la régie",
+      "debrief": "le débrief",
+      "terminee": "terminé"
+    },
+    "entrees": {
+      "jouer": "Jouer une histoire",
+      "bibliotheque": "Explorer la bibliothèque",
+      "exercice": "Faire un exercice",
+      "historique": "Historique des spectacles"
+    },
+    "types": {
+      "spectacle": "Spectacle",
+      "repetition": "Répétition"
+    },
+    "abandonner": "Abandonner ce spectacle",
+    "abandonner_confirmer": "Abandonner ce spectacle en cours ? Il disparaîtra de l'historique.",
+    "oui": "Oui",
+    "non": "Non",
+    "suivant": "Suivant",
+    "retour": "Retour",
+    "enregistrer": "Enregistrer",
+    "annuler": "Annuler"
+  },
+  "preparer": {
+    "titre": "Préparer",
+    "type": "Spectacle ou répétition",
+    "kids": "Avec des enfants",
+    "joueurs": "Combien de joueurs ?",
+    "prenom": "Prénom",
+    "distribution": "La distribution",
+    "tirer": "Tirer",
+    "autre_exemple": "Autre exemple",
+    "choisir_archetype": "Choisir un archétype",
+    "choisir_animal": "Choisir son animal",
+    "appliquer": "Appliquer la proposition",
+    "animaux_manquants": "Chaque joueur choisit son animal parmi les deux de son archétype.",
+    "vers_echauffement": "Passer à l'échauffement"
+  },
+  "echauffement": {
+    "titre": "Échauffement",
+    "intro": "Chacun reçoit sa carte et se pose les trois questions.",
+    "demarrer": "Lancer le minuteur",
+    "pause": "Pause",
+    "reprendre": "Reprendre",
+    "fini": "L'échauffement est terminé. À vous de jouer !",
+    "vers_avant_scene": "Avant d'entrer en scène"
+  },
+  "avant_scene": {
+    "titre": "Avant d'entrer en scène",
+    "message": "Vous êtes prêts. Écoutez-vous, prenez votre temps : le danger fera le reste.",
+    "entrer": "On y va : la mise en place"
+  },
+  "mise_en_place": {
+    "titre": "La mise en place",
+    "intro": "Le public choisit le lieu et le groupe, puis le danger.",
+    "lieu": "Le lieu",
+    "groupe": "Le groupe",
+    "danger": "Le danger",
+    "vote": "Trois propositions pour le vote à main levée",
+    "nouvelles": "Trois autres",
+    "choix_libre": "Choix libre",
+    "groupe_aide": "Une équipe, une famille, des associés : tout le monde se connaît.",
+    "groupes": [
+      "une famille",
+      "une équipe de travail",
+      "des associés",
+      "une bande d'amis",
+      "des voisins",
+      "des collègues de longue date",
+      "une troupe"
+    ],
+    "liens": "Des liens pour commencer",
+    "objets": "Les trois objets",
+    "objet": "Objet {n}",
+    "objets_aide": "Touchés à l'acte 1 ; l'un peut se retourner contre le groupe, l'un sert à la fin.",
+    "mystere": "Le mystère",
+    "mystere_aide": "Un seul, attaché à un endroit ou à un objet du lieu.",
+    "reponse": "Sa réponse (pour la régie)",
+    "reponse_aide": "Elle rassemble des éléments déjà posés, jamais une information nouvelle.",
+    "chrono": "Le chrono",
+    "minutes": "{n} min",
+    "destiny_a": "Destiny à {liste}",
+    "lever_rideau": "Lever le rideau"
+  },
+  "regie": {
+    "titre": "Régie",
+    "destiny": "Destiny",
+    "destiny_aide": "Réservé à la régie : lance le rituel et fait monter le danger d'un palier.",
+    "demarrer": "Lancer le chrono",
+    "pause": "Pause",
+    "reprendre": "Reprendre",
+    "acte": "Acte {n}",
+    "prochain": "Prochain Destiny à {t}",
+    "dernier_acte": "Dernier acte : il fait payer le prix.",
+    "temps_ecoule": "Le temps est écoulé.",
+    "rappel": "Pour la régie",
+    "montee": "Ce qu'on peut voir à ce palier",
+    "objets_mystere": "Objets et mystère",
+    "dilemme": "Un dilemme pour l'acte 4",
+    "dilemme_aide": "À proposer comme choix final, si ça sert l'histoire.",
+    "notes": "Moments forts",
+    "note_aide": "Ce qui vient de se passer…",
+    "noter": "Noter",
+    "terminer": "Terminer et débriefer",
+    "terminer_confirmer": "Terminer le spectacle et passer au débrief ?"
+  },
+  "debrief": {
+    "titre": "Débrief",
+    "intro": "Pour chaque personnage : ce que tu veux, c'est… mais ce dont tu as besoin pour aller mieux, c'est…",
+    "groupe": "Ce que le groupe a vu",
+    "fixe": "Ce que le comédien avait choisi au premier figé",
+    "veut": "Il veut…",
+    "besoin": "…mais il a besoin de…",
+    "choix": "Son choix à l'acte 4",
+    "choix_vouloir": "Son vouloir",
+    "choix_besoin": "Son besoin",
+    "prix": "Le prix payé",
+    "ce_qui_a_marche": "Ce qui a marché",
+    "ajouter": "Ajouter",
+    "aide_marche": "Une scène, une phrase, un silence…",
+    "enregistrer": "Enregistrer le débrief",
+    "bravo": "Bravo à toute la troupe !",
+    "meme_phrase": "Le groupe a vu la même chose que toi."
+  },
+  "historique": {
+    "titre": "Historique",
+    "vide": "Aucun spectacle pour l'instant. Le premier vous attend !",
+    "exporter": "Exporter en PDF",
+    "supprimer": "Supprimer",
+    "supprimer_confirmer": "Supprimer ce spectacle de l'historique ?",
+    "distribution": "La distribution",
+    "mise_en_place": "La mise en place",
+    "destinys": "Les Destiny",
+    "destiny_n": "Destiny {n} à {t}{manuel}",
+    "manuel": " (régie)",
+    "palier_atteint": "Palier atteint : {n}"
   }
 }

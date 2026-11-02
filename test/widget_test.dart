@@ -4,15 +4,12 @@ import 'package:destiny/application/services/random_picker_service.dart';
 import 'package:destiny/application/state/ai_settings.dart';
 import 'package:destiny/application/state/campagne_store.dart';
 import 'package:destiny/application/state/chat_controller.dart';
-import 'package:destiny/application/state/generation_history.dart';
-import 'package:destiny/application/state/guide_content.dart';
 import 'package:destiny/application/state/location_details.dart';
 import 'package:destiny/application/state/music_controller.dart';
+import 'package:destiny/application/state/reglages_destiny.dart';
+import 'package:destiny/application/state/troupe_store.dart';
 import 'package:destiny/application/state/relation_cheatsheet.dart';
-import 'package:destiny/application/state/tracking_store.dart';
 import 'package:destiny/application/state/spectacle_controller.dart';
-import 'package:destiny/application/state/spinoff_history.dart';
-import 'package:destiny/application/state/story_controller.dart';
 import 'package:destiny/application/state/visual_settings.dart';
 import 'package:destiny/domain/repositories/combination_memory.dart';
 import 'package:destiny/domain/usecases/generate_story_usecase.dart';
@@ -71,7 +68,6 @@ void main() {
       randomPickerService: RandomPickerService(),
       combinationMemory: memory,
     );
-    final controller = StoryController(generateStoryUseCase: useCase);
     final aiSettings = await AiSettings.load();
     final llmService = LlmService();
     final chatController = ChatController(
@@ -90,7 +86,6 @@ void main() {
     await tester.pumpWidget(
       DestinyApp(
         grammaire: grammaire,
-        controller: controller,
         audioService: AudioService(),
         visualSettings: VisualSettings(),
         musicController: MusicController(),
@@ -99,21 +94,22 @@ void main() {
         catalogStore: catalogStore,
         aiSettings: aiSettings,
         chatController: chatController,
-        generationHistory: GenerationHistory(),
         spectacleController: spectacleController,
-        llm: llmService,
-        spinoffHistory: SpinoffHistory(),
-        guideContent: GuideContent(),
-        trackingStore: TrackingStore(),
         relationCheatsheet: RelationCheatsheet(),
         locationDetails: LocationDetailsStore(),
         campagneStore: CampagneStore(),
+        troupeStore: TroupeStore(),
+        reglages: ReglagesDestiny(),
       ),
     );
 
-    // Le générateur est l'onglet par défaut : son bouton et sa navigation
-    // sont présents au démarrage.
-    expect(find.text('Générateur'), findsWidgets);
-    expect(find.text('Générer une histoire'), findsOneWidget);
+    await tester.pumpAndSettle();
+    // L'appli s'ouvre sur Troupe ; les trois onglets sont là.
+    final t = grammaire.textes;
+    expect(find.text(t.t('navigation.jouer')), findsWidgets);
+    expect(find.text(t.t('navigation.troupe')), findsWidgets);
+    expect(find.text(t.t('navigation.exercices')), findsWidgets);
+    expect(find.text(t.t('troupe.preparer')), findsOneWidget);
+    expect(find.text(grammaire.grammaire.promesse), findsWidgets);
   });
 }

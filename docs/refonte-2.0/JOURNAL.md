@@ -152,3 +152,85 @@ Tous les textes viennent de la grammaire ou du fichier de textes. Les couleurs d
 ### À savoir
 
 L'ancien Guide reste joignable depuis le chrono TOP, et l'ancien catalogue depuis les Réglages, jusqu'à leur remplacement aux phases 4 et 7.
+
+---
+
+## Phase 4 — Navigation et mode Troupe ✅
+
+### Ce qui a été fait
+
+- **Trois onglets** : Jouer, Troupe et Exercices. L'appli **s'ouvre sur Troupe**. En haut à droite, quatre petits boutons : Bibliothèque, Musique (la bibliothèque des morceaux), Réglages et le son.
+- **L'onglet Troupe** :
+  - l'accueil, avec la promesse et, un jour sur deux, la règle d'or du jour ou la réplique du jour ;
+  - le bouton « Préparer un spectacle » (ou « Reprendre », s'il y en a un en cours) ;
+  - les entrées vers Jouer, la Bibliothèque, les Exercices et l'Historique.
+- **Le déroulé complet d'un spectacle** (ou d'une répétition) :
+  1. **Préparer** : spectacle ou répétition, avec ou sans enfants, 4, 5 ou 6 joueurs et leurs prénoms. La distribution se fait par choix concerté, tirage équilibré ou exemple tout prêt. L'appli refuse une distribution déséquilibrée, dit pourquoi en une phrase et propose une correction en un geste. Chaque joueur choisit son animal parmi les deux de son archétype.
+  2. **Échauffement** : la carte de chaque joueur (en version kids si besoin), les trois questions, la limite (« le corps, pas l'histoire ») et un minuteur de 30 minutes.
+  3. **Avant d'entrer en scène** : un écran qui donne envie de jouer, avec les règles d'or, les quatre paliers et la phrase des débriefs. Aucune critique.
+  4. **La mise en place** :
+     - trois lieux et trois dangers tirés pour le vote à main levée, ou un choix libre ;
+     - le groupe, avec des suggestions, et deux liens tirés de l'antisèche ;
+     - les trois objets, le mystère et sa réponse ;
+     - le chrono (20, 30 ou 45 min).
+
+     En mode kids, seuls les lieux et dangers kids sont proposés, avec le palier 4 kids.
+  5. **La régie** :
+     - un gros chrono et l'acte en cours ;
+     - le **bouton Destiny**, réservé à la régie : il lance le rituel, fait monter le palier et affiche la nouvelle à souffler à l'alarmiste. Il se déclenche aussi tout seul aux minutes prévues, selon le réglage (automatique, manuel ou les deux) ;
+     - au premier figé, le rappel de fixer le besoin ;
+     - la frise des paliers ;
+     - à chaque acte, le geste (Dire, Bloquer, Nommer, Choisir) et ses consignes ;
+     - pour chaque joueur, ce que fait son archétype à ce palier et ce que fait le corps de son animal ;
+     - les objets et le mystère ;
+     - à l'acte 4, le dilemme du danger ;
+     - les moments forts notés avec l'heure (« 23:10 : … ») ;
+     - la régie son.
+
+     **Les musiques** : celle du début, le son de chaque Destiny (tonnerre et rire), l'ambiance après le 2ᵉ Destiny et la musique de fin. Elles sont gardées dans les réglages ; l'écran pour les choisir arrive en phase 7.
+  6. **Le débrief**, pour chaque personnage :
+     - la phrase du groupe, face à celle choisie au premier figé, avec le rappel si le besoin ressemble à un objet ;
+     - le choix de l'acte 4 et le prix payé.
+
+     On y note aussi ce qui a marché.
+  7. **L'historique** des spectacles et répétitions, avec la fiche de chacun et son **export en PDF**.
+- **Retiré**, comme convenu :
+  - l'ancien Générateur et ses modes Histoire, Rue, Spin-off et Dilemme ;
+  - le chrono TOP et son dé (poids, faces, cartes Destin) ;
+  - le dé 3D ;
+  - l'ancien Guide et l'ancien Suivi de répétition ;
+  - l'ancien catalogue en lecture seule (la Bibliothèque le remplace, y compris dans les Réglages) ;
+  - la bulle « moteur ».
+
+  **Aucune donnée n'est effacée** : les anciens tirages et l'ancien suivi restent enregistrés dans le téléphone.
+
+### Tests
+
+**119 tests passent**, dont 6 nouveaux sur le mode Troupe :
+- relecture d'une session ;
+- historique et session en cours ;
+- protection d'une sauvegarde illisible ;
+- réglages gardés, et reprise des anciens réglages de son ;
+- fiche PDF ;
+- **un spectacle complet de bout en bout** : préparer, échauffement, mise en place, régie avec Destiny, note, débrief.
+
+### Ce qui reste (prévu plus tard)
+
+- Générer les objets et le mystère avec l'IA (phase 6).
+- L'écran des réglages Destiny : chronos, musiques des quatre moments, rituel (phase 7).
+- L'export PDF des cartes d'archétypes (phase 7, avec le livret).
+- La vue « salle », à projeter pendant le spectacle (proposée, à faire si tu la veux).
+
+### Question
+
+**Les niveaux de corps de cinq animaux contredisent leur nouvel archétype.** Ils décrivent encore leur ancien moteur :
+
+| Animal | Nouvel archétype | Ancien moteur | Exemple (palier 2) |
+|---|---|---|---|
+| Rat | Alarmiste | le profit | « réclame, marchande, ne lâche rien de ce qui lui revient » |
+| Coq | Alarmiste | la conquête | « veut plaire à tout prix, transforme chaque échange en conquête » |
+| Lapin | Paranoïaque | plaire à tous | « fuit les tensions, dit oui à tout » |
+| Mouton | Aidant | l'abri du plus fort | « cherche la protection du plus fort » |
+| Hibou | Débrouillard | avoir raison | « corrige les autres, impose son analyse » |
+
+Je propose de réécrire leurs quatre niveaux pour leur nouvel archétype, et de te les soumettre avant de les mettre dans l'appli. D'accord ?

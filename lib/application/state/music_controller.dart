@@ -369,6 +369,24 @@ class MusicController extends ChangeNotifier {
     } catch (_) {}
   }
 
+  /// Joue un choix de musique des réglages Destiny : `aucune`, `lieu`
+  /// (l'ambiance du lieu [lieu]), ou le fichier d'une piste
+  /// (`music/…`, `audio/…`).
+  Future<void> jouerChoix(String choix, {String lieu = ''}) async {
+    if (choix.isEmpty || choix == 'aucune') return;
+    if (choix == 'lieu') {
+      await playLocationAmbience(lieu);
+      return;
+    }
+    for (final track in _tracks) {
+      if (track.file == choix) {
+        await playTrack(track);
+        return;
+      }
+    }
+    await _playScore(choix, choix.split('/').last);
+  }
+
   /// Joue l'ambiance du lieu (catégorie « Lieux ») dont le titre correspond.
   /// Sans effet si aucune ambiance ne correspond.
   Future<void> playLocationAmbience(String locationName) async {

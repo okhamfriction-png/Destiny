@@ -15,7 +15,8 @@ import 'about_screen.dart';
 import 'ai_config_screen.dart';
 import 'appearance_screen.dart';
 import 'catalog_editor_screen.dart';
-import 'catalog_view_screen.dart';
+import '../bibliotheque/bibliotheque_screen.dart';
+import '../destiny/donnees.dart';
 import 'dilemma_editor_screen.dart';
 import 'contact_screen.dart';
 import 'credits_screen.dart';
@@ -108,15 +109,16 @@ class SettingsScreen extends StatelessWidget {
             ),
             _item(
               context,
-              icon: Icons.grid_view,
-              title: 'Catalogue de données',
-              subtitle: 'Parcourir lieux, dangers et archétypes (lecture seule).',
+              icon: Icons.menu_book_rounded,
+              title: context.textes.t('bibliotheque.titre'),
+              subtitle: context.textes.t('bibliotheque.sous_titre'),
               onTap: () => _push(
                   context,
-                  CatalogViewScreen(
-                      repository: repository,
-                      visualSettings: visualSettings,
-                      locationDetails: locationDetails)),
+                  BibliothequeScreen(
+                      contexte: ContexteBibliotheque(
+                          catalogue: catalogStore,
+                          visuels: visualSettings,
+                          detailsLieux: locationDetails))),
             ),
             _item(
               context,
