@@ -1,4 +1,39 @@
-# CI/CD — Publier DestinyStory sur Google Play automatiquement
+# CI/CD — Construire et publier DestinyStory
+
+## L'APK sur GitHub (workflow `.github/workflows/apk.yml`)
+
+Tu pousses un **tag** (ex. `v2.0.0`) → GitHub Actions compile l'APK sur ses propres serveurs
+(Flutter 3.41.9) et le joint à la **release** de ce tag, sous le nom `DestinyStory-v2.0.0.apk`.
+Les notes de la release viennent de `docs/release_notes/<tag>.md` (la première ligne en est le titre).
+
+```bash
+git tag v2.0.1 && git push origin v2.0.1
+```
+
+On peut aussi le lancer à la main (**Actions → Construire l'APK → Run workflow**) : l'APK est
+alors seulement dans les « artifacts » du run.
+
+**La signature.** Pour que l'APK s'installe **par-dessus** la version déjà installée (et garde les
+données), il doit être signé avec ta clé de release. Ajoute ces secrets
+(**Settings → Secrets and variables → Actions**) :
+
+| Secret | Valeur |
+|---|---|
+| `ANDROID_KEYSTORE_BASE64` | ton keystore encodé : `base64 -i ~/destinystory-upload.jks \| pbcopy` (Mac) |
+| `ANDROID_KEY_ALIAS` | l'alias de la clé (celui de ton `android/key.properties`) |
+| `ANDROID_STORE_PASSWORD` | le mot de passe du keystore |
+| `ANDROID_KEY_PASSWORD` | le mot de passe de la clé (souvent le même) |
+
+Sans ces secrets, l'APK est signé avec une **clé de test** et la release est marquée
+« pré-version » : il faut alors désinstaller l'ancienne version avant de l'installer, ce qui
+efface les données de l'appli.
+
+---
+
+## Google Play (ancien pipeline, sur ton Mac)
+
+> ⚠️ Le fichier `.github/workflows/release-play.yml` décrit ci-dessous n'est pas dans le dépôt :
+> ce pipeline est à recréer si tu veux l'utiliser.
 
 Pipeline : tu pousses un **tag** (ex. `v1.3.5`) → GitHub Actions build le `.aab` signé
 et l'**uploade sur Google Play** (piste `internal` par défaut).
