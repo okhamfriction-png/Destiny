@@ -95,7 +95,7 @@ Rien n'est écrit. Tout reste à jouer.
 | Asset | Format requis | Statut |
 |---|---|---|
 | **Icône** | PNG 512 × 512 (32 bits, avec alpha) | ✅ tu as déjà `assets/icon/app_icon_full.png` (à exporter en 512²) |
-| **Bannière (Feature graphic)** | JPG/PNG **1024 × 500** | ⬜ à créer |
+| **Bannière (Feature graphic)** | JPG/PNG **1024 × 500** | ✅ `docs/store_assets/feature_graphic_1024x500.png`, refaite pour la 2.0 (polices de l'appli), depuis `banner.html` |
 | **Captures téléphone** | 2 à 8, min 320 px, ratio 16:9 ou 9:16 | ✅ 8 captures 1080 × 1920 (9:16) de la 2.0 dans `docs/store_assets/play_store_2_0/` : Découvrir Destiny (3), Troupe, Archétypes, Livret, Exercices, fiche d'exercice. Faites depuis la version web : à vérifier sur un téléphone |
 | Captures tablette (optionnel) | 7" et 10" | ⬜ facultatif |
 
