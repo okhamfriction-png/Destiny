@@ -13,8 +13,6 @@ import '../../application/state/spectacle_controller.dart';
 import '../../application/state/troupe_store.dart';
 import '../../application/state/visual_settings.dart';
 import '../../domain/repositories/catalog_store.dart';
-import '../../domain/repositories/combination_memory.dart';
-import '../../domain/repositories/story_repository.dart';
 import '../bibliotheque/bibliotheque_screen.dart';
 import '../destiny/donnees.dart';
 import '../jouer/jouer_screen.dart';
@@ -24,6 +22,7 @@ import '../troupe/troupe_screen.dart';
 import 'exercices_screen.dart';
 import 'music_screen.dart';
 import 'settings_screen.dart';
+import '../widgets/ecran_sombre.dart';
 
 /// Les trois onglets : Jouer · Troupe · Exercices. L'appli s'ouvre sur
 /// Troupe. La Bibliothèque, la musique et les réglages sont de petits boutons.
@@ -32,8 +31,6 @@ class RootScreen extends StatefulWidget {
     required this.audioService,
     required this.visualSettings,
     required this.musicController,
-    required this.repository,
-    required this.combinationMemory,
     required this.catalogStore,
     required this.aiSettings,
     required this.chatController,
@@ -50,8 +47,6 @@ class RootScreen extends StatefulWidget {
   final AudioService audioService;
   final VisualSettings visualSettings;
   final MusicController musicController;
-  final StoryRepository repository;
-  final CombinationMemory combinationMemory;
   final CatalogStore catalogStore;
   final AiSettings aiSettings;
   final ChatController chatController;
@@ -82,14 +77,15 @@ class _RootScreenState extends State<RootScreen> {
         ),
       ));
 
-  void _ouvrirMusique() => _ouvrir(Scaffold(
-        appBar: AppBar(title: Text(context.textes.t('navigation.musique'))),
-        body: MusicScreen(controller: widget.musicController),
+  void _ouvrirMusique() => _ouvrir(ThemeSombre(
+        child: Scaffold(
+          appBar: AppBar(title: Text(context.textes.t('navigation.musique'))),
+          body: MusicScreen(controller: widget.musicController),
+        ),
       ));
 
   void _ouvrirReglages() => _ouvrir(SettingsScreen(
-        repository: widget.repository,
-        combinationMemory: widget.combinationMemory,
+        reglages: widget.reglages,
         visualSettings: widget.visualSettings,
         catalogStore: widget.catalogStore,
         aiSettings: widget.aiSettings,
@@ -137,7 +133,7 @@ class _RootScreenState extends State<RootScreen> {
         versExercices: () => setState(() => _index = 2),
         versBibliotheque: _ouvrirBibliotheque,
       ),
-      ExercicesScreen(audioService: widget.audioService),
+      ThemeSombre(child: ExercicesScreen(audioService: widget.audioService)),
     ];
 
     return Scaffold(

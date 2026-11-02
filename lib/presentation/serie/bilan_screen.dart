@@ -332,7 +332,7 @@ class _BilanEpisodeScreenState extends State<BilanEpisodeScreen> {
             _sauver();
           },
         ),
-        if (_finDeSaison && r.choix == ChoixFinal.besoin && !p.pnj) ...[
+        if (_finDeSaison && r.choix == ChoixFinal.besoin && !p.pnj && widget.contexte.reglages.evolutionArchetype) ...[
           Paragraphe(k('changer_archetype'), italique: true),
           Align(
             alignment: Alignment.centerLeft,

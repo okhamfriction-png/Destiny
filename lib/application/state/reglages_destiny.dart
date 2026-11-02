@@ -24,6 +24,20 @@ enum Declenchement {
   }
 }
 
+/// Le thème de l'appli.
+enum ThemeDestiny {
+  sombre,
+  clair,
+  auto;
+
+  static ThemeDestiny depuisTexte(String? s) {
+    for (final t in ThemeDestiny.values) {
+      if (t.name == s) return t;
+    }
+    return ThemeDestiny.sombre;
+  }
+}
+
 /// Valeurs spéciales des choix de musique.
 abstract final class ChoixMusique {
   static const String aucune = 'aucune';
@@ -73,6 +87,15 @@ class ReglagesDestiny extends ChangeNotifier {
   int _minuteurEchauffement = 30;
   bool _afficherRepliques = true;
 
+  // La Série, par défaut.
+  bool _registreParDefaut = true;
+  bool _combatParDefaut = true;
+  bool _pieceParDefaut = true;
+  bool _evolutionArchetype = true;
+
+  // Apparence.
+  ThemeDestiny _theme = ThemeDestiny.sombre;
+
   List<ChronoSpectacle> get chronos => List.unmodifiable(_chronos);
   int get chronoChoisi => _chronoChoisi.clamp(0, _chronos.length - 1);
   ChronoSpectacle get chrono => _chronos[chronoChoisi];
@@ -97,6 +120,14 @@ class ReglagesDestiny extends ChangeNotifier {
   bool get kidsParDefaut => _kidsParDefaut;
   int get minuteurEchauffement => _minuteurEchauffement;
   bool get afficherRepliques => _afficherRepliques;
+  bool get registreParDefaut => _registreParDefaut;
+  bool get combatParDefaut => _combatParDefaut;
+  bool get pieceParDefaut => _pieceParDefaut;
+
+  /// Entre deux saisons, un personnage qui a payé son besoin peut changer
+  /// d'archétype.
+  bool get evolutionArchetype => _evolutionArchetype;
+  ThemeDestiny get theme => _theme;
 
   Future<void> charger() async {
     try {
@@ -138,6 +169,11 @@ class ReglagesDestiny extends ChangeNotifier {
     _kidsParDefaut = j['kids'] as bool? ?? _kidsParDefaut;
     _minuteurEchauffement = (j['echauffement'] as num?)?.toInt() ?? _minuteurEchauffement;
     _afficherRepliques = j['repliques'] as bool? ?? _afficherRepliques;
+    _registreParDefaut = j['serie_registre'] as bool? ?? _registreParDefaut;
+    _combatParDefaut = j['serie_combat'] as bool? ?? _combatParDefaut;
+    _pieceParDefaut = j['serie_piece'] as bool? ?? _pieceParDefaut;
+    _evolutionArchetype = j['evolution_archetype'] as bool? ?? _evolutionArchetype;
+    _theme = ThemeDestiny.depuisTexte(j['theme'] as String?);
   }
 
   Map<String, dynamic> versJson() => {
@@ -162,6 +198,11 @@ class ReglagesDestiny extends ChangeNotifier {
         'kids': _kidsParDefaut,
         'echauffement': _minuteurEchauffement,
         'repliques': _afficherRepliques,
+        'serie_registre': _registreParDefaut,
+        'serie_combat': _combatParDefaut,
+        'serie_piece': _pieceParDefaut,
+        'evolution_archetype': _evolutionArchetype,
+        'theme': _theme.name,
       };
 
   Future<void> _sauver() async {
@@ -210,6 +251,11 @@ class ReglagesDestiny extends ChangeNotifier {
     bool? kidsParDefaut,
     int? minuteurEchauffement,
     bool? afficherRepliques,
+    bool? registreParDefaut,
+    bool? combatParDefaut,
+    bool? pieceParDefaut,
+    bool? evolutionArchetype,
+    ThemeDestiny? theme,
   }) async {
     _declenchement = declenchement ?? _declenchement;
     _musiqueDebut = musiqueDebut ?? _musiqueDebut;
@@ -230,6 +276,11 @@ class ReglagesDestiny extends ChangeNotifier {
     _kidsParDefaut = kidsParDefaut ?? _kidsParDefaut;
     _minuteurEchauffement = (minuteurEchauffement ?? _minuteurEchauffement).clamp(5, 90);
     _afficherRepliques = afficherRepliques ?? _afficherRepliques;
+    _registreParDefaut = registreParDefaut ?? _registreParDefaut;
+    _combatParDefaut = combatParDefaut ?? _combatParDefaut;
+    _pieceParDefaut = pieceParDefaut ?? _pieceParDefaut;
+    _evolutionArchetype = evolutionArchetype ?? _evolutionArchetype;
+    _theme = theme ?? _theme;
     await _sauver();
   }
 }

@@ -1,640 +1,77 @@
 import 'package:flutter/material.dart';
 
-import '../../application/services/audio_service.dart';
-import '../../application/state/music_controller.dart';
+import '../../application/state/reglages_destiny.dart';
 import '../../application/state/visual_settings.dart';
+import '../destiny/donnees.dart';
+import '../destiny/page.dart';
 
-/// Réglage de l'apparence : taille du texte de l'application.
+/// L'apparence : le thème (sombre, clair ou comme le téléphone), les visuels
+/// des cartes, et le texte de l'histoire avec l'IA.
 class AppearanceScreen extends StatelessWidget {
-  const AppearanceScreen(
-      {required this.visualSettings,
-      required this.audioService,
-      required this.musicController,
-      super.key});
+  const AppearanceScreen({required this.visualSettings, required this.reglages, super.key});
 
   final VisualSettings visualSettings;
-  final AudioService audioService;
-  final MusicController musicController;
+  final ReglagesDestiny reglages;
 
-  static const _presets = <({String label, double value})>[
-    (label: 'Petit', value: 0.85),
-    (label: 'Normal', value: 1.0),
-    (label: 'Grand', value: 1.2),
-    (label: 'Très grand', value: 1.45),
-  ];
+  static const _tailles = <double>[0.85, 1.0, 1.2, 1.45];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Apparence')),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF141029), Color(0xFF0A0818)],
-          ),
-        ),
-        child: ListenableBuilder(
-          listenable: visualSettings,
-          builder: (context, _) {
-            final theme = Theme.of(context);
-            final scale = visualSettings.textScale;
-            return ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.format_size, color: theme.colorScheme.primary),
-                    const SizedBox(width: 8),
-                    Text('Taille du texte du Chat',
-                        style: theme.textTheme.titleMedium),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    for (final p in _presets)
-                      ChoiceChip(
-                        label: Text(p.label),
-                        selected: (scale - p.value).abs() < 0.02,
-                        onSelected: (_) =>
-                            visualSettings.setTextScale(p.value),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Text('Réglage fin : ×${scale.toStringAsFixed(2)}',
-                    style: theme.textTheme.bodyMedium),
-                Slider(
-                  value: scale,
-                  min: 0.8,
-                  max: 1.6,
-                  divisions: 16,
-                  label: '×${scale.toStringAsFixed(2)}',
-                  onChanged: (v) => visualSettings.setTextScale(v),
-                ),
-                const SizedBox(height: 16),
-                // L'aperçu applique l'échelle choisie (comme dans le Chat).
-                MediaQuery(
-                  data: MediaQuery.of(context)
-                      .copyWith(textScaler: TextScaler.linear(scale)),
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Aperçu (taille du Chat)',
-                              style: theme.textTheme.labelMedium),
-                          const SizedBox(height: 8),
-                          Text('Le Maître du jeu lance les dés…',
-                              style: theme.textTheme.titleLarge),
-                          const SizedBox(height: 6),
-                          Text(
-                            'DONC tu fonces. MAIS une ombre surgit. À toi de '
-                            'choisir : brave ou malin ?',
-                            style: theme.textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                const Divider(height: 1),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Icon(Icons.draw, color: theme.colorScheme.primary),
-                    const SizedBox(width: 8),
-                    Text('Écriture du Chat', style: theme.textTheme.titleMedium),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                SegmentedButton<bool>(
-                  showSelectedIcon: false,
-                  segments: const [
-                    ButtonSegment(value: false, label: Text('Standard')),
-                    ButtonSegment(value: true, label: Text('Manuscrite')),
-                  ],
-                  selected: {visualSettings.handwritten},
-                  onSelectionChanged: (s) =>
-                      visualSettings.setHandwritten(s.first),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'Aa Bb Cc — Le Maître du jeu écrit à la main.',
-                  style: TextStyle(
-                    fontFamily: visualSettings.handwritten
-                        ? VisualSettings.handwrittenFamily
-                        : null,
-                    fontSize: 20 * scale,
-                    color: Colors.white70,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'La taille et l\'écriture s\'appliquent uniquement au Chat '
-                  '(Maître du jeu) et sont conservées.',
-                  style:
-                      theme.textTheme.bodySmall?.copyWith(color: Colors.white38),
-                ),
-                const SizedBox(height: 24),
-                const Divider(height: 1),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Icon(Icons.image_outlined,
-                        color: theme.colorScheme.primary),
-                    const SizedBox(width: 8),
-                    Text('Visuels des cartes',
-                        style: theme.textTheme.titleMedium),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                SegmentedButton<VisualSource>(
-                  showSelectedIcon: false,
-                  style: const ButtonStyle(
-                      visualDensity: VisualDensity.compact,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                  segments: const [
-                    ButtonSegment(
-                        value: VisualSource.ai,
-                        icon: Icon(Icons.image),
-                        label: Text('Réaliste')),
-                    ButtonSegment(
-                        value: VisualSource.vector,
-                        icon: Icon(Icons.auto_awesome),
-                        label: Text('Vectoriel')),
-                    ButtonSegment(
-                        value: VisualSource.minimal,
-                        icon: Icon(Icons.gradient),
-                        label: Text('Minimal')),
-                  ],
-                  selected: {visualSettings.source},
-                  onSelectionChanged: (s) => visualSettings.setSource(s.first),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Style des images (lieux, dangers, archétypes) partout dans '
-                  'l\'app. Minimal : dégradé sobre, sans icône.',
-                  style:
-                      theme.textTheme.bodySmall?.copyWith(color: Colors.white38),
-                ),
-                const SizedBox(height: 20),
-                Text('Affichage du résultat (Générateur)',
-                    style: theme.textTheme.titleSmall),
-                const SizedBox(height: 8),
-                SegmentedButton<ResultLayout>(
-                  showSelectedIcon: false,
-                  style: const ButtonStyle(
-                      visualDensity: VisualDensity.compact,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                  segments: const [
-                    ButtonSegment(
-                        value: ResultLayout.cote,
-                        icon: Icon(Icons.view_agenda_outlined),
-                        label: Text('Côté')),
-                    ButtonSegment(
-                        value: ResultLayout.grand,
-                        icon: Icon(Icons.fullscreen),
-                        label: Text('Grand')),
-                    ButtonSegment(
-                        value: ResultLayout.full,
-                        icon: Icon(Icons.dashboard_customize_outlined),
-                        label: Text('Full')),
-                  ],
-                  selected: {visualSettings.resultLayout},
-                  onSelectionChanged: (s) =>
-                      visualSettings.setResultLayout(s.first),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Côté : lieu et danger côte à côte (compact). Grand : images '
-                  'en plein écran avec le nom dessous. Full : tout condensé sur '
-                  'un seul écran (visuels réduits, sans défilement).',
-                  style:
-                      theme.textTheme.bodySmall?.copyWith(color: Colors.white38),
-                ),
-                const SizedBox(height: 24),
-                const Divider(height: 1),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Icon(Icons.timer, color: theme.colorScheme.primary),
-                    const SizedBox(width: 8),
-                    Text('Durée du TOP (chrono de scène)',
-                        style: theme.textTheme.titleMedium),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                SegmentedButton<int>(
-                  showSelectedIcon: false,
-                  style: const ButtonStyle(
-                      visualDensity: VisualDensity.compact,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                  segments: const [
-                    ButtonSegment(value: 30, label: Text('30 s')),
-                    ButtonSegment(value: 45, label: Text('45 s')),
-                    ButtonSegment(value: 60, label: Text('60 s')),
-                    ButtonSegment(value: 90, label: Text('90 s')),
-                  ],
-                  selected: {visualSettings.topSeconds},
-                  onSelectionChanged: (s) =>
-                      visualSettings.setTopSeconds(s.first),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Durée du chrono lancé par le bouton TOP. Une alerte sonne à '
-                  '10 s de la fin. 30 s par défaut.',
-                  style:
-                      theme.textTheme.bodySmall?.copyWith(color: Colors.white38),
-                ),
-                const SizedBox(height: 24),
-                const Divider(height: 1),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Icon(Icons.casino, color: theme.colorScheme.primary),
-                    const SizedBox(width: 8),
-                    Text('DESTINY — le dé', style: theme.textTheme.titleMedium),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'À chaque DESTINY, le dé tire un type selon ces poids. Mets 0 '
-                  'pour désactiver un type (ex. seulement « Destin »).',
-                  style:
-                      theme.textTheme.bodySmall?.copyWith(color: Colors.white38),
-                ),
-                const SizedBox(height: 8),
-                Builder(builder: (context) {
-                  final a = visualSettings.destinyWeightArchetype;
-                  final d = visualSettings.destinyWeightDanger;
-                  final x = visualSettings.destinyWeightDestin;
-                  final total = a + d + x;
-                  String pct(int w) =>
-                      total <= 0 ? '—' : '${(w * 100 / total).round()} %';
-                  return Text(
-                    total <= 0
-                        ? 'Aucun type actif — « Destin » tombera par défaut.'
-                        : 'Chances : Archétype ${pct(a)} · Danger ${pct(d)} · '
-                            'Destin ${pct(x)}.',
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: theme.colorScheme.primary),
-                  );
-                }),
-                const SizedBox(height: 4),
-                _WeightRow(
-                  label: 'Archétype',
-                  value: visualSettings.destinyWeightArchetype,
-                  onChanged: visualSettings.setDestinyWeightArchetype,
-                ),
-                _WeightRow(
-                  label: 'Danger',
-                  value: visualSettings.destinyWeightDanger,
-                  onChanged: visualSettings.setDestinyWeightDanger,
-                ),
-                _WeightRow(
-                  label: 'Destin',
-                  value: visualSettings.destinyWeightDestin,
-                  onChanged: visualSettings.setDestinyWeightDestin,
-                ),
-                const SizedBox(height: 20),
-                const Divider(height: 1),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(Icons.graphic_eq, color: theme.colorScheme.primary),
-                    const SizedBox(width: 10),
-                    Text('Sons du chrono',
-                        style: theme.textTheme.titleMedium),
-                  ],
-                ),
-                const SizedBox(height: 2),
-                Text('Le son déclenché au lancement du chrono et à chaque DESTINY.',
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: Colors.white54)),
-                const SizedBox(height: 8),
-                _SonRow(
-                  label: 'Au début du chrono',
-                  value: visualSettings.sonDebut,
-                  onChanged: visualSettings.setSonDebut,
-                  audioService: audioService,
-                ),
-                _SonRow(
-                  label: 'À chaque DESTINY',
-                  value: visualSettings.sonDestiny,
-                  onChanged: visualSettings.setSonDestiny,
-                  audioService: audioService,
-                ),
-                const SizedBox(height: 20),
-                const Divider(height: 1),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(Icons.library_music,
-                        color: theme.colorScheme.primary),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text('Musique à chaque DESTINY',
-                          style: theme.textTheme.titleMedium),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'Importez vos propres musiques : l\'une d\'elles se lance à '
-                  'chaque DESTINY, par-dessus l\'ambiance. Choisissez-en une, ou '
-                  '« Au hasard » pour varier.',
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: Colors.white54),
-                ),
-                const SizedBox(height: 8),
-                _MusiqueDestinySection(
-                  visualSettings: visualSettings,
-                  musicController: musicController,
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
-/// Sélecteur d'un son du chrono, avec bouton d'aperçu.
-class _SonRow extends StatelessWidget {
-  const _SonRow({
-    required this.label,
-    required this.value,
-    required this.onChanged,
-    required this.audioService,
-  });
-  final String label;
-  final String value;
-  final ValueChanged<String> onChanged;
-  final AudioService audioService;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cur = AudioService.effets.containsKey(value) ? value : 'aucun';
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(label,
-                style: theme.textTheme.bodyMedium
-                    ?.copyWith(color: Colors.white)),
-          ),
-          DropdownButton<String>(
-            value: cur,
-            dropdownColor: const Color(0xFF1A1530),
-            underline: const SizedBox.shrink(),
-            style: TextStyle(color: theme.colorScheme.primary, fontSize: 15),
-            items: [
-              for (final e in AudioService.effets.entries)
-                DropdownMenuItem(value: e.key, child: Text(e.value)),
-            ],
-            onChanged: (v) {
-              if (v == null) return;
-              onChanged(v);
-              if (v != 'aucun') audioService.playEffet(v); // aperçu
-            },
-          ),
-          IconButton(
-            tooltip: 'Écouter',
-            icon: Icon(Icons.play_circle_outline,
-                color: cur == 'aucun'
-                    ? Colors.white24
-                    : theme.colorScheme.primary),
-            onPressed: cur == 'aucun'
-                ? null
-                : () => audioService.playEffet(cur),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Bibliothèque des musiques de DESTINY importées par le meneur.
-///
-/// Importer (copie dans l'app), choisir celle qui se lance à chaque DESTINY
-/// (ou « Au hasard »), écouter et supprimer.
-class _MusiqueDestinySection extends StatelessWidget {
-  const _MusiqueDestinySection({
-    required this.visualSettings,
-    required this.musicController,
-  });
-
-  final VisualSettings visualSettings;
-  final MusicController musicController;
-
-  Future<void> _importer(BuildContext context) async {
-    final n = await musicController.importerMusiques();
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(n == 0
-            ? 'Aucune musique ajoutée.'
-            : '$n musique${n > 1 ? 's' : ''} ajoutée${n > 1 ? 's' : ''}.'),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  Future<void> _supprimer(
-      BuildContext context, MusiqueImportee m) async {
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (c) => AlertDialog(
-        title: const Text('Supprimer la musique ?'),
-        content: Text('« ${m.nom} » sera retirée de l\'application.'),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(c, false),
-              child: const Text('Annuler')),
-          FilledButton(
-              onPressed: () => Navigator.pop(c, true),
-              child: const Text('Supprimer')),
-        ],
-      ),
-    );
-    if (ok != true) return;
-    // Si la musique supprimée était la sélection active, on revient à « Aucune ».
-    if (visualSettings.sonDestinyMusique == m.fichier) {
-      await visualSettings.setSonDestinyMusique('aucune');
-    }
-    await musicController.retirerImportee(m);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final t = context.textes;
+    String k(String x) => t.t('reglages.$x');
     return ListenableBuilder(
-      listenable: musicController,
-      builder: (context, _) {
-        final musiques = musicController.importees;
-        final sel = visualSettings.sonDestinyMusique;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Wrap(
-              spacing: 8,
-              children: [
+      listenable: Listenable.merge([visualSettings, reglages]),
+      builder: (context, _) => PageDestiny(
+        titre: k('apparence'),
+        enfants: [
+          SectionDestiny(titre: k('theme'), espace: 0, enfants: [
+            Wrap(spacing: 8, runSpacing: 6, children: [
+              for (final th in ThemeDestiny.values)
                 ChoiceChip(
-                  label: const Text('Aucune'),
-                  selected: sel == 'aucune',
-                  onSelected: (_) =>
-                      visualSettings.setSonDestinyMusique('aucune'),
+                  label: Text(k('themes.${th.name}')),
+                  selected: reglages.theme == th,
+                  onSelected: (_) => reglages.changer(theme: th),
                 ),
+            ]),
+          ]),
+          SectionDestiny(titre: k('visuels'), enfants: [
+            Wrap(spacing: 8, runSpacing: 6, children: [
+              for (final s in VisualSource.values)
                 ChoiceChip(
-                  label: const Text('Au hasard'),
-                  selected: sel == 'aleatoire',
-                  onSelected: musiques.isEmpty
-                      ? null
-                      : (_) =>
-                          visualSettings.setSonDestinyMusique('aleatoire'),
+                  label: Text(k('visuels_noms.${s.name}')),
+                  selected: visualSettings.source == s,
+                  onSelected: (_) => visualSettings.setSource(s),
                 ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            if (musiques.isEmpty)
-              Text(
-                'Aucune musique importée pour l\'instant.',
-                style: theme.textTheme.bodySmall
-                    ?.copyWith(color: Colors.white38),
-              )
-            else
-              for (final m in musiques)
-                _MusiqueRow(
-                  musique: m,
-                  selected: sel == m.fichier,
-                  onSelect: () =>
-                      visualSettings.setSonDestinyMusique(m.fichier),
-                  onPreview: () => musicController.apercuImportee(m),
-                  onDelete: () => _supprimer(context, m),
+            ]),
+            const SizedBox(height: 4),
+            Text(k('visuels_aide'), style: Theme.of(context).textTheme.bodySmall),
+          ]),
+          SectionDestiny(titre: k('texte_histoire'), enfants: [
+            Text(k('taille'), style: Theme.of(context).textTheme.titleSmall),
+            Wrap(spacing: 8, runSpacing: 6, children: [
+              for (final v in _tailles)
+                ChoiceChip(
+                  label: Text('×${v.toStringAsFixed(2)}'),
+                  selected: (visualSettings.textScale - v).abs() < 0.01,
+                  onSelected: (_) => visualSettings.setTextScale(v),
                 ),
-            const SizedBox(height: 8),
-            OutlinedButton.icon(
-              onPressed: () => _importer(context),
-              icon: const Icon(Icons.add),
-              label: const Text('Importer une musique'),
+            ]),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(k('manuscrite')),
+              value: visualSettings.handwritten,
+              onChanged: visualSettings.setHandwritten,
             ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-/// Une ligne de la bibliothèque : sélection, écoute, suppression.
-class _MusiqueRow extends StatelessWidget {
-  const _MusiqueRow({
-    required this.musique,
-    required this.selected,
-    required this.onSelect,
-    required this.onPreview,
-    required this.onDelete,
-  });
-
-  final MusiqueImportee musique;
-  final bool selected;
-  final VoidCallback onSelect;
-  final VoidCallback onPreview;
-  final VoidCallback onDelete;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return InkWell(
-      onTap: onSelect,
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          children: [
-            Icon(
-              selected
-                  ? Icons.radio_button_checked
-                  : Icons.radio_button_unchecked,
-              color: selected ? theme.colorScheme.primary : Colors.white38,
-              size: 22,
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                musique.nom,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium
-                    ?.copyWith(color: Colors.white),
+            Text(
+              context.grammaire.promesse,
+              style: TextStyle(
+                fontSize: 18 * visualSettings.textScale,
+                fontFamily: visualSettings.handwritten ? VisualSettings.handwrittenFamily : null,
               ),
             ),
-            IconButton(
-              tooltip: 'Écouter',
-              visualDensity: VisualDensity.compact,
-              icon: Icon(Icons.play_circle_outline,
-                  color: theme.colorScheme.primary),
-              onPressed: onPreview,
-            ),
-            IconButton(
-              tooltip: 'Supprimer',
-              visualDensity: VisualDensity.compact,
-              icon: const Icon(Icons.delete_outline, color: Colors.white38),
-              onPressed: onDelete,
-            ),
-          ],
-        ),
+          ]),
+        ],
       ),
-    );
-  }
-}
-
-/// Curseur de poids (0–12) pour un type du dé DESTINY.
-class _WeightRow extends StatelessWidget {
-  const _WeightRow({
-    required this.label,
-    required this.value,
-    required this.onChanged,
-  });
-
-  final String label;
-  final int value;
-  final ValueChanged<int> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      children: [
-        SizedBox(
-          width: 88,
-          child: Text(label, style: theme.textTheme.bodyMedium),
-        ),
-        Expanded(
-          child: Slider(
-            value: value.toDouble(),
-            min: 0,
-            max: 12,
-            divisions: 12,
-            label: '$value',
-            onChanged: (v) => onChanged(v.round()),
-          ),
-        ),
-        SizedBox(
-          width: 28,
-          child: Text('$value',
-              textAlign: TextAlign.end, style: theme.textTheme.bodyMedium),
-        ),
-      ],
     );
   }
 }

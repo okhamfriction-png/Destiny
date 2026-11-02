@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../destiny/donnees.dart';
+import '../theme/destiny_theme.dart';
+
 /// Habillage sombre pour un écran-contenu poussé en route (Chat, Spectacle) :
 /// il fournit le fond dégradé du shell et un bouton retour, que ces écrans
 /// n'ont pas puisqu'ils étaient conçus pour vivre dans l'onglet.
@@ -9,6 +12,10 @@ class EcranSombre extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ThemeSombre(child: _contenu(context));
+  }
+
+  Widget _contenu(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0A0818),
       body: Container(
@@ -38,4 +45,16 @@ class EcranSombre extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Garde un écran en thème sombre, même quand l'appli est en thème clair :
+/// les anciens écrans (histoire et spectacle avec l'IA, éditeurs, exercices)
+/// ont été dessinés pour le sombre.
+class ThemeSombre extends StatelessWidget {
+  const ThemeSombre({required this.child, super.key});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) =>
+      Theme(data: themeDestiny(context.grammaire, sombre: true), child: child);
 }

@@ -16,14 +16,11 @@ import 'application/state/spectacle_store.dart';
 import 'application/state/troupe_store.dart';
 import 'application/state/visual_settings.dart';
 import 'domain/repositories/catalog_store.dart';
-import 'domain/repositories/combination_memory.dart';
-import 'domain/repositories/story_repository.dart';
 import 'infrastructure/datasources/grammaire_source.dart';
 import 'infrastructure/datasources/local_json_datasource.dart';
+import 'infrastructure/platform/base_de_donnees.dart';
 import 'infrastructure/platform/catalog_store_factory.dart';
 import 'infrastructure/platform/chat_store_factory.dart';
-import 'infrastructure/platform/combination_memory_factory.dart';
-import 'infrastructure/repositories/story_repository_impl.dart';
 import 'presentation/destiny/donnees.dart';
 import 'presentation/screens/root_screen.dart';
 import 'presentation/theme/destiny_theme.dart';
@@ -67,8 +64,6 @@ Future<void> _boot() async {
   final grammaire = await grammaireSource.charger();
   final dataSource = LocalJsonDataSource(grammaire: grammaireSource);
   final catalogStore = createCatalogStore(dataSource);
-  final repository = StoryRepositoryImpl(catalogStore: catalogStore);
-  final combinationMemory = createCombinationMemory();
   final audioService = AudioService();
   final visualSettings = VisualSettings();
   final musicController = MusicController();
@@ -108,8 +103,6 @@ Future<void> _boot() async {
     audioService: audioService,
     visualSettings: visualSettings,
     musicController: musicController,
-    repository: repository,
-    combinationMemory: combinationMemory,
     catalogStore: catalogStore,
     aiSettings: aiSettings,
     chatController: chatController,
@@ -155,8 +148,6 @@ class DestinyApp extends StatelessWidget {
     required this.audioService,
     required this.visualSettings,
     required this.musicController,
-    required this.repository,
-    required this.combinationMemory,
     required this.catalogStore,
     required this.aiSettings,
     required this.chatController,
@@ -175,8 +166,6 @@ class DestinyApp extends StatelessWidget {
   final AudioService audioService;
   final VisualSettings visualSettings;
   final MusicController musicController;
-  final StoryRepository repository;
-  final CombinationMemory combinationMemory;
   final CatalogStore catalogStore;
   final AiSettings aiSettings;
   final ChatController chatController;
@@ -190,12 +179,23 @@ class DestinyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: reglages,
+      builder: (context, _) => _appli(),
+    );
+  }
+
+  Widget _appli() {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'DestinyStory',
       theme: themeDestiny(grammaire.grammaire, sombre: false),
       darkTheme: themeDestiny(grammaire.grammaire, sombre: true),
-      themeMode: ThemeMode.dark,
+      themeMode: switch (reglages.theme) {
+        ThemeDestiny.sombre => ThemeMode.dark,
+        ThemeDestiny.clair => ThemeMode.light,
+        ThemeDestiny.auto => ThemeMode.system,
+      },
       builder: (context, child) => DestinyDonnees(
         grammaire: grammaire.grammaire,
         textes: grammaire.textes,
@@ -205,9 +205,7 @@ class DestinyApp extends StatelessWidget {
         audioService: audioService,
         visualSettings: visualSettings,
         musicController: musicController,
-        repository: repository,
-        combinationMemory: combinationMemory,
-        catalogStore: catalogStore,
+                catalogStore: catalogStore,
         aiSettings: aiSettings,
         chatController: chatController,
         spectacleController: spectacleController,

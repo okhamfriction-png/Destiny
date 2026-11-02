@@ -28,7 +28,12 @@ class _CreerSerieScreenState extends State<CreerSerieScreen> {
   String _lore = '';
   final TextEditingController _nom = TextEditingController();
   final TextEditingController _contexte = TextEditingController();
-  late final ReglagesSerie _reglages = ReglagesSerie(traitre: widget.contexte.reglages.moduleTraitre && !_kids);
+  late final ReglagesSerie _reglages = ReglagesSerie(
+    traitre: widget.contexte.reglages.moduleTraitre && !_kids,
+    registre: widget.contexte.reglages.registreParDefaut,
+    combat: widget.contexte.reglages.combatParDefaut,
+    piece: widget.contexte.reglages.pieceParDefaut,
+  );
 
   bool get _kids => _public == PublicSerie.kids;
 
