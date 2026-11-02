@@ -14,7 +14,6 @@ import '../serie/creer_serie_screen.dart';
 import '../serie/fiche_serie_screen.dart';
 import '../serie/series_screen.dart';
 import '../theme/destiny_theme.dart';
-import '../widgets/ecran_sombre.dart';
 
 /// L'onglet Jouer : le jeu de rôle, entre humains ou avec l'IA (comme aux
 /// échecs : avec quelqu'un, ou contre l'ordinateur).
@@ -98,21 +97,19 @@ class JouerScreen extends StatelessWidget {
                   titre: j('ia.histoire.titre'),
                   sousTitre: '${j('ia.histoire.texte')}\n${j('ia.cle')}',
                   devant: const Icon(Icons.auto_stories_outlined, color: DestinyCouleurs.ia),
-                  onTap: () => ouvrir(EcranSombre(
-                    child: ChatScreen(
-                      controller: chatController,
-                      audioService: audioService,
-                      visualSettings: visualSettings,
-                      musicController: musicController,
-                      univers: serie.store.catalogue,
-                    ),
+                  onTap: () => ouvrir(ChatScreen(
+                    controller: chatController,
+                    audioService: audioService,
+                    visualSettings: visualSettings,
+                    musicController: musicController,
+                    univers: serie.store.catalogue,
                   )),
                 ),
                 ElementListe(
                   titre: j('ia.spectacle.titre'),
                   sousTitre: '${j('ia.spectacle.texte')}\n${j('ia.cle')}',
                   devant: const Icon(Icons.theater_comedy_outlined, color: DestinyCouleurs.ia),
-                  onTap: () => ouvrir(EcranSombre(child: SpectacleScreen(controller: spectacleController, univers: serie.store.catalogue))),
+                  onTap: () => ouvrir(SpectacleScreen(controller: spectacleController, univers: serie.store.catalogue)),
                 ),
               ]),
               const SizedBox(height: 8),

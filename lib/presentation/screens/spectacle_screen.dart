@@ -1,27 +1,20 @@
 import 'package:flutter/material.dart';
 
-import '../destiny/donnees.dart';
-
 import '../../application/state/spectacle_controller.dart';
 import '../../domain/entities/spectacle_turn.dart';
+import '../../domain/grammaire/modeles.dart';
 import '../../domain/serie/univers.dart';
 import '../destiny/composants.dart';
+import '../destiny/donnees.dart';
+import '../destiny/page.dart';
 import '../jouer/univers_ia.dart';
+import '../theme/destiny_theme.dart';
 import 'spectacle_archives_screen.dart';
 
-const Color _gold = Color(0xFFFFC24B);
-
-/// Tons / genres (mêmes que le mode Chat).
-const List<String> _spectacleTones = [
-  'Aventure',
-  'Humour',
-  'Drame',
-  'Épique',
-  'Voyage initiatique',
-  'Romance',
-  'Mystère',
-  'Action',
-];
+/// Une couleur d'accent rendue lisible comme texte : éclaircie en sombre,
+/// assombrie en clair (contraste d'au moins 4,5).
+Color _lisible(DestinyCouleurs d, Color accent) =>
+    d.sombre ? Color.lerp(accent, Colors.white, 0.45)! : Color.lerp(accent, d.encre, 0.5)!;
 
 /// Petit avatar emoji d'un animal (par son nom ou son id), ou null si inconnu.
 Widget? _archEmoji(String nomOuId, {double size = 18}) {
@@ -30,7 +23,14 @@ Widget? _archEmoji(String nomOuId, {double size = 18}) {
   return Text(emoji, style: TextStyle(fontSize: size));
 }
 
-/// Onglet « Spectacle » : jeu d'impro long form solo piloté par l'IA.
+/// La couleur de famille d'un des quatre personnages (or s'il est inconnu).
+Color _couleurPersonnage(BuildContext context, PersonnageSpectacle p) {
+  final d = context.destiny;
+  final a = context.grammaire.archetype(p.archetypeId);
+  return a == null ? d.or : d.famille(a.famille);
+}
+
+/// Le spectacle avec l'IA : jeu d'impro long form en solo.
 class SpectacleScreen extends StatefulWidget {
   const SpectacleScreen({required this.controller, this.univers = CatalogueUnivers.vide, super.key});
 
@@ -59,6 +59,9 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
 
   final _freeCtrl = TextEditingController();
   final _scroll = ScrollController();
+
+  /// Raccourci vers les textes de l'écran.
+  String k(String x, [Map<String, String> v = const {}]) => context.textes.t('spectacle_ia.$x', v);
 
   @override
   void initState() {
@@ -89,207 +92,141 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
   @override
   Widget build(BuildContext context) {
     final c = widget.controller;
-    return c.started ? _buildGame(context, c) : _buildSetup(context, c);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(k('titre')),
+        actions: [
+          if (!c.started)
+            IconButton(
+              tooltip: k('historique'),
+              icon: const Icon(Icons.history),
+              onPressed: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => SpectacleArchivesScreen(controller: widget.controller))),
+            ),
+        ],
+      ),
+      body: SafeArea(top: false, child: c.started ? _buildGame(context, c) : _buildSetup(context, c)),
+    );
   }
 
   // ------------------------------------------------------------------ SETUP
   Widget _buildSetup(BuildContext context, SpectacleController c) {
+    final d = context.destiny;
     final theme = Theme.of(context);
     final draw = c.draw;
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text('Mode Scène',
-                  style: theme.textTheme.headlineSmall),
-            ),
-            IconButton(
-              tooltip: 'Historique des parties',
-              icon: const Icon(Icons.history),
-              onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) =>
-                      SpectacleArchivesScreen(controller: widget.controller))),
-            ),
-          ],
-        ),
-        Text(
-          'Impro dramatique long form en solo. L\'IA joue trois personnages, '
-          'le régisseur et le coach. Tu en incarnes un.',
-          style: theme.textTheme.bodySmall?.copyWith(color: Colors.white60),
-        ),
-        const SizedBox(height: 16),
-        if (c.canResume) ...[
-          Card(
-            color: theme.colorScheme.primary.withValues(alpha: 0.14),
-            child: ListTile(
-              leading: Icon(Icons.play_circle_fill,
-                  color: theme.colorScheme.primary),
-              title: const Text('Reprendre la partie en cours'),
-              subtitle: const Text('Une partie non terminée a été trouvée.'),
-              trailing: IconButton(
-                tooltip: 'Oublier',
-                icon: const Icon(Icons.close),
-                onPressed: c.discardSaved,
-              ),
-              onTap: c.resume,
-            ),
+    final tons = [for (final x in tonsPourIa(context.textes)) x.name];
+    final aide = TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, height: 1.35, color: d.texteSecondaire);
+    final enfants = <Widget>[
+      Paragraphe(k('intro')),
+      if (c.canResume)
+        ElementListe(
+          titre: k('reprendre'),
+          sousTitre: k('reprendre_texte'),
+          couleur: d.titre,
+          devant: Icon(Icons.play_circle_fill, color: d.titre),
+          apres: IconButton(
+            tooltip: k('oublier'),
+            icon: const Icon(Icons.close),
+            onPressed: c.discardSaved,
           ),
-          const SizedBox(height: 12),
-        ],
-        if (!c.configured)
-          Card(
-            color: Colors.orange.withValues(alpha: 0.12),
-            child: const Padding(
-              padding: EdgeInsets.all(12),
-              child: Text(
-                'Configure d\'abord l\'IA dans Paramètres → Configurer l\'IA '
-                '(fournisseur, modèle, jeton). Le Mode Spectacle appelle l\'IA '
-                'à chaque tour.',
-              ),
-            ),
-          ),
-        const SizedBox(height: 8),
-        if (c.sessionIgnoree)
-          Card(
-            color: theme.colorScheme.primary.withValues(alpha: 0.10),
-            child: const Padding(
-              padding: EdgeInsets.all(12),
-              child: Text('Une partie commencée avec l\'ancienne version n\'a pas été reprise : '
-                  'les règles du spectacle ont changé (quatre actes, Destiny lancé par toi, débrief).'),
-            ),
-          ),
-        SwitchListTile(
-          contentPadding: EdgeInsets.zero,
-          title: const Wrap(spacing: 8, crossAxisAlignment: WrapCrossAlignment.center, children: [Text('Avec des enfants'), SigleKids(petit: true)]),
-          subtitle: const Text('Lieux et dangers kids, des frissons doux, personne ne meurt.'),
-          value: c.kids,
-          onChanged: c.setKids,
+          onTap: c.resume,
         ),
-        const SizedBox(height: 8),
-        Text('Sous-mode', style: theme.textTheme.titleSmall),
-        const SizedBox(height: 8),
+      if (!c.configured) CadreLisere(couleur: DestinyCouleurs.ia, child: Text(k('sans_cle'), style: TextStyle(color: d.texte))),
+      if (c.sessionIgnoree) CadreLisere(couleur: d.or, child: Text(k('ancienne'), style: TextStyle(color: d.texte))),
+      SwitchListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Wrap(
+          spacing: 8,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [Text(k('kids')), const SigleKids(petit: true)],
+        ),
+        subtitle: Text(k('kids_aide')),
+        value: c.kids,
+        onChanged: c.setKids,
+      ),
+      SectionDestiny(titre: k('sous_mode'), espace: 8, enfants: [
         SegmentedButton<SpectacleMode>(
           showSelectedIcon: false,
-          segments: const [
-            ButtonSegment(
-                value: SpectacleMode.classique, label: Text('Classique')),
-            ButtonSegment(value: SpectacleMode.libre, label: Text('Libre')),
+          segments: [
+            ButtonSegment(value: SpectacleMode.classique, label: Text(k('classique'))),
+            ButtonSegment(value: SpectacleMode.libre, label: Text(k('libre'))),
           ],
           selected: {c.mode},
           onSelectionChanged: (s) => c.setMode(s.first),
         ),
         const SizedBox(height: 6),
-        Text(
-          c.mode == SpectacleMode.classique
-              ? 'Classique : 4 répliques proposées à chaque tour, une seule est '
-                  'dans la langue de ton archétype.'
-              : 'Libre : tu écris ta réplique, le coach te dit si elle est dans la langue de ton archétype.',
-          style: theme.textTheme.bodySmall?.copyWith(color: Colors.white38),
-        ),
-        const SizedBox(height: 16),
-        // Univers et Ton côte à côte.
+        Text(c.mode == SpectacleMode.classique ? k('classique_aide') : k('libre_aide'), style: aide),
+      ]),
+      SectionDestiny(titre: k('decor'), enfants: [
+        // Univers et ton côte à côte.
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Univers', style: theme.textTheme.titleSmall),
-                  const SizedBox(height: 8),
-                  DropdownButtonFormField<String>(
-                    initialValue: _valeursUnivers().contains(c.universe) ? c.universe : null,
-                    isExpanded: true,
-                    decoration: const InputDecoration(
-                        isDense: true, border: OutlineInputBorder()),
-                    items: [
-                      const DropdownMenuItem(
-                          enabled: false,
-                          value: '__h_genres',
-                          child: Text('— Genres —')),
-                      for (final u in _universAdultes())
-                        DropdownMenuItem(value: u, child: Text(u)),
-                      const DropdownMenuItem(
-                          enabled: false,
-                          value: '__h_kids',
-                          child: Text('— Enfant —')),
-                      for (final u in _universEnfants())
-                        DropdownMenuItem(value: u, child: Text(u)),
-                    ],
-                    onChanged: (v) {
-                      if (v == null || v.startsWith('__h')) return;
-                      c.setUniverse(v);
-                    },
-                  ),
+              child: DropdownButtonFormField<String>(
+                initialValue: _valeursUnivers().contains(c.universe) ? c.universe : null,
+                isExpanded: true,
+                decoration: InputDecoration(labelText: k('univers'), isDense: true),
+                items: [
+                  DropdownMenuItem(enabled: false, value: '__h_genres', child: Text(k('genres'))),
+                  for (final u in _universAdultes()) DropdownMenuItem(value: u, child: Text(u)),
+                  DropdownMenuItem(enabled: false, value: '__h_kids', child: Text(k('enfants'))),
+                  for (final u in _universEnfants()) DropdownMenuItem(value: u, child: Text(u)),
                 ],
+                onChanged: (v) {
+                  if (v == null || v.startsWith('__h')) return;
+                  c.setUniverse(v);
+                },
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Ton', style: theme.textTheme.titleSmall),
-                  const SizedBox(height: 8),
-                  DropdownButtonFormField<String>(
-                    initialValue: c.tone,
-                    isExpanded: true,
-                    decoration: const InputDecoration(
-                        isDense: true, border: OutlineInputBorder()),
-                    items: [
-                      for (final t in _spectacleTones)
-                        DropdownMenuItem(value: t, child: Text(t)),
-                    ],
-                    onChanged: (v) => c.setTone(v ?? _spectacleTones.first),
-                  ),
-                ],
+              child: DropdownButtonFormField<String>(
+                initialValue: tons.contains(c.tone) ? c.tone : null,
+                isExpanded: true,
+                decoration: InputDecoration(labelText: k('ton'), isDense: true),
+                items: [for (final x in tons) DropdownMenuItem(value: x, child: Text(x))],
+                onChanged: (v) {
+                  if (v != null) c.setTone(v);
+                },
               ),
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        Text('Longueur des scènes', style: theme.textTheme.titleSmall),
-        const SizedBox(height: 8),
+      ]),
+      SectionDestiny(titre: k('longueur'), enfants: [
         SegmentedButton<SceneLength>(
           showSelectedIcon: false,
           style: const ButtonStyle(
-              visualDensity: VisualDensity.compact,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-          segments: const [
-            ButtonSegment(value: SceneLength.court, label: Text('Court 10')),
-            ButtonSegment(value: SceneLength.normal, label: Text('Normal 20')),
-            ButtonSegment(value: SceneLength.long, label: Text('Long 30')),
+              visualDensity: VisualDensity.compact, tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+          segments: [
+            for (final l in SceneLength.values)
+              ButtonSegment(value: l, label: Text(k(l.name, {'n': '${l.count}'}))),
           ],
           selected: {c.sceneLength},
           onSelectionChanged: (s) => c.setSceneLength(s.first),
         ),
         const SizedBox(height: 8),
-        Text(
-          'Par défaut « Contemporain », ton « Drame ». Le lieu, le danger et '
-          'les paliers ne changent pas — seuls l\'univers et le ton s\'adaptent. '
-          'Chaque scène vise ${c.sceneTarget} répliques ; tu choisis ton '
-          'personnage à chaque nouvelle scène, et tu lances Destiny quand tu veux '
-          'faire monter le danger (quatre actes).',
-          style: theme.textTheme.bodySmall?.copyWith(color: Colors.white38),
-        ),
-        const SizedBox(height: 18),
-        FilledButton.icon(
+        Text(k('explication', {'n': '${c.sceneTarget}'}), style: aide),
+      ]),
+      const SizedBox(height: 18),
+      SizedBox(
+        width: double.infinity,
+        child: FilledButton.icon(
           onPressed: () => c.drawDecor(),
           icon: const Icon(Icons.shuffle_rounded),
-          label: Text(draw == null ? 'Tirer le décor' : 'Retirer le décor'),
+          label: Text(draw == null ? k('tirer') : k('retirer')),
         ),
-        if (c.error != null) ...[
-          const SizedBox(height: 10),
-          Text(c.error!, style: const TextStyle(color: Colors.redAccent)),
-        ],
-        if (draw != null) ...[
-          const SizedBox(height: 16),
-          _DecorCard(draw: draw),
-          const SizedBox(height: 16),
-          Text('Personnage de départ', style: theme.textTheme.titleSmall),
-          const SizedBox(height: 8),
+      ),
+      if (c.error != null)
+        Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Text(c.error!,
+              style: TextStyle(color: _lisible(d, d.famille(FamilleId.fissure)), fontWeight: FontWeight.w600)),
+        ),
+      if (draw != null) ...[
+        _DecorCard(draw: draw),
+        SectionDestiny(titre: k('personnage_depart'), enfants: [
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -299,36 +236,42 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
                   avatar: _archEmoji(draw.archetypes[i].animalId),
                   label: Text(draw.archetypes[i].name),
                   selected: c.playerIndex == i,
+                  selectedColor: _couleurPersonnage(context, draw.archetypes[i]).withValues(alpha: d.sombre ? 0.35 : 0.2),
+                  side: BorderSide(color: _couleurPersonnage(context, draw.archetypes[i])),
+                  showCheckmark: false,
                   onSelected: (_) => c.setPlayerIndex(i),
                 ),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           if (c.playerArchetype != null)
-            Text(
-              c.playerArchetype!.line,
-              style:
-                  theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.primary),
-            ),
-          const SizedBox(height: 18),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton.icon(
-              onPressed: c.configured ? () => c.start() : null,
-              icon: const Icon(Icons.theater_comedy),
-              label: const Text('Lever le rideau'),
-              style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14)),
-            ),
+            Text(c.playerArchetype!.line,
+                style: theme.textTheme.bodyMedium?.copyWith(color: d.titre, fontWeight: FontWeight.w600)),
+        ]),
+        const SizedBox(height: 18),
+        SizedBox(
+          width: double.infinity,
+          child: FilledButton.icon(
+            onPressed: c.configured ? () => c.start() : null,
+            icon: const Icon(Icons.theater_comedy),
+            label: Text(k('lever')),
+            style: FilledButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14)),
           ),
-        ],
+        ),
+      ],
+    ];
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+      children: [
+        for (final e in enfants)
+          Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 760), child: e)),
       ],
     );
   }
 
   // ------------------------------------------------------------------- GAME
   Widget _buildGame(BuildContext context, SpectacleController c) {
-    final theme = Theme.of(context);
+    final d = context.destiny;
     final turn = c.current;
     return Column(
       children: [
@@ -340,17 +283,15 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
             children: [
               if (turn?.isDestiny ?? false) const _DestinyBanner(),
               for (final item in c.log) _LogBubble(item: item),
-              if (turn?.correction != null)
-                _CorrectionCard(correction: turn!.correction!),
+              if (turn?.correction != null) _CorrectionCard(correction: turn!.correction!),
               if (turn?.crow != null) _CrowCard(crow: turn!.crow!),
-              if (turn?.feedback != null)
-                _FeedbackCard(child: _renderDynamic(theme, turn!.feedback)),
+              if (turn?.feedback != null) _FeedbackCard(child: _renderDynamic(context, turn!.feedback)),
               if (turn?.isFin ?? false) _DebriefCard(turn: turn!),
               if (c.error != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(c.error!,
-                      style: const TextStyle(color: Colors.redAccent)),
+                      style: TextStyle(color: _lisible(d, d.famille(FamilleId.fissure)), fontWeight: FontWeight.w600)),
                 ),
             ],
           ),
@@ -368,15 +309,11 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Quitter le spectacle ?'),
-        content: const Text('La partie en cours sera perdue.'),
+        title: Text(k('jeu.quitter_titre')),
+        content: Text(k('jeu.quitter_texte')),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Continuer')),
-          FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Quitter')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(k('jeu.continuer'))),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: Text(k('jeu.quitter_oui'))),
         ],
       ),
     );
@@ -385,14 +322,12 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
 }
 
 /// Rendu générique d'une valeur JSON (String / nombre / liste / objet).
-Widget _renderDynamic(ThemeData theme, Object? value) {
+Widget _renderDynamic(BuildContext context, Object? value) {
+  final d = context.destiny;
+  final corps = TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.35, color: d.texte);
   if (value == null) return const SizedBox.shrink();
-  if (value is String) {
-    return Text(value, style: theme.textTheme.bodyMedium?.copyWith(height: 1.35));
-  }
-  if (value is num || value is bool) {
-    return Text('$value', style: theme.textTheme.bodyMedium);
-  }
+  if (value is String) return Text(value, style: corps);
+  if (value is num || value is bool) return Text('$value', style: corps);
   if (value is List) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -403,8 +338,11 @@ Widget _renderDynamic(ThemeData theme, Object? value) {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('•  '),
-                Expanded(child: _renderDynamic(theme, e)),
+                Padding(
+                  padding: const EdgeInsets.only(top: 6, right: 8),
+                  child: Text('◆', style: TextStyle(fontSize: 8, color: d.or)),
+                ),
+                Expanded(child: _renderDynamic(context, e)),
               ],
             ),
           ),
@@ -421,43 +359,25 @@ Widget _renderDynamic(ThemeData theme, Object? value) {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(_pretty(entry.key.toString()),
-                    style: theme.textTheme.labelMedium
-                        ?.copyWith(color: theme.colorScheme.primary)),
+                Text(_pretty(context, entry.key.toString()),
+                    style: TextStyle(
+                        fontFamily: kPoliceTexte, fontSize: 12, fontWeight: FontWeight.w700, color: d.titre)),
                 const SizedBox(height: 2),
-                _renderDynamic(theme, entry.value),
+                _renderDynamic(context, entry.value),
               ],
             ),
           ),
       ],
     );
   }
-  return Text('$value', style: theme.textTheme.bodyMedium);
+  return Text('$value', style: corps);
 }
 
-String _pretty(String key) {
-  const map = {
-    'histoire': 'L\'histoire',
-    'personnage': 'Ton personnage',
-    'phrase_cle': 'La phrase clé',
-    'ce_qui_a_marche': 'Ce qui a marché',
-    'a_essayer': 'À essayer la prochaine fois',
-    'veut': 'Il veut',
-    'besoin': 'Il a besoin de',
-    'choix': 'Son choix',
-    'prix': 'Le prix payé',
-    'nom': 'Nom',
-    'scoreGlobal': 'Score',
-    'detail': 'Détail',
-    'acte1': 'Acte 1',
-    'acte2': 'Acte 2',
-    'acte3': 'Acte 3',
-    'crow': 'CROW (fin Acte 1)',
-    'archetype': 'Ton archétype',
-    'juste': 'Ce qui était juste',
-    'travailler': 'À travailler',
-  };
-  return map[key] ?? (key.isEmpty ? key : '${key[0].toUpperCase()}${key.substring(1)}');
+/// Le libellé d'une rubrique du débrief (clés de la réponse de l'IA).
+String _pretty(BuildContext context, String key) {
+  final libelle = context.textes.table('spectacle_ia.rubriques')[key];
+  if (libelle is String && libelle.isNotEmpty) return libelle;
+  return key.isEmpty ? key : '${key[0].toUpperCase()}${key.substring(1)}';
 }
 
 // ------------------------------------------------------------------ WIDGETS
@@ -469,63 +389,52 @@ class _DecorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(14),
+    final d = context.destiny;
+    String k(String x, [Map<String, String> v = const {}]) => context.textes.t('spectacle_ia.$x', v);
+    return SectionDestiny(titre: k('decor'), enfants: [
+      CadreLisere(
+        couleur: d.or,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _kv(theme, 'LIEU', draw.lieu),
-            const SizedBox(height: 6),
-            _kv(theme, 'DANGER', draw.danger),
-            if (draw.groupe.isNotEmpty) ...[
-              const SizedBox(height: 6),
-              _kv(theme, 'GROUPE', draw.groupe),
-            ],
-            if (draw.espaces.isNotEmpty) ...[
-              const SizedBox(height: 6),
-              _kv(theme, 'ESPACES', draw.espaces.join(', ')),
-            ],
-            if (draw.paliers.isNotEmpty) ...[
-              const SizedBox(height: 10),
-              Text('Paliers',
-                  style: theme.textTheme.labelMedium
-                      ?.copyWith(color: theme.colorScheme.primary)),
-              const SizedBox(height: 4),
-              for (var i = 0; i < draw.paliers.length; i++)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 3),
-                  child: Text('${i + 1}. ${draw.paliers[i]}',
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: Colors.white70, height: 1.3)),
-                ),
-            ],
-            const SizedBox(height: 10),
-            Text('Les quatre personnages',
-                style: theme.textTheme.labelMedium
-                    ?.copyWith(color: theme.colorScheme.primary)),
-            const SizedBox(height: 4),
-            for (final a in draw.archetypes)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 3),
-                child: Text('${emojiAnimal(a.animalId) ?? ''} ${a.name} — ${a.line}',
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: Colors.white70, height: 1.3)),
-              ),
+            LigneInfo(k('lieu'), draw.lieu),
+            LigneInfo(k('danger'), draw.danger),
+            LigneInfo(k('groupe'), draw.groupe),
+            LigneInfo(k('espaces'), draw.espaces.join(', ')),
           ],
         ),
       ),
-    );
+      if (draw.paliers.isNotEmpty)
+        SectionDestiny(titre: k('paliers'), espace: 8, enfants: [
+          FrisePaliers(textes: draw.paliers, compacte: true),
+        ]),
+      SectionDestiny(titre: k('personnages'), espace: 8, enfants: [
+        for (final a in draw.archetypes)
+          CadreLisere(
+            couleur: _couleurPersonnage(context, a),
+            marge: 8,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (_archEmoji(a.animalId, size: 20) case final emoji?) ...[emoji, const SizedBox(width: 8)],
+                Expanded(
+                  child: Text.rich(
+                    TextSpan(children: [
+                      TextSpan(
+                        text: a.name,
+                        style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, color: d.texte),
+                      ),
+                      if (a.line.isNotEmpty) TextSpan(text: '\n${a.line}', style: TextStyle(color: d.texteSecondaire)),
+                    ]),
+                    style: const TextStyle(fontFamily: kPoliceTexte, fontSize: 13, height: 1.35),
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ]),
+    ]);
   }
-
-  Widget _kv(ThemeData theme, String k, String v) => Text.rich(TextSpan(children: [
-        TextSpan(
-            text: '$k : ',
-            style: theme.textTheme.labelMedium
-                ?.copyWith(color: theme.colorScheme.primary)),
-        TextSpan(text: v, style: theme.textTheme.titleMedium),
-      ]));
 }
 
 class _GameHeader extends StatelessWidget {
@@ -536,49 +445,45 @@ class _GameHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final d = context.destiny;
+    String k(String x, [Map<String, String> v = const {}]) => context.textes.t('spectacle_ia.$x', v);
     final parts = <String>[
-      if (turn?.acte != null) 'Acte ${turn!.acte}',
-      if (turn?.scene != null) 'Scène ${turn!.scene}',
-      if (turn?.palier != null) 'Palier ${turn!.palier}',
+      if (turn?.acte != null) k('jeu.acte', {'n': '${turn!.acte}'}),
+      if (turn?.scene != null) k('jeu.scene', {'n': '${turn!.scene}'}),
+      if (turn?.palier != null) k('jeu.palier', {'n': '${turn!.palier}'}),
     ];
     final cible = turn?.cible;
     final posees = turn?.posees;
     return Container(
-      padding: const EdgeInsets.fromLTRB(12, 4, 8, 8),
-      decoration: BoxDecoration(
-        border: Border(
-            bottom:
-                BorderSide(color: Colors.white.withValues(alpha: 0.08))),
-      ),
+      padding: const EdgeInsets.fromLTRB(16, 4, 8, 8),
+      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: d.filet))),
       child: Row(
         children: [
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(parts.isEmpty ? 'Spectacle' : parts.join(' · '),
-                    style: theme.textTheme.titleSmall),
+                Text(parts.isEmpty ? k('jeu.spectacle') : parts.join(' · '),
+                    style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 15, color: d.titre)),
                 if (posees != null && cible != null)
-                  Text('Répliques : $posees / $cible',
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: Colors.white54)),
+                  Text(k('jeu.repliques', {'posees': '$posees', 'cible': '$cible'}),
+                      style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12, color: d.texteSecondaire)),
               ],
             ),
           ),
-          if (turn?.phase != null)
+          if (turn?.phase != null && turn!.phase.isNotEmpty)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withValues(alpha: 0.16),
+                color: d.or.withValues(alpha: d.sombre ? 0.2 : 0.14),
                 borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: d.filet),
               ),
               child: Text(turn!.phase,
-                  style: theme.textTheme.labelSmall
-                      ?.copyWith(color: theme.colorScheme.primary)),
+                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 11, fontWeight: FontWeight.w600, color: d.titre)),
             ),
           IconButton(
-            tooltip: 'Quitter',
+            tooltip: k('jeu.quitter'),
             icon: const Icon(Icons.close),
             onPressed: onQuit,
           ),
@@ -593,23 +498,22 @@ class _DestinyBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final d = context.destiny;
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: _gold.withValues(alpha: 0.14),
+        color: d.bleuDestiny.withValues(alpha: d.sombre ? 0.22 : 0.12),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: _gold.withValues(alpha: 0.5)),
+        border: Border.all(color: d.bleuDestiny.withValues(alpha: 0.7)),
       ),
-      child: const Row(
+      child: Row(
         children: [
-          Icon(Icons.bolt, color: _gold, size: 18),
-          SizedBox(width: 8),
-          Text('DESTINY',
+          Icon(Icons.flash_on_rounded, color: d.bleuTexte, size: 18),
+          const SizedBox(width: 8),
+          Text(context.textes.t('regie.destiny').toUpperCase(),
               style: TextStyle(
-                  color: _gold,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 2)),
+                  fontFamily: kPoliceTitres, color: d.bleuTexte, fontWeight: FontWeight.w900, letterSpacing: 2)),
         ],
       ),
     );
@@ -623,75 +527,68 @@ class _LogBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final d = context.destiny;
+    String k(String x, [Map<String, String> v = const {}]) => context.textes.t('spectacle_ia.$x', v);
     final isPlayer = item.isPlayer;
+    final teinte = d.sombre ? 0.2 : 0.12;
 
-    // Fond : vert = réussite, rouge = erreur, sinon couleur par défaut.
+    // Fond : vert = réplique juste, rouge = à retravailler, sinon neutre.
     Color bg;
     Color border;
     if (item.success == true) {
-      bg = Colors.green.withValues(alpha: 0.18);
-      border = Colors.green.withValues(alpha: 0.5);
+      bg = d.famille(FamilleId.tient).withValues(alpha: teinte);
+      border = d.famille(FamilleId.tient).withValues(alpha: 0.6);
     } else if (item.success == false) {
-      bg = Colors.red.withValues(alpha: 0.16);
-      border = Colors.red.withValues(alpha: 0.5);
+      bg = d.famille(FamilleId.fissure).withValues(alpha: teinte);
+      border = d.famille(FamilleId.fissure).withValues(alpha: 0.6);
     } else {
-      bg = isPlayer
-          ? theme.colorScheme.primary.withValues(alpha: 0.16)
-          : Colors.white.withValues(alpha: 0.05);
-      border = Colors.white.withValues(alpha: 0.08);
+      bg = isPlayer ? d.or.withValues(alpha: teinte) : d.carte;
+      border = d.filet;
     }
 
     final emoji = item.archetype.isEmpty ? null : _archEmoji(item.archetype);
-    final nameLabel = [
-      if (item.personnage.isNotEmpty) item.personnage,
-    ].join();
+    final nameLabel = item.personnage;
 
     return Align(
       alignment: isPlayer ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(10),
-        constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.82),
+        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.82),
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: border),
         ),
         child: Column(
-          crossAxisAlignment:
-              isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          crossAxisAlignment: isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             if (!isPlayer && item.didascalie.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Text(item.didascalie,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                        color: Colors.white54,
-                        fontStyle: FontStyle.italic)),
+                    style: TextStyle(
+                        fontFamily: kPoliceTexte, fontSize: 12.5, color: d.texteSecondaire, fontStyle: FontStyle.italic)),
               ),
             // Rappel de l'archétype : icône animal + prénom.
-            if (emoji != null || nameLabel.isNotEmpty)
+            if (emoji != null || nameLabel.isNotEmpty || isPlayer)
               Padding(
                 padding: const EdgeInsets.only(bottom: 2),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (emoji != null) ...[emoji, const SizedBox(width: 4)],
-                    if (nameLabel.isNotEmpty)
-                      Text(isPlayer ? 'Toi — $nameLabel' : nameLabel,
-                          style: theme.textTheme.labelMedium
-                              ?.copyWith(color: theme.colorScheme.primary))
-                    else if (isPlayer)
-                      Text('Toi',
-                          style: theme.textTheme.labelMedium
-                              ?.copyWith(color: theme.colorScheme.primary)),
+                    if (nameLabel.isNotEmpty || isPlayer)
+                      Flexible(
+                        child: Text(
+                          nameLabel.isEmpty ? k('jeu.toi') : (isPlayer ? k('jeu.toi_nom', {'nom': nameLabel}) : nameLabel),
+                          style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, fontWeight: FontWeight.w700, color: d.titre),
+                        ),
+                      ),
                   ],
                 ),
               ),
-            Text(item.texte,
-                style: theme.textTheme.bodyMedium?.copyWith(height: 1.35)),
+            Text(item.texte, style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.35, color: d.texte)),
           ],
         ),
       ),
@@ -706,36 +603,32 @@ class _CorrectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.orange.withValues(alpha: 0.10),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.orange.withValues(alpha: 0.35)),
-      ),
+    final d = context.destiny;
+    String k(String x, [Map<String, String> v = const {}]) => context.textes.t('spectacle_ia.$x', v);
+    return CadreLisere(
+      couleur: d.or,
+      marge: 8,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.sports, size: 16, color: Colors.orangeAccent),
+              Icon(Icons.sports, size: 16, color: d.titre),
               const SizedBox(width: 6),
-              Text('Coach — ${correction.defaut}',
-                  style: theme.textTheme.labelMedium
-                      ?.copyWith(color: Colors.orangeAccent)),
+              Expanded(
+                child: Text(k('jeu.coach', {'defaut': correction.defaut}),
+                    style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, color: d.titre)),
+              ),
             ],
           ),
           if (correction.explication.isNotEmpty) ...[
             const SizedBox(height: 4),
-            Text(correction.explication, style: theme.textTheme.bodySmall),
+            Text(correction.explication, style: TextStyle(fontSize: 13, height: 1.35, color: d.texte)),
           ],
           if (correction.modele.isNotEmpty) ...[
             const SizedBox(height: 4),
-            Text('Modèle : ${correction.modele}',
-                style: theme.textTheme.bodySmall
-                    ?.copyWith(fontStyle: FontStyle.italic)),
+            Text(k('jeu.modele', {'modele': correction.modele}),
+                style: TextStyle(fontSize: 13, height: 1.35, fontStyle: FontStyle.italic, color: d.texte)),
           ],
         ],
       ),
@@ -750,51 +643,42 @@ class _CrowCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final d = context.destiny;
+    String k(String x, [Map<String, String> v = const {}]) => context.textes.t('spectacle_ia.$x', v);
     Widget cell(String label, bool ok) => Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(ok ? Icons.check_circle : Icons.cancel,
-                size: 14,
-                color: ok ? Colors.greenAccent : Colors.redAccent),
+                size: 14, color: d.famille(ok ? FamilleId.tient : FamilleId.fissure)),
             const SizedBox(width: 4),
-            Text(label, style: theme.textTheme.bodySmall),
+            Text(label, style: TextStyle(fontSize: 12.5, color: d.texte)),
           ],
         );
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
-      ),
+    return CadreLisere(
+      couleur: d.bleuDestiny,
+      marge: 8,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('CROW — fin de scène',
-              style: theme.textTheme.labelMedium
-                  ?.copyWith(color: theme.colorScheme.primary)),
+          Text(k('jeu.crow'), style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, color: d.bleuTexte)),
           const SizedBox(height: 6),
           Wrap(
             spacing: 12,
             runSpacing: 4,
             children: [
-              cell('Prénom', crow.prenom),
-              cell('Fonction', crow.fonction),
-              cell('Relation (${crow.liens})', crow.liens >= 2),
-              cell('Objectif', crow.objectif),
-              cell('Lieu', crow.where),
+              cell(k('jeu.prenom'), crow.prenom),
+              cell(k('jeu.fonction'), crow.fonction),
+              cell(k('jeu.relation', {'n': '${crow.liens}'}), crow.liens >= 2),
+              cell(k('jeu.objectif'), crow.objectif),
+              cell(k('jeu.lieu'), crow.where),
             ],
           ),
           if (crow.trou.isNotEmpty) ...[
             const SizedBox(height: 6),
-            Text('Trou : ${crow.trou}', style: theme.textTheme.bodySmall),
+            Text(k('jeu.trou', {'trou': crow.trou}), style: TextStyle(fontSize: 12.5, color: d.texte)),
           ],
           if (crow.moyen.isNotEmpty)
-            Text('À combler par : ${crow.moyen}',
-                style: theme.textTheme.bodySmall
-                    ?.copyWith(color: Colors.white54)),
+            Text(k('jeu.combler', {'moyen': crow.moyen}), style: TextStyle(fontSize: 12.5, color: d.texteSecondaire)),
         ],
       ),
     );
@@ -808,27 +692,19 @@ class _FeedbackCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primary.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-            color: theme.colorScheme.primary.withValues(alpha: 0.25)),
-      ),
+    final d = context.destiny;
+    return CadreLisere(
+      couleur: DestinyCouleurs.ia,
+      marge: 8,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Icons.feedback_outlined,
-                  size: 16, color: theme.colorScheme.primary),
+              const Icon(Icons.feedback_outlined, size: 16, color: DestinyCouleurs.ia),
               const SizedBox(width: 6),
-              Text('Retour',
-                  style: theme.textTheme.labelMedium
-                      ?.copyWith(color: theme.colorScheme.primary)),
+              Text(context.textes.t('spectacle_ia.jeu.retour'),
+                  style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, color: d.titre)),
             ],
           ),
           const SizedBox(height: 4),
@@ -846,32 +722,22 @@ class _DebriefCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final d = context.destiny;
+    String k(String x, [Map<String, String> v = const {}]) => context.textes.t('spectacle_ia.$x', v);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            _gold.withValues(alpha: 0.12),
-            theme.colorScheme.primary.withValues(alpha: 0.10),
-          ],
-        ),
+        color: d.carte,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _gold.withValues(alpha: 0.4)),
+        border: Border.all(color: d.or),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Center(
-            child: Text('DESTINY — FIN DU SPECTACLE',
-                style: TextStyle(
-                    color: _gold,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 1)),
-          ),
+          BandeauAffiche(surtitre: k('jeu.fin_surtitre'), titre: k('jeu.fin')),
           const SizedBox(height: 12),
-          _renderDynamic(theme, turn.debrief),
+          _renderDynamic(context, turn.debrief),
         ],
       ),
     );
@@ -891,17 +757,21 @@ class _ActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final d = context.destiny;
+    final t = context.textes;
+    String k(String x, [Map<String, String> v = const {}]) => t.t('spectacle_ia.$x', v);
     final c = controller;
     final turn = c.current;
 
     Widget content;
     if (c.loading) {
-      content = const Padding(
-        padding: EdgeInsets.symmetric(vertical: 14),
+      content = Padding(
+        padding: const EdgeInsets.symmetric(vertical: 14),
         child: Center(
-          child: SizedBox(
-              width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2)),
+          child: Semantics(
+            label: t.t('ia_jeu.en_cours'),
+            child: const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2)),
+          ),
         ),
       );
     } else if (c.needsCharacterChoice && c.draw != null) {
@@ -911,9 +781,8 @@ class _ActionBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Scène ${c.sceneNumber} — quel personnage joues-tu ?',
-            style: theme.textTheme.labelLarge
-                ?.copyWith(color: theme.colorScheme.primary),
+            k('jeu.quel_personnage', {'n': '${c.sceneNumber}'}),
+            style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, color: d.titre),
           ),
           const SizedBox(height: 8),
           Wrap(
@@ -924,6 +793,7 @@ class _ActionBar extends StatelessWidget {
                 ActionChip(
                   avatar: _archEmoji(draw.archetypes[i].animalId),
                   label: Text(draw.archetypes[i].name),
+                  side: BorderSide(color: _couleurPersonnage(context, draw.archetypes[i])),
                   onPressed: () => c.chooseSceneCharacter(i),
                 ),
             ],
@@ -931,19 +801,12 @@ class _ActionBar extends StatelessWidget {
         ],
       );
     } else if (turn?.isFin ?? false) {
-      content = Row(
-        children: [
-          Expanded(
-            child: FilledButton.icon(
-              onPressed: onQuitToSetup,
-              icon: const Icon(Icons.replay),
-              label: const Text('Nouveau spectacle'),
-            ),
-          ),
-        ],
+      content = FilledButton.icon(
+        onPressed: onQuitToSetup,
+        icon: const Icon(Icons.replay),
+        label: Text(k('jeu.nouveau')),
       );
-    } else if (c.mode == SpectacleMode.classique &&
-        (turn?.propositions.isNotEmpty ?? false)) {
+    } else if (c.mode == SpectacleMode.classique && (turn?.propositions.isNotEmpty ?? false)) {
       content = Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -954,10 +817,11 @@ class _ActionBar extends StatelessWidget {
                 onPressed: () => c.choose(p),
                 style: OutlinedButton.styleFrom(
                   alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 10),
+                  foregroundColor: d.texte,
+                  side: BorderSide(color: d.filet, width: 1.2),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 ),
-                child: Text(p.texte, textAlign: TextAlign.left),
+                child: Text(p.texte, textAlign: TextAlign.left, style: const TextStyle(fontWeight: FontWeight.w500)),
               ),
             ),
         ],
@@ -972,17 +836,13 @@ class _ActionBar extends StatelessWidget {
               minLines: 1,
               maxLines: 4,
               textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(
-                hintText: 'Ta réplique…',
-                border: OutlineInputBorder(),
-                isDense: true,
-              ),
+              decoration: InputDecoration(hintText: k('jeu.ta_replique'), isDense: true),
               onSubmitted: (_) => _sendFree(),
             ),
           ),
           const SizedBox(width: 8),
           IconButton.filled(
-            tooltip: context.textes.t('accessibilite.envoyer'),
+            tooltip: t.t('accessibilite.envoyer'),
             icon: const Icon(Icons.send),
             onPressed: _sendFree,
           ),
@@ -991,29 +851,33 @@ class _ActionBar extends StatelessWidget {
     }
 
     return Container(
-      padding: EdgeInsets.fromLTRB(
-          12, 8, 12, 8 + MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.fromLTRB(12, 10, 12, 8 + MediaQuery.of(context).viewInsets.bottom),
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.2),
-        border: Border(
-            top: BorderSide(color: Colors.white.withValues(alpha: 0.08))),
+        color: d.carte,
+        border: Border(top: BorderSide(color: d.filet)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (c.peutLancerDestiny)
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Row(children: [
                 Expanded(
-                  child: Text('Acte ${c.palier} · le danger monte quand tu lances Destiny.',
-                      style: theme.textTheme.bodySmall?.copyWith(color: Colors.white54)),
+                  child: Text(k('jeu.lancer_destiny', {'n': '${c.palier}'}),
+                      style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: d.texteSecondaire)),
                 ),
+                const SizedBox(width: 8),
                 FilledButton.icon(
-                  style: FilledButton.styleFrom(backgroundColor: const Color(0xFF2E5BFF), foregroundColor: Colors.white),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: d.bleuDestiny,
+                    foregroundColor: Colors.white,
+                    textStyle: const TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w900, fontSize: 16),
+                  ),
                   onPressed: c.lancerDestiny,
                   icon: const Icon(Icons.flash_on_rounded),
-                  label: const Text('DESTINY'),
+                  label: Text(t.t('regie.destiny').toUpperCase()),
                 ),
               ]),
             ),
@@ -1032,11 +896,8 @@ class _ActionBar extends StatelessWidget {
                     if (emoji != null) ...[emoji, const SizedBox(width: 6)],
                     Expanded(
                       child: Text(
-                        name.isEmpty
-                            ? 'Choisis la réplique dans la langue de ton archétype :'
-                            : 'Réponds en tant que $name — choisis sa langue :',
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: theme.colorScheme.primary),
+                        name.isEmpty ? k('jeu.choisis') : k('jeu.reponds', {'nom': name}),
+                        style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, fontWeight: FontWeight.w600, color: d.titre),
                       ),
                     ),
                   ],

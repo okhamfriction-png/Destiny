@@ -64,7 +64,7 @@ void main() {
       ),
     ));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Nouvelle histoire').last);
+    await tester.tap(find.text(chargee.textes.t('histoire_ia.nouvelle')).last);
     await tester.pumpAndSettle();
     await tester.tap(find.byType(DropdownButtonFormField<String>).at(2));
     await tester.pumpAndSettle();
@@ -105,15 +105,17 @@ void main() {
     expect(universPourIa(univers, kids: false).map((u) => u.name), contains('Contemporain'));
     expect(universPourIa(univers, kids: true).map((u) => u.name), contains('Pirates'));
     expect(find.text('Contemporain'), findsWidgets);
-    await tester.tap(find.text('Tirer le décor'));
+    await tester.tap(find.text(chargee.textes.t('spectacle_ia.tirer')));
     await tester.pumpAndSettle();
     expect(c.draw!.archetypes, hasLength(4));
-    expect(find.text('DESTINY'), findsNothing);
-    await tester.scrollUntilVisible(find.text('Lever le rideau'), 300, scrollable: find.byType(Scrollable).first);
+    final destiny = chargee.textes.t('regie.destiny').toUpperCase();
+    final lever = find.text(chargee.textes.t('spectacle_ia.lever'));
+    expect(find.text(destiny), findsNothing);
+    await tester.scrollUntilVisible(lever, 300, scrollable: find.byType(Scrollable).first);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Lever le rideau'));
+    await tester.tap(lever);
     await tester.pumpAndSettle();
     expect(find.text('Vous sentez ?'), findsOneWidget);
-    expect(find.text('DESTINY'), findsOneWidget);
+    expect(find.text(destiny), findsOneWidget);
   });
 }

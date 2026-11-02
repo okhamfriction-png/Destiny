@@ -7,29 +7,37 @@ import '../../application/state/ai_settings.dart';
 import '../../application/state/chat_controller.dart';
 import '../../application/state/music_controller.dart';
 import '../../application/state/visual_settings.dart';
-import 'ai_config_screen.dart';
-import 'chat_archives_screen.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../domain/entities/chat_story.dart';
-import '../destiny/cartes.dart';
+import '../../domain/grammaire/modeles.dart';
 import '../../domain/serie/univers.dart';
+import '../destiny/cartes.dart';
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
+import '../destiny/page.dart';
 import '../jouer/univers_ia.dart';
 import '../theme/destiny_theme.dart';
+import 'ai_config_screen.dart';
+import 'chat_archives_screen.dart';
 
-/// Tons / genres d'histoire proposés.
-const List<({String name, IconData icon})> _tones = [
-  (name: 'Aventure', icon: Icons.explore),
-  (name: 'Humour', icon: Icons.sentiment_very_satisfied),
-  (name: 'Drame', icon: Icons.theater_comedy),
-  (name: 'Épique', icon: Icons.auto_awesome),
-  (name: 'Voyage initiatique', icon: Icons.hiking),
-  (name: 'Romance', icon: Icons.favorite),
-  (name: 'Mystère', icon: Icons.search),
-  (name: 'Action', icon: Icons.bolt),
-];
+/// Les accents des deux sortes d'actions proposées par l'IA.
+const Color _brave = Color(0xFFF57C00);
+const Color _smart = Color(0xFF7E3FF2);
 
+/// L'orange du danger (bannière ⚡ et rappel de la pièce plus dure).
+const Color _orangeDanger = Color(0xFFFF9800);
+
+/// Une couleur d'accent rendue lisible comme texte : éclaircie en sombre,
+/// assombrie en clair (contraste d'au moins 4,5).
+Color _lisible(DestinyCouleurs d, Color accent) =>
+    d.sombre ? Color.lerp(accent, Colors.white, 0.45)! : Color.lerp(accent, d.encre, 0.5)!;
+
+/// Ce qu'on peut faire d'une histoire de la liste.
+enum _ActionHistoire { resume, archiver, supprimer }
+
+/// Une histoire avec l'IA : la liste des histoires, la création d'une
+/// nouvelle histoire, puis la partie (le maître du destin raconte, le joueur
+/// choisit, la pièce du destin tranche, Destiny entre deux chapitres).
 class ChatScreen extends StatefulWidget {
   const ChatScreen({
     required this.controller,
@@ -52,8 +60,7 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen>
-    with TickerProviderStateMixin {
+class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final ScrollController _scroll = ScrollController();
   final TextEditingController _custom = TextEditingController();
 
@@ -74,13 +81,14 @@ class _ChatScreenState extends State<ChatScreen>
   late final List<List<Offset>> _cracks;
   late final List<Offset> _bolt;
 
+  /// Raccourci vers les textes de l'écran.
+  String k(String x, [Map<String, String> v = const {}]) => context.textes.t('histoire_ia.$x', v);
+
   @override
   void initState() {
     super.initState();
-    _resultAnim = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1150));
-    _dangerAnim = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 2600));
+    _resultAnim = AnimationController(vsync: this, duration: const Duration(milliseconds: 1150));
+    _dangerAnim = AnimationController(vsync: this, duration: const Duration(milliseconds: 2600));
     _lastPulse = widget.controller.resultPulse;
     _lastDangerPulse = widget.controller.dangerPulse;
     _buildGeometry();
@@ -128,52 +136,54 @@ class _ChatScreenState extends State<ChatScreen>
   Future<void> _showSummary(ChatController c, ChatStory s) async {
     final future = c.summarize(s);
     if (!mounted) return;
+    final indisponible = k('resume_indisponible');
+    final fermer = k('fermer');
     await showDialog<void>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Row(
-          children: [
-            const Icon(Icons.summarize, size: 20),
-            const SizedBox(width: 8),
-            Expanded(
+      builder: (context) {
+        final d = context.destiny;
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(Icons.summarize, size: 20, color: d.titre),
+              const SizedBox(width: 8),
+              Expanded(
                 child: Text(s.title,
-                    style: const TextStyle(fontSize: 16),
-                    overflow: TextOverflow.ellipsis)),
-          ],
-        ),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: FutureBuilder<String>(
-            future: future,
-            builder: (context, snap) {
-              if (snap.connectionState != ConnectionState.done) {
-                return const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 24),
-                  child: Center(child: CircularProgressIndicator()),
+                    style: TextStyle(fontFamily: kPoliceTitres, fontSize: 16, color: d.titre),
+                    overflow: TextOverflow.ellipsis),
+              ),
+            ],
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: FutureBuilder<String>(
+              future: future,
+              builder: (context, snap) {
+                if (snap.connectionState != ConnectionState.done) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 24),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+                return SingleChildScrollView(
+                  child: Text(snap.data ?? indisponible, style: TextStyle(height: 1.5, color: d.texte)),
                 );
-              }
-              return SingleChildScrollView(
-                child: Text(snap.data ?? 'Résumé indisponible.',
-                    style: const TextStyle(height: 1.5)),
-              );
-            },
+              },
+            ),
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Fermer'),
-          ),
-        ],
-      ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: Text(fermer)),
+          ],
+        );
+      },
     );
   }
 
-  /// Univers de l'histoire active, extrait du contexte « univers · lieu · danger ».
-  String _currentUniverse(ChatController c) {
-    final ctx = c.active?.context ?? '';
-    return ctx.split('·').first.trim();
-  }
+  /// Univers d'une histoire, extrait du contexte « univers · lieu · danger ».
+  String _universeOf(ChatStory? s) => (s?.context ?? '').split('·').first.trim();
+
+  /// Univers de l'histoire active.
+  String _currentUniverse(ChatController c) => _universeOf(c.active);
 
   /// Icône correspondant à un univers (sinon masque de théâtre par défaut).
   IconData _universeIcon(String universe) {
@@ -189,9 +199,7 @@ class _ChatScreenState extends State<ChatScreen>
 
   Future<void> _openAiConfig(ChatController c) async {
     await Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => AiConfigScreen(settings: c.aiSettings),
-      ),
+      MaterialPageRoute<void>(builder: (_) => AiConfigScreen(settings: c.aiSettings)),
     );
     if (mounted) setState(() {});
   }
@@ -257,6 +265,7 @@ class _ChatScreenState extends State<ChatScreen>
     var malus = false;
     final g = context.grammaire;
     final t = context.textes;
+    final tons = tonsPourIa(t);
 
     final ok = await showModalBottomSheet<bool>(
       context: context,
@@ -264,6 +273,7 @@ class _ChatScreenState extends State<ChatScreen>
       builder: (context) => StatefulBuilder(
         builder: (context, setLocal) {
           final theme = Theme.of(context);
+          final d = context.destiny;
           var ready = universe != null && tone != null;
           for (var i = 0; i < playerCount; i++) {
             if (nameCtrls[i].text.trim().isEmpty || archetypesChoisis[i] == null || animauxChoisis[i] == null) {
@@ -272,103 +282,96 @@ class _ChatScreenState extends State<ChatScreen>
           }
           final universes = universPourIa(widget.univers, kids: childMode);
 
-          Widget label(String t) => Padding(
-                padding: const EdgeInsets.only(top: 16, bottom: 8),
-                child: Text(t, style: theme.textTheme.titleMedium),
+          Widget choixAvecIcone(IconData icone, String nom) => Row(
+                children: [
+                  Icon(icone, size: 18, color: d.titre),
+                  const SizedBox(width: 8),
+                  Flexible(child: Text(nom, overflow: TextOverflow.ellipsis)),
+                ],
               );
 
           Widget playerBlock(int i) {
             final a = g.archetype(archetypesChoisis[i] ?? '');
-            final c = context.destiny;
-            return Card(
-              margin: const EdgeInsets.symmetric(vertical: 6),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(playerCount > 1 ? 'Joueur ${i + 1}' : 'Ton héros',
-                        style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.primary)),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: nameCtrls[i],
-                      textCapitalization: TextCapitalization.words,
-                      decoration: const InputDecoration(
-                        labelText: 'Nom du héros',
-                        border: OutlineInputBorder(),
-                        isDense: true,
-                      ),
-                      onChanged: (_) => setLocal(() {}),
+            return CadreLisere(
+              couleur: a == null ? d.or : d.famille(a.famille),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (playerCount > 1)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(k('creer.joueur', {'n': '${i + 1}'}),
+                          style: TextStyle(
+                              fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 15, color: d.titre)),
                     ),
-                    const SizedBox(height: 10),
-                    DropdownButtonFormField<String>(
-                      initialValue: archetypesChoisis[i],
-                      isExpanded: true,
-                      decoration: const InputDecoration(
-                        labelText: 'Archétype',
-                        border: OutlineInputBorder(),
-                        isDense: true,
-                      ),
-                      items: [
-                        for (final ar in g.archetypes)
-                          DropdownMenuItem(
-                            value: ar.id,
-                            child: Row(children: [
-                              Container(
-                                width: 10,
-                                height: 10,
-                                decoration: BoxDecoration(shape: BoxShape.circle, color: c.famille(ar.famille)),
-                              ),
-                              const SizedBox(width: 8),
-                              Flexible(child: Text(ar.nom, overflow: TextOverflow.ellipsis)),
-                            ]),
-                          ),
-                      ],
-                      onChanged: (v) => setLocal(() {
-                        archetypesChoisis[i] = v;
-                        animauxChoisis[i] = null;
-                      }),
-                    ),
-                    if (a != null) ...[
-                      Padding(
-                        padding: const EdgeInsets.only(top: 6, left: 4),
-                        child: Text(a.ceQuIlFait, style: theme.textTheme.bodySmall?.copyWith(color: Colors.white54)),
-                      ),
-                      const SizedBox(height: 8),
-                      Wrap(spacing: 8, children: [
-                        for (final an in g.animauxDe(a.id))
-                          ChoiceChip(
-                            avatar: Text(kEmojiAnimal[an.id] ?? ''),
-                            label: Text(an.nom),
-                            selected: animauxChoisis[i] == an.id,
-                            onSelected: (_) {
-                              setLocal(() => animauxChoisis[i] = an.id);
-                              _revealArchetype(an.id, kids: childMode);
-                            },
-                          ),
-                      ]),
+                  TextField(
+                    controller: nameCtrls[i],
+                    textCapitalization: TextCapitalization.words,
+                    decoration: InputDecoration(labelText: k('creer.nom'), isDense: true),
+                    onChanged: (_) => setLocal(() {}),
+                  ),
+                  const SizedBox(height: 10),
+                  DropdownButtonFormField<String>(
+                    initialValue: archetypesChoisis[i],
+                    isExpanded: true,
+                    decoration: InputDecoration(labelText: k('creer.archetype'), isDense: true),
+                    items: [
+                      for (final ar in g.archetypes)
+                        DropdownMenuItem(
+                          value: ar.id,
+                          child: Row(children: [
+                            Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(shape: BoxShape.circle, color: d.famille(ar.famille)),
+                            ),
+                            const SizedBox(width: 8),
+                            Flexible(child: Text(ar.nom, overflow: TextOverflow.ellipsis)),
+                          ]),
+                        ),
                     ],
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: blessures[i],
-                      decoration: InputDecoration(
-                        labelText: childMode ? t.t('mode_enfant.mots.blessure') : 'Sa blessure (facultatif)',
-                        helperText: g.personnage.couches.length > 2 ? 'Une phrase sur son passé, sans explication.' : null,
-                        border: const OutlineInputBorder(),
-                        isDense: true,
-                      ),
+                    onChanged: (v) => setLocal(() {
+                      archetypesChoisis[i] = v;
+                      animauxChoisis[i] = null;
+                    }),
+                  ),
+                  if (a != null) ...[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6, left: 4),
+                      child: Text(a.ceQuIlFait,
+                          style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: d.texteSecondaire)),
                     ),
                     const SizedBox(height: 8),
-                    TextField(
-                      controller: vouloirs[i],
-                      decoration: const InputDecoration(
-                        labelText: 'Ce qu\'il veut, ce soir (facultatif)',
-                        border: OutlineInputBorder(),
-                        isDense: true,
-                      ),
-                    ),
+                    Wrap(spacing: 8, runSpacing: 4, children: [
+                      for (final an in g.animauxDe(a.id))
+                        ChoiceChip(
+                          avatar: Text(kEmojiAnimal[an.id] ?? ''),
+                          label: Text(an.nom),
+                          selected: animauxChoisis[i] == an.id,
+                          selectedColor: d.famille(a.famille).withValues(alpha: d.sombre ? 0.35 : 0.2),
+                          showCheckmark: false,
+                          onSelected: (_) {
+                            setLocal(() => animauxChoisis[i] = an.id);
+                            _revealArchetype(an.id, kids: childMode);
+                          },
+                        ),
+                    ]),
                   ],
-                ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: blessures[i],
+                    decoration: InputDecoration(
+                      labelText: childMode ? t.t('mode_enfant.mots.blessure') : k('creer.blessure'),
+                      helperText: g.personnage.couches.length > 2 ? k('creer.blessure_aide') : null,
+                      isDense: true,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: vouloirs[i],
+                    decoration: InputDecoration(labelText: k('creer.vouloir'), isDense: true),
+                  ),
+                ],
               ),
             );
           }
@@ -378,21 +381,20 @@ class _ChatScreenState extends State<ChatScreen>
             initialChildSize: 0.9,
             maxChildSize: 0.95,
             builder: (context, scrollCtrl) => Padding(
-              padding: EdgeInsets.fromLTRB(
-                  20, 16, 20, MediaQuery.of(context).viewInsets.bottom + 16),
+              padding: EdgeInsets.fromLTRB(20, 16, 20, MediaQuery.of(context).viewInsets.bottom + 16),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text('Nouvelle histoire', style: theme.textTheme.titleLarge),
+                  Text(k('creer.titre'), textAlign: TextAlign.center, style: theme.textTheme.headlineSmall),
                   const SizedBox(height: 12),
                   Row(
                     children: [
                       Expanded(
                         child: SegmentedButton<bool>(
                           showSelectedIcon: false,
-                          segments: const [
-                            ButtonSegment(value: false, label: Text('Adulte')),
-                            ButtonSegment(value: true, label: Text('Enfant')),
+                          segments: [
+                            ButtonSegment(value: false, label: Text(k('creer.adulte'))),
+                            ButtonSegment(value: true, label: Text(k('creer.enfant'))),
                           ],
                           selected: {childMode},
                           onSelectionChanged: (s) => setLocal(() {
@@ -405,122 +407,86 @@ class _ChatScreenState extends State<ChatScreen>
                       Expanded(
                         child: SegmentedButton<int>(
                           showSelectedIcon: false,
-                          segments: const [
-                            ButtonSegment(value: 1, label: Text('Solo')),
-                            ButtonSegment(value: 2, label: Text('Duo')),
+                          segments: [
+                            ButtonSegment(value: 1, label: Text(k('creer.solo'))),
+                            ButtonSegment(value: 2, label: Text(k('creer.duo'))),
                           ],
                           selected: {playerCount},
-                          onSelectionChanged: (s) =>
-                              setLocal(() => playerCount = s.first),
+                          onSelectionChanged: (s) => setLocal(() => playerCount = s.first),
                         ),
                       ),
                     ],
                   ),
+                  if (childMode) const Padding(padding: EdgeInsets.only(top: 8), child: Center(child: SigleKids())),
                   const SizedBox(height: 4),
                   Expanded(
                     child: ListView(
                       controller: scrollCtrl,
                       children: [
-                        label('Univers'),
-                        DropdownButtonFormField<String>(
-                          initialValue: universe,
-                          isExpanded: true,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            isDense: true,
-                            hintText: 'Choisis un univers',
+                        SectionDestiny(titre: k('creer.univers'), enfants: [
+                          DropdownButtonFormField<String>(
+                            initialValue: universe,
+                            isExpanded: true,
+                            decoration: InputDecoration(isDense: true, hintText: k('creer.univers_aide')),
+                            items: [
+                              for (final u in universes)
+                                DropdownMenuItem(value: u.name, child: choixAvecIcone(u.icon, u.name)),
+                            ],
+                            onChanged: (v) => setLocal(() => universe = v),
                           ),
-                          items: [
-                            for (final u in universes)
-                              DropdownMenuItem(
-                                value: u.name,
-                                child: Row(
-                                  children: [
-                                    Icon(u.icon,
-                                        size: 18,
-                                        color: theme.colorScheme.primary),
-                                    const SizedBox(width: 8),
-                                    Flexible(
-                                        child: Text(u.name,
-                                            overflow: TextOverflow.ellipsis)),
-                                  ],
-                                ),
-                              ),
-                          ],
-                          onChanged: (v) => setLocal(() => universe = v),
-                        ),
-                        label('Ton de l\'histoire'),
-                        DropdownButtonFormField<String>(
-                          initialValue: tone,
-                          isExpanded: true,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            isDense: true,
-                            hintText: 'Choisis un ton',
+                        ]),
+                        SectionDestiny(titre: k('creer.ton'), enfants: [
+                          DropdownButtonFormField<String>(
+                            initialValue: tone,
+                            isExpanded: true,
+                            decoration: InputDecoration(isDense: true, hintText: k('creer.ton_aide')),
+                            items: [
+                              for (final x in tons) DropdownMenuItem(value: x.name, child: choixAvecIcone(x.icon, x.name)),
+                            ],
+                            onChanged: (v) => setLocal(() => tone = v),
                           ),
-                          items: [
-                            for (final t in _tones)
-                              DropdownMenuItem(
-                                value: t.name,
-                                child: Row(
-                                  children: [
-                                    Icon(t.icon,
-                                        size: 18,
-                                        color: theme.colorScheme.primary),
-                                    const SizedBox(width: 8),
-                                    Flexible(
-                                        child: Text(t.name,
-                                            overflow: TextOverflow.ellipsis)),
-                                  ],
-                                ),
-                              ),
-                          ],
-                          onChanged: (v) => setLocal(() => tone = v),
+                        ]),
+                        SectionDestiny(
+                          titre: playerCount > 1 ? k('creer.les_heros') : k('creer.heros'),
+                          enfants: [for (var i = 0; i < playerCount; i++) playerBlock(i)],
                         ),
-                        label(playerCount > 1 ? 'Les héros' : 'Héros'),
-                        for (var i = 0; i < playerCount; i++) playerBlock(i),
-                        label('Narration'),
-                        SegmentedButton<bool>(
-                          showSelectedIcon: false,
-                          segments: const [
-                            ButtonSegment(
-                                value: true, label: Text('« Tu » (direct)')),
-                            ButtonSegment(
-                                value: false, label: Text('3ᵉ personne')),
-                          ],
-                          selected: {directAddress},
-                          onSelectionChanged: (s) =>
-                              setLocal(() => directAddress = s.first),
-                        ),
-                        SwitchListTile(
-                          contentPadding: EdgeInsets.zero,
-                          title: const Text('La pièce est plus dure après Destiny'),
-                          subtitle: const Text('L\'action qui suit un Destiny demande deux réussites.'),
-                          value: malus,
-                          onChanged: (v) => setLocal(() => malus = v),
-                        ),
-                        label('Longueur : $maxResponses réponses, en quatre chapitres'),
-                        Slider(
-                          value: maxResponses.toDouble(),
-                          min: 10,
-                          max: 100,
-                          divisions: 18,
-                          label: '$maxResponses',
-                          onChanged: (v) =>
-                              setLocal(() => maxResponses = v.round()),
-                        ),
+                        SectionDestiny(titre: k('creer.narration'), enfants: [
+                          SegmentedButton<bool>(
+                            showSelectedIcon: false,
+                            segments: [
+                              ButtonSegment(value: true, label: Text(k('creer.tu'))),
+                              ButtonSegment(value: false, label: Text(k('creer.il'))),
+                            ],
+                            selected: {directAddress},
+                            onSelectionChanged: (s) => setLocal(() => directAddress = s.first),
+                          ),
+                          SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(k('creer.plus_dure')),
+                            subtitle: Text(k('creer.plus_dure_aide')),
+                            value: malus,
+                            onChanged: (v) => setLocal(() => malus = v),
+                          ),
+                        ]),
+                        SectionDestiny(titre: k('creer.longueur'), enfants: [
+                          Paragraphe(k('creer.longueur_texte', {'n': '$maxResponses'})),
+                          Slider(
+                            value: maxResponses.toDouble(),
+                            min: 10,
+                            max: 100,
+                            divisions: 18,
+                            label: '$maxResponses',
+                            onChanged: (v) => setLocal(() => maxResponses = v.round()),
+                          ),
+                        ]),
                       ],
                     ),
                   ),
                   const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      onPressed:
-                          ready ? () => Navigator.pop(context, true) : null,
-                      icon: const Icon(Icons.auto_stories),
-                      label: const Text('Lancer l\'histoire'),
-                    ),
+                  FilledButton.icon(
+                    onPressed: ready ? () => Navigator.pop(context, true) : null,
+                    icon: const Icon(Icons.auto_stories),
+                    label: Text(k('creer.lancer')),
                   ),
                 ],
               ),
@@ -564,11 +530,10 @@ class _ChatScreenState extends State<ChatScreen>
     await showGeneralDialog<void>(
       context: context,
       barrierDismissible: true,
-      barrierLabel: 'archetype',
+      barrierLabel: k('creer.fermer_carte'),
       barrierColor: Colors.black.withValues(alpha: 0.88),
       transitionDuration: const Duration(milliseconds: 420),
-      pageBuilder: (_, __, ___) =>
-          _ArchetypeReveal(animalId: animalId, kids: kids, source: widget.visualSettings.source),
+      pageBuilder: (_, __, ___) => _ArchetypeReveal(animalId: animalId, kids: kids, source: widget.visualSettings.source),
       transitionBuilder: (_, anim, __, child) => FadeTransition(
         opacity: anim,
         child: ScaleTransition(
@@ -582,30 +547,41 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   Widget build(BuildContext context) {
     final c = widget.controller;
-    // Taille du texte + écriture manuscrite (réglées dans Apparence) : Chat seul.
+    final t = context.textes;
+    // Taille du texte + écriture manuscrite (réglées dans Apparence) : le
+    // contenu de l'histoire seulement.
     return ListenableBuilder(
       listenable: widget.visualSettings,
       builder: (context, _) {
         final vs = widget.visualSettings;
         Widget content = MediaQuery(
-          data: MediaQuery.of(context).copyWith(
-            textScaler: TextScaler.linear(vs.textScale),
-          ),
+          data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(vs.textScale)),
           child: c.active == null ? _buildList(c) : _buildSession(c),
         );
-        if (!vs.handwritten) return content;
-        // Écriture manuscrite : police thème + styles bruts (Text sans famille).
-        final base = Theme.of(context);
-        content = DefaultTextStyle.merge(
-          style: const TextStyle(fontFamily: VisualSettings.handwrittenFamily),
-          child: content,
-        );
-        return Theme(
-          data: base.copyWith(
-            textTheme: base.textTheme
-                .apply(fontFamily: VisualSettings.handwrittenFamily),
+        if (vs.handwritten) {
+          // Écriture manuscrite : police thème + styles bruts (Text sans famille).
+          final base = Theme.of(context);
+          content = Theme(
+            data: base.copyWith(textTheme: base.textTheme.apply(fontFamily: VisualSettings.handwrittenFamily)),
+            child: DefaultTextStyle.merge(
+              style: const TextStyle(fontFamily: VisualSettings.handwrittenFamily),
+              child: content,
+            ),
+          );
+        }
+        final active = c.active;
+        return Scaffold(
+          appBar: AppBar(
+            leading: active == null
+                ? null
+                : IconButton(
+                    tooltip: t.t('accessibilite.retour'),
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: c.closeStory,
+                  ),
+            title: Text(active?.title ?? k('titre'), overflow: TextOverflow.ellipsis),
           ),
-          child: content,
+          body: SafeArea(top: false, child: content),
         );
       },
     );
@@ -613,65 +589,56 @@ class _ChatScreenState extends State<ChatScreen>
 
   // --- Liste des histoires ---
   Widget _buildList(ChatController c) {
-    final theme = Theme.of(context);
+    final d = context.destiny;
+    final t = context.textes;
+    Widget centre(Widget w) => Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 760), child: w));
     return Stack(
       children: [
         ListView(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 90),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
           children: [
-            Text('Chat — Maître du jeu',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.headlineMedium),
-            const SizedBox(height: 8),
-            if (!c.aiConfigured)
-              Card(
-                color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
+            for (final w in [
+              Paragraphe(k('intro')),
+              if (!c.aiConfigured)
+                CadreLisere(
+                  couleur: DestinyCouleurs.ia,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.key_off_outlined,
-                              size: 20, color: theme.colorScheme.primary),
+                          const Icon(Icons.key_off_outlined, size: 20, color: DestinyCouleurs.ia),
                           const SizedBox(width: 8),
                           Expanded(
-                            child: Text('Aucune clé IA configurée',
-                                style: theme.textTheme.titleSmall),
+                            child: Text(k('sans_cle.titre'),
+                                style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, color: d.texte)),
                           ),
                         ],
                       ),
                       const SizedBox(height: 6),
-                      const Text(
-                        'Ajoute un fournisseur + un jeton API pour jouer. '
-                        'Google (Gemini) fonctionne aussi dans le navigateur.',
-                        style: TextStyle(color: Colors.white70),
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: double.infinity,
-                        child: FilledButton.icon(
-                          onPressed: () => _openAiConfig(c),
-                          icon: const Icon(Icons.settings),
-                          label: const Text('Configurer l\'IA'),
-                        ),
+                      Paragraphe(k('sans_cle.texte')),
+                      FilledButton.icon(
+                        onPressed: () => _openAiConfig(c),
+                        icon: const Icon(Icons.settings),
+                        label: Text(k('sans_cle.configurer')),
                       ),
                     ],
                   ),
                 ),
-              ),
-            const SizedBox(height: 4),
-            _listToolbar(c, theme),
-            const SizedBox(height: 4),
-            if (c.activeStories.isEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 24),
-                child: Text('Aucune histoire pour l\'instant.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white54)),
-              ),
-            for (final s in c.activeStories) _storyTile(c, s, theme),
+              if (c.error != null) Paragraphe(c.error!, gras: true),
+              _listToolbar(c),
+              SectionDestiny(titre: k('mes_histoires'), espace: 8, enfants: [
+                if (c.activeStories.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Text(k('aucune'),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontFamily: kPoliceTexte, fontStyle: FontStyle.italic, color: d.texteSecondaire)),
+                  ),
+                for (final s in c.activeStories) _storyTile(c, s),
+              ]),
+            ])
+              centre(w),
           ],
         ),
         if (!_selectMode)
@@ -679,17 +646,22 @@ class _ChatScreenState extends State<ChatScreen>
             right: 16,
             bottom: 16,
             child: FloatingActionButton.extended(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
               onPressed: c.busy ? null : _newStory,
               icon: const Icon(Icons.add),
-              label: const Text('Nouvelle histoire'),
+              label: Text(k('nouvelle')),
             ),
           ),
-        if (_selectMode) _selectionBar(c, theme),
+        if (_selectMode) _selectionBar(c),
         if (c.busy)
-          const Positioned.fill(
-            child: ColoredBox(
-              color: Colors.black54,
-              child: Center(child: CircularProgressIndicator()),
+          Positioned.fill(
+            child: Semantics(
+              label: t.t('ia_jeu.en_cours'),
+              child: ColoredBox(
+                color: d.fond.withValues(alpha: 0.75),
+                child: const Center(child: CircularProgressIndicator()),
+              ),
             ),
           ),
       ],
@@ -698,15 +670,14 @@ class _ChatScreenState extends State<ChatScreen>
 
   // --- Barre d'outils + tuiles + sélection ---
 
-  Widget _listToolbar(ChatController c, ThemeData theme) {
+  Widget _listToolbar(ChatController c) {
     final visible = c.activeStories;
     if (_selectMode) {
-      final allSelected =
-          visible.isNotEmpty && _selected.length == visible.length;
+      final allSelected = visible.isNotEmpty && _selected.length == visible.length;
       return Row(
         children: [
           IconButton(
-            tooltip: 'Annuler',
+            tooltip: k('annuler'),
             icon: const Icon(Icons.close),
             onPressed: () => setState(() {
               _selectMode = false;
@@ -714,12 +685,11 @@ class _ChatScreenState extends State<ChatScreen>
             }),
           ),
           Expanded(
-            child: Text('${_selected.length} sélectionnée(s)',
-                style: theme.textTheme.titleSmall),
+            child: Text(k('selection', {'n': '${_selected.length}'}), style: Theme.of(context).textTheme.titleSmall),
           ),
           TextButton.icon(
             icon: Icon(allSelected ? Icons.deselect : Icons.select_all),
-            label: Text(allSelected ? 'Aucun' : 'Tout'),
+            label: Text(allSelected ? k('aucun') : k('tout')),
             onPressed: () => setState(() {
               if (allSelected) {
                 _selected.clear();
@@ -738,7 +708,7 @@ class _ChatScreenState extends State<ChatScreen>
       children: [
         TextButton.icon(
           icon: const Icon(Icons.checklist),
-          label: const Text('Sélectionner'),
+          label: Text(k('selectionner')),
           onPressed: visible.isEmpty
               ? null
               : () => setState(() {
@@ -750,49 +720,74 @@ class _ChatScreenState extends State<ChatScreen>
         ),
         TextButton.icon(
           icon: const Icon(Icons.archive_outlined),
-          label: Text('Archives (${c.archivedStories.length})'),
+          label: Text(k('archives', {'n': '${c.archivedStories.length}'})),
           onPressed: _openArchives,
         ),
       ],
     );
   }
 
-  Widget _storyTile(ChatController c, ChatStory s, ThemeData theme) {
+  Widget _storyTile(ChatController c, ChatStory s) {
+    final d = context.destiny;
     final selected = _selected.contains(s.id);
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      color: selected ? theme.colorScheme.primary.withValues(alpha: 0.18) : null,
-      child: ListTile(
-        leading: _selectMode
-            ? Checkbox(
-                value: selected,
-                onChanged: (_) => _toggleSelect(s.id),
-              )
-            : Icon(Icons.menu_book, color: theme.colorScheme.primary),
-        title: Text(s.title, maxLines: 1, overflow: TextOverflow.ellipsis),
-        trailing: _selectMode
-            ? null
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    tooltip: 'Résumé',
-                    icon: const Icon(Icons.summarize),
-                    onPressed: () => _showSummary(c, s),
-                  ),
-                  IconButton(
-                    tooltip: 'Archiver',
-                    icon: const Icon(Icons.archive_outlined),
-                    onPressed: () => c.setArchived(s.id, true),
-                  ),
-                  IconButton(
-                    tooltip: 'Supprimer',
-                    icon: const Icon(Icons.delete_outline),
-                    onPressed: () => c.deleteStory(s.id),
-                  ),
-                ],
-              ),
-        onTap: _selectMode ? () => _toggleSelect(s.id) : () => c.openStory(s),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Material(
+        color: selected ? d.or.withValues(alpha: d.sombre ? 0.22 : 0.14) : d.carte,
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: BorderSide(color: selected ? d.titre : d.filet),
+        ),
+        child: ListTile(
+          leading: _selectMode
+              ? Checkbox(value: selected, onChanged: (_) => _toggleSelect(s.id))
+              : Icon(_universeIcon(_universeOf(s)), color: d.titre),
+          title: Text(
+            s.title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 15, color: d.texte),
+          ),
+          subtitle: s.context.isEmpty
+              ? null
+              : Text(s.context,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: d.texteSecondaire)),
+          trailing: _selectMode
+              ? null
+              : PopupMenuButton<_ActionHistoire>(
+                  tooltip: k('actions'),
+                  icon: Icon(Icons.more_vert, color: d.texteSecondaire),
+                  onSelected: (a) {
+                    switch (a) {
+                      case _ActionHistoire.resume:
+                        _showSummary(c, s);
+                      case _ActionHistoire.archiver:
+                        c.setArchived(s.id, true);
+                      case _ActionHistoire.supprimer:
+                        c.deleteStory(s.id);
+                    }
+                  },
+                  itemBuilder: (_) => [
+                    for (final (a, icone, libelle) in [
+                      (_ActionHistoire.resume, Icons.summarize, k('resume')),
+                      (_ActionHistoire.archiver, Icons.archive_outlined, k('archiver')),
+                      (_ActionHistoire.supprimer, Icons.delete_outline, k('supprimer')),
+                    ])
+                      PopupMenuItem(
+                        value: a,
+                        child: Row(children: [
+                          Icon(icone, size: 20, color: d.titre),
+                          const SizedBox(width: 12),
+                          Text(libelle),
+                        ]),
+                      ),
+                  ],
+                ),
+          onTap: _selectMode ? () => _toggleSelect(s.id) : () => c.openStory(s),
+        ),
       ),
     );
   }
@@ -801,7 +796,8 @@ class _ChatScreenState extends State<ChatScreen>
         if (!_selected.add(id)) _selected.remove(id);
       });
 
-  Widget _selectionBar(ChatController c, ThemeData theme) {
+  Widget _selectionBar(ChatController c) {
+    final d = context.destiny;
     final n = _selected.length;
     return Positioned(
       left: 12,
@@ -810,7 +806,7 @@ class _ChatScreenState extends State<ChatScreen>
       child: Material(
         elevation: 6,
         borderRadius: BorderRadius.circular(16),
-        color: theme.colorScheme.surface,
+        color: d.carte,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
           child: Row(
@@ -827,18 +823,16 @@ class _ChatScreenState extends State<ChatScreen>
                           });
                         },
                   icon: const Icon(Icons.archive),
-                  label: Text('Archiver ($n)'),
+                  label: Text(k('archiver_n', {'n': '$n'})),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: FilledButton.tonalIcon(
-                  style: FilledButton.styleFrom(
-                    foregroundColor: const Color(0xFFFF6B6B),
-                  ),
+                  style: FilledButton.styleFrom(foregroundColor: _lisible(d, d.famille(FamilleId.fissure))),
                   onPressed: n == 0 ? null : () => _confirmDeleteMany(c),
                   icon: const Icon(Icons.delete_outline),
-                  label: Text('Supprimer ($n)'),
+                  label: Text(k('supprimer_n', {'n': '$n'})),
                 ),
               ),
             ],
@@ -853,15 +847,11 @@ class _ChatScreenState extends State<ChatScreen>
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Supprimer ?'),
-        content: Text('Supprimer définitivement $n histoire(s) ?'),
+        title: Text(k('supprimer_titre')),
+        content: Text(k('supprimer_texte', {'n': '$n'})),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Annuler')),
-          FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Supprimer')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(k('annuler'))),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: Text(k('supprimer'))),
         ],
       ),
     );
@@ -875,58 +865,40 @@ class _ChatScreenState extends State<ChatScreen>
 
   Future<void> _openArchives() async {
     await Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => ChatArchivesScreen(controller: widget.controller),
-      ),
+      MaterialPageRoute<void>(builder: (_) => ChatArchivesScreen(controller: widget.controller)),
     );
     if (mounted) setState(() {});
   }
 
   // --- Session de jeu ---
   Widget _buildSession(ChatController c) {
-    final theme = Theme.of(context);
+    final d = context.destiny;
     return Stack(
       children: [
         Column(
           children: [
-            Row(
-              children: [
-                IconButton(
-                  tooltip: context.textes.t('accessibilite.retour'),
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: c.closeStory),
-                Expanded(
-                  child: Text(c.active!.title,
-                      style: theme.textTheme.titleMedium,
-                      overflow: TextOverflow.ellipsis),
-                ),
-              ],
-            ),
             Expanded(
               child: ListView(
                 controller: _scroll,
-                padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+                padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
                 children: [
-                  for (final m in c.visibleMessages)
-                    _bubble(m, theme, _universeIcon(_currentUniverse(c))),
+                  for (final m in c.visibleMessages) _bubble(m, _universeIcon(_currentUniverse(c))),
                   if (c.busy)
-                    const Padding(
-                      padding: EdgeInsets.all(12),
-                      child: Text('Le maître du jeu écrit…',
-                          style: TextStyle(
-                              color: Colors.white54,
-                              fontStyle: FontStyle.italic)),
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Text(k('jeu.ecrit'),
+                          style: TextStyle(color: d.texteSecondaire, fontStyle: FontStyle.italic)),
                     ),
                   if (c.error != null)
                     Padding(
                       padding: const EdgeInsets.all(8),
                       child: Text(c.error!,
-                          style: const TextStyle(color: Colors.redAccent)),
+                          style: TextStyle(color: _lisible(d, d.famille(FamilleId.fissure)), fontWeight: FontWeight.w600)),
                     ),
                 ],
               ),
             ),
-            _choices(c, theme),
+            _choices(c),
           ],
         ),
         _resultOverlay(),
@@ -951,6 +923,36 @@ class _ChatScreenState extends State<ChatScreen>
     );
   }
 
+  /// Le mot du résultat, en blanc sur une pastille pleine : lisible sur les
+  /// deux thèmes.
+  Widget _resultBadge(String word, Color couleur, {required bool success}) {
+    final fond = Color.lerp(couleur, Colors.black, 0.4)!;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+      decoration: BoxDecoration(
+        color: fond,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: couleur.withValues(alpha: 0.6), blurRadius: 24)],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            word,
+            style: const TextStyle(
+              fontFamily: kPoliceTitres,
+              color: Colors.white,
+              fontSize: 32,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 3,
+            ),
+          ),
+          _rollSubtitle(success),
+        ],
+      ),
+    );
+  }
+
   /// Illumination verte : flash radial, onde de choc, badge ✓.
   Widget _successFx(double t) {
     const color = Color(0xFF2ECC71);
@@ -964,8 +966,7 @@ class _ChatScreenState extends State<ChatScreen>
     } else {
       op = (1 - (t - 0.72) / 0.26).clamp(0.0, 1.0);
     }
-    final flash =
-        t < 0.18 ? t / 0.18 : (1 - (t - 0.18) / 0.42).clamp(0.0, 1.0);
+    final flash = t < 0.18 ? t / 0.18 : (1 - (t - 0.18) / 0.42).clamp(0.0, 1.0);
     final ringT = (t / 0.6).clamp(0.0, 1.0);
     final ringScale = 0.3 + ringT * 2.2;
     final ringOp = (1 - ringT) * 0.7;
@@ -1016,31 +1017,13 @@ class _ChatScreenState extends State<ChatScreen>
                     shape: BoxShape.circle,
                     gradient: const RadialGradient(colors: [glow, color]),
                     boxShadow: [
-                      BoxShadow(
-                        color: glow.withValues(alpha: 0.75),
-                        blurRadius: 40,
-                        spreadRadius: 8,
-                      ),
+                      BoxShadow(color: glow.withValues(alpha: 0.75), blurRadius: 40, spreadRadius: 8),
                     ],
                   ),
-                  child: const Icon(Icons.check_rounded,
-                      color: Colors.white, size: 78),
+                  child: const Icon(Icons.check_rounded, color: Colors.white, size: 78),
                 ),
                 const SizedBox(height: 14),
-                const Text(
-                  'RÉUSSITE',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 34,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 3,
-                    shadows: [
-                      Shadow(color: glow, blurRadius: 24),
-                      Shadow(color: Colors.black, blurRadius: 6),
-                    ],
-                  ),
-                ),
-                _rollSubtitle(true),
+                _resultBadge(k('jeu.reussite'), color, success: true),
               ],
             ),
           ),
@@ -1052,22 +1035,17 @@ class _ChatScreenState extends State<ChatScreen>
   /// Sous-titre du résultat : les lancers de la pièce (et l'option « plus dure »).
   Widget _rollSubtitle(bool success) {
     final c = widget.controller;
-    final dice = c.lastRolls.length;
-    if (dice == 0) return const SizedBox.shrink();
-    final heads = c.lastRolls.where((h) => h).length;
-    final parts = <String>['🪙 $heads/$dice'];
-    if (c.lastRequired >= 2) parts.add('Tension ×2');
+    final lancers = c.lastRolls.length;
+    if (lancers == 0) return const SizedBox.shrink();
+    final reussites = c.lastRolls.where((h) => h).length;
+    final parts = <String>[k('jeu.piece', {'reussites': '$reussites', 'lancers': '$lancers'})];
+    if (c.lastRequired >= 2) parts.add(k('jeu.tension'));
 
     return Padding(
-      padding: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(top: 4),
       child: Text(
         parts.join('   ·   '),
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 14,
-          fontWeight: FontWeight.w700,
-          shadows: [Shadow(color: Colors.black, blurRadius: 6)],
-        ),
+        style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700),
       ),
     );
   }
@@ -1077,18 +1055,15 @@ class _ChatScreenState extends State<ChatScreen>
     // Modes enfant : on reformule l'échec en encouragement (« COURAGE » + cœur),
     // dans une couleur chaude plutôt que rouge alarmant.
     final narration = widget.controller.aiSettings.narration;
-    final kid = narration == NarrationStyle.petit ||
-        narration == NarrationStyle.child;
+    final kid = narration == NarrationStyle.petit || narration == NarrationStyle.child;
     final main = kid ? const Color(0xFFFF8A3D) : const Color(0xFFFF3B3B);
     final light = kid ? const Color(0xFFFFB27A) : const Color(0xFFFF6B6B);
-    final word = kid ? 'COURAGE' : 'ÉCHEC';
+    final word = kid ? k('jeu.courage') : k('jeu.echec');
     final iconData = kid ? Icons.favorite : Icons.close_rounded;
     // Secousse rapide qui s'amortit.
-    final shake =
-        math.sin(t * math.pi * 14) * 9 * (1 - t).clamp(0.0, 1.0);
+    final shake = math.sin(t * math.pi * 14) * 9 * (1 - t).clamp(0.0, 1.0);
     // Flash bref.
-    final flash =
-        t < 0.12 ? t / 0.12 : (1 - (t - 0.12) / 0.3).clamp(0.0, 1.0);
+    final flash = t < 0.12 ? t / 0.12 : (1 - (t - 0.12) / 0.3).clamp(0.0, 1.0);
     // Badge ✗.
     final scale = Curves.elasticOut.transform((t / 0.5).clamp(0.0, 1.0));
     double op;
@@ -1125,30 +1100,13 @@ class _ChatScreenState extends State<ChatScreen>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(colors: [light, main]),
                       boxShadow: [
-                        BoxShadow(
-                          color: main.withValues(alpha: 0.7),
-                          blurRadius: 36,
-                          spreadRadius: 6,
-                        ),
+                        BoxShadow(color: main.withValues(alpha: 0.7), blurRadius: 36, spreadRadius: 6),
                       ],
                     ),
                     child: Icon(iconData, color: Colors.white, size: 72),
                   ),
                   const SizedBox(height: 14),
-                  Text(
-                    word,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 34,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 3,
-                      shadows: [
-                        Shadow(color: main, blurRadius: 24),
-                        const Shadow(color: Colors.black, blurRadius: 6),
-                      ],
-                    ),
-                  ),
-                  _rollSubtitle(false),
+                  _resultBadge(word, main, success: false),
                 ],
               ),
             ),
@@ -1158,12 +1116,15 @@ class _ChatScreenState extends State<ChatScreen>
     );
   }
 
-  /// Montée du danger : événement plein écran — voile d'orage, éclairs qui
-  /// traversent l'écran, gros titre « ORAGE » couleur foudre, et mise en
-  /// évidence du malus (2 réussites requises). Prend son temps.
+  /// Montée du danger (Destiny entre deux chapitres) : événement plein écran
+  /// — voile d'orage, éclairs qui traversent l'écran, gros titre couleur
+  /// foudre, et le rappel de la pièce plus dure quand l'option est prise.
+  /// Le voile reste sombre sur les deux thèmes : c'est un orage.
   Widget _dangerOverlay() {
     const thunder = Color(0xFF8FD3FF); // bleu foudre
     const stormDeep = Color(0xFF0A0E2A);
+    final d = context.destiny;
+    final voile = d.sombre ? 0.55 : 0.72;
     return Positioned.fill(
       child: IgnorePointer(
         child: AnimatedBuilder(
@@ -1201,15 +1162,13 @@ class _ChatScreenState extends State<ChatScreen>
             } else {
               textOp = (1 - (t - 0.82) / 0.18).clamp(0.0, 1.0);
             }
-            final textScale = 0.85 + 0.15 * Curves.easeOut.transform(
-                ((t - 0.2) / 0.18).clamp(0.0, 1.0));
+            final textScale = 0.85 + 0.15 * Curves.easeOut.transform(((t - 0.2) / 0.18).clamp(0.0, 1.0));
 
             return Stack(
               children: [
                 // Voile d'orage sombre.
                 Positioned.fill(
-                  child: ColoredBox(
-                      color: stormDeep.withValues(alpha: 0.55 * veil)),
+                  child: ColoredBox(color: stormDeep.withValues(alpha: voile * veil)),
                 ),
                 // Flash bleuté des éclairs.
                 Positioned.fill(
@@ -1231,71 +1190,70 @@ class _ChatScreenState extends State<ChatScreen>
                 Positioned.fill(
                   child: CustomPaint(painter: _LightningPainter(_bolt, boltT)),
                 ),
-                // Bloc texte central : ORAGE + malus.
+                // Bloc texte central : le danger monte, et la pièce plus dure.
                 Center(
                   child: Opacity(
                     opacity: textOp,
                     child: Transform.scale(
                       scale: textScale,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.bolt,
-                              color: thunder,
-                              size: 64,
-                              shadows: [
-                                Shadow(color: thunder, blurRadius: 30),
-                                Shadow(color: Colors.black, blurRadius: 8),
-                              ]),
-                          const SizedBox(height: 4),
-                          const Text(
-                            'LE DANGER MONTE',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 38,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 4,
-                              shadows: [
-                                Shadow(color: thunder, blurRadius: 28),
-                                Shadow(color: Colors.black, blurRadius: 8),
-                              ],
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.bolt, color: thunder, size: 64, shadows: [
+                              Shadow(color: thunder, blurRadius: 30),
+                              Shadow(color: Colors.black, blurRadius: 8),
+                            ]),
+                            const SizedBox(height: 4),
+                            Text(
+                              k('jeu.danger_monte'),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontFamily: kPoliceTitres,
+                                color: Colors.white,
+                                fontSize: 34,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 3,
+                                shadows: [
+                                  Shadow(color: thunder, blurRadius: 28),
+                                  Shadow(color: Colors.black, blurRadius: 8),
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 18, vertical: 10),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFF9800)
-                                  .withValues(alpha: 0.22),
-                              borderRadius: BorderRadius.circular(14),
-                              border: Border.all(
-                                  color: const Color(0xFFFF9800), width: 2),
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: Color(0x66FF9800), blurRadius: 22),
-                              ],
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.warning_amber_rounded,
-                                    color: Color(0xFFFFB74D), size: 24),
-                                SizedBox(width: 10),
-                                Text(
-                                  'MALUS · 2 RÉUSSITES REQUISES',
-                                  style: TextStyle(
-                                    color: Color(0xFFFFB74D),
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: 1.5,
-                                  ),
+                            if (widget.controller.malusPending) ...[
+                              const SizedBox(height: 16),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                                decoration: BoxDecoration(
+                                  // Plein et sombre : le texte orangé reste lisible sur les deux thèmes.
+                                  color: Color.lerp(_orangeDanger, Colors.black, 0.72)!.withValues(alpha: 0.92),
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(color: _orangeDanger, width: 2),
+                                  boxShadow: const [BoxShadow(color: Color(0x66FF9800), blurRadius: 22)],
                                 ),
-                              ],
-                            ),
-                          ),
-                        ],
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.warning_amber_rounded, color: Color(0xFFFFB74D), size: 24),
+                                    const SizedBox(width: 10),
+                                    Flexible(
+                                      child: Text(
+                                        k('jeu.malus'),
+                                        style: const TextStyle(
+                                          color: Color(0xFFFFB74D),
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w900,
+                                          letterSpacing: 1.5,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -1308,23 +1266,24 @@ class _ChatScreenState extends State<ChatScreen>
     );
   }
 
-  Widget _bubble(ChatMessage m, ThemeData theme, IconData gmIcon) {
-    final isUser = m.isUser;
-    if (isUser) {
+  Widget _bubble(ChatMessage m, IconData gmIcon) {
+    final d = context.destiny;
+    if (m.isUser) {
       final success = m.result == 'success';
       final fail = m.result == 'fail';
-      const green = Color(0xFF2ECC71);
-      const red = Color(0xFFFF4D4D);
+      final vert = d.famille(FamilleId.tient);
+      final rouge = d.famille(FamilleId.fissure);
+      final teinte = d.sombre ? 0.22 : 0.12;
       final bg = success
-          ? green.withValues(alpha: 0.22)
+          ? vert.withValues(alpha: teinte)
           : fail
-              ? red.withValues(alpha: 0.22)
-              : theme.colorScheme.primary.withValues(alpha: 0.22);
+              ? rouge.withValues(alpha: teinte)
+              : d.or.withValues(alpha: teinte);
       final border = success
-          ? green.withValues(alpha: 0.55)
+          ? vert.withValues(alpha: 0.6)
           : fail
-              ? red.withValues(alpha: 0.55)
-              : Colors.white.withValues(alpha: 0.08);
+              ? rouge.withValues(alpha: 0.6)
+              : d.filet;
       final brave = m.kind == 'brave';
       final smart = m.kind == 'smart';
       final iconData = brave
@@ -1333,10 +1292,10 @@ class _ChatScreenState extends State<ChatScreen>
               ? Icons.theater_comedy
               : Icons.edit;
       final iconColor = brave
-          ? const Color(0xFFF57C00)
+          ? _brave
           : smart
-              ? const Color(0xFF7E3FF2)
-              : Colors.white70;
+              ? _smart
+              : d.texteSecondaire;
       return Align(
         alignment: Alignment.centerRight,
         child: Container(
@@ -1356,14 +1315,9 @@ class _ChatScreenState extends State<ChatScreen>
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(m.actorEmoji ?? '🎭',
-                        style: const TextStyle(fontSize: 14)),
+                    Text(m.actorEmoji ?? '🎭', style: const TextStyle(fontSize: 14)),
                     const SizedBox(width: 4),
-                    Text(m.actor!,
-                        style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            color: theme.colorScheme.primary)),
+                    Text(m.actor!, style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: d.titre)),
                   ],
                 ),
                 const SizedBox(height: 4),
@@ -1377,8 +1331,7 @@ class _ChatScreenState extends State<ChatScreen>
                     const SizedBox(width: 8),
                   ],
                   Flexible(
-                    child: Text(m.display ?? m.content,
-                        style: const TextStyle(height: 1.4)),
+                    child: Text(m.display ?? m.content, style: TextStyle(height: 1.4, color: d.texte)),
                   ),
                 ],
               ),
@@ -1387,7 +1340,7 @@ class _ChatScreenState extends State<ChatScreen>
         ),
       );
     }
-    // Bulle du Maître du jeu, avec DONC/MAIS mis en valeur.
+    // Bulle du maître du destin, avec DONC/MAIS mis en valeur.
     final text = ChatController.displayContent(m.content);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
@@ -1396,17 +1349,17 @@ class _ChatScreenState extends State<ChatScreen>
         children: [
           CircleAvatar(
             radius: 15,
-            backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.25),
-            child: Icon(gmIcon, size: 17, color: theme.colorScheme.primary),
+            backgroundColor: d.or.withValues(alpha: d.sombre ? 0.25 : 0.18),
+            child: Icon(gmIcon, size: 17, color: d.titre),
           ),
           const SizedBox(width: 8),
           Flexible(
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.06),
+                color: d.carte,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                border: Border.all(color: d.filet),
               ),
               child: _gmRich(text),
             ),
@@ -1418,6 +1371,7 @@ class _ChatScreenState extends State<ChatScreen>
 
   /// Rend la narration ligne par ligne, avec une bannière « ⚡ DANGER ».
   Widget _gmRich(String text) {
+    final d = context.destiny;
     final lines = text.split('\n');
     final children = <Widget>[];
     final dangerRe = RegExp(r'^[⚡⚠️]*\s*DANGER\s*[:\-–]?\s*', caseSensitive: false);
@@ -1426,27 +1380,21 @@ class _ChatScreenState extends State<ChatScreen>
       if (line.isEmpty) continue;
       final isDanger = line.startsWith('⚡') || dangerRe.hasMatch(line);
       if (isDanger) {
-        final body = line
-            .replaceFirst('⚡', '')
-            .replaceFirst(dangerRe, '')
-            .trim();
-        const orange = Color(0xFFFF9800);
+        final body = line.replaceFirst('⚡', '').replaceFirst(dangerRe, '').trim();
         children.add(Container(
           margin: const EdgeInsets.only(bottom: 6),
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
           decoration: BoxDecoration(
-            color: orange.withValues(alpha: 0.25),
+            color: _orangeDanger.withValues(alpha: d.sombre ? 0.22 : 0.12),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: orange.withValues(alpha: 0.55)),
+            border: Border.all(color: _orangeDanger.withValues(alpha: 0.6)),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.bolt, color: orange, size: 18),
+              const Icon(Icons.bolt, color: _orangeDanger, size: 18),
               const SizedBox(width: 6),
-              Expanded(
-                child: Text(body, style: const TextStyle(color: Colors.white)),
-              ),
+              Expanded(child: Text(body, style: TextStyle(color: d.texte, fontWeight: FontWeight.w600))),
             ],
           ),
         ));
@@ -1462,6 +1410,7 @@ class _ChatScreenState extends State<ChatScreen>
 
   /// Met DONC en vert et MAIS en rouge, en majuscules et en gras.
   Widget _gmText(String text) {
+    final d = context.destiny;
     final spans = <TextSpan>[];
     final re = RegExp(r'\b(donc|mais)\b', caseSensitive: false);
     var last = 0;
@@ -1475,9 +1424,7 @@ class _ChatScreenState extends State<ChatScreen>
         style: TextStyle(
           fontWeight: FontWeight.w900,
           letterSpacing: 0.5,
-          color: word == 'DONC'
-              ? const Color(0xFF38EF7D)
-              : const Color(0xFFFF4D4D),
+          color: _lisible(d, d.famille(word == 'DONC' ? FamilleId.tient : FamilleId.fissure)),
         ),
       ));
       last = m.end;
@@ -1485,44 +1432,43 @@ class _ChatScreenState extends State<ChatScreen>
     if (last < text.length) spans.add(TextSpan(text: text.substring(last)));
     return Text.rich(
       TextSpan(children: spans),
-      style: const TextStyle(height: 1.5, color: Colors.white),
+      style: TextStyle(height: 1.5, color: d.texte),
     );
   }
 
-  Widget _choices(ChatController c, ThemeData theme) {
+  Widget _choices(ChatController c) {
+    final d = context.destiny;
+    final t = context.textes;
     if (c.busy) return const SizedBox.shrink();
+    final finStyle = TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, color: d.titre);
     if (c.lectureSeule) {
       return Padding(
         padding: const EdgeInsets.all(12),
-        child: Text(context.textes.t('jouer.ia.ancienne'),
-            textAlign: TextAlign.center,
-            style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary)),
+        child: Text(t.t('jouer.ia.ancienne'), textAlign: TextAlign.center, style: finStyle),
       );
     }
     if (c.choices.isEmpty) {
       if (c.error == null) {
         return Padding(
           padding: const EdgeInsets.all(12),
-          child: Text('— Fin de l\'histoire —',
-              textAlign: TextAlign.center,
-              style: theme.textTheme.labelLarge
-                  ?.copyWith(color: theme.colorScheme.primary)),
+          child: Text(k('jeu.fin'), textAlign: TextAlign.center, style: finStyle),
         );
       }
       return const SizedBox.shrink();
     }
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 14),
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 14),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: d.carte,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+        border: Border(top: BorderSide(color: d.filet)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _turnIndicator(c, theme),
-          _statusRow(c, theme),
+          _turnIndicator(c),
+          _statusRow(c),
           for (final choice in c.choices) _choiceButton(c, choice),
           const SizedBox(height: 6),
           Row(
@@ -1532,16 +1478,12 @@ class _ChatScreenState extends State<ChatScreen>
                   controller: _custom,
                   textInputAction: TextInputAction.send,
                   onSubmitted: (_) => _sendCustom(),
-                  decoration: const InputDecoration(
-                    hintText: 'Ou écris ta propre action…',
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                  ),
+                  decoration: InputDecoration(hintText: k('jeu.action_libre'), isDense: true),
                 ),
               ),
               const SizedBox(width: 6),
               IconButton.filled(
-                tooltip: context.textes.t('accessibilite.envoyer'),
+                tooltip: t.t('accessibilite.envoyer'),
                 icon: const Icon(Icons.send),
                 onPressed: _sendCustom,
               ),
@@ -1553,7 +1495,8 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   /// Indique le héros dont c'est le tour (mis en avant surtout en duo).
-  Widget _turnIndicator(ChatController c, ThemeData theme) {
+  Widget _turnIndicator(ChatController c) {
+    final d = context.destiny;
     final actor = c.currentActor;
     if (actor == null) return const SizedBox.shrink();
     final duo = c.isDuo;
@@ -1563,49 +1506,44 @@ class _ChatScreenState extends State<ChatScreen>
         children: [
           Text(actor.emoji ?? '🎭', style: const TextStyle(fontSize: 18)),
           const SizedBox(width: 6),
-          Text(
-            duo ? 'À toi, ${actor.name}' : actor.name,
-            style: TextStyle(
-                color: theme.colorScheme.primary,
-                fontWeight: FontWeight.w800,
-                fontSize: 14),
+          Flexible(
+            child: Text(
+              duo ? k('jeu.a_toi', {'nom': actor.name}) : actor.name,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: d.titre, fontWeight: FontWeight.w800, fontSize: 14),
+            ),
           ),
           const SizedBox(width: 6),
           Expanded(
             child: Text('· ${actor.archetype}',
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: Colors.white54, fontSize: 12)),
+                overflow: TextOverflow.ellipsis, style: TextStyle(color: d.texteSecondaire, fontSize: 12)),
           ),
         ],
       ),
     );
   }
 
-  /// Rappel compact du malus tant que le danger reste « monté ».
-  Widget _statusRow(ChatController c, ThemeData theme) {
+  /// Rappel compact de la pièce plus dure, tant que le danger reste « monté ».
+  Widget _statusRow(ChatController c) {
     if (!c.malusPending) return const SizedBox.shrink();
-    const orange = Color(0xFFFF9800);
+    final d = context.destiny;
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: orange.withValues(alpha: 0.18),
+          color: _orangeDanger.withValues(alpha: d.sombre ? 0.18 : 0.12),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: orange.withValues(alpha: 0.7)),
-          boxShadow: [BoxShadow(color: orange.withValues(alpha: 0.3), blurRadius: 10)],
+          border: Border.all(color: _orangeDanger.withValues(alpha: 0.7)),
         ),
-        child: const Row(
+        child: Row(
           children: [
-            Icon(Icons.bolt, color: orange, size: 20),
-            SizedBox(width: 8),
+            const Icon(Icons.bolt, color: _orangeDanger, size: 20),
+            const SizedBox(width: 8),
             Expanded(
-              child: Text('DANGER ACCRU — ta prochaine action exige 2 réussites',
-                  style: TextStyle(
-                      color: Color(0xFFFFB74D),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800)),
+              child: Text(k('jeu.plus_dure'),
+                  style: TextStyle(color: _lisible(d, _orangeDanger), fontSize: 13, fontWeight: FontWeight.w800)),
             ),
           ],
         ),
@@ -1614,6 +1552,9 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Widget _choiceButton(ChatController c, String choice) {
+    final d = context.destiny;
+    // Les étiquettes [BRAVE] et [SMART] viennent de l'IA : on les lit ici,
+    // seul le libellé affiché vient des textes.
     final up = choice.toUpperCase();
     final brave = up.contains('[BRAVE]');
     final smart = up.contains('[SMART]');
@@ -1622,16 +1563,16 @@ class _ChatScreenState extends State<ChatScreen>
         .replaceAll(RegExp(r'\[SMART\]', caseSensitive: false), '')
         .trim();
     final color = brave
-        ? const Color(0xFFF57C00)
+        ? _brave
         : smart
-            ? const Color(0xFF7E3FF2)
-            : Colors.white70;
+            ? _smart
+            : d.texteSecondaire;
     final icon = brave
         ? Icons.bolt
         : smart
             ? Icons.theater_comedy
             : Icons.chevron_right;
-    final tag = brave ? 'BRAVE' : (smart ? 'SMART' : '');
+    final tag = brave ? k('jeu.brave') : (smart ? k('jeu.smart') : '');
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -1640,6 +1581,7 @@ class _ChatScreenState extends State<ChatScreen>
         child: OutlinedButton(
           style: OutlinedButton.styleFrom(
             side: BorderSide(color: color, width: 1.5),
+            backgroundColor: color.withValues(alpha: d.sombre ? 0.08 : 0.05),
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
           ),
           onPressed: () => c.sendChoice(choice),
@@ -1651,14 +1593,10 @@ class _ChatScreenState extends State<ChatScreen>
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: Text(tag,
-                      style: TextStyle(
-                          color: color,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 12)),
+                      style: TextStyle(color: _lisible(d, color), fontWeight: FontWeight.w800, fontSize: 12)),
                 ),
               Expanded(
-                child: Text(label,
-                    style: const TextStyle(color: Colors.white)),
+                child: Text(label, style: TextStyle(color: d.texte, fontWeight: FontWeight.w500)),
               ),
             ],
           ),
@@ -1782,8 +1720,7 @@ class _LightningPainter extends CustomPainter {
     final op = fade * flick;
 
     final count = (bolt.length * reveal).ceil().clamp(2, bolt.length);
-    final path = Path()
-      ..moveTo(bolt[0].dx * size.width, bolt[0].dy * size.height);
+    final path = Path()..moveTo(bolt[0].dx * size.width, bolt[0].dy * size.height);
     for (var i = 1; i < count; i++) {
       path.lineTo(bolt[i].dx * size.width, bolt[i].dy * size.height);
     }
