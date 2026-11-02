@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../destiny/donnees.dart';
+
 import '../../application/state/music_controller.dart';
 
 class MusicScreen extends StatefulWidget {
@@ -345,6 +347,7 @@ class _NowPlayingBar extends StatelessWidget {
                 ),
               ),
               IconButton(
+                tooltip: context.textes.t(controller.playing ? 'accessibilite.pause' : 'accessibilite.lecture'),
                 icon: Icon(
                   controller.playing
                       ? Icons.pause_circle_filled
@@ -355,6 +358,7 @@ class _NowPlayingBar extends StatelessWidget {
                 onPressed: controller.togglePlayPause,
               ),
               IconButton(
+                tooltip: context.textes.t('accessibilite.arreter'),
                 icon: const Icon(Icons.stop_circle),
                 iconSize: 32,
                 color: Colors.white70,

@@ -341,14 +341,14 @@ class CadreLisere extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: c.filet),
       ),
+      // Sans IntrinsicHeight : le liseré suit la hauteur du contenu, même quand
+      // un grand texte passe sur plusieurs lignes.
       child: ClipRRect(
         borderRadius: BorderRadius.circular(13),
-        child: IntrinsicHeight(
-          child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            Container(width: 4, color: couleur),
-            Expanded(child: Padding(padding: const EdgeInsets.all(12), child: child)),
-          ]),
-        ),
+        child: Stack(children: [
+          Padding(padding: const EdgeInsets.fromLTRB(16, 12, 12, 12), child: child),
+          Positioned(left: 0, top: 0, bottom: 0, width: 4, child: ColoredBox(color: couleur)),
+        ]),
       ),
     );
   }

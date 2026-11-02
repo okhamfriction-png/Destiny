@@ -1312,5 +1312,19 @@
     "titre": "Me contacter",
     "accroche": "Suivez Destiny Impro",
     "texte": "Retrouvez les vidéos, les coulisses, et écrivez-moi directement sur les réseaux."
+  },
+  "accessibilite": {
+    "moins": "Un de moins",
+    "plus": "Un de plus",
+    "afficher": "Afficher",
+    "masquer": "Masquer",
+    "retirer": "Retirer",
+    "envoyer": "Envoyer",
+    "retour": "Revenir à la liste",
+    "lecture": "Lecture",
+    "pause": "Pause",
+    "arreter": "Arrêter la musique",
+    "modifier": "Modifier",
+    "supprimer": "Supprimer"
   }
 }

@@ -73,6 +73,11 @@ class DestinyCouleurs extends ThemeExtension<DestinyCouleurs> {
   /// Couleur des titres (or en sombre, or foncé en clair).
   Color get titre => sombre ? or : orFonce;
 
+  /// Le bleu Destiny quand il colore du texte : éclairci en sombre, assombri
+  /// en clair, pour rester lisible (contraste d'au moins 4,5).
+  Color get bleuTexte =>
+      sombre ? Color.lerp(bleuDestiny, Colors.white, 0.35)! : Color.lerp(bleuDestiny, encre, 0.25)!;
+
   /// Filets dorés.
   Color get filet => sombre ? orFonce.withValues(alpha: 0.7) : trait;
 

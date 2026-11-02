@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../destiny/donnees.dart';
+
 import '../../application/state/location_details.dart';
 import '../widgets/location_detail_section.dart';
 
@@ -290,6 +292,7 @@ class _LocationDetailsEditScreenState extends State<LocationDetailsEditScreen> {
                   ),
                 ),
                 IconButton(
+                  tooltip: context.textes.t('accessibilite.retirer'),
                   icon: const Icon(Icons.remove_circle_outline, size: 20),
                   onPressed: () => onRemove(i),
                 ),

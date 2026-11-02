@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../destiny/donnees.dart';
+
 import '../../application/state/ai_settings.dart';
 
 const String _kCustom = 'Personnalisé…';
@@ -127,6 +129,7 @@ class _AiConfigScreenState extends State<AiConfigScreen> {
                   AiProvider.google => 'AIza…',
                 },
                 suffixIcon: IconButton(
+                  tooltip: context.textes.t(_obscure ? 'accessibilite.afficher' : 'accessibilite.masquer'),
                   icon: Icon(_obscure ? Icons.visibility : Icons.visibility_off),
                   onPressed: () => setState(() => _obscure = !_obscure),
                 ),

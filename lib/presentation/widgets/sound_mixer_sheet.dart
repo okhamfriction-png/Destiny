@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../destiny/donnees.dart';
+
 import '../../application/state/music_controller.dart';
 
 const Color _gold = Color(0xFFFFC24B);
@@ -234,6 +236,7 @@ class _SoundMixerSheetState extends State<SoundMixerSheet> {
                       ),
                     ),
                     IconButton(
+                      tooltip: context.textes.t(c.playing ? 'accessibilite.pause' : 'accessibilite.lecture'),
                       icon: Icon(c.playing ? Icons.pause : Icons.play_arrow,
                           color: _gold),
                       onPressed: () => c.togglePlayPause(),

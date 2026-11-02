@@ -253,6 +253,7 @@ class _EditeurChrono extends StatelessWidget {
     Widget ligne(String libelle, int valeur, ValueChanged<int> changer) => Row(children: [
           Expanded(child: Text(libelle)),
           IconButton(
+            tooltip: context.textes.t('accessibilite.moins'),
             visualDensity: VisualDensity.compact,
             onPressed: valeur > 1 ? () => changer(valeur - 1) : null,
             icon: const Icon(Icons.remove_circle_outline),
@@ -263,6 +264,7 @@ class _EditeurChrono extends StatelessWidget {
                 textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w700)),
           ),
           IconButton(
+            tooltip: context.textes.t('accessibilite.plus'),
             visualDensity: VisualDensity.compact,
             onPressed: () => changer(valeur + 1),
             icon: const Icon(Icons.add_circle_outline),

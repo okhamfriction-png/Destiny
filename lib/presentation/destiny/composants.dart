@@ -61,13 +61,16 @@ class PuceFamille extends StatelessWidget {
           decoration: BoxDecoration(color: couleur, shape: BoxShape.circle),
         ),
         const SizedBox(width: 6),
-        Text(
-          nom,
-          style: TextStyle(
-            fontFamily: kPoliceTexte,
-            fontSize: compacte ? 11 : 12.5,
-            fontWeight: FontWeight.w600,
-            color: c.sombre ? Color.lerp(couleur, Colors.white, 0.55) : couleur,
+        Flexible(
+          child: Text(
+            nom,
+            style: TextStyle(
+              fontFamily: kPoliceTexte,
+              fontSize: compacte ? 11 : 12.5,
+              fontWeight: FontWeight.w600,
+              // Éclairci en sombre, assombri en clair : lisible sur sa pastille.
+              color: c.sombre ? Color.lerp(couleur, Colors.white, 0.55) : Color.lerp(couleur, c.encre, 0.4),
+            ),
           ),
         ),
       ]),

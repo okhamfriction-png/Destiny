@@ -162,6 +162,7 @@ class _PersonnagesScreenState extends State<PersonnagesScreen> {
         SectionDestiny(titre: k('joueurs'), espace: 0, enfants: [
           Row(children: [
             IconButton.outlined(
+              tooltip: context.textes.t('accessibilite.moins'),
               onPressed: joueurs.length > 1 ? () => _changerNombre(joueurs.length - 1) : null,
               icon: const Icon(Icons.remove_rounded),
             ),
@@ -169,6 +170,7 @@ class _PersonnagesScreenState extends State<PersonnagesScreen> {
               child: Text('${joueurs.length}', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineMedium),
             ),
             IconButton.outlined(
+              tooltip: context.textes.t('accessibilite.plus'),
               onPressed: joueurs.length < 8 ? () => _changerNombre(joueurs.length + 1) : null,
               icon: const Icon(Icons.add_rounded),
             ),

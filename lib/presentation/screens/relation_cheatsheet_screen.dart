@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../destiny/donnees.dart';
+
 import '../../application/state/relation_cheatsheet.dart';
 
 const Color _gold = Color(0xFFFFC24B);
@@ -200,10 +202,12 @@ class _RelationCheatsheetScreenState extends State<RelationCheatsheetScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
+                        tooltip: context.textes.t('accessibilite.modifier'),
                         icon: const Icon(Icons.edit, size: 20),
                         onPressed: () => _editDialog(index: i),
                       ),
                       IconButton(
+                        tooltip: context.textes.t('accessibilite.supprimer'),
                         icon: const Icon(Icons.delete_outline, size: 20),
                         onPressed: () => widget.cheatsheet.removeAt(i),
                       ),

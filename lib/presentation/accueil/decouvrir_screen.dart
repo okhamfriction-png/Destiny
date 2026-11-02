@@ -95,10 +95,14 @@ class _DecouvrirScreenState extends State<DecouvrirScreen> {
                     ),
                 ]),
               ),
+              const SizedBox(width: 12),
               const Spacer(),
-              FilledButton(
-                onPressed: _suivant,
-                child: Text(dernier ? k('commencer') : k('suivant')),
+              Flexible(
+                flex: 4,
+                child: FilledButton(
+                  onPressed: _suivant,
+                  child: Text(dernier ? k('commencer') : k('suivant'), overflow: TextOverflow.ellipsis),
+                ),
               ),
             ]),
           ),
@@ -220,7 +224,7 @@ class _EcranDanger extends StatelessWidget {
       FrisePaliers(textes: [for (final p in g.paliers) p.ambiance], compacte: true),
       const SizedBox(height: 14),
       Text(t.t('decouvrir.ecrans.danger.rituel'),
-          style: TextStyle(fontFamily: kPoliceTitres, fontSize: 17, fontWeight: FontWeight.w700, color: c.bleuDestiny)),
+          style: TextStyle(fontFamily: kPoliceTitres, fontSize: 17, fontWeight: FontWeight.w700, color: c.bleuTexte)),
       const SizedBox(height: 6),
       Wrap(spacing: 6, runSpacing: 6, children: [
         for (final s in g.rituel.sequence)
@@ -250,13 +254,10 @@ class _EcranPersonnages extends StatelessWidget {
       for (final f in g.familles)
         Padding(
           padding: const EdgeInsets.only(bottom: 8),
-          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             PuceFamille(f.id, compacte: true),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(f.idee,
-                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, height: 1.35, color: c.texte)),
-            ),
+            const SizedBox(height: 4),
+            Text(f.idee, style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, height: 1.35, color: c.texte)),
           ]),
         ),
       const SizedBox(height: 8),

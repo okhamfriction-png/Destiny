@@ -892,6 +892,7 @@ class _ChatScreenState extends State<ChatScreen>
             Row(
               children: [
                 IconButton(
+                  tooltip: context.textes.t('accessibilite.retour'),
                     icon: const Icon(Icons.arrow_back),
                     onPressed: c.closeStory),
                 Expanded(
@@ -1540,6 +1541,7 @@ class _ChatScreenState extends State<ChatScreen>
               ),
               const SizedBox(width: 6),
               IconButton.filled(
+                tooltip: context.textes.t('accessibilite.envoyer'),
                 icon: const Icon(Icons.send),
                 onPressed: _sendCustom,
               ),

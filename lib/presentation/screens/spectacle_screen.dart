@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../destiny/donnees.dart';
+
 import '../../application/state/spectacle_controller.dart';
 import '../../domain/entities/spectacle_turn.dart';
 import '../../domain/serie/univers.dart';
@@ -980,6 +982,7 @@ class _ActionBar extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           IconButton.filled(
+            tooltip: context.textes.t('accessibilite.envoyer'),
             icon: const Icon(Icons.send),
             onPressed: _sendFree,
           ),
