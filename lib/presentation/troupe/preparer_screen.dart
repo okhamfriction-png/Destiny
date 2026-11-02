@@ -15,6 +15,7 @@ import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
 import '../theme/destiny_theme.dart';
+import 'composants_troupe.dart';
 import 'troupe_screen.dart';
 
 /// Préparer une répétition ou un spectacle. Sans prénoms : on se les donne
@@ -234,6 +235,13 @@ class _PreparerScreenState extends State<PreparerScreen> {
     return PageDestiny(
       titre: p('titre'),
       enfants: [
+        FilEtapes(
+          contexte: widget.contexte,
+          session: s,
+          courante: EtapeSession.preparation,
+          peutAvancer: verdict.valide,
+        ),
+        const SizedBox(height: 14),
         SegmentedButton<TypeSession>(
           segments: [
             for (final ty in [TypeSession.repetition, TypeSession.spectacle])
@@ -358,6 +366,7 @@ class _PreparerScreenState extends State<PreparerScreen> {
           child: FilledButton.icon(
             onPressed: verdict.valide
                 ? () async {
+                    appliquerChrono(s, widget.contexte.reglages.chrono);
                     s.etape = EtapeSession.echauffement;
                     await _sauver();
                     if (context.mounted) ouvrirEtape(context, widget.contexte, s, remplacer: true);

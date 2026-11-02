@@ -9,11 +9,13 @@ import '../destiny/donnees.dart';
 import '../destiny/page.dart';
 import '../theme/destiny_theme.dart';
 import 'composants_troupe.dart';
+import 'regie_screen.dart';
 import 'troupe_screen.dart';
 
-/// L'échauffement : les trois questions, puis chaque archétype en petit
-/// rectangle (sa fiche à portée d'une bulle d'info). Un minuteur tourne
-/// (30 minutes par défaut).
+/// L'échauffement : le fil des étapes (la régie à un appui), le minuteur
+/// (30 minutes par défaut), le lieu et le danger, la régie son pour
+/// s'échauffer en musique, les trois questions, chaque archétype en petit
+/// rectangle (sa fiche à portée d'une bulle d'info) et les Destiny prévus.
 class EchauffementScreen extends StatefulWidget {
   const EchauffementScreen({super.key, required this.contexte, required this.session});
 
@@ -86,10 +88,25 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
     final e = g.personnage.echauffement;
     final m = _reste ~/ 60;
     final s = _reste % 60;
+    final session = widget.session;
     return PageDestiny(
       titre: t.t('echauffement.titre'),
       enfants: [
+        FilEtapes(contexte: widget.contexte, session: session, courante: EtapeSession.echauffement),
+        const SizedBox(height: 14),
         Paragraphe(t.t('echauffement.intro')),
+        Center(
+          child: Text(
+            t.t('echauffement.temps').toUpperCase(),
+            style: TextStyle(
+              fontFamily: kPoliceTexte,
+              fontWeight: FontWeight.w700,
+              fontSize: 12.5,
+              letterSpacing: 1.4,
+              color: c.texteSecondaire,
+            ),
+          ),
+        ),
         Center(
           child: FittedBox(
             fit: BoxFit.scaleDown,
@@ -111,6 +128,10 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
                     : t.t('echauffement.demarrer'))),
           ),
         ),
+        SectionDestiny(titre: t.t('regie.scene'), enfants: [
+          LieuEtDanger(contexte: widget.contexte, session: session),
+        ]),
+        TabletteSon(contexte: widget.contexte, session: session),
         SectionDestiny(titre: t.t('bibliotheque.regles.questions'), enfants: [
           for (final (i, q) in e.questions.indexed) Puce(q, numero: i + 1),
           Container(
@@ -136,12 +157,35 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
                   : null,
             ),
         ]),
+        SectionDestiny(titre: t.t('echauffement.destinys'), enfants: [
+          FriseDestiny(
+            totalSecondes: session.dureeMinutes * 60,
+            ecouleSecondes: 0,
+            curseur: false,
+            reperes: reperesDestiny(session),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            t.t('echauffement.plan', {
+              'duree': '${session.dureeMinutes}',
+              'liste': session.destinyMinutes.map((x) => '$x').join(' · '),
+            }),
+            style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w600, color: c.texte),
+          ),
+          Paragraphe(t.t('echauffement.destinys_aide'), italique: true),
+        ]),
         const SizedBox(height: 22),
         FilledButton.icon(
           icon: const Icon(Icons.wb_sunny_outlined),
           onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (_) => AvantSceneScreen(contexte: widget.contexte, session: widget.session))),
           label: Text(t.t('echauffement.vers_avant_scene')),
+        ),
+        const SizedBox(height: 10),
+        OutlinedButton.icon(
+          icon: const Icon(Icons.play_circle_rounded),
+          onPressed: () => allerAEtape(context, widget.contexte, session, EtapeSession.regie),
+          label: Text(t.t('echauffement.vers_regie')),
         ),
       ],
     );
@@ -165,6 +209,8 @@ class AvantSceneScreen extends StatelessWidget {
     return PageDestiny(
       titre: t.t('avant_scene.titre'),
       enfants: [
+        FilEtapes(contexte: contexte, session: session, courante: EtapeSession.echauffement),
+        const SizedBox(height: 14),
         BandeauAffiche(titre: g.promesse.toUpperCase(), sousTitre: t.t('avant_scene.message')),
         SectionDestiny(titre: t.t('avant_scene.distribution'), enfants: [
           for (final p in session.personnages) RectangleArchetype(personnage: p, contexte: contexte),

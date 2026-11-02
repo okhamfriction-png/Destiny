@@ -449,6 +449,89 @@ void main() {
     expect(find.text(_rg('terminer')), findsOneWidget);
   });
 
+  group('dès l\'échauffement', () {
+    Future<Banc> echauffement(WidgetTester tester) async {
+      final b = await _banc(tester);
+      b.session
+        ..etape = EtapeSession.echauffement
+        ..groupe = '';
+      await _ouvrir(tester, EchauffementScreen(contexte: b.contexte, session: b.session));
+      return b;
+    }
+
+    testWidgets('le lieu, le danger, la régie son et les Destiny prévus sont là', (tester) async {
+      final b = await echauffement(tester);
+      final s = b.session;
+      expect(find.byType(FilEtapes), findsOneWidget);
+      expect(find.byType(LieuEtDanger), findsOneWidget);
+      expect(find.text(s.lieuNom), findsWidgets);
+      expect(find.text(s.dangerNom), findsWidgets);
+      expect(find.byType(TabletteSon), findsOneWidget);
+      expect(find.byType(FriseDestiny), findsOneWidget);
+      expect(find.text(t.t('echauffement.plan', {'duree': '30', 'liste': '10 · 18 · 27'})), findsOneWidget);
+      // On s'échauffe en musique.
+      await tester.tap(find.text(_rg('son_debut')));
+      await tester.pump();
+      expect(b.musique.joues, [b.contexte.reglages.musiqueDebut]);
+    });
+
+    testWidgets('le fil des étapes mène à la régie en un appui, avec un groupe tiré d\'office', (tester) async {
+      final b = await echauffement(tester);
+      await tester.tap(find.text(t.t('troupe.fil.regie')));
+      await tester.pumpAndSettle();
+      expect(find.byType(RegieScreen), findsOneWidget);
+      expect(b.session.etape, EtapeSession.regie);
+      expect(b.session.groupe, isNotEmpty);
+      expect(find.byKey(const ValueKey('bouton_destiny')), findsOneWidget);
+      expect(find.byType(TabletteSon), findsOneWidget);
+    });
+
+    testWidgets('« Aller directement à la régie » aussi', (tester) async {
+      final b = await echauffement(tester);
+      await tester.scrollUntilVisible(find.text(t.t('echauffement.vers_regie')), 300);
+      await tester.tap(find.text(t.t('echauffement.vers_regie')));
+      await tester.pumpAndSettle();
+      expect(find.byType(RegieScreen), findsOneWidget);
+      expect(b.session.etape, EtapeSession.regie);
+    });
+  });
+
+  testWidgets('en quittant la préparation, le spectacle prend le chrono des réglages', (tester) async {
+    final b = await _banc(tester);
+    await tester.runAsync(() => b.contexte.reglages.choisirChrono(0));
+    b.session.etape = EtapeSession.preparation;
+    await _ouvrir(
+      tester,
+      Builder(
+        builder: (context) => TextButton(
+          onPressed: () => allerAEtape(context, b.contexte, b.session, EtapeSession.regie),
+          child: const Text('aller'),
+        ),
+      ),
+    );
+    await tester.tap(find.text('aller'));
+    await tester.pumpAndSettle();
+    final chrono = b.contexte.reglages.chronos[0];
+    expect(b.session.dureeMinutes, chrono.dureeMinutes);
+    expect(b.session.destinyMinutes, chrono.destinyMinutes);
+    expect(find.byType(RegieScreen), findsOneWidget);
+  });
+
+  testWidgets('à la mise en place, le chrono choisi va tout de suite dans la session', (tester) async {
+    final b = await _banc(tester);
+    b.session.etape = EtapeSession.miseEnPlace;
+    await _ouvrir(tester, MiseEnPlaceScreen(contexte: b.contexte, session: b.session));
+    final chronos = b.contexte.reglages.chronos;
+    final dernier = chronos.last;
+    final puce = find.widgetWithText(ChoiceChip, t.t('mise_en_place.minutes', {'n': '${dernier.dureeMinutes}'}));
+    await tester.ensureVisible(puce);
+    await tester.pumpAndSettle();
+    await tester.tap(puce);
+    await tester.pump();
+    expect(b.session.dureeMinutes, dernier.dureeMinutes);
+    expect(b.session.destinyMinutes, dernier.destinyMinutes);
+  });
+
   test('chaque texte des écrans Troupe existe', () {
     expect(textesManquants(['lib/presentation/troupe']), isEmpty);
   });

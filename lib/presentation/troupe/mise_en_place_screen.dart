@@ -40,7 +40,16 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
   ];
   late final TextEditingController _mystere = TextEditingController(text: s.mystere);
   late final TextEditingController _reponse = TextEditingController(text: s.reponseMystere);
-  late int _chrono = widget.contexte.reglages.chronoChoisi;
+  /// Le chrono de la session parmi ceux des réglages (celui des réglages si
+  /// la session n'en a pas encore).
+  late int _chrono = () {
+    final chronos = widget.contexte.reglages.chronos;
+    for (var i = 0; i < chronos.length; i++) {
+      final ch = chronos[i];
+      if (ch.dureeMinutes == s.dureeMinutes && ch.destinyMinutes.join(',') == s.destinyMinutes.join(',')) return i;
+    }
+    return widget.contexte.reglages.chronoChoisi;
+  }();
 
   SessionTroupe get s => widget.session;
 
@@ -52,13 +61,14 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
     // mais rien n'empêche de lever le rideau.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted || s.groupe.trim().isNotEmpty) return;
-      final groupes = context.textes.liste('mise_en_place.groupes');
-      if (groupes.isEmpty) return;
       setState(() {
-        s.groupe = groupes[_hasard.nextInt(groupes.length)];
+        tirerGroupeSiVide(s, context.textes, hasard: _hasard);
         _groupe.text = s.groupe;
       });
     });
+    // Le chrono choisi va dans la session tout de suite : le fil des étapes
+    // peut mener à la régie sans passer par « Lever le rideau ».
+    appliquerChrono(s, widget.contexte.reglages.chronos[_chrono]);
   }
 
   Future<void> _charger() async {
@@ -175,6 +185,8 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
     return PageDestiny(
       titre: m('titre'),
       enfants: [
+        FilEtapes(contexte: widget.contexte, session: s, courante: EtapeSession.miseEnPlace),
+        const SizedBox(height: 14),
         Paragraphe(m('intro')),
         SectionDestiny(titre: m('lieu'), enfants: [
           LigneDecor(
@@ -289,7 +301,10 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
               ChoiceChip(
                 label: Text(m('minutes', {'n': '${chronos[i].dureeMinutes}'})),
                 selected: _chrono == i,
-                onSelected: (_) => setState(() => _chrono = i),
+                onSelected: (_) => setState(() {
+                  _chrono = i;
+                  appliquerChrono(s, chronos[i]);
+                }),
               ),
           ]),
           const SizedBox(height: 14),
@@ -311,11 +326,8 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
         FilledButton.icon(
           onPressed: pret
               ? () async {
-                  final ch = chronos[_chrono];
-                  s
-                    ..dureeMinutes = ch.dureeMinutes
-                    ..destinyMinutes = [...ch.destinyMinutes]
-                    ..etape = EtapeSession.regie;
+                  appliquerChrono(s, chronos[_chrono]);
+                  s.etape = EtapeSession.regie;
                   await widget.contexte.store.enregistrer(s);
                   if (context.mounted) ouvrirEtape(context, widget.contexte, s, remplacer: true);
                 }

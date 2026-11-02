@@ -559,3 +559,116 @@ class _Repere extends StatelessWidget {
     );
   }
 }
+
+/// Le fil des étapes du spectacle : où on en est, et chaque étape à un appui,
+/// la régie comprise, sans passer par les autres.
+class FilEtapes extends StatelessWidget {
+  const FilEtapes({
+    super.key,
+    required this.contexte,
+    required this.session,
+    required this.courante,
+    this.peutAvancer = true,
+  });
+
+  final ContexteTroupe contexte;
+  final SessionTroupe session;
+  final EtapeSession courante;
+
+  /// Faux tant que la distribution n'est pas jouable : les étapes suivantes
+  /// attendent.
+  final bool peutAvancer;
+
+  static const List<(EtapeSession, IconData)> etapes = [
+    (EtapeSession.preparation, Icons.style_rounded),
+    (EtapeSession.echauffement, Icons.self_improvement_rounded),
+    (EtapeSession.miseEnPlace, Icons.theater_comedy_rounded),
+    (EtapeSession.regie, Icons.play_circle_rounded),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.textes;
+    return Semantics(
+      container: true,
+      label: t.t('troupe.fil.titre'),
+      child: Wrap(spacing: 6, runSpacing: 6, children: [
+        for (final (etape, icone) in etapes)
+          _EtapeFil(
+            libelle: t.t('troupe.fil.${etape.name}'),
+            icone: icone,
+            courante: etape == courante,
+            regie: etape == EtapeSession.regie,
+            onTap: etape == courante || (!peutAvancer && etape.index > courante.index)
+                ? null
+                : () => allerAEtape(context, contexte, session, etape),
+          ),
+      ]),
+    );
+  }
+}
+
+class _EtapeFil extends StatelessWidget {
+  const _EtapeFil({
+    required this.libelle,
+    required this.icone,
+    required this.courante,
+    required this.regie,
+    required this.onTap,
+  });
+
+  final String libelle;
+  final IconData icone;
+  final bool courante;
+
+  /// La régie se détache : c'est là que se joue le spectacle.
+  final bool regie;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.destiny;
+    final fond = courante ? c.or : (regie ? c.teinte(c.bleuDestiny) : c.carte);
+    final bord = courante ? c.or : (regie ? c.bleuDestiny : c.ligne);
+    final encre = courante ? c.surOr : (regie ? c.bleuTexte : c.texte);
+    final forme = StadiumBorder(side: BorderSide(color: bord, width: regie && !courante ? 1.5 : 1));
+    return Semantics(
+      button: true,
+      selected: courante,
+      enabled: onTap != null || courante,
+      child: Opacity(
+        opacity: onTap == null && !courante ? 0.5 : 1,
+        child: Material(
+          color: fond,
+          shape: forme,
+          child: InkWell(
+            customBorder: forme,
+            onTap: onTap,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 44),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  Icon(icone, size: 18, color: encre),
+                  const SizedBox(width: 6),
+                  Flexible(
+                    child: Text(
+                      libelle,
+                      style: TextStyle(
+                        fontFamily: kPoliceTexte,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                        height: 1.2,
+                        color: encre,
+                      ),
+                    ),
+                  ),
+                ]),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

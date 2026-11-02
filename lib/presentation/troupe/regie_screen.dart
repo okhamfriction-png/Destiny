@@ -462,7 +462,7 @@ class _RegieScreenState extends State<RegieScreen> {
       entete: collant ? panneau : null,
       enfants: [
         if (!collant) panneau,
-        _TabletteSon(contexte: widget.contexte, session: s),
+        TabletteSon(contexte: widget.contexte, session: s),
         SectionDestiny(titre: rg('scene'), enfants: [
           LieuEtDanger(contexte: widget.contexte, session: s),
           LigneInfo(t.t('mise_en_place.groupe'), s.groupe),
@@ -624,17 +624,17 @@ class _LigneReglage extends StatelessWidget {
 /// La régie son, en tablette : de grandes tuiles pour les musiques du
 /// spectacle, le son de Destiny et Stop, plus tout le mixeur. Elle respecte
 /// le son coupé.
-class _TabletteSon extends StatefulWidget {
-  const _TabletteSon({required this.contexte, required this.session});
+class TabletteSon extends StatefulWidget {
+  const TabletteSon({super.key, required this.contexte, required this.session});
 
   final ContexteTroupe contexte;
   final SessionTroupe session;
 
   @override
-  State<_TabletteSon> createState() => _TabletteSonState();
+  State<TabletteSon> createState() => _TabletteSonState();
 }
 
-class _TabletteSonState extends State<_TabletteSon> {
+class _TabletteSonState extends State<TabletteSon> {
   MusicController get _musique => widget.contexte.musique;
   AudioService get _audio => widget.contexte.audio;
   ReglagesDestiny get _r => widget.contexte.reglages;

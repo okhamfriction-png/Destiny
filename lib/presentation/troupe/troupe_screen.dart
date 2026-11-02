@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../../application/services/assistant_jeu.dart';
@@ -8,6 +10,8 @@ import '../../application/state/reglages_destiny.dart';
 import '../../application/state/relation_cheatsheet.dart';
 import '../../application/state/troupe_store.dart';
 import '../../application/state/visual_settings.dart';
+import '../../domain/grammaire/chronos.dart';
+import '../../domain/grammaire/textes.dart';
 import '../../domain/repositories/catalog_store.dart';
 import '../../domain/troupe/session.dart';
 import '../destiny/composants.dart';
@@ -62,6 +66,34 @@ Future<void> ouvrirEtape(BuildContext context, ContexteTroupe ctx, SessionTroupe
   final route = MaterialPageRoute<void>(builder: (_) => page);
   final nav = Navigator.of(context);
   return remplacer ? nav.pushReplacement(route) : nav.push(route);
+}
+
+/// Le chrono du spectacle : sa durée et ses trois Destiny.
+void appliquerChrono(SessionTroupe s, ChronoSpectacle chrono) {
+  s
+    ..dureeMinutes = chrono.dureeMinutes
+    ..destinyMinutes = [...chrono.destinyMinutes];
+}
+
+/// Tire le groupe s'il n'est pas encore choisi, comme le lieu et le danger :
+/// on peut le changer, mais rien ne bloque.
+void tirerGroupeSiVide(SessionTroupe s, TextesDestiny t, {Random? hasard}) {
+  if (s.groupe.trim().isNotEmpty) return;
+  final groupes = t.liste('mise_en_place.groupes');
+  if (groupes.isEmpty) return;
+  s.groupe = groupes[(hasard ?? Random()).nextInt(groupes.length)];
+}
+
+/// Va directement à une étape du spectacle (le fil des étapes), la régie
+/// comprise. Ce qui n'a pas encore été fait est rempli d'office : le chrono
+/// des réglages en quittant la préparation, et le groupe avant la régie.
+Future<void> allerAEtape(BuildContext context, ContexteTroupe ctx, SessionTroupe s, EtapeSession etape) async {
+  if (etape == s.etape) return;
+  if (s.etape == EtapeSession.preparation) appliquerChrono(s, ctx.reglages.chrono);
+  if (etape == EtapeSession.regie) tirerGroupeSiVide(s, context.textes);
+  s.etape = etape;
+  await ctx.store.enregistrer(s);
+  if (context.mounted) ouvrirEtape(context, ctx, s, remplacer: true);
 }
 
 /// L'onglet Troupe : l'accueil, la règle ou la réplique du jour, et le

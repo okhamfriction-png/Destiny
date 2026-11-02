@@ -705,3 +705,38 @@ La version web a été mise en ligne dans une page Claude pour être essayée av
 Validée par l'utilisateur, la 2.0.1 part en APK : le workflow crée la release v2.0.1 et la marque comme dernière version.
 
 Au passage, la transcription vocale passe la langue et la durée d'écoute par les options d'écoute du paquet, au lieu des deux paramètres dépréciés. Le comportement ne change pas, et l'analyse ne signale plus rien.
+
+## 2.0.2 : la régie dès l'échauffement
+
+### La demande
+
+Capture de l'échauffement sur téléphone : « Y'a pas la régie, les musiques, lieu, danger, Destiny etc. »
+
+La régie existait, avec le chrono, les Destiny, la tablette son, le lieu et le danger. Mais elle n'arrivait qu'après l'échauffement, « Avant d'entrer en scène » et la mise en place, et aucun écran ne le disait. Le minuteur d'échauffement, de 30 minutes, ressemblait en plus au chrono du spectacle.
+
+### Ce qui a été fait
+
+- **Le fil des étapes** (`FilEtapes`), en haut de Préparer, de l'échauffement, d'« Avant d'entrer en scène » et de la mise en place :
+  - il montre l'étape en cours, et la régie se détache en bleu ;
+  - un appui mène à l'étape voulue (`allerAEtape`) ;
+  - depuis Préparer, on n'avance que si la distribution est jouable ;
+  - la régie n'a pas de fil : un appui par erreur arrêterait le chrono.
+- **Ce qui manque est rempli d'office** :
+  - en quittant Préparer, le spectacle prend le chrono des réglages ;
+  - avant la régie, le groupe est tiré s'il est vide ;
+  - à la mise en place, le chrono choisi va dans la session dès qu'on le choisit.
+- **À l'échauffement** :
+  - le lieu et le danger ;
+  - la tablette son de la régie (`TabletteSon`, partagée) ;
+  - la frise des trois Destiny prévus ;
+  - « Aller directement à la régie » ;
+  - le minuteur nommé « Temps d'échauffement ».
+
+### Tests
+
+Cinq nouveaux tests :
+- ce que montre l'échauffement, et la musique qu'on y lance ;
+- le fil vers la régie, avec le groupe tiré d'office ;
+- le bouton « Aller directement à la régie » ;
+- le chrono des réglages en quittant la préparation ;
+- le chrono de la mise en place écrit tout de suite.
