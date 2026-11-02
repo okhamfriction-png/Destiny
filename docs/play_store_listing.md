@@ -85,7 +85,7 @@ Rien n'est écrit. Tout reste à jouer.
 | **E-mail développeur** | okhamfriction@gmail.com |
 | **Politique de confidentialité** | ✅ EN LIGNE : https://okhamfriction-png.github.io/Destiny/privacy.html |
 | **Classification du contenu** | À remplir via le questionnaire Google (l'app n'a pas de contenu sensible → visera « Tout public / PEGI 3 ») |
-| **Section Data safety** | Tout reste sur l'appareil, **sauf** les modes « avec l'IA » : le texte de jeu part chez le fournisseur choisi (Anthropic ou OpenAI), avec la clé de l'utilisateur, sans les prénoms des comédiens. La transcription reste sur l'appareil. À déclarer en conséquence (voir § 6). |
+| **Section Data safety** | Tout reste sur l'appareil, **sauf** les modes « avec l'IA » : le texte de jeu part chez le fournisseur choisi (Anthropic ou OpenAI), avec la clé de l'utilisateur, sans les prénoms des comédiens. La transcription passe par la reconnaissance vocale du système (Google ou Apple) ; l'appli ne garde aucun son. À déclarer en conséquence (voir § 6). |
 | **Public cible** | 13 ans et + (ou « tout public » selon ton choix) |
 
 ---
@@ -121,16 +121,16 @@ propre clé d'API, le texte de la partie est envoyé au fournisseur que vous
 avez choisi (Anthropic ou OpenAI), selon ses propres conditions. Les prénoms
 des comédiens ne sont jamais envoyés.
 
-La transcription de la voix, si vous l'activez, se fait sur l'appareil ;
-aucun son n'est conservé.
+La transcription de la voix, si vous l'activez, utilise la reconnaissance
+vocale du système (Google ou Apple) ; l'application ne conserve aucun son.
 
 L'application ne contient pas de publicité et n'utilise aucun outil de suivi.
 
 Contact : okhamfriction@gmail.com
 Dernière mise à jour : novembre 2026
 ```
-> ⚠️ La page en ligne (`docs/privacy.html`) ne parle pas encore de l'IA : à mettre à jour avant
-> la publication de la 2.0 si tu valides ce texte.
+> ✅ La page `docs/privacy.html` est à jour pour la 2.0 (IA, transcription, mode kids). Elle sera
+> en ligne dès que la branche sera fusionnée dans `main`.
 
 ---
 

@@ -81,7 +81,7 @@ L'accueil montre la promesse et, un jour sur deux, la règle d'or ou la répliqu
 - **Le registre** garde les figurants, les sbires, les objets, les lieux, les secrets, les promesses, les morts (adultes seulement), le traître et ce que le méchant a laissé. Au début d'un épisode, l'IA peut proposer deux ou trois éléments à ressortir. Il ne contient **jamais les prénoms des joueurs**, seulement les personnages. Il s'exporte en PDF.
 - **Le traître** : une option, désactivée par défaut. En saison, c'est le méchant qui le recrute, en secret.
 - **Le combat** et **la pièce du destin** restent, en option.
-- **La transcription** (facultative) : le téléphone écrit la scène localement pour aider au résumé ; aucun son n'est gardé, et l'on voit ce qui part avant tout envoi à l'IA.
+- **La transcription** (facultative) : la reconnaissance vocale du téléphone écrit la scène pour aider au résumé ; l'appli ne garde aucun son, et l'on voit ce qui part avant tout envoi à l'IA.
 
 ### Le mode kids
 
@@ -164,7 +164,7 @@ Facultatif : il faut une clé d'API (Anthropic ou OpenAI), à régler dans **Ré
 
 - **Hors ligne** par défaut. La régie, le rituel et la Série ne dépendent jamais du réseau.
 - Seuls les modes IA envoient du texte, avec la clé de l'utilisateur, au fournisseur choisi. Les prénoms des comédiens ne partent pas ; le registre ne garde que des personnages.
-- La transcription reste sur l'appareil ; aucun son n'est gardé.
+- La transcription passe par la reconnaissance vocale du système (Google ou Apple) ; l'appli ne garde aucun son, seulement le texte, sur l'appareil.
 - **Rien n'est perdu à la mise à jour** : les anciennes campagnes deviennent des séries, les anciennes histoires se relisent, les lieux et dangers modifiés sont gardés, une sauvegarde illisible n'est jamais écrasée.
 - Politique de confidentialité : [`privacy.html`](privacy.html).
 

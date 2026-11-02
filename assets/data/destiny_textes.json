@@ -745,7 +745,7 @@
       "registre_ia": "Demander à l'IA",
       "registre_vide": "Le registre est vide pour l'instant.",
       "micro": "Transcrire l'épisode",
-      "micro_aide": "Le texte reste sur l'appareil. Il ne part vers l'IA que si vous le demandez au bilan, sans les prénoms.",
+      "micro_aide": "La reconnaissance vocale du téléphone écrit l'épisode ; l'appli ne garde aucun son. Le texte reste sur l'appareil, et ne part vers l'IA que si vous le demandez au bilan, sans les prénoms.",
       "micro_absent": "Aucun moteur de reconnaissance sur cet appareil.",
       "mechant_hors_saison": "Un méchant pour cet épisode ?",
       "mechant_hors_saison_aide": "Facultatif. Ses sbires agissent d'abord, puis il prend les deux dernières marches.",
