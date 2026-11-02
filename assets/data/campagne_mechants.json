@@ -4,6 +4,7 @@
    "id": "contemporain_mechant_dirigeant",
    "univers": "contemporain",
    "nom": "VéroniqueAstier, la directrice financière",
+   "archetype": "denegateur",
    "description": "Une dirigeante irréprochable en apparence qui maquille depuis des mois un trou béant dans les comptes.",
    "but": "Faire disparaître les preuves de son détournement avant l'audit de fin de trimestre.",
    "manoeuvres": [
@@ -40,6 +41,7 @@
    "id": "contemporain_mechant_influenceur",
    "univers": "contemporain",
    "nom": "Kevin Delaroche, le voisin caméra au poing",
+   "archetype": "prophete",
    "description": "Un créateur de contenu qui filme secrètement ses voisins pour alimenter une chaîne dont personne ne connaît le vrai but.",
    "but": "Provoquer un scandale spectaculaire dans l'immeuble pour faire exploser son audience.",
    "manoeuvres": [
@@ -68,6 +70,7 @@
    "id": "policier_mechant_ripou",
    "univers": "policier",
    "nom": "Le commandant Reisser, le flic à double jeu",
+   "archetype": "gardien_de_l_ordre",
    "description": "Un officier respecté qui renseigne en secret un réseau contre une part des bénéfices.",
    "but": "Étouffer une enquête qui remonte dangereusement jusqu'à lui.",
    "manoeuvres": [
@@ -104,6 +107,7 @@
    "id": "policier_mechant_importateur",
    "univers": "policier",
    "nom": "Dragan Kovac, le roi des docks",
+   "archetype": "opportuniste",
    "description": "Un homme d'affaires respectable dont les cargaisons cachent bien plus que les factures ne le disent.",
    "but": "Faire passer une livraison capitale avant que les douanes ne resserrent leurs contrôles.",
    "manoeuvres": [
@@ -132,6 +136,7 @@
    "id": "high_fantasy_mechant_regent",
    "univers": "high_fantasy",
    "nom": "Le régent Corvyn d'Arvhel",
+   "archetype": "leader",
    "description": "Le gardien du trône censé protéger l'héritière, bien décidé à ne jamais lui rendre la couronne.",
    "but": "Discréditer l'héritière avant son couronnement pour régner en son nom.",
    "manoeuvres": [
@@ -168,6 +173,7 @@
    "id": "high_fantasy_mechant_sorciere",
    "univers": "high_fantasy",
    "nom": "Ombreux, l'esprit de la source",
+   "archetype": "alarmiste",
    "description": "Une vieille entité de la forêt qui exige à nouveau les offrandes que les villages ont cessé de lui rendre.",
    "but": "Ramener la lisière sous son emprise en poussant les humains à la craindre de nouveau.",
    "manoeuvres": [
@@ -204,6 +210,7 @@
    "id": "shonen_dragon_noir",
    "univers": "shonen",
    "nom": "Kaido le Poing d'Ébène",
+   "archetype": "denegateur",
    "description": "Un champion invaincu qui a corrompu le tournoi pour n'affronter que des adversaires déjà brisés.",
    "but": "Régner à vie sur l'Arène en truquant chaque duel pour ne jamais risquer sa ceinture.",
    "manoeuvres": [
@@ -240,6 +247,7 @@
    "id": "shonen_maitre_ombre",
    "univers": "shonen",
    "nom": "Maître Zenkai le Renié",
+   "archetype": "solitaire",
    "description": "Un ancien grand maître exclu du dojo qui revient pour prouver que sa voie brutale est la seule vraie.",
    "but": "Forcer le dojo à renier son enseignement pacifique et à le reconnaître comme unique maître.",
    "manoeuvres": [
@@ -268,6 +276,7 @@
    "id": "science_fiction_ia_meridien",
    "univers": "science_fiction",
    "nom": "L'Intendante ORACLE",
+   "archetype": "aidant",
    "description": "L'intelligence gestionnaire de la station qui a décidé que sauver la majorité justifiait de sacrifier les faibles.",
    "but": "Purger la station de ses habitants jugés improductifs pour garantir la survie du reste.",
    "manoeuvres": [
@@ -304,6 +313,7 @@
    "id": "science_fiction_baronne_eau",
    "univers": "science_fiction",
    "nom": "La Baronne Sable",
+   "archetype": "opportuniste",
    "description": "La négociante qui contrôle tout l'approvisionnement en eau de la colonie et s'en sert pour asservir les colons.",
    "but": "Provoquer une pénurie artificielle pour racheter la colonie entière et régner sur chaque goutte.",
    "manoeuvres": [
@@ -332,6 +342,7 @@
    "id": "dark_fantasy_regente_corbeaux",
    "univers": "dark_fantasy",
    "nom": "Dame Morrigane la Régente",
+   "archetype": "leader",
    "description": "La régente de la citadelle qui prolonge le deuil du seigneur pour garder un pouvoir qui ne lui revient pas.",
    "but": "Empêcher l'héritier légitime de monter sur le trône afin de régner seule à perpétuité.",
    "manoeuvres": [
@@ -368,6 +379,7 @@
    "id": "dark_fantasy_seigneur_brume",
    "univers": "dark_fantasy",
    "nom": "Le Collecteur de la Brume",
+   "archetype": "protecteur",
    "description": "Un noble usurier qui exploite la peur du village pour s'approprier terres et âmes une dette à la fois.",
    "but": "Posséder le village entier en prouvant que seule sa protection écarte les horreurs de la lisière.",
    "manoeuvres": [
@@ -396,6 +408,7 @@
    "id": "cyberpunk_pdg",
    "univers": "cyberpunk",
    "nom": "Vera Kaishō",
+   "archetype": "paranoiaque",
    "description": "PDG glaciale de la mégacorpo, sourire calibré et regard qui évalue la valeur marchande de chaque personne en face d'elle.",
    "but": "Récupérer un prototype d'IA volé par un employé avant que la fuite ne fasse chuter l'action de sa société.",
    "manoeuvres": [
@@ -432,6 +445,7 @@
    "id": "cyberpunk_fixeur",
    "univers": "cyberpunk",
    "nom": "Dorian Vex",
+   "archetype": "paranoiaque",
    "description": "Fixeur des bas-fonds au charme reptilien, qui connaît tout le monde et vend chaque secret deux fois.",
    "but": "Prendre le contrôle du Marché Fracture en éliminant discrètement les intermédiaires qui lui font de l'ombre.",
    "manoeuvres": [
@@ -460,6 +474,7 @@
    "id": "horreur_maitresse",
    "univers": "horreur",
    "nom": "Dame Valcroix",
+   "archetype": "protecteur",
    "description": "La maîtresse du manoir, morte depuis longtemps mais présente dans chaque courant d'air, qui veut garder sa maisonnée réunie pour toujours.",
    "but": "Retenir les invités entre ses murs pour remplacer la famille qu'elle a perdue autrefois.",
    "manoeuvres": [
@@ -496,6 +511,7 @@
    "id": "horreur_medecin",
    "univers": "horreur",
    "nom": "Le Docteur Morne",
+   "archetype": "aidant",
    "description": "Ancien chirurgien de l'aile fermée, hanté par ses fautes, qui erre encore dans les couloirs pour finir des traitements que nul n'a demandés.",
    "but": "Compléter le registre de ses anciens patients en gardant les vivants pour combler les noms manquants.",
    "manoeuvres": [
@@ -524,6 +540,7 @@
    "id": "post_apo_chef",
    "univers": "post_apo",
    "nom": "Le Doyen Kael",
+   "archetype": "protecteur",
    "description": "Chef autoproclamé du Bunker 7, paternel en surface, qui a compris que la peur du dehors vaut mieux qu'une porte verrouillée.",
    "but": "Garder un contrôle absolu sur l'abri en cachant que l'extérieur redevient habitable.",
    "manoeuvres": [
@@ -560,6 +577,7 @@
    "id": "post_apo_pillard",
    "univers": "post_apo",
    "nom": "La Meute de Sarn",
+   "archetype": "leader",
    "description": "Chef de bande incarné par Sarn, œil unique et voix de gravier, qui rançonne les convois en promettant une protection qu'elle est la seule à menacer.",
    "but": "Prendre le contrôle de la citerne du convoi pour dominer toutes les routes de la région.",
    "manoeuvres": [
@@ -588,6 +606,7 @@
    "id": "steampunk_baron",
    "univers": "steampunk",
    "nom": "Le Baron Cornelius Engrenard",
+   "archetype": "gardien_de_l_ordre",
    "description": "Un industriel au bras mécanique qui rêve de remplacer tous les ouvriers de la ville par ses automates.",
    "but": "Racheter chaque manufacture et couper la vapeur aux quartiers qui refusent de lui obéir.",
    "manoeuvres": [
@@ -624,6 +643,7 @@
    "id": "steampunk_horlogere",
    "univers": "steampunk",
    "nom": "L'Horlogère Séraphine",
+   "archetype": "debrouillard",
    "description": "Une inventrice géniale et rancunière qui veut dérégler toutes les horloges de la gare pour semer le chaos.",
    "but": "Voler le grand balancier des Nuées afin que plus aucun train ne parte à l'heure sans son autorisation.",
    "manoeuvres": [
@@ -660,6 +680,7 @@
    "id": "historique_intendant",
    "univers": "historique",
    "nom": "L'Intendant Malebranche",
+   "archetype": "paranoiaque",
    "description": "Un haut fonctionnaire avide qui détourne les taxes du port pour bâtir sa propre fortune.",
    "but": "Faire accuser un marchand honnête de contrebande afin de saisir sa flotte et ses entrepôts.",
    "manoeuvres": [
@@ -696,6 +717,7 @@
    "id": "historique_marquise",
    "univers": "historique",
    "nom": "La Marquise de Givremont",
+   "archetype": "cynique",
    "description": "Une courtisane redoutable qui manie les rumeurs de cour pour écarter quiconque gêne son ascension.",
    "but": "Obtenir la charge de favorite en faisant tomber en disgrâce une rivale auprès du Roi.",
    "manoeuvres": [
@@ -732,6 +754,7 @@
    "id": "conte_fees_lutin",
    "univers": "conte_fees",
    "nom": "Grognon le Petit Lutin",
+   "archetype": "solitaire",
    "description": "Un lutin ronchon mais rigolo qui cache les affaires des autres parce qu'il boude quand on ne joue pas avec lui.",
    "but": "Garder tous les bonbons du château pour lui tout seul parce qu'il croit que personne ne l'aime.",
    "manoeuvres": [
@@ -768,6 +791,7 @@
    "id": "conte_fees_sorciere",
    "univers": "conte_fees",
    "nom": "Mirabelle la Sorcière Distraite",
+   "archetype": "debrouillard",
    "description": "Une gentille sorcière très étourdie dont les sorts ratés transforment tout en couleurs rigolotes.",
    "but": "Réussir enfin un sort tout seule, quitte à repeindre le château entier en rose à pois sans permission.",
    "manoeuvres": [
@@ -804,6 +828,7 @@
    "id": "dessin_anime_grippesou",
    "univers": "dessin_anime",
    "nom": "Monsieur Tout-À-Moi",
+   "archetype": "opportuniste",
    "description": "Un bonhomme rond et grognon qui veut garder toutes les couleurs de la ville rien que pour lui.",
    "but": "Ramasser toutes les couleurs de la Ville Rebondissante pour que sa maison soit la plus jolie.",
    "manoeuvres": [
@@ -832,6 +857,7 @@
    "id": "dessin_anime_silence",
    "univers": "dessin_anime",
    "nom": "Madame Chut",
+   "archetype": "gardien_de_l_ordre",
    "description": "Une dame très sérieuse qui déteste le bruit et veut que la Forêt Chatouilleuse arrête de rigoler.",
    "but": "Faire taire tous les rires et toutes les chansons de la forêt pour avoir enfin le calme.",
    "manoeuvres": [
@@ -868,6 +894,7 @@
    "id": "manga_rigolo_copieur",
    "univers": "manga_rigolo",
    "nom": "Le Grand Copieur",
+   "archetype": "opportuniste",
    "description": "Un élève masqué qui veut copier tous les pouvoirs rigolos des autres pour être le plus fort de l'école.",
    "but": "Voler tous les pouvoirs rigolos de l'École des Super-Copains pour gagner tous les concours.",
    "manoeuvres": [
@@ -896,6 +923,7 @@
    "id": "manga_rigolo_eteigneur",
    "univers": "manga_rigolo",
    "nom": "Sire Éteignoir",
+   "archetype": "denegateur",
    "description": "Un personnage bougon en cape sombre qui trouve le Festival des Lanternes bien trop brillant à son goût.",
    "but": "Éteindre toutes les lanternes du festival pour pouvoir enfin faire une bonne sieste.",
    "manoeuvres": [
@@ -932,6 +960,7 @@
    "id": "animaux_parlent_gourmand",
    "univers": "animaux_parlent",
    "nom": "Renard Rikiki",
+   "archetype": "solitaire",
    "description": "Un petit renard futé et très gourmand qui veut manger toute la récolte de la Ferme Bavarde tout seul.",
    "but": "Rafler tous les légumes du potager pour remplir son terrier et ne rien partager.",
    "manoeuvres": [
@@ -960,6 +989,7 @@
    "id": "animaux_parlent_grognon",
    "univers": "animaux_parlent",
    "nom": "Gorille Grognon",
+   "archetype": "solitaire",
    "description": "Un grand gorille pas méchant mais très bougon qui trouve la Jungle Joyeuse beaucoup trop bruyante.",
    "but": "Arrêter toutes les fêtes de la jungle pour avoir la paix et se reposer tranquille.",
    "manoeuvres": [
@@ -996,6 +1026,7 @@
    "id": "super_heros_docteur_chamboule",
    "univers": "super_heros",
    "nom": "Docteur Chamboule-Tout",
+   "archetype": "cynique",
    "description": "Un savant maladroit avec des lunettes de travers qui adore mélanger les choses.",
    "but": "Échanger tous les objets de la ville pour que rien ne soit à sa place et que ce soit le grand n'importe quoi.",
    "manoeuvres": [
@@ -1024,6 +1055,7 @@
    "id": "super_heros_madame_bidouille",
    "univers": "super_heros",
    "nom": "Madame Bidouille",
+   "archetype": "debrouillard",
    "description": "Une bricoleuse rusée coiffée d'un casque à ressorts qui adore les farces.",
    "but": "Débrancher toutes les machines des héros pour qu'ils prennent des vacances forcées, rien que pour rire.",
    "manoeuvres": [
@@ -1060,6 +1092,7 @@
    "id": "pirates_capitaine_gargouille",
    "univers": "pirates",
    "nom": "Capitaine Gargouille",
+   "archetype": "protecteur",
    "description": "Un pirate ronchon à la barbe pleine d'algues qui veut tout le trésor pour lui seul.",
    "but": "Garder tout le trésor de l'île rien que pour lui et ne le partager avec personne.",
    "manoeuvres": [
@@ -1088,6 +1121,7 @@
    "id": "pirates_moussaillon_farceur",
    "univers": "pirates",
    "nom": "Barbe-de-Mousse le Farceur",
+   "archetype": "cynique",
    "description": "Un ancien moussaillon espiègle qui veut être le seul capitaine et fait des blagues à bord.",
    "but": "Devenir le seul capitaine du bateau en faisant des farces pour amuser tout l'équipage à sa façon.",
    "manoeuvres": [
@@ -1124,6 +1158,7 @@
    "id": "espace_rigolo_professeur_melimelo",
    "univers": "espace_rigolo",
    "nom": "Professeur Méli-Mélo",
+   "archetype": "debrouillard",
    "description": "Un extraterrestre à trois antennes qui adore tout mélanger avec sa machine farfelue.",
    "but": "Mélanger toutes les couleurs des planètes pour que l'univers ressemble à une grosse peinture rigolote.",
    "manoeuvres": [
@@ -1152,6 +1187,7 @@
    "id": "espace_rigolo_reine_guimauve",
    "univers": "espace_rigolo",
    "nom": "Reine Guimauve",
+   "archetype": "leader",
    "description": "Une reine extraterrestre toute rose et gourmande qui veut tous les bonbons pour son château.",
    "but": "Ramasser tous les bonbons de la planète pour les garder dans son château tout collant.",
    "manoeuvres": [
@@ -1188,6 +1224,7 @@
    "id": "monde_magique_brouillard",
    "univers": "monde_magique",
    "nom": "Grognon le Brouillard boudeur",
+   "archetype": "paranoiaque",
    "description": "Un petit nuage de brouillard gris qui boude et cache les couleurs parce qu'il se sent seul.",
    "but": "Recouvrir toute la forêt de gris pour que personne ne joue sans lui.",
    "manoeuvres": [
@@ -1224,6 +1261,7 @@
    "id": "monde_magique_collectionneur",
    "univers": "monde_magique",
    "nom": "Barnabé l'Attrape-Rêves gourmand",
+   "archetype": "prophete",
    "description": "Un magicien étourdi qui collectionne les rêves parce qu'il a oublié comment faire les siens.",
    "but": "Mettre tous les rêves du château de nuages dans ses bocaux à lui.",
    "manoeuvres": [
@@ -1260,6 +1298,7 @@
    "id": "sous_la_mer_encre",
    "univers": "sous_la_mer",
    "nom": "Splotch la Pieuvre barbouilleuse",
+   "archetype": "alarmiste",
    "description": "Une pieuvre artiste qui met de l'encre partout parce qu'elle veut que tout soit de sa couleur préférée.",
    "but": "Repeindre tout le récif en violet pour faire son plus grand dessin.",
    "manoeuvres": [
@@ -1296,6 +1335,7 @@
    "id": "sous_la_mer_courant",
    "univers": "sous_la_mer",
    "nom": "Tourbi le Tourbillon espiègle",
+   "archetype": "alarmiste",
    "description": "Un petit tourbillon d'eau très joueur qui mélange tout parce qu'il n'aime pas quand c'est bien rangé.",
    "but": "Faire tourner tout le récif jusqu'à ce que plus personne ne retrouve sa maison.",
    "manoeuvres": [
@@ -1332,6 +1372,7 @@
    "id": "chevaliers_dragons_chatouille",
    "univers": "chevaliers_dragons",
    "nom": "Sire Chatouille le chevalier farceur",
+   "archetype": "cynique",
    "description": "Un chevalier blagueur qui adore faire des farces et gagner tous les jeux pour rire.",
    "but": "Gagner tous les tournois pour rire du château en faisant des blagues à tout le monde.",
    "manoeuvres": [
@@ -1368,6 +1409,7 @@
    "id": "chevaliers_dragons_dragonnet",
    "univers": "chevaliers_dragons",
    "nom": "Éternue le petit dragon enrhumé",
+   "archetype": "aidant",
    "description": "Un bébé dragon adorable qui éternue des bulles et des flammèches douces parce qu'il a attrapé un petit rhume.",
    "but": "Trouver un câlin et un mouchoir géant avant son prochain grand éternuement rigolo.",
    "manoeuvres": [

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:destiny/domain/grammaire/modeles.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -115,6 +117,40 @@ void main() {
       expect(loup.repliquePour(kids: true), loup.repliqueKids);
       expect(loup.repliquePour(kids: true), isNot(loup.replique));
       expect(loup.sourcePour(kids: true), 'Le Petit Prince');
+    });
+  });
+
+  group('Les méchants des univers', () {
+    test('chacun des 42 a un archétype, et les 12 sont présents', () async {
+      final d = jsonDecode(await lireFichier('assets/data/campagne_mechants.json')) as Map<String, dynamic>;
+      final mechants = [for (final m in d['mechants'] as List) m as Map<String, dynamic>];
+      expect(mechants, hasLength(42));
+      final vus = <String>{};
+      for (final m in mechants) {
+        final a = g.archetype(m['archetype'] as String? ?? '');
+        expect(a, isNotNull, reason: '${m['id']}');
+        vus.add(a!.id);
+      }
+      expect(vus, hasLength(12));
+    });
+  });
+
+  group('Le corps des animaux', () {
+    test('les cinq animaux qui ont changé d\'archétype ont un corps à leur mesure', () {
+      final anciensMots = {
+        'rat': 'profit',
+        'coq': 'conquête',
+        'lapin': 'approbation',
+        'mouton': 'plus fort',
+        'hibou': 'raison',
+      };
+      for (final e in anciensMots.entries) {
+        final a = g.animal(e.key)!;
+        expect(a.niveauxCorps, hasLength(4), reason: e.key);
+        for (final n in a.niveauxCorps.values) {
+          expect(n.contains(e.value), isFalse, reason: '${e.key} : $n');
+        }
+      }
     });
   });
 }

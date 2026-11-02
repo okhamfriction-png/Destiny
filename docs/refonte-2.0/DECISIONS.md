@@ -92,3 +92,31 @@ Ils sont intégrés à la 2.0 (la 2.0 n'est pas sortie, donc pas de 2.1 séparé
 | Rue et Spin-off | propose-moi quelque chose | retire-les | retirés |
 | Cartes « Destin » | propose un usage facultatif | retire tous les effets de dé | retirées de l'interface (elles venaient du dé) |
 | Traître | module facultatif, recruté par le méchant en saison | facultatif, désactivé par défaut | les deux : option désactivée, et en saison c'est le méchant qui le recrute |
+
+## Tes réponses aux quatre questions de la phase 4
+
+| Question | Ta réponse | Ce que je fais |
+|---|---|---|
+| Un chrono kids de 24 minutes (Destiny à 6, 12, 18) | « Je ne vois pas l'intérêt : avec les enfants, on joue en jeu de rôle. » | **Pas de chrono kids.** Avec des enfants, on joue une Série, et le maître du jeu lance Destiny quand il veut. |
+| La consigne enfant de l'IA (« aucune peur ») | « Tu peux adapter. » | Elle dit maintenant : « des frissons doux, jamais d'effroi ». Un personnage ne meurt pas, il **quitte l'histoire**. Même règle dans l'IA du jeu. |
+| Le corps de cinq animaux contredit leur nouvel archétype | « Adapte tout. » | Les quatre niveaux de corps du **rat**, du **coq** (alarmistes), du **lapin** (paranoïaque), du **mouton** (aidant) et du **hibou** (débrouillard) sont réécrits pour leur archétype, avec leur tempérament. L'ancienne version reste dans le fichier, sous `anciens`. |
+| Un archétype pour chacun des 42 méchants d'univers | « Oui, ça c'est sûr. » | Chacun a son archétype (tableau ci-dessous). Il sert au reflet : le méchant en veut au protagoniste qui a le même archétype que lui. |
+
+### Les archétypes des 42 méchants d'univers
+
+Les 12 archétypes sont tous présents, chez les adultes comme chez les enfants.
+
+| Archétype | Adultes | Enfants |
+|---|---|---|
+| Leader | le régent Corvyn, Dame Morrigane, la Meute de Sarn | Reine Guimauve |
+| Protecteur | le Collecteur de la Brume, Dame Valcroix, le Doyen Kael | Capitaine Gargouille |
+| Aidant | l'Intendante ORACLE, le Docteur Morne | Éternue le petit dragon |
+| Débrouillard | l'Horlogère Séraphine | Mirabelle, Madame Bidouille, le Professeur Méli-Mélo |
+| Alarmiste | Ombreux, l'esprit de la source | Splotch la pieuvre, Tourbi le tourbillon |
+| Dénégateur | Véronique Astier, Kaido le Poing d'Ébène | Sire Éteignoir |
+| Prophète | Kevin Delaroche | Barnabé l'Attrape-Rêves |
+| Cynique | la Marquise de Givremont | Docteur Chamboule-Tout, Barbe-de-Mousse, Sire Chatouille |
+| Opportuniste | Dragan Kovac, la Baronne Sable | Monsieur Tout-À-Moi, le Grand Copieur |
+| Gardien de l'ordre | le commandant Reisser, le Baron Engrenard | Madame Chut |
+| Solitaire | Maître Zenkai le Renié | Grognon le Petit Lutin, Renard Rikiki, Gorille Grognon |
+| Paranoïaque | Vera Kaishō, Dorian Vex, l'Intendant Malebranche | Grognon le Brouillard boudeur |
