@@ -9,7 +9,7 @@
 # Signature : si les secrets ANDROID_KEYSTORE_BASE64, ANDROID_KEY_ALIAS,
 # ANDROID_STORE_PASSWORD et ANDROID_KEY_PASSWORD existent, l'APK est signé
 # avec la clé de release (celle du Play Store). Sinon, il est signé avec une
-# clé de test, et la release est marquée « pré-version ».
+# clé de test, et les notes de la release le disent en tête.
 name: Construire l'APK
 
 on:
@@ -98,7 +98,28 @@ jobs:
           TAG: ${{ steps.nom.outputs.tag }}
           FICHIER: ${{ steps.nom.outputs.fichier }}
         run: |
+          source="docs/release_notes/$TAG.md"
+          notes="$RUNNER_TEMP/notes.md"
+          titre="DestinyStory $TAG"
+          : > "$notes"
+          if [ "$SIGNE" != "true" ]; then
+            cat >> "$notes" <<'AVERTISSEMENT'
+          > **À lire avant d'installer.** Cet APK est signé avec une clé de test, pas avec celle du Play Store. Android refusera de l'installer par-dessus une version signée avec la vraie clé : il faut d'abord désinstaller l'ancienne version, **ce qui efface les données de l'appli** (campagnes, histoires, réglages).
+
+          AVERTISSEMENT
+          fi
+          if [ -f "$source" ]; then
+            # La première ligne (« # Titre ») devient le titre de la release.
+            premiere=$(head -n 1 "$source" | sed 's/^# //')
+            [ -n "$premiere" ] && titre="$premiere"
+            tail -n +2 "$source" >> "$notes"
+          else
+            echo "Version $TAG. Voir CHANGELOG.md." >> "$notes"
+          fi
           if gh release view "$TAG" >/dev/null 2>&1; then
+            # Une release déjà publiée : on remet ses notes à jour, et elle
+            # reste la dernière version (jamais une pré-version).
+            gh release edit "$TAG" --title "$titre" --notes-file "$notes" --prerelease=false --latest
             if [ "$GITHUB_REF_TYPE" = "tag" ]; then
               gh release upload "$TAG" "$FICHIER" --clobber
             else
@@ -106,22 +127,9 @@ jobs:
             fi
             exit 0
           fi
-          source="docs/release_notes/$TAG.md"
-          notes="$RUNNER_TEMP/notes.md"
-          titre="DestinyStory $TAG"
-          if [ -f "$source" ]; then
-            # La première ligne (« # Titre ») devient le titre de la release.
-            premiere=$(head -n 1 "$source" | sed 's/^# //')
-            [ -n "$premiere" ] && titre="$premiere"
-            tail -n +2 "$source" > "$notes"
-          else
-            echo "Version $TAG. Voir CHANGELOG.md." > "$notes"
-          fi
-          options=()
-          if [ "$SIGNE" != "true" ]; then options+=(--prerelease); fi
           if [ "$GITHUB_REF_TYPE" = "tag" ]; then
-            gh release create "$TAG" --title "$titre" --notes-file "$notes" --verify-tag "${options[@]}"
+            gh release create "$TAG" --title "$titre" --notes-file "$notes" --verify-tag --latest
           else
-            gh release create "$TAG" --title "$titre" --notes-file "$notes" --target "$GITHUB_SHA" "${options[@]}"
+            gh release create "$TAG" --title "$titre" --notes-file "$notes" --target "$GITHUB_SHA" --latest
           fi
           gh release upload "$TAG" "$FICHIER" --clobber

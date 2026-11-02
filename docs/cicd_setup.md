@@ -29,9 +29,9 @@ données), il doit être signé avec ta clé de release. Ajoute ces secrets
 | `ANDROID_STORE_PASSWORD` | le mot de passe du keystore |
 | `ANDROID_KEY_PASSWORD` | le mot de passe de la clé (souvent le même) |
 
-Sans ces secrets, l'APK est signé avec une **clé de test** et la release est marquée
-« pré-version » : il faut alors désinstaller l'ancienne version avant de l'installer, ce qui
-efface les données de l'appli.
+Sans ces secrets, l'APK est signé avec une **clé de test**, et les notes de la release
+l'annoncent en tête : il faut alors désinstaller l'ancienne version avant de l'installer, ce
+qui efface les données de l'appli. La release est quand même publiée comme « Latest ».
 
 ---
 
