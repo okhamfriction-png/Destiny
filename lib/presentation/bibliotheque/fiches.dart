@@ -37,7 +37,7 @@ class PuceArchetype extends StatelessWidget {
           suffixe == null ? a.nom : '${a.nom} · $suffixe',
           style: TextStyle(
             fontFamily: kPoliceTexte,
-            fontSize: 12,
+            fontSize: 13.5,
             fontWeight: FontWeight.w600,
             color: c.sombre ? Color.lerp(couleur, Colors.white, 0.55) : couleur,
           ),
@@ -66,7 +66,7 @@ class CarteDirection extends StatelessWidget {
         Row(children: [
           Expanded(
             child: Text(d.personnage,
-                style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 15, color: c.texte)),
+                style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 16, color: c.texte)),
           ),
           Flexible(child: PuceArchetype(d.archetypeId)),
         ]),

@@ -50,20 +50,24 @@ class JouerScreen extends StatelessWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 640),
             child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              const SizedBox(height: 4),
               Text(j('titre'), textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineMedium),
-              Text(j('sous_titre'), textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
+              const SizedBox(height: 4),
+              Text(j('sous_titre'),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 15, color: c.texteSecondaire)),
               SectionDestiny(titre: j('humains.titre'), enfants: [
                 Paragraphe(j('humains.sous_titre')),
                 ElementListe(
                   titre: t.t('serie.nouvel_episode'),
                   sousTitre: g.serie.episode,
-                  devant: Icon(Icons.movie_creation_outlined, color: c.titre),
+                  devant: const Icon(Icons.movie_creation_outlined, color: DestinyCouleurs.corail),
                   onTap: () => ouvrir(CreerSerieScreen(contexte: serie, saison: false)),
                 ),
                 ElementListe(
                   titre: t.t('serie.nouvelle_saison'),
                   sousTitre: g.serie.saison,
-                  devant: Icon(Icons.video_library_outlined, color: c.titre),
+                  devant: Icon(Icons.video_library_outlined, color: c.or),
                   onTap: () => ouvrir(CreerSerieScreen(contexte: serie, saison: true)),
                 ),
                 ListenableBuilder(
@@ -81,14 +85,16 @@ class JouerScreen extends StatelessWidget {
                     ]);
                   },
                 ),
+                const SizedBox(height: 4),
                 FilledButton.icon(
                   icon: const Icon(Icons.groups_rounded),
                   onPressed: () => ouvrir(SeriesScreen(contexte: serie)),
                   label: Text(j('humains.ouvrir')),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Text(g.serie.serie, style: Theme.of(context).textTheme.bodySmall),
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(g.serie.serie,
+                      style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.4, color: c.texteSecondaire)),
                 ),
               ]),
               SectionDestiny(titre: j('ia.titre'), enfants: [
@@ -112,8 +118,10 @@ class JouerScreen extends StatelessWidget {
                   onTap: () => ouvrir(SpectacleScreen(controller: spectacleController, univers: serie.store.catalogue)),
                 ),
               ]),
-              const SizedBox(height: 8),
-              Text(g.promesse, textAlign: TextAlign.center, style: TextStyle(fontFamily: kPoliceTitres, color: c.titre)),
+              const SizedBox(height: 20),
+              Text(g.promesse,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontFamily: kPoliceTitres, fontSize: 17, fontWeight: FontWeight.w700, color: c.titre)),
             ]),
           ),
         ),

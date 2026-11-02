@@ -146,7 +146,7 @@ class FicheArchetype extends StatelessWidget {
               Expanded(
                 child: Text(animal.nom,
                     style: TextStyle(
-                        fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 18, color: c.texte)),
+                        fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 18, color: c.texte)),
               ),
               PastilleStatut(animal.statutDepart),
             ]),
@@ -158,7 +158,7 @@ class FicheArchetype extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 4, bottom: 6),
               child: Text('${f('source')} ${animal.sourceReplique}',
-                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12, color: c.texteSecondaire)),
+                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: c.texteSecondaire)),
             ),
             LigneInfo(f('corps'), ''),
             for (final p in PalierId.values)
@@ -261,7 +261,7 @@ class FicheAnimal extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Text('${f('source')} ${a.sourceReplique}',
-                style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12, color: c.texteSecondaire)),
+                style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: c.texteSecondaire)),
           ),
           if (a.repliqueKids.isNotEmpty && a.repliqueKids != a.replique) ...[
             const SizedBox(height: 10),
@@ -276,7 +276,7 @@ class FicheAnimal extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 4),
               child: Text('${f('source')} ${a.sourceRepliqueKids}',
-                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12, color: c.texteSecondaire)),
+                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: c.texteSecondaire)),
             ),
           ],
         ]),

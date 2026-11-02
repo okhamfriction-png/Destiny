@@ -90,7 +90,7 @@ class CarteArchetype extends StatelessWidget {
                 Text(
                   archetype.ceQuIlFait,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, height: 1.3, color: c.texte),
+                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14.5, height: 1.4, color: c.texte),
                 ),
                 const SizedBox(height: 12),
                 if (animal == null)
@@ -151,9 +151,9 @@ class _Entete extends StatelessWidget {
             Text(
               animal!.nom,
               style: TextStyle(
-                fontFamily: kPoliceTitres,
+                fontFamily: kPoliceTexte,
                 fontWeight: FontWeight.w700,
-                fontSize: 15,
+                fontSize: 16,
                 color: c.texte,
               ),
             ),
@@ -181,16 +181,17 @@ class _TuileAnimal extends StatelessWidget {
       const SizedBox(height: 4),
       Text(
         animal.nom,
-        style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 14, color: c.texte),
+        style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 15, color: c.texte),
       ),
       Text(
         '${context.textes.t('cartes.port')} ${animal.port}',
-        style: TextStyle(fontFamily: kPoliceTexte, fontStyle: FontStyle.italic, fontSize: 11.5, color: c.texteSecondaire),
+        textAlign: TextAlign.center,
+        style: TextStyle(fontFamily: kPoliceTexte, fontStyle: FontStyle.italic, fontSize: 12.5, color: c.texteSecondaire),
       ),
       const SizedBox(height: 3),
       PastilleStatut(animal.statutDepart),
       const SizedBox(height: 6),
-      EncartReplique(animal.replique, couleur: couleur, taille: 11.5),
+      EncartReplique(animal.replique, couleur: couleur, taille: 12.5),
     ]);
   }
 }
@@ -212,7 +213,7 @@ class _AnimalSeul extends StatelessWidget {
       Text(
         animal.posture,
         textAlign: TextAlign.center,
-        style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire),
+        style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.35, color: c.texteSecondaire),
       ),
       const SizedBox(height: 6),
       Wrap(
@@ -223,13 +224,13 @@ class _AnimalSeul extends StatelessWidget {
         children: [
           Text(
             '${context.textes.t('cartes.port')} ${animal.port}',
-            style: TextStyle(fontFamily: kPoliceTexte, fontStyle: FontStyle.italic, fontSize: 12, color: c.texteSecondaire),
+            style: TextStyle(fontFamily: kPoliceTexte, fontStyle: FontStyle.italic, fontSize: 13, color: c.texteSecondaire),
           ),
           PastilleStatut(animal.statutDepart),
         ],
       ),
       const SizedBox(height: 10),
-      EncartReplique(animal.repliquePour(kids: kids), couleur: couleur, taille: 14),
+      EncartReplique(animal.repliquePour(kids: kids), couleur: couleur, taille: 15),
     ]);
   }
 }
@@ -249,20 +250,20 @@ class _Montee extends StatelessWidget {
         context.textes.t('cartes.montee').toUpperCase(),
         style: TextStyle(
           fontFamily: kPoliceTexte,
-          fontSize: 10.5,
-          letterSpacing: 1.8,
+          fontSize: 12.5,
+          letterSpacing: 1.1,
           fontWeight: FontWeight.w700,
           color: c.titre,
         ),
       ),
-      const SizedBox(height: 4),
+      const SizedBox(height: 6),
       for (final p in PalierId.values)
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2),
+          padding: const EdgeInsets.symmetric(vertical: 3),
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Container(
-              width: 18,
-              height: 18,
+              width: 20,
+              height: 20,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -271,9 +272,9 @@ class _Montee extends StatelessWidget {
               child: Text(
                 '${p.numero}',
                 style: TextStyle(
-                  fontFamily: kPoliceTitres,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 10,
+                  fontFamily: kPoliceTexte,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 11,
                   color: courant == p ? Colors.white : c.texte,
                 ),
               ),
@@ -284,7 +285,8 @@ class _Montee extends StatelessWidget {
                 archetype.monteeA(p),
                 style: TextStyle(
                   fontFamily: kPoliceTexte,
-                  fontSize: 12.5,
+                  fontSize: 13.5,
+                  height: 1.35,
                   fontWeight: courant == p ? FontWeight.w700 : FontWeight.w400,
                   color: c.texte,
                 ),

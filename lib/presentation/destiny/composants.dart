@@ -48,7 +48,7 @@ class PuceFamille extends StatelessWidget {
     final couleur = c.famille(famille);
     final nom = context.grammaire.famille(famille).nom;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: compacte ? 8 : 10, vertical: compacte ? 3 : 5),
+      padding: EdgeInsets.symmetric(horizontal: compacte ? 9 : 12, vertical: compacte ? 3 : 6),
       decoration: BoxDecoration(
         color: couleur.withValues(alpha: c.sombre ? 0.22 : 0.12),
         borderRadius: BorderRadius.circular(99),
@@ -66,8 +66,8 @@ class PuceFamille extends StatelessWidget {
             nom,
             style: TextStyle(
               fontFamily: kPoliceTexte,
-              fontSize: compacte ? 11 : 12.5,
-              fontWeight: FontWeight.w600,
+              fontSize: compacte ? 12 : 13.5,
+              fontWeight: FontWeight.w700,
               // Éclairci en sombre, assombri en clair : lisible sur sa pastille.
               color: c.sombre ? Color.lerp(couleur, Colors.white, 0.55) : Color.lerp(couleur, c.encre, 0.4),
             ),
@@ -88,7 +88,7 @@ class PastilleStatut extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.destiny;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
       decoration: BoxDecoration(
         color: c.statuts[statut] ?? c.creme,
         borderRadius: BorderRadius.circular(99),
@@ -97,8 +97,8 @@ class PastilleStatut extends StatelessWidget {
         context.textes.t('statuts.${statut.name}'),
         style: TextStyle(
           fontFamily: kPoliceTexte,
-          fontSize: 10.5,
-          fontWeight: FontWeight.w600,
+          fontSize: 11.5,
+          fontWeight: FontWeight.w700,
           color: c.encre,
         ),
       ),
@@ -192,7 +192,7 @@ class MedaillonAnimal extends StatelessWidget {
 
 /// L'encart d'une réplique : en italique, à la couleur de la famille.
 class EncartReplique extends StatelessWidget {
-  const EncartReplique(this.texte, {super.key, required this.couleur, this.taille = 13.5});
+  const EncartReplique(this.texte, {super.key, required this.couleur, this.taille = 14.5});
 
   final String texte;
   final Color couleur;
@@ -202,11 +202,11 @@ class EncartReplique extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.destiny;
     return Container(
-      padding: const EdgeInsets.fromLTRB(10, 6, 8, 6),
+      padding: const EdgeInsets.fromLTRB(12, 8, 10, 8),
       decoration: BoxDecoration(
-        color: couleur.withValues(alpha: c.sombre ? 0.14 : 0.07),
+        color: couleur.withValues(alpha: c.sombre ? 0.18 : 0.08),
         border: Border(left: BorderSide(color: couleur, width: 3)),
-        borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
+        borderRadius: const BorderRadius.horizontal(right: Radius.circular(10)),
       ),
       child: Text(
         '« $texte »',
@@ -214,8 +214,9 @@ class EncartReplique extends StatelessWidget {
           fontFamily: kPoliceTexte,
           fontStyle: FontStyle.italic,
           fontSize: taille,
-          height: 1.3,
-          color: c.sombre ? Color.lerp(couleur, Colors.white, 0.6) : Color.lerp(couleur, c.encre, 0.35),
+          height: 1.35,
+          fontWeight: FontWeight.w500,
+          color: c.sombre ? Color.lerp(couleur, Colors.white, 0.7) : Color.lerp(couleur, c.encre, 0.45),
         ),
       ),
     );
@@ -250,9 +251,9 @@ class BandeauAffiche extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: kPoliceTexte,
-              fontSize: 11,
-              letterSpacing: 2.4,
-              fontWeight: FontWeight.w600,
+              fontSize: 12.5,
+              letterSpacing: 2.2,
+              fontWeight: FontWeight.w700,
               color: c.texteSecondaire,
             ),
           ),
@@ -272,8 +273,9 @@ class BandeauAffiche extends StatelessWidget {
         style: TextStyle(
           fontFamily: kPoliceTitres,
           fontWeight: FontWeight.w900,
-          fontSize: 26,
-          letterSpacing: 1.5,
+          fontSize: 32,
+          letterSpacing: 2,
+          height: 1.15,
           color: c.titre,
         ),
       ),
@@ -282,7 +284,7 @@ class BandeauAffiche extends StatelessWidget {
         Text(
           sousTitre!,
           textAlign: TextAlign.center,
-          style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13, color: c.texteSecondaire),
+          style: TextStyle(fontFamily: kPoliceTexte, fontSize: 15, fontStyle: FontStyle.italic, color: c.texteSecondaire),
         ),
       ],
       const SizedBox(height: 6),
@@ -344,7 +346,7 @@ class _LignePalier extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.destiny;
-    final pastille = compacte ? 22.0 : 28.0;
+    final pastille = compacte ? 24.0 : 30.0;
     return IntrinsicHeight(
       child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         SizedBox(
@@ -365,9 +367,9 @@ class _LignePalier extends StatelessWidget {
               child: Text(
                 '${palier.numero}',
                 style: TextStyle(
-                  fontFamily: kPoliceTitres,
-                  fontWeight: FontWeight.w900,
-                  fontSize: compacte ? 11 : 13,
+                  fontFamily: kPoliceTexte,
+                  fontWeight: FontWeight.w800,
+                  fontSize: compacte ? 12 : 14,
                   color: actif || passe
                       ? Colors.white
                       : (c.sombre ? Color.lerp(couleur, Colors.white, 0.45) : couleur),
@@ -383,25 +385,22 @@ class _LignePalier extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.only(bottom: compacte ? 6 : 10, top: 2),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                Flexible(
-                  child: Text(
-                    palier.nom,
-                    style: TextStyle(
-                      fontFamily: kPoliceTitres,
-                      fontWeight: FontWeight.w700,
-                      fontSize: compacte ? 13 : 15,
-                      color: actif ? c.titre : c.texte,
-                    ),
+              Wrap(spacing: 8, crossAxisAlignment: WrapCrossAlignment.center, children: [
+                Text(
+                  palier.nom,
+                  style: TextStyle(
+                    fontFamily: kPoliceTexte,
+                    fontWeight: FontWeight.w700,
+                    fontSize: compacte ? 14 : 16,
+                    color: actif ? c.titre : c.texte,
                   ),
                 ),
                 if (!compacte) ...[
-                  const SizedBox(width: 8),
                   Text(
                     palier.ambiance,
                     style: TextStyle(
                       fontFamily: kPoliceTexte,
-                      fontSize: 11.5,
+                      fontSize: 13,
                       fontStyle: FontStyle.italic,
                       color: c.texteSecondaire,
                     ),
@@ -415,8 +414,8 @@ class _LignePalier extends StatelessWidget {
                     texte!,
                     style: TextStyle(
                       fontFamily: kPoliceTexte,
-                      fontSize: compacte ? 12 : 13,
-                      height: 1.3,
+                      fontSize: compacte ? 13.5 : 14.5,
+                      height: 1.35,
                       color: actif ? c.texte : c.texteSecondaire,
                     ),
                   ),

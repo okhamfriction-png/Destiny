@@ -13,6 +13,7 @@ import '../accueil/decouvrir_screen.dart';
 import '../bibliotheque/bibliotheque_screen.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
+import '../theme/destiny_theme.dart';
 import '../reglages/editeur_catalogue_screen.dart';
 import '../reglages/editeur_dilemmes_screen.dart';
 import '../reglages/grammaire_admin_screen.dart';
@@ -57,10 +58,11 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.textes;
     String k(String x, [Map<String, String> v = const {}]) => t.t('reglages.$x', v);
-    Widget entree(IconData icone, String titre, String aide, VoidCallback onTap) => ElementListe(
+    final c = context.destiny;
+    Widget entree(IconData icone, Color couleur, String titre, String aide, VoidCallback onTap) => ElementListe(
           titre: titre,
           sousTitre: aide,
-          devant: Icon(icone),
+          devant: PastilleIcone(icone, couleur: couleur),
           onTap: onTap,
         );
 
@@ -69,40 +71,47 @@ class SettingsScreen extends StatelessWidget {
       builder: (context, _) => PageDestiny(
         titre: k('titre'),
         enfants: [
-          entree(Icons.flash_on_rounded, k('destiny'), k('destiny_aide'), () => _ouvrir(
+          entree(Icons.flash_on_rounded, c.bleuDestiny, k('destiny'), k('destiny_aide'), () => _ouvrir(
                 context,
                 ReglagesDestinyScreen(reglages: reglages, audio: audioService, musique: musicController),
               )),
           entree(
             Icons.smart_toy_outlined,
+            DestinyCouleurs.ia,
             k('ia'),
             aiSettings.configured ? '${aiSettings.provider.label} · ${aiSettings.model}' : k('ia_aide_off'),
             () => _ouvrir(context, AiConfigScreen(settings: aiSettings)),
           ),
-          entree(Icons.palette_outlined, k('apparence'), k('apparence_aide'),
+          entree(Icons.palette_outlined, DestinyCouleurs.rose, k('apparence'), k('apparence_aide'),
               () => _ouvrir(context, AppearanceScreen(visualSettings: visualSettings, reglages: reglages))),
           SectionDestiny(titre: k('donnees'), enfants: [
-            entree(Icons.tune_rounded, k('catalogue'), k('catalogue_aide'),
+            entree(Icons.tune_rounded, DestinyCouleurs.corail, k('catalogue'), k('catalogue_aide'),
                 () => _ouvrir(context, EditeurCatalogueScreen(catalogue: catalogStore))),
-            entree(Icons.place_outlined, k('details_lieux'), k('details_lieux_aide'),
+            entree(Icons.place_outlined, DestinyCouleurs.turquoise, k('details_lieux'), k('details_lieux_aide'),
                 () => _ouvrir(context, LocationDetailsListScreen(store: locationDetails))),
-            entree(Icons.diversity_3_outlined, k('relations'), k('relations_aide'),
+            entree(Icons.diversity_3_outlined, DestinyCouleurs.ciel, k('relations'), k('relations_aide'),
                 () => _ouvrir(context, RelationCheatsheetScreen(cheatsheet: relationCheatsheet))),
-            entree(Icons.balance_outlined, k('dilemmes'), k('dilemmes_aide'),
+            entree(Icons.balance_outlined, DestinyCouleurs.ambre, k('dilemmes'), k('dilemmes_aide'),
                 () => _ouvrir(context, EditeurDilemmesScreen(catalogue: catalogStore))),
-            entree(Icons.sync_rounded, k('synchro'), k('synchro_aide'),
+            entree(Icons.sync_rounded, DestinyCouleurs.cyan, k('synchro'), k('synchro_aide'),
                 () => _ouvrir(context, SynchroScreen(catalogue: catalogStore))),
           ]),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            secondary: const Icon(Icons.admin_panel_settings_outlined),
-            title: Text(k('admin')),
-            subtitle: Text(k('admin_aide')),
-            value: visualSettings.adminMode,
-            onChanged: visualSettings.setAdminMode,
+          const SizedBox(height: 14),
+          DecoratedBox(
+            decoration: decorCarte(c),
+            child: SwitchListTile(
+              contentPadding: const EdgeInsets.fromLTRB(14, 6, 10, 6),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              secondary: PastilleIcone(Icons.admin_panel_settings_outlined, couleur: c.texteSecondaire),
+              title: Text(k('admin')),
+              subtitle: Text(k('admin_aide')),
+              value: visualSettings.adminMode,
+              onChanged: visualSettings.setAdminMode,
+            ),
           ),
+          const SizedBox(height: 12),
           if (visualSettings.adminMode)
-            entree(Icons.data_object_rounded, k('grammaire'), k('grammaire_aide'),
+            entree(Icons.data_object_rounded, c.texteSecondaire, k('grammaire'), k('grammaire_aide'),
                 () => _ouvrir(
                     context,
                     GrammaireAdminScreen(
@@ -110,13 +119,13 @@ class SettingsScreen extends StatelessWidget {
                           catalogue: catalogStore, visuels: visualSettings, detailsLieux: locationDetails),
                     ))),
           SectionDestiny(titre: k('aide'), enfants: [
-            entree(Icons.explore_outlined, k('decouvrir'), k('decouvrir_aide'),
+            entree(Icons.explore_outlined, c.or, k('decouvrir'), k('decouvrir_aide'),
                 () => _ouvrir(context, const DecouvrirScreen())),
-            entree(Icons.alternate_email, k('contact'), k('contact_aide'),
+            entree(Icons.alternate_email, c.or, k('contact'), k('contact_aide'),
                 () => _ouvrir(context, const ContactScreen())),
-            entree(Icons.favorite_border, k('credits'), k('credits_aide'),
+            entree(Icons.favorite_border, c.or, k('credits'), k('credits_aide'),
                 () => _ouvrir(context, const CreditsScreen())),
-            entree(Icons.info_outline, k('a_propos'), k('a_propos_aide'),
+            entree(Icons.info_outline, c.or, k('a_propos'), k('a_propos_aide'),
                 () => _ouvrir(context, const AboutScreen())),
           ]),
           const SizedBox(height: 8),

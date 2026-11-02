@@ -61,7 +61,7 @@ class _DecouvrirScreenState extends State<DecouvrirScreen> {
                 child: Text(k('titre').toUpperCase(),
                     style: TextStyle(
                         fontFamily: kPoliceTexte,
-                        fontSize: 11.5,
+                        fontSize: 12.5,
                         letterSpacing: 2,
                         fontWeight: FontWeight.w700,
                         color: c.texteSecondaire)),
@@ -168,7 +168,7 @@ class _Regle extends StatelessWidget {
       couleur: couleur ?? c.or,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(regle.titre,
-            style: TextStyle(fontFamily: kPoliceTitres, fontSize: 16, fontWeight: FontWeight.w700, color: c.texte)),
+            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 16, fontWeight: FontWeight.w700, color: c.texte)),
         const SizedBox(height: 4),
         Text(regle.texte,
             style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14.5, height: 1.4, color: c.texte)),
@@ -225,7 +225,7 @@ class _EcranDanger extends StatelessWidget {
       FrisePaliers(textes: [for (final p in g.paliers) p.ambiance], compacte: true),
       const SizedBox(height: 14),
       Text(t.t('decouvrir.ecrans.danger.rituel'),
-          style: TextStyle(fontFamily: kPoliceTitres, fontSize: 17, fontWeight: FontWeight.w700, color: c.bleuTexte)),
+          style: TextStyle(fontFamily: kPoliceTexte, fontSize: 17, fontWeight: FontWeight.w700, color: c.bleuTexte)),
       const SizedBox(height: 6),
       Wrap(spacing: 6, runSpacing: 6, children: [
         for (final s in g.rituel.sequence)
@@ -267,10 +267,10 @@ class _EcranPersonnages extends StatelessWidget {
           couleur: c.or,
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(carte.titre,
-                style: TextStyle(fontFamily: kPoliceTitres, fontSize: 16, fontWeight: FontWeight.w700, color: c.texte)),
+                style: TextStyle(fontFamily: kPoliceTexte, fontSize: 16, fontWeight: FontWeight.w700, color: c.texte)),
             Text(carte.sousTitre,
                 style: TextStyle(
-                    fontFamily: kPoliceTexte, fontSize: 13, fontStyle: FontStyle.italic, color: c.texteSecondaire)),
+                    fontFamily: kPoliceTexte, fontSize: 14, fontStyle: FontStyle.italic, color: c.texteSecondaire)),
             const SizedBox(height: 4),
             Text(carte.texte, style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.35, color: c.texte)),
           ]),

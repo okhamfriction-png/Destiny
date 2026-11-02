@@ -149,7 +149,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(s.title,
-                    style: TextStyle(fontFamily: kPoliceTitres, fontSize: 16, color: d.titre),
+                    style: TextStyle(fontFamily: kPoliceTexte, fontSize: 16, color: d.titre),
                     overflow: TextOverflow.ellipsis),
               ),
             ],
@@ -302,7 +302,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Text(k('creer.joueur', {'n': '${i + 1}'}),
                           style: TextStyle(
-                              fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 15, color: d.titre)),
+                              fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 16, color: d.titre)),
                     ),
                   TextField(
                     controller: nameCtrls[i],
@@ -611,7 +611,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(k('sans_cle.titre'),
-                                style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, color: d.texte)),
+                                style: TextStyle(fontSize: 16, fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, color: d.texte)),
                           ),
                         ],
                       ),
@@ -747,7 +747,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             s.title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 15, color: d.texte),
+            style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 16, color: d.texte),
           ),
           subtitle: s.context.isEmpty
               ? null
@@ -1440,7 +1440,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     final d = context.destiny;
     final t = context.textes;
     if (c.busy) return const SizedBox.shrink();
-    final finStyle = TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, color: d.titre);
+    final finStyle = TextStyle(fontSize: 16, fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, color: d.titre);
     if (c.lectureSeule) {
       return Padding(
         padding: const EdgeInsets.all(12),

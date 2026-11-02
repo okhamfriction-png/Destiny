@@ -122,7 +122,7 @@ class FicheSession extends StatelessWidget {
                     g.archetype(p.archetypeId)?.nom ?? '',
                     g.animal(p.animalId)?.nom ?? '',
                   ].where((x) => x.isNotEmpty).join(' · '),
-                  style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, color: c.texte),
+                  style: TextStyle(fontSize: 16, fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, color: c.texte),
                 ),
                 const SizedBox(height: 6),
                 LigneInfo(t.t('debrief.groupe'), [p.groupeVeut, p.groupeBesoin].where((x) => x.isNotEmpty).join(' / ')),

@@ -32,7 +32,7 @@ class RelationCheatsheetView extends StatelessWidget {
           children: [
             Text(
               context.textes.t('relations.intro'),
-              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13, height: 1.35, color: c.texteSecondaire),
+              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.35, color: c.texteSecondaire),
             ),
             const SizedBox(height: 8),
             for (final reg in ordered) ...[
@@ -41,7 +41,7 @@ class RelationCheatsheetView extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: kPoliceTexte,
                   color: c.titre,
-                  fontSize: 12,
+                  fontSize: 13.5,
                   letterSpacing: 1,
                   fontWeight: FontWeight.w800,
                 ),
@@ -195,7 +195,7 @@ class _RelationCheatsheetScreenState extends State<RelationCheatsheetScreen> {
                       links[i].registre.toUpperCase(),
                       style: TextStyle(
                         fontFamily: kPoliceTexte,
-                        fontSize: 11,
+                        fontSize: 12.5,
                         letterSpacing: 1.2,
                         fontWeight: FontWeight.w700,
                         color: c.titre,

@@ -40,7 +40,7 @@ class AboutScreen extends StatelessWidget {
         const SizedBox(height: 6),
         Center(
           child: Text(k('version', {'version': kVersionAppli}),
-              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire)),
+              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: c.texteSecondaire)),
         ),
         SectionDestiny(titre: k('ce_qu_on_y_fait'), enfants: [
           for (final f in t.tables('page_a_propos.fonctions'))

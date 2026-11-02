@@ -52,9 +52,10 @@ class PageDestiny extends StatelessWidget {
   }
 }
 
-/// Une section : un intertitre doré, puis son contenu.
+/// Une section : un intertitre net (capitales sobres, en or, précédé d'un
+/// trait), bien détaché de ce qui précède, puis son contenu.
 class SectionDestiny extends StatelessWidget {
-  const SectionDestiny({super.key, required this.titre, required this.enfants, this.espace = 18});
+  const SectionDestiny({super.key, required this.titre, required this.enfants, this.espace = 26});
 
   final String titre;
   final List<Widget> enfants;
@@ -66,20 +67,29 @@ class SectionDestiny extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: espace),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Text(
-          titre.toUpperCase(),
-          style: TextStyle(
-            fontFamily: kPoliceTexte,
-            fontSize: 11.5,
-            letterSpacing: 2,
-            fontWeight: FontWeight.w700,
-            color: c.titre,
-          ),
-        ),
-        Container(
-          height: 1,
-          margin: const EdgeInsets.only(top: 4, bottom: 10),
-          color: c.filet,
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            Container(
+              width: 4,
+              height: 18,
+              decoration: BoxDecoration(color: c.or, borderRadius: BorderRadius.circular(2)),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                titre.toUpperCase(),
+                style: TextStyle(
+                  fontFamily: kPoliceTexte,
+                  fontSize: 14.5,
+                  letterSpacing: 0.9,
+                  height: 1.25,
+                  fontWeight: FontWeight.w700,
+                  color: c.titre,
+                ),
+              ),
+            ),
+          ]),
         ),
         ...enfants,
       ]),
@@ -100,24 +110,24 @@ class LigneInfo extends StatelessWidget {
     if (texte.trim().isEmpty) return const SizedBox.shrink();
     final c = context.destiny;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
           libelle,
           style: TextStyle(
             fontFamily: kPoliceTexte,
-            fontSize: 11.5,
+            fontSize: 13.5,
             fontWeight: FontWeight.w700,
-            color: c.texteSecondaire,
+            color: c.titre,
           ),
         ),
-        const SizedBox(height: 2),
+        const SizedBox(height: 3),
         Text(
           texte,
           style: TextStyle(
             fontFamily: kPoliceTexte,
-            fontSize: 14.5,
-            height: 1.35,
+            fontSize: 15,
+            height: 1.45,
             fontStyle: italique ? FontStyle.italic : FontStyle.normal,
             color: c.texte,
           ),
@@ -139,13 +149,13 @@ class Paragraphe extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.destiny;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Text(
         texte,
         style: TextStyle(
           fontFamily: kPoliceTexte,
-          fontSize: 14.5,
-          height: 1.4,
+          fontSize: 15,
+          height: 1.45,
           fontStyle: italique ? FontStyle.italic : FontStyle.normal,
           fontWeight: gras ? FontWeight.w700 : FontWeight.w400,
           color: c.texte,
@@ -166,31 +176,85 @@ class Puce extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.destiny;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.only(bottom: 8),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         SizedBox(
-          width: 22,
-          child: Text(
-            numero == null ? '◆' : '$numero.',
-            style: TextStyle(
-              fontFamily: numero == null ? kPoliceTexte : kPoliceTitres,
-              fontSize: numero == null ? 8 : 14,
-              fontWeight: FontWeight.w700,
-              color: c.or,
-              height: numero == null ? 2.4 : 1.25,
-            ),
-          ),
+          width: 24,
+          child: numero == null
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      width: 7,
+                      height: 7,
+                      decoration: BoxDecoration(color: c.or, borderRadius: BorderRadius.circular(2)),
+                    ),
+                  ),
+                )
+              : Text(
+                  '$numero.',
+                  style: TextStyle(
+                    fontFamily: kPoliceTexte,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
+                    color: c.titre,
+                    height: 1.4,
+                  ),
+                ),
         ),
         Expanded(
           child: Text(texte,
-              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14.5, height: 1.35, color: c.texte)),
+              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 15, height: 1.4, color: c.texte)),
         ),
       ]),
     );
   }
 }
 
-/// Un élément de liste en carte, avec une bordure de couleur facultative.
+/// Une icône sur une pastille teintée de sa couleur : le repère visuel d'une
+/// entrée (une couleur par entrée, pour la reconnaître d'un coup d'œil).
+class PastilleIcone extends StatelessWidget {
+  const PastilleIcone(this.icone, {super.key, this.couleur, this.taille = 44});
+
+  final IconData icone;
+
+  /// Couleur d'accent (l'or par défaut).
+  final Color? couleur;
+  final double taille;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.destiny;
+    final base = couleur ?? c.or;
+    return Container(
+      width: taille,
+      height: taille,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: c.teinte(base),
+        borderRadius: BorderRadius.circular(taille * 0.29),
+      ),
+      child: Icon(icone, color: c.accent(base), size: taille * 0.55),
+    );
+  }
+}
+
+/// Le fond d'une carte : une surface pleine, plus claire que la page, avec
+/// une ombre douce. Pas de bordure, sauf si elle dit quelque chose.
+BoxDecoration decorCarte(DestinyCouleurs c, {double rayon = 16, Color? bordure, double largeur = 1.5}) =>
+    BoxDecoration(
+      color: c.carte,
+      borderRadius: BorderRadius.circular(rayon),
+      border: bordure == null ? null : Border.all(color: bordure, width: largeur),
+      boxShadow: c.ombre,
+    );
+
+/// Un élément de liste en carte : une pastille d'icône (ou un médaillon),
+/// un titre lisible, un sous-titre, et un liseré de couleur facultatif.
+///
+/// Une simple [Icon] passée en [devant] devient une [PastilleIcone] de sa
+/// couleur (l'or si elle n'en a pas).
 class ElementListe extends StatelessWidget {
   const ElementListe({
     super.key,
@@ -214,68 +278,69 @@ class ElementListe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.destiny;
+    final d = devant;
+    final Widget? tete = d is Icon && d.icon != null
+        ? PastilleIcone(d.icon!, couleur: d.color == null || d.color == c.titre ? c.or : d.color)
+        : d;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Material(
-        color: c.carte,
-        borderRadius: BorderRadius.circular(14),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(14),
-          onTap: onTap,
-          child: Container(
-            constraints: const BoxConstraints(minHeight: 56),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: c.filet),
-            ),
-            child: Row(children: [
-              if (couleur != null)
-                Container(
-                  width: 5,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    color: couleur,
-                    borderRadius: const BorderRadius.horizontal(left: Radius.circular(14)),
+      padding: const EdgeInsets.only(bottom: 12),
+      child: DecoratedBox(
+        decoration: decorCarte(c),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: onTap,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Stack(children: [
+                ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: 64),
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(couleur != null ? 20 : 14, 14, onTap != null ? 8 : 14, 14),
+                    child: Row(children: [
+                      if (tete != null) ...[tete, const SizedBox(width: 14)],
+                      Expanded(
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Text(
+                            titre,
+                            style: TextStyle(
+                              fontFamily: kPoliceTexte,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16.5,
+                              height: 1.25,
+                              color: c.texte,
+                            ),
+                          ),
+                          if (sousTitre != null && sousTitre!.isNotEmpty) ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              sousTitre!,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: kPoliceTexte,
+                                fontSize: 14,
+                                height: 1.35,
+                                color: c.texteSecondaire,
+                              ),
+                            ),
+                          ],
+                        ]),
+                      ),
+                      if (apres != null) Padding(padding: const EdgeInsets.only(left: 10), child: apres),
+                      if (onTap != null)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4),
+                          child: Icon(Icons.chevron_right_rounded, color: c.texteSecondaire, size: 26),
+                        ),
+                    ]),
                   ),
                 ),
-              if (devant != null) Padding(padding: const EdgeInsets.only(left: 12), child: devant),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(
-                      titre,
-                      style: TextStyle(
-                        fontFamily: kPoliceTitres,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 15.5,
-                        color: c.texte,
-                      ),
-                    ),
-                    if (sousTitre != null && sousTitre!.isNotEmpty) ...[
-                      const SizedBox(height: 2),
-                      Text(
-                        sousTitre!,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontFamily: kPoliceTexte,
-                          fontSize: 12.5,
-                          height: 1.3,
-                          color: c.texteSecondaire,
-                        ),
-                      ),
-                    ],
-                  ]),
-                ),
-              ),
-              if (apres != null) Padding(padding: const EdgeInsets.only(right: 10), child: apres),
-              if (onTap != null)
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: Icon(Icons.chevron_right_rounded, color: c.texteSecondaire),
-                ),
-            ]),
+                if (couleur != null)
+                  Positioned(left: 0, top: 0, bottom: 0, width: 6, child: ColoredBox(color: couleur!)),
+              ]),
+            ),
           ),
         ),
       ),
@@ -309,23 +374,37 @@ class FiltresPuces<T> extends StatelessWidget {
         for (final v in valeurs)
           Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: ChoiceChip(
-              label: Text(libelle(v)),
-              selected: v == choisi,
-              onSelected: (_) => onChoix(v),
-              selectedColor: (couleur?.call(v) ?? c.or).withValues(alpha: 0.3),
-              side: BorderSide(color: couleur?.call(v) ?? c.filet),
-              showCheckmark: false,
-            ),
+            child: Builder(builder: (context) {
+              final teinte = couleur?.call(v);
+              final actif = v == choisi;
+              return ChoiceChip(
+                label: Text(libelle(v)),
+                selected: actif,
+                onSelected: (_) => onChoix(v),
+                avatar: teinte == null
+                    ? null
+                    : Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(color: teinte, shape: BoxShape.circle),
+                      ),
+                selectedColor: teinte == null ? c.selection : c.teinte(teinte),
+                side: BorderSide(
+                  color: actif ? (teinte ?? c.or) : c.ligne,
+                  width: actif ? 1.6 : 1,
+                ),
+                showCheckmark: false,
+              );
+            }),
           ),
       ]),
     );
   }
 }
 
-/// Un cadre arrondi avec un liseré de couleur à gauche (couleur de famille).
+/// Un cadre en carte, avec un liseré de couleur à gauche (couleur de famille).
 class CadreLisere extends StatelessWidget {
-  const CadreLisere({super.key, required this.couleur, required this.child, this.marge = 10});
+  const CadreLisere({super.key, required this.couleur, required this.child, this.marge = 12});
 
   final Color couleur;
   final Widget child;
@@ -336,18 +415,14 @@ class CadreLisere extends StatelessWidget {
     final c = context.destiny;
     return Container(
       margin: EdgeInsets.only(bottom: marge),
-      decoration: BoxDecoration(
-        color: c.carte,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: c.filet),
-      ),
+      decoration: decorCarte(c),
       // Sans IntrinsicHeight : le liseré suit la hauteur du contenu, même quand
       // un grand texte passe sur plusieurs lignes.
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(13),
+        borderRadius: BorderRadius.circular(16),
         child: Stack(children: [
-          Padding(padding: const EdgeInsets.fromLTRB(16, 12, 12, 12), child: child),
-          Positioned(left: 0, top: 0, bottom: 0, width: 4, child: ColoredBox(color: couleur)),
+          Padding(padding: const EdgeInsets.fromLTRB(20, 12, 14, 12), child: child),
+          Positioned(left: 0, top: 0, bottom: 0, width: 6, child: ColoredBox(color: couleur)),
         ]),
       ),
     );

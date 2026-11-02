@@ -17,13 +17,13 @@ import 'fiche_exercice_screen.dart';
 const List<String> _themesCarnet = ['Échauffement', 'Statut', 'Spontanéité', 'Écoute', 'Dialogue', 'Imagination'];
 
 Color _couleurCarnet(String theme) => switch (theme) {
-      'Échauffement' => const Color(0xFFE5735F),
-      'Statut' => const Color(0xFFD9A030),
-      'Spontanéité' => const Color(0xFF2FAF95),
-      'Écoute' => const Color(0xFF4A90D0),
-      'Imagination' => const Color(0xFF9B7FE0),
-      'Dialogue' => const Color(0xFF2DB0C0),
-      _ => const Color(0xFFD06A95),
+      'Échauffement' => DestinyCouleurs.corail,
+      'Statut' => DestinyCouleurs.ambre,
+      'Spontanéité' => DestinyCouleurs.turquoise,
+      'Écoute' => DestinyCouleurs.ciel,
+      'Imagination' => DestinyCouleurs.lavande,
+      'Dialogue' => DestinyCouleurs.cyan,
+      _ => DestinyCouleurs.rose,
     };
 
 IconData _iconeCarnet(String theme) => switch (theme) {
@@ -107,10 +107,10 @@ class _ExercicesScreenState extends State<ExercicesScreen> {
     ];
 
     Widget etiquette(IconData icone, Color couleur, String texte) => Tab(
-          height: 44,
+          height: 50,
           child: Row(mainAxisSize: MainAxisSize.min, children: [
-            Icon(icone, size: 18, color: couleur),
-            const SizedBox(width: 6),
+            Icon(icone, size: 20, color: c.accent(couleur)),
+            const SizedBox(width: 8),
             Text(texte),
           ]),
         );
@@ -121,18 +121,14 @@ class _ExercicesScreenState extends State<ExercicesScreen> {
         TabBar(
           isScrollable: true,
           tabAlignment: TabAlignment.start,
-          indicatorColor: c.titre,
-          labelColor: c.texte,
-          unselectedLabelColor: c.texteSecondaire,
-          labelStyle: const TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 14),
-          unselectedLabelStyle: const TextStyle(fontFamily: kPoliceTexte, fontSize: 14),
-          dividerColor: c.filet,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          indicatorWeight: 3,
           tabs: [
             for (final o in onglets)
               switch (o) {
                 _OngletCarnet(:final theme) => etiquette(_iconeCarnet(theme), _couleurCarnet(theme), theme),
-                _OngletGrammaire(:final theme) => etiquette(
-                    iconeThemeExercice(theme.id), couleurThemeExercice(context, theme.id), theme.nom),
+                _OngletGrammaire(:final theme) =>
+                  etiquette(iconeThemeExercice(theme.id), couleurThemeExercice(context, theme.id), theme.nom),
                 _OngletSolo() => etiquette(_iconeCarnet(''), _couleurCarnet(''), t.t('exercices.solo')),
               },
           ],
@@ -152,7 +148,7 @@ class _ExercicesScreenState extends State<ExercicesScreen> {
   }
 
   Widget _liste(List<Widget> enfants) => ListView(
-        padding: const EdgeInsets.fromLTRB(16, 14, 16, 28),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
         children: [
           for (final e in enfants)
             Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 760), child: e)),
@@ -166,18 +162,22 @@ class _ExercicesScreenState extends State<ExercicesScreen> {
     return _liste([
       CadreLisere(
         couleur: c.or,
-        marge: 14,
+        marge: 18,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
             t.t('exercices.principe_du_jour').toUpperCase(),
             style: TextStyle(
-                fontFamily: kPoliceTexte, fontSize: 11.5, letterSpacing: 2, fontWeight: FontWeight.w700, color: c.titre),
+                fontFamily: kPoliceTexte,
+                fontSize: 12.5,
+                letterSpacing: 1.1,
+                fontWeight: FontWeight.w700,
+                color: c.titre),
           ),
           const SizedBox(height: 6),
           Text(
             carnet.principeDuJour(DateTime.now()),
             style: TextStyle(
-                fontFamily: kPoliceTexte, fontSize: 15, height: 1.35, fontWeight: FontWeight.w600, color: c.texte),
+                fontFamily: kPoliceTexte, fontSize: 16.5, height: 1.4, fontWeight: FontWeight.w600, color: c.texte),
           ),
         ]),
       ),
@@ -185,9 +185,10 @@ class _ExercicesScreenState extends State<ExercicesScreen> {
         ElementListe(
           titre: ex.nom,
           sousTitre: ex.consigne,
-          devant: _Pastille(icone: _iconeCarnet(theme), couleur: couleur),
+          devant: PastilleIcone(_iconeCarnet(theme), couleur: couleur),
           apres: Text(t.t('exercices.minutes', {'n': '${(ex.duree / 60).round()}'}),
-              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire)),
+              style: TextStyle(
+                  fontFamily: kPoliceTexte, fontSize: 13.5, fontWeight: FontWeight.w600, color: c.texteSecondaire)),
           onTap: () => _ouvrir(ChronoExerciceScreen(
             titre: ex.nom,
             consigne: ex.consigne,
@@ -220,26 +221,6 @@ class _ExercicesScreenState extends State<ExercicesScreen> {
   }
 }
 
-/// Une icône sur une pastille teintée.
-class _Pastille extends StatelessWidget {
-  const _Pastille({required this.icone, required this.couleur});
-
-  final IconData icone;
-  final Color couleur;
-
-  @override
-  Widget build(BuildContext context) => Container(
-        width: 38,
-        height: 38,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: couleur.withValues(alpha: context.destiny.sombre ? 0.2 : 0.14),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Icon(icone, color: couleur, size: 21),
-      );
-}
-
 /// Le bandeau d'un thème de la grammaire : son nom, son sous-titre, le
 /// principe (une phrase de Mark Jane) et son explication.
 class _BandeauTheme extends StatelessWidget {
@@ -255,24 +236,24 @@ class _BandeauTheme extends StatelessWidget {
     final couleur = couleurThemeExercice(context, theme.id);
     return CadreLisere(
       couleur: couleur,
-      marge: 14,
+      marge: 18,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          Icon(iconeThemeExercice(theme.id), color: couleur, size: 22),
-          const SizedBox(width: 8),
+          PastilleIcone(iconeThemeExercice(theme.id), couleur: couleur, taille: 40),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(theme.nom,
-                style: TextStyle(
-                    fontFamily: kPoliceTitres, fontSize: 20, fontWeight: FontWeight.w900, color: c.titre)),
+                style: TextStyle(fontFamily: kPoliceTitres, fontSize: 21, fontWeight: FontWeight.w900, color: c.titre)),
           ),
           Text(t.t('exercices.nombre', {'n': '$nombre'}),
-              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12, color: c.texteSecondaire)),
+              style: TextStyle(
+                  fontFamily: kPoliceTexte, fontSize: 13.5, fontWeight: FontWeight.w600, color: c.texteSecondaire)),
         ]),
         if (theme.sousTitre.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(top: 2, bottom: 8),
+            padding: const EdgeInsets.only(top: 8, bottom: 8),
             child: Text(theme.sousTitre,
-                style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13, color: c.texteSecondaire)),
+                style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, color: c.texteSecondaire)),
           ),
         if (theme.principe.isNotEmpty)
           Padding(
@@ -280,15 +261,15 @@ class _BandeauTheme extends StatelessWidget {
             child: Text(theme.principe,
                 style: TextStyle(
                     fontFamily: kPoliceTexte,
-                    fontSize: 15,
-                    height: 1.35,
+                    fontSize: 16,
+                    height: 1.4,
                     fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.w600,
                     color: c.texte)),
           ),
         if (theme.explication.isNotEmpty)
           Text(theme.explication,
-              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, height: 1.35, color: c.texte)),
+              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 15, height: 1.45, color: c.texte)),
       ]),
     );
   }
@@ -306,43 +287,45 @@ class _CarteExercice extends StatelessWidget {
     final c = context.destiny;
     final e = exercice;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Material(
-        color: c.carte,
-        borderRadius: BorderRadius.circular(14),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(14),
-          onTap: onTap,
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: c.filet),
-            ),
-            child: Row(children: [
-              Expanded(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(e.titre,
-                      style: TextStyle(
-                          fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 15.5, color: c.texte)),
-                  const SizedBox(height: 6),
-                  Wrap(spacing: 10, runSpacing: 4, crossAxisAlignment: WrapCrossAlignment.center, children: [
-                    EtiquetteExercice(icone: Icons.timer_outlined, texte: e.duree),
-                    EtiquetteExercice(icone: Icons.groups_outlined, texte: e.joueurs),
-                    if (avecMarkJane(context, e)) const BadgeMarkJane(),
-                  ]),
-                  if (e.but.isNotEmpty) ...[
-                    const SizedBox(height: 6),
-                    Text(e.but,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
+      padding: const EdgeInsets.only(bottom: 12),
+      child: DecoratedBox(
+        decoration: decorCarte(c),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 14, 8, 14),
+              child: Row(children: [
+                Expanded(
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(e.titre,
                         style: TextStyle(
-                            fontFamily: kPoliceTexte, fontSize: 12.5, height: 1.3, color: c.texteSecondaire)),
-                  ],
-                ]),
-              ),
-              Icon(Icons.chevron_right_rounded, color: c.texteSecondaire),
-            ]),
+                            fontFamily: kPoliceTexte,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16.5,
+                            height: 1.25,
+                            color: c.texte)),
+                    const SizedBox(height: 8),
+                    Wrap(spacing: 10, runSpacing: 4, crossAxisAlignment: WrapCrossAlignment.center, children: [
+                      EtiquetteExercice(icone: Icons.timer_outlined, texte: e.duree),
+                      EtiquetteExercice(icone: Icons.groups_outlined, texte: e.joueurs),
+                      if (avecMarkJane(context, e)) const BadgeMarkJane(),
+                    ]),
+                    if (e.but.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      Text(e.but,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontFamily: kPoliceTexte, fontSize: 14, height: 1.35, color: c.texteSecondaire)),
+                    ],
+                  ]),
+                ),
+                Icon(Icons.chevron_right_rounded, color: c.texteSecondaire, size: 26),
+              ]),
+            ),
           ),
         ),
       ),

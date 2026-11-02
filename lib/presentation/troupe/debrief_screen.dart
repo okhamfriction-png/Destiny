@@ -209,7 +209,7 @@ class _DebriefScreenState extends State<DebriefScreen> {
           Expanded(
             child: Text(
               [if (p.joueur.isNotEmpty) p.joueur, if (a != null) a.nom].join(' · '),
-              style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 16, color: c.texte),
+              style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 16.5, color: c.texte),
             ),
           ),
         ]),

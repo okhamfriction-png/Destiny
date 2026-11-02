@@ -422,7 +422,7 @@ class _DecorCard extends StatelessWidget {
                     TextSpan(children: [
                       TextSpan(
                         text: a.name,
-                        style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, color: d.texte),
+                        style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, color: d.texte),
                       ),
                       if (a.line.isNotEmpty) TextSpan(text: '\n${a.line}', style: TextStyle(color: d.texteSecondaire)),
                     ]),
@@ -464,7 +464,7 @@ class _GameHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(parts.isEmpty ? k('jeu.spectacle') : parts.join(' · '),
-                    style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 15, color: d.titre)),
+                    style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 16, color: d.titre)),
                 if (posees != null && cible != null)
                   Text(k('jeu.repliques', {'posees': '$posees', 'cible': '$cible'}),
                       style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12, color: d.texteSecondaire)),
@@ -818,10 +818,13 @@ class _ActionBar extends StatelessWidget {
                 style: OutlinedButton.styleFrom(
                   alignment: Alignment.centerLeft,
                   foregroundColor: d.texte,
-                  side: BorderSide(color: d.filet, width: 1.2),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  backgroundColor: d.champ,
+                  side: BorderSide(color: d.ligne, width: 1.2),
+                  minimumSize: const Size(48, 44),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  textStyle: const TextStyle(fontFamily: kPoliceTexte, fontSize: 15, fontWeight: FontWeight.w500),
                 ),
-                child: Text(p.texte, textAlign: TextAlign.left, style: const TextStyle(fontWeight: FontWeight.w500)),
+                child: Text(p.texte, textAlign: TextAlign.left),
               ),
             ),
         ],

@@ -69,17 +69,25 @@ void main() {
   test('les couleurs du texte se lisent, en clair comme en sombre (contraste AA)', () {
     for (final sombre in [false, true]) {
       final c = DestinyCouleurs.depuisGrammaire(chargee.grammaire, sombre: sombre);
-      for (final fond in [c.fond, c.carte]) {
+      final theme = sombre ? 'sombre' : 'clair';
+      for (final (surface, fond) in [
+        ('le fond', c.fond),
+        ('une carte', c.carte),
+        ('un champ', c.champ),
+        ('la barre', c.barre),
+      ]) {
         for (final (nom, couleur) in [
           ('texte', c.texte),
           ('secondaire', c.texteSecondaire),
           ('titre', c.titre),
           ('bleu', c.bleuTexte),
         ]) {
-          expect(_contraste(couleur, fond), greaterThanOrEqualTo(4.5),
-              reason: '$nom sur ${fond == c.fond ? 'le fond' : 'une carte'} (${sombre ? 'sombre' : 'clair'})');
+          expect(_contraste(couleur, fond), greaterThanOrEqualTo(4.5), reason: '$nom sur $surface ($theme)');
         }
       }
+      // Un élément choisi (segment, puce) et le texte des boutons pleins.
+      expect(_contraste(c.texte, c.selection), greaterThanOrEqualTo(4.5), reason: 'élément choisi ($theme)');
+      expect(_contraste(c.surOr, c.or), greaterThanOrEqualTo(4.5), reason: 'bouton plein ($theme)');
       expect(_contraste(c.kidsTexte, c.kidsFond), greaterThanOrEqualTo(4.5));
     }
   });

@@ -111,7 +111,7 @@ class FicheOeuvre extends StatelessWidget {
                   Expanded(
                     child: Text(p.nom,
                         style: TextStyle(
-                            fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 15, color: c.texte)),
+                            fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 16, color: c.texte)),
                   ),
                   Flexible(child: PuceArchetype(p.archetypeId, suffixe: p.animalNom)),
                 ]),

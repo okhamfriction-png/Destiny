@@ -175,7 +175,7 @@ class FigurantsScreen extends StatelessWidget {
           for (final ty in f.types)
             ExpansionTile(
               tilePadding: EdgeInsets.zero,
-              title: Text(ty.nom, style: const TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700)),
+              title: Text(ty.nom, style: const TextStyle(fontFamily: kPoliceTexte, fontSize: 16, fontWeight: FontWeight.w700)),
               subtitle: Text(ty.ceQuIlEst),
               childrenPadding: const EdgeInsets.only(bottom: 8),
               children: [

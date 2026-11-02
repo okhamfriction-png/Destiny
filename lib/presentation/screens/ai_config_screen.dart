@@ -49,7 +49,7 @@ class _AiConfigScreenState extends State<AiConfigScreen> {
     final models = s.provider.models;
     final isCustom = !models.contains(s.model);
     final dropdownValue = isCustom ? _kPersonnalise : s.model;
-    final petit = TextStyle(fontFamily: kPoliceTexte, fontSize: 13, height: 1.35, color: c.texteSecondaire);
+    final petit = TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.35, color: c.texteSecondaire);
 
     return PageDestiny(
       titre: k('titre'),

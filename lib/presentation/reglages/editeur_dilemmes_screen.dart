@@ -115,14 +115,14 @@ class _EditeurDilemmesScreenState extends State<EditeurDilemmesScreen> {
                   child: ExpansionTile(
                     title: Text(danger.name,
                         style: TextStyle(
-                            fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 15, color: c.texte)),
+                            fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 16, color: c.texte)),
                     subtitle: Text(
                       dilemmes.isEmpty
                           ? k('aucun')
                           : dilemmes.length == 1
                               ? k('un')
                               : k('nombre', {'n': '${dilemmes.length}'}),
-                      style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire),
+                      style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: c.texteSecondaire),
                     ),
                     childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
                     children: [

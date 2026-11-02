@@ -323,11 +323,11 @@ class _RegieScreenState extends State<RegieScreen> {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
               [if (p.joueur.isNotEmpty) p.joueur, m.archetype.nom].join(' · '),
-              style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, color: c.texte),
+              style: TextStyle(fontSize: 16, fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, color: c.texte),
             ),
             Text(m.ceQuIlFait, style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w600, color: couleur)),
             if (m.corps.isNotEmpty)
-              Text(m.corps, style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire)),
+              Text(m.corps, style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: c.texteSecondaire)),
           ]),
         ),
       ]),

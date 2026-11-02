@@ -128,7 +128,7 @@ class LocationDetailSection extends StatelessWidget {
               if (!dense)
                 Text(
                   t.t('details_lieux.${s.cle}_aide'),
-                  style: TextStyle(fontFamily: kPoliceTexte, color: d.texteSecondaire, fontSize: 12),
+                  style: TextStyle(fontFamily: kPoliceTexte, color: d.texteSecondaire, fontSize: 13.5),
                 ),
             ],
           ),

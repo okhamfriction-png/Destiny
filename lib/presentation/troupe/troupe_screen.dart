@@ -108,44 +108,39 @@ class TroupeScreen extends StatelessWidget {
                     CadreLisere(
                       couleur: c.or,
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Text(t.t('troupe.regle_du_jour').toUpperCase(),
-                            style: TextStyle(
-                                fontFamily: kPoliceTexte, fontSize: 11, letterSpacing: 1.6, color: c.texteSecondaire)),
-                        const SizedBox(height: 4),
+                        _Surtitre(t.t('troupe.regle_du_jour')),
+                        const SizedBox(height: 6),
                         Text(regle.titre,
                             style: TextStyle(
-                                fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 17, color: c.titre)),
-                        Text(regle.texte, style: TextStyle(fontFamily: kPoliceTexte, color: c.texte)),
+                                fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 17.5, color: c.titre)),
+                        const SizedBox(height: 4),
+                        Text(regle.texte,
+                            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 15, height: 1.45, color: c.texte)),
                       ]),
                     )
                   else
                     CadreLisere(
                       couleur: couleurAnimal,
                       child: Row(children: [
-                        MedaillonAnimal(animal, taille: 48, source: contexte.visuels.source),
-                        const SizedBox(width: 12),
+                        MedaillonAnimal(animal, taille: 56, source: contexte.visuels.source),
+                        const SizedBox(width: 14),
                         Expanded(
                           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                            Text(t.t('troupe.replique_du_jour').toUpperCase(),
-                                style: TextStyle(
-                                    fontFamily: kPoliceTexte,
-                                    fontSize: 11,
-                                    letterSpacing: 1.6,
-                                    color: c.texteSecondaire)),
-                            const SizedBox(height: 4),
+                            _Surtitre(t.t('troupe.replique_du_jour')),
+                            const SizedBox(height: 8),
                             EncartReplique(animal.replique, couleur: couleurAnimal),
                           ]),
                         ),
                       ]),
                     ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
                   if (enCours != null) ...[
                     FilledButton.icon(
                       icon: const Icon(Icons.play_arrow_rounded),
                       onPressed: () => ouvrirEtape(context, contexte, enCours),
                       label: Text(t.t('troupe.reprendre', {'etape': t.t('troupe.etapes.${enCours.etape.name}')})),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 12),
                     OutlinedButton.icon(
                       icon: const Icon(Icons.add_rounded),
                       onPressed: () => _nouveau(context),
@@ -157,25 +152,25 @@ class TroupeScreen extends StatelessWidget {
                       onPressed: () => _nouveau(context),
                       label: Text(t.t('troupe.preparer')),
                     ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 24),
                   ElementListe(
                     titre: t.t('troupe.entrees.jouer'),
-                    devant: Icon(Icons.auto_stories_outlined, color: c.titre),
+                    devant: const Icon(Icons.auto_stories_rounded, color: DestinyCouleurs.corail),
                     onTap: versJouer,
                   ),
                   ElementListe(
                     titre: t.t('troupe.entrees.bibliotheque'),
-                    devant: Icon(Icons.menu_book_rounded, color: c.titre),
+                    devant: Icon(Icons.menu_book_rounded, color: c.or),
                     onTap: versBibliotheque,
                   ),
                   ElementListe(
                     titre: t.t('troupe.entrees.exercice'),
-                    devant: Icon(Icons.self_improvement_rounded, color: c.titre),
+                    devant: const Icon(Icons.self_improvement_rounded, color: DestinyCouleurs.turquoise),
                     onTap: versExercices,
                   ),
                   ElementListe(
                     titre: t.t('troupe.entrees.historique'),
-                    devant: Icon(Icons.history_rounded, color: c.titre),
+                    devant: const Icon(Icons.history_rounded, color: DestinyCouleurs.ciel),
                     onTap: () => Navigator.of(context)
                         .push(MaterialPageRoute(builder: (_) => HistoriqueScreen(contexte: contexte))),
                   ),
@@ -193,4 +188,23 @@ class TroupeScreen extends StatelessWidget {
     s.kids = contexte.reglages.kidsParDefaut;
     if (context.mounted) await ouvrirEtape(context, contexte, s);
   }
+}
+
+/// Le surtitre d'un encart (« La règle du jour », « La réplique du jour »).
+class _Surtitre extends StatelessWidget {
+  const _Surtitre(this.texte);
+
+  final String texte;
+
+  @override
+  Widget build(BuildContext context) => Text(
+        texte.toUpperCase(),
+        style: TextStyle(
+          fontFamily: kPoliceTexte,
+          fontSize: 12.5,
+          letterSpacing: 1.1,
+          fontWeight: FontWeight.w700,
+          color: context.destiny.texteSecondaire,
+        ),
+      );
 }

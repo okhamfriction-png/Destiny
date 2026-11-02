@@ -231,7 +231,7 @@ class _LocationDetailsEditScreenState extends State<LocationDetailsEditScreen> {
         Padding(
           padding: const EdgeInsets.only(bottom: 8),
           child: Text(aide,
-              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, height: 1.3, color: c.texteSecondaire)),
+              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, height: 1.3, color: c.texteSecondaire)),
         ),
         for (var i = 0; i < controllers.length; i++)
           Padding(

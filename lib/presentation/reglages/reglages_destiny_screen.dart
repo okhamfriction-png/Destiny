@@ -272,12 +272,12 @@ class _EditeurChrono extends StatelessWidget {
         ]);
 
     return CadreLisere(
-      couleur: choisi ? c.titre : c.filet,
+      couleur: choisi ? c.or : c.filet,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(children: [
           Expanded(
             child: Text(k('chrono_n', {'n': '${ch.dureeMinutes}'}),
-                style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, color: c.texte)),
+                style: TextStyle(fontFamily: kPoliceTexte, fontSize: 17, fontWeight: FontWeight.w700, color: c.texte)),
           ),
           ChoiceChip(
             label: Text(k('par_defaut')),

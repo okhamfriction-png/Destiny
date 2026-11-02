@@ -75,7 +75,7 @@ class _LivretScreenState extends State<LivretScreen> {
                 Text(t.t('livret.sommaire').toUpperCase(),
                     style: TextStyle(
                         fontFamily: kPoliceTexte,
-                        fontSize: 11.5,
+                        fontSize: 12.5,
                         letterSpacing: 2,
                         fontWeight: FontWeight.w700,
                         color: c.titre)),
@@ -117,7 +117,7 @@ class BlocLivretVue extends StatelessWidget {
       IntertitreLivret(:final texte) => Padding(
           padding: const EdgeInsets.only(top: 10, bottom: 6),
           child: Text(texte,
-              style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 15.5, color: c.texte)),
+              style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 16, color: c.texte)),
         ),
       ParagrapheLivret(:final texte, :final italique) => Paragraphe(texte, italique: italique),
       PucesLivret(:final items, :final numerotees) => Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [

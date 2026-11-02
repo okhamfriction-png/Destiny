@@ -150,10 +150,12 @@ class _RootScreenState extends State<RootScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 52,
+        toolbarHeight: 56,
+        centerTitle: false,
+        titleSpacing: 20,
         title: Text(
           t.t('navigation.${['jouer', 'troupe', 'exercices'][_index]}'),
-          style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w900, color: c.titre),
+          style: TextStyle(fontFamily: kPoliceTitres, fontSize: 22, fontWeight: FontWeight.w900, color: c.titre),
         ),
         actions: [
           _PetitBouton(
@@ -174,23 +176,26 @@ class _RootScreenState extends State<RootScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() => _index = i),
-        destinations: [
-          NavigationDestination(
-              icon: const Icon(Icons.auto_stories_outlined),
-              selectedIcon: const Icon(Icons.auto_stories),
-              label: t.t('navigation.jouer')),
-          NavigationDestination(
-              icon: const Icon(Icons.theater_comedy_outlined),
-              selectedIcon: const Icon(Icons.theater_comedy),
-              label: t.t('navigation.troupe')),
-          NavigationDestination(
-              icon: const Icon(Icons.self_improvement_outlined),
-              selectedIcon: const Icon(Icons.self_improvement),
-              label: t.t('navigation.exercices')),
-        ],
+      bottomNavigationBar: DecoratedBox(
+        decoration: BoxDecoration(border: Border(top: BorderSide(color: c.filet))),
+        child: NavigationBar(
+          selectedIndex: _index,
+          onDestinationSelected: (i) => setState(() => _index = i),
+          destinations: [
+            NavigationDestination(
+                icon: const Icon(Icons.auto_stories_outlined),
+                selectedIcon: const Icon(Icons.auto_stories),
+                label: t.t('navigation.jouer')),
+            NavigationDestination(
+                icon: const Icon(Icons.theater_comedy_outlined),
+                selectedIcon: const Icon(Icons.theater_comedy),
+                label: t.t('navigation.troupe')),
+            NavigationDestination(
+                icon: const Icon(Icons.self_improvement_outlined),
+                selectedIcon: const Icon(Icons.self_improvement),
+                label: t.t('navigation.exercices')),
+          ],
+        ),
       ),
     );
   }
@@ -205,7 +210,7 @@ class _PetitBouton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      IconButton(icon: Icon(icon, size: 22), tooltip: tooltip, onPressed: onPressed);
+      IconButton(icon: Icon(icon, size: 24), tooltip: tooltip, onPressed: onPressed);
 }
 
 /// Coupe ou remet le son (effets et musique).

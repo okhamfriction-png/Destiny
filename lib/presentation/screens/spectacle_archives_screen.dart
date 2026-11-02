@@ -131,7 +131,7 @@ class _ArchiveDetailScreen extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 12),
           child: Text(
             '${record['lieu'] ?? ''} · ${record['danger'] ?? ''}',
-            style: TextStyle(fontFamily: kPoliceTitres, fontSize: 16, fontWeight: FontWeight.w700, color: c.titre),
+            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 16, fontWeight: FontWeight.w700, color: c.titre),
           ),
         ),
         // Transcript.
@@ -206,7 +206,7 @@ class _ArchiveBubble extends StatelessWidget {
                 child: Text(
                   didascalie,
                   style: TextStyle(
-                      fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire, fontStyle: FontStyle.italic),
+                      fontFamily: kPoliceTexte, fontSize: 13.5, color: c.texteSecondaire, fontStyle: FontStyle.italic),
                 ),
               ),
             Row(
@@ -223,7 +223,7 @@ class _ArchiveBubble extends StatelessWidget {
                             ? t.t('archives.spectacles.toi')
                             : t.t('archives.spectacles.toi_personnage', {'personnage': personnage}))
                         : personnage,
-                    style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13, fontWeight: FontWeight.w700, color: c.titre),
+                    style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, fontWeight: FontWeight.w700, color: c.titre),
                   ),
                 ),
               ],
@@ -276,7 +276,7 @@ Widget _renderDynamic(DestinyCouleurs c, Object? value) {
               children: [
                 Text(
                   entry.key.toString(),
-                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13, fontWeight: FontWeight.w700, color: c.titre),
+                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, fontWeight: FontWeight.w700, color: c.titre),
                 ),
                 const SizedBox(height: 2),
                 _renderDynamic(c, entry.value),

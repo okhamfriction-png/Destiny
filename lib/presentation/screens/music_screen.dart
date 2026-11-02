@@ -102,7 +102,7 @@ class _MusicScreenState extends State<MusicScreen> {
             children: [
               Text(
                 tracks.length == 1 ? k('piste') : k('pistes', {'n': '${tracks.length}'}),
-                style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13, color: d.texteSecondaire),
+                style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, color: d.texteSecondaire),
               ),
               const Spacer(),
               TextButton.icon(
@@ -327,7 +327,7 @@ class _NowPlayingBar extends StatelessWidget {
     final current = controller.current!;
     final dur = controller.duration.inMilliseconds.toDouble();
     final pos = controller.position.inMilliseconds.toDouble().clamp(0, dur <= 0 ? 1 : dur);
-    final temps = TextStyle(fontFamily: kPoliceTexte, fontSize: 12, color: d.texteSecondaire);
+    final temps = TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: d.texteSecondaire);
 
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),

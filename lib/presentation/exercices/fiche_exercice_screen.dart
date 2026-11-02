@@ -80,7 +80,7 @@ class BadgeMarkJane extends StatelessWidget {
         const SizedBox(width: 4),
         Text(
           context.textes.t('exercices.badge_mark_jane'),
-          style: TextStyle(fontFamily: kPoliceTexte, fontSize: 11, fontWeight: FontWeight.w700, color: c.texte),
+          style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, fontWeight: FontWeight.w700, color: c.texte),
         ),
       ]),
     );
@@ -102,7 +102,7 @@ class EtiquetteExercice extends StatelessWidget {
       const SizedBox(width: 4),
       Flexible(
         child: Text(texte,
-            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12, color: c.texteSecondaire)),
+            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: c.texteSecondaire)),
       ),
     ]);
   }
@@ -188,7 +188,7 @@ class FicheExerciceScreen extends StatelessWidget {
           Text(
             k('source', {'source': e.source}),
             textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12, color: c.texteSecondaire),
+            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: c.texteSecondaire),
           ),
         ],
       ],

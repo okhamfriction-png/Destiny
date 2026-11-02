@@ -250,12 +250,16 @@ class _PreparerScreenState extends State<PreparerScreen> {
           title: Wrap(
             spacing: 8,
             crossAxisAlignment: WrapCrossAlignment.center,
-            children: [Text(p('kids')), const SigleKids(petit: true)],
+            children: [
+              Text(p('kids'),
+                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 16, fontWeight: FontWeight.w600, color: c.texte)),
+              const SigleKids(petit: true),
+            ],
           ),
           value: s.kids,
           onChanged: _changerKids,
         ),
-        SectionDestiny(titre: p('joueurs'), espace: 8, enfants: [
+        SectionDestiny(titre: p('joueurs'), espace: 14, enfants: [
           SegmentedButton<int>(
             segments: [
               for (final n in [4, 5, 6]) ButtonSegment(value: n, label: Text('$n'))
@@ -265,7 +269,7 @@ class _PreparerScreenState extends State<PreparerScreen> {
           ),
         ]),
         SectionDestiny(titre: p('distribution'), enfants: [
-          Wrap(spacing: 8, runSpacing: 6, children: [
+          Wrap(spacing: 8, runSpacing: 8, children: [
             for (final m in ['tirage', 'exemple', 'concerte'])
               ChoiceChip(
                 label: Text(t.t('distribution.modes.$m')),
@@ -277,23 +281,23 @@ class _PreparerScreenState extends State<PreparerScreen> {
               ),
           ]),
         ]),
-        const SizedBox(height: 14),
+        const SizedBox(height: 22),
         SizedBox(
           width: double.infinity,
           child: FilledButton.icon(
             onPressed: _toutTirer,
-            icon: const Icon(Icons.shuffle_rounded),
+            icon: const Icon(Icons.shuffle_rounded, size: 24),
             label: Text(p('tirer')),
             style: FilledButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              textStyle: const TextStyle(fontFamily: kPoliceTexte, fontSize: 17, fontWeight: FontWeight.w700),
+              padding: const EdgeInsets.symmetric(vertical: 18),
+              textStyle: const TextStyle(fontFamily: kPoliceTexte, fontSize: 18, fontWeight: FontWeight.w800),
             ),
           ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 8),
         Text(p('tirer_aide'),
             textAlign: TextAlign.center,
-            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire)),
+            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: c.texteSecondaire)),
         SectionDestiny(titre: p('tirage'), enfants: [
           if (_catalogueCharge && _lieuxPossibles.isEmpty && _dangersPossibles.isEmpty)
             Paragraphe(p('catalogue_vide'), italique: true)
@@ -337,8 +341,9 @@ class _PreparerScreenState extends State<PreparerScreen> {
             ]),
         ]),
         SectionDestiny(titre: p('archetypes'), enfants: [
-          Text(p('animaux_aide'), style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire)),
-          const SizedBox(height: 8),
+          Text(p('animaux_aide'),
+              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.4, color: c.texteSecondaire)),
+          const SizedBox(height: 12),
           for (var i = 0; i < s.personnages.length; i++) _ligneArchetype(i),
           _Verdict(
             ok: verdict.valide,
@@ -347,7 +352,7 @@ class _PreparerScreenState extends State<PreparerScreen> {
             onCorriger: verdict.correction == null ? null : () => _attribuer(verdict.correction!.appliquer(ids)),
           ),
         ]),
-        const SizedBox(height: 18),
+        const SizedBox(height: 24),
         SizedBox(
           width: double.infinity,
           child: FilledButton.icon(
@@ -378,17 +383,17 @@ class _PreparerScreenState extends State<PreparerScreen> {
     final c = context.destiny;
     final pers = s.personnages[i];
     final arch = g.archetype(pers.archetypeId);
-    final couleur = arch == null ? c.filet : c.famille(arch.famille);
+    final couleur = arch == null ? c.ligne : c.famille(arch.famille);
     String p(String k, [Map<String, String> v = const {}]) => t.t('preparer.$k', v);
     return CadreLisere(
       couleur: couleur,
-      marge: 8,
+      marge: 12,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(children: [
           Expanded(
             child: Text(
               arch?.nom ?? p('choisir_archetype'),
-              style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 16, color: c.texte),
+              style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 17, color: c.texte),
             ),
           ),
           IconButton(
@@ -409,8 +414,8 @@ class _PreparerScreenState extends State<PreparerScreen> {
           Text(arch.ceQuIlFait,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, height: 1.3, color: c.texteSecondaire)),
-          const SizedBox(height: 6),
+              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.35, color: c.texteSecondaire)),
+          const SizedBox(height: 10),
           Row(children: [
             for (final (j, a) in g.animauxDe(arch.id).indexed) ...[
               if (j > 0) const SizedBox(width: 8),
@@ -507,7 +512,7 @@ class _VignetteTirage extends StatelessWidget {
           ),
         );
     return ClipRRect(
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(16),
       child: AspectRatio(
         aspectRatio: 0.85,
         child: Stack(fit: StackFit.expand, children: [
@@ -521,8 +526,8 @@ class _VignetteTirage extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                stops: [0.45, 1],
-                colors: [Colors.transparent, Color(0xE6000000)],
+                stops: [0.35, 1],
+                colors: [Colors.transparent, Color(0xF0000000)],
               ),
             ),
           ),
@@ -534,16 +539,20 @@ class _VignetteTirage extends StatelessWidget {
               Text(surtitre.toUpperCase(),
                   style: const TextStyle(
                       fontFamily: kPoliceTexte,
-                      fontSize: 10.5,
-                      letterSpacing: 1.6,
+                      fontSize: 12,
+                      letterSpacing: 1.1,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFFE8D5A8))),
+                      color: Color(0xFFF0DDB0))),
               const SizedBox(height: 2),
               Text(nom.isEmpty ? '—' : nom,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                      fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 15, color: Colors.white)),
+                      fontFamily: kPoliceTexte,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16.5,
+                      height: 1.2,
+                      color: Colors.white)),
             ]),
           ),
           Positioned(top: 6, left: 6, child: bouton(Icons.shuffle_rounded, relancer, onRelancer)),
@@ -579,24 +588,24 @@ class _PuceAnimal extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.destiny;
     return Material(
-      color: choisi ? couleur.withValues(alpha: c.sombre ? 0.22 : 0.12) : Colors.transparent,
+      color: choisi ? couleur.withValues(alpha: c.sombre ? 0.26 : 0.12) : c.champ,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: choisi ? couleur : c.filet, width: choisi ? 2 : 1),
+        side: BorderSide(color: choisi ? couleur : c.ligne, width: choisi ? 2 : 1),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: onChoisir,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(6, 4, 0, 4),
+          padding: const EdgeInsets.fromLTRB(6, 5, 0, 5),
           child: Row(children: [
-            MedaillonAnimal(animal, taille: 30, source: source),
-            const SizedBox(width: 6),
+            MedaillonAnimal(animal, taille: 34, source: source),
+            const SizedBox(width: 8),
             Expanded(
               child: Text(animal.nom,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                      fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 13.5, color: c.texte)),
+                      fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 14.5, color: c.texte)),
             ),
             IconButton(
               tooltip: info,
@@ -625,22 +634,24 @@ class _Verdict extends StatelessWidget {
     final c = context.destiny;
     final couleur = ok ? c.famille(FamilleId.tient) : c.famille(FamilleId.fissure);
     return Container(
-      margin: const EdgeInsets.only(top: 6),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(top: 4),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: couleur.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: couleur),
+        color: couleur.withValues(alpha: c.sombre ? 0.18 : 0.10),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: couleur.withValues(alpha: 0.8), width: 1.4),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(children: [
           Icon(ok ? Icons.check_circle_rounded : Icons.info_outline_rounded, color: couleur),
           const SizedBox(width: 8),
-          Expanded(child: Text(texte, style: TextStyle(fontFamily: kPoliceTexte, color: c.texte))),
+          Expanded(
+              child: Text(texte,
+                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 15, fontWeight: FontWeight.w600, color: c.texte))),
         ]),
         if (!ok && correction.isNotEmpty) ...[
           const SizedBox(height: 6),
-          Text(correction, style: TextStyle(fontFamily: kPoliceTexte, color: c.texteSecondaire)),
+          Text(correction, style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, color: c.texteSecondaire)),
           if (onCorriger != null)
             Align(
               alignment: Alignment.centerRight,
