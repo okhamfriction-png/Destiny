@@ -788,3 +788,30 @@ Rien n'est perdu.
 ### Tests
 
 **304 tests passent.** Un test vérifie que la grammaire, les textes et les fiches des animaux ne parlent plus des objets du lieu. Un autre vérifie qu'une ancienne session avec des objets ne les montre plus à la mise en place ni à la régie, mais les garde dans sa sauvegarde.
+
+## 2.0.2 : la régie son dans un bouton, l'heure des Destiny
+
+### La demande
+
+« La régie prend trop de place : juste un bouton régie qui ouvre tout le son dans une pop-up qu'on peut fermer. Et le minuteur : qu'on voie les Destiny, à quel timing. »
+
+### Ce qui a été fait
+
+- **La régie son** :
+  - la tablette n'est plus dans la page ;
+  - à la régie, un bouton carré « Son » est à côté de DESTINY, dans le panneau du chrono qui reste en haut ;
+  - à l'échauffement, c'est un bouton « Régie son », qui dit aussi ce qui joue ;
+  - le bouton ouvre la tablette dans une fenêtre (`ouvrirRegieSon`). On la ferme avec la croix, en la glissant vers le bas ou en touchant à côté. Le chrono continue.
+  - l'icône du mixeur, en haut de la régie, disparaît : « Tout le mixeur » est dans la fenêtre.
+- **L'heure des Destiny** : sous chaque repère de la frise, l'heure prévue, ou celle où le Destiny a été lancé.
+  - Deux heures ne se chevauchent jamais et restent dans la frise (`FriseDestiny.placerHeures`), même avec des Destiny très proches.
+  - C'est la même frise à la régie, à l'échauffement et à la mise en place.
+
+### Tests
+
+**307 tests passent**, dont trois nouveaux :
+- la fenêtre de la régie son s'ouvre et se ferme ;
+- un Destiny lancé montre l'heure où il l'a été ;
+- les heures ne se chevauchent pas.
+
+Le test de la frise vérifie aussi les heures prévues sous les repères, et les tests de la régie son ouvrent d'abord la fenêtre.

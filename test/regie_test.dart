@@ -171,6 +171,13 @@ Future<Banc> _regie(WidgetTester tester,
   return b;
 }
 
+/// Ouvre la fenêtre de la régie son.
+Future<void> _ouvrirSon(WidgetTester tester) async {
+  await tester.tap(find.byKey(const ValueKey('bouton_regie_son')));
+  await tester.pumpAndSettle();
+  expect(find.byType(TabletteSon), findsOneWidget);
+}
+
 /// Laisse passer le rituel Destiny, puis « Reprendre ».
 Future<void> _finirRituel(WidgetTester tester) async {
   await tester.pump();
@@ -223,6 +230,35 @@ void main() {
     expect(find.text(_rg('dans', {'n': '1', 't': '10:00'})), findsOneWidget);
     expect(find.text('30:00'), findsOneWidget, reason: 'le temps qui reste, en grand');
     expect(find.text(_rg('destiny_n', {'n': '1'}).toUpperCase()), findsOneWidget);
+    // L'heure de chaque Destiny, sous son repère.
+    for (final (n, heure) in [(1, '10:00'), (2, '18:00'), (3, '27:00')]) {
+      expect(tester.widget<Text>(find.byKey(ValueKey('heure_destiny_$n'))).data, heure);
+    }
+  });
+
+  testWidgets('un Destiny lancé montre l\'heure où il l\'a été, les autres leur heure prévue', (tester) async {
+    final b = await _banc(tester);
+    b.session.destinys.add(const EvenementDestiny(numero: 1, secondes: 9 * 60 + 41, manuel: true));
+    b.session.palierAtteint = 2;
+    await _ouvrir(tester, RegieScreen(contexte: b.contexte, session: b.session));
+    expect(tester.widget<Text>(find.byKey(const ValueKey('heure_destiny_1'))).data, '09:41');
+    expect(tester.widget<Text>(find.byKey(const ValueKey('heure_destiny_2'))).data, '18:00');
+  });
+
+  test('les heures des Destiny ne se chevauchent jamais, et restent dans la frise', () {
+    for (final centres in [
+      [10.0, 12.0, 14.0],
+      [0.0, 150.0, 300.0],
+      [290.0, 295.0, 300.0],
+      [100.0, 101.0, 280.0],
+    ]) {
+      final g = FriseDestiny.placerHeures(centres, 300);
+      for (var i = 0; i < g.length; i++) {
+        expect(g[i], greaterThanOrEqualTo(0), reason: '$centres');
+        expect(g[i] + 46, lessThanOrEqualTo(300.001), reason: '$centres');
+        if (i > 0) expect(g[i] - g[i - 1], greaterThanOrEqualTo(46), reason: '$centres');
+      }
+    }
   });
 
   testWidgets('« +1 min » déplace le prochain Destiny, et le garde', (tester) async {
@@ -313,9 +349,22 @@ void main() {
     await tester.pump();
   });
 
+  testWidgets('la régie son : un bouton qui l\'ouvre dans une fenêtre, qu\'on ferme', (tester) async {
+    await _regie(tester);
+    expect(find.byType(TabletteSon), findsNothing, reason: 'elle ne prend plus de place à l\'écran');
+    expect(find.text(_rg('son_debut')), findsNothing);
+    await _ouvrirSon(tester);
+    expect(find.text(_rg('son_debut')), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('fermer_regie_son')));
+    await tester.pumpAndSettle();
+    expect(find.byType(TabletteSon), findsNothing);
+    expect(find.byKey(const ValueKey('bouton_destiny')), findsOneWidget);
+  });
+
   testWidgets('la régie son : chaque tuile fait jouer la régie', (tester) async {
     final b = await _regie(tester);
     final r = b.contexte.reglages;
+    await _ouvrirSon(tester);
     Future<void> tuile(String cle) async {
       await tester.tap(find.text(_rg(cle)));
       await tester.pump();
@@ -338,6 +387,7 @@ void main() {
 
   testWidgets('la régie son respecte le son coupé', (tester) async {
     final b = await _regie(tester, muet: true);
+    await _ouvrirSon(tester);
     expect(find.text(_rg('son_coupe')), findsOneWidget);
     await tester.tap(find.text(_rg('son_debut')), warnIfMissed: false);
     await tester.tap(find.text(_rg('son_destiny')), warnIfMissed: false);
@@ -465,10 +515,13 @@ void main() {
       expect(find.byType(LieuEtDanger), findsOneWidget);
       expect(find.text(s.lieuNom), findsWidgets);
       expect(find.text(s.dangerNom), findsWidgets);
-      expect(find.byType(TabletteSon), findsOneWidget);
+      expect(find.byType(BoutonRegieSon), findsOneWidget);
+      expect(find.byType(TabletteSon), findsNothing);
       expect(find.byType(FriseDestiny), findsOneWidget);
+      expect(tester.widget<Text>(find.byKey(const ValueKey('heure_destiny_2'))).data, '18:00');
       expect(find.text(t.t('echauffement.plan', {'duree': '30', 'liste': '10 · 18 · 27'})), findsOneWidget);
       // On s'échauffe en musique.
+      await _ouvrirSon(tester);
       await tester.tap(find.text(_rg('son_debut')));
       await tester.pump();
       expect(b.musique.joues, [b.contexte.reglages.musiqueDebut]);
@@ -482,7 +535,7 @@ void main() {
       expect(b.session.etape, EtapeSession.regie);
       expect(b.session.groupe, isNotEmpty);
       expect(find.byKey(const ValueKey('bouton_destiny')), findsOneWidget);
-      expect(find.byType(TabletteSon), findsOneWidget);
+      expect(find.byKey(const ValueKey('bouton_regie_son')), findsOneWidget);
     });
 
     testWidgets('« Aller directement à la régie » aussi', (tester) async {

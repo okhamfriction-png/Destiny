@@ -206,7 +206,8 @@ void main() {
     for (final n in [1, 2, 3]) {
       expect(find.byKey(ValueKey('repere_destiny_$n')), findsOneWidget);
     }
-    expect(find.text(t.t('regie.son_debut')), findsOneWidget);
+    expect(find.byKey(const ValueKey('bouton_regie_son')), findsOneWidget);
+    expect(find.text(t.t('regie.son_debut')), findsNothing, reason: 'la régie son est rangée dans sa fenêtre');
     await tester.tap(find.text(t.t('regie.destiny_n', {'n': '1'}).toUpperCase()));
     await tester.pump();
     await tester.pump();

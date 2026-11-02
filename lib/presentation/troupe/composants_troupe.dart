@@ -412,7 +412,8 @@ String horloge(int secondes) {
 }
 
 /// La frise du chrono : toute la durée, la position actuelle, et les trois
-/// Destiny numérotés (ceux passés cochés, le prochain mis en avant).
+/// Destiny numérotés (ceux passés cochés, le prochain mis en avant), avec
+/// leur heure en dessous : prévue, ou celle où ils ont été lancés.
 class FriseDestiny extends StatelessWidget {
   const FriseDestiny({
     super.key,
@@ -432,6 +433,29 @@ class FriseDestiny extends StatelessWidget {
   static const double _hauteur = 36;
   static const double _rayon = 16;
 
+  /// La ligne des heures, sous les repères.
+  static const double _hauteurHeures = 20;
+  static const double _largeurHeure = 46;
+
+  /// Où poser l'heure de chaque repère : centrée dessous, sans que deux
+  /// heures se chevauchent ni sortent de la frise.
+  static List<double> placerHeures(List<double> centres, double largeur) {
+    const l = _largeurHeure;
+    const ecart = 2.0;
+    final gauches = [for (final cx in centres) (cx - l / 2).clamp(0.0, (largeur - l).clamp(0.0, double.infinity))];
+    for (var i = 1; i < gauches.length; i++) {
+      if (gauches[i] < gauches[i - 1] + l + ecart) gauches[i] = gauches[i - 1] + l + ecart;
+    }
+    final max = (largeur - l).clamp(0.0, double.infinity);
+    if (gauches.isNotEmpty && gauches.last > max) {
+      gauches[gauches.length - 1] = max;
+      for (var i = gauches.length - 2; i >= 0; i--) {
+        if (gauches[i] > gauches[i + 1] - l - ecart) gauches[i] = gauches[i + 1] - l - ecart;
+      }
+    }
+    return [for (final g in gauches) g < 0 ? 0.0 : g];
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = context.destiny;
@@ -440,10 +464,11 @@ class FriseDestiny extends StatelessWidget {
     final avance = (ecouleSecondes / total).clamp(0.0, 1.0);
     return MediaQuery.withNoTextScaling(
       child: SizedBox(
-        height: _hauteur,
+        height: _hauteur + _hauteurHeures,
         child: LayoutBuilder(builder: (context, contraintes) {
           final largeur = contraintes.maxWidth;
           double x(int secondes) => _rayon + (largeur - 2 * _rayon) * (secondes / total).clamp(0.0, 1.0);
+          final heures = placerHeures([for (final r in reperes) x(r.secondes)], largeur);
           return Stack(clipBehavior: Clip.none, children: [
             // La barre, et ce qui est déjà joué.
             Positioned(
@@ -482,6 +507,29 @@ class FriseDestiny extends StatelessWidget {
                     {'n': '${r.numero}', 't': horloge(r.secondes)},
                   ),
                   child: _Repere(key: ValueKey('repere_destiny_${r.numero}'), repere: r),
+                ),
+              ),
+            // L'heure de chaque Destiny, sous son repère.
+            for (final (i, r) in reperes.indexed)
+              Positioned(
+                left: heures[i],
+                top: _hauteur + 2,
+                width: _largeurHeure,
+                child: ExcludeSemantics(
+                  child: Text(
+                    horloge(r.secondes),
+                    key: ValueKey('heure_destiny_${r.numero}'),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontFamily: kPoliceTexte,
+                      fontWeight: r.etat == EtatDestiny.avenir ? FontWeight.w600 : FontWeight.w800,
+                      fontSize: 12.5,
+                      height: 1.2,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                      color: r.etat == EtatDestiny.avenir ? c.texteSecondaire : c.bleuTexte,
+                    ),
+                  ),
                 ),
               ),
             // Le curseur : où en est le chrono.

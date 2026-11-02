@@ -414,23 +414,31 @@ class _RegieScreenState extends State<RegieScreen> {
                 style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, color: couleurReste)),
           ),
         const SizedBox(height: 12),
-        Semantics(
-          hint: prochain == null ? null : rg('destiny_aide'),
-          child: FilledButton.icon(
-            key: const ValueKey('bouton_destiny'),
-            style: FilledButton.styleFrom(
-              backgroundColor: c.bleuDestiny,
-              foregroundColor: Colors.white,
-              minimumSize: const Size(48, 58),
-              textStyle: const TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w900, fontSize: 21),
-            ),
-            onPressed: prochain == null || _rituelEnCours ? null : () => _destiny(manuel: true),
-            icon: const Icon(Icons.flash_on_rounded),
-            label: Text(
-              prochain == null ? rg('destiny').toUpperCase() : rg('destiny_n', {'n': '${prochain + 1}'}).toUpperCase(),
+        Row(children: [
+          Expanded(
+            child: Semantics(
+              hint: prochain == null ? null : rg('destiny_aide'),
+              child: FilledButton.icon(
+                key: const ValueKey('bouton_destiny'),
+                style: FilledButton.styleFrom(
+                  backgroundColor: c.bleuDestiny,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(48, 58),
+                  textStyle: const TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w900, fontSize: 21),
+                ),
+                onPressed: prochain == null || _rituelEnCours ? null : () => _destiny(manuel: true),
+                icon: const Icon(Icons.flash_on_rounded),
+                label: Text(
+                  prochain == null
+                      ? rg('destiny').toUpperCase()
+                      : rg('destiny_n', {'n': '${prochain + 1}'}).toUpperCase(),
+                ),
+              ),
             ),
           ),
-        ),
+          const SizedBox(width: 10),
+          BoutonRegieSon(contexte: widget.contexte, session: s, compact: true),
+        ]),
       ]),
     );
     return MediaQuery.withClampedTextScaling(maxScaleFactor: 1.3, child: panneau);
@@ -452,17 +460,9 @@ class _RegieScreenState extends State<RegieScreen> {
 
     return PageDestiny(
       titre: rg('titre'),
-      actions: [
-        IconButton(
-          tooltip: t.t('navigation.regie_son'),
-          icon: const Icon(Icons.graphic_eq_rounded),
-          onPressed: () => showSoundMixer(context, widget.contexte.musique),
-        ),
-      ],
       entete: collant ? panneau : null,
       enfants: [
         if (!collant) panneau,
-        TabletteSon(contexte: widget.contexte, session: s),
         SectionDestiny(titre: rg('scene'), enfants: [
           LieuEtDanger(contexte: widget.contexte, session: s),
           LigneInfo(t.t('mise_en_place.groupe'), s.groupe),
@@ -621,12 +621,15 @@ class _LigneReglage extends StatelessWidget {
 
 /// La régie son, en tablette : de grandes tuiles pour les musiques du
 /// spectacle, le son de Destiny et Stop, plus tout le mixeur. Elle respecte
-/// le son coupé.
+/// le son coupé. Elle s'ouvre dans une fenêtre ([ouvrirRegieSon]).
 class TabletteSon extends StatefulWidget {
-  const TabletteSon({super.key, required this.contexte, required this.session});
+  const TabletteSon({super.key, required this.contexte, required this.session, this.enSection = true});
 
   final ContexteTroupe contexte;
   final SessionTroupe session;
+
+  /// Avec son titre de section (faux dans la fenêtre, qui a le sien).
+  final bool enSection;
 
   @override
   State<TabletteSon> createState() => _TabletteSonState();
@@ -684,7 +687,7 @@ class _TabletteSonState extends State<TabletteSon> {
       listenable: _musique,
       builder: (context, _) {
         final enCours = _musique.playing ? _musique.current : null;
-        return SectionDestiny(titre: rg('son'), espace: 18, enfants: [
+        final enfants = <Widget>[
           if (muet)
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
@@ -766,7 +769,114 @@ class _TabletteSonState extends State<TabletteSon> {
                 ),
               ]),
             ),
-        ]);
+        ];
+        return widget.enSection
+            ? SectionDestiny(titre: rg('son'), espace: 18, enfants: enfants)
+            : Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: enfants);
+      },
+    );
+  }
+}
+
+/// Ouvre la régie son dans une fenêtre, par-dessus l'écran : on la ferme
+/// avec la croix, en la glissant vers le bas ou en touchant à côté. Le chrono
+/// continue pendant ce temps.
+Future<void> ouvrirRegieSon(BuildContext context, ContexteTroupe contexte, SessionTroupe session) {
+  final t = context.textes;
+  return showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    showDragHandle: true,
+    useSafeArea: true,
+    builder: (ctx) => SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Row(children: [
+          Expanded(child: Text(t.t('regie.son'), style: Theme.of(ctx).textTheme.titleLarge)),
+          IconButton(
+            key: const ValueKey('fermer_regie_son'),
+            tooltip: t.t('regie.son_fermer'),
+            icon: const Icon(Icons.close_rounded),
+            onPressed: () => Navigator.pop(ctx),
+          ),
+        ]),
+        const SizedBox(height: 8),
+        TabletteSon(contexte: contexte, session: session, enSection: false),
+      ]),
+    ),
+  );
+}
+
+/// Le bouton de la régie son : il ouvre toute la tablette son dans une
+/// fenêtre ([ouvrirRegieSon]), et dit ce qui joue.
+class BoutonRegieSon extends StatelessWidget {
+  const BoutonRegieSon({super.key, required this.contexte, required this.session, this.compact = false});
+
+  final ContexteTroupe contexte;
+  final SessionTroupe session;
+
+  /// Un bouton carré, à côté de DESTINY dans le panneau du chrono.
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.textes;
+    final c = context.destiny;
+    String rg(String k, [Map<String, String> v = const {}]) => t.t('regie.$k', v);
+    void ouvrir() => ouvrirRegieSon(context, contexte, session);
+    final bord = BorderSide(color: c.or, width: 1.5);
+    if (compact) {
+      return Tooltip(
+        message: rg('son_ouvrir'),
+        child: SizedBox(
+          width: 64,
+          height: 58,
+          child: OutlinedButton(
+            key: const ValueKey('bouton_regie_son'),
+            style: OutlinedButton.styleFrom(
+              padding: EdgeInsets.zero,
+              side: bord,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            ),
+            onPressed: ouvrir,
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Icon(Icons.graphic_eq_rounded, size: 24, color: c.titre),
+              Text(
+                rg('son_court'),
+                style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 12, color: c.titre),
+              ),
+            ]),
+          ),
+        ),
+      );
+    }
+    return ListenableBuilder(
+      listenable: contexte.musique,
+      builder: (context, _) {
+        final musique = contexte.musique;
+        final enCours = musique.playing ? musique.current : null;
+        return OutlinedButton.icon(
+          key: const ValueKey('bouton_regie_son'),
+          style: OutlinedButton.styleFrom(
+            side: bord,
+            minimumSize: const Size(48, 56),
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          ),
+          onPressed: ouvrir,
+          icon: Icon(Icons.graphic_eq_rounded, color: c.titre),
+          label: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+            Text(rg('son_ouvrir')),
+            if (enCours != null)
+              Text(
+                rg('son_en_cours', {'titre': enCours.title}),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    fontFamily: kPoliceTexte, fontWeight: FontWeight.w500, fontSize: 13, color: c.texteSecondaire),
+              ),
+          ]),
+        );
       },
     );
   }

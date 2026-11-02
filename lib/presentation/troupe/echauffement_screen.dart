@@ -131,7 +131,10 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
         SectionDestiny(titre: t.t('regie.scene'), enfants: [
           LieuEtDanger(contexte: widget.contexte, session: session),
         ]),
-        TabletteSon(contexte: widget.contexte, session: session),
+        Padding(
+          padding: const EdgeInsets.only(top: 18),
+          child: BoutonRegieSon(contexte: widget.contexte, session: session),
+        ),
         SectionDestiny(titre: t.t('bibliotheque.regles.questions'), enfants: [
           for (final (i, q) in e.questions.indexed) Puce(q, numero: i + 1),
           Container(
