@@ -14,6 +14,7 @@ import 'package:destiny/infrastructure/datasources/in_memory_catalog_store.dart'
 import 'package:destiny/infrastructure/datasources/in_memory_chat_store.dart';
 import 'package:destiny/infrastructure/datasources/local_json_datasource.dart';
 import 'package:destiny/main.dart';
+import 'package:destiny/presentation/accueil/decouvrir_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,6 +42,7 @@ void main() {
       aiSettings: aiSettings,
     );
 
+    final reglages = ReglagesDestiny();
     await tester.pumpWidget(
       DestinyApp(
         grammaire: grammaire,
@@ -55,13 +57,19 @@ void main() {
         locationDetails: LocationDetailsStore(),
         serieStore: SerieStore(),
         troupeStore: TroupeStore(),
-        reglages: ReglagesDestiny(),
+        reglages: reglages,
       ),
     );
 
     await tester.pumpAndSettle();
-    // L'appli s'ouvre sur Troupe ; les trois onglets sont là.
     final t = grammaire.textes;
+    // Au premier lancement, « Découvrir Destiny » ; on peut le passer.
+    expect(find.byType(DecouvrirScreen), findsOneWidget);
+    await tester.tap(find.text(t.t('decouvrir.passer')));
+    await tester.pumpAndSettle();
+    expect(find.byType(DecouvrirScreen), findsNothing);
+    expect(reglages.decouverteVue, isTrue);
+    // L'appli s'ouvre sur Troupe ; les trois onglets sont là.
     expect(find.text(t.t('navigation.jouer')), findsWidgets);
     expect(find.text(t.t('navigation.troupe')), findsWidgets);
     expect(find.text(t.t('navigation.exercices')), findsWidgets);

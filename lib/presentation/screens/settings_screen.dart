@@ -9,6 +9,7 @@ import '../../application/state/relation_cheatsheet.dart';
 import '../../application/state/visual_settings.dart';
 import '../../application/version.dart';
 import '../../domain/repositories/catalog_store.dart';
+import '../accueil/decouvrir_screen.dart';
 import '../bibliotheque/bibliotheque_screen.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
@@ -25,7 +26,6 @@ import 'credits_screen.dart';
 import 'dilemma_editor_screen.dart';
 import 'location_details_screen.dart';
 import 'relation_cheatsheet_screen.dart';
-import 'tutorial_screen.dart';
 
 /// Les réglages : Destiny, l'IA, l'apparence, les données, l'aide. Les écrans
 /// de l'ancienne interface (éditeurs, IA, aide) restent en thème sombre.
@@ -111,8 +111,8 @@ class SettingsScreen extends StatelessWidget {
                           catalogue: catalogStore, visuels: visualSettings, detailsLieux: locationDetails),
                     ))),
           SectionDestiny(titre: k('aide'), enfants: [
-            entree(Icons.school_outlined, k('tutoriel'), k('tutoriel_aide'),
-                () => _ouvrir(context, const TutorialScreen(), sombre: true)),
+            entree(Icons.explore_outlined, k('decouvrir'), k('decouvrir_aide'),
+                () => _ouvrir(context, const DecouvrirScreen())),
             entree(Icons.alternate_email, k('contact'), k('contact_aide'),
                 () => _ouvrir(context, const ContactScreen(), sombre: true)),
             entree(Icons.favorite_border, k('credits'), k('credits_aide'),

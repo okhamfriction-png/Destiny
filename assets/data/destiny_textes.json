@@ -250,9 +250,13 @@
     "titre": "Bibliothèque",
     "sous_titre": "Tout Destiny, à portée de main.",
     "entrees": {
+      "decouvrir": {
+        "titre": "Découvrir Destiny",
+        "texte": "Destiny en deux minutes : la promesse, le lieu, le danger, les personnages."
+      },
       "regles": {
-        "titre": "Les règles du spectacle",
-        "texte": "Règles d'or, quatre paliers, quatre actes, rituel Destiny, distribution, échauffement."
+        "titre": "Le livret de règles",
+        "texte": "Le but, la mise en place, le déroulé, la fin, les variantes et les règles d'or. À imprimer en PDF."
       },
       "archetypes": {
         "titre": "Archétypes",
@@ -416,6 +420,16 @@
       "mechants_univers": "Les méchants des univers",
       "mechants_univers_aide": "Deux par univers. Chacun a un archétype : il en veut au protagoniste qui a le même.",
       "presages": "Ses présages"
+    },
+    "imprimer": {
+      "titre": "Imprimer les cartes",
+      "aide": "Cartes de 63 × 88 mm, neuf par page A4. Imprime en recto verso, bord long : le verso Destiny tombe au dos de chaque carte.",
+      "par_archetype": "Un recto par archétype",
+      "par_archetype_aide": "12 cartes : la famille, ce qu'il fait, sa montée, ses deux animaux.",
+      "par_animal": "Un recto par animal",
+      "par_animal_aide": "24 cartes : la posture, la réplique, le corps à chaque palier.",
+      "en_cours": "Les cartes se préparent…",
+      "echec": "Le PDF n'a pas pu être créé. Réessaie dans un instant."
     }
   },
   "modes_pnj": {
@@ -934,8 +948,8 @@
     "grammaire": "La grammaire (lecture seule)",
     "grammaire_aide": "Version, contenu et vérifications du fichier de grammaire.",
     "aide": "Aide",
-    "tutoriel": "Découvrir Destiny",
-    "tutoriel_aide": "Les quatre écrans de la première ouverture.",
+    "decouvrir": "Découvrir Destiny",
+    "decouvrir_aide": "Les quatre écrans du premier lancement, à revoir.",
     "contact": "Me contacter",
     "contact_aide": "Instagram et TikTok : @destinyimpro.",
     "credits": "Crédits",
@@ -1069,5 +1083,95 @@
     "rejouer": "Rejouer",
     "terminer": "Terminer",
     "fermer": "Fermer"
+  },
+  "livret": {
+    "titre": "Le livret de règles",
+    "sous_titre": "Pour jouer Destiny chez soi ou en atelier, comme un jeu de rôle sans gagnant.",
+    "entree": "Règles d'or, mise en place, déroulé, fin, variantes : tout Destiny, à lire ou à imprimer.",
+    "exporter": "Exporter en PDF",
+    "export_en_cours": "Le livret se prépare…",
+    "export_echec": "Le PDF n'a pas pu être créé. Réessaie dans un instant.",
+    "sommaire": "Sommaire",
+    "sections": {
+      "but": "Le but",
+      "materiel": "Le matériel",
+      "roles": "Les rôles",
+      "mise_en_place": "La mise en place",
+      "deroule": "Le déroulé",
+      "fin": "La fin",
+      "variantes": "Les variantes",
+      "regles_d_or": "Les règles d'or"
+    },
+    "but": "Créer ensemble une belle histoire. Il n'y a ni gagnant ni perdant.",
+    "materiel": [
+      "L'appli : le chrono, les sons, le rituel Destiny et les tirages.",
+      "Les cartes d'archétypes, à imprimer depuis la Bibliothèque."
+    ],
+    "roles": [
+      "Les joueurs : chacun joue un personnage.",
+      "La régie, le maître du destin : une personne, ou l'appli. C'est elle qui lance Destiny, de l'extérieur."
+    ],
+    "sous": {
+      "lieu_groupe": "Le lieu et le groupe",
+      "liens": "Les liens entre les personnages",
+      "danger": "Le danger, en quatre paliers",
+      "objets": "Les trois objets et le mystère",
+      "distribution": "La distribution des archétypes",
+      "animaux": "Le choix des animaux",
+      "personnage": "Le personnage",
+      "echauffement": "L'échauffement et les trois questions",
+      "actes": "Les quatre actes",
+      "rituel": "Le rituel Destiny",
+      "alarmiste": "La nouvelle de l'alarmiste",
+      "montee": "La montée des archétypes",
+      "gestes": "Les cinq gestes",
+      "acte_4": "Le choix de l'acte 4",
+      "prix": "Le prix payé",
+      "debrief": "Le débrief",
+      "a_456": "Les parties à 4, 5 et 6",
+      "serie": "La Série : épisode, saison, série",
+      "mechants": "Les méchants",
+      "sbires": "Les sbires",
+      "figurants": "Les figurants",
+      "registre": "Le registre",
+      "traitre": "Le module traître",
+      "kids": "Le mode kids"
+    },
+    "liens": "Le groupe se connaît déjà : chaque personnage a un lien avec les autres. La mise en place en tire deux dans l'antisèche des relations, pour commencer.",
+    "danger": "Le danger se choisit avec le lieu. Il monte en quatre paliers, un par acte :",
+    "animaux": "Chaque joueur choisit son animal parmi les deux de son archétype : c'est son vêtement et sa posture.",
+    "debrief": "On fait le tour des personnages, avec une seule phrase pour chacun :",
+    "mots_doux": "Les mots plus doux",
+    "mots": {
+      "blessure": "la blessure",
+      "besoin": "le besoin",
+      "vouloir": "le vouloir",
+      "prix_a_payer": "le prix à payer"
+    }
+  },
+  "decouvrir": {
+    "titre": "Découvrir Destiny",
+    "aide": "Destiny en deux minutes, à revoir quand tu veux.",
+    "passer": "Passer",
+    "suivant": "Suivant",
+    "commencer": "C'est parti",
+    "ecran": "{n} sur {total}",
+    "ecrans": {
+      "promesse": {
+        "titre": "Une histoire, ensemble",
+        "texte": "Destiny se joue sans gagnant ni perdant : on crée ensemble une belle histoire, qui monte jusqu'au bout."
+      },
+      "lieu": {
+        "titre": "Un lieu, un groupe"
+      },
+      "danger": {
+        "titre": "Un danger, quatre paliers",
+        "rituel": "Entre deux actes, Destiny"
+      },
+      "personnages": {
+        "titre": "Des personnages",
+        "texte": "Chacun a un archétype, sa conviction face au danger, et un animal, son corps. Il y a douze archétypes, en trois familles :"
+      }
+    }
   }
 }

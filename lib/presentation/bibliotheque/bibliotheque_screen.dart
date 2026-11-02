@@ -4,12 +4,14 @@ import '../../domain/serie/univers.dart';
 import '../../application/state/location_details.dart';
 import '../../application/state/visual_settings.dart';
 import '../../domain/repositories/catalog_store.dart';
+import '../accueil/decouvrir_screen.dart';
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
 import '../theme/destiny_theme.dart';
 import 'archetypes_screen.dart';
 import 'dangers_lieux_screen.dart';
+import 'livret_screen.dart';
 import 'mechants_screen.dart';
 import 'oeuvres_screen.dart';
 import 'pages_textes.dart';
@@ -35,7 +37,8 @@ class ContexteBibliotheque {
 /// Les entrées de la Bibliothèque : clé (celle des textes
 /// `bibliotheque.entrees`), icône, page.
 List<(String, IconData, Widget Function())> entreesBibliotheque(ContexteBibliotheque contexte) => [
-      ('regles', Icons.auto_stories_outlined, () => const ReglesScreen()),
+      ('decouvrir', Icons.explore_outlined, () => const DecouvrirScreen()),
+      ('regles', Icons.auto_stories_outlined, () => const LivretScreen()),
       ('archetypes', Icons.style_outlined, () => ArchetypesScreen(contexte: contexte)),
       ('animaux', Icons.pets_outlined, () => AnimauxScreen(contexte: contexte)),
       ('vouloir_besoin', Icons.favorite_border_rounded, () => const VouloirBesoinScreen()),

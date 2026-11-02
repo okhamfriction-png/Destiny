@@ -7,6 +7,7 @@ import 'package:destiny/domain/grammaire/textes.dart';
 import 'package:destiny/domain/repositories/catalog_store.dart';
 import 'package:destiny/domain/serie/univers.dart';
 import 'package:destiny/presentation/bibliotheque/bibliotheque_screen.dart';
+import 'package:destiny/presentation/bibliotheque/livret_screen.dart';
 import 'package:destiny/presentation/bibliotheque/mechants_screen.dart';
 import 'package:destiny/presentation/destiny/cartes.dart';
 import 'package:destiny/presentation/destiny/donnees.dart';
@@ -71,9 +72,9 @@ void main() {
     catalogue = CatalogueDeTest(await d.loadDangers(), await d.loadLocations());
   });
 
-  testWidgets('le sommaire propose les douze entrées', (tester) async {
+  testWidgets('le sommaire propose les treize entrées', (tester) async {
     await _ouvrir(tester);
-    for (final cle in ['regles', 'archetypes', 'animaux', 'vouloir_besoin', 'dangers', 'lieux', 'oeuvres',
+    for (final cle in ['decouvrir', 'regles', 'archetypes', 'animaux', 'vouloir_besoin', 'dangers', 'lieux', 'oeuvres',
       'mechants', 'figurants', 'kids', 'outils', 'lexique']) {
       expect(find.text(t.t('bibliotheque.entrees.$cle.titre')), findsWidgets, reason: cle);
     }
@@ -81,7 +82,7 @@ void main() {
 
   testWidgets('chaque page s\'ouvre', (tester) async {
     await _ouvrir(tester);
-    for (final cle in ['regles', 'archetypes', 'animaux', 'vouloir_besoin', 'dangers', 'lieux', 'oeuvres',
+    for (final cle in ['archetypes', 'animaux', 'vouloir_besoin', 'dangers', 'lieux', 'oeuvres',
       'mechants', 'figurants', 'kids', 'outils', 'lexique']) {
       await _entrer(tester, cle);
       expect(tester.takeException(), isNull, reason: cle);
@@ -91,12 +92,13 @@ void main() {
     }
   });
 
-  testWidgets('les règles affichent les huit règles d\'or telles quelles', (tester) async {
+  testWidgets('le livret affiche les huit règles d\'or telles quelles', (tester) async {
     await _ouvrir(tester);
     await _entrer(tester, 'regles');
+    expect(find.byType(LivretScreen), findsOneWidget);
     for (final r in g.reglesDOr) {
-      expect(find.text(r.titre), findsOneWidget);
-      expect(find.text(r.texte), findsOneWidget);
+      expect(find.text(r.titre), findsWidgets);
+      expect(find.text(r.texte), findsWidgets);
     }
   });
 

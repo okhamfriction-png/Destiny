@@ -96,6 +96,9 @@ class ReglagesDestiny extends ChangeNotifier {
   // Apparence.
   ThemeDestiny _theme = ThemeDestiny.sombre;
 
+  // L'accueil « Découvrir Destiny », vu une fois au premier lancement.
+  bool _decouverteVue = false;
+
   List<ChronoSpectacle> get chronos => List.unmodifiable(_chronos);
   int get chronoChoisi => _chronoChoisi.clamp(0, _chronos.length - 1);
   ChronoSpectacle get chrono => _chronos[chronoChoisi];
@@ -128,6 +131,9 @@ class ReglagesDestiny extends ChangeNotifier {
   /// d'archétype.
   bool get evolutionArchetype => _evolutionArchetype;
   ThemeDestiny get theme => _theme;
+
+  /// Vrai une fois l'accueil « Découvrir Destiny » vu (ou passé).
+  bool get decouverteVue => _decouverteVue;
 
   Future<void> charger() async {
     try {
@@ -174,6 +180,7 @@ class ReglagesDestiny extends ChangeNotifier {
     _pieceParDefaut = j['serie_piece'] as bool? ?? _pieceParDefaut;
     _evolutionArchetype = j['evolution_archetype'] as bool? ?? _evolutionArchetype;
     _theme = ThemeDestiny.depuisTexte(j['theme'] as String?);
+    _decouverteVue = j['decouverte_vue'] as bool? ?? _decouverteVue;
   }
 
   Map<String, dynamic> versJson() => {
@@ -203,6 +210,7 @@ class ReglagesDestiny extends ChangeNotifier {
         'serie_piece': _pieceParDefaut,
         'evolution_archetype': _evolutionArchetype,
         'theme': _theme.name,
+        'decouverte_vue': _decouverteVue,
       };
 
   Future<void> _sauver() async {
@@ -256,6 +264,7 @@ class ReglagesDestiny extends ChangeNotifier {
     bool? pieceParDefaut,
     bool? evolutionArchetype,
     ThemeDestiny? theme,
+    bool? decouverteVue,
   }) async {
     _declenchement = declenchement ?? _declenchement;
     _musiqueDebut = musiqueDebut ?? _musiqueDebut;
@@ -281,6 +290,7 @@ class ReglagesDestiny extends ChangeNotifier {
     _pieceParDefaut = pieceParDefaut ?? _pieceParDefaut;
     _evolutionArchetype = evolutionArchetype ?? _evolutionArchetype;
     _theme = theme ?? _theme;
+    _decouverteVue = decouverteVue ?? _decouverteVue;
     await _sauver();
   }
 }

@@ -13,6 +13,7 @@ import '../../application/state/spectacle_controller.dart';
 import '../../application/state/troupe_store.dart';
 import '../../application/state/visual_settings.dart';
 import '../../domain/repositories/catalog_store.dart';
+import '../accueil/decouvrir_screen.dart';
 import '../bibliotheque/bibliotheque_screen.dart';
 import '../destiny/donnees.dart';
 import '../exercices/exercices_screen.dart';
@@ -67,6 +68,20 @@ class _RootScreenState extends State<RootScreen> {
   int _index = 1;
 
   void _ouvrir(Widget page) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
+
+  @override
+  void initState() {
+    super.initState();
+    // Au premier lancement, « Découvrir Destiny ». Vu une fois, même passé.
+    if (!widget.reglages.decouverteVue) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        Navigator.of(context)
+            .push(MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => const DecouvrirScreen()))
+            .then((_) => widget.reglages.changer(decouverteVue: true));
+      });
+    }
+  }
 
   ContexteBibliotheque get _contexteBibliotheque => ContexteBibliotheque(
         catalogue: widget.catalogStore,

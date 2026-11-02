@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:printing/printing.dart';
 
+import '../../application/services/export_pdf.dart';
 import '../../domain/grammaire/modeles.dart';
 import '../destiny/cartes.dart';
 import '../destiny/composants.dart';
@@ -32,6 +34,13 @@ class _ArchetypesScreenState extends State<ArchetypesScreen> {
     final familles = _famille == null ? FamilleId.values : [_famille!];
     return PageDestiny(
       titre: t.t('bibliotheque.entrees.archetypes.titre'),
+      actions: [
+        IconButton(
+          tooltip: t.t('bibliotheque.imprimer.titre'),
+          icon: const Icon(Icons.print_outlined),
+          onPressed: () => imprimerCartes(context),
+        ),
+      ],
       entete: FiltresPuces<FamilleId?>(
         valeurs: const [null, ...FamilleId.values],
         libelle: (f) => f == null ? t.t('bibliotheque.toutes') : g.famille(f).nom,
@@ -59,6 +68,51 @@ class _ArchetypesScreenState extends State<ArchetypesScreen> {
         ],
       ],
     );
+  }
+}
+
+/// Propose d'imprimer les cartes d'archétypes (un recto par archétype ou
+/// par animal, verso Destiny), puis partage le PDF.
+Future<void> imprimerCartes(BuildContext context) async {
+  final g = context.grammaire;
+  final t = context.textes;
+  final messager = ScaffoldMessenger.of(context);
+  String k(String x) => t.t('bibliotheque.imprimer.$x');
+  final parAnimal = await showModalBottomSheet<bool>(
+    context: context,
+    showDragHandle: true,
+    builder: (context) => SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Text(k('titre'), style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 4),
+          Paragraphe(k('aide')),
+          ElementListe(
+            titre: k('par_archetype'),
+            sousTitre: k('par_archetype_aide'),
+            devant: const Icon(Icons.style_outlined),
+            onTap: () => Navigator.of(context).pop(false),
+          ),
+          ElementListe(
+            titre: k('par_animal'),
+            sousTitre: k('par_animal_aide'),
+            devant: const Icon(Icons.pets_outlined),
+            onTap: () => Navigator.of(context).pop(true),
+          ),
+        ]),
+      ),
+    ),
+  );
+  if (parAnimal == null) return;
+  messager.showSnackBar(SnackBar(content: Text(k('en_cours'))));
+  try {
+    final polices = await PolicesPdf.chargerDepuisAssets();
+    final octets = await cartesArchetypesPdf(g: g, t: t, polices: polices, parAnimal: parAnimal);
+    await Printing.sharePdf(
+        bytes: octets, filename: parAnimal ? 'destiny-cartes-animaux.pdf' : 'destiny-cartes-archetypes.pdf');
+  } catch (_) {
+    messager.showSnackBar(SnackBar(content: Text(k('echec'))));
   }
 }
 
