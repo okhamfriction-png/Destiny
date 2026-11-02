@@ -4,7 +4,8 @@
 
 GitHub Actions compile l'APK sur ses propres serveurs (Flutter 3.41.9) et le joint à une
 **release**, sous le nom `DestinyStory-v2.0.0.apk` :
-- à chaque **push sur `main`** (ou sur la branche de la refonte) qui touche le code : la release
+- à chaque **push sur `main`** (ou sur la branche de la refonte) dont le message de commit
+  contient **`[apk]`** : la release
   de la version du `pubspec.yaml` (`2.0.0+20` → `v2.0.0`) est créée sur ce commit si elle
   n'existe pas encore. Pour publier un nouvel APK, monte la version dans le `pubspec.yaml` ;
 - à chaque **tag** poussé : la release de ce tag.

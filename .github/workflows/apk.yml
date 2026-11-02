@@ -1,9 +1,9 @@
 # Construit l'APK Android sur les serveurs de GitHub et le joint à une release.
 #
 # - Un tag poussé (v2.0.1…) : la release de ce tag.
-# - Un push sur main ou sur la branche de la refonte : la release de la version
-#   du pubspec (« version: 2.0.0+20 » → v2.0.0), créée sur ce commit si elle
-#   n'existe pas encore. Si elle existe déjà, l'APK reste dans les artifacts du
+# - Un push sur main ou sur la branche de la refonte dont le message contient
+#   [apk] : la release de la version du pubspec (« version: 2.0.0+20 » →
+#   v2.0.0), créée sur ce commit si elle n'existe pas encore. Si elle existe déjà, l'APK reste dans les artifacts du
 #   run : pour publier un nouvel APK, monter la version du pubspec.
 #
 # Signature : si les secrets ANDROID_KEYSTORE_BASE64, ANDROID_KEY_ALIAS,
@@ -24,6 +24,9 @@ permissions:
 
 jobs:
   apk:
+    # Sur un push de branche, l'APK n'est fabriqué que si le message du commit
+    # contient [apk] : on teste d'abord la version web, puis on publie.
+    if: github.event_name != 'push' || github.ref_type == 'tag' || contains(github.event.head_commit.message, '[apk]')
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
