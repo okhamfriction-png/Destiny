@@ -6,9 +6,11 @@ import 'package:destiny/application/state/chat_controller.dart';
 import 'package:destiny/application/state/music_controller.dart';
 import 'package:destiny/application/state/spectacle_controller.dart';
 import 'package:destiny/application/state/visual_settings.dart';
+import 'package:destiny/domain/serie/univers.dart';
 import 'package:destiny/infrastructure/datasources/grammaire_source.dart';
 import 'package:destiny/infrastructure/datasources/in_memory_chat_store.dart';
 import 'package:destiny/presentation/destiny/donnees.dart';
+import 'package:destiny/presentation/jouer/univers_ia.dart';
 import 'package:destiny/presentation/screens/chat_screen.dart';
 import 'package:destiny/presentation/screens/spectacle_screen.dart';
 import 'package:destiny/presentation/theme/destiny_theme.dart';
@@ -17,11 +19,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'outils/grammaire_partagee.dart';
-import 'serie_test.dart' show FauxLlm;
+import 'serie_test.dart' show FauxLlm, chargerCatalogue;
 import 'troupe_test.dart' show CatalogueDeTest;
 
 late GrammaireChargee chargee;
 late CatalogueDeTest catalogue;
+late CatalogueUnivers univers;
 
 Widget _appli(GrammaireChargee c, Widget home) => MaterialApp(
       theme: themeDestiny(c.grammaire, sombre: true),
@@ -34,6 +37,7 @@ void main() {
     chargee = await chargerGrammaire();
     final d = donneesDeTest();
     catalogue = CatalogueDeTest(await d.loadDangers(), await d.loadLocations());
+    univers = await chargerCatalogue(chargee.grammaire);
   });
 
   testWidgets('l\'histoire avec l\'IA : on choisit un archétype, puis un de ses deux animaux', (tester) async {
@@ -56,6 +60,7 @@ void main() {
         audioService: AudioService()..setMuted(true),
         visualSettings: VisualSettings(),
         musicController: MusicController(),
+        univers: univers,
       ),
     ));
     await tester.pumpAndSettle();
@@ -94,8 +99,12 @@ void main() {
       })),
       aiSettings: ia,
     );
-    await tester.pumpWidget(_appli(chargee, SpectacleScreen(controller: c)));
+    await tester.pumpWidget(_appli(chargee, SpectacleScreen(controller: c, univers: univers)));
     await tester.pumpAndSettle();
+    // Les univers viennent de univers.json ; « Contemporain » par défaut.
+    expect(universPourIa(univers, kids: false).map((u) => u.name), contains('Contemporain'));
+    expect(universPourIa(univers, kids: true).map((u) => u.name), contains('Pirates'));
+    expect(find.text('Contemporain'), findsWidgets);
     await tester.tap(find.text('Tirer le décor'));
     await tester.pumpAndSettle();
     expect(c.draw!.archetypes, hasLength(4));

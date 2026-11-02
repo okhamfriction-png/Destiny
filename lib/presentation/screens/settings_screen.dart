@@ -13,6 +13,8 @@ import '../accueil/decouvrir_screen.dart';
 import '../bibliotheque/bibliotheque_screen.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
+import '../reglages/editeur_catalogue_screen.dart';
+import '../reglages/editeur_dilemmes_screen.dart';
 import '../reglages/grammaire_admin_screen.dart';
 import '../reglages/reglages_destiny_screen.dart';
 import '../reglages/synchro_screen.dart';
@@ -20,10 +22,8 @@ import '../widgets/ecran_sombre.dart';
 import 'about_screen.dart';
 import 'ai_config_screen.dart';
 import 'appearance_screen.dart';
-import 'catalog_editor_screen.dart';
 import 'contact_screen.dart';
 import 'credits_screen.dart';
-import 'dilemma_editor_screen.dart';
 import 'location_details_screen.dart';
 import 'relation_cheatsheet_screen.dart';
 
@@ -84,13 +84,13 @@ class SettingsScreen extends StatelessWidget {
               () => _ouvrir(context, AppearanceScreen(visualSettings: visualSettings, reglages: reglages))),
           SectionDestiny(titre: k('donnees'), enfants: [
             entree(Icons.tune_rounded, k('catalogue'), k('catalogue_aide'),
-                () => _ouvrir(context, CatalogEditorScreen(catalogStore: catalogStore), sombre: true)),
+                () => _ouvrir(context, EditeurCatalogueScreen(catalogue: catalogStore))),
             entree(Icons.place_outlined, k('details_lieux'), k('details_lieux_aide'),
                 () => _ouvrir(context, LocationDetailsListScreen(store: locationDetails), sombre: true)),
             entree(Icons.diversity_3_outlined, k('relations'), k('relations_aide'),
                 () => _ouvrir(context, RelationCheatsheetScreen(cheatsheet: relationCheatsheet), sombre: true)),
             entree(Icons.balance_outlined, k('dilemmes'), k('dilemmes_aide'),
-                () => _ouvrir(context, DilemmaEditorScreen(catalogStore: catalogStore), sombre: true)),
+                () => _ouvrir(context, EditeurDilemmesScreen(catalogue: catalogStore))),
             entree(Icons.sync_rounded, k('synchro'), k('synchro_aide'),
                 () => _ouvrir(context, SynchroScreen(catalogue: catalogStore))),
           ]),
@@ -114,11 +114,11 @@ class SettingsScreen extends StatelessWidget {
             entree(Icons.explore_outlined, k('decouvrir'), k('decouvrir_aide'),
                 () => _ouvrir(context, const DecouvrirScreen())),
             entree(Icons.alternate_email, k('contact'), k('contact_aide'),
-                () => _ouvrir(context, const ContactScreen(), sombre: true)),
+                () => _ouvrir(context, const ContactScreen())),
             entree(Icons.favorite_border, k('credits'), k('credits_aide'),
-                () => _ouvrir(context, const CreditsScreen(), sombre: true)),
+                () => _ouvrir(context, const CreditsScreen())),
             entree(Icons.info_outline, k('a_propos'), k('a_propos_aide'),
-                () => _ouvrir(context, const AboutScreen(), sombre: true)),
+                () => _ouvrir(context, const AboutScreen())),
           ]),
           const SizedBox(height: 8),
           Center(child: Text(k('version', {'version': kVersionAppli}), style: Theme.of(context).textTheme.bodySmall)),

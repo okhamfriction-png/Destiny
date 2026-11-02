@@ -404,3 +404,87 @@ La Campagne devient la **Série**, avec le vocabulaire de la télé.
 - Les Réglages : retirer les poids du dé de l'écran Apparence, l'écran des réglages Destiny (chronos, musiques, rituel, distribution, traître, public par défaut), le thème clair, sombre ou automatique.
 - Le tutoriel, l'« À propos » et les exercices parlent encore du dé.
 - Le livret de règles, l'export PDF des cartes, les éditeurs, la relecture des textes.
+
+---
+
+## Phase 7 — Réglages, exercices, accueil, livret, textes ✅
+
+### Ce qui a été fait
+
+- **Les Réglages** sont réorganisés en cinq parties : Destiny, IA, Apparence, Données et Aide.
+  - **Destiny** (nouvel écran) :
+    - les **chronos** de 20, 30 et 45 minutes se modifient (durée et minute de chaque Destiny), avec un retour aux valeurs par défaut. Un chrono incohérent est refusé, avec une phrase qui dit pourquoi ;
+    - le **déclenchement** : automatique, manuel par la régie, ou les deux ;
+    - le **rituel** : la lumière bleue, la durée du figé, le texte de l'ellipse, les rappels ;
+    - **les quatre musiques** (début, son de Destiny, ambiance de l'acte 2, fin), la musique de chaque Destiny, et les musiques importées ;
+    - la **distribution** par défaut, le **jeu de rôle** (kids, traître, registre, combat, pièce, évolution d'archétype), l'échauffement et les cartes.
+  - **Apparence** : le thème **sombre, clair ou comme le téléphone**, les visuels des cartes, la taille et l'écriture manuscrite du texte de l'histoire. Les poids du dé ont disparu.
+  - **Données** : les éditeurs, l'antisèche des relations, les détails des lieux, et le rapport de synchro du catalogue.
+  - **Mode admin** : la vérification de la grammaire (les comptes, les erreurs éventuelles) et la lecture des archétypes.
+- **Les Exercices** :
+  - **trois nouveaux onglets, CROW, Lieu et Destiny**, à côté des anciens thèmes, qui restent tels quels ;
+  - chaque thème s'ouvre sur **son principe**, une phrase de Mark Jane, et son explication ;
+  - chaque exercice a **sa fiche** : le but, les consignes, les exemples, la question du débrief, la variante, la source, et le **badge « Avec Mark Jane »** pour ceux de la séance du 27 octobre ;
+  - un **chrono** réglé sur la durée conseillée (« 5 à 10 min » propose 5 et 10 min) ;
+  - les **cartes à tirer** (les dix visions du monde de « Trois phrases ») : une carte au hasard, jamais deux fois la même de suite ;
+  - un lien **« Revoir la notion dans la Bibliothèque »** ;
+  - l'écran suit le thème clair ou sombre, et le dé de l'onglet Solo est remplacé par une icône « au hasard ».
+- **Découvrir Destiny** : **quatre écrans au premier lancement**, tirés de la grammaire :
+  1. la promesse ;
+  2. le lieu et le groupe ;
+  3. le danger en quatre paliers, puis le rituel Destiny ;
+  4. les personnages : l'archétype, l'animal, le vouloir et le besoin.
+
+  On peut les passer, et les revoir depuis la Bibliothèque et les Réglages. Ils remplacent l'ancien tutoriel (« l'appli lance les dés »).
+- **Le livret de règles**, en tête de la Bibliothèque, avec un sommaire :
+  - le but, le matériel, les rôles ;
+  - la mise en place : lieu et groupe, liens, danger, objets et mystère, distribution, animaux, personnage, échauffement ;
+  - le déroulé : les quatre actes, le rituel, la nouvelle de l'alarmiste, la montée des archétypes, les cinq gestes (Dire, Fixer, Bloquer, Nommer, Choisir) ;
+  - la fin : le choix de l'acte 4, le prix payé, le débrief ;
+  - les variantes : 4, 5 ou 6 joueurs, la Série, les méchants, les sbires, les figurants, le registre, le traître, le mode kids ;
+  - les règles d'or, rappelées à la fin.
+
+  **Chaque règle vient de la grammaire** : je n'en ai ajouté aucune. Il **s'exporte en PDF** (7 pages). Il remplace l'ancienne page « Les règles du spectacle ».
+- **Les cartes d'archétypes à imprimer** (Bibliothèque › Archétypes, bouton imprimante) :
+  - un recto **par archétype** (12 cartes) ou **par animal** (24 cartes) ;
+  - un verso Destiny ;
+  - neuf cartes de 63 × 88 mm par page A4, placées pour une impression recto verso (bord long).
+- **Les éditeurs**, refaits au nouveau design :
+  - **lieux et dangers** : les espaces et les rôles d'un lieu, les quatre paliers d'un danger **nommés comme dans la grammaire** (les anciens « Palier 4 — climax, survie » ont disparu), le palier 4 en version kids, le sigle KIDS, et « proposé à la mise en place » ;
+  - **les dilemmes de l'acte 4** : le « moteur » s'appelle maintenant **« genre »** à l'écran (le fichier garde l'ancien nom). L'ancienne mention du « mode Dilemme » a disparu.
+- **À propos, Crédits et Contact** sont refaits :
+  - **À propos** montre la version (2.0.0) et ce qu'on fait dans l'appli, sans le Générateur ni le dé ;
+  - **Crédits** : les trois polices sous **licence SIL Open Font License 1.1** (Cinzel, Montserrat, Patrick Hand), les sons de freesound.org, et un bouton vers les licences des logiciels libres. Les textes des licences des polices sont embarqués dans l'appli.
+- **Les univers de l'histoire et du spectacle avec l'IA** viennent maintenant de `univers.json`, comme ceux de la Série.
+- **Le ménage** : l'ancien tutoriel, les anciens éditeurs, l'ancien écran des exercices, la page « Les règles du spectacle », la mémoire des combinaisons, le dépôt d'histoires et l'écran de base de données sont retirés. Le son « dé » n'est plus proposé dans les réglages (une ancienne sauvegarde qui le choisissait le joue encore).
+
+### Tests
+
+**205 tests passent** (169 à la fin de la phase 6). Les nouveaux :
+- **les réglages** : un chrono se modifie, un chrono incohérent est refusé, le thème clair se garde, les réglages tiennent sur un téléphone, sans le dé ;
+- **les exercices** : les anciens thèmes intacts (32 exercices, 50 virelangues), le principe du jour stable sur la journée, un carnet abîmé qui ne bloque rien, les durées lues en minutes, chaque exercice relié à une notion de la Bibliothèque, la fiche (cartes, débrief, chrono, lien), chaque fiche tient sur un téléphone ;
+- **le livret** : huit sections dans l'ordre, chaque règle d'or, chaque palier, les cinq gestes, les règles des méchants et du mode kids présents tels quels, ni « dé » ni « sidéré », le PDF ;
+- **les cartes à imprimer** : 4 pages par archétype, 6 par animal ;
+- **Découvrir Destiny** : les quatre écrans, et il ne revient pas une fois vu ; au premier lancement, il s'affiche, et « Passer » mène à Troupe ;
+- **les éditeurs** : un lieu créé avec ses espaces et KIDS, un danger dont les paliers portent les noms de la grammaire, les dilemmes sans « moteur » ;
+- **À propos, Crédits, Contact** : sur un téléphone, sans le dé ;
+- **chaque texte utilisé par les nouveaux écrans existe** dans `destiny_textes.json` (un test lit le code et vérifie chaque clé).
+
+### Décisions que j'ai prises (à revoir si tu veux)
+
+1. **Les 20 exercices sont lus dans la grammaire**, sans être recopiés dans `exercices.json` : le fichier de grammaire reste la seule source. À l'écran, ils sont bien trois onglets de plus, à côté des anciens.
+2. **L'ordre des onglets** : les six anciens thèmes (Échauffement d'abord), puis CROW, Lieu, Destiny, puis Solo.
+3. **Chaque exercice renvoie à une page de la Bibliothèque** (par exemple « Trois phrases » → Vouloir et besoin ; « Le lieu en quatre paliers » → Dangers). La table est dans le code, et un test vérifie que les 20 y sont.
+4. **Le livret remplace la page « Les règles du spectacle »** : il contient tout ce qu'elle disait, et plus. Les phrases de présentation (le but, le matériel, les rôles) reprennent ton cahier des charges, mot pour mot quand c'était possible.
+5. **Découvrir Destiny compte comme « vu » dès qu'on le ferme**, même sans aller au bout.
+6. **Les tons** de l'histoire et du spectacle avec l'IA restent les leurs (Aventure, Humour, Drame…) : ce sont des genres d'histoire, différents des tons de la Série (Drôle, Aventureux, Enquête…).
+
+### Ce qui reste (phase 8)
+
+- L'accessibilité (tailles de texte, lecteurs d'écran, contrastes du thème clair) et la régie sans réseau.
+- Le ménage du vieux code qui reste (les visuels des anciennes entités, les anciens écrans de l'histoire et du spectacle avec l'IA encore en thème sombre).
+- La documentation (`FEATURES.md`, README, fiche Play Store), la version web, la version 2.0.0+20 et le changelog en français.
+
+### Question
+
+**Le logo de l'appli est un cube**, avec un lieu, des masques et un éclair sur ses faces. On peut le lire comme un dé. Je l'ai gardé : c'est l'icône de l'appli et le dos des cartes. Veux-tu le garder, ou faut-il prévoir un nouveau logo (par exemple l'éclair seul, ou le losange doré) ?

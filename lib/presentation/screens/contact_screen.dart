@@ -1,75 +1,66 @@
 import 'package:flutter/material.dart';
 
+import '../destiny/donnees.dart';
+import '../destiny/page.dart';
 import '../social_links.dart';
+import '../theme/destiny_theme.dart';
 
+/// Me contacter : Instagram et TikTok.
 class ContactScreen extends StatelessWidget {
   const ContactScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(title: const Text('Me contacter')),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF141029), Color(0xFF0A0818)],
-          ),
+    final t = context.textes;
+    final c = context.destiny;
+    String k(String x) => t.t('contact.$x');
+    return PageDestiny(
+      titre: k('titre'),
+      enfants: [
+        const SizedBox(height: 8),
+        Text(k('accroche'),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontFamily: kPoliceTitres, fontSize: 22, fontWeight: FontWeight.w900, color: c.titre)),
+        const SizedBox(height: 6),
+        Text(k('texte'),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14.5, height: 1.4, color: c.texte)),
+        const SizedBox(height: 24),
+        _CarteReseau(
+          icone: instagramIcon,
+          titre: 'Instagram',
+          pseudo: kHandle,
+          degrade: kInstagramGradient,
+          onTap: () => openSocial(kInstagramUrl),
         ),
-        child: ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            const SizedBox(height: 8),
-            Text('Suivez Destiny Impro',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.headlineSmall),
-            const SizedBox(height: 6),
-            Text(
-              'Retrouvez les vidéos, les coulisses et contactez-moi directement '
-              'sur les réseaux.',
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white70),
-            ),
-            const SizedBox(height: 24),
-            _SocialCard(
-              icon: instagramIcon,
-              title: 'Instagram',
-              handle: kHandle,
-              gradient: kInstagramGradient,
-              onTap: () => openSocial(kInstagramUrl),
-            ),
-            const SizedBox(height: 14),
-            _SocialCard(
-              icon: tiktokIcon,
-              title: 'TikTok',
-              handle: kHandle,
-              gradient: const [Color(0xFF010101), Color(0xFF25F4EE)],
-              accent: const Color(0xFFFE2C55),
-              onTap: () => openSocial(kTiktokUrl),
-            ),
-          ],
+        const SizedBox(height: 14),
+        _CarteReseau(
+          icone: tiktokIcon,
+          titre: 'TikTok',
+          pseudo: kHandle,
+          degrade: const [Color(0xFF010101), Color(0xFF25F4EE)],
+          accent: const Color(0xFFFE2C55),
+          onTap: () => openSocial(kTiktokUrl),
         ),
-      ),
+      ],
     );
   }
 }
 
-class _SocialCard extends StatelessWidget {
-  const _SocialCard({
-    required this.icon,
-    required this.title,
-    required this.handle,
-    required this.gradient,
+class _CarteReseau extends StatelessWidget {
+  const _CarteReseau({
+    required this.icone,
+    required this.titre,
+    required this.pseudo,
+    required this.degrade,
     required this.onTap,
     this.accent,
   });
 
-  final IconData icon;
-  final String title;
-  final String handle;
-  final List<Color> gradient;
+  final IconData icone;
+  final String titre;
+  final String pseudo;
+  final List<Color> degrade;
   final Color? accent;
   final VoidCallback onTap;
 
@@ -82,51 +73,27 @@ class _SocialCard extends StatelessWidget {
         onTap: onTap,
         child: Ink(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: gradient,
-            ),
+            gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: degrade),
             borderRadius: BorderRadius.circular(18),
-            boxShadow: [
-              BoxShadow(
-                color: gradient.last.withValues(alpha: 0.4),
-                blurRadius: 16,
-                offset: const Offset(0, 6),
-              ),
-            ],
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.25),
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.center,
-                child: Icon(icon, color: accent ?? Colors.white, size: 26),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 18)),
-                    Text(handle,
-                        style: const TextStyle(color: Colors.white70)),
-                  ],
-                ),
-              ),
-              const Icon(Icons.open_in_new, color: Colors.white, size: 20),
-            ],
-          ),
+          padding: const EdgeInsets.all(18),
+          child: Row(children: [
+            Container(
+              width: 48,
+              height: 48,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.25), shape: BoxShape.circle),
+              child: Icon(icone, color: accent ?? Colors.white, size: 26),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(titre, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 18)),
+                Text(pseudo, style: const TextStyle(color: Colors.white70)),
+              ]),
+            ),
+            const Icon(Icons.open_in_new_rounded, color: Colors.white, size: 20),
+          ]),
         ),
       ),
     );

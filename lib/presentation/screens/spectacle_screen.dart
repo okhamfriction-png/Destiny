@@ -2,40 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../application/state/spectacle_controller.dart';
 import '../../domain/entities/spectacle_turn.dart';
+import '../../domain/serie/univers.dart';
 import '../destiny/composants.dart';
+import '../jouer/univers_ia.dart';
 import 'spectacle_archives_screen.dart';
 
 const Color _gold = Color(0xFFFFC24B);
-
-/// Univers (mêmes listes que le mode Chat), « Contemporain » par défaut.
-const List<String> _spectacleUniverses = [
-  'Contemporain',
-  'Policier',
-  'High Fantasy',
-  'Shonen',
-  'Science-Fiction',
-  'Dark Fantasy',
-  'Cyberpunk',
-  'Horreur',
-  'Post-apocalyptique',
-  'Steampunk',
-  'Super-héros',
-  'Historique',
-];
-
-/// Univers adaptés aux enfants (façon Disney / manga / contes).
-const List<String> _spectacleKidUniverses = [
-  'Conte de fées',
-  'Dessin animé',
-  'Manga rigolo',
-  'Animaux qui parlent',
-  'Super-héros (enfant)',
-  'Pirates',
-  'Espace rigolo',
-  'Monde magique',
-  'Sous la mer',
-  'Chevaliers & dragons',
-];
 
 /// Tons / genres (mêmes que le mode Chat).
 const List<String> _spectacleTones = [
@@ -58,15 +30,31 @@ Widget? _archEmoji(String nomOuId, {double size = 18}) {
 
 /// Onglet « Spectacle » : jeu d'impro long form solo piloté par l'IA.
 class SpectacleScreen extends StatefulWidget {
-  const SpectacleScreen({required this.controller, super.key});
+  const SpectacleScreen({required this.controller, this.univers = CatalogueUnivers.vide, super.key});
 
   final SpectacleController controller;
+
+  /// Les univers de `univers.json`.
+  final CatalogueUnivers univers;
 
   @override
   State<SpectacleScreen> createState() => _SpectacleScreenState();
 }
 
 class _SpectacleScreenState extends State<SpectacleScreen> {
+  List<String> _universAdultes() => [for (final u in universPourIa(widget.univers, kids: false)) u.name];
+
+  /// Les univers pour enfants qui ne sont pas déjà dans la liste adulte.
+  List<String> _universEnfants() {
+    final adultes = _universAdultes();
+    return [
+      for (final u in universPourIa(widget.univers, kids: true))
+        if (!adultes.contains(u.name)) u.name,
+    ];
+  }
+
+  Set<String> _valeursUnivers() => {..._universAdultes(), ..._universEnfants()};
+
   final _freeCtrl = TextEditingController();
   final _scroll = ScrollController();
 
@@ -210,7 +198,7 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
                   Text('Univers', style: theme.textTheme.titleSmall),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
-                    initialValue: c.universe,
+                    initialValue: _valeursUnivers().contains(c.universe) ? c.universe : null,
                     isExpanded: true,
                     decoration: const InputDecoration(
                         isDense: true, border: OutlineInputBorder()),
@@ -219,13 +207,13 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
                           enabled: false,
                           value: '__h_genres',
                           child: Text('— Genres —')),
-                      for (final u in _spectacleUniverses)
+                      for (final u in _universAdultes())
                         DropdownMenuItem(value: u, child: Text(u)),
                       const DropdownMenuItem(
                           enabled: false,
                           value: '__h_kids',
                           child: Text('— Enfant —')),
-                      for (final u in _spectacleKidUniverses)
+                      for (final u in _universEnfants())
                         DropdownMenuItem(value: u, child: Text(u)),
                     ],
                     onChanged: (v) {

@@ -1,7 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 
 /// Lecture des effets sonores de l'app. Un lecteur dédié par canal pour que
-/// les sons courts (pièce, dé) puissent se chevaucher sans se couper.
+/// les sons courts (pièce, éclat) puissent se chevaucher sans se couper.
 class AudioService {
   AudioService() {
     for (final p in [
@@ -79,7 +79,7 @@ class AudioService {
   /// Tintement de pièce.
   Future<void> playCoin() => _restart(_coin, coinAsset);
 
-  /// Cliquetis de dé.
+  /// Cliquetis (ancien son du dé, gardé pour les réglages d'avant la 2.0).
   Future<void> playDice() => _restart(_dice, diceAsset);
 
   /// Bris de verre (échec).
@@ -94,11 +94,11 @@ class AudioService {
   /// Révélation d'archétype : tambour + coup de foudre.
   Future<void> playReveal() => _restart(_beast, revealAsset);
 
-  /// Effets sélectionnables (clé → libellé) pour les sons du chrono.
+  /// Effets sélectionnables (clé → libellé) pour les sons du rituel. L'ancien
+  /// son « dice » n'est plus proposé, mais [playEffet] le joue encore.
   static const Map<String, String> effets = {
     'storm': 'Tonnerre Destiny',
     'thunder': 'Tonnerre',
-    'dice': 'Dé',
     'coin': 'Pièce',
     'crack': 'Fissure',
     'shine': 'Éclat',

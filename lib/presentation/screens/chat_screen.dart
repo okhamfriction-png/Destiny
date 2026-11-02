@@ -12,38 +12,11 @@ import 'chat_archives_screen.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../domain/entities/chat_story.dart';
 import '../destiny/cartes.dart';
+import '../../domain/serie/univers.dart';
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
+import '../jouer/univers_ia.dart';
 import '../theme/destiny_theme.dart';
-
-const List<({String name, IconData icon})> _universes = [
-  (name: 'Contemporain', icon: Icons.location_city),
-  (name: 'Policier', icon: Icons.local_police),
-  (name: 'High Fantasy', icon: Icons.castle),
-  (name: 'Shonen', icon: Icons.sports_martial_arts),
-  (name: 'Science-Fiction', icon: Icons.rocket_launch),
-  (name: 'Dark Fantasy', icon: Icons.dark_mode),
-  (name: 'Cyberpunk', icon: Icons.memory),
-  (name: 'Horreur', icon: Icons.bloodtype),
-  (name: 'Post-apocalyptique', icon: Icons.dangerous),
-  (name: 'Steampunk', icon: Icons.settings),
-  (name: 'Super-héros', icon: Icons.shield),
-  (name: 'Historique', icon: Icons.account_balance),
-];
-
-/// Univers adaptés aux enfants (façon Disney / manga / contes).
-const List<({String name, IconData icon})> _kidUniverses = [
-  (name: 'Conte de fées', icon: Icons.auto_stories),
-  (name: 'Dessin animé', icon: Icons.movie_filter),
-  (name: 'Manga rigolo', icon: Icons.sports_martial_arts),
-  (name: 'Animaux qui parlent', icon: Icons.pets),
-  (name: 'Super-héros', icon: Icons.shield),
-  (name: 'Pirates', icon: Icons.sailing),
-  (name: 'Espace rigolo', icon: Icons.rocket_launch),
-  (name: 'Monde magique', icon: Icons.auto_fix_high),
-  (name: 'Sous la mer', icon: Icons.water),
-  (name: 'Chevaliers & dragons', icon: Icons.castle),
-];
 
 /// Tons / genres d'histoire proposés.
 const List<({String name, IconData icon})> _tones = [
@@ -63,6 +36,7 @@ class ChatScreen extends StatefulWidget {
     required this.audioService,
     required this.visualSettings,
     required this.musicController,
+    this.univers = CatalogueUnivers.vide,
     super.key,
   });
 
@@ -70,6 +44,9 @@ class ChatScreen extends StatefulWidget {
   final AudioService audioService;
   final VisualSettings visualSettings;
   final MusicController musicController;
+
+  /// Les univers de `univers.json`.
+  final CatalogueUnivers univers;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -201,7 +178,10 @@ class _ChatScreenState extends State<ChatScreen>
   /// Icône correspondant à un univers (sinon masque de théâtre par défaut).
   IconData _universeIcon(String universe) {
     final u = universe.toLowerCase();
-    for (final e in [..._universes, ..._kidUniverses]) {
+    for (final e in [
+      ...universPourIa(widget.univers, kids: false),
+      ...universPourIa(widget.univers, kids: true),
+    ]) {
       if (e.name.toLowerCase() == u) return e.icon;
     }
     return Icons.theater_comedy;
@@ -290,7 +270,7 @@ class _ChatScreenState extends State<ChatScreen>
               ready = false;
             }
           }
-          final universes = childMode ? _kidUniverses : _universes;
+          final universes = universPourIa(widget.univers, kids: childMode);
 
           Widget label(String t) => Padding(
                 padding: const EdgeInsets.only(top: 16, bottom: 8),

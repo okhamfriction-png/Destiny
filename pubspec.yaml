@@ -60,6 +60,9 @@ flutter:
     - assets/data/dangers.json
     - assets/data/archetypes.json
     - assets/data/dilemmas.json
+    - assets/fonts/OFL-Cinzel.txt
+    - assets/fonts/OFL-Montserrat.txt
+    - assets/fonts/OFL-PatrickHand.txt
     - assets/audio/DestinyStorm.wav
     - assets/audio/story_epic.wav
     - assets/audio/coin.wav
@@ -74,6 +77,7 @@ flutter:
     - assets/images/dangers/
     - assets/images/archetypes/
     - assets/images/destiny_cube.png
+    - assets/images/logo_destiny.png
     - assets/music/
 
   fonts:

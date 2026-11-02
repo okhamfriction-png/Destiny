@@ -25,7 +25,7 @@ List<String> textesManquants(List<String> chemins) {
   ];
   final manquants = <String>[];
   final raccourci = RegExp(
-      r"String (\w+)\(String \w+(?:, \[Map<String, String> \w+ = const \{\}\])?\) => t\.t\('([a-z_\.]+)\.\$");
+      r"String (\w+)\(String \w+(?:, \[Map<String, String> \w+ = const \{\}\])?\) => (?:t|context\.textes)\.t\('([a-z_\.]+)\.\$");
   for (final f in fichiers) {
     final code = f.readAsStringSync();
     for (final m in RegExp(r"(?:\bt|textes)\.t\('([a-z_]+\.[a-z_\.]+)'").allMatches(code)) {

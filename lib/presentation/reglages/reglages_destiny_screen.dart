@@ -368,10 +368,7 @@ class _ChoixSon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effets = {
-      for (final e in AudioService.effets.entries)
-        if (e.key != 'dice') e.key: e.value,
-    };
+    const effets = AudioService.effets;
     final courant = effets.containsKey(valeur) ? valeur : 'storm';
     return Row(children: [
       Expanded(child: Text(libelle)),

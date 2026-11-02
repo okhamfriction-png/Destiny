@@ -22,6 +22,7 @@ import 'infrastructure/platform/base_de_donnees.dart';
 import 'infrastructure/platform/catalog_store_factory.dart';
 import 'infrastructure/platform/chat_store_factory.dart';
 import 'presentation/destiny/donnees.dart';
+import 'presentation/screens/credits_screen.dart';
 import 'presentation/screens/root_screen.dart';
 import 'presentation/theme/destiny_theme.dart';
 
@@ -97,6 +98,8 @@ Future<void> _boot() async {
   await troupeStore.charger();
 
   final assistantJeu = AssistantJeu(llm: llmService, reglages: aiSettings, grammaire: grammaire.grammaire);
+
+  enregistrerLicencesPolices();
 
   runApp(DestinyApp(
     grammaire: grammaire,

@@ -1173,5 +1173,144 @@
         "texte": "Chacun a un archétype, sa conviction face au danger, et un animal, son corps. Il y a douze archétypes, en trois familles :"
       }
     }
+  },
+  "editeurs": {
+    "catalogue": {
+      "titre": "Lieux et dangers",
+      "lieux": "Lieux ({n})",
+      "dangers": "Dangers ({n})",
+      "ajouter_lieu": "Un lieu",
+      "ajouter_danger": "Un danger",
+      "nouveau_lieu": "Nouveau lieu",
+      "nouveau_danger": "Nouveau danger",
+      "restaurer": "Revenir à la liste d'origine",
+      "restaurer_titre": "Revenir à la liste d'origine ?",
+      "restaurer_texte": "Les lieux et les dangers redeviennent ceux de Destiny. Tes modifications seront perdues.",
+      "restaure": "La liste d'origine est revenue.",
+      "nom": "Nom",
+      "espaces": "Les espaces",
+      "espaces_aide": "Un par ligne : les coins du lieu où l'on joue.",
+      "roles": "Les rôles possibles",
+      "roles_aide": "Un par ligne.",
+      "style": "Style",
+      "styles": [
+        "Catastrophe",
+        "Fantastique",
+        "Mystère",
+        "Social / Dilemme",
+        "Survie / Dilemme",
+        "Thriller",
+        "Libre"
+      ],
+      "paliers": "Les quatre paliers",
+      "palier_aide": "Ce que fait le danger à ce palier.",
+      "palier_4_kids": "Palier 4, en version kids",
+      "palier_4_kids_aide": "Personne ne meurt : on renonce, on se sépare un moment.",
+      "kids": "Jouable avec des enfants",
+      "kids_aide": "Le sigle KIDS : proposé en mode kids.",
+      "actif": "Proposé à la mise en place",
+      "actif_aide": "Éteint, il reste dans ta liste sans être proposé.",
+      "enregistrer": "Enregistrer",
+      "supprimer": "Supprimer",
+      "annuler": "Annuler",
+      "valider": "Valider",
+      "supprimer_titre": "Supprimer « {nom} » ?",
+      "supprimer_texte": "Il disparaît de ta liste. La liste d'origine reste là, si tu veux y revenir.",
+      "nom_requis": "Il faut un nom.",
+      "paliers_n": "{n} paliers sur 4",
+      "sans_espace": "Pas encore d'espace",
+      "mis_de_cote": "Mis de côté",
+      "enregistre": "C'est enregistré."
+    },
+    "dilemmes": {
+      "titre": "Dilemmes de l'acte 4",
+      "intro": "Chaque dilemme est rattaché à un danger. À l'acte 4, la régie le propose : c'est le prix à payer.",
+      "aucun": "Aucun dilemme",
+      "nombre": "{n} dilemmes",
+      "un": "1 dilemme",
+      "ajouter": "Ajouter un dilemme",
+      "nouveau": "Nouveau dilemme",
+      "modifier": "Modifier le dilemme",
+      "danger": "Danger : {nom}",
+      "titre_champ": "Titre",
+      "titre_exemple": "ex. Le dernier canot",
+      "genre": "Genre",
+      "genres": [
+        "Sacrifice",
+        "Confiance/Trahison",
+        "Ressource rare",
+        "Vérité/Mensonge",
+        "Tout ou rien"
+      ],
+      "situation": "Le dilemme",
+      "situation_exemple": "ex. Il reste une place dans le canot, et vous êtes deux.",
+      "choix_a": "Choix A",
+      "choix_b": "Choix B",
+      "requis": "À remplir",
+      "sans_titre": "(sans titre)",
+      "ajoute": "Dilemme ajouté à « {danger} ».",
+      "modifie": "Dilemme modifié.",
+      "supprimer_titre": "Supprimer ce dilemme ?",
+      "supprimer": "Supprimer",
+      "annuler": "Annuler",
+      "enregistrer": "Enregistrer",
+      "modifier_court": "Modifier"
+    }
+  },
+  "page_a_propos": {
+    "titre": "À propos",
+    "sous_titre": "L'improvisation dramatique, avec la grammaire de Destiny.",
+    "version": "Version {version}",
+    "ce_qu_on_y_fait": "Ce qu'on y fait",
+    "fonctions": [
+      {
+        "id": "troupe",
+        "titre": "Troupe",
+        "texte": "Préparer un spectacle ou une répétition, l'échauffement, la régie avec le bouton Destiny, le débrief et l'historique."
+      },
+      {
+        "id": "jouer",
+        "titre": "Jouer",
+        "texte": "Entre humains : l'épisode, la saison et la série, avec leurs méchants et le registre. Avec l'IA : une histoire où tu joues ton personnage, ou un spectacle complet."
+      },
+      {
+        "id": "exercices",
+        "titre": "Exercices",
+        "texte": "Des échauffements et des jeux de théâtre, dont les vingt exercices de la grammaire, avec un chrono."
+      },
+      {
+        "id": "bibliotheque",
+        "titre": "Bibliothèque",
+        "texte": "Le livret de règles, les archétypes et leurs animaux, les dangers, les lieux, les œuvres et les méchants."
+      },
+      {
+        "id": "musique",
+        "titre": "Musique",
+        "texte": "Des ambiances et des musiques pour la scène, et la régie son."
+      }
+    ],
+    "hors_ligne": "Tout se joue sans réseau, sauf l'IA."
+  },
+  "credits": {
+    "titre": "Crédits",
+    "polices": "Les polices",
+    "polices_texte": "Cinzel, Montserrat et Patrick Hand sont sous licence SIL Open Font License 1.1. Merci à leurs auteurs.",
+    "polices_liste": [
+      "Cinzel · The Cinzel Project Authors",
+      "Montserrat · The Montserrat Project Authors",
+      "Patrick Hand · Patrick Wagesreiter"
+    ],
+    "sons": "Les sons d'ambiance",
+    "sons_texte": "Les ambiances de lieux proviennent de freesound.org, sous licences Creative Commons. Merci à leurs auteurs.",
+    "par": "par {auteur} · {licence}",
+    "aucun": "Aucun crédit à afficher.",
+    "logiciels": "Les logiciels libres",
+    "logiciels_texte": "Destiny est fait avec Flutter et des bibliothèques libres. Leurs licences, et celles des polices, sont toutes ici.",
+    "voir_licences": "Voir les licences"
+  },
+  "contact": {
+    "titre": "Me contacter",
+    "accroche": "Suivez Destiny Impro",
+    "texte": "Retrouvez les vidéos, les coulisses, et écrivez-moi directement sur les réseaux."
   }
 }

@@ -296,7 +296,7 @@ class _Montee extends StatelessWidget {
   }
 }
 
-/// Le dos d'une carte : le dé Destiny et « Rien n'est écrit », dans un
+/// Le dos d'une carte : le cube Destiny (le logo) et la promesse, dans un
 /// contour épais de la couleur de la famille.
 class DosCarte extends StatelessWidget {
   const DosCarte({super.key, required this.famille, this.largeur = 340, this.hauteur = 480});
@@ -327,7 +327,7 @@ class DosCarte extends StatelessWidget {
           Image.asset(
             'assets/images/destiny_cube.png',
             width: largeur * 0.42,
-            errorBuilder: (_, __, ___) => Icon(Icons.casino_outlined, size: largeur * 0.3, color: c.or),
+            errorBuilder: (_, __, ___) => Icon(Icons.flash_on_rounded, size: largeur * 0.3, color: c.or),
           ),
           const SizedBox(height: 18),
           Text(
