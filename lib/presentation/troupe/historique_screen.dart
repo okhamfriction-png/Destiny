@@ -106,8 +106,6 @@ class FicheSession extends StatelessWidget {
           LieuEtDanger(contexte: contexte, session: s),
           LigneInfo(t.t('mise_en_place.groupe'), s.groupe),
           FrisePaliers(textes: s.paliers, courant: PalierId.deNumero(s.palierAtteint)),
-          for (final (i, o) in s.objets.indexed)
-            if (o.isNotEmpty) Puce(o, numero: i + 1),
           LigneInfo(t.t('mise_en_place.mystere'), s.mystere),
           LigneInfo(t.t('mise_en_place.reponse'), s.reponseMystere, italique: true),
         ]),

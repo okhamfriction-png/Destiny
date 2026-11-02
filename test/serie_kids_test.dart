@@ -20,7 +20,7 @@ void main() {
       expect(g.serie.saison, isNotEmpty);
       expect(g.serie.serie, isNotEmpty);
       expect(g.serie.reglesDuMechant, hasLength(7));
-      expect(g.serie.registre.categories, hasLength(10));
+      expect(g.serie.registre.categories, hasLength(9));
     });
   });
 

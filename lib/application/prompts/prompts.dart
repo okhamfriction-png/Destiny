@@ -19,7 +19,6 @@ class ScenePrompt {
     this.groupe = '',
     this.danger = '',
     this.paliers = const [],
-    this.objets = const [],
     this.mystere = '',
     this.univers = '',
     this.ton = '',
@@ -30,7 +29,6 @@ class ScenePrompt {
   final String groupe;
   final String danger;
   final List<String> paliers;
-  final List<String> objets;
   final String mystere;
   final String univers;
   final String ton;
@@ -45,8 +43,6 @@ class ScenePrompt {
     for (final (i, p) in paliers.indexed) {
       b.writeln('  Palier ${i + 1} : $p');
     }
-    final o = [for (final x in objets) if (x.trim().isNotEmpty) x];
-    if (o.isNotEmpty) b.writeln('Les trois objets du lieu : ${o.join(' ; ')}.');
     if (mystere.isNotEmpty) b.writeln('Le mystère : $mystere');
     return b.toString().trim();
   }
@@ -209,7 +205,7 @@ String rappelStyle(StyleNarration s) => switch (s) {
     };
 
 /// 2. Le générateur de mise en place : il complète ce qui manque (lieu,
-/// espaces, groupe, danger et ses quatre paliers, trois objets, mystère).
+/// espaces, groupe, danger et ses quatre paliers, mystère).
 String promptMiseEnPlace({required Grammaire g, required ScenePrompt connu, bool kids = false}) => '''
 Tu prépares la mise en place d'une partie de Destiny. Tu complètes UNIQUEMENT ce qui manque ; ce qui est donné reste tel quel.
 ${grammaireCourte(g, kids: kids)}
@@ -217,11 +213,11 @@ ${grammaireCourte(g, kids: kids)}
 CE QUI EST DÉJÀ CHOISI :
 ${connu.decrire().isEmpty ? '(rien)' : connu.decrire()}
 
-RÈGLES : un seul lieu, avec 4 espaces ; un groupe qui se connaît ; un danger qui vient du lieu et monte en 4 paliers (il se signale, il enferme, il envahit, il bloque les sorties) ; trois objets concrets, présents dans le lieu, qui pourront servir ; un mystère (une question que le groupe se pose) et sa réponse, que seul le maître du jeu connaît. $_interdits
+RÈGLES : un seul lieu, avec 4 espaces ; un groupe qui se connaît ; un danger qui vient du lieu et monte en 4 paliers (il se signale, il enferme, il envahit, il bloque les sorties) ; un mystère (une question que le groupe se pose) et sa réponse, que seul le maître du jeu connaît. $_interdits
 ${_public(kids)}
 
 Réponds uniquement par un objet JSON, sans texte autour :
-{"lieu": "...", "espaces": ["...", "...", "...", "..."], "groupe": "...", "danger": "...", "paliers": ["...", "...", "...", "..."], "objets": ["...", "...", "..."], "mystere": "...", "reponse": "..."}
+{"lieu": "...", "espaces": ["...", "...", "...", "..."], "groupe": "...", "danger": "...", "paliers": ["...", "...", "...", "..."], "mystere": "...", "reponse": "..."}
 '''
     .trim();
 

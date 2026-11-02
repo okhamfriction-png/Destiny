@@ -29,8 +29,12 @@ Future<EntreeRegistre?> editerEntree(
   var categorie = existante?.categorie ?? CategorieRegistre.figurant;
   var statut = existante?.statut ?? StatutRegistre.present;
   final categories = [
+    // L'ancienne catégorie « objet » ne reste que pour corriger une entrée
+    // déjà notée.
     for (final c in CategorieRegistre.values)
-      if (!serie.kids || c != CategorieRegistre.mort) c,
+      if ((c != CategorieRegistre.objet || existante?.categorie == c) &&
+          (!serie.kids || c != CategorieRegistre.mort))
+        c,
   ];
   final statuts = [
     for (final s in StatutRegistre.values)

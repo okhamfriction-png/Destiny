@@ -112,8 +112,9 @@ void main() {
     test('la mise en place complète ce qui manque, en JSON', () {
       final p = promptMiseEnPlace(g: g, connu: const ScenePrompt(lieu: 'Aquarium'));
       expect(p, contains('Aquarium'));
-      expect(p, contains('"objets"'));
       expect(p, contains('"mystere"'));
+      expect(p, isNot(contains('"objets"')));
+      expect(p, isNot(contains('trois objets')));
       sansAncienneGrammaire(p);
     });
 
@@ -295,11 +296,11 @@ void main() {
       return (AssistantJeu(llm: llm, reglages: await AiSettings.load(), grammaire: g), llm);
     }
 
-    test('la mise en place : trois objets et un mystère', () async {
+    test('la mise en place : le mystère et sa réponse (d\'anciens objets sont ignorés)', () async {
       final (a, llm) = await assistant('Voici : {"objets": ["une clé", "une lampe", "une corde"], "mystere": "Qui ?", "reponse": "Lui."}');
       final r = await a.miseEnPlace(_scene);
-      expect(r.objets, hasLength(3));
       expect(r.mystere, 'Qui ?');
+      expect(r.reponse, 'Lui.');
       expect(llm.envois.single, contains('Aquarium'));
     });
 
@@ -325,7 +326,7 @@ void main() {
 
     test('une réponse illisible ne casse rien', () async {
       final (a, _) = await assistant('pas de JSON');
-      expect((await a.miseEnPlace(_scene)).objets, isEmpty);
+      expect((await a.miseEnPlace(_scene)).mystere, isEmpty);
       expect(await a.echauffement(archetypeId: 'leader'), isEmpty);
     });
   });

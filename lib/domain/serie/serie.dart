@@ -58,18 +58,25 @@ enum Sante {
 }
 
 /// Les catégories du registre, dans l'ordre de `serie.registre.categories`
-/// de la grammaire. Les libellés sont dans le fichier de textes.
+/// de la grammaire, puis [objet], l'ancienne catégorie. Les libellés sont
+/// dans le fichier de textes.
 enum CategorieRegistre {
   figurant,
   sbire,
   bascule,
-  objet,
   lieu,
   secret,
   promesse,
   mort,
   traitre,
-  heritage;
+  heritage,
+
+  /// Ancienne catégorie (avant la 2.0.2) : on relit et on montre les objets
+  /// déjà notés, mais on n'en crée plus, et on ne les propose plus.
+  objet;
+
+  /// Les catégories qu'on peut encore créer : toutes, sauf [objet].
+  static List<CategorieRegistre> get actives => [for (final c in values) if (c != objet) c];
 
   static CategorieRegistre depuisTexte(String? s) {
     final v = (s ?? '').trim().toLowerCase();
@@ -497,6 +504,9 @@ class EpisodeSerie {
   /// Le méchant de l'épisode. En saison, c'est celui de la saison ; hors
   /// saison, il est facultatif (l'ancienne règle de la Campagne).
   String mechantId;
+
+  /// Ancien : les trois objets du lieu (avant la 2.0.2). L'appli ne les
+  /// montre plus ; on les relit et on les réécrit pour ne rien perdre.
   List<String> objets;
   String mystere;
   String reponseMystere;

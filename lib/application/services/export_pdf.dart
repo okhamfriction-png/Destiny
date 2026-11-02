@@ -87,9 +87,7 @@ Future<Uint8List> fichePdfSession({
       h(t.t('bibliotheque.regles.paliers')),
       for (final p in g.paliers)
         ligne('${p.numero}. ${p.nom}', s.paliers.length > p.id.index ? s.paliers[p.id.index] : ''),
-      h(t.t('mise_en_place.objets')),
-      for (final o in s.objets)
-        if (o.isNotEmpty) pw.Bullet(text: o, style: const pw.TextStyle(fontSize: 10.5)),
+      h(t.t('regie.mystere')),
       ligne(t.t('mise_en_place.mystere'), s.mystere),
       ligne(t.t('mise_en_place.reponse'), s.reponseMystere),
       h(t.t('historique.distribution')),
@@ -142,7 +140,8 @@ Future<Uint8List> fichePdfSession({
 }
 
 /// Le registre d'une série en PDF, rangé par catégorie. Il ne contient que
-/// des personnages, des objets, des lieux, des secrets et des promesses.
+/// des personnages, des lieux, des secrets et des promesses (et les objets
+/// notés avant la 2.0.2, gardés pour ne rien perdre).
 Future<Uint8List> registrePdf({
   required Serie s,
   required TextesDestiny t,

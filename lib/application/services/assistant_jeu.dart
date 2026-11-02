@@ -8,8 +8,7 @@ import 'llm_service.dart';
 
 /// Ce que l'IA propose pour la mise en place.
 class MiseEnPlaceIA {
-  const MiseEnPlaceIA({this.objets = const [], this.mystere = '', this.reponse = ''});
-  final List<String> objets;
+  const MiseEnPlaceIA({this.mystere = '', this.reponse = ''});
   final String mystere;
   final String reponse;
 }
@@ -78,10 +77,10 @@ class AssistantJeu {
         messages: [ChatMessage(role: 'user', content: contenu)],
       );
 
-  /// Les trois objets et le mystère, pour un lieu, un groupe et un danger.
+  /// Le mystère et sa réponse, pour un lieu, un groupe et un danger.
   Future<MiseEnPlaceIA> miseEnPlace(ScenePrompt connu, {bool kids = false}) async {
     final j = _objet(await _demander(promptMiseEnPlace(g: grammaire, connu: connu, kids: kids), 'Propose.'));
-    return MiseEnPlaceIA(objets: _ls(j['objets']), mystere: _s(j['mystere']), reponse: _s(j['reponse']));
+    return MiseEnPlaceIA(mystere: _s(j['mystere']), reponse: _s(j['reponse']));
   }
 
   /// Des idées pour les trois questions de l'échauffement.

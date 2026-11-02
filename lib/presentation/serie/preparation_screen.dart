@@ -20,7 +20,7 @@ import 'pbta_composants.dart';
 
 /// Préparer un épisode : le présage (en saison), le lieu et le danger tirés
 /// du catalogue de Destiny (avec leur image et leur fiche), les figurants du
-/// lieu, le groupe, les objets et le mystère, le vouloir de chacun, ce qu'on
+/// lieu, le groupe, le mystère, le vouloir de chacun, ce qu'on
 /// ressort du registre, le chrono et le micro.
 class PreparationEpisodeScreen extends StatefulWidget {
   const PreparationEpisodeScreen({super.key, required this.contexte, required this.serie, required this.episode});
@@ -186,7 +186,10 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
     try {
       final candidats = [
         for (final r in s.registre)
-          if (r.categorie != CategorieRegistre.mort && r.statut != StatutRegistre.tombe) r,
+          if (r.categorie != CategorieRegistre.mort &&
+              r.categorie != CategorieRegistre.objet &&
+              r.statut != StatutRegistre.tombe)
+            r,
       ];
       final choix = await widget.contexte.store
           .proposerRessortis(s, candidats, prochain: [e.lieuNom, e.dangerNom, e.presage].where((x) => x.isNotEmpty).join(' · '));
@@ -361,25 +364,7 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
               ),
             ]),
           ]),
-        SectionDestiny(titre: m('objets'), enfants: [
-          Text(m('objets_aide'), style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: 6),
-          for (var i = 0; i < 3; i++)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: TextField(
-                controller: _champ('objet$i', i < e.objets.length ? e.objets[i] : ''),
-                decoration: InputDecoration(labelText: m('objet', {'n': '${i + 1}'}), isDense: true),
-                onChanged: (v) {
-                  while (e.objets.length < 3) {
-                    e.objets.add('');
-                  }
-                  e.objets[i] = v.trim();
-                  _sauver();
-                },
-              ),
-            ),
-          const SizedBox(height: 6),
+        SectionDestiny(titre: m('mystere'), enfants: [
           TextField(
             controller: _champ('mystere', e.mystere),
             maxLines: 2,

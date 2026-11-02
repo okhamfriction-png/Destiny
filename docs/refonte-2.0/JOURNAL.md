@@ -740,3 +740,51 @@ Cinq nouveaux tests :
 - le bouton « Aller directement à la régie » ;
 - le chrono des réglages en quittant la préparation ;
 - le chrono de la mise en place écrit tout de suite.
+
+## 2.0.2 : plus d'objets
+
+### La demande
+
+« Retire toute la logique d'objet de l'application, jeu de rôle et règles. »
+
+### Ce qui a été retiré
+
+Les trois objets du lieu, partout où ils étaient une règle du jeu.
+
+- **La grammaire** :
+  - les consignes des actes 1 et 4 (« Les trois objets sont touchés », « Un des objets sert dans la scène finale ») ;
+  - la montée du débrouillard au palier 4, qui parlait de « l'objet du début » ;
+  - la catégorie « objets » du registre, et les objets dans la règle de la série et dans « ce que le méchant laisse » ;
+  - la faille de l'Immortel, qui renvoyait aux trois objets : l'objet où il a caché sa mort est maintenant « quelque part dans le lieu » ;
+  - l'exercice « Les trois objets » : il reste 19 exercices.
+- **Les textes** :
+  - les objets de la mise en place ;
+  - « Objets et mystère » à la régie, qui devient « Le mystère » ;
+  - le mouvement doux du Maître du destin « Utiliser un objet du lieu » ;
+  - l'aide du registre et de l'héritage du méchant ;
+  - « Proposer les objets et le mystère (IA) », qui devient « Proposer le mystère (IA) ».
+- **Les écrans** :
+  - la mise en place, la régie et la fiche d'un spectacle ;
+  - la préparation et le jeu d'un épisode de série ;
+  - le livret et le PDF d'un spectacle.
+- **L'IA** : le prompt de la mise en place ne demande plus d'objets. Le numéro des prompts ne change pas : les prompts du spectacle avec l'IA sont les mêmes, et le changer effacerait les parties en cours.
+- **La fiche du hibou** (`archetypes.json`) ne parle plus de « l'objet du début ».
+
+### Ce qui reste
+
+- **Le mystère et sa réponse.**
+- **Les objets de tous les jours** dans les descriptions (un figurant qui « apporte un objet, une clé ou un savoir », un danger où « un objet tombe »), et les exercices d'impro avec des objets imaginaires.
+- **Le contrôle du besoin** (« un besoin n'est jamais un objet ») : c'est une autre règle.
+
+### Les anciennes données
+
+Rien n'est perdu.
+- Les objets déjà notés restent dans les sauvegardes des spectacles et des épisodes : ils sont relus et réécrits, mais plus montrés.
+- Dans le registre, l'ancienne catégorie « objet » est gardée en fin de liste :
+  - les entrées déjà notées s'affichent et se corrigent ;
+  - on n'en crée plus ;
+  - elles ne sont plus proposées à ressortir, ni par l'appli ni par l'IA.
+
+### Tests
+
+**304 tests passent.** Un test vérifie que la grammaire, les textes et les fiches des animaux ne parlent plus des objets du lieu. Un autre vérifie qu'une ancienne session avec des objets ne les montre plus à la mise en place ni à la régie, mais les garde dans sa sauvegarde.

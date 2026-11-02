@@ -17,7 +17,7 @@ import 'troupe_screen.dart';
 
 /// La mise en place : le lieu et le danger tirés à la préparation (chacun
 /// avec sa bulle d'info), que le public peut changer par un vote ; le groupe ;
-/// les trois objets et le mystère ; le chrono et ses trois Destiny.
+/// le mystère ; le chrono et ses trois Destiny.
 class MiseEnPlaceScreen extends StatefulWidget {
   const MiseEnPlaceScreen({super.key, required this.contexte, required this.session});
 
@@ -35,9 +35,6 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
   List<Location> _propLieux = const [];
   List<Danger> _propDangers = const [];
   late final TextEditingController _groupe = TextEditingController(text: s.groupe);
-  late final List<TextEditingController> _objets = [
-    for (final o in s.objets) TextEditingController(text: o),
-  ];
   late final TextEditingController _mystere = TextEditingController(text: s.mystere);
   late final TextEditingController _reponse = TextEditingController(text: s.reponseMystere);
   /// Le chrono de la session parmi ceux des réglages (celui des réglages si
@@ -108,9 +105,6 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
     _groupe.dispose();
     _mystere.dispose();
     _reponse.dispose();
-    for (final o in _objets) {
-      o.dispose();
-    }
     super.dispose();
   }
 
@@ -138,7 +132,7 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
         ),
       );
 
-  /// L'IA propose les trois objets et le mystère ; elle ne remplit que ce
+  /// L'IA propose le mystère et sa réponse ; elle ne remplit que ce
   /// qui est encore vide.
   Future<void> _proposerAvecIa() async {
     final r = await widget.contexte.ia!.miseEnPlace(
@@ -147,19 +141,12 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
         groupe: s.groupe,
         danger: s.dangerNom,
         paliers: s.paliers,
-        objets: s.objets,
         mystere: s.mystere,
       ),
       kids: s.kids,
     );
     if (!mounted) return;
     setState(() {
-      for (var i = 0; i < 3 && i < r.objets.length; i++) {
-        if (s.objets[i].trim().isEmpty) {
-          s.objets[i] = r.objets[i];
-          _objets[i].text = r.objets[i];
-        }
-      }
       if (s.mystere.trim().isEmpty && r.mystere.isNotEmpty) {
         s.mystere = r.mystere;
         _mystere.text = r.mystere;
@@ -264,22 +251,9 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
             FrisePaliers(textes: s.paliers),
           ],
         ]),
-        SectionDestiny(titre: m('objets'), enfants: [
-          Text(m('objets_aide'), style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: 6),
-          for (var i = 0; i < 3; i++)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: TextField(
-                controller: _objets[i],
-                decoration: InputDecoration(labelText: m('objet', {'n': '${i + 1}'}), isDense: true),
-                onChanged: (v) => s.objets[i] = v.trim(),
-              ),
-            ),
-        ]),
         if (widget.contexte.ia != null)
           BoutonIA(
-            libelle: t.t('ia_jeu.proposer_objets'),
+            libelle: t.t('ia_jeu.proposer_mystere'),
             disponible: widget.contexte.ia!.disponible,
             action: _proposerAvecIa,
           ),

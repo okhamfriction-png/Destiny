@@ -476,9 +476,7 @@ class _RegieScreenState extends State<RegieScreen> {
         SectionDestiny(titre: rg('montee'), enfants: [
           for (final p in s.personnages) RectangleArchetype(personnage: p, contexte: widget.contexte, palier: _palier),
         ]),
-        SectionDestiny(titre: rg('objets_mystere'), enfants: [
-          for (final (i, o) in s.objets.indexed)
-            if (o.isNotEmpty) Puce(o, numero: i + 1),
+        SectionDestiny(titre: rg('mystere'), enfants: [
           LigneInfo(t.t('mise_en_place.mystere'), s.mystere),
           LigneInfo(t.t('mise_en_place.reponse'), s.reponseMystere, italique: true),
         ]),

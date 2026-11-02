@@ -84,10 +84,37 @@ void main() {
       final g = (await chargerGrammaire()).grammaire;
       expect(g.oeuvres, hasLength(21));
       expect(g.scenes, hasLength(3));
-      expect(g.exercices, hasLength(20));
+      expect(g.exercices, hasLength(19));
       expect(g.themesExercices.map((t) => t.id), ['crow', 'lieu', 'destiny']);
       expect(g.modelesDe('alarmiste'), isNotEmpty);
       expect(g.directionDe('leader'), isNotNull);
+    });
+
+    test('plus de logique d\'objets : ni règle, ni exercice, ni mouvement, ni catégorie du registre', () async {
+      final g = (await chargerGrammaire()).grammaire;
+      final brut = [
+        File('assets/data/destiny_grammaire.json').readAsStringSync(),
+        File('assets/data/destiny_textes.json').readAsStringSync(),
+        File('assets/data/archetypes.json').readAsStringSync(),
+      ].join('\n').toLowerCase();
+      for (final x in ['trois objets', 'objets du lieu', 'objet du lieu', 'objet du début', 'objets et mystère']) {
+        expect(brut, isNot(contains(x)), reason: x);
+      }
+      expect(g.exercices.map((e) => e.id), isNot(contains('trois_objets')));
+      for (final a in g.actes) {
+        for (final c in a.consignes) {
+          expect(c.toLowerCase(), isNot(contains('objet')), reason: c);
+        }
+      }
+      expect(g.serie.registre.categories.where((c) => c.contains('objet')), isEmpty);
+      final textes = jsonDecode(File('assets/data/destiny_textes.json').readAsStringSync()) as Map<String, dynamic>;
+      final pbta = textes['pbta'] as Map<String, dynamic>;
+      final mj = pbta['mouvements_mj'] as Map<String, dynamic>;
+      for (final liste in mj.values.whereType<List<dynamic>>()) {
+        for (final m in liste.cast<Map<String, dynamic>>()) {
+          expect(m['id'], isNot('objet'));
+        }
+      }
     });
 
     test('rapproche les noms sans tenir compte des accents', () async {

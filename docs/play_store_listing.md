@@ -41,7 +41,7 @@ JOUER UN SPECTACLE
 
 • L'ÉCHAUFFEMENT — La carte de chaque joueur, trois questions, un minuteur.
 
-• LA MISE EN PLACE — Le lieu et le danger à voter, le groupe, les liens, trois objets et un mystère.
+• LA MISE EN PLACE — Le lieu et le danger à voter, le groupe, les liens et un mystère.
 
 • LA RÉGIE — Un grand chrono, et le bouton Destiny. À chaque acte, l'appli rappelle le geste à jouer et ce que fait chaque archétype.
 

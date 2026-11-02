@@ -158,7 +158,7 @@
         "signale": "Bidouille un objet",
         "enferme": "Cherche une issue",
         "envahit": "Tente le plan risqué",
-        "supprime": "Dernier plan, avec l'objet du début"
+        "supprime": "Dernier plan, le tout pour le tout"
       },
       "animaux": [
         {
@@ -552,8 +552,7 @@
       "consignes": [
         "On est dans le quotidien et le déni.",
         "Deux par deux : relations, vouloir et besoin.",
-        "L'alarmiste entre avec le signal ; personne n'y croit.",
-        "Les trois objets sont touchés."
+        "L'alarmiste entre avec le signal ; personne n'y croit."
       ]
     },
     {
@@ -582,8 +581,7 @@
       "ambiance": "Le prix à payer",
       "consignes": [
         "Tout le monde sur scène, personne ne sort.",
-        "Chacun face à son besoin.",
-        "Un des objets sert dans la scène finale."
+        "Chacun face à son besoin."
       ]
     }
   ],
@@ -4726,14 +4724,14 @@
   "serie": {
     "episode": "Le one-shot : un lieu, un groupe, un danger en quatre paliers, quatre actes. Il se suffit à lui-même.",
     "saison": "Quatre épisodes. Un méchant et sa machination en quatre présages, un par épisode (il se signale, il enferme, il envahit, il bloque les sorties). Chaque danger d'épisode est l'un de ses coups. Le besoin du personnage appartient à la saison : fixé à l'épisode 1, nommé à l'épisode 3, payé au final. Le vouloir change à chaque épisode. La sortie du palier 4 mène au lieu de l'épisode suivant.",
-    "serie": "Une suite de saisons. Entre deux saisons, un personnage qui a payé son besoin peut changer d'archétype. Un registre garde les figurants, les objets, les lieux, les secrets, les morts et les promesses, que l'IA propose au MJ de ressortir.",
+    "serie": "Une suite de saisons. Entre deux saisons, un personnage qui a payé son besoin peut changer d'archétype. Un registre garde les figurants, les lieux, les secrets, les morts et les promesses, que l'IA propose au MJ de ressortir.",
     "regles_du_mechant": [
       "Son reflet : il a le même archétype que le protagoniste qu'il vise, c'est pour ça qu'il lui en veut.",
       "Il agit dans l'ombre : chaque danger d'épisode est l'un de ses coups, sans qu'on le sache au début.",
       "Il veut, il a besoin, comme les héros : son besoin est sa faille, on la découvre à l'épisode 3.",
       "Son traître : il recrute l'un des protagonistes avec une offre ; le traître se révèle à l'épisode 3.",
       "Le final : à l'épisode 4, on le voit enfin, dans le lieu ; on le vainc par sa faille plutôt que par la force.",
-      "Ce qu'il laisse : un objet, un figurant ou une promesse, que la saison suivante pourra ressortir.",
+      "Ce qu'il laisse : un figurant, un secret ou une promesse, que la saison suivante pourra ressortir.",
       "Ses sbires : deux par méchant, ils agissent à sa place tant qu'il reste dans l'ombre ; on voit les sbires avant de voir le méchant."
     ],
     "registre": {
@@ -4742,7 +4740,6 @@
         "figurants (nom, type, archétype, animal, ce qu'il sait, ce qu'on lui a promis)",
         "sbires (vivants, tombés, retournés)",
         "figurants passés sbires (bascule après une offre du méchant)",
-        "objets (dont les trois objets du lieu)",
         "lieux visités et leurs sorties",
         "secrets révélés ou gardés",
         "promesses faites",
@@ -5650,12 +5647,12 @@
       "histoire": "Il a vu mourir tous ceux qu'il aimait, et a caché sa propre mort dans un objet. Depuis, il soupçonne tout le monde de la chercher.",
       "veut": "Ne jamais mourir.",
       "besoin": "Accepter de passer la main.",
-      "faille": "L'objet où sa mort est cachée : c'est l'un des trois objets du lieu.",
+      "faille": "L'objet où sa mort est cachée, quelque part dans le lieu.",
       "cible": "Le paranoïaque, qui soupçonne comme lui.",
       "offre_au_traitre": "Il promet une part d'éternité à qui lui rapporte les secrets des autres.",
       "kids": true,
       "version_kids": "Il a caché son cœur dans un objet, et soupçonne tout le monde de le chercher.",
-      "faille_kids": "L'objet où son cœur est caché : c'est l'un des trois objets du lieu.",
+      "faille_kids": "L'objet où son cœur est caché, quelque part dans le lieu.",
       "sbires": [
         {
           "id": "le_capitaine_noir",
@@ -6151,27 +6148,6 @@
       ],
       "debrief": "L'activité a-t-elle révélé quelque chose du personnage ?",
       "variante": "L'activité s'arrête net au moment où ça fait mal."
-    },
-    {
-      "id": "trois_objets",
-      "theme": "lieu",
-      "titre": "Les trois objets",
-      "source": "Troupe Destiny, novembre 2026",
-      "duree": "8 min",
-      "joueurs": "4",
-      "notion": "les objets du lieu",
-      "but": "Installer trois objets au début et s'en servir jusqu'à la fin.",
-      "consignes": [
-        "On donne trois objets du lieu.",
-        "À l'acte 1, chaque objet doit être touché.",
-        "L'un d'eux se retourne contre le groupe à un palier.",
-        "L'un d'eux sert dans la scène finale."
-      ],
-      "exemples": [
-        "Mark : un lieu unique pose des « cadeaux pour la suite », puisque tout objet installé reste là."
-      ],
-      "debrief": "Quel objet a servi à la fin ? Qui s'en est souvenu ?",
-      "variante": "Un des objets cache le mystère."
     },
     {
       "id": "lieu_quatre_paliers",

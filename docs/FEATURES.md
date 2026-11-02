@@ -57,7 +57,7 @@ L'accueil montre la promesse et, un jour sur deux, la règle d'or ou la répliqu
    - Chaque joueur choisit son animal parmi les deux de son archétype.
 2. **L'échauffement** : la carte de chaque joueur, les trois questions (« Comment je me tiens ? »…), la limite (« le corps, pas l'histoire ») et un minuteur.
 3. **Avant d'entrer en scène** : les règles d'or, les quatre paliers et la phrase des débriefs. Aucune critique.
-4. **La mise en place** : trois lieux et trois dangers à voter à main levée (ou un choix libre), le groupe, deux liens pour commencer, les trois objets, le mystère et sa réponse, le chrono (20, 30 ou 45 min). Avec l'IA, l'appli peut proposer les objets et le mystère.
+4. **La mise en place** : trois lieux et trois dangers à voter à main levée (ou un choix libre), le groupe, deux liens pour commencer, le mystère et sa réponse, le chrono (20, 30 ou 45 min). Avec l'IA, l'appli peut proposer le mystère.
 5. **La régie** :
    - un gros chrono et l'acte en cours ;
    - le **bouton Destiny**, réservé à la régie. Il se déclenche aussi tout seul aux minutes prévues, selon le réglage ;
@@ -78,7 +78,7 @@ L'accueil montre la promesse et, un jour sur deux, la règle d'or ou la répliqu
 - **La série** enchaîne les saisons. Entre deux saisons, un personnage qui a payé son besoin peut changer d'archétype.
 - **21 univers** (12 pour adultes, 10 pour enfants, Super-héros est des deux) avec leurs lores, leurs peuples, leurs lieux, leurs **figurants** (trois par lieu), leurs **dangers** (trois par univers) et leurs **méchants**.
 - **Les figurants et les sbires** : deux modes distincts. Un figurant peut basculer en sbire, et c'est noté au registre.
-- **Le registre** garde les figurants, les sbires, les objets, les lieux, les secrets, les promesses, les morts (adultes seulement), le traître et ce que le méchant a laissé. Au début d'un épisode, l'IA peut proposer deux ou trois éléments à ressortir. Il ne contient **jamais les prénoms des joueurs**, seulement les personnages. Il s'exporte en PDF.
+- **Le registre** garde les figurants, les sbires, les lieux, les secrets, les promesses, les morts (adultes seulement), le traître et ce que le méchant a laissé. Au début d'un épisode, l'IA peut proposer deux ou trois éléments à ressortir. Il ne contient **jamais les prénoms des joueurs**, seulement les personnages. Il s'exporte en PDF.
 - **Le traître** : une option, désactivée par défaut. En saison, c'est le méchant qui le recrute, en secret.
 - **Le combat** et **la pièce du destin** restent, en option.
 - **La transcription** (facultative) : la reconnaissance vocale du téléphone écrit la scène pour aider au résumé ; l'appli ne garde aucun son, et l'on voit ce qui part avant tout envoi à l'IA.

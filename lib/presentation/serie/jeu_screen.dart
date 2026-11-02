@@ -595,9 +595,7 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
           icon: const Icon(Icons.help_outline_rounded),
           label: Text(k('types')),
         ),
-        SectionDestiny(titre: rg('objets_mystere'), enfants: [
-          for (final (i, o) in e.objets.indexed)
-            if (o.isNotEmpty) Puce(o, numero: i + 1),
+        SectionDestiny(titre: rg('mystere'), enfants: [
           LigneInfo(t.t('mise_en_place.mystere'), e.mystere),
           LigneInfo(t.t('mise_en_place.reponse'), e.reponseMystere, italique: true),
         ]),

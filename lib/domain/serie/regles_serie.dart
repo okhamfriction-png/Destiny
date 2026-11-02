@@ -266,8 +266,9 @@ DistributionJeu tirerDistributionJeu(Grammaire g, int joueurs, {Random? hasard, 
 }
 
 /// Jusqu'à trois entrées du registre à ressortir, sans l'IA : de préférence
-/// des figurants encore là, des objets, des promesses et des secrets, puis le
-/// reste ; jamais les morts. En kids, les « morts » ne sont pas proposés.
+/// des figurants encore là, des promesses et des secrets, puis le reste ;
+/// jamais les morts, ni les anciens objets. En kids, les « morts » ne sont
+/// pas proposés.
 List<EntreeRegistre> suggestionsRegistre(
   List<EntreeRegistre> registre, {
   Iterable<String> dejaRessortis = const [],
@@ -277,7 +278,6 @@ List<EntreeRegistre> suggestionsRegistre(
   final rng = hasard ?? Random();
   const preferees = {
     CategorieRegistre.figurant,
-    CategorieRegistre.objet,
     CategorieRegistre.promesse,
     CategorieRegistre.secret,
     CategorieRegistre.heritage,
@@ -285,6 +285,7 @@ List<EntreeRegistre> suggestionsRegistre(
   final candidates = [
     for (final e in registre)
       if (e.categorie != CategorieRegistre.mort &&
+          e.categorie != CategorieRegistre.objet &&
           e.statut != StatutRegistre.tombe &&
           !dejaRessortis.contains(e.id))
         e,

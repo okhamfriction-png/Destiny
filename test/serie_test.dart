@@ -424,24 +424,29 @@ void main() {
         EntreeRegistre(id: '1', categorie: CategorieRegistre.figurant, nom: 'Le facteur'),
         EntreeRegistre(id: '2', categorie: CategorieRegistre.figurant, nom: 'La boulangère'),
         EntreeRegistre(id: '3', categorie: CategorieRegistre.mort, nom: 'Le garde'),
-        EntreeRegistre(id: '4', categorie: CategorieRegistre.objet, nom: 'La clé'),
+        EntreeRegistre(id: '4', categorie: CategorieRegistre.secret, nom: 'La porte condamnée'),
         EntreeRegistre(id: '5', categorie: CategorieRegistre.promesse, nom: 'Revenir'),
         EntreeRegistre(id: '6', categorie: CategorieRegistre.sbire, nom: 'Le cocher', statut: StatutRegistre.tombe),
+        // Un objet noté avant la 2.0.2 : gardé, mais plus proposé.
+        EntreeRegistre(id: '7', categorie: CategorieRegistre.objet, nom: 'La clé'),
       ];
       final s = suggestionsRegistre(r, hasard: Random(1));
       expect(s, hasLength(3));
       expect(s.map((e) => e.id), isNot(contains('3')));
       expect(s.map((e) => e.id), isNot(contains('6')));
+      expect(s.map((e) => e.id), isNot(contains('7')));
       expect(s.map((e) => e.categorie).toSet(), hasLength(3));
       expect(suggestionsRegistre(r, dejaRessortis: ['1', '2', '4', '5']), isEmpty);
     });
 
     test('les catégories de l\'IA se lisent avec leurs mots', () {
       expect(CategorieRegistre.depuisTexte('figurants'), CategorieRegistre.figurant);
+      // Les anciens objets se relisent toujours.
       expect(CategorieRegistre.depuisTexte('objet'), CategorieRegistre.objet);
       expect(StatutRegistre.depuisTexte('tombé'), StatutRegistre.tombe);
       expect(StatutRegistre.depuisTexte('présent'), StatutRegistre.present);
-      expect(CategorieRegistre.values, hasLength(g.serie.registre.categories.length));
+      expect(CategorieRegistre.actives, hasLength(g.serie.registre.categories.length));
+      expect(CategorieRegistre.actives, isNot(contains(CategorieRegistre.objet)));
     });
   });
 
@@ -606,7 +611,7 @@ void main() {
         ..lore = 'Peter Pan';
       await m.resumer(s, transcription: 'Ils ouvrent la porte.');
       await m.proposerPresages(s, g.mechant('le_seigneur_des_brumes')!, paliers: [for (final x in g.paliers) x.nom]);
-      await m.proposerRessortis(s, [EntreeRegistre(id: 'r', categorie: CategorieRegistre.objet, nom: 'La clé')]);
+      await m.proposerRessortis(s, [EntreeRegistre(id: 'r', categorie: CategorieRegistre.secret, nom: 'La porte condamnée')]);
       expect(llm.envois, hasLength(3));
       for (final envoi in llm.envois) {
         expect(envoi, isNot(contains('Univers')));

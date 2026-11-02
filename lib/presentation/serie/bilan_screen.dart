@@ -401,7 +401,10 @@ class _DemandeResumeScreenState extends State<DemandeResumeScreen> {
       final m = await widget.contexte.store.resumer(
         widget.serie,
         transcription: _texte.text,
-        categories: [for (final c in CategorieRegistre.values) if (!widget.serie.kids || c != CategorieRegistre.mort) c.name],
+        categories: [
+          for (final c in CategorieRegistre.actives)
+            if (!widget.serie.kids || c != CategorieRegistre.mort) c.name,
+        ],
       );
       if (mounted) setState(() => _resultat = m);
     } catch (e) {

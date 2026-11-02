@@ -172,7 +172,8 @@ class SessionTroupe {
   /// Les quatre paliers du danger, tels que joués.
   List<String> paliers;
 
-  /// Les trois objets donnés au départ.
+  /// Ancien : les trois objets donnés au départ (avant la 2.0.2). L'appli ne
+  /// les montre plus ; on les relit et on les réécrit pour ne rien perdre.
   List<String> objets;
   String mystere;
   String reponseMystere;

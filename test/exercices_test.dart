@@ -97,9 +97,9 @@ void main() {
   });
 
   group('les exercices de la grammaire', () {
-    test('les 20 exercices sont rangés dans les trois thèmes', () {
+    test('les 19 exercices sont rangés dans les trois thèmes', () {
       final g = chargee.grammaire;
-      expect(g.exercices, hasLength(20));
+      expect(g.exercices, hasLength(19));
       for (final th in g.themesExercices) {
         expect(g.exercices.where((e) => e.themeId == th.id), isNotEmpty, reason: th.id);
         expect(th.principe, contains('Mark Jane'));

@@ -34,7 +34,7 @@ String _formatRegistre(List<String> categories, {required bool kids}) =>
     '"suite" : deux phrases au présent qui disent où l\'on reprend et ce que le '
     'méchant a fait depuis. '
     '"registre" : la mémoire de la série, ce qu\'on pourra ressortir plus tard. '
-    'Une entrée par figurant, sbire, objet, lieu et sa sortie, secret, promesse '
+    'Une entrée par figurant, sbire, lieu et sa sortie, secret, promesse '
     '${kids ? '' : 'ou mort '}apparu dans l\'épisode, en une phrase de détail. '
     '"categorie" est l\'un de : ${categories.join(', ')}. '
     '${kids ? 'Il n\'y a jamais de mort : un personnage qui quitte l\'histoire a le statut « parti ». ' : ''}'
@@ -57,6 +57,6 @@ String consignePresages({required bool kids}) => '${kids ? _consigneEnfant : _co
 /// La consigne des entrées du registre à ressortir.
 String consigneRessortis({required bool kids}) => '${kids ? _consigneEnfant : _consigneAdulte} '
     'Tu proposes au maître du jeu deux ou trois entrées du registre à ressortir '
-    'dans le prochain épisode (un témoin qui revient, un objet oublié qui '
-    'réapparaît, une promesse qui coûte). Pour chacune, une phrase qui dit '
+    'dans le prochain épisode (un témoin qui revient, un secret qui '
+    'resurgit, une promesse qui coûte). Pour chacune, une phrase qui dit '
     'comment la ressortir. Forme : {"choix": [{"numero": 1, "comment": "..."}]}.';

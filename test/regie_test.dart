@@ -123,7 +123,6 @@ Future<Banc> _banc(
     ..dangerId = danger.id
     ..dangerNom = danger.name
     ..paliers = danger.paliersPour(kids: false)
-    ..objets = ['une clé', 'une lampe', 'une photo']
     ..mystere = 'Qui a fermé la vanne ?'
     ..dureeMinutes = duree
     ..destinyMinutes = [...destiny];
@@ -530,6 +529,26 @@ void main() {
     await tester.pump();
     expect(b.session.dureeMinutes, dernier.dureeMinutes);
     expect(b.session.destinyMinutes, dernier.destinyMinutes);
+  });
+
+  testWidgets('plus d\'objets à l\'écran, même pour une ancienne session qui en avait', (tester) async {
+    final b = await _banc(tester);
+    final anciens = ['une clé rouillée', 'une lampe de poche', 'une photo déchirée'];
+    b.session.objets = [...anciens];
+    for (final page in [
+      () => MiseEnPlaceScreen(contexte: b.contexte, session: b.session),
+      () => RegieScreen(contexte: b.contexte, session: b.session),
+    ]) {
+      await _ouvrir(tester, page());
+      for (final o in anciens) {
+        expect(find.textContaining(o), findsNothing, reason: o);
+      }
+      expect(find.textContaining('Objet 1'), findsNothing);
+      expect(find.textContaining('trois objets'), findsNothing);
+      expect(find.textContaining(RegExp('mystère', caseSensitive: false)), findsWidgets);
+    }
+    // Les anciennes données restent dans la sauvegarde.
+    expect(SessionTroupe.depuisJson(b.session.versJson()).objets, anciens);
   });
 
   test('chaque texte des écrans Troupe existe', () {

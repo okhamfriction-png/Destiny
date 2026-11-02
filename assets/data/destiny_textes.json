@@ -535,7 +535,7 @@
   },
   "mise_en_place": {
     "titre": "La mise en place",
-    "intro": "Le lieu et le danger sont déjà tirés : le public peut les changer. Puis le groupe, les objets, le mystère et le chrono.",
+    "intro": "Le lieu et le danger sont déjà tirés : le public peut les changer. Puis le groupe, le mystère et le chrono.",
     "lieu": "Le lieu",
     "groupe": "Le groupe",
     "danger": "Le danger",
@@ -553,11 +553,8 @@
       "une troupe"
     ],
     "liens": "Des liens pour commencer",
-    "objets": "Les trois objets",
-    "objet": "Objet {n}",
-    "objets_aide": "Touchés à l'acte 1 ; l'un peut se retourner contre le groupe, l'un sert à la fin.",
     "mystere": "Le mystère",
-    "mystere_aide": "Un seul, attaché à un endroit ou à un objet du lieu.",
+    "mystere_aide": "Un seul, attaché à un endroit du lieu.",
     "reponse": "Sa réponse (pour la régie)",
     "reponse_aide": "Elle rassemble des éléments déjà posés, jamais une information nouvelle.",
     "chrono": "Le chrono",
@@ -578,7 +575,7 @@
     "temps_ecoule": "Le temps est écoulé.",
     "rappel": "Pour la régie",
     "montee": "Ce qu'on peut voir à ce palier",
-    "objets_mystere": "Objets et mystère",
+    "mystere": "Le mystère",
     "dilemme": "Un dilemme pour l'acte 4",
     "dilemme_aide": "À proposer comme choix final, si ça sert l'histoire.",
     "notes": "Moments forts",
@@ -702,7 +699,7 @@
       "traitre_aide": "Désactivé par défaut. En saison, le méchant recrute un protagoniste en secret ; il se révèle à l'épisode 3. Il n'y a jamais de gagnant.",
       "traitre_kids": "Avec des enfants, il reste désactivé tant que le parent ne l'active pas.",
       "registre": "Le registre",
-      "registre_aide": "L'IA note les figurants, les objets, les secrets et les promesses, pour les ressortir plus tard.",
+      "registre_aide": "L'IA note les figurants, les secrets et les promesses, pour les ressortir plus tard.",
       "suivant": "Les personnages"
     },
     "personnages": {
@@ -873,7 +870,7 @@
       "ce_qui_a_marche": "Ce qui a marché",
       "phrase": "La phrase qu'on garde",
       "heritage": "Ce que le méchant laisse",
-      "heritage_aide": "Un objet, un figurant ou une promesse, pour la saison suivante.",
+      "heritage_aide": "Un figurant, un secret ou une promesse, pour la saison suivante.",
       "registre": "Le registre",
       "registre_ajouter": "Ajouter au registre",
       "transcription": "La transcription",
@@ -1184,11 +1181,6 @@
           "id": "pnj",
           "nom": "Faire agir un sbire ou un figurant",
           "texte": "Il veut quelque chose, maintenant : il le dit, il le prend, ou il s'interpose."
-        },
-        {
-          "id": "objet",
-          "nom": "Utiliser un objet du lieu",
-          "texte": "Un des trois objets, ou un coin du lieu, entre en jeu : il aide, il gêne, ou il révèle."
         }
       ],
       "durs": [
@@ -1250,7 +1242,7 @@
   "ia_jeu": {
     "en_cours": "L'IA réfléchit…",
     "echec": "L'IA n'a pas répondu : {erreur}",
-    "proposer_objets": "Proposer les objets et le mystère (IA)",
+    "proposer_mystere": "Proposer le mystère (IA)",
     "idees_echauffement": "Des idées pour le corps (IA)",
     "idees_titre": "Des idées pour l'échauffement",
     "coach": "Demander au coach (IA)",
@@ -1626,7 +1618,7 @@
       "lieu_groupe": "Le lieu et le groupe",
       "liens": "Les liens entre les personnages",
       "danger": "Le danger, en quatre paliers",
-      "objets": "Les trois objets et le mystère",
+      "mystere": "Le mystère",
       "distribution": "La distribution des archétypes",
       "animaux": "Le choix des animaux",
       "personnage": "Le personnage",

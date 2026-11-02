@@ -2,9 +2,9 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
-## 2.0.2 — La régie dès l'échauffement (novembre 2026)
+## 2.0.2 — La régie dès l'échauffement, et plus d'objets (novembre 2026)
 
-Après un essai de la 2.0.1 sur téléphone : la régie arrivait trois écrans plus loin, et rien ne le disait.
+Après un essai de la 2.0.1 sur téléphone : la régie arrivait trois écrans plus loin, et rien ne le disait. Et les objets du lieu ne servaient pas.
 
 - **Le fil des étapes** : en haut de Préparer, de l'échauffement, d'« Avant d'entrer en scène » et de la mise en place, on voit où on en est : Préparer, Échauffement, Mise en place, Régie. Un appui mène à l'étape voulue, la régie comprise, sans passer par les autres. Le groupe est alors tiré d'office, et le chrono est celui des réglages.
 - **L'échauffement a ce qu'il faut pour la régie** :
@@ -14,6 +14,13 @@ Après un essai de la 2.0.1 sur téléphone : la régie arrivait trois écrans p
   - un bouton « Aller directement à la régie ».
 - **Le minuteur d'échauffement est nommé** « Temps d'échauffement », pour ne pas le confondre avec le chrono du spectacle.
 - **Le chrono choisi à la mise en place** compte tout de suite, même si on file à la régie par le fil des étapes.
+- **Plus d'objets.** Les trois objets du lieu disparaissent partout :
+  - à la mise en place, à la régie, à la préparation d'un épisode et pendant le jeu ;
+  - dans les règles des actes, le livret, la fiche du spectacle et son PDF ;
+  - dans l'aide de l'IA, qui ne propose plus que le mystère ;
+  - dans le jeu de rôle (le mouvement « Utiliser un objet du lieu ») et dans le registre de la série ;
+  - et l'exercice « Les trois objets ».
+  Le mystère reste. Rien n'est perdu : les objets déjà notés restent dans vos sauvegardes, et ceux du registre s'y lisent toujours.
 
 ## 2.0.1 — Plus lisible, et le jeu de rôle façon PbtA (novembre 2026)
 
