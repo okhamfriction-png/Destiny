@@ -616,3 +616,52 @@ La Campagne devient la **Série**, avec le vocabulaire de la télé.
 - les quatre boutons info ;
 - le mode kids ;
 - l'écran à 390 px avec un texte agrandi, en clair et en sombre.
+
+---
+
+## 2.0.1 (suite) — Plus lisible, et le jeu de rôle façon PbtA ✅
+
+### Tes retours
+
+- « Améliore l'UX : c'est trop moche, on n'y voit rien, c'est pas clair comparé à avant. »
+- « La partie Jouer, c'est du jeu de rôle : il faut les codes PbtA. Retire les univers, le ton et la place dans le lieu pour la partie entre humains. »
+- La pièce : « BRAVE ou SMART. Le joueur choisit sa ligne. Si la pièce tombe sur l'autre face, c'est un échec. Les personnages ont un bonus en BRAVE ou en SMART : ils lancent deux fois. »
+
+### Ce qui a été fait (deux agents en parallèle, puis fusion)
+
+- **Le visuel** :
+  - le texte est en Montserrat, plus gros ; Cinzel ne sert plus qu'aux grands titres ;
+  - les cartes sont pleines, sur un fond moins brun ;
+  - chaque entrée a une couleur et une icône sur une pastille ;
+  - les sélections sont dorées, à la place du bleu terne ;
+  - les intitulés de section sont plus grands ;
+  - le thème clair est revu ;
+  - les contrastes et les débordements sont testés.
+- **Le jeu de rôle entre humains** :
+  - la pièce BRAVE / SMART et le bonus à deux lancers ;
+  - neuf mouvements des joueurs ;
+  - l'agenda, les huit principes et les mouvements du Maître du destin (doux ou durs selon le palier), dans une aide du MJ en quatre onglets ;
+  - deux horloges, et trois cases de blessures ;
+  - plus d'univers, de ton, de lore, de peuple ni de place dans le lieu ;
+  - les lieux et les dangers viennent du catalogue de Destiny, avec leurs images ; le méchant de saison est l'un des 24 grands méchants ;
+  - les anciennes sauvegardes se lisent toujours ;
+  - les modes IA gardent leurs univers.
+- **Le workflow de l'APK** ne se lance plus à chaque envoi : seulement sur un tag, à la main, ou quand le message du commit contient la balise prévue pour ça. On teste la version web d'abord.
+
+### Tests
+
+**278 tests passent**.
+- Le moteur de la pièce : la bonne face, l'autre face, le bonus, l'aide, la gêne, la gravité selon le palier.
+- Les blessures : en kids, jamais la mort.
+- Les écrans du jeu de rôle, en clair, en sombre et avec un texte agrandi.
+- Les tests de vie privée sont toujours verts.
+
+### À confirmer avec toi
+
+1. **Le bonus suggéré** pour chaque archétype (le joueur choisit toujours) :
+   - BRAVE pour le leader, le protecteur, le dénégateur, le gardien de l'ordre et le solitaire ;
+   - SMART pour les sept autres.
+2. **Un mouvement « Soigner »** a été ajouté : il efface une case de blessure.
+3. **« Hors jeu »** : le personnage ne quitte l'histoire que si on le coche au bilan.
+4. **Le lieu et le danger** de l'épisode sont tirés tout seuls en arrivant sur la préparation, comme en Troupe.
+5. **Deux réglages retirés** : « combat par défaut » et « pièce par défaut » ne servaient plus à rien.

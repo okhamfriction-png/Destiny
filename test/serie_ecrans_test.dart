@@ -490,6 +490,8 @@ void main() {
       expect(find.textContaining('Jamais la mort'), findsOneWidget);
       await _parcourir(tester, 'l\'aide du MJ, en kids', dans: _liste);
       await _onglet(tester, t.liste('serie.aide_mj.onglets')[3]);
+      // Avec le texte agrandi, les blessures sont plus bas : on y descend.
+      await _voir(tester, find.text('Doit se reposer'), dans: _liste);
       expect(find.text('Doit se reposer'), findsOneWidget);
       await _parcourir(tester, 'les blessures, en kids', dans: _liste);
     });

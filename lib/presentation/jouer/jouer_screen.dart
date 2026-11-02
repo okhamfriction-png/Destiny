@@ -50,8 +50,7 @@ class JouerScreen extends StatelessWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 640),
             child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              const SizedBox(height: 4),
-              Text(j('titre'), textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineMedium),
+              // Le titre « Jouer » est déjà dans la barre du haut.
               const SizedBox(height: 4),
               Text(j('sous_titre'),
                   textAlign: TextAlign.center,

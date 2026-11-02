@@ -2,16 +2,39 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
-## 2.0.1 — Préparer en un geste (novembre 2026)
+## 2.0.1 — Plus lisible, et le jeu de rôle façon PbtA (novembre 2026)
 
-Après un premier essai en répétition :
+Après un premier essai de la 2.0.
 
-- **La répétition est le choix par défaut**, avant le spectacle.
-- **Plus de prénoms** en spectacle et en répétition : on se les donne sur le plateau. Ils restent dans le jeu de rôle (Jouer).
-- **« Tirer » donne tout d'un coup** : le lieu et le danger, avec leur image, puis les archétypes en version compacte, chacun avec ses deux animaux possibles. À l'arrivée, c'est déjà tiré.
-- **Un bouton « i » à chaque niveau** : le lieu, le danger, chaque archétype et chaque animal ouvrent leur fiche.
-- **On passe à l'échauffement tout de suite** : choisir son animal est facultatif. Sans choix, l'échauffement montre l'archétype et ses deux animaux.
-- **Les images des lieux et des dangers sont de retour.**
+### Un visuel plus lisible
+
+- Les titres et les textes sont plus grands et plus nets. La police de titre, Cinzel, est gardée pour les grands titres.
+- Les cartes se détachent du fond. Chaque entrée a sa couleur et son icône.
+- Les choix sélectionnés sont dorés. Les boutons principaux sont plus grands.
+- Le thème clair est revu dans le même esprit.
+
+### Le jeu de rôle entre humains, façon PbtA
+
+- **La pièce du destin, BRAVE ou SMART.** Avant de lancer, tu choisis ta ligne du destin :
+  - **BRAVE** : la force, le courage, la puissance, la bagarre ;
+  - **SMART** : la perception, l'intelligence, le charisme, la parole.
+- **Le résultat.** Si la pièce tombe sur ta face, c'est un succès. Si elle tombe sur l'autre, tu t'es trompé de ligne : le Maître du destin fait un mouvement, doux aux paliers 1 et 2, dur aux paliers 3 et 4.
+- **Le bonus.** Chaque personnage a un bonus, BRAVE ou SMART. Quand il agit dans sa ligne de bonus, il lance deux fois. Être aidé, dire son vouloir et utiliser le pouvoir d'un enfant donnent aussi un second lancer.
+- **L'aide du MJ** rassemble les mouvements des joueurs, et l'agenda, les principes et les mouvements du Maître du destin.
+- **Deux horloges** : le danger et ses quatre paliers, le méchant et ses quatre présages.
+- **Les blessures** remplacent l'ancien combat : trois cases par personnage. En kids, ce sont Fatigué, Épuisé et Doit se reposer : personne ne meurt.
+- **Plus d'univers, de ton ni de place dans le lieu** : c'est aux joueurs de les inventer.
+  - Les lieux et les dangers viennent du catalogue de Destiny, avec leurs images.
+  - Le méchant de saison est l'un des 24 grands méchants.
+  - Les univers restent dans les modes avec l'IA.
+
+### Préparer en un geste (spectacle et répétition)
+
+- **La répétition est le choix par défaut.**
+- **Plus de prénoms** : on se les donne sur le plateau.
+- **« Tirer » donne tout d'un coup** : le lieu et le danger avec leur image, puis les archétypes en version compacte, chacun avec ses deux animaux. À l'arrivée, c'est déjà tiré.
+- **Un bouton « i » à chaque niveau** ouvre la fiche : le lieu, le danger, chaque archétype et chaque animal.
+- **On passe à l'échauffement tout de suite** : choisir son animal est facultatif.
 
 ## 2.0.0 — La grammaire de Destiny (novembre 2026)
 
