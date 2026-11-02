@@ -116,3 +116,39 @@ Tu m'as envoyé la grammaire 2.1 et deux cahiers des charges (refonte v2, et la 
 
 - **Les anciens écrans** prennent déjà les couleurs et les polices du nouveau thème, mais gardent leur mise en page. Ils seront remplacés aux phases 3 à 7.
 - Les images des animaux s'affichent dans l'appli. Les rendus de test utilisent le visuel « minimal », qui ne dépend pas du chargement des images.
+
+---
+
+## Phase 3 — Bibliothèque ✅
+
+### Ce qui a été fait
+
+La **Bibliothèque** remplace le Guide Destiny et les deux catalogues (dangers, archétypes). On l'ouvre avec l'icône livre en haut de l'écran. Elle compte douze entrées :
+
+- **Les règles du spectacle** : les 8 règles d'or telles quelles, la frise des 4 paliers (et ce que fait l'archétype à chacun), les 4 actes et leurs consignes, le rituel Destiny et le premier figé, la distribution à 4, 5 et 6 avec les 4 exemples, l'échauffement et ses trois questions.
+- **Archétypes** : les 12 cartes rangées par famille, avec un filtre. La fiche détaillée donne :
+  - les deux animaux, avec posture, port, tempérament, statut, la réplique **et sa source**, et le corps à chaque palier ;
+  - l'exemple des six directions ;
+  - les personnages d'œuvres qui ont cet archétype, avec un lien vers l'œuvre ;
+  - les deux méchants reflets.
+- **Animaux** : les 24. Chaque fiche montre la carte, la réplique et sa source, la réplique kids quand elle est différente, le corps à chaque palier et la montée.
+- **Vouloir et besoin** : les trois cartes, le piège, « détecter, pas jouer », la phrase des débriefs, la chaîne, les six couches, le tableau acte par acte et les six directions.
+- **Dangers** : ceux du catalogue que tu joues (avec tes modifications), avec recherche, filtre kids et frise des paliers. Les dangers kids montrent aussi leur palier 4 kids.
+- **Lieux** : leurs 4 espaces, les autres coins (les anciens sous-espaces), les rôles et **les trois figurants** du lieu. Recherche et filtre kids.
+- **Œuvres** : les 21 œuvres et les 3 scènes, filtrables par catégorie et par archétype, avec l'avertissement « c'est notre lecture, et la fiche raconte la fin ». Chaque fiche a le lieu, le groupe, le danger, la frise des paliers, les personnages (archétype et animal en couleur, vouloir, besoin, face au danger, choix) et la leçon pour Destiny.
+- **Grands méchants** : les 24 cartes avec leurs règles (le reflet, l'ombre, la faille…), filtrables par archétype et en kids. Chaque **sbire se joue depuis sa fiche** : la carte de son animal, ce qu'il veut, d'où il vient, ce qu'il fait.
+- **Figurants** : les deux modes, les huit types (ce qu'il est, ce qu'il veut, comment le jouer, à quoi il sert), les règles, et le tableau des trois figurants par lieu. Chaque figurant se joue aussi depuis sa fiche.
+- **Mode kids** : le principe, les 6 règles, des idées de pouvoirs, le palier 4 sans mort, et l'épisode, la saison et la série.
+- **Outils de jeu** (les mains occupées, le sous-texte, les silences, la règle des 20 %) et **Les mots de Destiny** (le lexique).
+
+Tous les textes viennent de la grammaire ou du fichier de textes. Les couleurs de famille apparaissent partout : cartes, puces, liserés, filtres.
+
+### Tests
+
+**113 tests passent** :
+- les 11 nouveaux tests ouvrent chaque page de la Bibliothèque et vérifient son contenu : règles d'or, filtres, recherche, fiches, sources des répliques, figurants, méchants et sbires ;
+- un nouveau rendu de référence : la carte du méchant.
+
+### À savoir
+
+L'ancien Guide reste joignable depuis le chrono TOP, et l'ancien catalogue depuis les Réglages, jusqu'à leur remplacement aux phases 4 et 7.

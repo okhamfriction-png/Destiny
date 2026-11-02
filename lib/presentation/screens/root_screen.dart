@@ -1,3 +1,6 @@
+import '../bibliotheque/bibliotheque_screen.dart';
+import '../destiny/donnees.dart';
+import '../theme/destiny_theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../application/services/audio_service.dart';
@@ -19,9 +22,7 @@ import '../../domain/repositories/catalog_store.dart';
 import '../../domain/repositories/combination_memory.dart';
 import '../../domain/repositories/story_repository.dart';
 import '../social_links.dart';
-import 'catalog_view_screen.dart';
 import 'generator_screen.dart';
-import 'guide_screen.dart';
 import 'histoire_hub_screen.dart';
 import 'music_screen.dart';
 import 'scene_hub_screen.dart';
@@ -78,19 +79,6 @@ class RootScreen extends StatefulWidget {
 class _RootScreenState extends State<RootScreen> {
   int _index = 0;
 
-  void _openCatalog(CatalogTab tab) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => CatalogViewScreen(
-          repository: widget.repository,
-          visualSettings: widget.visualSettings,
-          locationDetails: widget.locationDetails,
-          initialTab: tab,
-        ),
-      ),
-    );
-  }
-
   void _openSettings() {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -109,12 +97,15 @@ class _RootScreenState extends State<RootScreen> {
     );
   }
 
-  void _openGuide() {
+  void _ouvrirBibliotheque() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => GuideScreen(
-          guide: widget.guideContent,
-          visualSettings: widget.visualSettings,
+        builder: (_) => BibliothequeScreen(
+          contexte: ContexteBibliotheque(
+            catalogue: widget.catalogStore,
+            visuels: widget.visualSettings,
+            detailsLieux: widget.locationDetails,
+          ),
         ),
       ),
     );
@@ -217,9 +208,9 @@ class _RootScreenState extends State<RootScreen> {
                   children: [
                     _RoundIcon(
                       icon: Icons.menu_book,
-                      tooltip: 'Guide Destiny',
-                      color: const Color(0xFFFFC24B),
-                      onPressed: _openGuide,
+                      tooltip: context.textes.t('bibliotheque.titre'),
+                      color: context.destiny.or,
+                      onPressed: _ouvrirBibliotheque,
                     ),
                     const SizedBox(width: 6),
                     _RoundIcon(
@@ -229,18 +220,7 @@ class _RootScreenState extends State<RootScreen> {
                       onPressed: _openTracking,
                     ),
                     const SizedBox(width: 6),
-                    _RoundIcon(
-                      icon: Icons.warning_amber_rounded,
-                      tooltip: 'Catalogue des dangers',
-                      onPressed: () => _openCatalog(CatalogTab.dangers),
-                    ),
-                    const SizedBox(width: 6),
-                    _RoundIcon(
-                      icon: Icons.pets,
-                      tooltip: 'Catalogue des archétypes',
-                      onPressed: () => _openCatalog(CatalogTab.archetypes),
-                    ),
-                    const SizedBox(width: 6),
+
                     _RoundIcon(
                       icon: Icons.settings,
                       tooltip: 'Paramètres',

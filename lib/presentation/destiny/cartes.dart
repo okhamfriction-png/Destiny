@@ -215,14 +215,19 @@ class _AnimalSeul extends StatelessWidget {
         style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire),
       ),
       const SizedBox(height: 6),
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(
-          '${context.textes.t('cartes.port')} ${animal.port}',
-          style: TextStyle(fontFamily: kPoliceTexte, fontStyle: FontStyle.italic, fontSize: 12, color: c.texteSecondaire),
-        ),
-        const SizedBox(width: 8),
-        PastilleStatut(animal.statutDepart),
-      ]),
+      Wrap(
+        alignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 8,
+        runSpacing: 4,
+        children: [
+          Text(
+            '${context.textes.t('cartes.port')} ${animal.port}',
+            style: TextStyle(fontFamily: kPoliceTexte, fontStyle: FontStyle.italic, fontSize: 12, color: c.texteSecondaire),
+          ),
+          PastilleStatut(animal.statutDepart),
+        ],
+      ),
       const SizedBox(height: 10),
       EncartReplique(animal.repliquePour(kids: kids), couleur: couleur, taille: 14),
     ]);

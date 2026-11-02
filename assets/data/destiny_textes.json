@@ -243,5 +243,177 @@
     "source": "Réplique tirée de",
     "famille": "Famille",
     "palier_courant": "Palier en cours"
+  },
+  "bibliotheque": {
+    "titre": "Bibliothèque",
+    "sous_titre": "Tout Destiny, à portée de main.",
+    "entrees": {
+      "regles": {
+        "titre": "Les règles du spectacle",
+        "texte": "Règles d'or, quatre paliers, quatre actes, rituel Destiny, distribution, échauffement."
+      },
+      "archetypes": {
+        "titre": "Archétypes",
+        "texte": "Les 12 convictions face au danger, en trois familles."
+      },
+      "animaux": {
+        "titre": "Animaux",
+        "texte": "Les 24 vêtements des archétypes : posture, réplique, corps à chaque palier."
+      },
+      "vouloir_besoin": {
+        "titre": "Vouloir et besoin",
+        "texte": "Le cœur du personnage : blessure, vouloir, besoin, prix à payer."
+      },
+      "dangers": {
+        "titre": "Dangers",
+        "texte": "Les dangers et leurs quatre paliers."
+      },
+      "lieux": {
+        "titre": "Lieux",
+        "texte": "Les lieux, leurs espaces, leurs rôles et leurs figurants."
+      },
+      "oeuvres": {
+        "titre": "Œuvres",
+        "texte": "Des séries, des pièces et des films lus avec la grammaire de Destiny."
+      },
+      "mechants": {
+        "titre": "Grands méchants",
+        "texte": "Les méchants de saison et leurs sbires."
+      },
+      "figurants": {
+        "titre": "Figurants",
+        "texte": "Deux modes, huit types, et comment les jouer."
+      },
+      "kids": {
+        "titre": "Mode kids",
+        "texte": "La même grammaire, avec des enfants."
+      },
+      "outils": {
+        "titre": "Outils de jeu",
+        "texte": "Les outils de Mark Jane."
+      },
+      "lexique": {
+        "titre": "Les mots de Destiny",
+        "texte": "Ce qu'on dit, et ce qu'on ne dit plus."
+      }
+    },
+    "toutes": "Toutes",
+    "tous": "Tous",
+    "kids_seulement": "Kids seulement",
+    "recherche": "Rechercher",
+    "aucun_resultat": "Rien ne correspond.",
+    "fiche": {
+      "ce_qu_il_fait": "Ce qu'il fait",
+      "montee": "La montée",
+      "animaux": "Ses deux animaux",
+      "exemple": "Un exemple",
+      "modeles": "Ses modèles dans les œuvres",
+      "reflets": "Ses méchants reflets",
+      "posture": "Posture",
+      "port": "Port",
+      "temperament": "Tempérament",
+      "statut": "Statut de départ",
+      "corps": "Le corps à chaque palier",
+      "replique": "Sa réplique",
+      "replique_kids": "Sa réplique kids",
+      "source": "tirée de",
+      "archetype": "Archétype",
+      "espaces": "Les espaces",
+      "sous_espaces": "Autres coins du lieu",
+      "roles": "Rôles possibles",
+      "figurants": "Ses figurants",
+      "lieu": "Lieu",
+      "groupe": "Groupe",
+      "danger": "Danger",
+      "paliers": "Les paliers",
+      "personnages": "Les personnages",
+      "lecon": "Leçon pour Destiny",
+      "veut": "Veut",
+      "besoin": "Besoin",
+      "face_au_danger": "Face au danger",
+      "choix": "Son choix",
+      "inspiration": "Inspiration",
+      "histoire": "Son histoire",
+      "il_veut": "Il veut",
+      "il_a_besoin": "Il a besoin de",
+      "faille": "Sa faille",
+      "cible": "Il en veut à",
+      "traitre": "Son offre au traître",
+      "version_kids": "Version kids",
+      "faille_kids": "Sa faille, en kids",
+      "sbires": "Ses sbires",
+      "vient_de": "Vient de",
+      "fait": "Ce qu'il fait pour son maître",
+      "sait": "Ce qu'il sait ou apporte",
+      "comment_le_jouer": "Comment le jouer",
+      "sert_a": "À quoi il sert",
+      "ce_qu_il_est": "Ce qu'il est",
+      "palier4_kids": "Palier 4, en kids",
+      "jouer_ce_personnage": "Jouer ce personnage",
+      "mode": "Mode",
+      "type": "Type",
+      "acte": "Acte",
+      "blessure": "Sa blessure",
+      "acte1": "Acte 1",
+      "acte2": "Acte 2",
+      "acte3": "Acte 3",
+      "acte4": "Acte 4"
+    },
+    "oeuvres": {
+      "categories": {
+        "serieRoman": "Séries et romans",
+        "theatre": "Théâtre",
+        "cinema": "Cinéma",
+        "scenes": "Scènes de Tarantino"
+      },
+      "avertissement": "Les archétypes et les besoins sont notre lecture des œuvres. Attention : chaque fiche raconte la fin."
+    },
+    "regles": {
+      "regles_d_or": "Les règles d'or",
+      "paliers": "Les quatre paliers du danger",
+      "actes": "Les quatre actes",
+      "rituel": "Le rituel Destiny",
+      "distribution": "La distribution",
+      "par_nombre": "Qui joue, selon le nombre",
+      "exemples": "Exemples équilibrés",
+      "echauffement": "L'échauffement",
+      "questions": "Les trois questions",
+      "joueurs": "{n} joueurs",
+      "alarmiste": "l'alarmiste",
+      "au_choix": "{n} au choix",
+      "l_archetype": "L'archétype",
+      "reprise": "La reprise"
+    },
+    "vouloir_besoin": {
+      "couches": "Les six couches du personnage",
+      "chaine": "La chaîne",
+      "piege": "Le piège",
+      "detecter": "Détecter, pas jouer",
+      "phrase_cle": "La phrase des débriefs",
+      "acte_par_acte": "Acte par acte",
+      "six_directions": "Six directions"
+    },
+    "figurants": {
+      "modes": "Les deux modes",
+      "types": "Les huit types",
+      "regles": "Les règles",
+      "par_lieu": "Trois figurants par lieu"
+    },
+    "kids": {
+      "principe": "Le principe",
+      "regles": "Les règles",
+      "pouvoirs": "Idées de pouvoirs",
+      "palier4": "Au palier 4",
+      "duree": "Un épisode dure de {min} à {max} minutes."
+    },
+    "serie": {
+      "titre": "Épisode, saison, série",
+      "regles_mechant": "Les règles du méchant",
+      "registre": "Le registre de la série"
+    }
+  },
+  "modes_pnj": {
+    "figurant": "Figurant",
+    "sbire": "Sbire"
   }
 }
