@@ -2,8 +2,13 @@
 
 ## L'APK sur GitHub (workflow `.github/workflows/apk.yml`)
 
-Tu pousses un **tag** (ex. `v2.0.0`) → GitHub Actions compile l'APK sur ses propres serveurs
-(Flutter 3.41.9) et le joint à la **release** de ce tag, sous le nom `DestinyStory-v2.0.0.apk`.
+GitHub Actions compile l'APK sur ses propres serveurs (Flutter 3.41.9) et le joint à une
+**release**, sous le nom `DestinyStory-v2.0.0.apk` :
+- à chaque **push sur `main`** (ou sur la branche de la refonte) qui touche le code : la release
+  de la version du `pubspec.yaml` (`2.0.0+20` → `v2.0.0`) est créée sur ce commit si elle
+  n'existe pas encore. Pour publier un nouvel APK, monte la version dans le `pubspec.yaml` ;
+- à chaque **tag** poussé : la release de ce tag.
+
 Les notes de la release viennent de `docs/release_notes/<tag>.md` (la première ligne en est le titre).
 
 ```bash

@@ -1,5 +1,10 @@
-# Construit l'APK Android sur les serveurs de GitHub et le joint à la release
-# du tag poussé (v2.0.0, v2.0.1…).
+# Construit l'APK Android sur les serveurs de GitHub et le joint à une release.
+#
+# - Un tag poussé (v2.0.1…) : la release de ce tag.
+# - Un push sur main ou sur la branche de la refonte : la release de la version
+#   du pubspec (« version: 2.0.0+20 » → v2.0.0), créée sur ce commit si elle
+#   n'existe pas encore. Si elle existe déjà, l'APK reste dans les artifacts du
+#   run : pour publier un nouvel APK, monter la version du pubspec.
 #
 # Signature : si les secrets ANDROID_KEYSTORE_BASE64, ANDROID_KEY_ALIAS,
 # ANDROID_STORE_PASSWORD et ANDROID_KEY_PASSWORD existent, l'APK est signé
@@ -10,6 +15,8 @@ name: Construire l'APK
 on:
   push:
     tags: ['v*']
+    branches: ['main', 'claude/destiny-story-2-refonte-cyw02u']
+    paths-ignore: ['docs/**', '**/*.md']
   workflow_dispatch:
 
 permissions:
@@ -64,11 +71,17 @@ jobs:
       - name: APK
         run: flutter build apk --release
 
-      - name: Nom de l'APK
+      - name: Version et nom de l'APK
         id: nom
         run: |
-          nom="DestinyStory-${GITHUB_REF_NAME}.apk"
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            tag="$GITHUB_REF_NAME"
+          else
+            tag="v$(grep '^version:' pubspec.yaml | sed 's/^version: *//; s/+.*//')"
+          fi
+          nom="DestinyStory-$tag.apk"
           cp build/app/outputs/flutter-apk/app-release.apk "$nom"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "fichier=$nom" >> "$GITHUB_OUTPUT"
 
       - uses: actions/upload-artifact@v4
@@ -77,27 +90,38 @@ jobs:
           path: ${{ steps.nom.outputs.fichier }}
           retention-days: 30
 
-      - name: Release du tag
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Release
+        if: github.event_name == 'push'
         env:
           GH_TOKEN: ${{ github.token }}
           SIGNE: ${{ steps.cle.outputs.release }}
+          TAG: ${{ steps.nom.outputs.tag }}
+          FICHIER: ${{ steps.nom.outputs.fichier }}
         run: |
-          tag="$GITHUB_REF_NAME"
-          source="docs/release_notes/$tag.md"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+              gh release upload "$TAG" "$FICHIER" --clobber
+            else
+              echo "La release $TAG existe déjà : l'APK de ce run reste dans ses artifacts."
+            fi
+            exit 0
+          fi
+          source="docs/release_notes/$TAG.md"
           notes="$RUNNER_TEMP/notes.md"
-          titre="DestinyStory $tag"
+          titre="DestinyStory $TAG"
           if [ -f "$source" ]; then
             # La première ligne (« # Titre ») devient le titre de la release.
             premiere=$(head -n 1 "$source" | sed 's/^# //')
             [ -n "$premiere" ] && titre="$premiere"
             tail -n +2 "$source" > "$notes"
           else
-            echo "Version $tag. Voir CHANGELOG.md." > "$notes"
+            echo "Version $TAG. Voir CHANGELOG.md." > "$notes"
           fi
           options=()
           if [ "$SIGNE" != "true" ]; then options+=(--prerelease); fi
-          if ! gh release view "$tag" >/dev/null 2>&1; then
-            gh release create "$tag" --title "$titre" --notes-file "$notes" --verify-tag "${options[@]}"
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            gh release create "$TAG" --title "$titre" --notes-file "$notes" --verify-tag "${options[@]}"
+          else
+            gh release create "$TAG" --title "$titre" --notes-file "$notes" --target "$GITHUB_SHA" "${options[@]}"
           fi
-          gh release upload "$tag" "${{ steps.nom.outputs.fichier }}" --clobber
+          gh release upload "$TAG" "$FICHIER" --clobber
