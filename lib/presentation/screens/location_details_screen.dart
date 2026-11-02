@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../destiny/donnees.dart';
-
 import '../../application/state/location_details.dart';
+import '../destiny/donnees.dart';
+import '../destiny/page.dart';
+import '../theme/destiny_theme.dart';
 import '../widgets/location_detail_section.dart';
 
-/// Liste des lieux (paramètres) : choisir un lieu pour éditer ses détails.
+/// Liste des lieux (réglages) : choisir un lieu pour éditer ses détails.
 class LocationDetailsListScreen extends StatefulWidget {
   const LocationDetailsListScreen({required this.store, super.key});
   final LocationDetailsStore store;
 
   @override
-  State<LocationDetailsListScreen> createState() =>
-      _LocationDetailsListScreenState();
+  State<LocationDetailsListScreen> createState() => _LocationDetailsListScreenState();
 }
 
 class _LocationDetailsListScreenState extends State<LocationDetailsListScreen> {
@@ -34,67 +34,41 @@ class _LocationDetailsListScreenState extends State<LocationDetailsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final t = context.textes;
+    final c = context.destiny;
+    String k(String x, [Map<String, String> v = const {}]) => t.t('details_lieux.$x', v);
     final locations = widget.store.locations;
-    return Scaffold(
-      appBar: AppBar(title: const Text('Détails des lieux')),
-      body: Container(
-        decoration: _bg,
-        child: ListView(
-          padding: const EdgeInsets.all(12),
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(6, 4, 6, 10),
-              child: Text(
-                'Sous-espaces et vocabulaire par lieu. Touche un lieu pour '
-                'éditer.',
-                style: theme.textTheme.bodySmall
-                    ?.copyWith(color: Colors.white54),
-              ),
-            ),
-            for (final l in locations)
-              Card(
-                margin: const EdgeInsets.symmetric(vertical: 3),
-                child: ListTile(
-                  leading:
-                      const Icon(Icons.place_outlined, color: Color(0xFFFFC24B)),
-                  title: Text(l.name),
-                  subtitle: Builder(builder: (context) {
-                    final d = widget.store.byId(l.id);
-                    final n = (d?.sousEspaces.length ?? 0);
-                    final v = (d?.vocabulaire.length ?? 0);
-                    return Text('$n sous-espaces · $v mots'
-                        '${widget.store.hasOverride(l.id) ? ' · modifié' : ''}');
-                  }),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => LocationDetailsEditScreen(
-                      store: widget.store,
-                      locationId: l.id,
-                      locationName: l.name,
-                    ),
-                  )),
+    return PageDestiny(
+      titre: k('titre'),
+      enfants: [
+        Paragraphe(k('intro'), italique: true),
+        for (final l in locations)
+          Builder(builder: (context) {
+            final d = widget.store.byId(l.id);
+            final resume = k('resume', {
+              'n': '${d?.sousEspaces.length ?? 0}',
+              'v': '${d?.vocabulaire.length ?? 0}',
+            });
+            return ElementListe(
+              titre: l.name,
+              sousTitre: widget.store.hasOverride(l.id) ? '$resume · ${k('modifie')}' : resume,
+              devant: Icon(Icons.place_outlined, color: c.titre),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                builder: (_) => LocationDetailsEditScreen(
+                  store: widget.store,
+                  locationId: l.id,
+                  locationName: l.name,
                 ),
-              ),
-          ],
-        ),
-      ),
+              )),
+            );
+          }),
+      ],
     );
   }
 }
 
-const Color _gold = Color(0xFFFFC24B);
-
-const BoxDecoration _bg = BoxDecoration(
-  gradient: LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: [Color(0xFF141029), Color(0xFF0A0818)],
-  ),
-);
-
 /// Consultation des détails d'un lieu : sous-espaces jouables + vocabulaire.
-/// Lecture seule (l'édition se fait dans les paramètres).
+/// Lecture seule (l'édition se fait dans les réglages).
 class LocationDetailsScreen extends StatelessWidget {
   const LocationDetailsScreen({
     required this.store,
@@ -107,47 +81,34 @@ class LocationDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final t = context.textes;
+    final c = context.destiny;
+    String k(String x, [Map<String, String> v = const {}]) => t.t('details_lieux.$x', v);
     final details = store.byName(locationName);
-    return Scaffold(
-      appBar: AppBar(title: Text('Lieu : $locationName')),
-      body: Container(
-        decoration: _bg,
-        child: (details == null || details.isEmpty)
-            ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Text(
-                    'Aucun détail pour ce lieu.\n'
-                    'Ajoute des sous-espaces et du vocabulaire dans '
-                    'Paramètres → Détails des lieux.',
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyMedium
-                        ?.copyWith(color: Colors.white54),
-                  ),
-                ),
-              )
-            : ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  LocationDetailSection(
-                    kind: LocationDetailKind.sousEspaces,
-                    items: details.sousEspaces,
-                  ),
-                  LocationDetailSection(
-                    kind: LocationDetailKind.fonctions,
-                    items: details.fonctions,
-                  ),
-                  LocationDetailSection(
-                    kind: LocationDetailKind.vocabulaire,
-                    items: details.vocabulaire,
-                  ),
-                ],
-              ),
-      ),
+    if (details == null || details.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: Text(k('lieu', {'nom': locationName}))),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Text(
+              k('vide'),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14.5, height: 1.4, color: c.texteSecondaire),
+            ),
+          ),
+        ),
+      );
+    }
+    return PageDestiny(
+      titre: k('lieu', {'nom': locationName}),
+      enfants: [
+        LocationDetailSection(kind: LocationDetailKind.sousEspaces, items: details.sousEspaces),
+        LocationDetailSection(kind: LocationDetailKind.fonctions, items: details.fonctions),
+        LocationDetailSection(kind: LocationDetailKind.vocabulaire, items: details.vocabulaire),
+      ],
     );
   }
-
 }
 
 /// Éditeur des détails d'un lieu (sous-espaces + fonctions + vocabulaire).
@@ -164,8 +125,7 @@ class LocationDetailsEditScreen extends StatefulWidget {
   final String locationName;
 
   @override
-  State<LocationDetailsEditScreen> createState() =>
-      _LocationDetailsEditScreenState();
+  State<LocationDetailsEditScreen> createState() => _LocationDetailsEditScreenState();
 }
 
 class _LocationDetailsEditScreenState extends State<LocationDetailsEditScreen> {
@@ -193,6 +153,8 @@ class _LocationDetailsEditScreenState extends State<LocationDetailsEditScreen> {
     super.dispose();
   }
 
+  String k(String x, [Map<String, String> v = const {}]) => context.textes.t('details_lieux.$x', v);
+
   Future<void> _save() async {
     List<String> vals(List<TextEditingController> cs) =>
         [for (final c in cs) if (c.text.trim().isNotEmpty) c.text.trim()];
@@ -205,77 +167,71 @@ class _LocationDetailsEditScreenState extends State<LocationDetailsEditScreen> {
     if (mounted) Navigator.of(context).pop();
   }
 
+  Future<void> _restaurer() async {
+    await widget.store.resetToDefault(widget.locationId);
+    if (mounted) Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Éditer : ${widget.locationName}'),
-        actions: [
-          TextButton(onPressed: _save, child: const Text('Enregistrer')),
-        ],
-      ),
-      body: Container(
-        decoration: _bg,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            _editList(
-              title: 'Sous-espaces',
-              controllers: _sous,
-              onAdd: () => setState(() => _sous.add(TextEditingController())),
-              onRemove: (i) => setState(() => _sous.removeAt(i).dispose()),
-            ),
-            const SizedBox(height: 20),
-            _editList(
-              title: 'Fonctions',
-              controllers: _fonc,
-              onAdd: () => setState(() => _fonc.add(TextEditingController())),
-              onRemove: (i) => setState(() => _fonc.removeAt(i).dispose()),
-            ),
-            const SizedBox(height: 20),
-            _editList(
-              title: 'Vocabulaire',
-              controllers: _voc,
-              onAdd: () => setState(() => _voc.add(TextEditingController())),
-              onRemove: (i) => setState(() => _voc.removeAt(i).dispose()),
-            ),
-            const SizedBox(height: 24),
-            if (widget.store.hasOverride(widget.locationId))
-              TextButton.icon(
-                onPressed: () async {
-                  await widget.store.resetToDefault(widget.locationId);
-                  if (mounted) Navigator.of(context).pop();
-                },
-                icon: const Icon(Icons.restore),
-                label: const Text('Restaurer les valeurs d\'origine'),
-              ),
-          ],
+    return PageDestiny(
+      titre: k('modifier', {'nom': widget.locationName}),
+      actions: [
+        TextButton(onPressed: _save, child: Text(k('enregistrer'))),
+      ],
+      enfants: [
+        _editList(
+          title: k('sous_espaces'),
+          aide: k('sous_espaces_aide'),
+          controllers: _sous,
+          onAdd: () => setState(() => _sous.add(TextEditingController())),
+          onRemove: (i) => setState(() => _sous.removeAt(i).dispose()),
         ),
-      ),
+        _editList(
+          title: k('fonctions'),
+          aide: k('fonctions_aide'),
+          controllers: _fonc,
+          onAdd: () => setState(() => _fonc.add(TextEditingController())),
+          onRemove: (i) => setState(() => _fonc.removeAt(i).dispose()),
+        ),
+        _editList(
+          title: k('vocabulaire'),
+          aide: k('vocabulaire_aide'),
+          controllers: _voc,
+          onAdd: () => setState(() => _voc.add(TextEditingController())),
+          onRemove: (i) => setState(() => _voc.removeAt(i).dispose()),
+        ),
+        if (widget.store.hasOverride(widget.locationId))
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                onPressed: _restaurer,
+                icon: const Icon(Icons.restore_rounded),
+                label: Text(k('restaurer')),
+              ),
+            ),
+          ),
+      ],
     );
   }
 
   Widget _editList({
     required String title,
+    required String aide,
     required List<TextEditingController> controllers,
     required VoidCallback onAdd,
     required void Function(int) onRemove,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(title,
-                style: const TextStyle(
-                    color: _gold, fontWeight: FontWeight.w800, fontSize: 16)),
-            const Spacer(),
-            TextButton.icon(
-              onPressed: onAdd,
-              icon: const Icon(Icons.add, size: 18),
-              label: const Text('Ajouter'),
-            ),
-          ],
+    final c = context.destiny;
+    return SectionDestiny(
+      titre: title,
+      enfants: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Text(aide,
+              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, height: 1.3, color: c.texteSecondaire)),
         ),
         for (var i = 0; i < controllers.length; i++)
           Padding(
@@ -294,11 +250,20 @@ class _LocationDetailsEditScreenState extends State<LocationDetailsEditScreen> {
                 IconButton(
                   tooltip: context.textes.t('accessibilite.retirer'),
                   icon: const Icon(Icons.remove_circle_outline, size: 20),
+                  color: c.texteSecondaire,
                   onPressed: () => onRemove(i),
                 ),
               ],
             ),
           ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton.icon(
+            onPressed: onAdd,
+            icon: const Icon(Icons.add_rounded, size: 18),
+            label: Text(k('ajouter')),
+          ),
+        ),
       ],
     );
   }

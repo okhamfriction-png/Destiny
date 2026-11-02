@@ -18,7 +18,6 @@ import '../reglages/editeur_dilemmes_screen.dart';
 import '../reglages/grammaire_admin_screen.dart';
 import '../reglages/reglages_destiny_screen.dart';
 import '../reglages/synchro_screen.dart';
-import '../widgets/ecran_sombre.dart';
 import 'about_screen.dart';
 import 'ai_config_screen.dart';
 import 'appearance_screen.dart';
@@ -27,8 +26,8 @@ import 'credits_screen.dart';
 import 'location_details_screen.dart';
 import 'relation_cheatsheet_screen.dart';
 
-/// Les réglages : Destiny, l'IA, l'apparence, les données, l'aide. Les écrans
-/// de l'ancienne interface (éditeurs, IA, aide) restent en thème sombre.
+/// Les réglages : Destiny, l'IA, l'apparence, les données, l'aide. Chaque
+/// écran suit le thème choisi (clair ou sombre).
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({
     required this.reglages,
@@ -51,8 +50,8 @@ class SettingsScreen extends StatelessWidget {
   final AudioService audioService;
   final MusicController musicController;
 
-  void _ouvrir(BuildContext context, Widget page, {bool sombre = false}) =>
-      Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => sombre ? ThemeSombre(child: page) : page));
+  void _ouvrir(BuildContext context, Widget page) =>
+      Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +77,7 @@ class SettingsScreen extends StatelessWidget {
             Icons.smart_toy_outlined,
             k('ia'),
             aiSettings.configured ? '${aiSettings.provider.label} · ${aiSettings.model}' : k('ia_aide_off'),
-            () => _ouvrir(context, AiConfigScreen(settings: aiSettings), sombre: true),
+            () => _ouvrir(context, AiConfigScreen(settings: aiSettings)),
           ),
           entree(Icons.palette_outlined, k('apparence'), k('apparence_aide'),
               () => _ouvrir(context, AppearanceScreen(visualSettings: visualSettings, reglages: reglages))),
@@ -86,9 +85,9 @@ class SettingsScreen extends StatelessWidget {
             entree(Icons.tune_rounded, k('catalogue'), k('catalogue_aide'),
                 () => _ouvrir(context, EditeurCatalogueScreen(catalogue: catalogStore))),
             entree(Icons.place_outlined, k('details_lieux'), k('details_lieux_aide'),
-                () => _ouvrir(context, LocationDetailsListScreen(store: locationDetails), sombre: true)),
+                () => _ouvrir(context, LocationDetailsListScreen(store: locationDetails))),
             entree(Icons.diversity_3_outlined, k('relations'), k('relations_aide'),
-                () => _ouvrir(context, RelationCheatsheetScreen(cheatsheet: relationCheatsheet), sombre: true)),
+                () => _ouvrir(context, RelationCheatsheetScreen(cheatsheet: relationCheatsheet))),
             entree(Icons.balance_outlined, k('dilemmes'), k('dilemmes_aide'),
                 () => _ouvrir(context, EditeurDilemmesScreen(catalogue: catalogStore))),
             entree(Icons.sync_rounded, k('synchro'), k('synchro_aide'),

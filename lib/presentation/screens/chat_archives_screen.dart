@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../application/state/chat_controller.dart';
 import '../../domain/entities/chat_story.dart';
+import '../destiny/donnees.dart';
+import '../theme/destiny_theme.dart';
 
 enum _Sort { dateDesc, nameAsc }
 
@@ -37,14 +39,15 @@ class _ChatArchivesScreenState extends State<ChatArchivesScreen> {
     if (mounted) setState(() {});
   }
 
+  String k(String x, [Map<String, String> v = const {}]) => context.textes.t('archives.histoires.$x', v);
+
   List<ChatStory> get _items {
     final list = [...widget.controller.archivedStories];
     switch (_sort) {
       case _Sort.dateDesc:
         list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       case _Sort.nameAsc:
-        list.sort(
-            (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
+        list.sort((a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
     }
     return list;
   }
@@ -52,17 +55,18 @@ class _ChatArchivesScreenState extends State<ChatArchivesScreen> {
   Future<void> _showSummary(ChatStory s) async {
     final future = widget.controller.summarize(s);
     if (!mounted) return;
+    final indisponible = k('resume_indisponible');
+    final fermer = k('fermer');
     await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Row(
           children: [
-            const Icon(Icons.summarize, size: 20),
+            Icon(Icons.summarize, size: 20, color: context.destiny.titre),
             const SizedBox(width: 8),
             Expanded(
-                child: Text(s.title,
-                    style: const TextStyle(fontSize: 16),
-                    overflow: TextOverflow.ellipsis)),
+              child: Text(s.title, style: const TextStyle(fontSize: 16), overflow: TextOverflow.ellipsis),
+            ),
           ],
         ),
         content: SizedBox(
@@ -77,17 +81,16 @@ class _ChatArchivesScreenState extends State<ChatArchivesScreen> {
                 );
               }
               return SingleChildScrollView(
-                child: Text(snap.data ?? 'Résumé indisponible.',
-                    style: const TextStyle(height: 1.5)),
+                child: Text(
+                  snap.data ?? indisponible,
+                  style: TextStyle(fontFamily: kPoliceTexte, height: 1.5, color: context.destiny.texte),
+                ),
               );
             },
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Fermer'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(fermer)),
         ],
       ),
     );
@@ -124,16 +127,11 @@ class _ChatArchivesScreenState extends State<ChatArchivesScreen> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Supprimer la sélection ?'),
-        content: Text('Supprimer $n histoire${n > 1 ? 's' : ''} archivée'
-            '${n > 1 ? 's' : ''} ? Cette action est définitive.'),
+        title: Text(k('supprimer_titre')),
+        content: Text(n > 1 ? k('supprimer_n', {'n': '$n'}) : k('supprimer_un')),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Annuler')),
-          FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Supprimer')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(k('annuler'))),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: Text(k('supprimer'))),
         ],
       ),
     );
@@ -150,30 +148,29 @@ class _ChatArchivesScreenState extends State<ChatArchivesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final c = context.destiny;
     final items = _items;
     final allSelected = items.isNotEmpty && _selected.length == items.length;
+    final n = _selected.length;
     return Scaffold(
       appBar: AppBar(
         leading: _selectMode
             ? IconButton(
                 icon: const Icon(Icons.close),
-                tooltip: 'Annuler',
+                tooltip: k('quitter_selection'),
                 onPressed: _toggleSelectMode,
               )
             : null,
-        title: Text(_selectMode
-            ? '${_selected.length} sélectionné${_selected.length > 1 ? 's' : ''}'
-            : 'Archives'),
+        title: Text(_selectMode ? (n > 1 ? k('selection', {'n': '$n'}) : k('selection_un', {'n': '$n'})) : k('titre')),
         actions: _selectMode
             ? [
                 IconButton(
-                  tooltip: allSelected ? 'Tout désélectionner' : 'Tout sélectionner',
+                  tooltip: allSelected ? k('tout_deselectionner') : k('tout_selectionner'),
                   icon: Icon(allSelected ? Icons.deselect : Icons.select_all),
                   onPressed: items.isEmpty ? null : () => _toggleAll(items),
                 ),
                 IconButton(
-                  tooltip: 'Supprimer la sélection',
+                  tooltip: k('supprimer_selection'),
                   icon: const Icon(Icons.delete_sweep),
                   onPressed: _selected.isEmpty ? null : _deleteSelected,
                 ),
@@ -181,86 +178,93 @@ class _ChatArchivesScreenState extends State<ChatArchivesScreen> {
             : [
                 if (items.isNotEmpty)
                   IconButton(
-                    tooltip: 'Sélectionner',
+                    tooltip: k('selectionner'),
                     icon: const Icon(Icons.checklist),
                     onPressed: _toggleSelectMode,
                   ),
                 PopupMenuButton<_Sort>(
-                  tooltip: 'Trier',
+                  tooltip: k('trier'),
                   icon: const Icon(Icons.sort),
                   initialValue: _sort,
                   onSelected: (v) => setState(() => _sort = v),
-                  itemBuilder: (context) => const [
-                    PopupMenuItem(value: _Sort.dateDesc, child: Text('Par date')),
-                    PopupMenuItem(value: _Sort.nameAsc, child: Text('Par nom')),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(value: _Sort.dateDesc, child: Text(k('par_date'))),
+                    PopupMenuItem(value: _Sort.nameAsc, child: Text(k('par_nom'))),
                   ],
                 ),
               ],
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF141029), Color(0xFF0A0818)],
-          ),
-        ),
-        child: items.isEmpty
-            ? const Center(
-                child: Text('Aucune histoire archivée.',
-                    style: TextStyle(color: Colors.white54)),
-              )
-            : ListView(
-                padding: const EdgeInsets.all(12),
-                children: [
-                  for (final s in items)
-                    Card(
-                      margin: const EdgeInsets.symmetric(vertical: 4),
-                      child: ListTile(
-                        leading: _selectMode
-                            ? Checkbox(
-                                value: _selected.contains(s.id),
-                                onChanged: (_) => _toggleOne(s.id),
-                              )
-                            : Icon(Icons.inventory_2_outlined,
-                                color: theme.colorScheme.primary),
-                        title: Text(s.title,
-                            maxLines: 1, overflow: TextOverflow.ellipsis),
-                        trailing: _selectMode
-                            ? null
-                            : Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    tooltip: 'Résumé',
-                                    icon: const Icon(Icons.summarize),
-                                    onPressed: () => _showSummary(s),
-                                  ),
-                                  IconButton(
-                                    tooltip: 'Restaurer',
-                                    icon: const Icon(Icons.unarchive_outlined),
-                                    onPressed: () => widget.controller
-                                        .setArchived(s.id, false),
-                                  ),
-                                  IconButton(
-                                    tooltip: 'Supprimer',
-                                    icon: const Icon(Icons.delete_outline),
-                                    onPressed: () =>
-                                        widget.controller.deleteStory(s.id),
-                                  ),
-                                ],
-                              ),
-                        onTap: _selectMode
-                            ? () => _toggleOne(s.id)
-                            : () {
-                                widget.controller.openStory(s);
-                                Navigator.of(context).pop();
-                              },
+      body: items.isEmpty
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(
+                  k('vide'),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14.5, color: c.texteSecondaire),
+                ),
+              ),
+            )
+          : ListView(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+              children: [
+                for (final s in items)
+                  Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 760),
+                      child: Card(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        clipBehavior: Clip.antiAlias,
+                        child: ListTile(
+                          leading: _selectMode
+                              ? Checkbox(
+                                  value: _selected.contains(s.id),
+                                  onChanged: (_) => _toggleOne(s.id),
+                                )
+                              : Icon(Icons.inventory_2_outlined, color: c.titre),
+                          title: Text(
+                            s.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w600, color: c.texte),
+                          ),
+                          trailing: _selectMode
+                              ? null
+                              : Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      tooltip: k('resume'),
+                                      icon: const Icon(Icons.summarize),
+                                      color: c.texteSecondaire,
+                                      onPressed: () => _showSummary(s),
+                                    ),
+                                    IconButton(
+                                      tooltip: k('desarchiver'),
+                                      icon: const Icon(Icons.unarchive_outlined),
+                                      color: c.texteSecondaire,
+                                      onPressed: () => widget.controller.setArchived(s.id, false),
+                                    ),
+                                    IconButton(
+                                      tooltip: k('supprimer'),
+                                      icon: const Icon(Icons.delete_outline),
+                                      color: c.texteSecondaire,
+                                      onPressed: () => widget.controller.deleteStory(s.id),
+                                    ),
+                                  ],
+                                ),
+                          onTap: _selectMode
+                              ? () => _toggleOne(s.id)
+                              : () {
+                                  widget.controller.openStory(s);
+                                  Navigator.of(context).pop();
+                                },
+                        ),
                       ),
                     ),
-                ],
-              ),
-      ),
+                  ),
+              ],
+            ),
     );
   }
 }

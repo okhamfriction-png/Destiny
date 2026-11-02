@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../application/state/spectacle_controller.dart';
 import '../destiny/composants.dart';
+import '../destiny/donnees.dart';
+import '../destiny/page.dart';
+import '../theme/destiny_theme.dart';
 
 /// Historique des parties de Mode Spectacle terminées.
 class SpectacleArchivesScreen extends StatefulWidget {
@@ -10,8 +13,7 @@ class SpectacleArchivesScreen extends StatefulWidget {
   final SpectacleController controller;
 
   @override
-  State<SpectacleArchivesScreen> createState() =>
-      _SpectacleArchivesScreenState();
+  State<SpectacleArchivesScreen> createState() => _SpectacleArchivesScreenState();
 }
 
 class _SpectacleArchivesScreenState extends State<SpectacleArchivesScreen> {
@@ -23,6 +25,8 @@ class _SpectacleArchivesScreenState extends State<SpectacleArchivesScreen> {
     super.initState();
     _load();
   }
+
+  String k(String x, [Map<String, String> v = const {}]) => context.textes.t('archives.spectacles.$x', v);
 
   Future<void> _load() async {
     final r = await widget.controller.loadHistory();
@@ -36,16 +40,12 @@ class _SpectacleArchivesScreenState extends State<SpectacleArchivesScreen> {
   Future<void> _clearAll() async {
     final ok = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Vider l\'historique ?'),
-        content: const Text('Toutes les parties archivées seront supprimées.'),
+      builder: (context) => AlertDialog(
+        title: Text(k('vider_titre')),
+        content: Text(k('vider_texte')),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Annuler')),
-          FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Vider')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(k('annuler'))),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: Text(k('vider_ok'))),
         ],
       ),
     );
@@ -62,65 +62,52 @@ class _SpectacleArchivesScreenState extends State<SpectacleArchivesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final c = context.destiny;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Parties archivées'),
+        title: Text(k('titre')),
         actions: [
           if (_records.isNotEmpty)
-            IconButton(
-                tooltip: 'Vider',
-                icon: const Icon(Icons.delete_sweep),
-                onPressed: _clearAll),
+            IconButton(tooltip: k('vider'), icon: const Icon(Icons.delete_sweep), onPressed: _clearAll),
         ],
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF141029), Color(0xFF0A0818)],
-          ),
-        ),
-        child: _loading
-            ? const Center(child: CircularProgressIndicator())
-            : _records.isEmpty
-                ? Center(
-                    child: Text('Aucune partie terminée pour l\'instant.',
-                        style: theme.textTheme.bodyMedium
-                            ?.copyWith(color: Colors.white54)),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(12),
-                    itemCount: _records.length,
-                    itemBuilder: (context, i) {
-                      final r = _records[i];
-                      final arch = r['archetype'] as String? ?? '';
-                      final emoji = arch.isEmpty
-                          ? null
-                          : emojiAnimal(arch);
-                      return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 4),
-                        child: ListTile(
-                          leading: Text(emoji ?? '🎭',
-                              style: const TextStyle(fontSize: 24)),
-                          title: Text(
-                              '${r['lieu'] ?? ''} · ${r['danger'] ?? ''}'),
-                          subtitle: Text(
-                            '${arch.isEmpty ? '' : '$arch · '}'
-                            '${(r['mode'] as String? ?? '')} · '
-                            '${_date((r['createdAt'] as num?)?.toInt() ?? 0)}',
-                          ),
-                          trailing: const Icon(Icons.chevron_right),
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : _records.isEmpty
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Text(
+                      k('vide'),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14.5, color: c.texteSecondaire),
+                    ),
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+                  itemCount: _records.length,
+                  itemBuilder: (context, i) {
+                    final r = _records[i];
+                    final arch = r['archetype'] as String? ?? '';
+                    final emoji = arch.isEmpty ? null : emojiAnimal(arch);
+                    return Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 760),
+                        child: ElementListe(
+                          titre: '${r['lieu'] ?? ''} · ${r['danger'] ?? ''}',
+                          sousTitre: '${arch.isEmpty ? '' : '$arch · '}'
+                              '${(r['mode'] as String? ?? '')} · '
+                              '${_date((r['createdAt'] as num?)?.toInt() ?? 0)}',
+                          devant: Text(emoji ?? '🎭', style: const TextStyle(fontSize: 24)),
                           onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (_) => _ArchiveDetailScreen(record: r)),
+                            MaterialPageRoute<void>(builder: (_) => _ArchiveDetailScreen(record: r)),
                           ),
                         ),
-                      );
-                    },
-                  ),
-      ),
+                      ),
+                    );
+                  },
+                ),
     );
   }
 }
@@ -132,54 +119,43 @@ class _ArchiveDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final log = (record['log'] as List<dynamic>? ?? const [])
-        .map((e) => (e as Map).cast<String, dynamic>())
-        .toList();
-    return Scaffold(
-      appBar: AppBar(title: Text(record['lieu'] as String? ?? 'Partie')),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF141029), Color(0xFF0A0818)],
+    final t = context.textes;
+    final c = context.destiny;
+    String k(String x, [Map<String, String> v = const {}]) => t.t('archives.spectacles.$x', v);
+    final log = (record['log'] as List<dynamic>? ?? const []).map((e) => (e as Map).cast<String, dynamic>()).toList();
+    final bilan = record['debrief'] ?? record['score'];
+    return PageDestiny(
+      titre: record['lieu'] as String? ?? k('partie'),
+      enfants: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Text(
+            '${record['lieu'] ?? ''} · ${record['danger'] ?? ''}',
+            style: TextStyle(fontFamily: kPoliceTitres, fontSize: 16, fontWeight: FontWeight.w700, color: c.titre),
           ),
         ),
-        child: ListView(
-          padding: const EdgeInsets.all(12),
-          children: [
-            Text('${record['lieu'] ?? ''} · ${record['danger'] ?? ''}',
-                style: theme.textTheme.titleMedium),
-            const SizedBox(height: 12),
-            // Transcript.
-            for (final item in log) _ArchiveBubble(item: item),
-            // Le débrief (les anciennes parties avaient un score).
-            if ((record['debrief'] ?? record['score']) != null) ...[
-              const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFC24B).withValues(alpha: 0.10),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                      color: const Color(0xFFFFC24B).withValues(alpha: 0.4)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(record['debrief'] != null ? 'Le débrief' : 'Score (ancienne version)',
-                        style: theme.textTheme.titleSmall
-                            ?.copyWith(color: const Color(0xFFFFC24B))),
-                    const SizedBox(height: 8),
-                    _renderDynamic(theme, record['debrief'] ?? record['score']),
-                  ],
-                ),
+        // Transcript.
+        for (final item in log) _ArchiveBubble(item: item),
+        // Le débrief (les anciennes parties avaient un score).
+        if (bilan != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: CadreLisere(
+              couleur: c.or,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    record['debrief'] != null ? k('debrief') : k('score'),
+                    style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, fontWeight: FontWeight.w700, color: c.titre),
+                  ),
+                  const SizedBox(height: 8),
+                  _renderDynamic(c, bilan),
+                ],
               ),
-            ],
-          ],
-        ),
-      ),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -191,25 +167,23 @@ class _ArchiveBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final t = context.textes;
+    final c = context.destiny;
     final isPlayer = item['isPlayer'] as bool? ?? false;
     final arch = item['archetype'] as String? ?? '';
-    final emoji =
-        arch.isEmpty ? null : emojiAnimal(arch);
+    final emoji = arch.isEmpty ? null : emojiAnimal(arch);
     final personnage = item['personnage'] as String? ?? '';
     final texte = item['texte'] as String? ?? '';
     final didascalie = item['didascalie'] as String? ?? '';
     final success = item['success'] as bool?;
 
-    Color bg;
+    final Color teinte;
     if (success == true) {
-      bg = Colors.green.withValues(alpha: 0.16);
+      teinte = Colors.green.withValues(alpha: c.sombre ? 0.16 : 0.12);
     } else if (success == false) {
-      bg = Colors.red.withValues(alpha: 0.14);
+      teinte = Colors.red.withValues(alpha: c.sombre ? 0.14 : 0.08);
     } else {
-      bg = isPlayer
-          ? theme.colorScheme.primary.withValues(alpha: 0.14)
-          : Colors.white.withValues(alpha: 0.05);
+      teinte = isPlayer ? c.or.withValues(alpha: c.sombre ? 0.16 : 0.10) : Colors.transparent;
     }
 
     return Align(
@@ -217,24 +191,23 @@ class _ArchiveBubble extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(10),
-        constraints:
-            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.82),
+        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.82),
         decoration: BoxDecoration(
-          color: bg,
+          color: Color.alphaBlend(teinte, c.carte),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+          border: Border.all(color: c.filet),
         ),
         child: Column(
-          crossAxisAlignment:
-              isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          crossAxisAlignment: isPlayer ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             if (!isPlayer && didascalie.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
-                child: Text(didascalie,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                        color: Colors.white54,
-                        fontStyle: FontStyle.italic)),
+                child: Text(
+                  didascalie,
+                  style: TextStyle(
+                      fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire, fontStyle: FontStyle.italic),
+                ),
               ),
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -243,16 +216,19 @@ class _ArchiveBubble extends StatelessWidget {
                   Text(emoji, style: const TextStyle(fontSize: 16)),
                   const SizedBox(width: 4),
                 ],
-                Text(
-                  isPlayer
-                      ? (personnage.isEmpty ? 'Toi' : 'Toi — $personnage')
-                      : personnage,
-                  style: theme.textTheme.labelMedium
-                      ?.copyWith(color: theme.colorScheme.primary),
+                Flexible(
+                  child: Text(
+                    isPlayer
+                        ? (personnage.isEmpty
+                            ? t.t('archives.spectacles.toi')
+                            : t.t('archives.spectacles.toi_personnage', {'personnage': personnage}))
+                        : personnage,
+                    style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13, fontWeight: FontWeight.w700, color: c.titre),
+                  ),
                 ),
               ],
             ),
-            Text(texte, style: theme.textTheme.bodyMedium?.copyWith(height: 1.35)),
+            Text(texte, style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.35, color: c.texte)),
           ],
         ),
       ),
@@ -261,13 +237,14 @@ class _ArchiveBubble extends StatelessWidget {
 }
 
 /// Rendu générique d'une valeur JSON (dupliqué léger pour l'écran d'archive).
-Widget _renderDynamic(ThemeData theme, Object? value) {
+Widget _renderDynamic(DestinyCouleurs c, Object? value) {
+  final texte = TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.35, color: c.texte);
   if (value == null) return const SizedBox.shrink();
   if (value is String) {
-    return Text(value, style: theme.textTheme.bodyMedium?.copyWith(height: 1.35));
+    return Text(value, style: texte);
   }
   if (value is num || value is bool) {
-    return Text('$value', style: theme.textTheme.bodyMedium);
+    return Text('$value', style: texte);
   }
   if (value is List) {
     return Column(
@@ -279,8 +256,8 @@ Widget _renderDynamic(ThemeData theme, Object? value) {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('•  '),
-                Expanded(child: _renderDynamic(theme, e)),
+                Text('•  ', style: texte),
+                Expanded(child: _renderDynamic(c, e)),
               ],
             ),
           ),
@@ -297,16 +274,17 @@ Widget _renderDynamic(ThemeData theme, Object? value) {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(entry.key.toString(),
-                    style: theme.textTheme.labelMedium
-                        ?.copyWith(color: theme.colorScheme.primary)),
+                Text(
+                  entry.key.toString(),
+                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13, fontWeight: FontWeight.w700, color: c.titre),
+                ),
                 const SizedBox(height: 2),
-                _renderDynamic(theme, entry.value),
+                _renderDynamic(c, entry.value),
               ],
             ),
           ),
       ],
     );
   }
-  return Text('$value', style: theme.textTheme.bodyMedium);
+  return Text('$value', style: texte);
 }

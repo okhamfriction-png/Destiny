@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../destiny/donnees.dart';
-
 import '../../application/state/music_controller.dart';
+import '../destiny/donnees.dart';
+import '../theme/destiny_theme.dart';
 
+/// La bibliothèque musicale : les pistes par catégorie, triées de A à Z (ou
+/// de Z à A), et la barre de lecture en bas.
 class MusicScreen extends StatefulWidget {
   const MusicScreen({required this.controller, super.key});
 
@@ -43,96 +45,85 @@ class _MusicScreenState extends State<MusicScreen> {
   @override
   Widget build(BuildContext context) {
     final c = widget.controller;
-    final theme = Theme.of(context);
+    final t = context.textes;
+    final d = context.destiny;
+    String k(String x, [Map<String, String> v = const {}]) => t.t('musique.$x', v);
 
     if (c.loading) {
       return const Center(child: CircularProgressIndicator());
     }
     if (c.tracks.isEmpty) {
-      return const Center(
+      return Center(
         child: Padding(
-          padding: EdgeInsets.all(24),
+          padding: const EdgeInsets.all(24),
           child: Text(
-            'Aucune musique trouvée.',
+            k('vide'),
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white70),
+            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14.5, color: d.texteSecondaire),
           ),
         ),
       );
     }
 
     final categories = c.categories;
-    final selected =
-        (_selected != null && categories.contains(_selected))
-            ? _selected!
-            : categories.first;
+    final selected = (_selected != null && categories.contains(_selected)) ? _selected! : categories.first;
     final tracks = c.tracksOf(selected);
+
+    Widget centre(Widget enfant) =>
+        Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 760), child: enfant));
 
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-          child: Text(
-            'Musique',
-            textAlign: TextAlign.center,
-            style: theme.textTheme.headlineMedium,
-          ),
-        ),
         // Filtres par catégorie.
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        centre(Padding(
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
           child: Wrap(
             alignment: WrapAlignment.center,
-            spacing: 10,
+            spacing: 8,
             runSpacing: 8,
             children: [
               for (final category in categories)
                 ChoiceChip(
-                  avatar: Icon(
-                    _categoryIcons[category] ?? Icons.library_music,
-                    size: 18,
-                    color: selected == category
-                        ? Colors.black
-                        : theme.colorScheme.primary,
-                  ),
-                  label: Text('$category (${c.tracksOf(category).length})'),
+                  avatar: Icon(_categoryIcons[category] ?? Icons.library_music, size: 18, color: d.titre),
+                  label: Text(k('categorie', {'nom': category, 'n': '${c.tracksOf(category).length}'})),
                   selected: selected == category,
+                  selectedColor: d.or.withValues(alpha: 0.3),
+                  side: BorderSide(color: selected == category ? d.titre : d.filet),
+                  showCheckmark: false,
                   onSelected: (_) => setState(() => _selected = category),
                 ),
             ],
           ),
-        ),
+        )),
         // Tri alphabétique (A→Z / Z→A).
-        Padding(
+        centre(Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              Text('${tracks.length} piste(s)',
-                  style: theme.textTheme.labelMedium
-                      ?.copyWith(color: Colors.white54)),
+              Text(
+                tracks.length == 1 ? k('piste') : k('pistes', {'n': '${tracks.length}'}),
+                style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13, color: d.texteSecondaire),
+              ),
               const Spacer(),
               TextButton.icon(
                 onPressed: c.toggleSortOrder,
-                icon: Icon(
-                    c.ascending
-                        ? Icons.arrow_downward
-                        : Icons.arrow_upward,
-                    size: 16),
-                label: Text(c.ascending ? 'A → Z' : 'Z → A'),
+                icon: Icon(c.ascending ? Icons.arrow_downward : Icons.arrow_upward, size: 16),
+                label: Text(c.ascending ? k('tri_az') : k('tri_za')),
               ),
             ],
           ),
-        ),
+        )),
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 90),
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
             children: [
-              ...tracks.map((t) => _TrackTile(
-                    track: t,
-                    isCurrent: c.current?.file == t.file,
-                    isPlaying: c.current?.file == t.file && c.playing,
-                    onTap: () => c.toggle(t),
-                  )),
+              for (final piste in tracks)
+                centre(_TrackTile(
+                  track: piste,
+                  isCurrent: c.current?.file == piste.file,
+                  isPlaying: c.current?.file == piste.file && c.playing,
+                  onTap: () => c.toggle(piste),
+                )),
             ],
           ),
         ),
@@ -255,45 +246,64 @@ class _TrackTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final d = context.destiny;
     final gradient = _gradientFor(track);
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      color: isCurrent
-          ? theme.colorScheme.primary.withValues(alpha: 0.18)
-          : null,
-      child: ListTile(
-        leading: Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: gradient,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Material(
+        color: isCurrent ? Color.alphaBlend(d.or.withValues(alpha: d.sombre ? 0.16 : 0.12), d.carte) : d.carte,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: BorderSide(color: isCurrent ? d.titre : d.filet, width: isCurrent ? 1.4 : 1),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Row(
+              children: [
+                // La vignette de la piste : son dégradé et son icône.
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: gradient,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(_iconFor(track), color: Colors.white, size: 24),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    track.title,
+                    style: TextStyle(
+                      fontFamily: kPoliceTexte,
+                      fontSize: 15,
+                      fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w600,
+                      color: d.texte,
+                    ),
+                  ),
+                ),
+                if (track.loop)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4),
+                    child: Icon(Icons.loop, size: 16, color: d.texteSecondaire),
+                  ),
+                Icon(
+                  isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
+                  color: d.titre,
+                  size: 30,
+                ),
+              ],
             ),
-            borderRadius: BorderRadius.circular(12),
           ),
-          alignment: Alignment.center,
-          child: Icon(_iconFor(track), color: Colors.white, size: 24),
         ),
-        title: Text(track.title),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (track.loop)
-              const Padding(
-                padding: EdgeInsets.only(right: 4),
-                child: Icon(Icons.loop, size: 16, color: Colors.white38),
-              ),
-            Icon(
-              isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
-              color: theme.colorScheme.primary,
-              size: 30,
-            ),
-          ],
-        ),
-        onTap: onTap,
       ),
     );
   }
@@ -312,77 +322,74 @@ class _NowPlayingBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final d = context.destiny;
+    final t = context.textes;
     final current = controller.current!;
     final dur = controller.duration.inMilliseconds.toDouble();
-    final pos = controller.position.inMilliseconds
-        .toDouble()
-        .clamp(0, dur <= 0 ? 1 : dur);
+    final pos = controller.position.inMilliseconds.toDouble().clamp(0, dur <= 0 ? 1 : dur);
+    final temps = TextStyle(fontFamily: kPoliceTexte, fontSize: 12, color: d.texteSecondaire);
 
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: d.carte,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+        border: Border(top: BorderSide(color: d.filet)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.4),
+            color: Colors.black.withValues(alpha: d.sombre ? 0.4 : 0.08),
             blurRadius: 16,
             offset: const Offset(0, -4),
           ),
         ],
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.music_note, color: theme.colorScheme.primary),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  current.title,
-                  style: theme.textTheme.titleMedium,
-                  overflow: TextOverflow.ellipsis,
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.music_note, color: d.titre),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    current.title,
+                    style: TextStyle(fontFamily: kPoliceTexte, fontSize: 16, fontWeight: FontWeight.w600, color: d.texte),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
-              IconButton(
-                tooltip: context.textes.t(controller.playing ? 'accessibilite.pause' : 'accessibilite.lecture'),
-                icon: Icon(
-                  controller.playing
-                      ? Icons.pause_circle_filled
-                      : Icons.play_circle_fill,
+                IconButton(
+                  tooltip: t.t(controller.playing ? 'accessibilite.pause' : 'accessibilite.lecture'),
+                  icon: Icon(controller.playing ? Icons.pause_circle_filled : Icons.play_circle_fill),
+                  iconSize: 40,
+                  color: d.titre,
+                  onPressed: controller.togglePlayPause,
                 ),
-                iconSize: 40,
-                color: theme.colorScheme.primary,
-                onPressed: controller.togglePlayPause,
-              ),
-              IconButton(
-                tooltip: context.textes.t('accessibilite.arreter'),
-                icon: const Icon(Icons.stop_circle),
-                iconSize: 32,
-                color: Colors.white70,
-                onPressed: controller.stop,
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Text(_fmt(controller.position),
-                  style: theme.textTheme.bodySmall),
-              Expanded(
-                child: Slider(
-                  value: pos.toDouble(),
-                  max: dur <= 0 ? 1 : dur,
-                  onChanged: (v) =>
-                      controller.seek(Duration(milliseconds: v.round())),
+                IconButton(
+                  tooltip: t.t('accessibilite.arreter'),
+                  icon: const Icon(Icons.stop_circle),
+                  iconSize: 32,
+                  color: d.texteSecondaire,
+                  onPressed: controller.stop,
                 ),
-              ),
-              Text(_fmt(controller.duration),
-                  style: theme.textTheme.bodySmall),
-            ],
-          ),
-        ],
+              ],
+            ),
+            Row(
+              children: [
+                Text(_fmt(controller.position), style: temps),
+                Expanded(
+                  child: Slider(
+                    value: pos.toDouble(),
+                    max: dur <= 0 ? 1 : dur,
+                    onChanged: (v) => controller.seek(Duration(milliseconds: v.round())),
+                  ),
+                ),
+                Text(_fmt(controller.duration), style: temps),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

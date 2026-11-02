@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../destiny/donnees.dart';
-
 import '../../application/state/music_controller.dart';
-
-const Color _gold = Color(0xFFFFC24B);
-const Color _lav = Color(0xFFB9A6FF);
+import '../destiny/donnees.dart';
+import '../theme/destiny_theme.dart';
 
 /// Couleur d'accent par catégorie de son (repère visuel dans la régie).
 Color _categoryColor(String cat) {
@@ -21,9 +18,14 @@ Color _categoryColor(String cat) {
     case 'Univers':
       return const Color(0xFFB79CFF); // violet
     default:
-      return _lav;
+      return const Color(0xFFB9A6FF); // lavande
   }
 }
+
+/// La couleur d'une catégorie quand elle colore du texte : éclaircie en
+/// sombre, assombrie en clair, pour rester lisible.
+Color _texteCategorie(DestinyCouleurs d, Color couleur) =>
+    d.sombre ? Color.lerp(couleur, Colors.white, 0.2)! : Color.lerp(couleur, d.encre, 0.6)!;
 
 /// Icône adaptée à la catégorie de son (à la place d'un bouton lecture).
 IconData _categoryIcon(String cat) {
@@ -49,10 +51,6 @@ Future<void> showSoundMixer(BuildContext context, MusicController controller) {
   return showModalBottomSheet(
     context: context,
     isScrollControlled: true,
-    backgroundColor: const Color(0xFF120F1E),
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
-    ),
     builder: (_) => SoundMixerSheet(controller: controller),
   );
 }
@@ -116,6 +114,9 @@ class _SoundMixerSheetState extends State<SoundMixerSheet> {
   @override
   Widget build(BuildContext context) {
     final c = widget.controller;
+    final d = context.destiny;
+    final t = context.textes;
+    String k(String x, [Map<String, String> v = const {}]) => t.t('musique.$x', v);
     final cats = _ordered(c.categories);
     // Première ouverture : on ne déplie qu'Émotions et Lieux, le reste masqué.
     if (!_initCollapse && !c.loading && cats.isNotEmpty) {
@@ -137,7 +138,7 @@ class _SoundMixerSheetState extends State<SoundMixerSheet> {
               width: 42,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.white24,
+                color: d.filet,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -145,21 +146,25 @@ class _SoundMixerSheetState extends State<SoundMixerSheet> {
               padding: const EdgeInsets.fromLTRB(18, 12, 10, 6),
               child: Row(
                 children: [
-                  const Icon(Icons.tune, color: _gold),
+                  Icon(Icons.tune, color: d.titre),
                   const SizedBox(width: 10),
-                  const Text('Régie son',
+                  Expanded(
+                    child: Text(
+                      t.t('navigation.regie_son'),
                       style: TextStyle(
-                          color: _gold,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800)),
-                  const Spacer(),
+                        fontFamily: kPoliceTitres,
+                        color: d.titre,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
                   if (c.playing)
                     TextButton.icon(
                       onPressed: () => c.stop(),
-                      icon: const Icon(Icons.stop_circle_outlined,
-                          color: Colors.white70),
-                      label: const Text('Couper',
-                          style: TextStyle(color: Colors.white70)),
+                      style: TextButton.styleFrom(foregroundColor: d.texteSecondaire),
+                      icon: const Icon(Icons.stop_circle_outlined),
+                      label: Text(k('couper')),
                     ),
                 ],
               ),
@@ -169,45 +174,26 @@ class _SoundMixerSheetState extends State<SoundMixerSheet> {
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
               child: Row(
                 children: [
-                  InkWell(
-                    onTap: () => c.setBoucle(!c.boucle),
-                    borderRadius: BorderRadius.circular(16),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: c.boucle
-                            ? _gold.withValues(alpha: 0.16)
-                            : Colors.white10,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                            color: c.boucle ? _gold : Colors.white24),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.repeat,
-                              size: 16,
-                              color: c.boucle ? _gold : Colors.white54),
-                          const SizedBox(width: 4),
-                          Text('Boucle',
-                              style: TextStyle(
-                                  color: c.boucle ? _gold : Colors.white54,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700)),
-                        ],
-                      ),
-                    ),
+                  FilterChip(
+                    avatar: Icon(Icons.repeat, size: 16, color: c.boucle ? d.titre : d.texteSecondaire),
+                    label: Text(k('boucle')),
+                    selected: c.boucle,
+                    onSelected: (v) => c.setBoucle(v),
+                    selectedColor: d.or.withValues(alpha: 0.25),
+                    side: BorderSide(color: c.boucle ? d.titre : d.filet),
+                    showCheckmark: false,
+                    visualDensity: VisualDensity.compact,
                   ),
                   const SizedBox(width: 10),
-                  const Icon(Icons.volume_down, color: Colors.white54, size: 18),
+                  Icon(Icons.volume_down, color: d.texteSecondaire, size: 18),
                   Expanded(
                     child: Slider(
                       value: c.volume,
+                      semanticFormatterCallback: (v) => '${k('volume')} ${(v * 100).round()} %',
                       onChanged: (v) => c.setVolume(v),
                     ),
                   ),
-                  const Icon(Icons.volume_up, color: Colors.white54, size: 18),
+                  Icon(Icons.volume_up, color: d.texteSecondaire, size: 18),
                 ],
               ),
             ),
@@ -215,30 +201,28 @@ class _SoundMixerSheetState extends State<SoundMixerSheet> {
             if (c.current != null)
               Container(
                 margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding: const EdgeInsets.only(left: 14, right: 4, top: 2, bottom: 2),
                 decoration: BoxDecoration(
-                  color: _gold.withValues(alpha: 0.10),
+                  color: Color.alphaBlend(d.or.withValues(alpha: d.sombre ? 0.12 : 0.10), d.carte),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: _gold.withValues(alpha: 0.35)),
+                  border: Border.all(color: d.titre.withValues(alpha: 0.5)),
                 ),
                 child: Row(
                   children: [
-                    Icon(c.playing ? Icons.graphic_eq : Icons.pause,
-                        color: _gold, size: 20),
+                    Icon(c.playing ? Icons.graphic_eq : Icons.pause, color: d.titre, size: 20),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        '${c.playing ? "En cours" : "En pause"} : ${c.current!.title}',
-                        style: const TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.w600),
+                        c.playing
+                            ? k('en_cours', {'titre': c.current!.title})
+                            : k('en_pause', {'titre': c.current!.title}),
+                        style: TextStyle(fontFamily: kPoliceTexte, color: d.texte, fontWeight: FontWeight.w600),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     IconButton(
-                      tooltip: context.textes.t(c.playing ? 'accessibilite.pause' : 'accessibilite.lecture'),
-                      icon: Icon(c.playing ? Icons.pause : Icons.play_arrow,
-                          color: _gold),
+                      tooltip: t.t(c.playing ? 'accessibilite.pause' : 'accessibilite.lecture'),
+                      icon: Icon(c.playing ? Icons.pause : Icons.play_arrow, color: d.titre),
                       onPressed: () => c.togglePlayPause(),
                     ),
                   ],
@@ -259,29 +243,32 @@ class _SoundMixerSheetState extends State<SoundMixerSheet> {
                             }),
                             borderRadius: BorderRadius.circular(8),
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 14, bottom: 8),
+                              padding: const EdgeInsets.only(top: 14, bottom: 8),
                               child: Row(
                                 children: [
                                   Icon(
-                                      _collapsed.contains(cat)
-                                          ? Icons.chevron_right
-                                          : Icons.expand_more,
-                                      color: _categoryColor(cat),
-                                      size: 18),
+                                    _collapsed.contains(cat) ? Icons.chevron_right : Icons.expand_more,
+                                    color: _texteCategorie(d, _categoryColor(cat)),
+                                    size: 18,
+                                  ),
                                   const SizedBox(width: 4),
-                                  Text(cat.toUpperCase(),
+                                  Flexible(
+                                    child: Text(
+                                      cat.toUpperCase(),
                                       style: TextStyle(
-                                          color: _categoryColor(cat),
-                                          letterSpacing: 2,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w700)),
+                                        fontFamily: kPoliceTexte,
+                                        color: _texteCategorie(d, _categoryColor(cat)),
+                                        letterSpacing: 2,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
                                   const SizedBox(width: 8),
-                                  Text('${c.tracksOf(cat).length}',
-                                      style: TextStyle(
-                                          color: _categoryColor(cat)
-                                              .withValues(alpha: 0.6),
-                                          fontSize: 12)),
+                                  Text(
+                                    '${c.tracksOf(cat).length}',
+                                    style: TextStyle(fontFamily: kPoliceTexte, color: d.texteSecondaire, fontSize: 12),
+                                  ),
                                 ],
                               ),
                             ),
@@ -291,15 +278,14 @@ class _SoundMixerSheetState extends State<SoundMixerSheet> {
                               spacing: 8,
                               runSpacing: 8,
                               children: [
-                                for (final t in c.tracksOf(cat))
+                                for (final piste in c.tracksOf(cat))
                                   _TrackChip(
-                                    title: t.title,
+                                    title: piste.title,
                                     color: _categoryColor(cat),
                                     icon: _categoryIcon(cat),
-                                    active: c.current?.file == t.file,
-                                    playing:
-                                        c.current?.file == t.file && c.playing,
-                                    onTap: () => c.toggle(t),
+                                    active: c.current?.file == piste.file,
+                                    playing: c.current?.file == piste.file && c.playing,
+                                    onTap: () => c.toggle(piste),
                                   ),
                               ],
                             ),
@@ -333,29 +319,35 @@ class _TrackChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fg = active ? color : Colors.white70;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: BoxDecoration(
-          color: active ? color.withValues(alpha: 0.16) : Colors.white10,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-              color: active ? color : Colors.white24,
-              width: active ? 1.5 : 1),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(playing ? Icons.graphic_eq : icon, size: 18, color: fg),
-            const SizedBox(width: 6),
-            Text(title,
-                style: TextStyle(
+    final d = context.destiny;
+    final fg = active ? _texteCategorie(d, color) : d.texte;
+    return Material(
+      color: active
+          ? Color.alphaBlend(color.withValues(alpha: d.sombre ? 0.16 : 0.12), d.carte)
+          : Color.alphaBlend(d.texte.withValues(alpha: 0.05), d.carte),
+      shape: StadiumBorder(side: BorderSide(color: active ? color : d.filet, width: active ? 1.5 : 1)),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(playing ? Icons.graphic_eq : icon, size: 18, color: active ? fg : _texteCategorie(d, color)),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontFamily: kPoliceTexte,
                     color: fg,
-                    fontWeight: active ? FontWeight.w700 : FontWeight.w500)),
-          ],
+                    fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

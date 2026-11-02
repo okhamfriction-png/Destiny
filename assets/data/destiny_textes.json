@@ -1326,5 +1326,121 @@
     "arreter": "Arrêter la musique",
     "modifier": "Modifier",
     "supprimer": "Supprimer"
+  },
+  "ia_config": {
+    "titre": "Configurer l'IA",
+    "fournisseur": "Le fournisseur",
+    "modele": "Le modèle",
+    "personnalise": "Personnalisé…",
+    "modele_personnalise": "Nom du modèle (personnalisé)",
+    "cle": "La clé d'API",
+    "prete": "L'IA est prête : {fournisseur} · {modele}",
+    "a_configurer": "Saisis une clé pour jouer avec l'IA.",
+    "cle_aide": "La clé reste sur ton appareil. L'IA marche dans l'appli mobile ; dans le navigateur, les services d'IA bloquent les appels (CORS).",
+    "style": "Le style du maître du destin",
+    "styles": {
+      "normal": {
+        "nom": "Normal",
+        "aide": "La narration immersive habituelle : 2 à 3 lignes par réponse."
+      },
+      "punchy": {
+        "nom": "Ultra percutant",
+        "aide": "Ultra direct : sujet, verbe, complément. Une phrase très courte par DONC et par MAIS."
+      },
+      "child": {
+        "nom": "Enfant (CP-CE2)",
+        "aide": "Une phrase de 8 mots au plus, des mots simples, très percutante."
+      },
+      "petit": {
+        "nom": "Petit (5-6 ans)",
+        "aide": "6 mots au plus, des mots très simples : pour apprendre à lire tout seul."
+      }
+    }
+  },
+  "musique": {
+    "vide": "Aucune musique trouvée.",
+    "categorie": "{nom} ({n})",
+    "piste": "1 piste",
+    "pistes": "{n} pistes",
+    "tri_az": "A → Z",
+    "tri_za": "Z → A",
+    "couper": "Couper",
+    "boucle": "Boucle",
+    "volume": "Volume",
+    "en_cours": "En cours : {titre}",
+    "en_pause": "En pause : {titre}"
+  },
+  "relations": {
+    "titre": "Antisèche de relations",
+    "intro": "Des points de départ, jamais imposés : un écart de statut avec une amorce d'histoire.",
+    "vide": "Aucun lien pour l'instant. Ajoute le premier !",
+    "nouveau": "Nouveau lien",
+    "modifier": "Modifier le lien",
+    "registre": "Le registre",
+    "champ": "Le lien (écart de statut + amorce)",
+    "annuler": "Annuler",
+    "valider": "Valider",
+    "ajouter": "Ajouter",
+    "restaurer": "Restaurer les liens d'origine",
+    "restaurer_titre": "Restaurer les liens d'origine ?",
+    "restaurer_texte": "Tous les liens seront remplacés par la liste d'origine.",
+    "restaurer_ok": "Restaurer"
+  },
+  "details_lieux": {
+    "titre": "Détails des lieux",
+    "intro": "Les sous-espaces et le vocabulaire de chaque lieu. Touche un lieu pour le modifier.",
+    "resume": "{n} sous-espaces · {v} mots",
+    "modifie": "modifié",
+    "lieu": "Lieu : {nom}",
+    "vide": "Aucun détail pour ce lieu. Ajoute des sous-espaces et du vocabulaire dans Réglages → Détails des lieux.",
+    "modifier": "Modifier : {nom}",
+    "enregistrer": "Enregistrer",
+    "ajouter": "Ajouter",
+    "restaurer": "Restaurer les valeurs d'origine",
+    "sous_espaces": "Sous-espaces",
+    "sous_espaces_aide": "Les endroits jouables à l'intérieur du lieu",
+    "fonctions": "Fonctions",
+    "fonctions_aide": "Les métiers et les rôles jouables au lieu",
+    "vocabulaire": "Vocabulaire",
+    "vocabulaire_aide": "Le jargon, les objets et les gestes propres au lieu"
+  },
+  "archives": {
+    "histoires": {
+      "titre": "Archives",
+      "vide": "Aucune histoire archivée.",
+      "selection_un": "{n} sélectionnée",
+      "selection": "{n} sélectionnées",
+      "quitter_selection": "Annuler la sélection",
+      "selectionner": "Sélectionner",
+      "tout_selectionner": "Tout sélectionner",
+      "tout_deselectionner": "Tout désélectionner",
+      "supprimer_selection": "Supprimer la sélection",
+      "trier": "Trier",
+      "par_date": "Par date",
+      "par_nom": "Par nom",
+      "resume": "Résumé",
+      "resume_indisponible": "Résumé indisponible.",
+      "fermer": "Fermer",
+      "desarchiver": "Sortir des archives",
+      "supprimer": "Supprimer",
+      "annuler": "Annuler",
+      "supprimer_titre": "Supprimer la sélection ?",
+      "supprimer_un": "Supprimer 1 histoire archivée ? C'est définitif.",
+      "supprimer_n": "Supprimer {n} histoires archivées ? C'est définitif."
+    },
+    "spectacles": {
+      "titre": "Parties archivées",
+      "vide": "Aucune partie terminée pour l'instant.",
+      "vider": "Vider l'historique",
+      "vider_titre": "Vider l'historique ?",
+      "vider_texte": "Toutes les parties archivées seront supprimées.",
+      "vider_ok": "Vider",
+      "annuler": "Annuler",
+      "partie": "Partie",
+      "debrief": "Le débrief",
+      "score": "Score (ancienne version)",
+      "toi": "Toi",
+      "toi_personnage": "Toi — {personnage}"
+    }
   }
 }

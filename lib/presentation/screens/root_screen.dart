@@ -21,7 +21,6 @@ import '../jouer/jouer_screen.dart';
 import '../serie/contexte_serie.dart';
 import '../theme/destiny_theme.dart';
 import '../troupe/troupe_screen.dart';
-import '../widgets/ecran_sombre.dart';
 import 'music_screen.dart';
 import 'settings_screen.dart';
 
@@ -92,11 +91,9 @@ class _RootScreenState extends State<RootScreen> {
 
   void _ouvrirBibliotheque() => _ouvrir(BibliothequeScreen(contexte: _contexteBibliotheque));
 
-  void _ouvrirMusique() => _ouvrir(ThemeSombre(
-        child: Scaffold(
-          appBar: AppBar(title: Text(context.textes.t('navigation.musique'))),
-          body: MusicScreen(controller: widget.musicController),
-        ),
+  void _ouvrirMusique() => _ouvrir(Scaffold(
+        appBar: AppBar(title: Text(context.textes.t('navigation.musique'))),
+        body: MusicScreen(controller: widget.musicController),
       ));
 
   void _ouvrirReglages() => _ouvrir(SettingsScreen(
