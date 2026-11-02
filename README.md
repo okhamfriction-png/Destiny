@@ -42,5 +42,5 @@ La refonte 2.0 est racontée phase par phase dans [`docs/refonte-2.0/JOURNAL.md`
 ## Publication
 
 - **Android** : `.aab` (Google Play) et `.apk`. Pousser un tag `vX.Y.Z` lance le workflow `.github/workflows/apk.yml`, qui compile l'APK et le joint à la release. Voir les [Releases](https://github.com/okhamfriction-png/Destiny/releases).
-- **Web** : `flutter build web --release --base-href /Destiny/app/`, puis copier `build/web` dans `docs/app` (GitHub Pages).
+- **Web** : `flutter build web --release --no-web-resources-cdn`, copier `build/web` dans `docs/app`, puis mettre `<base href="./">` dans `docs/app/index.html` : la version web marche alors sur GitHub Pages comme depuis n'importe quel chemin (par exemple raw.githack.com pour tester une branche).
 - **CI/CD** : [`docs/cicd_setup.md`](docs/cicd_setup.md) · **Fiche Play Store** : [`docs/play_store_listing.md`](docs/play_store_listing.md).
