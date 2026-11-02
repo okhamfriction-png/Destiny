@@ -6,6 +6,7 @@ class Location {
     this.espaces = const [],
     this.rue = false,
     this.actif = true,
+    this.kids = false,
   });
 
   final String id;
@@ -24,12 +25,16 @@ class Location {
   /// Vrai si le lieu est actif (sinon jamais tiré).
   final bool actif;
 
+  /// Jouable avec des enfants (venu de la grammaire).
+  final bool kids;
+
   Location copyWith({
     String? id,
     String? name,
     List<String>? roles,
     List<String>? espaces,
     bool? actif,
+    bool? kids,
   }) {
     return Location(
       id: id ?? this.id,
@@ -39,6 +44,7 @@ class Location {
       // ignore: deprecated_member_use_from_same_package
       rue: rue,
       actif: actif ?? this.actif,
+      kids: kids ?? this.kids,
     );
   }
 
@@ -52,6 +58,7 @@ class Location {
       espaces: ls(json['espaces']),
       rue: json['rue'] as bool? ?? false,
       actif: json['actif'] as bool? ?? true,
+      kids: json['kids'] as bool? ?? false,
     );
   }
 
@@ -61,5 +68,6 @@ class Location {
         'roles': roles,
         'espaces': espaces,
         'actif': actif,
+        'kids': kids,
       };
 }

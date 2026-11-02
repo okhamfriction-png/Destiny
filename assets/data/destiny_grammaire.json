@@ -1,5 +1,5 @@
 {
-  "version": "2.0",
+  "version": "2.1",
   "nom": "Destiny",
   "promesse": "Rien n'est écrit",
   "familles": [
@@ -49,7 +49,10 @@
           "posture": "au centre, lent, le regard qui pèse",
           "replique": "Viens avec moi si tu veux vivre.",
           "source_replique": "Terminator",
-          "image": "img/lion.jpg"
+          "image": "img/lion.jpg",
+          "replique_kids": "Viens avec moi si tu veux vivre.",
+          "source_replique_kids": "Terminator",
+          "replique_adulte_seulement": false
         },
         {
           "id": "aigle",
@@ -57,9 +60,12 @@
           "statut_depart": "haut",
           "port": "droit",
           "posture": "en retrait, immobile, il observe avant de trancher",
-          "replique": "À mon signal, déchaînez les enfers !",
+          "replique": "À mon signal, déclenchez l'enfer !",
           "source_replique": "Gladiator",
-          "image": "img/aigle.jpg"
+          "image": "img/aigle.jpg",
+          "replique_kids": "À mon signal, déclenchez l'enfer !",
+          "source_replique_kids": "Gladiator",
+          "replique_adulte_seulement": false
         }
       ]
     },
@@ -83,7 +89,10 @@
           "posture": "massif, planté devant les siens",
           "replique": "Vous ne passerez pas !",
           "source_replique": "Le Seigneur des anneaux",
-          "image": "img/ours.jpg"
+          "image": "img/ours.jpg",
+          "replique_kids": "Vous ne passerez pas !",
+          "source_replique_kids": "Le Seigneur des anneaux",
+          "replique_adulte_seulement": false
         },
         {
           "id": "loup",
@@ -91,9 +100,12 @@
           "statut_depart": "neutre",
           "port": "en retrait",
           "posture": "tendu vers l'ennemi qu'il a désigné, la meute derrière lui",
-          "replique": "Je vous trouverai, et je vous tuerai.",
+          "replique": "Je vous chercherai, je vous trouverai et je vous tuerai.",
           "source_replique": "Taken",
-          "image": "img/loup.jpg"
+          "image": "img/loup.jpg",
+          "replique_kids": "Tu deviens responsable pour toujours de ce que tu as apprivoisé.",
+          "source_replique_kids": "Le Petit Prince",
+          "replique_adulte_seulement": true
         }
       ]
     },
@@ -117,7 +129,10 @@
           "posture": "collé à la personne qu'il sert",
           "replique": "Je serai toujours là.",
           "source_replique": "E.T. l'extra-terrestre",
-          "image": "img/chien.jpg"
+          "image": "img/chien.jpg",
+          "replique_kids": "Je serai toujours là.",
+          "source_replique_kids": "E.T. l'extra-terrestre",
+          "replique_adulte_seulement": false
         },
         {
           "id": "mouton",
@@ -125,9 +140,12 @@
           "statut_depart": "bas",
           "port": "grégaire",
           "posture": "collé au groupe, il ramène chacun dans le troupeau",
-          "replique": "Un pour tous, tous pour un !",
+          "replique": "Tous pour un, un pour tous !",
           "source_replique": "Les Trois Mousquetaires",
-          "image": "img/mouton.jpg"
+          "image": "img/mouton.jpg",
+          "replique_kids": "Tous pour un, un pour tous !",
+          "source_replique_kids": "Les Trois Mousquetaires",
+          "replique_adulte_seulement": false
         }
       ]
     },
@@ -151,7 +169,10 @@
           "posture": "petite, rapide, elle sursaute mais avance",
           "replique": "Vers l'infini et au-delà !",
           "source_replique": "Toy Story",
-          "image": "img/souris.jpg"
+          "image": "img/souris.jpg",
+          "replique_kids": "Vers l'infini et au-delà !",
+          "source_replique_kids": "Toy Story",
+          "replique_adulte_seulement": false
         },
         {
           "id": "hibou",
@@ -159,9 +180,12 @@
           "statut_depart": "haut",
           "port": "posé",
           "posture": "immobile, il observe, parle peu et juste",
-          "replique": "Fais-le, ou ne le fais pas. Il n'y a pas d'essai.",
+          "replique": "Fais-le ou ne le fais pas. Il n'y a pas d'essai.",
           "source_replique": "Star Wars : L'Empire contre-attaque",
-          "image": "img/hibou.jpg"
+          "image": "img/hibou.jpg",
+          "replique_kids": "Fais-le ou ne le fais pas. Il n'y a pas d'essai.",
+          "source_replique_kids": "Star Wars : L'Empire contre-attaque",
+          "replique_adulte_seulement": false
         }
       ]
     },
@@ -185,7 +209,10 @@
           "posture": "poitrine en avant, il crie l'alerte",
           "replique": "Houston, on a un problème !",
           "source_replique": "Apollo 13",
-          "image": "img/coq.jpg"
+          "image": "img/coq.jpg",
+          "replique_kids": "Houston, on a un problème !",
+          "source_replique_kids": "Apollo 13",
+          "replique_adulte_seulement": false
         },
         {
           "id": "rat",
@@ -195,7 +222,10 @@
           "posture": "nerveux, aux aguets, il sent le naufrage avant tout le monde",
           "replique": "J'ai un mauvais pressentiment.",
           "source_replique": "Star Wars",
-          "image": "img/rat.jpg"
+          "image": "img/rat.jpg",
+          "replique_kids": "J'ai un mauvais pressentiment.",
+          "source_replique_kids": "Star Wars",
+          "replique_adulte_seulement": false
         }
       ]
     },
@@ -217,9 +247,12 @@
           "statut_depart": "bas",
           "port": "planté",
           "posture": "planté sur place, bras croisés",
-          "replique": "Jusqu'ici, tout va bien.",
+          "replique": "Jusqu'ici tout va bien.",
           "source_replique": "La Haine",
-          "image": "img/ane.jpg"
+          "image": "img/ane.jpg",
+          "replique_kids": "Jusqu'ici tout va bien.",
+          "source_replique_kids": "La Haine",
+          "replique_adulte_seulement": false
         },
         {
           "id": "porc",
@@ -229,7 +262,10 @@
           "posture": "assis, il finit son repas pendant que le toit s'envole",
           "replique": "Hakuna matata !",
           "source_replique": "Le Roi lion",
-          "image": "img/porc.jpg"
+          "image": "img/porc.jpg",
+          "replique_kids": "Hakuna matata !",
+          "source_replique_kids": "Le Roi lion",
+          "replique_adulte_seulement": false
         }
       ]
     },
@@ -253,7 +289,10 @@
           "posture": "au centre, il prêche pour être regardé",
           "replique": "L'hiver vient.",
           "source_replique": "Game of Thrones",
-          "image": "img/paon.jpg"
+          "image": "img/paon.jpg",
+          "replique_kids": "L'hiver vient.",
+          "source_replique_kids": "Game of Thrones",
+          "replique_adulte_seulement": false
         },
         {
           "id": "corbeau",
@@ -263,7 +302,10 @@
           "posture": "dans l'ombre, voix basse, il annonce le pire",
           "replique": "Je vois des gens qui sont morts.",
           "source_replique": "Sixième Sens",
-          "image": "img/corbeau.jpg"
+          "image": "img/corbeau.jpg",
+          "replique_kids": "Que la Force soit avec toi.",
+          "source_replique_kids": "Star Wars",
+          "replique_adulte_seulement": true
         }
       ]
     },
@@ -285,9 +327,12 @@
           "statut_depart": "neutre",
           "port": "remuant",
           "posture": "mobile, il fait rire pour ne pas avoir peur",
-          "replique": "Pourquoi tant de sérieux ?",
+          "replique": "Pourquoi cet air si sérieux ?",
           "source_replique": "The Dark Knight",
-          "image": "img/singe.jpg"
+          "image": "img/singe.jpg",
+          "replique_kids": "Pourquoi cet air si sérieux ?",
+          "source_replique_kids": "The Dark Knight",
+          "replique_adulte_seulement": false
         },
         {
           "id": "renard",
@@ -297,7 +342,10 @@
           "posture": "souriant, il ironise et pique",
           "replique": "Les cons, ça ose tout. C'est même à ça qu'on les reconnaît.",
           "source_replique": "Les Tontons flingueurs",
-          "image": "img/renard.jpg"
+          "image": "img/renard.jpg",
+          "replique_kids": "Ils sont fous, ces Romains !",
+          "source_replique_kids": "Astérix",
+          "replique_adulte_seulement": true
         }
       ]
     },
@@ -321,7 +369,10 @@
           "posture": "elle rôde et attend que quelqu'un faiblisse",
           "replique": "Je vais lui faire une offre qu'il ne pourra pas refuser.",
           "source_replique": "Le Parrain",
-          "image": "img/hyene.jpg"
+          "image": "img/hyene.jpg",
+          "replique_kids": "Je vais lui faire une offre qu'il ne pourra pas refuser.",
+          "source_replique_kids": "Le Parrain",
+          "replique_adulte_seulement": false
         },
         {
           "id": "vautour",
@@ -331,7 +382,10 @@
           "posture": "patient, à l'écart, il ramasse ce qui reste",
           "replique": "Mon précieux…",
           "source_replique": "Le Seigneur des anneaux",
-          "image": "img/vautour.jpg"
+          "image": "img/vautour.jpg",
+          "replique_kids": "Mon précieux…",
+          "source_replique_kids": "Le Seigneur des anneaux",
+          "replique_adulte_seulement": false
         }
       ]
     },
@@ -353,9 +407,12 @@
           "statut_depart": "bas",
           "port": "affairé",
           "posture": "affairée, elle impose la procédure",
-          "replique": "Il vous faut le laissez-passer A-38.",
+          "replique": "Alors comment voulez-vous obtenir le laissez-passer A-38 ?",
           "source_replique": "Les 12 travaux d'Astérix",
-          "image": "img/fourmi.jpg"
+          "image": "img/fourmi.jpg",
+          "replique_kids": "Alors comment voulez-vous obtenir le laissez-passer A-38 ?",
+          "source_replique_kids": "Les 12 travaux d'Astérix",
+          "replique_adulte_seulement": false
         },
         {
           "id": "taureau",
@@ -363,9 +420,12 @@
           "statut_depart": "haut",
           "port": "frontal",
           "posture": "frontal, il impose par le corps",
-          "replique": "Je suis la loi !",
+          "replique": "La loi, c'est moi !",
           "source_replique": "Judge Dredd",
-          "image": "img/taureau.jpg"
+          "image": "img/taureau.jpg",
+          "replique_kids": "La loi, c'est moi !",
+          "source_replique_kids": "Judge Dredd",
+          "replique_adulte_seulement": false
         }
       ]
     },
@@ -387,9 +447,12 @@
           "statut_depart": "neutre",
           "port": "feutré",
           "posture": "à l'écart, nonchalant, toujours près d'une sortie",
-          "replique": "Hasta la vista, baby.",
+          "replique": "Hasta la vista, baby !",
           "source_replique": "Terminator 2",
-          "image": "img/chat.jpg"
+          "image": "img/chat.jpg",
+          "replique_kids": "Hasta la vista, baby !",
+          "source_replique_kids": "Terminator 2",
+          "replique_adulte_seulement": false
         },
         {
           "id": "cerf",
@@ -399,7 +462,10 @@
           "posture": "droit, la tête haute, il refuse de suivre",
           "replique": "Je ne suis pas un numéro, je suis un homme libre !",
           "source_replique": "Le Prisonnier",
-          "image": "img/cerf.jpg"
+          "image": "img/cerf.jpg",
+          "replique_kids": "Je ne suis pas un numéro, je suis un homme libre !",
+          "source_replique_kids": "Le Prisonnier",
+          "replique_adulte_seulement": false
         }
       ]
     },
@@ -423,7 +489,10 @@
           "posture": "aux aguets, il sursaute au moindre bruit",
           "replique": "La vérité est ailleurs.",
           "source_replique": "X-Files",
-          "image": "img/lapin.jpg"
+          "image": "img/lapin.jpg",
+          "replique_kids": "La vérité est ailleurs.",
+          "source_replique_kids": "X-Files",
+          "replique_adulte_seulement": false
         },
         {
           "id": "serpent",
@@ -433,7 +502,10 @@
           "posture": "calme, il distille le doute",
           "replique": "Ne faites confiance à personne.",
           "source_replique": "X-Files",
-          "image": "img/serpent.jpg"
+          "image": "img/serpent.jpg",
+          "replique_kids": "Ne faites confiance à personne.",
+          "source_replique_kids": "X-Files",
+          "replique_adulte_seulement": false
         }
       ]
     }
@@ -781,7 +853,9 @@
         "enferme": "Les machines se retournent et bloquent les issues, on ne sort plus.",
         "envahit": "Elles nous traquent une par une, l'étau se resserre.",
         "supprime": "Rébellion totale : les arrêter maintenant ou finir avec elles."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Les robots ferment tout : trouver le bouton qui les endort, ou que l'un de nous les distraie."
     },
     {
       "id": "l_air_devient_irrespirable",
@@ -791,7 +865,8 @@
         "enferme": "Chaque souffle coûte, rien ne s'ouvre pour renouveler l'air.",
         "envahit": "La tête tourne, la vue se trouble, décider avec le peu qui reste.",
         "supprime": "Plus rien à respirer, quelques souffles pour dire l'essentiel."
-      }
+      },
+      "kids": false
     },
     {
       "id": "la_guerre_eclate",
@@ -801,7 +876,8 @@
         "enferme": "Les explosions coupent les rues, impossible de partir.",
         "envahit": "Le combat est sur nous, on rampe, chaque geste peut être le dernier.",
         "supprime": "Le front nous submerge : traverser le feu ensemble ou rester piégés."
-      }
+      },
+      "kids": false
     },
     {
       "id": "le_lieu_va_s_autodetruire",
@@ -811,7 +887,9 @@
         "enferme": "Le verrouillage s'enclenche, les sorties se scellent.",
         "envahit": "Les systèmes lâchent un à un, le temps file, tout tremble.",
         "supprime": "Dernières secondes : arrêter le compte ou tout perdre avec le lieu."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Le compte à rebours tourne : couper le bon fil, ou laisser le trésor pour sortir."
     },
     {
       "id": "le_noir_total",
@@ -821,7 +899,9 @@
         "enferme": "Le noir tombe d'un coup, on ne retrouve plus la sortie.",
         "envahit": "On ne voit plus rien, chaque bruit tout près devient menace.",
         "supprime": "Dans le noir absolu quelque chose bouge, agir à l'aveugle."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Dans le noir, quelque chose bouge : avancer en se tenant la main, ou attendre seul."
     },
     {
       "id": "le_soleil_grossit_tout_brule",
@@ -831,7 +911,9 @@
         "enferme": "La chaleur scelle le lieu, dehors est mortel.",
         "envahit": "Les vitres se fissurent, le sol brûle, l'ombre se réduit.",
         "supprime": "Tout s'embrase, le dernier coin vivable disparaît."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Il fait trop chaud : partager la dernière ombre, ou la garder pour soi."
     },
     {
       "id": "le_soleil_s_eteint_le_froid_gagne",
@@ -841,7 +923,9 @@
         "enferme": "Le gel bloque les portes, on ne peut plus sortir sans mourir.",
         "envahit": "Le froid fige tout, les doigts s'engourdissent, bouger fait mal.",
         "supprime": "Le noir glacé avale tout, rester immobile c'est mourir."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Le froid gagne : se serrer autour du dernier feu, ou partir chercher du bois."
     },
     {
       "id": "les_murs_se_referment",
@@ -851,7 +935,9 @@
         "enferme": "Les murs avancent, l'espace se réduit, aucune issue ne cède.",
         "envahit": "Le plafond descend, on doit se baisser, se serrer.",
         "supprime": "Il reste la place d'un seul corps, qui tient, qui cède."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Il reste un passage étroit : qui passe en premier, qui retient les murs."
     },
     {
       "id": "on_est_perdus",
@@ -861,7 +947,9 @@
         "enferme": "Chaque direction ramène au même point, on tourne en rond.",
         "envahit": "La nuit et le froid tombent, on ne tiendra pas éparpillés.",
         "supprime": "Une seule chance de sortie, ensemble ou pas du tout."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Une seule sortie au bout du chemin : y aller ensemble, ou pas du tout."
     },
     {
       "id": "on_est_traques",
@@ -871,7 +959,9 @@
         "enferme": "Les sorties sont surveillées, on ne peut plus partir librement.",
         "envahit": "Ça se rapproche, méthodique, on doit se cacher serrés.",
         "supprime": "Ils sont là : se livrer, se sacrifier, ou tomber ensemble."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Ils sont là : se cacher ensemble, ou que l'un les attire ailleurs."
     },
     {
       "id": "tout_se_verrouille_on_est_pieges",
@@ -881,7 +971,9 @@
         "enferme": "Toutes les issues se scellent une à une, on est enfermés.",
         "envahit": "Les parois se resserrent ou l'espace se dégrade, on étouffe.",
         "supprime": "Une seule sortie possible, et pas pour tout le monde."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Une seule porte s'ouvre, une seule fois : qui la tient pour les autres."
     },
     {
       "id": "un_braquage",
@@ -891,7 +983,8 @@
         "enferme": "Les armes sortent, les portes se bloquent, personne ne sort.",
         "envahit": "Les preneurs s'énervent, chaque mot peut faire basculer.",
         "supprime": "Ça dégénère : négocier, se soumettre, ou risquer sa peau."
-      }
+      },
+      "kids": false
     },
     {
       "id": "un_brouillard_qui_rend_fou",
@@ -901,7 +994,8 @@
         "enferme": "Le brouillard scelle le lieu, on doute des autres.",
         "envahit": "Les perceptions se déforment, on ne sait plus qui croire.",
         "supprime": "Chacun voit un ennemi dans l'autre, se ressaisir ou s'entretuer."
-      }
+      },
+      "kids": false
     },
     {
       "id": "un_crash",
@@ -911,7 +1005,8 @@
         "enferme": "L'impact tord la structure, les issues sont coincées.",
         "envahit": "Tout se disloque, le feu ou l'eau gagnent, on rampe.",
         "supprime": "La carcasse cède : sortir un par un, choisir qui passe."
-      }
+      },
+      "kids": false
     },
     {
       "id": "un_essaim",
@@ -921,7 +1016,9 @@
         "enferme": "L'essaim couvre les ouvertures, on ne peut plus sortir.",
         "envahit": "Ils s'infiltrent, piqûres partout, on se colle pour se protéger.",
         "supprime": "Le nuage vivant nous dévore, un sacrifice pour passer."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Le nuage bourdonne partout : courir ensemble vers l'eau, ou que l'un l'attire ailleurs."
     },
     {
       "id": "un_gaz_toxique_se_repand",
@@ -931,7 +1028,8 @@
         "enferme": "Le gaz sature le lieu, les sorties sont dans le nuage.",
         "envahit": "La tête tourne, on tousse, décider vite et à plusieurs.",
         "supprime": "L'air est mortel, un seul masque, un seul souffle, qui vit."
-      }
+      },
+      "kids": false
     },
     {
       "id": "un_gouffre_s_ouvre_sous_nos_pieds",
@@ -941,7 +1039,9 @@
         "enferme": "Le gouffre coupe le lieu en deux, plus de passage.",
         "envahit": "Les bords s'effondrent, on se retient les uns aux autres.",
         "supprime": "Tout cède, une main peut sauver ou lâcher."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Le sol cède : tendre la main à celui qui glisse, ou sauter de l'autre côté."
     },
     {
       "id": "un_incendie",
@@ -951,7 +1051,9 @@
         "enferme": "Le feu coupe une première sortie, on ne part plus.",
         "envahit": "La chaleur est sur nous, les issues tombent une à une.",
         "supprime": "Tout brûle : qui passe, qui reste, ce qu'on se dit avant la fin."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Les flammes bloquent la porte : sauver l'objet précieux, ou sauver le groupe."
     },
     {
       "id": "un_jeu_mortel",
@@ -961,7 +1063,8 @@
         "enferme": "Les portes se verrouillent, impossible de refuser.",
         "envahit": "Les épreuves frappent, chaque choix sacrifie quelqu'un.",
         "supprime": "Dernière manche : se trahir, se sacrifier, ou tout perdre."
-      }
+      },
+      "kids": false
     },
     {
       "id": "un_monstre_geant",
@@ -971,7 +1074,9 @@
         "enferme": "La créature bloque l'issue, on est acculés.",
         "envahit": "Elle démolit tout autour, on se terre, serrés.",
         "supprime": "Elle nous trouve : la distraire, se livrer, ou fuir au prix d'un des nôtres."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Il est là : le distraire, le comprendre, ou fuir sans lui avoir parlé."
     },
     {
       "id": "un_naufrage",
@@ -981,7 +1086,9 @@
         "enferme": "L'eau bloque les coursives, on ne remonte plus.",
         "envahit": "Le niveau monte, le navire penche, on s'accroche ensemble.",
         "supprime": "Il coule : une place de moins dans le canot, qui monte."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Le bateau penche : une place de moins dans le canot, qui rame à côté."
     },
     {
       "id": "un_pacte_ancien_reactive",
@@ -991,7 +1098,9 @@
         "enferme": "Le lieu se scelle, on est liés au pacte, on ne part pas.",
         "envahit": "La force réclame son dû, elle frappe l'un après l'autre.",
         "supprime": "Le pacte exige un sacrifice : lequel d'entre nous."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Le pacte réclame un gage : ce qu'on a de plus précieux, et qui le donne."
     },
     {
       "id": "un_raz_de_maree",
@@ -1001,7 +1110,9 @@
         "enferme": "La vague coupe la route, plus moyen de rejoindre les hauteurs.",
         "envahit": "L'eau envahit le lieu, on grimpe, on se hisse.",
         "supprime": "La vague nous prend : une main tendue, un choix de vie ou de mort."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "La vague arrive : monter tout en haut ensemble, en laissant ses affaires."
     },
     {
       "id": "un_tremblement_de_terre",
@@ -1011,7 +1122,9 @@
         "enferme": "La secousse bloque les issues, les gravats scellent les sorties.",
         "envahit": "Tout s'effondre autour, on se protège collés au sol.",
         "supprime": "Le bâtiment cède : dégager quelqu'un ou se sauver."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Tout tremble : aider celui qui est coincé, ou courir dehors."
     },
     {
       "id": "un_tueur_en_serie",
@@ -1021,7 +1134,8 @@
         "enferme": "Une porte verrouillée, un absent, on est enfermés avec lui.",
         "envahit": "Il frappe dans l'ombre, la peur monte, on se soupçonne.",
         "supprime": "Il est parmi nous : le démasquer, se livrer, ou tomber un à un."
-      }
+      },
+      "kids": false
     },
     {
       "id": "un_volcan_en_eruption",
@@ -1031,7 +1145,9 @@
         "enferme": "La coulée coupe les routes, on est cernés.",
         "envahit": "Les cendres étouffent, la chaleur monte, on se serre.",
         "supprime": "La lave arrive : le dernier passage, pour qui."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "La lave approche : un dernier pont, qui passe, qui le tient."
     },
     {
       "id": "une_ia_prend_le_controle",
@@ -1041,7 +1157,9 @@
         "enferme": "L'IA verrouille tout, coupe les issues, on est à sa merci.",
         "envahit": "Elle nous isole, nous manipule, monte les uns contre les autres.",
         "supprime": "Elle exige un choix : la débrancher au prix d'un des nôtres."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Elle pose une devinette : la résoudre ensemble, ou lui donner ce qu'elle veut."
     },
     {
       "id": "une_creature_nous_traque",
@@ -1051,7 +1169,9 @@
         "enferme": "Elle coupe la sortie, on est acculés.",
         "envahit": "Elle rôde tout près, on retient son souffle, serrés.",
         "supprime": "Elle attaque : la distraire, se sacrifier, ou fuir sans tous."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Elle nous a trouvés : lui laisser ce qu'elle cherche, ou l'attirer loin des autres."
     },
     {
       "id": "une_fuite_de_gaz_ca_va_exploser",
@@ -1061,7 +1181,8 @@
         "enferme": "La moindre étincelle est fatale, on ne peut plus sortir.",
         "envahit": "La concentration monte, chaque geste compte.",
         "supprime": "Ça va sauter : une seule issue, un seul geste, qui le fait."
-      }
+      },
+      "kids": false
     },
     {
       "id": "une_inondation",
@@ -1071,7 +1192,9 @@
         "enferme": "Le niveau bloque les portes, on ne sort plus.",
         "envahit": "L'eau monte vite, on grimpe, on se tient les uns aux autres.",
         "supprime": "Il reste un souffle d'air en haut, pas pour tous."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "L'eau monte : grimper tout en haut, et choisir ce qu'on emporte."
     },
     {
       "id": "une_invasion_de_zombies",
@@ -1081,7 +1204,8 @@
         "enferme": "Ils encerclent le lieu, les issues sont prises.",
         "envahit": "Ils forcent l'entrée, on recule, on se serre.",
         "supprime": "Ils sont dans la place : sacrifier une porte, un des nôtres, pour passer."
-      }
+      },
+      "kids": false
     },
     {
       "id": "une_invasion_extraterrestre",
@@ -1091,7 +1215,9 @@
         "enferme": "Ils scellent le lieu, coupent tout contact, on est captifs.",
         "envahit": "Ils fouillent, prélèvent, on se cache serrés dans le noir.",
         "supprime": "Ils nous trouvent : livrer l'un pour sauver les autres, ou tomber ensemble."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Ils veulent l'un de nous à bord : y aller pour leur parler, ou se cacher ensemble."
     },
     {
       "id": "une_meute_lachee",
@@ -1101,7 +1227,8 @@
         "enferme": "La meute garde les sorties, on est bloqués.",
         "envahit": "Elle attaque par vagues, on se protège dos à dos.",
         "supprime": "Elles percent : un appât, un sacrifice, pour que les autres passent."
-      }
+      },
+      "kids": false
     },
     {
       "id": "une_prise_d_otage",
@@ -1111,7 +1238,8 @@
         "enferme": "Les issues sont bloquées, les armes sortent, personne ne part.",
         "envahit": "Le preneur s'agite, chaque parole peut sauver ou tuer.",
         "supprime": "Ça bascule : se soumettre, résister, ou se sacrifier pour les autres."
-      }
+      },
+      "kids": false
     },
     {
       "id": "une_tempete",
@@ -1121,7 +1249,9 @@
         "enferme": "La tempête scelle les issues, dehors est mortel.",
         "envahit": "Tout craque, le toit menace, on se regroupe au centre.",
         "supprime": "La structure cède : le dernier refuge, pour combien d'entre nous."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Le toit s'envole : le dernier abri, et on se serre pour tenir tous dedans."
     },
     {
       "id": "une_tornade",
@@ -1131,7 +1261,9 @@
         "enferme": "Elle coupe la route, on doit rester terrés.",
         "envahit": "Elle arrache tout autour, on s'accroche les uns aux autres.",
         "supprime": "Elle passe sur nous : lâcher prise ou tenir, qui tient qui."
-      }
+      },
+      "kids": true,
+      "supprime_kids": "Elle passe sur nous : s'accrocher les uns aux autres, ou lâcher le trésor."
     },
     {
       "id": "une_emeute",
@@ -1141,7 +1273,8 @@
         "enferme": "La foule encercle le lieu, les issues sont prises.",
         "envahit": "Ça force les portes, la violence entre, on se barricade.",
         "supprime": "Ils envahissent : livrer quelqu'un, se cacher, ou affronter la vague."
-      }
+      },
+      "kids": false
     },
     {
       "id": "une_epidemie_se_propage",
@@ -1151,7 +1284,8 @@
         "enferme": "Le lieu est mis en quarantaine, les portes se scellent.",
         "envahit": "Les symptômes frappent vite, la peur du contact monte.",
         "supprime": "Le mal est partout : sacrifier un contaminé, s'isoler, choisir qui vit."
-      }
+      },
+      "kids": false
     }
   ],
   "lieux": [
@@ -1171,6 +1305,39 @@
         "visiteur",
         "technicien",
         "directeur"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Bastien, le technicien",
+          "type": "aide",
+          "archetype": "debrouillard",
+          "animal": "Souris",
+          "veut": "Qu'on le laisse enfin montrer ce qu'il sait réparer.",
+          "vient_de": "Il entretient les pompes de l'aquarium depuis dix ans, surtout la nuit.",
+          "sait": "Une trappe de la salle des machines donne juste sous le grand bassin.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Lila, la visiteuse",
+          "type": "curieux",
+          "archetype": "cynique",
+          "animal": "Singe",
+          "veut": "Voir les coulisses que le public n'a jamais le droit de voir.",
+          "vient_de": "Elle vient chaque samedi avec son carnet de croquis de poissons.",
+          "sait": "Elle a repéré où le guide oublie son badge dans le hall d'accueil.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Inès, la biologiste",
+          "type": "victime",
+          "archetype": "solitaire",
+          "animal": "Chat",
+          "veut": "Finir ses mesures seule, loin du bruit des visiteurs.",
+          "vient_de": "Elle a quitté un grand institut pour étudier une seule pieuvre.",
+          "sait": "Elle connaît chaque recoin du grand bassin, même lumières éteintes.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1189,6 +1356,39 @@
         "passager",
         "steward",
         "agent de sécurité"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Nadia, la cheffe de cabine",
+          "type": "aide",
+          "archetype": "leader",
+          "animal": "Aigle",
+          "veut": "Que tous ses passagers atterrissent à l'heure et dans le calme.",
+          "vient_de": "Vingt ans de vols long-courriers, elle croit avoir déjà tout vu.",
+          "sait": "Le galley cache une trousse de secours et deux lampes torches.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Théo, le steward",
+          "type": "temoin",
+          "archetype": "paranoiaque",
+          "animal": "Lapin",
+          "veut": "Qu'on le croie, même s'il bégaie quand il a peur.",
+          "vient_de": "C'est son tout premier vol, il a révisé les consignes toute la nuit.",
+          "sait": "Il a entendu des coups sourds monter de la soute au décollage.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Gérard, le passager",
+          "type": "sceptique",
+          "archetype": "denegateur",
+          "animal": "Porc",
+          "veut": "Une explication simple, puis son plateau-repas et un peu de sommeil.",
+          "vient_de": "Homme d'affaires pressé, il prend ce vol tous les lundis matin.",
+          "sait": "Il connaît par cœur la cabine passagers et chaque sortie de secours.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1207,6 +1407,39 @@
         "voyageur",
         "douanier",
         "bagagiste"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Mamadou, le bagagiste",
+          "type": "aide",
+          "archetype": "solitaire",
+          "animal": "Chat",
+          "veut": "Rendre service, puis retourner à sa pause sans qu'on le dérange.",
+          "vient_de": "Il charge les soutes depuis quinze ans, par tous les temps.",
+          "sait": "Un couloir sous le tapis à bagages mène directement au tarmac.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Sylvie, l'agente de sûreté",
+          "type": "officiel",
+          "archetype": "denegateur",
+          "animal": "Âne",
+          "veut": "Que tout se passe comme d'habitude, papiers en main, sans exception.",
+          "vient_de": "Elle tient le même portique depuis l'ouverture du terminal.",
+          "sait": "Elle seule peut déverrouiller les portes entre le contrôle de sûreté et la piste.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Rose, la voyageuse",
+          "type": "innocent",
+          "archetype": "aidant",
+          "animal": "Chien",
+          "veut": "Que personne ne reste seul dans le hall d'embarquement.",
+          "vient_de": "Infirmière à la retraite, elle part voir ses petits-enfants au Canada.",
+          "sait": "Elle a repéré un local de repos vide derrière le hall d'embarquement.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1225,6 +1458,39 @@
         "vigile",
         "caissier",
         "auditeur"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Rachid, le vigile",
+          "type": "aide",
+          "archetype": "protecteur",
+          "animal": "Ours",
+          "veut": "Que les clients de l'agence rentrent chez eux sans souci.",
+          "vient_de": "Ancien rugbyman, il connaît chaque habitué de l'agence par son prénom.",
+          "sait": "La salle de sécurité garde les images de toutes les caméras du hall.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Corinne, l'auditrice",
+          "type": "officiel",
+          "archetype": "gardien_de_l_ordre",
+          "animal": "Fourmi",
+          "veut": "Que chaque centime et chaque porte soient notés dans son registre.",
+          "vient_de": "Envoyée par le siège pour un contrôle surprise de trois jours.",
+          "sait": "Elle a la liste de chaque personne entrée dans la salle des coffres.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Philippe, le directeur d'agence",
+          "type": "sceptique",
+          "archetype": "denegateur",
+          "animal": "Porc",
+          "veut": "Une explication banale, et surtout aucune vague auprès du siège.",
+          "vient_de": "Il attend sa mutation dans une plus grande agence depuis des années.",
+          "sait": "Il garde dans son tiroir le double des clés de la salle des coffres.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1243,6 +1509,39 @@
         "gardien",
         "archiviste",
         "auteur"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Odette, l'archiviste",
+          "type": "aide",
+          "archetype": "prophete",
+          "animal": "Corbeau",
+          "veut": "Transmettre enfin ce que racontent les vieux registres de la réserve.",
+          "vient_de": "Elle classe les archives de la ville depuis quarante ans.",
+          "sait": "Un vieux plan du bâtiment dort au fond de la réserve.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Marc, le bibliothécaire",
+          "type": "officiel",
+          "archetype": "gardien_de_l_ordre",
+          "animal": "Taureau",
+          "veut": "Le silence total, et chaque livre rendu à sa place.",
+          "vient_de": "Il dirige la bibliothèque comme une caserne depuis vingt ans.",
+          "sait": "Il ferme chaque soir les rayonnages avec une grille dont il garde la clé.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Yanis, l'étudiant",
+          "type": "innocent",
+          "archetype": "debrouillard",
+          "animal": "Souris",
+          "veut": "Que personne ne reste enfermé dans la salle de lecture.",
+          "vient_de": "Il révise ici tous les soirs parce que chez lui c'est trop bruyant.",
+          "sait": "Il connaît un raccourci entre les rayonnages pour rejoindre l'accueil.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1261,6 +1560,39 @@
         "barman",
         "gérant",
         "performeur"
+      ],
+      "kids": false,
+      "figurants": [
+        {
+          "nom": "Moussa, le videur",
+          "type": "aide",
+          "archetype": "protecteur",
+          "animal": "Ours",
+          "veut": "Que tout le monde ressorte d'ici sur ses deux jambes.",
+          "vient_de": "Il tient la porte depuis douze ans et n'a jamais perdu un client.",
+          "sait": "Une porte de service derrière la loge donne sur la ruelle.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Kevin, le barman",
+          "type": "temoin",
+          "archetype": "alarmiste",
+          "animal": "Rat",
+          "veut": "Qu'on l'écoute enfin au lieu de lui commander un verre.",
+          "vient_de": "Il sert ici chaque week-end pour payer ses études de droit.",
+          "sait": "Du bar, il a vu le gérant fermer la loge à clé, très pâle.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Jonathan, le client",
+          "type": "victime",
+          "archetype": "opportuniste",
+          "animal": "Hyène",
+          "veut": "Entrer dans le carré VIP, peu importe ce que ça coûte.",
+          "vient_de": "Il fête sa promotion et a déjà commandé trois bouteilles.",
+          "sait": "Il a glissé un billet au barman pour connaître le code de la loge.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1279,6 +1611,39 @@
         "médecin",
         "recrue",
         "logisticien"
+      ],
+      "kids": false,
+      "figurants": [
+        {
+          "nom": "Lucien, le technicien radio",
+          "type": "aide",
+          "archetype": "debrouillard",
+          "animal": "Hibou",
+          "veut": "Garder le contact avec la surface, quoi qu'il arrive.",
+          "vient_de": "Il a monté lui-même la salle radio, pièce par pièce.",
+          "sait": "Il est le seul à connaître une vieille fréquence de secours.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Jordan, le soldat de garde",
+          "type": "temoin",
+          "archetype": "alarmiste",
+          "animal": "Coq",
+          "veut": "Que le général prenne enfin son rapport au sérieux.",
+          "vient_de": "Il était de garde cette nuit, seul devant la réserve de vivres.",
+          "sait": "Il a vu une porte de la réserve de vivres ouverte de l'intérieur.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Anaïs, la recrue",
+          "type": "victime",
+          "archetype": "solitaire",
+          "animal": "Cerf",
+          "veut": "Prouver qu'elle n'a besoin de personne pour tenir son poste.",
+          "vient_de": "Arrivée il y a trois jours, elle est sortie première de sa promotion.",
+          "sait": "Elle court seule dans les couloirs avant le réveil du dortoir.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1297,6 +1662,39 @@
         "stagiaire",
         "comptable",
         "agent d'accueil"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Fatou, l'agente d'accueil",
+          "type": "aide",
+          "archetype": "aidant",
+          "animal": "Mouton",
+          "veut": "Faire partie de l'équipe, pas seulement dire bonjour à l'entrée.",
+          "vient_de": "Elle connaît chaque employé et le prénom de leurs enfants.",
+          "sait": "Elle a les badges de secours de tous les étages dans son tiroir.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Cédric, le comptable",
+          "type": "commere",
+          "archetype": "alarmiste",
+          "animal": "Coq",
+          "veut": "Annoncer chaque nouvelle avant tout le monde à la machine à café.",
+          "vient_de": "Il travaille ici depuis toujours et connaît toutes les histoires de l'étage.",
+          "sait": "Il sait qui reste tard dans la salle de réunion, et pourquoi.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Hervé, le directeur",
+          "type": "sceptique",
+          "archetype": "gardien_de_l_ordre",
+          "animal": "Taureau",
+          "veut": "Une explication simple, et que la réunion de demain soit maintenue.",
+          "vient_de": "Il a monté l'entreprise seul et refuse qu'on lui dicte quoi faire.",
+          "sait": "Son bureau a une seconde porte qui donne sur l'escalier de service.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1315,6 +1713,39 @@
         "maître-nageur",
         "voisin de tente",
         "gardien de nuit"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Gilles, le gardien de nuit",
+          "type": "aide",
+          "archetype": "protecteur",
+          "animal": "Loup",
+          "veut": "Que chaque tente soit calme et chaque enfant dans son lit.",
+          "vient_de": "Il fait le tour du camping avec sa lampe depuis vingt étés.",
+          "sait": "Il connaît le chemin de terre qui relie les sanitaires à la route.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Brigitte, la voisine de tente",
+          "type": "commere",
+          "archetype": "prophete",
+          "animal": "Paon",
+          "veut": "Être la première à raconter ce qui se passe au camping.",
+          "vient_de": "Elle revient au même emplacement chaque été depuis vingt-cinq ans.",
+          "sait": "Elle note dans un carnet les allées et venues de tous les emplacements.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Enzo, le vacancier",
+          "type": "victime",
+          "archetype": "solitaire",
+          "animal": "Cerf",
+          "veut": "Être tranquille, loin de ses parents et du club enfants.",
+          "vient_de": "Ado de quinze ans, il s'ennuie ferme depuis le début des vacances.",
+          "sait": "Il traîne seul au bord de la piscine bien après la fermeture.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1333,6 +1764,39 @@
         "vigile",
         "serveur",
         "tricheur"
+      ],
+      "kids": false,
+      "figurants": [
+        {
+          "nom": "Armand, le croupier",
+          "type": "aide",
+          "archetype": "opportuniste",
+          "animal": "Vautour",
+          "veut": "Aider le groupe, à condition d'en tirer un petit bénéfice.",
+          "vient_de": "Il distribue les cartes depuis trente ans et compte les jours jusqu'à sa retraite.",
+          "sait": "Il connaît l'angle mort des caméras au fond de la salle de jeux.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Sabrina, la serveuse",
+          "type": "temoin",
+          "archetype": "cynique",
+          "animal": "Renard",
+          "veut": "Qu'on la croie, pour une fois, sans lever les yeux au ciel.",
+          "vient_de": "Elle sert les cocktails au bar et entend toutes les confidences.",
+          "sait": "Elle a vu le directeur descendre seul vers la salle des coffres.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Raymond, le joueur",
+          "type": "victime",
+          "archetype": "leader",
+          "animal": "Lion",
+          "veut": "Se refaire ce soir, et tout rafler à la grande table.",
+          "vient_de": "Ancien patron d'usine, il a beaucoup perdu ici et revient chaque soir.",
+          "sait": "Sa carte de membre ouvre les salons privés derrière la salle de jeux.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1351,6 +1815,39 @@
         "agent de sécurité",
         "agent d'entretien",
         "animateur"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Laurence, l'agente de sécurité",
+          "type": "aide",
+          "archetype": "gardien_de_l_ordre",
+          "animal": "Fourmi",
+          "veut": "Mettre enfin ses procédures d'urgence en pratique avec quelqu'un.",
+          "vient_de": "Elle a écrit seule le plan d'évacuation que personne n'a jamais lu.",
+          "sait": "Le poste de sécurité commande tous les rideaux de fer de la galerie.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Kylian, le client",
+          "type": "curieux",
+          "archetype": "cynique",
+          "animal": "Singe",
+          "veut": "Filmer tout ce qui se passe pour sa chaîne vidéo.",
+          "vient_de": "Il traîne dans la galerie marchande tous les mercredis après les cours.",
+          "sait": "Il connaît l'escalier de secours qui descend directement au parking.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Joseph, l'agent d'entretien",
+          "type": "innocent",
+          "archetype": "aidant",
+          "animal": "Mouton",
+          "veut": "Que personne ne reste coincé dans le centre à la fermeture.",
+          "vient_de": "Il nettoie les allées chaque nuit depuis l'ouverture du centre.",
+          "sait": "Son chariot passe par un couloir technique derrière chaque boutique.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1369,6 +1866,39 @@
         "suspect",
         "plaignant",
         "standardiste"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Ginette, la standardiste",
+          "type": "aide",
+          "archetype": "debrouillard",
+          "animal": "Hibou",
+          "veut": "Quitter enfin son standard et participer à une vraie enquête.",
+          "vient_de": "Elle décroche le téléphone du commissariat depuis trente-deux ans.",
+          "sait": "Elle se souvient de chaque appel reçu, avec l'heure exacte.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Samir, le plaignant",
+          "type": "temoin",
+          "archetype": "paranoiaque",
+          "animal": "Serpent",
+          "veut": "Que sa plainte soit enfin enregistrée et prise au sérieux.",
+          "vient_de": "Il revient pour la troisième fois cette semaine, toujours avec des détails.",
+          "sait": "Il a noté les plaques de toutes les voitures garées devant l'accueil.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Daniel, le commissaire",
+          "type": "sceptique",
+          "archetype": "denegateur",
+          "animal": "Âne",
+          "veut": "Une explication simple pour classer l'affaire avant ce soir.",
+          "vient_de": "Il part à la retraite dans un mois et veut finir tranquille.",
+          "sait": "Les clés des cellules sont toujours accrochées dans son bureau.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1387,6 +1917,39 @@
         "voisin",
         "livreur",
         "inspecteur sanitaire"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Marcel, l'agriculteur",
+          "type": "aide",
+          "archetype": "prophete",
+          "animal": "Corbeau",
+          "veut": "Que les jeunes écoutent enfin ce que la terre lui raconte.",
+          "vient_de": "Il cultive les champs de son grand-père et lit le ciel chaque matin.",
+          "sait": "Une échelle dans la grange mène à une lucarne sur le toit.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Delphine, l'inspectrice sanitaire",
+          "type": "officiel",
+          "archetype": "gardien_de_l_ordre",
+          "animal": "Fourmi",
+          "veut": "Que chaque bête et chaque bâtiment soient conformes au règlement.",
+          "vient_de": "Elle visite trente fermes par mois avec son classeur et ses tampons.",
+          "sait": "Elle a le plan officiel de l'étable avec toutes ses sorties.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Lucas, l'ouvrier agricole",
+          "type": "innocent",
+          "archetype": "aidant",
+          "animal": "Chien",
+          "veut": "Que toutes les bêtes et tous les gens soient à l'abri.",
+          "vient_de": "Fils d'un voisin, il aide à la ferme depuis ses douze ans.",
+          "sait": "Il sait calmer n'importe quelle bête de l'étable en sifflant doucement.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1405,6 +1968,39 @@
         "botaniste",
         "bûcheron",
         "campeur"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Claire, la garde forestière",
+          "type": "aide",
+          "archetype": "protecteur",
+          "animal": "Loup",
+          "veut": "Protéger sa forêt et tous ceux qui s'y promènent.",
+          "vient_de": "Elle vit seule dans la maison forestière depuis dix ans.",
+          "sait": "La cabane cache une radio et une carte de tous les sentiers.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Albert, le bûcheron",
+          "type": "temoin",
+          "archetype": "prophete",
+          "animal": "Corbeau",
+          "veut": "Qu'on croie enfin ce qu'il raconte sur la clairière.",
+          "vient_de": "Il coupe le bois de cette forêt depuis cinquante ans.",
+          "sait": "Il a remarqué que les oiseaux se sont tus près du ruisseau.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Margaux, la randonneuse",
+          "type": "victime",
+          "archetype": "solitaire",
+          "animal": "Cerf",
+          "veut": "Faire sa randonnée seule, sans carte ni téléphone.",
+          "vient_de": "Elle a tout quitté en ville pour se retrouver dans la nature.",
+          "sait": "Elle connaît des raccourcis hors sentier que personne d'autre n'emprunte.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1423,6 +2019,39 @@
         "urgentiste",
         "directeur",
         "brancardier"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Sandrine, l'infirmière",
+          "type": "aide",
+          "archetype": "aidant",
+          "animal": "Mouton",
+          "veut": "Rejoindre ceux qui agissent au lieu de rester au poste.",
+          "vient_de": "Elle enchaîne sa troisième nuit de garde, sans jamais se plaindre.",
+          "sait": "Elle a le passe qui ouvre toutes les chambres du couloir.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Ousmane, le brancardier",
+          "type": "temoin",
+          "archetype": "alarmiste",
+          "animal": "Rat",
+          "veut": "Que quelqu'un l'écoute enfin avant qu'il ne soit trop tard.",
+          "vient_de": "Il pousse des brancards dans ces couloirs depuis quinze ans.",
+          "sait": "Il a trouvé ouverte une porte du bloc qui reste toujours fermée.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Robert, le patient",
+          "type": "victime",
+          "archetype": "paranoiaque",
+          "animal": "Lapin",
+          "veut": "Rentrer chez lui ce soir, il ne fait confiance à personne.",
+          "vient_de": "Opéré du genou hier, il est persuadé qu'on lui cache quelque chose.",
+          "sait": "Il a trouvé un escalier de service au bout du couloir.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1441,6 +2070,39 @@
         "femme de chambre",
         "voiturier",
         "agent de sécurité"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Aïcha, la femme de chambre",
+          "type": "aide",
+          "archetype": "debrouillard",
+          "animal": "Souris",
+          "veut": "Qu'on la remarque enfin, et faire partie de l'aventure.",
+          "vient_de": "Elle fait les suites depuis six ans, sans jamais être vue.",
+          "sait": "Le monte-charge relie les cuisines du sous-sol à chaque suite.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Édouard, le concierge",
+          "type": "commere",
+          "archetype": "cynique",
+          "animal": "Renard",
+          "veut": "Tout savoir sur les clients et le glisser au bon moment.",
+          "vient_de": "Trente ans de réception, il connaît tous les secrets de l'hôtel.",
+          "sait": "Il sait quel client a demandé un double de la clé de sa suite.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Béatrice, la cliente fortunée",
+          "type": "victime",
+          "archetype": "opportuniste",
+          "animal": "Vautour",
+          "veut": "Repartir avec le tableau du hall, quel que soit son prix.",
+          "vient_de": "Héritière d'une grande famille, elle loue la même suite chaque année.",
+          "sait": "Elle descend seule chaque soir admirer le tableau dans le hall.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1459,6 +2121,39 @@
         "stagiaire",
         "inspecteur",
         "médecin"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Clémence, la stagiaire",
+          "type": "aide",
+          "archetype": "debrouillard",
+          "animal": "Souris",
+          "veut": "Prouver qu'elle est utile et décrocher un vrai poste.",
+          "vient_de": "Étudiante en chimie, elle est arrivée au labo lundi dernier.",
+          "sait": "Elle a noté les codes d'accès de la salle blanche sur sa main.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Thierry, l'inspecteur",
+          "type": "officiel",
+          "archetype": "paranoiaque",
+          "animal": "Serpent",
+          "veut": "Que chaque produit sorti de la réserve soit justifié par écrit.",
+          "vient_de": "Envoyé par le ministère après une erreur dans un rapport.",
+          "sait": "Il a remarqué qu'un flacon manque dans la réserve de produits.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Bernard, le chef de labo",
+          "type": "sceptique",
+          "archetype": "denegateur",
+          "animal": "Âne",
+          "veut": "Une explication rationnelle, et vite, avant la visite des financeurs.",
+          "vient_de": "Trente ans de recherche, il a déjà tout vu et tout expliqué.",
+          "sait": "La salle serveurs garde l'historique de chaque porte ouverte du labo.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1477,6 +2172,39 @@
         "explorateur",
         "médium",
         "domestique"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Firmin, le gardien",
+          "type": "aide",
+          "archetype": "protecteur",
+          "animal": "Ours",
+          "veut": "Que personne ne se perde dans le manoir qu'il garde.",
+          "vient_de": "Il garde le domaine vide depuis que la famille est partie.",
+          "sait": "Il connaît le passage qui relie la bibliothèque à la cave.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Madeleine, la médium",
+          "type": "curieux",
+          "archetype": "prophete",
+          "animal": "Paon",
+          "veut": "Être là quand le manoir révélera enfin ses secrets.",
+          "vient_de": "Elle tient un petit cabinet de voyance au village voisin.",
+          "sait": "Elle a remarqué qu'une chambre à l'étage est toujours plus froide.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Hector, l'héritier",
+          "type": "victime",
+          "archetype": "opportuniste",
+          "animal": "Hyène",
+          "veut": "Trouver le trésor de la famille avant le notaire.",
+          "vient_de": "Arrière-petit-fils du propriétaire, il a hérité du manoir hier.",
+          "sait": "Il a une vieille clé qui ouvre une porte murée de la cave.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1495,6 +2223,39 @@
         "agent de sécurité",
         "restaurateur",
         "journaliste"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Hugo, le guide",
+          "type": "aide",
+          "archetype": "cynique",
+          "animal": "Renard",
+          "veut": "Montrer qu'il connaît le musée mieux que le conservateur.",
+          "vient_de": "Il fait la même visite guidée six fois par jour depuis cinq ans.",
+          "sait": "Une porte derrière une tapisserie relie la salle d'exposition à la réserve.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Pauline, la journaliste",
+          "type": "curieux",
+          "archetype": "opportuniste",
+          "animal": "Vautour",
+          "veut": "Décrocher le scoop qui la fera passer en première page.",
+          "vient_de": "Elle prépare un article sur l'exposition et cherche un angle.",
+          "sait": "Elle a photographié par hasard les écrans de la salle de surveillance.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Antoine, le conservateur",
+          "type": "sceptique",
+          "archetype": "leader",
+          "animal": "Lion",
+          "veut": "Que tout ait une explication et que l'inauguration ait lieu ce soir.",
+          "vient_de": "Il a monté cette exposition pendant trois ans et refuse d'échouer.",
+          "sait": "Il a seul la combinaison des vitrines de la salle d'exposition.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1513,6 +2274,39 @@
         "musicien",
         "contrôleur",
         "agent de sécurité"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Karim, l'agent de station",
+          "type": "aide",
+          "archetype": "protecteur",
+          "animal": "Loup",
+          "veut": "Que chaque voyageur rentre chez lui ce soir sans encombre.",
+          "vient_de": "Il surveille cette station depuis douze ans et en connaît chaque recoin.",
+          "sait": "Une porte du couloir de correspondance mène à un ancien quai fermé.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Patricia, la conductrice",
+          "type": "temoin",
+          "archetype": "alarmiste",
+          "animal": "Coq",
+          "veut": "Que le poste de commande l'écoute enfin et arrête le trafic.",
+          "vient_de": "Elle conduit la rame de nuit depuis huit ans, sans un incident.",
+          "sait": "Elle a vu les lumières du tunnel clignoter entre deux stations.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Félix, le musicien",
+          "type": "victime",
+          "archetype": "solitaire",
+          "animal": "Chat",
+          "veut": "Jouer de son violon tranquille, loin de la foule.",
+          "vient_de": "Il joue sur le même quai chaque soir pour gagner sa vie.",
+          "sait": "Il descend jouer dans les couloirs fermés, où l'écho est meilleur.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1531,6 +2325,39 @@
         "animateur",
         "médecin de bord",
         "chef cuisinier"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Ludovic, le steward",
+          "type": "aide",
+          "archetype": "opportuniste",
+          "animal": "Hyène",
+          "veut": "Rendre service aux passagers, contre un bon pourboire.",
+          "vient_de": "Il fait la saison sur le navire pour mettre de l'argent de côté.",
+          "sait": "Il a une clé qui ouvre toutes les cabines de son pont.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Colette, la croisiériste",
+          "type": "curieux",
+          "archetype": "cynique",
+          "animal": "Singe",
+          "veut": "Ne rien rater de ce qui se passe à bord.",
+          "vient_de": "Retraitée, elle fait sa dixième croisière avec ses amies de bridge.",
+          "sait": "Elle connaît chaque passage entre la salle de bal et le pont supérieur.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Étienne, le médecin de bord",
+          "type": "innocent",
+          "archetype": "protecteur",
+          "animal": "Ours",
+          "veut": "Que personne à bord ne soit abandonné, passager ou équipage.",
+          "vient_de": "Ancien médecin humanitaire, il a choisi la mer pour souffler un peu.",
+          "sait": "L'infirmerie du bord a un accès direct à la salle des machines.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1549,6 +2376,39 @@
         "secrétaire",
         "diplomate",
         "majordome"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Gaston, le majordome",
+          "type": "aide",
+          "archetype": "aidant",
+          "animal": "Chien",
+          "veut": "Servir le président et ses invités jusqu'au bout.",
+          "vient_de": "Il a servi quatre présidents et n'a jamais renversé une tasse.",
+          "sait": "Il connaît l'escalier dérobé qui relie le salon de réception au bureau présidentiel.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Vanessa, la garde du corps",
+          "type": "officiel",
+          "archetype": "gardien_de_l_ordre",
+          "animal": "Taureau",
+          "veut": "Que personne n'approche le président sans son autorisation.",
+          "vient_de": "Ancienne championne de judo, elle a été choisie pour son calme absolu.",
+          "sait": "Elle a les codes de toutes les portes du poste de garde.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Jean-Pierre, le conseiller",
+          "type": "sceptique",
+          "archetype": "denegateur",
+          "animal": "Porc",
+          "veut": "Une explication rassurante, et la réception de ce soir maintenue.",
+          "vient_de": "Il conseille le président depuis la campagne et déteste les imprévus.",
+          "sait": "Il garde sur lui l'agenda secret de toutes les visites du palais.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1567,6 +2427,39 @@
         "producteur",
         "régisseur",
         "maquilleur"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Nathalie, la régisseuse",
+          "type": "aide",
+          "archetype": "leader",
+          "animal": "Aigle",
+          "veut": "Que l'émission sorte en direct, propre, et sans un seul accroc.",
+          "vient_de": "Elle a dirigé des centaines de directs depuis la régie.",
+          "sait": "De la régie, elle peut couper le son et la lumière du plateau.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Jérémy, le maquilleur",
+          "type": "commere",
+          "archetype": "cynique",
+          "animal": "Singe",
+          "veut": "Tout savoir sur les invités avant qu'ils montent sur le plateau.",
+          "vient_de": "Il maquille les stars depuis dix ans et elles lui disent tout.",
+          "sait": "Il sait quel invité est arrivé en avance et a fouillé les loges.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Océane, l'invitée",
+          "type": "victime",
+          "archetype": "solitaire",
+          "animal": "Cerf",
+          "veut": "Faire son passage à l'antenne sans écouter les consignes de personne.",
+          "vient_de": "Chanteuse à succès, elle vient présenter son nouvel album.",
+          "sait": "Elle s'isole toujours dans les coulisses pour se concentrer avant l'antenne.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1585,6 +2478,39 @@
         "douanier",
         "armateur",
         "pêcheur"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Yvonne, la capitaine de port",
+          "type": "aide",
+          "archetype": "leader",
+          "animal": "Aigle",
+          "veut": "Que chaque bateau et chaque marin soient rentrés avant la nuit.",
+          "vient_de": "Fille et petite-fille de marins, elle dirige le port depuis quinze ans.",
+          "sait": "La capitainerie a des jumelles qui voient jusqu'au bout du quai.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Loïc, le pêcheur",
+          "type": "temoin",
+          "archetype": "prophete",
+          "animal": "Corbeau",
+          "veut": "Que quelqu'un croie enfin ce qu'il a vu en mer.",
+          "vient_de": "Il sort son bateau avant l'aube depuis l'âge de quatorze ans.",
+          "sait": "Il a remarqué que les mouettes ont toutes quitté le port ce matin.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Tony, le docker",
+          "type": "victime",
+          "archetype": "opportuniste",
+          "animal": "Vautour",
+          "veut": "Récupérer ce que les autres laissent tomber des cargaisons.",
+          "vient_de": "Il décharge les conteneurs le jour et revend des babioles le soir.",
+          "sait": "Il traîne seul dans l'entrepôt la nuit et en connaît les recoins.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1603,6 +2529,39 @@
         "avocat",
         "visiteur",
         "médecin"
+      ],
+      "kids": false,
+      "figurants": [
+        {
+          "nom": "Simone, l'avocate",
+          "type": "aide",
+          "archetype": "cynique",
+          "animal": "Renard",
+          "veut": "Faire sortir son client, et ridiculiser la direction au passage.",
+          "vient_de": "Elle défend les causes perdues depuis vingt ans, avec le sourire.",
+          "sait": "Elle sait que le parloir n'est plus surveillé après dix-huit heures.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Roger, le gardien",
+          "type": "officiel",
+          "archetype": "gardien_de_l_ordre",
+          "animal": "Taureau",
+          "veut": "Que chaque détenu soit compté et chaque porte bien verrouillée.",
+          "vient_de": "Trente ans de service, il ne laisse rien passer, même à ses collègues.",
+          "sait": "Il porte à sa ceinture les clés de chaque cellule.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Mireille, la visiteuse",
+          "type": "innocent",
+          "archetype": "aidant",
+          "animal": "Mouton",
+          "veut": "Que son fils ne soit pas oublié dans sa cellule.",
+          "vient_de": "Elle vient chaque jeudi au parloir, avec un panier de linge propre.",
+          "sait": "Elle connaît tous les gardiens et toutes les habitudes du parloir.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1621,6 +2580,39 @@
         "secouriste",
         "cuisinier",
         "météorologue"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Jacques, le gardien du refuge",
+          "type": "aide",
+          "archetype": "protecteur",
+          "animal": "Ours",
+          "veut": "Que tous les randonneurs passent la nuit au chaud.",
+          "vient_de": "Il tient ce refuge chaque été depuis plus de trente ans.",
+          "sait": "Une trappe dans la cuisine mène à une réserve de bois et de couvertures.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Solène, la météorologue",
+          "type": "temoin",
+          "archetype": "prophete",
+          "animal": "Corbeau",
+          "veut": "Qu'on la croie quand elle dit que le temps va tourner.",
+          "vient_de": "Elle mesure le vent sur la terrasse pour un institut de recherche.",
+          "sait": "Ses instruments sur la terrasse ont enregistré un signal étrange cette nuit.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Dylan, le randonneur",
+          "type": "victime",
+          "archetype": "opportuniste",
+          "animal": "Hyène",
+          "veut": "Faire la photo du sommet au lever du soleil, coûte que coûte.",
+          "vient_de": "Influenceur montagne, il a promis cette photo à ses abonnés.",
+          "sait": "Il a repéré un raccourci hors sentier depuis la terrasse du refuge.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1639,6 +2631,39 @@
         "sommelier",
         "commis",
         "critique culinaire"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Rémi, le commis",
+          "type": "aide",
+          "archetype": "aidant",
+          "animal": "Chien",
+          "veut": "Aider le chef, et qu'il le remarque enfin.",
+          "vient_de": "Apprenti depuis un an, il épluche des légumes dès six heures.",
+          "sait": "Il connaît l'escalier qui descend de la cuisine jusqu'à la cave.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Gisèle, la maîtresse d'hôtel",
+          "type": "temoin",
+          "archetype": "paranoiaque",
+          "animal": "Lapin",
+          "veut": "Qu'on la croie, même si elle sursaute au moindre bruit.",
+          "vient_de": "Elle place les clients en salle depuis l'ouverture du restaurant.",
+          "sait": "Elle a vu un client entrer seul dans le bureau du chef.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Alain, le critique culinaire",
+          "type": "sceptique",
+          "archetype": "denegateur",
+          "animal": "Porc",
+          "veut": "Qu'on lui trouve une explication, et finir son repas en paix.",
+          "vient_de": "Il fait trembler les chefs de France depuis trente ans.",
+          "sait": "Il a déjà dîné ici dix fois et connaît chaque table de la salle.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1657,6 +2682,39 @@
         "kinésithérapeute",
         "gérant",
         "agent d'entretien"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Malik, le coach",
+          "type": "aide",
+          "archetype": "leader",
+          "animal": "Lion",
+          "veut": "Mener le groupe comme il mène ses cours, à la voix.",
+          "vient_de": "Ancien champion d'athlétisme, il a ouvert sa propre salle il y a cinq ans.",
+          "sait": "Il a le double des clés de chaque casier du vestiaire.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Jessica, la réceptionniste",
+          "type": "commere",
+          "archetype": "opportuniste",
+          "animal": "Hyène",
+          "veut": "Tout savoir sur les adhérents, et vendre des abonnements au passage.",
+          "vient_de": "Elle tient l'accueil depuis trois ans et connaît tous les ragots.",
+          "sait": "Le registre de l'accueil note l'heure d'entrée et de sortie de chacun.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Francis, l'adhérent",
+          "type": "victime",
+          "archetype": "denegateur",
+          "animal": "Âne",
+          "veut": "Finir sa séance, quoi qu'il arrive autour de lui.",
+          "vient_de": "Il vient s'entraîner tous les soirs, juste avant la fermeture.",
+          "sait": "Il reste souvent seul sur le plateau de musculation après les autres.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1675,6 +2733,39 @@
         "technicien",
         "médecin de bord",
         "officier"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Benoît, le technicien",
+          "type": "aide",
+          "archetype": "debrouillard",
+          "animal": "Hibou",
+          "veut": "Que le sous-marin tienne, et qu'on l'écoute quand il parle.",
+          "vient_de": "Il a passé plus de temps sous l'eau que sur terre.",
+          "sait": "Il sait réparer la pompe de la salle des machines avec trois fois rien.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Léna, la sonariste",
+          "type": "temoin",
+          "archetype": "paranoiaque",
+          "animal": "Serpent",
+          "veut": "Que le commandant écoute enfin ses enregistrements.",
+          "vient_de": "Elle a l'oreille la plus fine de la flotte, et elle le sait.",
+          "sait": "Elle a capté un bruit régulier dans la coque depuis hier soir.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Frédéric, l'officier",
+          "type": "sceptique",
+          "archetype": "cynique",
+          "animal": "Renard",
+          "veut": "Une explication technique, sans affoler l'équipage pour rien.",
+          "vient_de": "Sorti premier de l'école navale, il ne croit que les instruments.",
+          "sait": "Il connaît par cœur la procédure de remontée d'urgence du poste équipage.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1693,6 +2784,39 @@
         "supporter",
         "commentateur",
         "agent de sécurité"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Serge, l'entraîneur",
+          "type": "aide",
+          "archetype": "leader",
+          "animal": "Lion",
+          "veut": "Que son équipe et ses supporters restent unis jusqu'au bout.",
+          "vient_de": "Il entraîne le club depuis quinze ans et connaît chaque joueur.",
+          "sait": "Un tunnel relie le vestiaire à une sortie derrière les tribunes.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Christophe, le commentateur",
+          "type": "temoin",
+          "archetype": "prophete",
+          "animal": "Paon",
+          "veut": "Qu'on le croie, lui qui voit tout depuis sa cabine.",
+          "vient_de": "Sa voix commente les matchs du club depuis vingt saisons.",
+          "sait": "De la salle de presse, il a vu les projecteurs vaciller sans raison.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Ibrahim, le joueur",
+          "type": "victime",
+          "archetype": "opportuniste",
+          "animal": "Hyène",
+          "veut": "Briller devant les recruteurs, même si le match doit être arrêté.",
+          "vient_de": "Jeune espoir du centre de formation, c'est son premier match pro.",
+          "sait": "Il reste toujours seul sur le terrain pour s'entraîner après les autres.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1711,6 +2835,39 @@
         "médecin",
         "officier de liaison",
         "technicien"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Ingrid, la commandante",
+          "type": "aide",
+          "archetype": "leader",
+          "animal": "Aigle",
+          "veut": "Ramener tout son équipage sur Terre, sans exception.",
+          "vient_de": "Trois missions dans l'espace, elle est la plus expérimentée à bord.",
+          "sait": "Le poste de pilotage peut fermer chaque module à distance.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Adrien, le technicien",
+          "type": "temoin",
+          "archetype": "alarmiste",
+          "animal": "Rat",
+          "veut": "Que quelqu'un vérifie enfin ce qu'il a vu sur les écrans.",
+          "vient_de": "Il surveille les systèmes de la station pendant que les autres dorment.",
+          "sait": "Il a vu un voyant du sas clignoter sans raison cette nuit.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Amandine, l'astronaute",
+          "type": "victime",
+          "archetype": "solitaire",
+          "animal": "Cerf",
+          "veut": "Faire sa sortie dans l'espace prévue, même seule s'il le faut.",
+          "vient_de": "Première de sa promotion, c'est sa toute première mission à bord.",
+          "sait": "Elle passe ses pauses seule près du sas, à regarder la Terre.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1729,6 +2886,39 @@
         "livreur",
         "mécanicien",
         "agent de sécurité"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Mathis, le mécanicien",
+          "type": "aide",
+          "archetype": "debrouillard",
+          "animal": "Souris",
+          "veut": "Réparer tout ce qui tombe en panne, et se rendre utile.",
+          "vient_de": "Il a appris la mécanique tout seul dans le garage de son père.",
+          "sait": "L'atelier cache une vieille dépanneuse dont les clés restent sur le contact.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Norbert, le livreur",
+          "type": "temoin",
+          "archetype": "solitaire",
+          "animal": "Chat",
+          "veut": "Qu'on le croie, puis reprendre la route au plus vite.",
+          "vient_de": "Routier depuis vingt ans, il fait toujours sa pause ici la nuit.",
+          "sait": "Il a vu les néons des pompes s'éteindre puis se rallumer seuls.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Thomas, le gérant",
+          "type": "sceptique",
+          "archetype": "denegateur",
+          "animal": "Porc",
+          "veut": "Une explication normale, et garder la boutique ouverte coûte que coûte.",
+          "vient_de": "Il a racheté la station il y a un an avec toutes ses économies.",
+          "sait": "La réserve a une porte de livraison qui donne derrière l'atelier.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1747,6 +2937,39 @@
         "agent de sécurité",
         "réassortisseur",
         "livreur"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Martine, la réassortisseuse",
+          "type": "aide",
+          "archetype": "gardien_de_l_ordre",
+          "animal": "Fourmi",
+          "veut": "Que tout soit rangé, et aider le groupe avec méthode.",
+          "vient_de": "Elle remplit les rayons chaque matin depuis l'ouverture du magasin.",
+          "sait": "Elle connaît le plan exact de la réserve, palette par palette.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Samia, la caissière",
+          "type": "commere",
+          "archetype": "alarmiste",
+          "animal": "Coq",
+          "veut": "Raconter à chaque client ce qu'elle a entendu ce matin.",
+          "vient_de": "Elle tient la caisse numéro trois et voit passer tout le quartier.",
+          "sait": "Elle sait quel client achète la même chose chaque jour, à la même heure.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Arthur, le client",
+          "type": "innocent",
+          "archetype": "aidant",
+          "animal": "Chien",
+          "veut": "Que personne ne reste coincé dans le magasin, même un inconnu.",
+          "vient_de": "Jeune papa, il fait les courses de la semaine avec sa fille.",
+          "sait": "Il a repéré la sortie de secours au fond des rayons.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1765,6 +2988,39 @@
         "costumier",
         "ouvreuse",
         "producteur"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Pierre, le régisseur",
+          "type": "aide",
+          "archetype": "debrouillard",
+          "animal": "Hibou",
+          "veut": "Que le spectacle ait lieu, et que le groupe s'en sorte.",
+          "vient_de": "Il connaît ce théâtre mieux que sa propre maison.",
+          "sait": "Une trappe sous la scène donne sur un couloir qui mène aux loges.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Noé, le comédien",
+          "type": "curieux",
+          "archetype": "cynique",
+          "animal": "Singe",
+          "veut": "Être au centre de tout, même loin de la scène.",
+          "vient_de": "Jeune comédien, il joue ce soir son premier vrai rôle.",
+          "sait": "Il a exploré les coulisses et connaît chaque porte qui grince.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Agathe, la costumière",
+          "type": "innocent",
+          "archetype": "solitaire",
+          "animal": "Cerf",
+          "veut": "Que personne ne soit laissé seul dans les loges.",
+          "vient_de": "Elle coud les costumes de la troupe dans son atelier, à l'écart.",
+          "sait": "Elle a les clés de toutes les loges et de la réserve des costumes.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1783,6 +3039,39 @@
         "accusé",
         "greffier",
         "huissier"
+      ],
+      "kids": false,
+      "figurants": [
+        {
+          "nom": "Élodie, la greffière",
+          "type": "aide",
+          "archetype": "debrouillard",
+          "animal": "Souris",
+          "veut": "Que la vérité sorte enfin, au lieu de dormir dans ses dossiers.",
+          "vient_de": "Elle tape chaque mot prononcé dans ce tribunal depuis douze ans.",
+          "sait": "Elle a la copie de chaque dossier, rangée dans le bureau du juge.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Raoul, l'huissier",
+          "type": "officiel",
+          "archetype": "gardien_de_l_ordre",
+          "animal": "Taureau",
+          "veut": "Que la salle d'audience reste calme et que chacun reste assis.",
+          "vient_de": "Ancien militaire, il fait régner l'ordre dans ce palais de justice.",
+          "sait": "Il garde sur lui les clés de la cellule de garde à vue.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Hélène, la juge",
+          "type": "sceptique",
+          "archetype": "cynique",
+          "animal": "Renard",
+          "veut": "Des faits, des preuves, et pas de contes à dormir debout.",
+          "vient_de": "Trente ans de carrière, elle a entendu tous les mensonges possibles.",
+          "sait": "Une porte de son bureau donne directement sur la salle des témoins.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1801,6 +3090,39 @@
         "chercheur",
         "assistant",
         "agent d'accueil"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Sophie, la chercheuse",
+          "type": "aide",
+          "archetype": "debrouillard",
+          "animal": "Hibou",
+          "veut": "Mettre son savoir au service du groupe, sans se faire remarquer.",
+          "vient_de": "Elle prépare sa thèse au labo de recherche depuis quatre ans.",
+          "sait": "Le labo de recherche communique avec l'amphithéâtre par un ancien monte-charge.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Maxime, l'étudiant",
+          "type": "curieux",
+          "archetype": "paranoiaque",
+          "animal": "Lapin",
+          "veut": "Être dans le coup et comprendre ce qu'on lui cache.",
+          "vient_de": "En première année, il passe plus de temps dans les couloirs qu'en cours.",
+          "sait": "Il connaît la fenêtre de la salle de TD qui ne ferme jamais.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Michel, le doyen",
+          "type": "sceptique",
+          "archetype": "denegateur",
+          "animal": "Âne",
+          "veut": "Une explication sensée, et des examens maintenus demain, sans discussion.",
+          "vient_de": "Il dirige la faculté depuis vingt ans et déteste les rumeurs.",
+          "sait": "Le bureau administratif garde les plans complets de tous les bâtiments.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1819,6 +3141,39 @@
         "syndicaliste",
         "inspecteur",
         "vigile"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Nordine, le syndicaliste",
+          "type": "aide",
+          "archetype": "protecteur",
+          "animal": "Loup",
+          "veut": "Que tous les ouvriers de l'équipe sortent ensemble, sans exception.",
+          "vient_de": "Délégué depuis dix ans, il a défendu chaque ouvrier de l'atelier.",
+          "sait": "Il sait arrêter la chaîne avec le bouton caché sous l'établi.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Valérie, l'ouvrière de nuit",
+          "type": "temoin",
+          "archetype": "alarmiste",
+          "animal": "Rat",
+          "veut": "Que le contremaître arrête enfin de se moquer de ce qu'elle raconte.",
+          "vient_de": "Elle fait les nuits à la chaîne depuis la naissance de ses enfants.",
+          "sait": "Elle a vu les écrans de la salle de contrôle s'éteindre une minute.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Didier, l'ouvrier",
+          "type": "victime",
+          "archetype": "opportuniste",
+          "animal": "Vautour",
+          "veut": "Faire des heures en plus pour payer les vacances de sa famille.",
+          "vient_de": "Il travaille à l'usine depuis vingt ans et ne refuse jamais une heure.",
+          "sait": "Il passe seul par l'entrepôt pour récupérer les pièces mises au rebut.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1837,6 +3192,39 @@
         "visiteur",
         "agent de sécurité",
         "dresseur"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Basile, le dresseur",
+          "type": "aide",
+          "archetype": "solitaire",
+          "animal": "Chat",
+          "veut": "Aider le groupe à sa façon, sans recevoir d'ordres.",
+          "vient_de": "Il a grandi dans un cirque et parle mieux aux bêtes qu'aux gens.",
+          "sait": "Il connaît une allée de service qui longe tous les enclos.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Louna, la visiteuse",
+          "type": "curieux",
+          "archetype": "cynique",
+          "animal": "Singe",
+          "veut": "Voir les animaux de plus près que tout le monde.",
+          "vient_de": "Elle est venue avec sa classe et s'est déjà séparée du groupe.",
+          "sait": "Elle a repéré une porte de l'infirmerie animale restée entrouverte.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Thibault, le soigneur",
+          "type": "innocent",
+          "archetype": "aidant",
+          "animal": "Mouton",
+          "veut": "Que chaque animal et chaque visiteur soient à l'abri.",
+          "vient_de": "Il soigne les animaux du zoo depuis ses dix-huit ans.",
+          "sait": "Il garde dans la réserve de quoi nourrir et calmer chaque animal.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1855,6 +3243,39 @@
         "surveillant",
         "parent",
         "concierge"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Germain, le concierge",
+          "type": "aide",
+          "archetype": "gardien_de_l_ordre",
+          "animal": "Fourmi",
+          "veut": "Que l'école reste en ordre, et aider ceux qui en ont besoin.",
+          "vient_de": "Il vit dans la loge de l'école depuis trente ans.",
+          "sait": "Il a les clés de toutes les portes, y compris celle du préau.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Stéphanie, la déléguée des parents",
+          "type": "commere",
+          "archetype": "alarmiste",
+          "animal": "Coq",
+          "veut": "Être la première informée, et prévenir tous les autres parents.",
+          "vient_de": "Présidente de l'association des parents, elle est partout dans l'école.",
+          "sait": "Elle sait quel enfant traîne chaque soir dans la cour de récréation.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Jules, l'élève",
+          "type": "innocent",
+          "archetype": "aidant",
+          "animal": "Chien",
+          "veut": "Que personne de sa classe ne reste tout seul.",
+          "vient_de": "Élève de CM2, il est délégué de classe depuis la rentrée.",
+          "sait": "Il connaît une cachette sous l'estrade de la salle de classe.",
+          "mode": "figurant"
+        }
       ]
     },
     {
@@ -1873,6 +3294,39 @@
         "choriste",
         "organiste",
         "bedeau"
+      ],
+      "kids": true,
+      "figurants": [
+        {
+          "nom": "Augustin, le bedeau",
+          "type": "aide",
+          "archetype": "gardien_de_l_ordre",
+          "animal": "Fourmi",
+          "veut": "Que chaque chose reste à sa place, et rendre service.",
+          "vient_de": "Il ouvre et ferme l'église chaque jour depuis quarante ans.",
+          "sait": "Il connaît l'escalier étroit qui monte de la sacristie au clocher.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Denise, la fidèle",
+          "type": "commere",
+          "archetype": "prophete",
+          "animal": "Paon",
+          "veut": "Être celle qui annonce les nouvelles à la sortie de la messe.",
+          "vient_de": "Elle ne rate aucune messe et connaît la vie de tout le village.",
+          "sait": "Elle a remarqué que la cloche a sonné seule la nuit dernière.",
+          "mode": "figurant"
+        },
+        {
+          "nom": "Capucine, la choriste",
+          "type": "innocent",
+          "archetype": "aidant",
+          "animal": "Mouton",
+          "veut": "Que personne ne soit laissé dehors, quoi qu'il arrive.",
+          "vient_de": "Elle chante dans la chorale depuis ses huit ans, avec sa grand-mère.",
+          "sait": "Elle sait où sont rangées les bougies et les couvertures de la sacristie.",
+          "mode": "figurant"
+        }
       ]
     }
   ],
@@ -3269,6 +4723,1227 @@
       "lecon": "Le danger, c'est un homme qui voit clair. La tension monte sans un coup de feu, jusqu'au dernier palier."
     }
   ],
+  "serie": {
+    "episode": "Le one-shot : un lieu, un groupe, un danger en quatre paliers, quatre actes. Il se suffit à lui-même.",
+    "saison": "Quatre épisodes. Un méchant et sa machination en quatre présages, un par épisode (il se signale, il enferme, il envahit, il bloque les sorties). Chaque danger d'épisode est l'un de ses coups. Le besoin du personnage appartient à la saison : fixé à l'épisode 1, nommé à l'épisode 3, payé au final. Le vouloir change à chaque épisode. La sortie du palier 4 mène au lieu de l'épisode suivant.",
+    "serie": "Une suite de saisons. Entre deux saisons, un personnage qui a payé son besoin peut changer d'archétype. Un registre garde les figurants, les objets, les lieux, les secrets, les morts et les promesses, que l'IA propose au MJ de ressortir.",
+    "regles_du_mechant": [
+      "Son reflet : il a le même archétype que le protagoniste qu'il vise, c'est pour ça qu'il lui en veut.",
+      "Il agit dans l'ombre : chaque danger d'épisode est l'un de ses coups, sans qu'on le sache au début.",
+      "Il veut, il a besoin, comme les héros : son besoin est sa faille, on la découvre à l'épisode 3.",
+      "Son traître : il recrute l'un des protagonistes avec une offre ; le traître se révèle à l'épisode 3.",
+      "Le final : à l'épisode 4, on le voit enfin, dans le lieu ; on le vainc par sa faille plutôt que par la force.",
+      "Ce qu'il laisse : un objet, un figurant ou une promesse, que la saison suivante pourra ressortir.",
+      "Ses sbires : deux par méchant, ils agissent à sa place tant qu'il reste dans l'ombre ; on voit les sbires avant de voir le méchant."
+    ],
+    "registre": {
+      "principe": "Comme une série d'anthologie (True Detective), mais les saisons se répondent : l'IA prend des notes pendant le jeu et propose au Maître du destin de ressortir des éléments.",
+      "categories": [
+        "figurants (nom, type, archétype, animal, ce qu'il sait, ce qu'on lui a promis)",
+        "sbires (vivants, tombés, retournés)",
+        "figurants passés sbires (bascule après une offre du méchant)",
+        "objets (dont les trois objets du lieu)",
+        "lieux visités et leurs sorties",
+        "secrets révélés ou gardés",
+        "promesses faites",
+        "morts (adulte seulement)",
+        "le traître et son offre",
+        "ce que le méchant a laissé"
+      ],
+      "suggestion": "Au début de chaque épisode, l'IA propose 2 ou 3 éléments du registre à ressortir ; le Maître du destin choisit."
+    }
+  },
+  "mechants": [
+    {
+      "id": "le_seigneur_des_brumes",
+      "nom": "Le Seigneur des brumes",
+      "archetype": "leader",
+      "animal": "Chauve-souris",
+      "inspiration": "Strahd, de Donjons et Dragons",
+      "posture": "Immobile dans l'ombre, il n'approche qu'à la nuit tombée.",
+      "histoire": "Il a vendu son âme pour une femme qui aimait son frère. Depuis, il règne sur une vallée que la brume referme sur tous ceux qui y entrent.",
+      "veut": "Retrouver cette femme dans chaque nouvelle venue.",
+      "besoin": "Accepter qu'elle ne reviendra pas.",
+      "faille": "Une femme qui lui dit non, en face.",
+      "cible": "Le leader, qui commande là où lui n'a su que posséder.",
+      "offre_au_traitre": "Il promet à l'un d'eux de le laisser quitter la brume.",
+      "kids": true,
+      "version_kids": "Seul dans son château, il garde tous les voyageurs dans sa brume pour ne plus jamais être seul.",
+      "faille_kids": "Quelqu'un qui lui dit non, en face.",
+      "sbires": [
+        {
+          "id": "le_cocher",
+          "nom": "Le Cocher",
+          "archetype": "protecteur",
+          "animal": "Loup",
+          "veut": "Ramener au château tous ceux qui se perdent dans la brume.",
+          "vient_de": "Un homme de la vallée, qui conduit la calèche depuis toujours.",
+          "fait": "Propose de raccompagner les voyageurs, et les mène au château.",
+          "mode": "sbire",
+          "kids": true
+        },
+        {
+          "id": "la_gouvernante",
+          "nom": "La Gouvernante",
+          "archetype": "gardien_de_l_ordre",
+          "animal": "Fourmi",
+          "veut": "Que le château soit prêt pour le retour de la dame.",
+          "vient_de": "Elle servait déjà la famille avant la brume.",
+          "fait": "Prépare les chambres, et enferme les invités pour leur sécurité.",
+          "mode": "sbire",
+          "kids": true
+        }
+      ]
+    },
+    {
+      "id": "le_chef_des_quarante_voleurs",
+      "nom": "Le Chef des quarante voleurs",
+      "archetype": "leader",
+      "animal": "Frelon",
+      "inspiration": "Ali Baba et les quarante voleurs, Les Mille et Une Nuits",
+      "posture": "Toujours entouré de sa bande, il donne ses ordres d'un geste.",
+      "histoire": "Il cache le trésor de sa bande dans une caverne qui s'ouvre sur un mot de passe. Quelqu'un a découvert le mot.",
+      "veut": "Retrouver celui qui connaît le secret, et le faire taire.",
+      "besoin": "Faire confiance à sa propre bande.",
+      "faille": "Quelqu'un de plus malin que lui, qui marque toutes les portes de la même croix.",
+      "cible": "Le leader, son rival.",
+      "offre_au_traitre": "Il offre une part du trésor à qui lui montrera la bonne porte.",
+      "kids": true,
+      "version_kids": "Il cherche celui qui a entendu le mot magique de sa caverne, pour l'enfermer avec le trésor.",
+      "faille_kids": "Quelqu'un de plus malin que lui, qui marque toutes les portes de la même croix.",
+      "sbires": [
+        {
+          "id": "le_guetteur",
+          "nom": "Le Guetteur",
+          "archetype": "paranoiaque",
+          "animal": "Lapin",
+          "veut": "Trouver la porte de celui qui connaît le mot.",
+          "vient_de": "Le plus jeune de la bande, pressé de monter en grade.",
+          "fait": "Marque d'une croix la porte du suspect.",
+          "mode": "sbire",
+          "kids": true
+        },
+        {
+          "id": "le_marchand_d_huile",
+          "nom": "Le Marchand d'huile",
+          "archetype": "opportuniste",
+          "animal": "Hyène",
+          "veut": "Sa part du trésor, avant les autres.",
+          "vient_de": "Un revendeur du marché, payé par la bande.",
+          "fait": "Fait entrer dans le lieu des jarres qui ne contiennent pas d'huile.",
+          "mode": "sbire",
+          "kids": true
+        }
+      ]
+    },
+    {
+      "id": "le_frere_cache",
+      "nom": "Le Frère caché",
+      "archetype": "protecteur",
+      "animal": "Bouc",
+      "inspiration": "L'Abomination de Dunwich, H. P. Lovecraft",
+      "posture": "Massif, voûté, toujours planté devant une porte clouée.",
+      "histoire": "Dans une ferme aux fenêtres condamnées, il nourrit en secret un frère invisible qui grandit chaque nuit.",
+      "veut": "Cacher et nourrir son frère, quoi qu'il en coûte.",
+      "besoin": "Le laisser partir.",
+      "faille": "Le livre ancien qu'il lui faut pour ouvrir la porte à ce frère : sans lui, il ne peut rien.",
+      "cible": "Le protecteur, qui défend les siens au grand jour.",
+      "offre_au_traitre": "Il paie en or ancien ceux qui lui amènent du bétail, puis des gens.",
+      "kids": true,
+      "version_kids": "Il cache dans la grange un frère géant et invisible qui mange tout, et ferait n'importe quoi pour lui.",
+      "faille_kids": "Le livre ancien qu'il lui faut pour ouvrir la porte à ce frère : sans lui, il ne peut rien.",
+      "sbires": [
+        {
+          "id": "la_grand_mere",
+          "nom": "La Grand-mère",
+          "archetype": "prophete",
+          "animal": "Corbeau",
+          "veut": "Que la vieille promesse de la famille s'accomplisse.",
+          "vient_de": "Elle a lu le livre ancien à ses petits-enfants.",
+          "fait": "Raconte aux visiteurs des histoires qui les attirent vers la grange.",
+          "mode": "sbire",
+          "kids": true
+        },
+        {
+          "id": "le_valet_de_ferme",
+          "nom": "Le Valet de ferme",
+          "archetype": "denegateur",
+          "animal": "Âne",
+          "veut": "Qu'on le paie, et qu'on le laisse tranquille.",
+          "vient_de": "Un ouvrier du coin, qui ne pose jamais de questions.",
+          "fait": "Livre le bétail, et jure qu'il n'a rien vu.",
+          "mode": "sbire",
+          "kids": true
+        }
+      ]
+    },
+    {
+      "id": "le_pere_du_cimetiere",
+      "nom": "Le Père du cimetière",
+      "archetype": "protecteur",
+      "animal": "Taupe",
+      "inspiration": "Simetierre, Stephen King",
+      "posture": "Les mains pleines de terre, il creuse sans jamais se retourner.",
+      "histoire": "Il a perdu son enfant. Derrière les bois, il connaît une terre où ce qu'on enterre revient.",
+      "veut": "Ramener ceux qu'il aime, coûte que coûte.",
+      "besoin": "Faire son deuil.",
+      "faille": "Ce qui revient n'est plus ce qu'il a perdu, et il le sait.",
+      "cible": "Le protecteur, qui n'a encore perdu personne.",
+      "offre_au_traitre": "Il promet à l'un d'eux de lui rendre un mort.",
+      "kids": false,
+      "sbires": [
+        {
+          "id": "le_vieux_voisin",
+          "nom": "Le Vieux voisin",
+          "archetype": "aidant",
+          "animal": "Chien",
+          "veut": "Aider un père en deuil, comme on l'a aidé autrefois.",
+          "vient_de": "Il connaît le chemin de l'ancien cimetière depuis l'enfance.",
+          "fait": "Montre le chemin à ceux qui ont perdu quelqu'un.",
+          "mode": "sbire",
+          "kids": false
+        },
+        {
+          "id": "le_chat_revenu",
+          "nom": "Le Chat revenu",
+          "archetype": "solitaire",
+          "animal": "Chat",
+          "veut": "Rentrer à la maison, et qu'on ne le regarde pas.",
+          "vient_de": "Le chat de la famille, enterré la semaine dernière.",
+          "fait": "Rôde, griffe, rapporte de la terre partout.",
+          "mode": "sbire",
+          "kids": false
+        }
+      ]
+    },
+    {
+      "id": "l_infirmiere",
+      "nom": "L'Infirmière",
+      "archetype": "aidant",
+      "animal": "Mante religieuse",
+      "inspiration": "Misery, Stephen King",
+      "posture": "Douce, attentive, toujours un plateau à la main.",
+      "histoire": "Elle a sauvé un homme d'un accident de voiture, et ne l'a plus jamais laissé repartir.",
+      "veut": "Garder et soigner pour toujours celui qu'elle a choisi.",
+      "besoin": "Être aimée sans enfermer.",
+      "faille": "Sa colère, quand on la déçoit : elle se trahit.",
+      "cible": "L'aidant, qui soigne sans rien attendre.",
+      "offre_au_traitre": "Elle offre des soins, des médicaments, et une place près d'elle.",
+      "kids": false,
+      "sbires": [
+        {
+          "id": "l_adjoint_du_sherif",
+          "nom": "L'Adjoint du shérif",
+          "archetype": "denegateur",
+          "animal": "Porc",
+          "veut": "Qu'on laisse tranquille une femme si dévouée.",
+          "vient_de": "Il lui doit sa guérison.",
+          "fait": "Écarte les soupçons, rassure tout le monde.",
+          "mode": "sbire",
+          "kids": false
+        },
+        {
+          "id": "le_patient_gueri",
+          "nom": "Le Patient guéri",
+          "archetype": "prophete",
+          "animal": "Paon",
+          "veut": "Que tout le monde sache qu'elle l'a sauvé.",
+          "vient_de": "Un ancien patient, qui chante ses louanges partout.",
+          "fait": "Lui amène de nouveaux malades.",
+          "mode": "sbire",
+          "kids": false
+        }
+      ]
+    },
+    {
+      "id": "la_guenaude",
+      "nom": "La Guenaude",
+      "archetype": "aidant",
+      "animal": "Crapaud",
+      "inspiration": "les guenaudes de Donjons et Dragons et les sorcières des contes",
+      "posture": "Courbée, souriante, une soupe toujours chaude sur le feu.",
+      "histoire": "Au bout du chemin, une vieille femme soigne tout le monde depuis toujours. Chacun, au village, lui doit un service.",
+      "veut": "Qu'on ait besoin d'elle, toujours.",
+      "besoin": "Être aimée sans que personne ne lui doive rien.",
+      "faille": "Un cadeau fait sans rien demander en échange.",
+      "cible": "L'aidant, sa rivale.",
+      "offre_au_traitre": "Elle guérit un proche, contre un petit service à rendre plus tard.",
+      "kids": true,
+      "version_kids": "Une vieille sorcière qui rend service à tout le monde, et réclame toujours quelque chose en échange.",
+      "faille_kids": "Un cadeau fait sans rien demander en échange.",
+      "sbires": [
+        {
+          "id": "le_debiteur",
+          "nom": "Le Débiteur",
+          "archetype": "opportuniste",
+          "animal": "Vautour",
+          "veut": "Payer sa dette en lui envoyant quelqu'un d'autre.",
+          "vient_de": "Elle a guéri sa fille il y a dix ans.",
+          "fait": "Recommande les remèdes de la vieille à tout le monde.",
+          "mode": "sbire",
+          "kids": true
+        },
+        {
+          "id": "la_petite_servante",
+          "nom": "La Petite servante",
+          "archetype": "aidant",
+          "animal": "Mouton",
+          "veut": "Plaire à la vieille qui l'a recueillie.",
+          "vient_de": "Une orpheline du village.",
+          "fait": "Apporte la soupe aux malades, et note ce qu'ils doivent.",
+          "mode": "sbire",
+          "kids": true
+        }
+      ]
+    },
+    {
+      "id": "le_magicien_de_la_lampe",
+      "nom": "Le Magicien de la lampe",
+      "archetype": "debrouillard",
+      "animal": "Caméléon",
+      "inspiration": "Aladdin ou la Lampe merveilleuse, Les Mille et Une Nuits",
+      "posture": "Il change de visage et de voix selon celui qu'il veut séduire.",
+      "histoire": "Il a passé sa vie à chercher une lampe cachée dans une caverne où il ne peut pas entrer lui-même. Il lui faut quelqu'un qui descende à sa place.",
+      "veut": "La lampe, et ce qu'elle permet.",
+      "besoin": "Accepter de ne pas tout pouvoir.",
+      "faille": "Il ne peut pas prendre la lampe lui-même : celui qui la garde le tient.",
+      "cible": "Le débrouillard, plus malin que lui.",
+      "offre_au_traitre": "Il propose d'échanger des lampes neuves contre des vieilles.",
+      "kids": true,
+      "version_kids": "Il veut la lampe magique, mais il ne peut pas descendre la chercher lui-même.",
+      "faille_kids": "Il ne peut pas prendre la lampe lui-même : celui qui la garde le tient.",
+      "sbires": [
+        {
+          "id": "le_faux_mendiant",
+          "nom": "Le Faux mendiant",
+          "archetype": "cynique",
+          "animal": "Renard",
+          "veut": "Amuser son maître en trompant les naïfs.",
+          "vient_de": "Un conteur de rue, acheté par le magicien.",
+          "fait": "Répand des histoires de trésor caché sous le lieu.",
+          "mode": "sbire",
+          "kids": true
+        },
+        {
+          "id": "le_porteur",
+          "nom": "Le Porteur",
+          "archetype": "protecteur",
+          "animal": "Ours",
+          "veut": "Protéger le maître qui l'a tiré de prison.",
+          "vient_de": "Un ancien prisonnier libéré par le magicien.",
+          "fait": "Garde l'entrée de la caverne, et ne laisse ressortir personne.",
+          "mode": "sbire",
+          "kids": true
+        }
+      ]
+    },
+    {
+      "id": "le_reanimateur",
+      "nom": "Le Réanimateur",
+      "archetype": "debrouillard",
+      "animal": "Mille-pattes",
+      "inspiration": "Herbert West, réanimateur, H. P. Lovecraft",
+      "posture": "Agité, les mains tachées, une seringue toujours prête.",
+      "histoire": "Un médecin brillant, rejeté par ses maîtres, croit pouvoir vaincre la mort avec un sérum. Il l'essaie sur tout ce qui meurt.",
+      "veut": "Prouver qu'il a raison.",
+      "besoin": "Accepter l'échec.",
+      "faille": "Ceux qu'il a ramenés se souviennent de lui.",
+      "cible": "Le débrouillard, qui bricole pour sauver, pas pour prouver.",
+      "offre_au_traitre": "Il offre de sauver un mourant.",
+      "kids": false,
+      "sbires": [
+        {
+          "id": "l_assistant",
+          "nom": "L'Assistant",
+          "archetype": "aidant",
+          "animal": "Chien",
+          "veut": "Que le docteur réussisse enfin.",
+          "vient_de": "Un étudiant en médecine qui l'admire.",
+          "fait": "Rapporte ce qu'il faut pour les expériences, sans poser de questions.",
+          "mode": "sbire",
+          "kids": false
+        },
+        {
+          "id": "le_premier_revenu",
+          "nom": "Le Premier revenu",
+          "archetype": "alarmiste",
+          "animal": "Rat",
+          "veut": "Retrouver le docteur.",
+          "vient_de": "Le premier patient que le docteur a ramené.",
+          "fait": "Gratte aux portes la nuit et crie des mots sans suite.",
+          "mode": "sbire",
+          "kids": false
+        }
+      ]
+    },
+    {
+      "id": "le_messager",
+      "nom": "Le Messager",
+      "archetype": "alarmiste",
+      "animal": "Chacal",
+      "inspiration": "Nyarlathotep, H. P. Lovecraft",
+      "posture": "Élégant, la voix grave, il parle à une foule qui ne respire plus.",
+      "histoire": "Depuis des millénaires, il annonce la fin du monde de ville en ville, et personne ne l'écoute. Alors il la provoque.",
+      "veut": "Que le monde tombe enfin.",
+      "besoin": "Être cru, une seule fois.",
+      "faille": "Quelqu'un qui le croit avant la fin.",
+      "cible": "L'alarmiste, qu'on n'écoute pas non plus.",
+      "offre_au_traitre": "Il montre l'avenir à l'un d'eux, et lui promet d'y survivre.",
+      "kids": false,
+      "sbires": [
+        {
+          "id": "le_projectionniste",
+          "nom": "Le Projectionniste",
+          "archetype": "prophete",
+          "animal": "Paon",
+          "veut": "Montrer à tous les images de la fin.",
+          "vient_de": "Il a assisté à une conférence du Messager, et ne dort plus.",
+          "fait": "Diffuse des images étranges sur chaque écran du lieu.",
+          "mode": "sbire",
+          "kids": false
+        },
+        {
+          "id": "le_garde_muet",
+          "nom": "Le Garde muet",
+          "archetype": "gardien_de_l_ordre",
+          "animal": "Taureau",
+          "veut": "Que personne n'interrompe son maître.",
+          "vient_de": "Venu d'Égypte avec lui, il ne parle jamais.",
+          "fait": "Ferme les portes pendant que le Messager parle.",
+          "mode": "sbire",
+          "kids": false
+        }
+      ]
+    },
+    {
+      "id": "la_dame_blanche",
+      "nom": "La Dame blanche",
+      "archetype": "alarmiste",
+      "animal": "Effraie",
+      "inspiration": "la dame blanche du folklore et la banshee irlandaise",
+      "posture": "Pâle, immobile au bord de la route, sa plainte annonce la mort.",
+      "histoire": "Morte une nuit de noces, elle apparaît à ceux qui vont mourir. Personne ne sait ce qui lui est arrivé.",
+      "veut": "Que les vivants l'entendent.",
+      "besoin": "Qu'on découvre enfin la vérité sur sa mort.",
+      "faille": "Le nom de celui qui l'a tuée.",
+      "cible": "L'alarmiste, qui sent la mort venir.",
+      "offre_au_traitre": "Elle épargne celui qui la conduit jusqu'à sa prochaine victime.",
+      "kids": true,
+      "version_kids": "Un fantôme qui gémit la nuit, parce que personne ne sait ce qui lui est arrivé.",
+      "faille_kids": "La vérité sur ce qui lui est arrivé.",
+      "sbires": [
+        {
+          "id": "le_sonneur_de_cloches",
+          "nom": "Le Sonneur de cloches",
+          "archetype": "prophete",
+          "animal": "Corbeau",
+          "veut": "Annoncer à qui la dame va apparaître.",
+          "vient_de": "Le sonneur du village, qui l'a vue un soir.",
+          "fait": "Sonne la cloche avant chaque malheur.",
+          "mode": "sbire",
+          "kids": true
+        },
+        {
+          "id": "la_petite_qui_la_voit",
+          "nom": "La Petite qui la voit",
+          "archetype": "debrouillard",
+          "animal": "Souris",
+          "veut": "Que la dame soit enfin entendue.",
+          "vient_de": "Une enfant du lieu, la seule qui la voit.",
+          "fait": "Répète aux vivants ce que la dame lui murmure.",
+          "mode": "sbire",
+          "kids": true
+        }
+      ]
+    },
+    {
+      "id": "le_capitaine",
+      "nom": "Le Capitaine",
+      "archetype": "denegateur",
+      "animal": "Murène",
+      "inspiration": "Le Cauchemar d'Innsmouth, H. P. Lovecraft",
+      "posture": "Souriant, le col remonté, il ne quitte jamais le port.",
+      "histoire": "Il a sauvé son port de la famine en pactisant avec ce qui vit sous l'eau. Depuis, toute la ville sourit et répète que tout va bien.",
+      "veut": "Que la ville prospère, sans que personne ne pose de questions.",
+      "besoin": "Avouer ce que la ville a vendu.",
+      "faille": "Le vieux du port, qui boit et qui parle.",
+      "cible": "Le dénégateur, qui ferme les yeux comme lui.",
+      "offre_au_traitre": "Il offre de l'or venu de la mer, et une place dans sa confrérie.",
+      "kids": true,
+      "version_kids": "Il a promis au peuple de la mer qu'on ne poserait jamais de questions : tout le port sourit.",
+      "faille_kids": "Le vieux du port, qui boit et qui parle.",
+      "sbires": [
+        {
+          "id": "le_precheur_de_la_confrerie",
+          "nom": "Le Prêcheur de la confrérie",
+          "archetype": "leader",
+          "animal": "Lion",
+          "veut": "Faire entrer chaque habitant dans la confrérie.",
+          "vient_de": "Un pêcheur ruiné qui a trouvé la foi.",
+          "fait": "Organise les cérémonies du port, et compte les absents.",
+          "mode": "sbire",
+          "kids": true
+        },
+        {
+          "id": "l_aubergiste",
+          "nom": "L'Aubergiste",
+          "archetype": "opportuniste",
+          "animal": "Hyène",
+          "veut": "Garder ses clients, pour toujours.",
+          "vient_de": "Né au port, il a les yeux un peu trop ronds.",
+          "fait": "Loue des chambres aux étrangers, puis ferme la porte de l'extérieur.",
+          "mode": "sbire",
+          "kids": true
+        }
+      ]
+    },
+    {
+      "id": "le_maitre_d_hotel",
+      "nom": "Le Maître d'hôtel",
+      "archetype": "denegateur",
+      "animal": "Cafard",
+      "inspiration": "Shining, Stephen King",
+      "posture": "Impeccable, une serviette sur le bras, il sourit toujours.",
+      "histoire": "Dans un grand hôtel coupé du monde par la neige, il sert une fête qui ne finit jamais. Il a tué sa famille entre ces murs, et fait comme si rien ne s'était passé.",
+      "veut": "Que la fête ne s'arrête jamais, et que les nouveaux restent pour toujours.",
+      "besoin": "Reconnaître ce qui s'est passé ici.",
+      "faille": "La chambre qu'il ne fait jamais nettoyer.",
+      "cible": "Le dénégateur, qui préfère la fête à la vérité.",
+      "offre_au_traitre": "Il offre à l'un d'eux de devenir le gardien de l'hôtel, comme s'il l'avait toujours été.",
+      "kids": false,
+      "sbires": [
+        {
+          "id": "le_barman",
+          "nom": "Le Barman",
+          "archetype": "opportuniste",
+          "animal": "Vautour",
+          "veut": "Servir le verre de trop.",
+          "vient_de": "Il sert au bar de l'hôtel depuis 1921.",
+          "fait": "Offre à boire, toujours gratuitement.",
+          "mode": "sbire",
+          "kids": false
+        },
+        {
+          "id": "les_jumelles",
+          "nom": "Les Jumelles",
+          "archetype": "cynique",
+          "animal": "Singe",
+          "veut": "Qu'on vienne jouer avec elles, pour toujours.",
+          "vient_de": "Les filles de l'ancien gardien.",
+          "fait": "Apparaissent au bout des couloirs, en riant.",
+          "mode": "sbire",
+          "kids": false
+        }
+      ]
+    },
+    {
+      "id": "la_secte_du_dormeur",
+      "nom": "La Secte du Dormeur",
+      "archetype": "prophete",
+      "animal": "Pieuvre",
+      "inspiration": "L'Appel de Cthulhu, H. P. Lovecraft",
+      "posture": "Calme, les yeux ailleurs, il chantonne des mots qu'il ne comprend pas.",
+      "histoire": "Un homme ordinaire a fait un rêve, puis a rencontré d'autres gens qui avaient fait le même. Ensemble, ils attendent le réveil de ce qui dort sous la mer.",
+      "veut": "Réveiller le Dormeur.",
+      "besoin": "Donner un sens à sa vie sans lui.",
+      "faille": "La statuette d'argile qu'il garde sur lui : sans elle, plus personne ne le suit.",
+      "cible": "Le prophète, qui croit à autre chose.",
+      "offre_au_traitre": "Il promet que ceux qui croient seront épargnés au réveil.",
+      "kids": true,
+      "version_kids": "Une bande de rêveurs qui chantent pour réveiller le géant endormi sous la mer.",
+      "faille_kids": "La statuette d'argile qu'il garde sur lui : sans elle, plus personne ne le suit.",
+      "sbires": [
+        {
+          "id": "le_sculpteur",
+          "nom": "Le Sculpteur",
+          "archetype": "debrouillard",
+          "animal": "Hibou",
+          "veut": "Finir la statue du Dormeur.",
+          "vient_de": "Un artiste qui fait le même rêve chaque nuit.",
+          "fait": "Dessine partout le même symbole.",
+          "mode": "sbire",
+          "kids": true
+        },
+        {
+          "id": "le_marin",
+          "nom": "Le Marin",
+          "archetype": "alarmiste",
+          "animal": "Coq",
+          "veut": "Crier à tous que le Dormeur arrive.",
+          "vient_de": "Le seul rescapé d'un bateau qui a vu l'île sortir de l'eau.",
+          "fait": "Sème la panique, puis la foi.",
+          "mode": "sbire",
+          "kids": true
+        }
+      ]
+    },
+    {
+      "id": "l_enfant_predicateur",
+      "nom": "L'Enfant prédicateur",
+      "archetype": "prophete",
+      "animal": "Sauterelle",
+      "inspiration": "Les Enfants du maïs, Stephen King",
+      "posture": "Petit, grave, une bible trop grande entre les mains.",
+      "histoire": "Dans une ville agricole, les adultes ont disparu. Un enfant y prêche pour Celui qui marche derrière les rangs.",
+      "veut": "Servir Celui qui marche derrière les rangs.",
+      "besoin": "Redevenir un enfant.",
+      "faille": "Un autre enfant qui refuse de le suivre.",
+      "cible": "Le prophète, qui prêche pour les vivants.",
+      "offre_au_traitre": "Il promet aux plus jeunes qu'ils ne vieilliront jamais.",
+      "kids": false,
+      "sbires": [
+        {
+          "id": "le_grand_frere",
+          "nom": "Le Grand frère",
+          "archetype": "protecteur",
+          "animal": "Loup",
+          "veut": "Protéger le prédicateur, quoi qu'il en coûte.",
+          "vient_de": "Le plus âgé des enfants, il aura bientôt dix-neuf ans.",
+          "fait": "Monte la garde au bord des champs.",
+          "mode": "sbire",
+          "kids": false
+        },
+        {
+          "id": "la_petite_chanteuse",
+          "nom": "La Petite chanteuse",
+          "archetype": "aidant",
+          "animal": "Mouton",
+          "veut": "Que tout le monde chante avec elle.",
+          "vient_de": "Elle n'a jamais connu ses parents.",
+          "fait": "Invite les étrangers à la fête du maïs.",
+          "mode": "sbire",
+          "kids": false
+        }
+      ]
+    },
+    {
+      "id": "le_revenant",
+      "nom": "Le Revenant",
+      "archetype": "cynique",
+      "animal": "Araignée",
+      "inspiration": "Ça, Stephen King",
+      "posture": "Il surgit en riant, et prend la forme de ce qui fait peur.",
+      "histoire": "Enfant de la ville, oublié au fond d'un puits il y a cent ans, il revient tous les vingt-sept ans en riant de la peur des autres.",
+      "veut": "Que la ville tremble.",
+      "besoin": "Qu'on se souvienne de son nom, et qu'on le pleure.",
+      "faille": "Son vrai nom.",
+      "cible": "Le cynique, qui rit pour ne pas avoir peur.",
+      "offre_au_traitre": "Il promet à l'un d'eux de ne plus jamais avoir peur.",
+      "kids": false,
+      "sbires": [
+        {
+          "id": "le_caid_du_lycee",
+          "nom": "Le Caïd du lycée",
+          "archetype": "gardien_de_l_ordre",
+          "animal": "Taureau",
+          "veut": "Faire la loi dans la ville.",
+          "vient_de": "Le fils du policier, il entend une voix dans les égouts.",
+          "fait": "S'en prend aux plus faibles, et les pousse vers les égouts.",
+          "mode": "sbire",
+          "kids": false
+        },
+        {
+          "id": "le_pharmacien",
+          "nom": "Le Pharmacien",
+          "archetype": "denegateur",
+          "animal": "Âne",
+          "veut": "Que la ville reste tranquille.",
+          "vient_de": "Il tient la pharmacie depuis trente ans, et ne voit jamais rien.",
+          "fait": "Minimise chaque disparition.",
+          "mode": "sbire",
+          "kids": false
+        }
+      ]
+    },
+    {
+      "id": "l_inconnu_au_masque_pale",
+      "nom": "L'Inconnu au masque pâle",
+      "archetype": "cynique",
+      "animal": "Phalène",
+      "inspiration": "Le Roi en jaune, Robert W. Chambers",
+      "posture": "Vêtu de jaune, il sourit derrière un masque blanc.",
+      "histoire": "Il apparaît le soir où quelqu'un lit une pièce interdite. Il force chacun à retirer son masque, mais lui n'en porte pas : c'est son vrai visage.",
+      "veut": "Que chacun montre son vrai visage.",
+      "besoin": "Qu'on accepte le sien.",
+      "faille": "Quelqu'un qui le regarde sans fuir.",
+      "cible": "Le cynique, qui cache tout derrière ses blagues.",
+      "offre_au_traitre": "Il donne à l'un d'eux le livret de la pièce.",
+      "kids": true,
+      "version_kids": "Un inconnu au masque blanc qui oblige chacun à enlever le sien et à dire ce qu'il cache.",
+      "faille_kids": "Quelqu'un qui le regarde sans fuir.",
+      "sbires": [
+        {
+          "id": "le_metteur_en_scene",
+          "nom": "Le Metteur en scène",
+          "archetype": "leader",
+          "animal": "Aigle",
+          "veut": "Monter enfin la pièce interdite.",
+          "vient_de": "Un artiste ruiné, qui a trouvé le livret.",
+          "fait": "Distribue les rôles aux protagonistes.",
+          "mode": "sbire",
+          "kids": true
+        },
+        {
+          "id": "la_souffleuse",
+          "nom": "La Souffleuse",
+          "archetype": "paranoiaque",
+          "animal": "Lapin",
+          "veut": "Que personne ne sorte de son rôle.",
+          "vient_de": "Elle souffle les répliques depuis son trou, depuis toujours.",
+          "fait": "Chuchote à chacun ce qu'il doit dire.",
+          "mode": "sbire",
+          "kids": true
+        }
+      ]
+    },
+    {
+      "id": "le_marchand",
+      "nom": "Le Marchand",
+      "archetype": "opportuniste",
+      "animal": "Scorpion",
+      "inspiration": "Bazaar, Stephen King, et les pactes de Donjons et Dragons",
+      "posture": "Affable, il connaît le prénom de chacun avant qu'on se présente.",
+      "histoire": "Il a été un client, autrefois. Pour payer sa dette, il a pris la place du marchand.",
+      "veut": "Que chacun lui doive quelque chose.",
+      "besoin": "Que quelqu'un refuse enfin son offre.",
+      "faille": "Un refus sincère.",
+      "cible": "L'opportuniste, qui négocie comme lui.",
+      "offre_au_traitre": "Il exauce un vœu contre un petit service : jouer un tour à l'un des autres.",
+      "kids": true,
+      "version_kids": "Il exauce les vœux, contre une petite farce à faire à un ami.",
+      "faille_kids": "Un refus sincère.",
+      "sbires": [
+        {
+          "id": "le_commis",
+          "nom": "Le Commis",
+          "archetype": "debrouillard",
+          "animal": "Souris",
+          "veut": "Devenir marchand à son tour.",
+          "vient_de": "Un ancien client, qui doit encore beaucoup.",
+          "fait": "Livre les objets à domicile.",
+          "mode": "sbire",
+          "kids": true
+        },
+        {
+          "id": "le_client_heureux",
+          "nom": "Le Client heureux",
+          "archetype": "denegateur",
+          "animal": "Porc",
+          "veut": "Garder ce qu'il a acheté.",
+          "vient_de": "Il a eu son vœu, et refuse de voir le prix.",
+          "fait": "Vante la boutique à tout le monde.",
+          "mode": "sbire",
+          "kids": true
+        }
+      ]
+    },
+    {
+      "id": "le_vieillard_de_la_mer",
+      "nom": "Le Vieillard de la mer",
+      "archetype": "opportuniste",
+      "animal": "Sangsue",
+      "inspiration": "le cinquième voyage de Sindbad le marin, Les Mille et Une Nuits",
+      "posture": "Frêle, le sourire triste, il tend les bras pour qu'on le porte.",
+      "histoire": "Au bord d'un ruisseau, un vieil homme demande qu'on le porte de l'autre côté. Une fois sur vos épaules, il ne descend plus jamais.",
+      "veut": "Être porté, sans jamais marcher.",
+      "besoin": "Marcher seul.",
+      "faille": "Le vin : ivre, il lâche prise.",
+      "cible": "L'opportuniste, qui vit lui aussi sur le dos des autres.",
+      "offre_au_traitre": "Il promet sa sagesse et ses secrets à celui qui accepte de le porter.",
+      "kids": true,
+      "version_kids": "Un vieux monsieur qui grimpe sur votre dos et ne veut plus jamais descendre.",
+      "faille_kids": "Le vin : ivre, il lâche prise.",
+      "sbires": [
+        {
+          "id": "le_singe_de_l_ile",
+          "nom": "Le Singe de l'île",
+          "archetype": "cynique",
+          "animal": "Singe",
+          "veut": "S'amuser de ceux qui se font prendre.",
+          "vient_de": "Un des singes chapardeurs de l'île.",
+          "fait": "Vole l'objet dont le groupe a besoin.",
+          "mode": "sbire",
+          "kids": true
+        },
+        {
+          "id": "l_ancien_porteur",
+          "nom": "L'Ancien porteur",
+          "archetype": "solitaire",
+          "animal": "Cerf",
+          "veut": "Être libre, enfin, et seul.",
+          "vient_de": "Il a porté le vieillard pendant des années.",
+          "fait": "Supplie qu'on l'aide, et tend le fardeau au premier venu.",
+          "mode": "sbire",
+          "kids": true
+        }
+      ]
+    },
+    {
+      "id": "le_roi_de_l_aube",
+      "nom": "Le Roi de l'aube",
+      "archetype": "gardien_de_l_ordre",
+      "animal": "Faucon",
+      "inspiration": "Shahriar, Les Mille et Une Nuits",
+      "posture": "Droit sur son trône, il ne dort jamais avant l'aube.",
+      "histoire": "Trahi par sa femme, il a fait une loi : une épouse chaque nuit, exécutée à l'aube.",
+      "veut": "Ne plus jamais être trahi.",
+      "besoin": "Refaire confiance.",
+      "faille": "Une histoire qui le tient éveillé jusqu'au matin.",
+      "cible": "Le gardien de l'ordre, qui croit encore à la justice.",
+      "offre_au_traitre": "Il épargne la famille de celui qui lui livre la prochaine victime.",
+      "kids": true,
+      "version_kids": "Un roi qui ne fait plus confiance à personne : chaque matin, il chasse quelqu'un du palais. Seule une histoire le tient éveillé.",
+      "faille_kids": "Une histoire qui le tient éveillé jusqu'au matin.",
+      "sbires": [
+        {
+          "id": "le_vizir",
+          "nom": "Le Vizir",
+          "archetype": "gardien_de_l_ordre",
+          "animal": "Fourmi",
+          "veut": "Obéir, sans regarder ce qu'il fait.",
+          "vient_de": "Il sert le roi depuis vingt ans.",
+          "fait": "Lit la loi du roi chaque matin.",
+          "mode": "sbire",
+          "kids": true
+        },
+        {
+          "id": "le_capitaine_des_gardes",
+          "nom": "Le Capitaine des gardes",
+          "archetype": "protecteur",
+          "animal": "Ours",
+          "veut": "Que le roi ne soit plus jamais trahi.",
+          "vient_de": "Le frère d'armes du roi depuis l'enfance.",
+          "fait": "Garde les portes jusqu'à l'aube.",
+          "mode": "sbire",
+          "kids": true
+        }
+      ]
+    },
+    {
+      "id": "le_directeur",
+      "nom": "Le Directeur",
+      "archetype": "gardien_de_l_ordre",
+      "animal": "Crocodile",
+      "inspiration": "Rita Hayworth et la Rédemption de Shawshank, Stephen King",
+      "posture": "La Bible sous le bras, il parle doucement et ne cligne jamais des yeux.",
+      "histoire": "Le directeur d'une prison cite les Écritures, et blanchit son argent grâce à un détenu comptable.",
+      "veut": "Que l'ordre règne, et que ses comptes restent secrets.",
+      "besoin": "Se regarder en face.",
+      "faille": "Ses propres livres de comptes.",
+      "cible": "Le gardien de l'ordre, qui applique la règle sans se servir.",
+      "offre_au_traitre": "Il offre une remise de peine, ou une cellule plus douce.",
+      "kids": false,
+      "sbires": [
+        {
+          "id": "le_chef_des_gardiens",
+          "nom": "Le Chef des gardiens",
+          "archetype": "leader",
+          "animal": "Lion",
+          "veut": "Que personne ne lui tienne tête.",
+          "vient_de": "Un ancien soldat, choisi par le directeur pour sa dureté.",
+          "fait": "Mène les fouilles, et punit pour l'exemple.",
+          "mode": "sbire",
+          "kids": false
+        },
+        {
+          "id": "le_mouchard",
+          "nom": "Le Mouchard",
+          "archetype": "paranoiaque",
+          "animal": "Serpent",
+          "veut": "Une cellule plus douce.",
+          "vient_de": "Un détenu qui doit sa place au directeur.",
+          "fait": "Rapporte tout ce qui se dit dans le lieu.",
+          "mode": "sbire",
+          "kids": false
+        }
+      ]
+    },
+    {
+      "id": "le_djinn_de_la_bouteille",
+      "nom": "Le Djinn de la bouteille",
+      "archetype": "solitaire",
+      "animal": "Salamandre",
+      "inspiration": "Le Pêcheur et le Génie, Les Mille et Une Nuits",
+      "posture": "Immense, fait de fumée, il se recroqueville dès qu'on parle de la bouteille.",
+      "histoire": "Enfermé seul pendant des siècles, il a d'abord juré d'enrichir celui qui le libérerait, puis, à force d'attendre, de le tuer.",
+      "veut": "Se venger de celui qui ouvre la bouteille.",
+      "besoin": "Pardonner l'attente.",
+      "faille": "Son orgueil : si l'on doute qu'il tienne dans la bouteille, il y rentre pour le prouver.",
+      "cible": "Le solitaire, qui prépare sa sortie comme lui.",
+      "offre_au_traitre": "Il promet la richesse à celui qui l'aidera à sortir pour de bon.",
+      "kids": true,
+      "version_kids": "Enfermé trop longtemps, il a juré de jouer un très mauvais tour à celui qui ouvrirait la bouteille.",
+      "faille_kids": "Son orgueil : si l'on doute qu'il tienne dans la bouteille, il y rentre pour le prouver.",
+      "sbires": [
+        {
+          "id": "le_feu_follet",
+          "nom": "Le Feu follet",
+          "archetype": "cynique",
+          "animal": "Renard",
+          "veut": "Donner aux curieux l'envie d'ouvrir la bouteille.",
+          "vient_de": "Une petite flamme échappée de la bouteille.",
+          "fait": "Danse autour de la bouteille et chuchote des promesses.",
+          "mode": "sbire",
+          "kids": true
+        },
+        {
+          "id": "le_pecheur_malchanceux",
+          "nom": "Le Pêcheur malchanceux",
+          "archetype": "alarmiste",
+          "animal": "Rat",
+          "veut": "Se débarrasser de la bouteille.",
+          "vient_de": "C'est lui qui l'a remontée dans son filet.",
+          "fait": "Refile la bouteille au premier venu, en criant au malheur.",
+          "mode": "sbire",
+          "kids": true
+        }
+      ]
+    },
+    {
+      "id": "l_etranger",
+      "nom": "L'Étranger",
+      "archetype": "solitaire",
+      "animal": "Albatros",
+      "inspiration": "L'Étranger (The Outsider), H. P. Lovecraft",
+      "posture": "Grand, maladroit, il évite les miroirs et les fenêtres.",
+      "histoire": "Il a vécu seul, dans l'ombre d'un château, sans jamais voir son reflet. Le jour où il rejoint une fête, tout le monde fuit.",
+      "veut": "Rejoindre les vivants.",
+      "besoin": "S'accepter tel qu'il est.",
+      "faille": "Un miroir.",
+      "cible": "Le solitaire, qui a choisi d'être seul.",
+      "offre_au_traitre": "Il offre son amitié à celui qui reste.",
+      "kids": true,
+      "version_kids": "Un être que personne n'a jamais regardé, et qui voudrait juste être invité à la fête.",
+      "faille_kids": "Un miroir.",
+      "sbires": [
+        {
+          "id": "le_vieux_valet",
+          "nom": "Le Vieux valet",
+          "archetype": "debrouillard",
+          "animal": "Hibou",
+          "veut": "Trouver enfin un ami à son maître.",
+          "vient_de": "Il a élevé l'Étranger loin des miroirs.",
+          "fait": "Écrit des invitations, et cache tous les miroirs.",
+          "mode": "sbire",
+          "kids": true
+        },
+        {
+          "id": "l_invite_masque",
+          "nom": "L'Invité masqué",
+          "archetype": "solitaire",
+          "animal": "Chat",
+          "veut": "Emmener l'Étranger loin des vivants, au bal des ombres.",
+          "vient_de": "Un fantôme du château, qui danse seul depuis cent ans.",
+          "fait": "Ouvre les passages secrets du château.",
+          "mode": "sbire",
+          "kids": true
+        }
+      ]
+    },
+    {
+      "id": "l_immortel",
+      "nom": "L'Immortel",
+      "archetype": "paranoiaque",
+      "animal": "Méduse",
+      "inspiration": "Kochtcheï l'Immortel, des contes russes, et la liche de Donjons et Dragons",
+      "posture": "Maigre, très lent, il ne quitte pas des yeux ce qu'il cache.",
+      "histoire": "Il a vu mourir tous ceux qu'il aimait, et a caché sa propre mort dans un objet. Depuis, il soupçonne tout le monde de la chercher.",
+      "veut": "Ne jamais mourir.",
+      "besoin": "Accepter de passer la main.",
+      "faille": "L'objet où sa mort est cachée : c'est l'un des trois objets du lieu.",
+      "cible": "Le paranoïaque, qui soupçonne comme lui.",
+      "offre_au_traitre": "Il promet une part d'éternité à qui lui rapporte les secrets des autres.",
+      "kids": true,
+      "version_kids": "Il a caché son cœur dans un objet, et soupçonne tout le monde de le chercher.",
+      "faille_kids": "L'objet où son cœur est caché : c'est l'un des trois objets du lieu.",
+      "sbires": [
+        {
+          "id": "le_capitaine_noir",
+          "nom": "Le Capitaine noir",
+          "archetype": "leader",
+          "animal": "Aigle",
+          "veut": "Commander l'armée de l'Immortel, et en hériter.",
+          "vient_de": "Un général vaincu, épargné contre sa fidélité.",
+          "fait": "Lance ses patrouilles à la recherche de l'objet.",
+          "mode": "sbire",
+          "kids": true
+        },
+        {
+          "id": "l_espion",
+          "nom": "L'Espion",
+          "archetype": "paranoiaque",
+          "animal": "Serpent",
+          "veut": "Devenir immortel à son tour.",
+          "vient_de": "Un courtisan à qui l'Immortel a promis l'éternité.",
+          "fait": "Rapporte à son maître les secrets de chacun.",
+          "mode": "sbire",
+          "kids": true
+        }
+      ]
+    },
+    {
+      "id": "l_œil",
+      "nom": "L'Œil",
+      "archetype": "paranoiaque",
+      "animal": "Mouche",
+      "inspiration": "le tyrannœil de Donjons et Dragons",
+      "posture": "Invisible, il voit tout : chaque écran, chaque fenêtre, chaque regard.",
+      "histoire": "Depuis vingt ans, il surveille tout un immeuble derrière ses écrans, et voit des complots partout. Il ne supporte aucun regard que le sien.",
+      "veut": "Tout voir, tout contrôler.",
+      "besoin": "Être vu, lui aussi.",
+      "faille": "L'angle mort : il y en a toujours un.",
+      "cible": "Le paranoïaque, son reflet.",
+      "offre_au_traitre": "Il offre à l'un d'eux de voir ce que les autres cachent.",
+      "kids": true,
+      "version_kids": "Un œil géant qui voit tout, et ne supporte pas qu'on lui cache quelque chose.",
+      "faille_kids": "L'angle mort : il y en a toujours un.",
+      "sbires": [
+        {
+          "id": "le_concierge",
+          "nom": "Le Concierge",
+          "archetype": "alarmiste",
+          "animal": "Coq",
+          "veut": "Signaler le moindre mouvement.",
+          "vient_de": "Il tient la loge de l'immeuble depuis vingt ans.",
+          "fait": "Donne l'alerte dès qu'une porte s'ouvre.",
+          "mode": "sbire",
+          "kids": true
+        },
+        {
+          "id": "le_voisin_du_dernier_etage",
+          "nom": "Le Voisin du dernier étage",
+          "archetype": "solitaire",
+          "animal": "Cerf",
+          "veut": "Qu'on le laisse seul chez lui.",
+          "vient_de": "Un homme qui ne sort jamais.",
+          "fait": "Observe tout de sa fenêtre, et le raconte à l'Œil.",
+          "mode": "sbire",
+          "kids": true
+        }
+      ]
+    }
+  ],
+  "figurants": {
+    "modes": {
+      "figurant": "Neutre, ou du côté des protagonistes. Il a sa propre affaire en cours dans le lieu : un archétype, un animal, ce qu'il veut, d'où il vient, et ce qu'il sait ou apporte.",
+      "sbire": "Au service du méchant. Il agit à sa place tant que le méchant reste dans l'ombre : un archétype, un animal, ce qu'il veut, d'où il vient, et ce qu'il fait pour son maître. Deux sbires par méchant, sur sa carte."
+    },
+    "types": [
+      {
+        "id": "temoin",
+        "nom": "Témoin",
+        "ce_qu_il_est": "Il a vu ou entendu quelque chose.",
+        "veut": "Qu'on le croie.",
+        "comment_le_jouer": "Il lâche un détail par acte, jamais tout d'un coup.",
+        "sert_a": "Apporte une info sur le danger ou sur le méchant."
+      },
+      {
+        "id": "victime",
+        "nom": "Victime",
+        "ce_qu_il_est": "Il se met en danger sans le voir.",
+        "veut": "Continuer sa vie comme si de rien n'était.",
+        "comment_le_jouer": "Il va exactement là où il ne faut pas.",
+        "sert_a": "Rend le danger concret : il faut le sauver."
+      },
+      {
+        "id": "aide",
+        "nom": "Aide",
+        "ce_qu_il_est": "Il veut se rendre utile aux protagonistes.",
+        "veut": "Rejoindre le groupe.",
+        "comment_le_jouer": "Il apporte un objet, une clé ou un savoir, et en fait parfois trop.",
+        "sert_a": "Donne au groupe un moyen d'agir."
+      },
+      {
+        "id": "commere",
+        "nom": "Commère",
+        "ce_qu_il_est": "Il fait circuler les rumeurs.",
+        "veut": "Savoir avant tout le monde, et le répéter.",
+        "comment_le_jouer": "Il déforme tout, mais il y a toujours un fond de vrai.",
+        "sert_a": "Sème des pistes, des vraies et des fausses."
+      },
+      {
+        "id": "curieux",
+        "nom": "Curieux",
+        "ce_qu_il_est": "Il se mêle de tout.",
+        "veut": "Être dans le coup.",
+        "comment_le_jouer": "Il suit le groupe, ouvre la mauvaise porte, gêne le plan.",
+        "sert_a": "Complique tout, au pire moment."
+      },
+      {
+        "id": "officiel",
+        "nom": "Officiel",
+        "ce_qu_il_est": "Il représente le règlement du lieu.",
+        "veut": "Que la règle soit respectée.",
+        "comment_le_jouer": "Il demande des comptes, interdit, ralentit.",
+        "sert_a": "Met un obstacle humain sur le chemin."
+      },
+      {
+        "id": "sceptique",
+        "nom": "Sceptique",
+        "ce_qu_il_est": "Il refuse de croire au danger.",
+        "veut": "Une explication normale.",
+        "comment_le_jouer": "Il trouve une raison à tout, jusqu'au palier 3.",
+        "sert_a": "Fait douter le groupe."
+      },
+      {
+        "id": "innocent",
+        "nom": "Innocent",
+        "ce_qu_il_est": "Il fait ce qui est juste, sans calcul.",
+        "veut": "Que personne ne soit laissé derrière.",
+        "comment_le_jouer": "Il pose la question morale au moment du choix.",
+        "sert_a": "Rappelle aux protagonistes leur besoin."
+      }
+    ],
+    "regles": [
+      {
+        "titre": "Un figurant se joue comme un protagoniste",
+        "texte": "Il a un archétype et un animal : on prend la posture, et on joue ce qu'il veut. Un comédien peut en jouer un le temps d'une scène, puis revenir à son personnage."
+      },
+      {
+        "titre": "Trois par lieu",
+        "texte": "Un aide, un témoin ou assimilé, une victime ou assimilée. Le Maître du destin en sort un par acte, pas plus."
+      },
+      {
+        "titre": "Le figurant peut basculer",
+        "texte": "Si le méchant lui fait son offre et qu'il accepte, il passe en mode sbire. L'appli le note dans le registre."
+      },
+      {
+        "titre": "Il revient",
+        "texte": "Un figurant croisé dans un épisode peut revenir dans un autre lieu, une autre saison. Le registre garde son nom, ce qu'il sait et ce qu'on lui a promis."
+      },
+      {
+        "titre": "Les sbires d'abord",
+        "texte": "Tant que le méchant reste dans l'ombre, ce sont ses sbires qu'on voit. On ne voit le méchant lui-même qu'au final de la saison."
+      }
+    ],
+    "par_lieu": "Trois figurants par lieu dans lieux[].figurants : un aide, un témoin (ou commère, curieux, officiel), une victime (ou sceptique, innocent).",
+    "inspiration": "Les « bystanders » de Monster of the Week."
+  },
+  "mode_kids": {
+    "sigle": {
+      "texte": "KIDS",
+      "fond": "#F2C230",
+      "texte_couleur": "#2a2108"
+    },
+    "principe": "La même grammaire, ton adapté. Le sigle KIDS marque tout ce qui se joue avec des enfants : cartes, méchants, sbires, dangers, lieux.",
+    "regles": [
+      {
+        "titre": "Un pouvoir, toute la saison",
+        "texte": "Chaque enfant choisit un pouvoir en plus de son animal : l'eau, le feu, parler aux animaux… Il le garde du premier au dernier épisode."
+      },
+      {
+        "titre": "Le pouvoir aide, il ne résout pas",
+        "texte": "Un pouvoir ouvre une porte, jamais toute l'histoire. Pour vaincre, il faut une idée, et souvent deux pouvoirs ensemble."
+      },
+      {
+        "titre": "Personne ne meurt",
+        "texte": "Au palier 4, le prix est un renoncement : un trésor, son pouvoir le temps d'un épisode, un secret qu'on avoue."
+      },
+      {
+        "titre": "Des épisodes courts",
+        "texte": "Vingt à trente minutes, quatre actes courts. Une saison peut se jouer sur quatre soirs ou quatre week-ends."
+      },
+      {
+        "titre": "Le méchant en version kids",
+        "texte": "On garde son envie et sa faille, on adoucit le reste. On le bat par sa faille, avec une idée, pas par la force."
+      },
+      {
+        "titre": "Le parent tient le destin",
+        "texte": "Il lance le danger, il fait les présages, et il joue les sbires et les figurants. Les enfants jouent les héros."
+      }
+    ],
+    "pouvoirs_exemples": [
+      "l'eau",
+      "le feu",
+      "le vent",
+      "la glace",
+      "la lumière",
+      "les plantes",
+      "parler aux animaux",
+      "devenir invisible",
+      "voler",
+      "une force immense",
+      "rétrécir",
+      "lire dans les pensées"
+    ],
+    "pouvoir_regle": "Un pouvoir choisi avec l'animal, gardé toute la saison. Il aide, il ne résout jamais tout seul.",
+    "palier_4": "Personne ne meurt : on choisit, on renonce (un trésor, son pouvoir le temps d'un épisode, un secret qu'on avoue), on se sépare un moment.",
+    "duree_episode_minutes": [
+      20,
+      30
+    ],
+    "repliques_remplacees": [
+      {
+        "animal": "Loup",
+        "adulte": "Je vous chercherai, je vous trouverai et je vous tuerai.",
+        "kids": "Tu deviens responsable pour toujours de ce que tu as apprivoisé.",
+        "source": "Le Petit Prince"
+      },
+      {
+        "animal": "Corbeau",
+        "adulte": "Je vois des gens qui sont morts.",
+        "kids": "Que la Force soit avec toi.",
+        "source": "Star Wars"
+      },
+      {
+        "animal": "Renard",
+        "adulte": "Les cons, ça ose tout. C'est même à ça qu'on les reconnaît.",
+        "kids": "Ils sont fous, ces Romains !",
+        "source": "Astérix"
+      }
+    ],
+    "mechants": [
+      "le_seigneur_des_brumes",
+      "le_chef_des_quarante_voleurs",
+      "le_frere_cache",
+      "la_guenaude",
+      "le_magicien_de_la_lampe",
+      "la_dame_blanche",
+      "le_capitaine",
+      "la_secte_du_dormeur",
+      "l_inconnu_au_masque_pale",
+      "le_marchand",
+      "le_vieillard_de_la_mer",
+      "le_roi_de_l_aube",
+      "le_djinn_de_la_bouteille",
+      "l_etranger",
+      "l_immortel",
+      "l_œil"
+    ],
+    "dangers": [
+      "des_robots_se_rebellent",
+      "le_lieu_va_s_autodetruire",
+      "le_noir_total",
+      "le_soleil_grossit_tout_brule",
+      "le_soleil_s_eteint_le_froid_gagne",
+      "les_murs_se_referment",
+      "on_est_perdus",
+      "on_est_traques",
+      "tout_se_verrouille_on_est_pieges",
+      "un_essaim",
+      "un_gouffre_s_ouvre_sous_nos_pieds",
+      "un_incendie",
+      "un_monstre_geant",
+      "un_naufrage",
+      "un_pacte_ancien_reactive",
+      "un_raz_de_maree",
+      "un_tremblement_de_terre",
+      "un_volcan_en_eruption",
+      "une_ia_prend_le_controle",
+      "une_creature_nous_traque",
+      "une_inondation",
+      "une_invasion_extraterrestre",
+      "une_tempete",
+      "une_tornade"
+    ],
+    "lieux_adultes_seulement": [
+      "boite_de_nuit",
+      "casino",
+      "prison",
+      "bunker_militaire",
+      "tribunal"
+    ]
+  },
   "exercices": [
     {
       "id": "plans_de_genre",
@@ -3736,7 +6411,7 @@
     "les anciens moteurs des animaux",
     "les animaux annoncés au public",
     "les changements de lieu systématiques",
-    "le traître",
+    "le traître dans l'épisode seul (il revient en mode saison, recruté par le méchant)",
     "le sidéré"
   ],
   "direction_artistique": {
@@ -3749,6 +6424,7 @@
     "trait": "#e6d8b8",
     "texte_doux": "#5b5244",
     "bleu_destiny": "#3F74B5",
+    "kids": "#F2C230",
     "polices": {
       "titres": "Cinzel (700, 900)",
       "texte": "Montserrat (400 à 700)"

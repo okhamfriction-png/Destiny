@@ -76,12 +76,19 @@ void main() {
 
     final lieux = {for (final l in await store.getLocations()) l.id: l};
     expect(lieux['banque']!.espaces, g.lieuNomme('Banque')!.espaces);
+    // Les drapeaux kids arrivent aussi dans une base 1.5.7.
+    expect(lieux['banque']!.kids, g.lieuNomme('Banque')!.kids);
+    expect(lieux['casino']!.kids, isFalse);
+    expect(dangers['incendie']!.kids, g.dangerNomme('Un incendie')!.kids);
+    expect(dangers.values.where((d) => d.kids), isNotEmpty);
+    expect(dangers.values.where((d) => d.kids).every((d) => d.palier4Kids.isNotEmpty), isTrue);
 
     final rapport = await store.dernierRapport();
     expect(rapport, isNotNull);
     expect(rapport!.gardes, contains('Une tempête'));
     expect(rapport.absents, contains('Une invasion de zombies'));
     expect(rapport.dangersMisAJour, greaterThan(0));
+    expect(rapport.sansCorrespondance, isEmpty);
   });
 
   test('une nouvelle installation part directement de la grammaire', () async {

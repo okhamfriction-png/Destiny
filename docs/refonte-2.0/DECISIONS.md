@@ -13,10 +13,10 @@ Tes réponses du 2 novembre 2026, notées telles que je les ai comprises. Elles 
 
 On y entre par deux portes, comme aux échecs ou dans FIFA (avec ses potes, ou contre l'ordinateur) :
 
-1. **Entre humains** : un maître du jeu humain, aidé par l'appli (chrono, musiques, régie, fiches).
-   - **Histoire** : un one shot, une histoire complète en 4 actes.
-   - **Saison** : quand on appuie sur « Faire la suite », l'histoire devient une saison. Les épisodes sont rangés ensemble.
-   - **Campagne** : une saison avec un grand danger qui revient d'épisode en épisode.
+1. **Entre humains** : un maître du jeu humain, aidé par l'appli (chrono, musiques, régie, fiches). On garde le vocabulaire de la télé (cahier des charges « série et kids ») :
+   - **Épisode** : le one shot, une histoire complète en 4 actes, un lieu, un danger.
+   - **Saison** : quand on appuie sur « Faire la suite », l'épisode devient le premier d'une saison de 4 épisodes, avec un grand méchant dans l'ombre et ses 4 présages. Les épisodes sont rangés ensemble.
+   - **Série** : plusieurs saisons à la suite. L'ancienne « Campagne » devient la Série.
 2. **Avec l'IA** : l'IA mène le jeu. Le Spectacle IA, qui servait à créer une histoire avec l'IA, passe ici.
 
 Tout doit rester clair pour le maître du jeu, avec la musique et la régie son.
@@ -79,3 +79,16 @@ Les **données** que tu as déjà enregistrées (anciennes histoires, parties, t
 - Le combat (cœurs), les malus et bonus.
 - La **pièce du destin** BRAVE / SMART. C'est une pièce, pas un dé.
 - La réussite ou l'échec d'une action dans le jeu avec l'IA est tirée avec cette même pièce. Le mot « dé » disparaît.
+
+## Les trois fichiers du 2 novembre (refonte v2, mise à jour série et kids, grammaire 2.1)
+
+Ils sont intégrés à la 2.0 (la 2.0 n'est pas sortie, donc pas de 2.1 séparée). Quand ils contredisent tes réponses ci-dessus, **tes réponses l'emportent** :
+
+| Sujet | Les fichiers disent | Tes réponses | Ce que je fais |
+|---|---|---|---|
+| Navigation | garder 4 onglets | Jouer, Troupe, Exercices | 3 onglets (tes réponses) |
+| Dangers et lieux | le catalogue reste la référence | « mets tout à jour avec les nouvelles données » | textes de la grammaire, sans jamais écraser tes modifications |
+| Animaux de campagne | rien ne se supprime | les 24 animaux, partout | les 16 restent dans les données (rien n'est effacé), mais l'appli n'utilise plus que les 24 |
+| Rue et Spin-off | propose-moi quelque chose | retire-les | retirés |
+| Cartes « Destin » | propose un usage facultatif | retire tous les effets de dé | retirées de l'interface (elles venaient du dé) |
+| Traître | module facultatif, recruté par le méchant en saison | facultatif, désactivé par défaut | les deux : option désactivée, et en saison c'est le méchant qui le recrute |

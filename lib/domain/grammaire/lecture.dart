@@ -167,6 +167,69 @@ List<String> validerGrammaire(Map<String, dynamic> j) {
       }
     }
   }
+  // Méchants et sbires.
+  final mechants = j['mechants'];
+  if (mechants is List) {
+    final parArchetype = <String, int>{};
+    final idsSbires = <String>{};
+    for (final m in mechants) {
+      final mm = m as Map;
+      final arch = '${mm['archetype']}';
+      parArchetype[arch] = (parArchetype[arch] ?? 0) + 1;
+      if (!idsArchetypes.contains(arch)) {
+        erreurs.add('Le méchant ${mm['id']} a un archétype inconnu.');
+      }
+      if (nomsAnimaux.containsKey(mm['animal'])) {
+        erreurs.add('Le méchant ${mm['id']} prend un animal des comédiens.');
+      }
+      if (mm['kids'] == true &&
+          ('${mm['version_kids'] ?? ''}'.isEmpty || '${mm['faille_kids'] ?? ''}'.isEmpty)) {
+        erreurs.add('Le méchant kids ${mm['id']} n\'a pas sa version kids.');
+      }
+      final sbires = mm['sbires'];
+      if (sbires is! List || sbires.length != 2) {
+        erreurs.add('Le méchant ${mm['id']} doit avoir 2 sbires.');
+        continue;
+      }
+      for (final sb in sbires) {
+        final sm = sb as Map;
+        if (!idsSbires.add('${sm['id']}')) erreurs.add('Sbire en double : ${sm['id']}.');
+        if (nomsAnimaux[sm['animal']] != sm['archetype']) {
+          erreurs.add('Le sbire ${sm['id']} : son animal n\'appartient pas à son archétype.');
+        }
+      }
+    }
+    for (final id in idsArchetypes) {
+      if ((parArchetype[id] ?? 0) == 0) erreurs.add('Aucun méchant pour l\'archétype $id.');
+    }
+  }
+
+  // Figurants des lieux.
+  final types = {
+    for (final t in ((j['figurants'] as Map?)?['types'] as List? ?? const []))
+      (t as Map)['id'],
+  };
+  for (final l in (j['lieux'] as List? ?? const [])) {
+    final lm = l as Map;
+    for (final f in (lm['figurants'] as List? ?? const [])) {
+      final fm = f as Map;
+      if (nomsAnimaux[fm['animal']] != fm['archetype']) {
+        erreurs.add('« ${lm['nom']} » : l\'animal de ${fm['nom']} '
+            'n\'appartient pas à son archétype.');
+      }
+      if (types.isNotEmpty && !types.contains(fm['type'])) {
+        erreurs.add('« ${lm['nom']} » : ${fm['nom']} a un type inconnu.');
+      }
+    }
+  }
+
+  // Dangers kids : un palier 4 sans mort.
+  for (final d in (j['dangers'] as List? ?? const [])) {
+    final dm = d as Map;
+    if (dm['kids'] == true && '${dm['supprime_kids'] ?? ''}'.trim().isEmpty) {
+      erreurs.add('Le danger kids « ${dm['nom']} » n\'a pas son palier 4 kids.');
+    }
+  }
   return erreurs;
 }
 
@@ -222,6 +285,9 @@ Grammaire lireGrammaire(
         posture: s(an['posture']),
         replique: s(an['replique']),
         sourceReplique: s(an['source_replique']),
+        repliqueKids: s(an['replique_kids']),
+        sourceRepliqueKids: s(an['source_replique_kids']),
+        repliqueAdulteSeulement: an['replique_adulte_seulement'] == true,
         temperament: appli.temperament,
         niveauxCorps: {
           for (var i = 0; i < PalierId.values.length && i < appli.niveaux.length; i++)
@@ -255,6 +321,25 @@ Grammaire lireGrammaire(
         consignes: ls(a['consignes']),
       ),
   ];
+
+  String idAnimal(Object? nom) {
+    final cle = Grammaire.normaliser(s(nom));
+    for (final a in animaux) {
+      if (Grammaire.normaliser(a.nom) == cle || a.id == s(nom)) return a.id;
+    }
+    return s(nom);
+  }
+
+  List<RegleDOr> regles(Object? v) => [
+        for (final r in maps(v)) RegleDOr(titre: s(r['titre']), texte: s(r['texte'])),
+      ];
+
+  final se = Map<String, dynamic>.from(j['serie'] as Map? ?? const {});
+  final reg = Map<String, dynamic>.from(se['registre'] as Map? ?? const {});
+  final fi = Map<String, dynamic>.from(j['figurants'] as Map? ?? const {});
+  final fiModes = Map<String, dynamic>.from(fi['modes'] as Map? ?? const {});
+  final mk = Map<String, dynamic>.from(j['mode_kids'] as Map? ?? const {});
+  final sigle = Map<String, dynamic>.from(mk['sigle'] as Map? ?? const {});
 
   final rd = Map<String, dynamic>.from(j['rituel_destiny'] as Map? ?? const {});
   final di = Map<String, dynamic>.from(j['distribution'] as Map? ?? const {});
@@ -355,6 +440,8 @@ Grammaire lireGrammaire(
           id: s(d['id']),
           nom: s(d['nom']),
           paliers: parPalier(d['paliers']),
+          kids: d['kids'] == true,
+          supprimeKids: s(d['supprime_kids']),
         ),
     ],
     lieux: [
@@ -364,6 +451,21 @@ Grammaire lireGrammaire(
           nom: s(l['nom']),
           espaces: ls(l['espaces']),
           roles: ls(l['roles']),
+          kids: l['kids'] == true,
+          figurants: [
+            for (final (i, f) in maps(l['figurants']).indexed)
+              FigurantPret(
+                id: '${s(l['id'])}.$i',
+                nom: s(f['nom']),
+                type: s(f['type']),
+                archetypeId: s(f['archetype']),
+                animalId: idAnimal(f['animal']),
+                veut: s(f['veut']),
+                vientDe: s(f['vient_de']),
+                sait: s(f['sait']),
+                mode: ModePnj.depuisTexte(s(f['mode'])),
+              ),
+          ],
         ),
     ],
     oeuvres: [
@@ -443,6 +545,86 @@ Grammaire lireGrammaire(
         for (final st in Statut.values)
           if (statuts[st.name] is String) st: s(statuts[st.name]),
       },
+    ),
+    serie: ReglesSerie(
+      episode: s(se['episode']),
+      saison: s(se['saison']),
+      serie: s(se['serie']),
+      reglesDuMechant: ls(se['regles_du_mechant']),
+      registre: RegistreSerie(
+        principe: s(reg['principe']),
+        categories: ls(reg['categories']),
+        suggestion: s(reg['suggestion']),
+      ),
+    ),
+    mechants: [
+      for (final m in maps(j['mechants']))
+        Mechant(
+          id: s(m['id']),
+          nom: s(m['nom']),
+          archetypeId: s(m['archetype']),
+          animal: s(m['animal']),
+          inspiration: s(m['inspiration']),
+          posture: s(m['posture']),
+          histoire: s(m['histoire']),
+          veut: s(m['veut']),
+          besoin: s(m['besoin']),
+          faille: s(m['faille']),
+          cible: s(m['cible']),
+          offreAuTraitre: s(m['offre_au_traitre']),
+          kids: m['kids'] == true,
+          versionKids: s(m['version_kids']),
+          failleKids: s(m['faille_kids']),
+          sbires: [
+            for (final sb in maps(m['sbires']))
+              Sbire(
+                id: s(sb['id']),
+                nom: s(sb['nom']),
+                archetypeId: s(sb['archetype']),
+                animalId: idAnimal(sb['animal']),
+                veut: s(sb['veut']),
+                vientDe: s(sb['vient_de']),
+                fait: s(sb['fait']),
+                kids: sb['kids'] == true,
+              ),
+          ],
+        ),
+    ],
+    figurants: ReglesFigurants(
+      modes: {
+        ModePnj.figurant: s(fiModes['figurant']),
+        ModePnj.sbire: s(fiModes['sbire']),
+      },
+      types: [
+        for (final t in maps(fi['types']))
+          TypeFigurant(
+            id: s(t['id']),
+            nom: s(t['nom']),
+            ceQuIlEst: s(t['ce_qu_il_est']),
+            veut: s(t['veut']),
+            commentLeJouer: s(t['comment_le_jouer']),
+            sertA: s(t['sert_a']),
+          ),
+      ],
+      regles: regles(fi['regles']),
+      parLieu: s(fi['par_lieu']),
+      inspiration: s(fi['inspiration']),
+    ),
+    modeKids: ModeKids(
+      sigleTexte: s(sigle['texte']),
+      sigleFond: s(sigle['fond']),
+      sigleTexteCouleur: s(sigle['texte_couleur']),
+      principe: s(mk['principe']),
+      regles: regles(mk['regles']),
+      pouvoirsExemples: ls(mk['pouvoirs_exemples']),
+      pouvoirRegle: s(mk['pouvoir_regle']),
+      palier4: s(mk['palier_4']),
+      dureeEpisodeMinutes: [
+        for (final x in (mk['duree_episode_minutes'] as List? ?? const [])) (x as num).toInt(),
+      ],
+      mechantIds: ls(mk['mechants']),
+      dangerIds: ls(mk['dangers']),
+      lieuxAdultesSeulement: ls(mk['lieux_adultes_seulement']),
     ),
   );
 }

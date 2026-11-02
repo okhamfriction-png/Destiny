@@ -39,6 +39,7 @@ class RapportSynchroCatalogue {
     required this.lieuxMisAJour,
     required this.gardes,
     required this.absents,
+    this.sansCorrespondance = const [],
   });
 
   final DateTime date;
@@ -52,12 +53,17 @@ class RapportSynchroCatalogue {
   /// l'utilisateur) : ils ne reviennent pas.
   final List<String> absents;
 
+  /// Éléments du catalogue de l'appli sans équivalent dans la grammaire
+  /// (signalés, jamais choisis seuls).
+  final List<String> sansCorrespondance;
+
   Map<String, dynamic> versJson() => {
         'date': date.toIso8601String(),
         'dangers': dangersMisAJour,
         'lieux': lieuxMisAJour,
         'gardes': gardes,
         'absents': absents,
+        'sans_correspondance': sansCorrespondance,
       };
 
   static RapportSynchroCatalogue? depuisJson(Object? j) {
@@ -69,6 +75,7 @@ class RapportSynchroCatalogue {
       lieuxMisAJour: (j['lieux'] as num?)?.toInt() ?? 0,
       gardes: ls(j['gardes']),
       absents: ls(j['absents']),
+      sansCorrespondance: ls(j['sans_correspondance']),
     );
   }
 }

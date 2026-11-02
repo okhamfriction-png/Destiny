@@ -1,14 +1,12 @@
 {
   "version": "2.0",
   "a_propos": "Textes de l'appli qui accompagnent la grammaire (destiny_grammaire.json). Ils viennent du cahier des charges de la refonte 2.0. La grammaire reste dans son fichier : ici, seulement les messages, l'aide et les réglages par défaut.",
-
   "rituel": {
     "titre": "Destiny",
     "texte_ellipse": "Quelques heures plus tard…",
     "rappel_premier_fige": "Premier figé : chacun choisit en silence sa phrase, « il veut… mais il a besoin de… ».",
     "nouvelle_alarmiste": "La nouvelle à souffler à l'alarmiste :"
   },
-
   "distribution": {
     "ok": "Distribution équilibrée : chaque famille est là, et l'alarmiste porte le danger.",
     "nombre": "Destiny se joue à 4, 5 ou 6 joueurs.",
@@ -27,16 +25,103 @@
       "exemple": "Exemple tout prêt"
     }
   },
-
   "besoin": {
     "titre_alerte_objet": "Ça ressemble à un vouloir.",
     "titre_alerte_nom": "Essaie avec un verbe.",
     "conseil": "Un besoin se dit avec un verbe : oser dire, faire confiance, lâcher prise, se laisser aider, être vu.",
-    "debuts_a_retirer": ["j'ai besoin de ", "j'ai besoin d'", "il a besoin de ", "il a besoin d'", "elle a besoin de ", "elle a besoin d'", "besoin de ", "besoin d'", "avoir besoin de ", "avoir besoin d'"],
-    "determinants": ["un", "une", "des", "du", "de", "d", "le", "la", "les", "l", "son", "sa", "ses", "mon", "ma", "mes", "ton", "ta", "tes", "notre", "nos", "votre", "vos", "leur", "leurs", "ce", "cet", "cette", "ces"],
-    "objets": ["argent", "fric", "pret", "credit", "voiture", "maison", "appart", "appartement", "poste", "promotion", "contrat", "cle", "cles", "tresor", "diamant", "billet", "billets", "medicament", "medicaments", "arme", "heritage", "testament", "job", "boulot", "travail", "salaire", "prime", "bonus", "vente", "signature", "trophee", "medaille", "couronne", "trone", "or", "bijou", "bijoux", "telephone", "eau", "nourriture", "provisions", "masque", "canot", "sortie", "passeport", "visa", "billet d'avion"]
+    "debuts_a_retirer": [
+      "j'ai besoin de ",
+      "j'ai besoin d'",
+      "il a besoin de ",
+      "il a besoin d'",
+      "elle a besoin de ",
+      "elle a besoin d'",
+      "besoin de ",
+      "besoin d'",
+      "avoir besoin de ",
+      "avoir besoin d'"
+    ],
+    "determinants": [
+      "un",
+      "une",
+      "des",
+      "du",
+      "de",
+      "d",
+      "le",
+      "la",
+      "les",
+      "l",
+      "son",
+      "sa",
+      "ses",
+      "mon",
+      "ma",
+      "mes",
+      "ton",
+      "ta",
+      "tes",
+      "notre",
+      "nos",
+      "votre",
+      "vos",
+      "leur",
+      "leurs",
+      "ce",
+      "cet",
+      "cette",
+      "ces"
+    ],
+    "objets": [
+      "argent",
+      "fric",
+      "pret",
+      "credit",
+      "voiture",
+      "maison",
+      "appart",
+      "appartement",
+      "poste",
+      "promotion",
+      "contrat",
+      "cle",
+      "cles",
+      "tresor",
+      "diamant",
+      "billet",
+      "billets",
+      "medicament",
+      "medicaments",
+      "arme",
+      "heritage",
+      "testament",
+      "job",
+      "boulot",
+      "travail",
+      "salaire",
+      "prime",
+      "bonus",
+      "vente",
+      "signature",
+      "trophee",
+      "medaille",
+      "couronne",
+      "trone",
+      "or",
+      "bijou",
+      "bijoux",
+      "telephone",
+      "eau",
+      "nourriture",
+      "provisions",
+      "masque",
+      "canot",
+      "sortie",
+      "passeport",
+      "visa",
+      "billet d'avion"
+    ]
   },
-
   "lexique": {
     "titre": "Les mots de Destiny",
     "utiliser": [
@@ -56,7 +141,6 @@
       "changer de lieu"
     ]
   },
-
   "outils_de_jeu": {
     "titre": "Les outils de jeu",
     "source": "D'après la séance avec Mark Jane, 27 octobre 2026",
@@ -80,14 +164,12 @@
     ],
     "instinct": "Ces outils se pratiquent jusqu'à devenir un instinct. On ne les récite pas en jouant."
   },
-
   "module_traitre": {
     "titre": "Un traître au hasard",
     "question": "Ajouter un personnage avec l'étiquette traître, au hasard ?",
-    "explication": "Option du jeu de rôle, désactivée par défaut. Un joueur reçoit en secret un objectif contraire au groupe. Il n'y a jamais de gagnant : le but reste de créer une belle histoire.",
+    "explication": "Option du jeu de rôle, désactivée par défaut. En saison, c'est le méchant qui recrute le traître avec son offre, en secret : un seul joueur la voit, écran caché, et il accepte ou refuse. Le traître se révèle à l'épisode 3. Il n'y a jamais de gagnant : le but reste de créer une belle histoire.",
     "etiquette": "Traître (secret)"
   },
-
   "mode_enfant": {
     "titre": "Mode enfant",
     "explication": "La structure ne change pas : un lieu, un groupe, un danger en quatre paliers, et Destiny entre les actes. Les mots sont plus doux.",
@@ -97,7 +179,13 @@
       "vouloir": "ce qu'il veut",
       "prix_a_payer": "le grand choix"
     },
-    "exemples_de_soucis": ["une dispute avec un copain", "un déménagement", "la peur du noir", "un ami qui est parti", "être le plus petit"],
+    "exemples_de_soucis": [
+      "une dispute avec un copain",
+      "un déménagement",
+      "la peur du noir",
+      "un ami qui est parti",
+      "être le plus petit"
+    ],
     "archetypes": {
       "leader": "le chef",
       "protecteur": "celui qui protège",
@@ -113,24 +201,21 @@
       "paranoiaque": "celui qui soupçonne tout le monde"
     }
   },
-
   "jouer": {
     "humains": {
       "titre": "Entre humains",
       "sous_titre": "Un maître du jeu, des joueurs, et l'appli pour le chrono, la musique et la régie.",
-      "histoire": {
-        "titre": "Histoire",
-        "texte": "Un one shot : une histoire complète en quatre actes, un lieu, un danger."
+      "episode": {
+        "titre": "Épisode"
       },
       "saison": {
-        "titre": "Saison",
-        "texte": "Une histoire qui a une suite : mêmes personnages, nouveau lieu, nouveau danger. Les épisodes sont rangés ensemble."
+        "titre": "Saison"
       },
-      "campagne": {
-        "titre": "Campagne",
-        "texte": "Une saison avec un grand danger qui revient et monte d'épisode en épisode."
+      "serie": {
+        "titre": "Série"
       },
-      "faire_la_suite": "Faire la suite"
+      "faire_la_suite": "Faire la suite",
+      "note": "Les descriptions de l'épisode, de la saison et de la série viennent de la grammaire (clé « serie »)."
     },
     "ia": {
       "titre": "Avec l'IA",

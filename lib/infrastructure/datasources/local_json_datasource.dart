@@ -59,6 +59,7 @@ class LocalJsonDataSource {
       ...j,
       'roles': lg?.roles ?? (j['roles'] as List? ?? const []),
       'espaces': lg?.espaces ?? (j['espaces'] as List? ?? const []),
+      'kids': lg?.kids ?? false,
     });
   }
 
@@ -76,7 +77,23 @@ class LocalJsonDataSource {
     return Danger.fromJson({
       ...j,
       'paliers': dg?.textes ?? (j['paliers'] as List? ?? const []),
+      'kids': dg?.kids ?? false,
+      'palier4_kids': dg?.supprimeKids ?? '',
     });
+  }
+
+  /// Les noms du catalogue embarqué qui n'ont pas d'équivalent dans la
+  /// grammaire (à signaler, jamais à choisir seul).
+  Future<List<String>> sansCorrespondance() async {
+    final g = (await grammaire.charger()).grammaire;
+    final d = await _json('assets/data/dangers.json');
+    final l = await _json('assets/data/locations.json');
+    return [
+      for (final x in d['dangers'] as List)
+        if (g.dangerNomme('${(x as Map)['name']}') == null) 'Danger : ${x['name']}',
+      for (final x in l['locations'] as List)
+        if (g.lieuNomme('${(x as Map)['name']}') == null) 'Lieu : ${x['name']}',
+    ];
   }
 
   /// La photo du catalogue 1.5.7 (migration uniquement).

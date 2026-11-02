@@ -49,3 +49,36 @@ L'analyse statique est inchangée : aucune erreur, les mêmes 12 remarques qu'av
 ### Décisions
 
 Aucune nouvelle décision bloquante. Une seule chose à valider quand tu auras le temps : les **noms d'archétypes en mode enfant**, que j'ai proposés dans `destiny_textes.json` (par exemple « celui qui dit que tout va bien » pour le dénégateur, « le blagueur » pour le cynique).
+
+---
+
+## Phase 1 bis — Grammaire 2.1 : série, méchants, sbires, figurants, kids ✅
+
+Tu m'as envoyé la grammaire 2.1 et deux cahiers des charges (refonte v2, et la mise à jour série et kids). Je les intègre à la 2.0.
+
+### Ce qui a été fait
+
+- **La grammaire 2.1 remplace la 2.0.** Archétypes, animaux, paliers, dangers et lieux sont inchangés : mêmes noms, mêmes textes. Elle ajoute :
+  - la **série** (épisode, saison, série, les 7 règles du méchant, le registre et ses 10 catégories) ;
+  - les **24 grands méchants**, deux par archétype, chacun avec son animal à lui, son histoire, son vouloir, son besoin, sa faille, sa cible et son offre au traître ;
+  - leurs **48 sbires**, jouables : chacun a un archétype et un animal des comédiens ;
+  - les **figurants** : deux modes (figurant, sbire), huit types, et **trois figurants prêts à jouer par lieu** ;
+  - le **mode kids** : le sigle, 6 règles, des pouvoirs, 16 méchants, 24 dangers avec un palier 4 sans mort, 35 lieux, et des répliques kids pour le loup, le corbeau et le renard.
+- **Tout est lu, typé et vérifié.** La validation contrôle par exemple qu'un sbire ou un figurant a bien un animal de son archétype, qu'un méchant kids a sa version kids, et qu'un danger kids a son palier 4 kids.
+- **Le catalogue reçoit les drapeaux kids** (24 dangers, 35 lieux) et le palier 4 kids des dangers. Comme pour les textes, cela se fait sans toucher à tes modifications, y compris sur une base 1.5.7. Le rapport signale aussi les éléments du catalogue sans équivalent dans la grammaire : aujourd'hui, il n'y en a aucun.
+
+### Tests
+
+**88 tests passent**, dont 9 nouveaux sur la série, les méchants, les sbires, les figurants et le mode kids. Aucune erreur d'analyse.
+
+### Questions (fichier « série et kids »)
+
+1. **Chrono kids** : je propose un 4ᵉ chrono de base de **24 minutes, Destiny à 6, 12 et 18**, pour les épisodes kids (20 à 30 minutes). D'accord ?
+2. **La consigne enfant de l'IA** dit aujourd'hui « aucune peur ». Certains méchants kids donnent de petits frissons, comme la Dame blanche ou le Seigneur des brumes. Je propose de la remplacer par : « des frissons doux, jamais d'effroi ». D'accord ?
+3. **La réplique adulte du loup** n'est pas la même aux deux endroits du fichier :
+   - dans `archetypes` : « Je vous trouverai, et je vous tuerai. » ;
+   - dans `mode_kids.repliques_remplacees` : « Je vous chercherai, je vous trouverai et je vous tuerai. »
+
+   Laquelle garder ? En attendant, j'affiche celle d'`archetypes`.
+4. **Les 42 méchants d'univers** gardent leur place. Je leur proposerai un archétype chacun (phase 5), à valider avant de l'appliquer.
+5. **Les présages des 24 méchants** : je propose qu'ils soient écrits par l'IA à la création de la saison, puis validés ou réécrits par le maître du jeu. Sans IA, le maître du jeu les écrit lui-même, guidé par les quatre paliers.

@@ -115,6 +115,9 @@ class Animal {
     required this.posture,
     required this.replique,
     required this.sourceReplique,
+    this.repliqueKids = '',
+    this.sourceRepliqueKids = '',
+    this.repliqueAdulteSeulement = false,
     this.temperament = '',
     this.niveauxCorps = const {},
     this.ancienMoteur = '',
@@ -133,6 +136,20 @@ class Animal {
 
   /// L'œuvre d'où vient la réplique. À n'afficher que dans la fiche détaillée.
   final String sourceReplique;
+
+  /// La réplique pour jouer avec des enfants, et son œuvre.
+  final String repliqueKids;
+  final String sourceRepliqueKids;
+
+  /// Vrai si la réplique ordinaire est réservée aux adultes.
+  final bool repliqueAdulteSeulement;
+
+  /// La réplique à afficher : la version kids en mode kids.
+  String repliquePour({bool kids = false}) =>
+      kids && repliqueKids.isNotEmpty ? repliqueKids : replique;
+
+  String sourcePour({bool kids = false}) =>
+      kids && sourceRepliqueKids.isNotEmpty ? sourceRepliqueKids : sourceReplique;
 
   /// Tempérament (venu des données des animaux de l'appli).
   final String temperament;
@@ -380,14 +397,30 @@ class DangerGrammaire {
     required this.id,
     required this.nom,
     required this.paliers,
+    this.kids = false,
+    this.supprimeKids = '',
   });
 
   final String id;
   final String nom;
   final Map<PalierId, String> paliers;
 
+  /// Jouable avec des enfants.
+  final bool kids;
+
+  /// Le palier 4 en mode kids : personne ne meurt.
+  final String supprimeKids;
+
   /// Les quatre textes dans l'ordre des paliers.
   List<String> get textes => [for (final p in PalierId.values) paliers[p] ?? ''];
+
+  /// Les quatre textes, avec le palier 4 kids en mode kids.
+  List<String> textesPour({bool kids = false}) => [
+        for (final p in PalierId.values)
+          kids && p == PalierId.supprime && supprimeKids.isNotEmpty
+              ? supprimeKids
+              : paliers[p] ?? '',
+      ];
 }
 
 /// Un lieu tel que décrit dans la grammaire.
@@ -397,12 +430,247 @@ class LieuGrammaire {
     required this.nom,
     required this.espaces,
     required this.roles,
+    this.kids = false,
+    this.figurants = const [],
   });
 
   final String id;
   final String nom;
   final List<String> espaces;
   final List<String> roles;
+
+  /// Jouable avec des enfants.
+  final bool kids;
+
+  /// Trois figurants prêts à jouer : un aide, un témoin (ou assimilé), une
+  /// victime (ou assimilée).
+  final List<FigurantPret> figurants;
+}
+
+/// Mode d'un personnage non joueur.
+enum ModePnj {
+  /// Neutre, ou du côté des protagonistes.
+  figurant,
+
+  /// Au service du méchant.
+  sbire;
+
+  static ModePnj depuisTexte(String? s) => s == 'sbire' ? ModePnj.sbire : ModePnj.figurant;
+}
+
+/// Un figurant prêt à jouer, attaché à un lieu.
+class FigurantPret {
+  const FigurantPret({
+    required this.id,
+    required this.nom,
+    required this.type,
+    required this.archetypeId,
+    required this.animalId,
+    required this.veut,
+    required this.vientDe,
+    required this.sait,
+    this.mode = ModePnj.figurant,
+  });
+
+  /// Identifiant stable : `<lieu>.<rang>` (ex. `aquarium.0`).
+  final String id;
+  final String nom;
+
+  /// Type de figurant (`temoin`, `aide`…).
+  final String type;
+  final String archetypeId;
+  final String animalId;
+  final String veut;
+  final String vientDe;
+
+  /// Ce qu'il sait ou apporte.
+  final String sait;
+  final ModePnj mode;
+}
+
+/// Un type de figurant (inspiré des « bystanders » de Monster of the Week).
+class TypeFigurant {
+  const TypeFigurant({
+    required this.id,
+    required this.nom,
+    required this.ceQuIlEst,
+    required this.veut,
+    required this.commentLeJouer,
+    required this.sertA,
+  });
+
+  final String id;
+  final String nom;
+  final String ceQuIlEst;
+  final String veut;
+  final String commentLeJouer;
+  final String sertA;
+}
+
+/// Les règles des figurants : les deux modes, les huit types, les règles.
+class ReglesFigurants {
+  const ReglesFigurants({
+    required this.modes,
+    required this.types,
+    required this.regles,
+    required this.parLieu,
+    required this.inspiration,
+  });
+
+  /// Texte de chaque mode.
+  final Map<ModePnj, String> modes;
+  final List<TypeFigurant> types;
+  final List<RegleDOr> regles;
+  final String parLieu;
+  final String inspiration;
+
+  TypeFigurant? type(String id) {
+    for (final t in types) {
+      if (t.id == id) return t;
+    }
+    return null;
+  }
+}
+
+/// Un sbire d'un grand méchant : jouable, avec un archétype et un animal des
+/// comédiens.
+class Sbire {
+  const Sbire({
+    required this.id,
+    required this.nom,
+    required this.archetypeId,
+    required this.animalId,
+    required this.veut,
+    required this.vientDe,
+    required this.fait,
+    this.kids = false,
+  });
+
+  final String id;
+  final String nom;
+  final String archetypeId;
+  final String animalId;
+  final String veut;
+  final String vientDe;
+
+  /// Ce qu'il fait pour son maître.
+  final String fait;
+  final bool kids;
+
+  ModePnj get mode => ModePnj.sbire;
+}
+
+/// Un grand méchant de saison.
+class Mechant {
+  const Mechant({
+    required this.id,
+    required this.nom,
+    required this.archetypeId,
+    required this.animal,
+    required this.inspiration,
+    required this.posture,
+    required this.histoire,
+    required this.veut,
+    required this.besoin,
+    required this.faille,
+    required this.cible,
+    required this.offreAuTraitre,
+    required this.sbires,
+    this.kids = false,
+    this.versionKids = '',
+    this.failleKids = '',
+  });
+
+  final String id;
+  final String nom;
+
+  /// Même archétype que le protagoniste qu'il vise (son reflet).
+  final String archetypeId;
+
+  /// Son animal à lui, hors des 24 des comédiens.
+  final String animal;
+  final String inspiration;
+  final String posture;
+  final String histoire;
+  final String veut;
+  final String besoin;
+  final String faille;
+  final String cible;
+  final String offreAuTraitre;
+  final List<Sbire> sbires;
+  final bool kids;
+  final String versionKids;
+  final String failleKids;
+
+  /// L'histoire à montrer : la version kids en mode kids.
+  String histoirePour({bool kids = false}) =>
+      kids && versionKids.isNotEmpty ? versionKids : histoire;
+
+  String faillePour({bool kids = false}) =>
+      kids && failleKids.isNotEmpty ? failleKids : faille;
+}
+
+/// Le registre de la série : la mémoire de ce qui a été joué.
+class RegistreSerie {
+  const RegistreSerie({
+    required this.principe,
+    required this.categories,
+    required this.suggestion,
+  });
+
+  final String principe;
+  final List<String> categories;
+  final String suggestion;
+}
+
+/// Épisode, saison, série.
+class ReglesSerie {
+  const ReglesSerie({
+    required this.episode,
+    required this.saison,
+    required this.serie,
+    required this.reglesDuMechant,
+    required this.registre,
+  });
+
+  final String episode;
+  final String saison;
+  final String serie;
+  final List<String> reglesDuMechant;
+  final RegistreSerie registre;
+}
+
+/// Le mode kids.
+class ModeKids {
+  const ModeKids({
+    required this.sigleTexte,
+    required this.sigleFond,
+    required this.sigleTexteCouleur,
+    required this.principe,
+    required this.regles,
+    required this.pouvoirsExemples,
+    required this.pouvoirRegle,
+    required this.palier4,
+    required this.dureeEpisodeMinutes,
+    required this.mechantIds,
+    required this.dangerIds,
+    required this.lieuxAdultesSeulement,
+  });
+
+  final String sigleTexte;
+  final String sigleFond;
+  final String sigleTexteCouleur;
+  final String principe;
+  final List<RegleDOr> regles;
+  final List<String> pouvoirsExemples;
+  final String pouvoirRegle;
+  final String palier4;
+
+  /// Durée d'un épisode kids : de [0] à [1] minutes.
+  final List<int> dureeEpisodeMinutes;
+  final List<String> mechantIds;
+  final List<String> dangerIds;
+  final List<String> lieuxAdultesSeulement;
 }
 
 /// Catégorie d'œuvre de référence.
@@ -577,6 +845,10 @@ class Grammaire {
     required this.themesExercices,
     required this.obsolete,
     required this.directionArtistique,
+    required this.serie,
+    required this.mechants,
+    required this.figurants,
+    required this.modeKids,
   })  : _archetypesParId = {for (final a in archetypes) a.id: a},
         _animauxParId = {for (final a in animaux) a.id: a},
         _famillesParId = {for (final f in familles) f.id: f};
@@ -601,6 +873,10 @@ class Grammaire {
   final List<ThemeExercice> themesExercices;
   final List<String> obsolete;
   final DirectionArtistique directionArtistique;
+  final ReglesSerie serie;
+  final List<Mechant> mechants;
+  final ReglesFigurants figurants;
+  final ModeKids modeKids;
 
   final Map<String, Archetype> _archetypesParId;
   final Map<String, Animal> _animauxParId;
@@ -636,6 +912,39 @@ class Grammaire {
       [for (final a in archetypes) if (a.famille == f) a];
 
   Palier palier(PalierId id) => paliers.firstWhere((p) => p.id == id);
+
+  /// L'animal qui porte ce nom (« Souris »), ou null.
+  Animal? animalNomme(String nom) {
+    final cle = normaliser(nom);
+    for (final a in animaux) {
+      if (normaliser(a.nom) == cle) return a;
+    }
+    return null;
+  }
+
+  Mechant? mechant(String id) {
+    for (final m in mechants) {
+      if (m.id == id) return m;
+    }
+    return null;
+  }
+
+  /// Les méchants « reflets » d'un archétype : ceux qui visent un
+  /// protagoniste de cet archétype. En mode kids, seulement les méchants kids.
+  List<Mechant> mechantsReflets(String archetypeId, {bool kids = false}) => [
+        for (final m in mechants)
+          if (m.archetypeId == archetypeId && (!kids || m.kids)) m,
+      ];
+
+  /// Le sbire qui porte cet identifiant, avec son maître.
+  ({Mechant mechant, Sbire sbire})? sbire(String id) {
+    for (final m in mechants) {
+      for (final s in m.sbires) {
+        if (s.id == id) return (mechant: m, sbire: s);
+      }
+    }
+    return null;
+  }
 
   /// Le danger de la grammaire qui porte ce nom (comparaison sans casse ni
   /// accents), ou null.

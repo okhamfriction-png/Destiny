@@ -6,8 +6,9 @@ class StadeEscalade {
   final String sens;
 }
 
-/// La grammaire commune à tous les dangers : Signale → Enferme → Envahit →
-/// Supprime. Chaque danger décline ces 4 stades avec ses propres paliers.
+/// Ancienne grammaire commune d'escalade (1.x). Obsolète : les noms des
+/// paliers viennent maintenant de la grammaire (`Grammaire.paliers`).
+@Deprecated('Utiliser Grammaire.paliers.')
 const List<StadeEscalade> kStadesEscalade = [
   StadeEscalade('Signale', 'le danger se manifeste, extérieur et diffus'),
   StadeEscalade('Enferme', 'il coupe les sorties : on ne sort plus'),
@@ -24,6 +25,8 @@ class Danger {
     this.theatre = true,
     this.actif = true,
     this.paliers = const [],
+    this.kids = false,
+    this.palier4Kids = '',
   });
 
   final String id;
@@ -44,6 +47,18 @@ class Danger {
   /// Vrai si le danger est actif (sinon jamais tiré).
   final bool actif;
 
+  /// Jouable avec des enfants (venu de la grammaire).
+  final bool kids;
+
+  /// Le palier 4 en mode kids : personne ne meurt.
+  final String palier4Kids;
+
+  /// Les quatre paliers, avec le palier 4 kids en mode kids.
+  List<String> paliersPour({bool kids = false}) => [
+        for (var i = 0; i < paliers.length; i++)
+          kids && i == 3 && palier4Kids.isNotEmpty ? palier4Kids : paliers[i],
+      ];
+
   Danger copyWith({
     String? id,
     String? name,
@@ -52,6 +67,8 @@ class Danger {
     bool? theatre,
     bool? actif,
     List<String>? paliers,
+    bool? kids,
+    String? palier4Kids,
   }) {
     return Danger(
       id: id ?? this.id,
@@ -61,6 +78,8 @@ class Danger {
       theatre: theatre ?? this.theatre,
       actif: actif ?? this.actif,
       paliers: paliers ?? this.paliers,
+      kids: kids ?? this.kids,
+      palier4Kids: palier4Kids ?? this.palier4Kids,
     );
   }
 
@@ -77,6 +96,8 @@ class Danger {
               ?.map((e) => e as String)
               .toList(growable: false) ??
           const [],
+      kids: json['kids'] as bool? ?? false,
+      palier4Kids: json['palier4_kids'] as String? ?? '',
     );
   }
 
@@ -88,5 +109,7 @@ class Danger {
         'theatre': theatre,
         'actif': actif,
         'paliers': paliers,
+        'kids': kids,
+        'palier4_kids': palier4Kids,
       };
 }

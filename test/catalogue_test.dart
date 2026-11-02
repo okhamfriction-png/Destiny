@@ -17,6 +17,15 @@ void main() {
       }
       // Les identifiants de l'appli sont gardés (images, mémoire des tirages).
       expect(dangers.first.id, 'robots_rebelle');
+      // Drapeau kids et palier 4 kids venus de la grammaire.
+      final kids = dangers.where((d) => d.kids).toList();
+      expect(kids, hasLength(24));
+      expect(kids.every((d) => d.palier4Kids.isNotEmpty), isTrue);
+      expect(kids.first.paliersPour(kids: true)[3], kids.first.palier4Kids);
+    });
+
+    test('tout le catalogue embarqué a son équivalent dans la grammaire', () async {
+      expect(await donneesDeTest().sansCorrespondance(), isEmpty);
     });
 
     test('chaque lieu a ses espaces et ses rôles de la grammaire', () async {
@@ -29,6 +38,8 @@ void main() {
         expect(l.roles, lg.roles, reason: l.name);
       }
       expect(lieux.firstWhere((l) => l.id == 'base_spatiale').name, 'Station spatiale');
+      expect(lieux.where((l) => l.kids), hasLength(35));
+      expect(lieux.firstWhere((l) => l.id == 'casino').kids, isFalse);
     });
 
     test('la photo 1.5.7 garde les anciens textes', () async {
