@@ -97,4 +97,7 @@ class InMemoryCatalogStore implements CatalogStore {
     _dangers = [...await _seed.loadDangers()];
     _dilemmas = [...await _seed.loadDilemmas()];
   }
+
+  @override
+  Future<RapportSynchroCatalogue?> dernierRapport() async => null;
 }

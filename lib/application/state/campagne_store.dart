@@ -303,10 +303,20 @@ class CampagneStore extends ChangeNotifier {
           ];
         }
       }
-    } catch (_) {}
+    } catch (_) {
+      // Lecture impossible : on n'écrira plus rien, pour ne jamais écraser
+      // des campagnes qu'on n'a pas su lire.
+      _lectureEchouee = true;
+    }
   }
 
+  /// Vrai si les campagnes enregistrées n'ont pas pu être lues. Dans ce cas,
+  /// aucune sauvegarde n'est faite : les données d'origine restent intactes.
+  bool get lectureEchouee => _lectureEchouee;
+  bool _lectureEchouee = false;
+
   Future<void> _sauver() async {
+    if (_lectureEchouee) return;
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt(_kProchainId, _prochainId);

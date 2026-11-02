@@ -24,4 +24,51 @@ abstract class CatalogStore {
 
   /// Restaure les listes par défaut (depuis le JSON embarqué).
   Future<void> resetToDefaults();
+
+  /// Le rapport de la dernière mise à jour avec la grammaire (null s'il n'y
+  /// en a pas eu) : ce qui a été mis à jour, et ce qui a été gardé parce que
+  /// l'utilisateur l'avait modifié.
+  Future<RapportSynchroCatalogue?> dernierRapport();
+}
+
+/// Ce que la mise à jour du catalogue avec la grammaire a fait.
+class RapportSynchroCatalogue {
+  const RapportSynchroCatalogue({
+    required this.date,
+    required this.dangersMisAJour,
+    required this.lieuxMisAJour,
+    required this.gardes,
+    required this.absents,
+  });
+
+  final DateTime date;
+  final int dangersMisAJour;
+  final int lieuxMisAJour;
+
+  /// Noms des éléments gardés tels quels (modifiés par l'utilisateur).
+  final List<String> gardes;
+
+  /// Noms des éléments de la grammaire absents du catalogue (supprimés par
+  /// l'utilisateur) : ils ne reviennent pas.
+  final List<String> absents;
+
+  Map<String, dynamic> versJson() => {
+        'date': date.toIso8601String(),
+        'dangers': dangersMisAJour,
+        'lieux': lieuxMisAJour,
+        'gardes': gardes,
+        'absents': absents,
+      };
+
+  static RapportSynchroCatalogue? depuisJson(Object? j) {
+    if (j is! Map) return null;
+    List<String> ls(Object? v) => [for (final x in (v as List? ?? const [])) '$x'];
+    return RapportSynchroCatalogue(
+      date: DateTime.tryParse('${j['date']}') ?? DateTime.now(),
+      dangersMisAJour: (j['dangers'] as num?)?.toInt() ?? 0,
+      lieuxMisAJour: (j['lieux'] as num?)?.toInt() ?? 0,
+      gardes: ls(j['gardes']),
+      absents: ls(j['absents']),
+    );
+  }
 }

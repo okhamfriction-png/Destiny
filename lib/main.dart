@@ -23,6 +23,7 @@ import 'domain/repositories/catalog_store.dart';
 import 'domain/repositories/combination_memory.dart';
 import 'domain/repositories/story_repository.dart';
 import 'domain/usecases/generate_story_usecase.dart';
+import 'infrastructure/datasources/grammaire_source.dart';
 import 'infrastructure/datasources/local_json_datasource.dart';
 import 'infrastructure/platform/catalog_store_factory.dart';
 import 'infrastructure/platform/chat_store_factory.dart';
@@ -65,7 +66,10 @@ Future<void> _boot() async {
   // FFI sur desktop, défaut sur mobile, no-op sur le web.
   configureDatabasePlatform();
 
-  final dataSource = LocalJsonDataSource();
+  // La grammaire de Destiny : chargée et vérifiée une seule fois.
+  final grammaireSource = GrammaireSource();
+  await grammaireSource.charger();
+  final dataSource = LocalJsonDataSource(grammaire: grammaireSource);
   final catalogStore = createCatalogStore(dataSource);
   final repository = StoryRepositoryImpl(
     dataSource: dataSource,

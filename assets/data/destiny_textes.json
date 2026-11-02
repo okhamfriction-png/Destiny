@@ -1,0 +1,140 @@
+{
+  "version": "2.0",
+  "a_propos": "Textes de l'appli qui accompagnent la grammaire (destiny_grammaire.json). Ils viennent du cahier des charges de la refonte 2.0. La grammaire reste dans son fichier : ici, seulement les messages, l'aide et les réglages par défaut.",
+
+  "rituel": {
+    "titre": "Destiny",
+    "texte_ellipse": "Quelques heures plus tard…",
+    "rappel_premier_fige": "Premier figé : chacun choisit en silence sa phrase, « il veut… mais il a besoin de… ».",
+    "nouvelle_alarmiste": "La nouvelle à souffler à l'alarmiste :"
+  },
+
+  "distribution": {
+    "ok": "Distribution équilibrée : chaque famille est là, et l'alarmiste porte le danger.",
+    "nombre": "Destiny se joue à 4, 5 ou 6 joueurs.",
+    "sans_alarmiste": "Il manque l'alarmiste : c'est lui qui porte le danger.",
+    "deux_alarmistes": "Un seul alarmiste suffit : c'est lui qui apporte chaque nouvelle.",
+    "famille_manquante": "Il manque quelqu'un qui {famille}. {pourquoi}",
+    "famille_insuffisante": "À {joueurs} joueurs, il faut {minimum} archétypes qui {famille}.",
+    "doublon": "{archetype} est choisi deux fois : chaque joueur a son propre archétype.",
+    "inconnu": "Archétype inconnu : {archetype}.",
+    "leader_demande": "Le leader est demandé dans les réglages : il faut l'ajouter.",
+    "correction": "Proposition : {ancien} devient {nouveau}.",
+    "correction_ajout": "Proposition : ajouter {nouveau}.",
+    "modes": {
+      "concerte": "Choix concerté",
+      "tirage": "Tirage équilibré",
+      "exemple": "Exemple tout prêt"
+    }
+  },
+
+  "besoin": {
+    "titre_alerte_objet": "Ça ressemble à un vouloir.",
+    "titre_alerte_nom": "Essaie avec un verbe.",
+    "conseil": "Un besoin se dit avec un verbe : oser dire, faire confiance, lâcher prise, se laisser aider, être vu.",
+    "debuts_a_retirer": ["j'ai besoin de ", "j'ai besoin d'", "il a besoin de ", "il a besoin d'", "elle a besoin de ", "elle a besoin d'", "besoin de ", "besoin d'", "avoir besoin de ", "avoir besoin d'"],
+    "determinants": ["un", "une", "des", "du", "de", "d", "le", "la", "les", "l", "son", "sa", "ses", "mon", "ma", "mes", "ton", "ta", "tes", "notre", "nos", "votre", "vos", "leur", "leurs", "ce", "cet", "cette", "ces"],
+    "objets": ["argent", "fric", "pret", "credit", "voiture", "maison", "appart", "appartement", "poste", "promotion", "contrat", "cle", "cles", "tresor", "diamant", "billet", "billets", "medicament", "medicaments", "arme", "heritage", "testament", "job", "boulot", "travail", "salaire", "prime", "bonus", "vente", "signature", "trophee", "medaille", "couronne", "trone", "or", "bijou", "bijoux", "telephone", "eau", "nourriture", "provisions", "masque", "canot", "sortie", "passeport", "visa", "billet d'avion"]
+  },
+
+  "lexique": {
+    "titre": "Les mots de Destiny",
+    "utiliser": [
+      "archétype, famille, montée",
+      "palier : il se signale, il enferme, il envahit, il bloque les sorties",
+      "Destiny (le rituel), le figé, l'ellipse",
+      "vouloir, besoin, blessure, prix à payer",
+      "tient le groupe, interprète le danger, fissure le groupe",
+      "le lieu, ses espaces, le groupe"
+    ],
+    "ne_plus_utiliser": [
+      "moteur (au sens ancien), rôle tiré au hasard",
+      "niveau tiré",
+      "lancer un dé",
+      "objectif vague, motivation",
+      "traître, sidéré",
+      "changer de lieu"
+    ]
+  },
+
+  "outils_de_jeu": {
+    "titre": "Les outils de jeu",
+    "source": "D'après la séance avec Mark Jane, 27 octobre 2026",
+    "outils": [
+      {
+        "titre": "Les mains occupées",
+        "texte": "Une activité propre au lieu, pendant toute la scène, sans en parler. Le corps est occupé : la tête est libre pour écouter."
+      },
+      {
+        "titre": "Le sous-texte",
+        "texte": "On dit la phrase que dirait le personnage, pas ce qu'il ressent. Le public entend le reste."
+      },
+      {
+        "titre": "Les silences",
+        "texte": "On laisse le temps à une phrase de tomber. Un silence tenu dit plus qu'une explication."
+      },
+      {
+        "titre": "La règle des 20 %",
+        "texte": "Chacun porte une part de l'histoire, pas toute l'histoire. On propose, on laisse les autres compléter."
+      }
+    ],
+    "instinct": "Ces outils se pratiquent jusqu'à devenir un instinct. On ne les récite pas en jouant."
+  },
+
+  "module_traitre": {
+    "titre": "Un traître au hasard",
+    "question": "Ajouter un personnage avec l'étiquette traître, au hasard ?",
+    "explication": "Option du jeu de rôle, désactivée par défaut. Un joueur reçoit en secret un objectif contraire au groupe. Il n'y a jamais de gagnant : le but reste de créer une belle histoire.",
+    "etiquette": "Traître (secret)"
+  },
+
+  "mode_enfant": {
+    "titre": "Mode enfant",
+    "explication": "La structure ne change pas : un lieu, un groupe, un danger en quatre paliers, et Destiny entre les actes. Les mots sont plus doux.",
+    "mots": {
+      "blessure": "gros souci",
+      "besoin": "ce qui l'aiderait vraiment",
+      "vouloir": "ce qu'il veut",
+      "prix_a_payer": "le grand choix"
+    },
+    "exemples_de_soucis": ["une dispute avec un copain", "un déménagement", "la peur du noir", "un ami qui est parti", "être le plus petit"],
+    "archetypes": {
+      "leader": "le chef",
+      "protecteur": "celui qui protège",
+      "aidant": "celui qui console",
+      "debrouillard": "le bricoleur",
+      "alarmiste": "celui qui donne l'alerte",
+      "denegateur": "celui qui dit que tout va bien",
+      "prophete": "celui qui voit des signes",
+      "cynique": "le blagueur",
+      "opportuniste": "celui qui veut tout garder pour lui",
+      "gardien_de_l_ordre": "le chef des règles",
+      "solitaire": "celui qui fait bande à part",
+      "paranoiaque": "celui qui soupçonne tout le monde"
+    }
+  },
+
+  "jouer": {
+    "humains": {
+      "titre": "Entre humains",
+      "sous_titre": "Un maître du jeu, des joueurs, et l'appli pour le chrono, la musique et la régie.",
+      "histoire": {
+        "titre": "Histoire",
+        "texte": "Un one shot : une histoire complète en quatre actes, un lieu, un danger."
+      },
+      "saison": {
+        "titre": "Saison",
+        "texte": "Une histoire qui a une suite : mêmes personnages, nouveau lieu, nouveau danger. Les épisodes sont rangés ensemble."
+      },
+      "campagne": {
+        "titre": "Campagne",
+        "texte": "Une saison avec un grand danger qui revient et monte d'épisode en épisode."
+      },
+      "faire_la_suite": "Faire la suite"
+    },
+    "ia": {
+      "titre": "Avec l'IA",
+      "sous_titre": "L'IA mène le jeu : elle raconte, fait monter le danger et joue les autres personnages."
+    }
+  }
+}
