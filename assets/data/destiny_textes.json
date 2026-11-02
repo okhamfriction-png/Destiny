@@ -478,7 +478,8 @@
     "suivant": "Suivant",
     "retour": "Retour",
     "enregistrer": "Enregistrer",
-    "annuler": "Annuler"
+    "annuler": "Annuler",
+    "info_de": "En savoir plus : {nom}"
   },
   "preparer": {
     "titre": "Préparer",
@@ -506,25 +507,27 @@
   },
   "echauffement": {
     "titre": "Échauffement",
-    "intro": "Chacun reçoit sa carte et se pose les trois questions.",
+    "intro": "Chacun se pose les trois questions sur son archétype. Touche le « i » pour relire sa fiche.",
     "demarrer": "Lancer le minuteur",
     "pause": "Pause",
     "reprendre": "Reprendre",
     "fini": "L'échauffement est terminé. À vous de jouer !",
-    "vers_avant_scene": "Avant d'entrer en scène"
+    "vers_avant_scene": "Avant d'entrer en scène",
+    "personnages": "Les personnages"
   },
   "avant_scene": {
     "titre": "Avant d'entrer en scène",
     "message": "Vous êtes prêts. Écoutez-vous, prenez votre temps : le danger fera le reste.",
-    "entrer": "On y va : la mise en place"
+    "entrer": "On y va : la mise en place",
+    "distribution": "La distribution"
   },
   "mise_en_place": {
     "titre": "La mise en place",
-    "intro": "Le public choisit le lieu et le groupe, puis le danger.",
+    "intro": "Le lieu et le danger sont déjà tirés : le public peut les changer. Puis le groupe, les objets, le mystère et le chrono.",
     "lieu": "Le lieu",
     "groupe": "Le groupe",
     "danger": "Le danger",
-    "vote": "Trois propositions pour le vote à main levée",
+    "vote": "Ou trois propositions pour le vote à main levée :",
     "nouvelles": "Trois autres",
     "choix_libre": "Choix libre",
     "groupe_aide": "Une équipe, une famille, des associés : tout le monde se connaît.",
@@ -553,7 +556,7 @@
   "regie": {
     "titre": "Régie",
     "destiny": "Destiny",
-    "destiny_aide": "Réservé à la régie : lance le rituel et fait monter le danger d'un palier.",
+    "destiny_aide": "Lance tout de suite le prochain Destiny : le rituel, puis le danger monte d'un palier.",
     "demarrer": "Lancer le chrono",
     "pause": "Pause",
     "reprendre": "Reprendre",
@@ -570,7 +573,40 @@
     "note_aide": "Ce qui vient de se passer…",
     "noter": "Noter",
     "terminer": "Terminer et débriefer",
-    "terminer_confirmer": "Terminer le spectacle et passer au débrief ?"
+    "terminer_confirmer": "Terminer le spectacle et passer au débrief ?",
+    "destiny_n": "Destiny {n}",
+    "ecoule": "Écoulé {t}",
+    "dans": "Destiny {n} dans {t}",
+    "en_retard": "Destiny {n} : c'est l'heure !",
+    "moins_une": "−1 min",
+    "plus_une": "+1 min",
+    "plus_tot": "Destiny {n} une minute plus tôt",
+    "plus_tard": "Destiny {n} une minute plus tard",
+    "regler": "Régler les Destiny",
+    "regler_aide": "Chaque Destiny tombe après le chrono, après le précédent, avant le suivant et avant la fin. Le bouton DESTINY lance le prochain tout de suite.",
+    "auto": "Ils tombent tout seuls à l'heure prévue.",
+    "manuel": "Ils ne tombent que quand tu appuies sur DESTINY.",
+    "lance_a": "Lancé à {t}",
+    "prevu_a": "Prévu à {t}",
+    "refus_chrono": "Trop tôt : le chrono en est déjà à {t}.",
+    "refus_precedent": "Trop tôt : Destiny {n} doit rester après Destiny {m}.",
+    "refus_suivant": "Trop tard : Destiny {n} doit rester avant Destiny {m}.",
+    "refus_fin": "Trop tard : Destiny {n} doit tomber avant la fin.",
+    "marque_passe": "Destiny {n}, lancé à {t}",
+    "marque_prochain": "Destiny {n}, le prochain, à {t}",
+    "marque_avenir": "Destiny {n}, à {t}",
+    "scene": "Lieu et danger",
+    "son": "La régie son",
+    "son_debut": "Musique du début",
+    "son_lieu": "Ambiance du lieu",
+    "son_acte2": "Ambiance de l'acte 2",
+    "son_fin": "Musique de fin",
+    "son_destiny": "Son de Destiny",
+    "son_stop": "Stop",
+    "son_mixeur": "Tout le mixeur",
+    "son_en_cours": "En cours : {titre}",
+    "son_coupe": "Le son est coupé.",
+    "son_remettre": "Remettre le son"
   },
   "debrief": {
     "titre": "Débrief",

@@ -6,15 +6,18 @@ import '../../domain/entities/danger.dart';
 import '../../domain/entities/location.dart';
 import '../../domain/troupe/session.dart';
 import '../../application/prompts/prompts.dart';
+import '../bibliotheque/dangers_lieux_screen.dart';
 import '../destiny/bouton_ia.dart';
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
 import '../theme/destiny_theme.dart';
+import 'composants_troupe.dart';
 import 'troupe_screen.dart';
 
-/// La mise en place : le public choisit le lieu et le groupe, puis le danger.
-/// La régie note les trois objets et le mystère, et choisit le chrono.
+/// La mise en place : le lieu et le danger tirés à la préparation (chacun
+/// avec sa bulle d'info), que le public peut changer par un vote ; le groupe ;
+/// les trois objets et le mystère ; le chrono et ses trois Destiny.
 class MiseEnPlaceScreen extends StatefulWidget {
   const MiseEnPlaceScreen({super.key, required this.contexte, required this.session});
 
@@ -58,6 +61,22 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
       _proposerDangers();
     });
   }
+
+  Location? get _lieu {
+    for (final l in _lieux) {
+      if (l.id == s.lieuId) return l;
+    }
+    return null;
+  }
+
+  Danger? get _danger {
+    for (final d in _dangers) {
+      if (d.id == s.dangerId) return d;
+    }
+    return null;
+  }
+
+  void _ouvrir(Widget page) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
 
   List<T> _trois<T>(List<T> liste) => ([...liste]..shuffle(_hasard)).take(3).toList();
   void _proposerLieux() => _propLieux = _trois(_lieux);
@@ -140,43 +159,38 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
     final chronos = widget.contexte.reglages.chronos;
     final pret = s.lieuNom.isNotEmpty && s.dangerNom.isNotEmpty && s.groupe.trim().isNotEmpty;
     final liens = (widget.contexte.relations?.links ?? const []).take(2).toList();
+    final source = widget.contexte.visuels.source;
 
     return PageDestiny(
       titre: m('titre'),
       enfants: [
         Paragraphe(m('intro')),
         SectionDestiny(titre: m('lieu'), enfants: [
-          Text(m('vote'), style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: 6),
-          Wrap(spacing: 8, runSpacing: 8, children: [
-            for (final l in _propLieux)
-              ChoiceChip(
-                label: Text(l.name),
-                selected: s.lieuId == l.id,
-                onSelected: (_) => _choisirLieu(l),
-              ),
-          ]),
-          Wrap(children: [
-            TextButton.icon(
-              onPressed: () => setState(_proposerLieux),
-              icon: const Icon(Icons.refresh_rounded),
-              label: Text(m('nouvelles')),
-            ),
-            TextButton.icon(
-              onPressed: () async {
-                final l = await _choixLibre(_lieux, (x) => x.name);
-                if (l != null) _choisirLieu(l);
-              },
-              icon: const Icon(Icons.list_rounded),
-              label: Text(m('choix_libre')),
-            ),
-          ]),
-          if (s.lieuNom.isNotEmpty) ...[
-            Text(s.lieuNom, style: Theme.of(context).textTheme.titleLarge),
-            Wrap(spacing: 6, runSpacing: 6, children: [
-              for (final e in _lieux.where((l) => l.id == s.lieuId).expand((l) => l.espaces)) Chip(label: Text(e)),
-            ]),
-          ],
+          LigneDecor(
+            dossier: 'locations',
+            id: s.lieuId,
+            nom: s.lieuNom,
+            icone: Icons.place_rounded,
+            source: source,
+            detail: _lieu?.espaces.join(' · '),
+            onInfo: _lieu == null
+                ? null
+                : () => _ouvrir(FicheLieu(lieu: _lieu!, contexte: bibliothequeDe(widget.contexte))),
+          ),
+          _Vote<Location>(
+            consigne: m('vote'),
+            propositions: _propLieux,
+            nom: (l) => l.name,
+            choisi: (l) => l.id == s.lieuId,
+            onChoisir: _choisirLieu,
+            nouvelles: m('nouvelles'),
+            onNouvelles: () => setState(_proposerLieux),
+            choixLibre: m('choix_libre'),
+            onChoixLibre: () async {
+              final l = await _choixLibre(_lieux, (x) => x.name);
+              if (l != null) _choisirLieu(l);
+            },
+          ),
         ]),
         SectionDestiny(titre: m('groupe'), enfants: [
           Text(m('groupe_aide'), style: Theme.of(context).textTheme.bodySmall),
@@ -200,32 +214,32 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
           ],
         ]),
         SectionDestiny(titre: m('danger'), enfants: [
-          Text(m('vote'), style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: 6),
-          Wrap(spacing: 8, runSpacing: 8, children: [
-            for (final d in _propDangers)
-              ChoiceChip(
-                label: Text(d.name),
-                selected: s.dangerId == d.id,
-                onSelected: (_) => _choisirDanger(d),
-              ),
-          ]),
-          Wrap(children: [
-            TextButton.icon(
-              onPressed: () => setState(_proposerDangers),
-              icon: const Icon(Icons.refresh_rounded),
-              label: Text(m('nouvelles')),
-            ),
-            TextButton.icon(
-              onPressed: () async {
-                final d = await _choixLibre(_dangers, (x) => x.name);
-                if (d != null) _choisirDanger(d);
-              },
-              icon: const Icon(Icons.list_rounded),
-              label: Text(m('choix_libre')),
-            ),
-          ]),
-          if (s.paliers.isNotEmpty) FrisePaliers(textes: s.paliers),
+          LigneDecor(
+            dossier: 'dangers',
+            id: s.dangerId,
+            nom: s.dangerNom,
+            icone: Icons.bolt_rounded,
+            source: source,
+            onInfo: _danger == null ? null : () => _ouvrir(FicheDanger(danger: _danger!)),
+          ),
+          _Vote<Danger>(
+            consigne: m('vote'),
+            propositions: _propDangers,
+            nom: (d) => d.name,
+            choisi: (d) => d.id == s.dangerId,
+            onChoisir: _choisirDanger,
+            nouvelles: m('nouvelles'),
+            onNouvelles: () => setState(_proposerDangers),
+            choixLibre: m('choix_libre'),
+            onChoixLibre: () async {
+              final d = await _choixLibre(_dangers, (x) => x.name);
+              if (d != null) _choisirDanger(d);
+            },
+          ),
+          if (s.paliers.isNotEmpty) ...[
+            const SizedBox(height: 14),
+            FrisePaliers(textes: s.paliers),
+          ],
         ]),
         SectionDestiny(titre: m('objets'), enfants: [
           Text(m('objets_aide'), style: Theme.of(context).textTheme.bodySmall),
@@ -259,7 +273,7 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
           ),
         ]),
         SectionDestiny(titre: m('chrono'), enfants: [
-          Wrap(spacing: 8, children: [
+          Wrap(spacing: 8, runSpacing: 8, children: [
             for (var i = 0; i < chronos.length; i++)
               ChoiceChip(
                 label: Text(m('minutes', {'n': '${chronos[i].dureeMinutes}'})),
@@ -267,7 +281,17 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
                 onSelected: (_) => setState(() => _chrono = i),
               ),
           ]),
-          const SizedBox(height: 4),
+          const SizedBox(height: 14),
+          FriseDestiny(
+            totalSecondes: chronos[_chrono].dureeMinutes * 60,
+            ecouleSecondes: 0,
+            curseur: false,
+            reperes: [
+              for (final (i, minute) in chronos[_chrono].destinyMinutes.indexed)
+                RepereDestiny(numero: i + 1, secondes: minute * 60, etat: EtatDestiny.avenir),
+            ],
+          ),
+          const SizedBox(height: 6),
           Text(m('destiny_a', {'liste': chronos[_chrono].destinyMinutes.map((x) => '$x').join(' · ')}),
               style: TextStyle(fontFamily: kPoliceTexte, color: c.texteSecondaire)),
         ]),
@@ -290,5 +314,55 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
         ),
       ],
     );
+  }
+}
+
+/// Le vote à main levée : trois propositions, trois autres, ou le choix libre.
+class _Vote<T> extends StatelessWidget {
+  const _Vote({
+    required this.consigne,
+    required this.propositions,
+    required this.nom,
+    required this.choisi,
+    required this.onChoisir,
+    required this.nouvelles,
+    required this.onNouvelles,
+    required this.choixLibre,
+    required this.onChoixLibre,
+  });
+
+  final String consigne;
+  final List<T> propositions;
+  final String Function(T) nom;
+  final bool Function(T) choisi;
+  final ValueChanged<T> onChoisir;
+  final String nouvelles;
+  final VoidCallback onNouvelles;
+  final String choixLibre;
+  final VoidCallback onChoixLibre;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.destiny;
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const SizedBox(height: 2),
+      Text(
+        consigne,
+        style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, height: 1.35, color: c.texteSecondaire),
+      ),
+      const SizedBox(height: 8),
+      Wrap(spacing: 8, runSpacing: 8, children: [
+        for (final e in propositions)
+          ChoiceChip(
+            label: Text(nom(e)),
+            selected: choisi(e),
+            onSelected: (_) => onChoisir(e),
+          ),
+      ]),
+      Wrap(spacing: 4, children: [
+        TextButton.icon(onPressed: onNouvelles, icon: const Icon(Icons.refresh_rounded), label: Text(nouvelles)),
+        TextButton.icon(onPressed: onChoixLibre, icon: const Icon(Icons.list_rounded), label: Text(choixLibre)),
+      ]),
+    ]);
   }
 }

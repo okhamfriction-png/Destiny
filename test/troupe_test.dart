@@ -18,6 +18,7 @@ import 'package:destiny/domain/repositories/catalog_store.dart';
 import 'package:destiny/domain/troupe/session.dart';
 import 'package:destiny/presentation/destiny/donnees.dart';
 import 'package:destiny/presentation/theme/destiny_theme.dart';
+import 'package:destiny/presentation/troupe/composants_troupe.dart';
 import 'package:destiny/presentation/troupe/troupe_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -176,8 +177,10 @@ void main() {
     await tester.tap(find.text(t.t('preparer.vers_echauffement')));
     await tester.pumpAndSettle();
 
-    // L'échauffement, puis l'écran d'avant scène.
+    // L'échauffement (chaque archétype en petit rectangle), puis l'écran
+    // d'avant scène.
     expect(find.text(g.personnage.echauffement.questions.first), findsOneWidget);
+    expect(find.byType(RectangleArchetype), findsNWidgets(4));
     await tester.tap(find.text(t.t('echauffement.vers_avant_scene')));
     await tester.pumpAndSettle();
     expect(find.textContaining(g.personnage.phraseCle), findsOneWidget);
@@ -197,9 +200,14 @@ void main() {
     await tester.tap(find.text(t.t('mise_en_place.lever_rideau')));
     await tester.pumpAndSettle();
 
-    // La régie : le bouton Destiny fait monter d'un palier.
+    // La régie : le chrono, la frise des trois Destiny, la régie son ; le
+    // bouton Destiny fait monter d'un palier.
     expect(find.text(g.palier(PalierId.signale).nom), findsWidgets);
-    await tester.tap(find.text(t.t('regie.destiny').toUpperCase()));
+    for (final n in [1, 2, 3]) {
+      expect(find.byKey(ValueKey('repere_destiny_$n')), findsOneWidget);
+    }
+    expect(find.text(t.t('regie.son_debut')), findsOneWidget);
+    await tester.tap(find.text(t.t('regie.destiny_n', {'n': '1'}).toUpperCase()));
     await tester.pump();
     await tester.pump();
     await tester.pump(const Duration(seconds: 10));

@@ -10,8 +10,10 @@ import 'package:destiny/domain/troupe/session.dart';
 import 'package:destiny/presentation/bibliotheque/archetypes_screen.dart';
 import 'package:destiny/presentation/bibliotheque/dangers_lieux_screen.dart';
 import 'package:destiny/presentation/destiny/cartes.dart';
+import 'package:destiny/presentation/destiny/composants.dart';
 import 'package:destiny/presentation/destiny/donnees.dart';
 import 'package:destiny/presentation/theme/destiny_theme.dart';
+import 'package:destiny/presentation/troupe/composants_troupe.dart';
 import 'package:destiny/presentation/troupe/preparer_screen.dart';
 import 'package:destiny/presentation/troupe/troupe_screen.dart';
 import 'package:flutter/material.dart';
@@ -91,8 +93,11 @@ void main() {
     await tester.tap(bouton);
     await tester.pumpAndSettle();
     expect(s.etape, EtapeSession.echauffement);
-    // Sans animal choisi, l'échauffement montre l'archétype et ses deux animaux.
-    expect(find.byType(CarteArchetype), findsNWidgets(4));
+    // Plus de grandes cartes : chaque archétype en petit rectangle, sans
+    // animal tant qu'il n'est pas choisi.
+    expect(find.byType(CarteArchetype), findsNothing);
+    expect(find.byType(RectangleArchetype), findsNWidgets(4));
+    expect(find.byType(MedaillonAnimal), findsNothing);
   });
 
   testWidgets('choisir un animal est facultatif, et se défait', (tester) async {

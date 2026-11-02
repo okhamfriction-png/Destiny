@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 
 import '../../domain/troupe/session.dart';
 import '../destiny/bouton_ia.dart';
-import '../destiny/cartes.dart';
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
 import '../theme/destiny_theme.dart';
+import 'composants_troupe.dart';
 import 'troupe_screen.dart';
 
-/// L'échauffement : chaque joueur reçoit sa carte et les trois questions. Un
-/// minuteur tourne (30 minutes par défaut).
+/// L'échauffement : les trois questions, puis chaque archétype en petit
+/// rectangle (sa fiche à portée d'une bulle d'info). Un minuteur tourne
+/// (30 minutes par défaut).
 class EchauffementScreen extends StatefulWidget {
   const EchauffementScreen({super.key, required this.contexte, required this.session});
 
@@ -90,9 +91,12 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
       enfants: [
         Paragraphe(t.t('echauffement.intro')),
         Center(
-          child: Text(
-            '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}',
-            style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w900, fontSize: 56, color: c.titre),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}',
+              style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w900, fontSize: 56, color: c.titre),
+            ),
           ),
         ),
         if (_reste == 0) Center(child: Paragraphe(t.t('echauffement.fini'), gras: true)),
@@ -118,33 +122,20 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
             child: Paragraphe(e.limite, italique: true),
           ),
         ]),
-        for (final p in widget.session.personnages)
-          Padding(
-            padding: const EdgeInsets.only(top: 18),
-            child: Column(children: [
-              if (p.joueur.isNotEmpty)
-                Text(p.joueur, style: Theme.of(context).textTheme.headlineSmall),
-              const SizedBox(height: 6),
-              if (p.animalId.isNotEmpty)
-                widget.session.kids
-                    ? CarteArchetype.kids(p.animalId, source: widget.contexte.visuels.source)
-                    : CarteArchetype.animal(p.animalId, source: widget.contexte.visuels.source)
-              // Animal pas encore choisi : l'archétype et ses deux animaux.
-              else if (p.archetypeId.isNotEmpty)
-                CarteArchetype.archetype(p.archetypeId, source: widget.contexte.visuels.source),
-              if (widget.contexte.ia != null && p.archetypeId.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Center(
-                    child: BoutonIA(
+        SectionDestiny(titre: t.t('echauffement.personnages'), enfants: [
+          for (final p in widget.session.personnages)
+            RectangleArchetype(
+              personnage: p,
+              contexte: widget.contexte,
+              pied: widget.contexte.ia?.disponible == true && p.archetypeId.isNotEmpty
+                  ? BoutonIA(
                       libelle: t.t('ia_jeu.idees_echauffement'),
                       disponible: widget.contexte.ia!.disponible,
                       action: () => _idees(p.archetypeId, p.animalId),
-                    ),
-                  ),
-                ),
-            ]),
-          ),
+                    )
+                  : null,
+            ),
+        ]),
         const SizedBox(height: 22),
         FilledButton.icon(
           icon: const Icon(Icons.wb_sunny_outlined),
@@ -157,8 +148,9 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
   }
 }
 
-/// Avant d'entrer en scène : un écran qui donne envie de jouer. Les règles
-/// d'or, les quatre paliers, la phrase des débriefs. Jamais de critique.
+/// Avant d'entrer en scène : un écran qui donne envie de jouer. La
+/// distribution, les règles d'or, les quatre paliers, la phrase des débriefs.
+/// Jamais de critique.
 class AvantSceneScreen extends StatelessWidget {
   const AvantSceneScreen({super.key, required this.contexte, required this.session});
 
@@ -174,6 +166,9 @@ class AvantSceneScreen extends StatelessWidget {
       titre: t.t('avant_scene.titre'),
       enfants: [
         BandeauAffiche(titre: g.promesse.toUpperCase(), sousTitre: t.t('avant_scene.message')),
+        SectionDestiny(titre: t.t('avant_scene.distribution'), enfants: [
+          for (final p in session.personnages) RectangleArchetype(personnage: p, contexte: contexte),
+        ]),
         SectionDestiny(titre: t.t('bibliotheque.regles.regles_d_or'), enfants: [
           for (final r in g.reglesDOr) Puce(r.titre),
         ]),

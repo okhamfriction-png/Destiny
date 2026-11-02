@@ -5,10 +5,10 @@ import '../../application/prompts/prompts.dart';
 import '../../domain/grammaire/controle_besoin.dart';
 import '../../domain/troupe/session.dart';
 import '../destiny/bouton_ia.dart';
-import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
 import '../theme/destiny_theme.dart';
+import 'composants_troupe.dart';
 import 'troupe_screen.dart';
 
 /// Le débrief : pour chaque personnage, la phrase du groupe face à celle
@@ -118,6 +118,8 @@ class _DebriefScreenState extends State<DebriefScreen> {
     return PageDestiny(
       titre: d('titre'),
       enfants: [
+        LieuEtDanger(contexte: widget.contexte, session: s),
+        const SizedBox(height: 8),
         Paragraphe(d('intro'), gras: true),
         if (widget.contexte.ia != null)
           BoutonIA(libelle: t.t('ia_jeu.coach'), disponible: widget.contexte.ia!.disponible, action: _coach),
@@ -171,7 +173,6 @@ class _DebriefScreenState extends State<DebriefScreen> {
     final c = context.destiny;
     String d(String k) => t.t('debrief.$k');
     final a = g.archetype(p.archetypeId);
-    final animal = g.animal(p.animalId);
     final couleur = a == null ? c.or : c.famille(a.famille);
     final memeBesoin = p.fixeBesoin.isNotEmpty &&
         p.groupeBesoin.isNotEmpty &&
@@ -203,17 +204,8 @@ class _DebriefScreenState extends State<DebriefScreen> {
       couleur: couleur,
       marge: 14,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Row(children: [
-          if (animal != null) MedaillonAnimal(animal, taille: 40, source: widget.contexte.visuels.source),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              [if (p.joueur.isNotEmpty) p.joueur, if (a != null) a.nom].join(' · '),
-              style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 16.5, color: c.texte),
-            ),
-          ),
-        ]),
-        const SizedBox(height: 10),
+        EnteteArchetype(personnage: p, contexte: widget.contexte),
+        const SizedBox(height: 12),
         Text(d('groupe'), style: Theme.of(context).textTheme.labelMedium),
         const SizedBox(height: 6),
         champ(d('veut'), p.groupeVeut, (v) => p.groupeVeut = v),

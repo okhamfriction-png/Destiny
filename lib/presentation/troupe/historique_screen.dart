@@ -8,6 +8,7 @@ import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
 import '../theme/destiny_theme.dart';
+import 'composants_troupe.dart';
 import 'troupe_screen.dart';
 
 String _date(DateTime d) =>
@@ -102,9 +103,8 @@ class FicheSession extends StatelessWidget {
       ],
       enfants: [
         SectionDestiny(titre: t.t('historique.mise_en_place'), espace: 0, enfants: [
-          LigneInfo(t.t('mise_en_place.lieu'), s.lieuNom),
+          LieuEtDanger(contexte: contexte, session: s),
           LigneInfo(t.t('mise_en_place.groupe'), s.groupe),
-          LigneInfo(t.t('mise_en_place.danger'), s.dangerNom),
           FrisePaliers(textes: s.paliers, courant: PalierId.deNumero(s.palierAtteint)),
           for (final (i, o) in s.objets.indexed)
             if (o.isNotEmpty) Puce(o, numero: i + 1),
@@ -116,15 +116,8 @@ class FicheSession extends StatelessWidget {
             CadreLisere(
               couleur: g.archetype(p.archetypeId) == null ? c.or : c.famille(g.archetype(p.archetypeId)!.famille),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(
-                  [
-                    if (p.joueur.isNotEmpty) p.joueur,
-                    g.archetype(p.archetypeId)?.nom ?? '',
-                    g.animal(p.animalId)?.nom ?? '',
-                  ].where((x) => x.isNotEmpty).join(' · '),
-                  style: TextStyle(fontSize: 16, fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, color: c.texte),
-                ),
-                const SizedBox(height: 6),
+                EnteteArchetype(personnage: p, contexte: contexte),
+                const SizedBox(height: 8),
                 LigneInfo(t.t('debrief.groupe'), [p.groupeVeut, p.groupeBesoin].where((x) => x.isNotEmpty).join(' / ')),
                 LigneInfo(t.t('debrief.fixe'), [p.fixeVeut, p.fixeBesoin].where((x) => x.isNotEmpty).join(' / ')),
                 LigneInfo(
