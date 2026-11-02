@@ -537,3 +537,50 @@ La Campagne devient la **Série**, avec le vocabulaire de la télé.
 1. **La politique de confidentialité en ligne** (`docs/privacy.html`) ne parle pas des modes IA. Je propose le texte du § 6 de `docs/play_store_listing.md`. Je l'applique ?
 2. **Les images des lieux et des dangers** : je les efface du dépôt, ou je les montre dans la Bibliothèque (pages Lieux et Dangers) ?
 3. **Le logo en forme de cube** (question de la phase 7) : on le garde ?
+
+---
+
+## Après la phase 8 — « Enchaîne, n'attends pas mon go » ✅
+
+### Ce qui a été fait
+
+- **Tous les écrans suivent maintenant le thème clair ou sombre.** Il y avait encore huit écrans forcés en sombre. Je les ai passés au nouveau design avec deux agents, chacun dans sa copie du projet, puis j'ai fusionné leur travail :
+  - l'**histoire avec l'IA** et le **spectacle avec l'IA** ;
+  - la **configuration de l'IA**, la **Musique** et la **régie son** ;
+  - l'**antisèche des relations**, les **détails des lieux**, les **archives**.
+
+  Leurs textes sont dans `destiny_textes.json` (sections `histoire_ia`, `spectacle_ia`, `ia_config`, `musique`, `relations`, `details_lieux`, `archives`). Le fichier qui forçait le thème sombre est retiré.
+- **Quelques défauts corrigés au passage** :
+  - taper la clé d'IA déclenchait une erreur à chaque lettre (en mode développeur) ;
+  - le cadre d'une fiche de lieu ne pouvait pas s'afficher (bordure arrondie non uniforme) ;
+  - l'erreur au lancement d'une nouvelle histoire ne s'affichait jamais ;
+  - le badge « 2 réussites requises » s'affichait à chaque chapitre, même sans l'option.
+- **Petits changements d'affichage** :
+  - dans la liste des histoires, un seul menu (Résumé, Archiver, Supprimer) remplace trois petits boutons qui coupaient les titres ;
+  - chaque histoire montre son univers, son lieu et son danger ;
+  - « Jeton API » devient « La clé d'API » ;
+  - « Paramètres » devient « Réglages » partout.
+- **La politique de confidentialité** (`docs/privacy.html`) est à jour :
+  - les modes IA, facultatifs, envoient le texte de jeu au fournisseur choisi. L'appli propose **Anthropic, OpenAI et Google** : les docs n'en citaient que deux ;
+  - en troupe et en Série, les prénoms des comédiens ne partent jamais. Dans l'histoire avec l'IA, seul le nom donné au héros part ;
+  - la transcription passe par la reconnaissance vocale du téléphone (Google ou Apple). Les docs disaient à tort « sur l'appareil » ; l'appli, elle, ne garde aucun son ;
+  - le mode kids est mentionné.
+- **Le Play Store** :
+  - huit captures au format 9:16 (1080 × 1920) dans `docs/store_assets/play_store_2_0/` ;
+  - la bannière refaite pour la 2.0.
+- **La version web** est recompilée avec tous ces écrans, et vérifiée en thème clair dans un navigateur.
+
+### Tests
+
+**243 tests passent** (216 à la fin de la phase 8). Les nouveaux vérifient :
+- chaque écran porté, à 390 px, en clair et en sombre, avec ses actions principales ;
+- que chaque texte utilisé existe ;
+- qu'aucune couleur sombre n'est restée en dur ;
+- qu'il n'y a plus d'écran forcé en sombre.
+
+### Décisions que j'ai prises (sans attendre ton go)
+
+1. **La politique de confidentialité** : j'ai appliqué le texte proposé, corrigé sur les trois points ci-dessus. Elle sera en ligne dès que la branche sera fusionnée dans `main`.
+2. **Le logo cube** est gardé.
+3. **Les images des lieux et des dangers** restent dans le dépôt, sans être embarquées dans l'appli.
+4. **Les effets plein écran** de l'histoire avec l'IA (réussite, échec, orage) gardent leurs couleurs propres dans les deux thèmes.

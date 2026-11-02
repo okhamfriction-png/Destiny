@@ -85,7 +85,7 @@ Rien n'est écrit. Tout reste à jouer.
 | **E-mail développeur** | okhamfriction@gmail.com |
 | **Politique de confidentialité** | ✅ EN LIGNE : https://okhamfriction-png.github.io/Destiny/privacy.html |
 | **Classification du contenu** | À remplir via le questionnaire Google (l'app n'a pas de contenu sensible → visera « Tout public / PEGI 3 ») |
-| **Section Data safety** | Tout reste sur l'appareil, **sauf** les modes « avec l'IA » : le texte de jeu part chez le fournisseur choisi (Anthropic ou OpenAI), avec la clé de l'utilisateur, sans les prénoms des comédiens. La transcription passe par la reconnaissance vocale du système (Google ou Apple) ; l'appli ne garde aucun son. À déclarer en conséquence (voir § 6). |
+| **Section Data safety** | Tout reste sur l'appareil, **sauf** les modes « avec l'IA » : le texte de jeu part chez le fournisseur choisi (Anthropic, OpenAI ou Google), avec la clé de l'utilisateur ; en troupe et en Série, sans les prénoms des comédiens. La transcription passe par la reconnaissance vocale du système (Google ou Apple) ; l'appli ne garde aucun son. À déclarer en conséquence (voir § 6). |
 | **Public cible** | 13 ans et + (ou « tout public » selon ton choix) |
 
 ---
@@ -118,8 +118,9 @@ sur votre appareil.
 
 Les modes « avec l'IA » sont facultatifs. Si vous les utilisez avec votre
 propre clé d'API, le texte de la partie est envoyé au fournisseur que vous
-avez choisi (Anthropic ou OpenAI), selon ses propres conditions. Les prénoms
-des comédiens ne sont jamais envoyés.
+avez choisi (Anthropic, OpenAI ou Google), selon ses propres conditions. En
+troupe et en Série, les prénoms des comédiens ne sont jamais envoyés ; dans
+l'histoire avec l'IA, seul le nom donné au héros l'est.
 
 La transcription de la voix, si vous l'activez, utilise la reconnaissance
 vocale du système (Google ou Apple) ; l'application ne conserve aucun son.

@@ -79,6 +79,7 @@ Le dé et ses cartes Destin, le Générateur et ses modes Rue et Spin-off, et l'
 
 ### Plus confortable
 
+- Tous les écrans suivent le thème choisi, clair ou sombre, y compris l'histoire et le spectacle avec l'IA, la Musique et la régie son.
 - L'appli suit la taille de texte du téléphone, jusqu'aux très grands caractères.
 - Chaque bouton a un nom lu par les lecteurs d'écran.
 - Les couleurs restent lisibles en clair comme en sombre.

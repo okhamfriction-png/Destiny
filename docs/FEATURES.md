@@ -94,7 +94,7 @@ L'accueil montre la promesse et, un jour sur deux, la règle d'or ou la répliqu
 
 ## 5. Jouer avec l'IA
 
-Facultatif : il faut une clé d'API (Anthropic ou OpenAI), à régler dans **Réglages › IA**. Les prompts sont réunis dans `lib/application/prompts/`, versionnés et testés ; chacun contient la grammaire en version courte, générée depuis le fichier.
+Facultatif : il faut une clé d'API (Anthropic, OpenAI ou Google), à régler dans **Réglages › IA**. Les prompts sont réunis dans `lib/application/prompts/`, versionnés et testés ; chacun contient la grammaire en version courte, générée depuis le fichier.
 
 - **L'histoire avec l'IA** : on choisit son archétype, son animal, et si on veut une blessure et un vouloir. L'IA joue les autres, avec une distribution équilibrée. Quatre chapitres, un par palier ; **Destiny tombe entre deux chapitres**. La **pièce du destin** tranche chaque action. Au dernier chapitre, on choisit : le vouloir ou le besoin. Le résumé suit le coach de débrief.
 - **Le spectacle avec l'IA** : quatre personnages tirés en distribution équilibrée, quatre actes, Destiny avec un bouton, et un **débrief positif** : l'histoire, ton personnage, la phrase clé, ce qui a marché, une piste pour la prochaine fois.
@@ -163,7 +163,7 @@ Facultatif : il faut une clé d'API (Anthropic ou OpenAI), à régler dans **Ré
 ## 11. Confidentialité et données
 
 - **Hors ligne** par défaut. La régie, le rituel et la Série ne dépendent jamais du réseau.
-- Seuls les modes IA envoient du texte, avec la clé de l'utilisateur, au fournisseur choisi. Les prénoms des comédiens ne partent pas ; le registre ne garde que des personnages.
+- Seuls les modes IA envoient du texte, avec la clé de l'utilisateur, au fournisseur choisi (Anthropic, OpenAI ou Google). En troupe et en Série, les prénoms des comédiens ne partent pas ; le registre ne garde que des personnages. Dans l'histoire avec l'IA, seul le nom donné au héros part.
 - La transcription passe par la reconnaissance vocale du système (Google ou Apple) ; l'appli ne garde aucun son, seulement le texte, sur l'appareil.
 - **Rien n'est perdu à la mise à jour** : les anciennes campagnes deviennent des séries, les anciennes histoires se relisent, les lieux et dangers modifiés sont gardés, une sauvegarde illisible n'est jamais écrasée.
 - Politique de confidentialité : [`privacy.html`](privacy.html).

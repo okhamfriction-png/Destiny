@@ -2,7 +2,7 @@
 
 Application Flutter (Android, iOS, web) pour l'**improvisation dramatique** avec la grammaire de Destiny : un lieu, un groupe qui se connaît, un danger qui monte en quatre paliers, et Destiny entre les actes. **Rien n'est écrit.**
 
-Tout fonctionne **hors ligne**. Seuls les modes « avec l'IA » demandent une clé d'API (Anthropic ou OpenAI), celle de l'utilisateur.
+Tout fonctionne **hors ligne**. Seuls les modes « avec l'IA » demandent une clé d'API (Anthropic, OpenAI ou Google), celle de l'utilisateur.
 
 > 📖 Les fonctionnalités en détail : [`docs/FEATURES.md`](docs/FEATURES.md) · Les nouveautés : [`CHANGELOG.md`](CHANGELOG.md)
 
