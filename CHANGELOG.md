@@ -28,6 +28,15 @@ Après un premier essai de la 2.0.
   - Le méchant de saison est l'un des 24 grands méchants.
   - Les univers restent dans les modes avec l'IA.
 
+### La régie du spectacle
+
+- **Le chrono reste en haut de l'écran**, avec une frise du temps qui montre les trois Destiny et le temps avant le prochain.
+- **Les Destiny se règlent pendant le jeu** : « −1 min » et « +1 min » pour décaler le prochain, ou le réglage de tous ceux qui restent. Le bouton DESTINY lance le suivant tout de suite, quel que soit le réglage.
+- **La tablette son est là dès le début** : musique du début, ambiance du lieu, ambiance de l'acte 2, musique de fin, son de Destiny, stop, et le mixeur complet.
+- **Des rectangles compacts** remplacent les grandes cartes à l'échauffement, avant d'entrer en scène, à la régie et au débrief. Une bulle « i » ouvre la fiche de l'archétype, du lieu ou du danger.
+- **Le groupe est tiré d'office** à la mise en place, comme le lieu et le danger : on le change si on veut, mais rien ne bloque.
+- **Un vrai noir** : la palette est neutre et nette, dans l'esprit des éditeurs de code ; le thème clair suit la même logique.
+
 ### Préparer en un geste (spectacle et répétition)
 
 - **La répétition est le choix par défaut.**

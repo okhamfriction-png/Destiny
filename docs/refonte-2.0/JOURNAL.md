@@ -665,3 +665,35 @@ La Campagne devient la **Série**, avec le vocabulaire de la télé.
 3. **« Hors jeu »** : le personnage ne quitte l'histoire que si on le coche au bilan.
 4. **Le lieu et le danger** de l'épisode sont tirés tout seuls en arrivant sur la préparation, comme en Troupe.
 5. **Deux réglages retirés** : « combat par défaut » et « pièce par défaut » ne servaient plus à rien.
+
+---
+
+## 2.0.1 (fin) — La régie, des rectangles, un vrai noir ✅
+
+### Ton retour
+
+« Des petits rectangles avec une bulle d'infos plutôt que les grandes cartes. Les musiques et les tablettes de régie dès le début du spectacle. Voir les 3 Destiny dans le minuteur, pouvoir les modifier, les lancer plus tôt ou plus tard. Et l'UX : le noir est trop gris, va vers un vrai noir, façon IntelliJ ou VS Code. »
+
+### Ce qui a été fait
+
+- **La palette** :
+  - en sombre, un fond quasi noir et neutre, des cartes anthracite, un texte blanc cassé et un gris secondaire lisible ; plus de teinte brune ni d'ombre ;
+  - en clair, un fond gris très pâle et des cartes blanches ;
+  - l'or reste pour les titres, les sélections et les boutons principaux.
+- **La régie** :
+  - le panneau du chrono reste fixé en haut : le temps restant, la frise des trois Destiny, le temps avant le prochain, « −1 min » et « +1 min », et le réglage de tous les Destiny restants ;
+  - le bouton DESTINY marche dans tous les modes de déclenchement ; il était grisé en mode automatique ;
+  - la tablette son ;
+  - le lieu et le danger avec leur bulle d'info.
+- **Les rectangles compacts** (archétype, puis l'animal s'il est choisi, et une bulle « i ») à l'échauffement, avant d'entrer en scène, à la régie, au débrief et dans la fiche du spectacle.
+- **La mise en place** : le groupe est tiré d'office, et « Lever le rideau » ne demande plus que le lieu et le danger.
+
+### Tests
+
+**297 tests passent**. Les nouveaux portent sur :
+- les règles de décalage d'un Destiny ;
+- les trois repères ;
+- le bouton DESTINY en mode automatique ;
+- la tablette son, et son comportement quand le son est coupé ;
+- les bulles d'info ;
+- chaque écran Troupe en clair et en sombre, avec un texte agrandi.

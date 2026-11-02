@@ -48,6 +48,17 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
   void initState() {
     super.initState();
     _charger();
+    // Un groupe déjà tiré, comme le lieu et le danger : on peut le changer,
+    // mais rien n'empêche de lever le rideau.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || s.groupe.trim().isNotEmpty) return;
+      final groupes = context.textes.liste('mise_en_place.groupes');
+      if (groupes.isEmpty) return;
+      setState(() {
+        s.groupe = groupes[_hasard.nextInt(groupes.length)];
+        _groupe.text = s.groupe;
+      });
+    });
   }
 
   Future<void> _charger() async {
@@ -157,7 +168,7 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
     final c = context.destiny;
     String m(String k, [Map<String, String> v = const {}]) => t.t('mise_en_place.$k', v);
     final chronos = widget.contexte.reglages.chronos;
-    final pret = s.lieuNom.isNotEmpty && s.dangerNom.isNotEmpty && s.groupe.trim().isNotEmpty;
+    final pret = s.lieuNom.isNotEmpty && s.dangerNom.isNotEmpty;
     final liens = (widget.contexte.relations?.links ?? const []).take(2).toList();
     final source = widget.contexte.visuels.source;
 
