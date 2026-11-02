@@ -139,7 +139,7 @@ void main() {
 
   testWidgets('un spectacle de bout en bout', (tester) async {
     SharedPreferences.setMockInitialValues({});
-    tester.view.physicalSize = const Size(900, 6000);
+    tester.view.physicalSize = const Size(390, 9000);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     final store = TroupeStore();

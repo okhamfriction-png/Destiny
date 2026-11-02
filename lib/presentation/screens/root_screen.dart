@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../application/services/audio_service.dart';
 import '../../application/state/ai_settings.dart';
-import '../../application/state/campagne_store.dart';
 import '../../application/state/chat_controller.dart';
 import '../../application/state/location_details.dart';
 import '../../application/state/music_controller.dart';
 import '../../application/state/reglages_destiny.dart';
 import '../../application/state/relation_cheatsheet.dart';
+import '../../application/state/serie_store.dart';
 import '../../application/state/spectacle_controller.dart';
 import '../../application/state/troupe_store.dart';
 import '../../application/state/visual_settings.dart';
@@ -17,6 +17,7 @@ import '../../domain/repositories/story_repository.dart';
 import '../bibliotheque/bibliotheque_screen.dart';
 import '../destiny/donnees.dart';
 import '../jouer/jouer_screen.dart';
+import '../serie/contexte_serie.dart';
 import '../theme/destiny_theme.dart';
 import '../troupe/troupe_screen.dart';
 import 'exercices_screen.dart';
@@ -38,7 +39,7 @@ class RootScreen extends StatefulWidget {
     required this.spectacleController,
     required this.relationCheatsheet,
     required this.locationDetails,
-    required this.campagneStore,
+    required this.serieStore,
     required this.troupeStore,
     required this.reglages,
     super.key,
@@ -55,7 +56,7 @@ class RootScreen extends StatefulWidget {
   final SpectacleController spectacleController;
   final RelationCheatsheet relationCheatsheet;
   final LocationDetailsStore locationDetails;
-  final CampagneStore campagneStore;
+  final SerieStore serieStore;
   final TroupeStore troupeStore;
   final ReglagesDestiny reglages;
 
@@ -110,9 +111,16 @@ class _RootScreenState extends State<RootScreen> {
     );
     final pages = [
       JouerScreen(
+        serie: ContexteSerie(
+          store: widget.serieStore,
+          reglages: widget.reglages,
+          catalogue: widget.catalogStore,
+          audio: widget.audioService,
+          musique: widget.musicController,
+          visuels: widget.visualSettings,
+        ),
         chatController: widget.chatController,
         spectacleController: widget.spectacleController,
-        campagneStore: widget.campagneStore,
         audioService: widget.audioService,
         visualSettings: widget.visualSettings,
         musicController: widget.musicController,

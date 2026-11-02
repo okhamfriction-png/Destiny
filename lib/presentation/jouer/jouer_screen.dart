@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../../application/services/audio_service.dart';
-import '../../application/state/campagne_store.dart';
 import '../../application/state/chat_controller.dart';
 import '../../application/state/music_controller.dart';
 import '../../application/state/spectacle_controller.dart';
 import '../../application/state/visual_settings.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
-import '../screens/campagne_liste_screen.dart';
 import '../screens/chat_screen.dart';
 import '../screens/spectacle_screen.dart';
+import '../serie/contexte_serie.dart';
+import '../serie/creer_serie_screen.dart';
+import '../serie/fiche_serie_screen.dart';
+import '../serie/series_screen.dart';
 import '../theme/destiny_theme.dart';
 import '../widgets/ecran_sombre.dart';
 
@@ -19,17 +21,17 @@ import '../widgets/ecran_sombre.dart';
 class JouerScreen extends StatelessWidget {
   const JouerScreen({
     super.key,
+    required this.serie,
     required this.chatController,
     required this.spectacleController,
-    required this.campagneStore,
     required this.audioService,
     required this.visualSettings,
     required this.musicController,
   });
 
+  final ContexteSerie serie;
   final ChatController chatController;
   final SpectacleController spectacleController;
-  final CampagneStore campagneStore;
   final AudioService audioService;
   final VisualSettings visualSettings;
   final MusicController musicController;
@@ -40,7 +42,7 @@ class JouerScreen extends StatelessWidget {
     final t = context.textes;
     final c = context.destiny;
     String j(String k) => t.t('jouer.$k');
-    void ouvrir(Widget page) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
+    void ouvrir(Widget page) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
@@ -53,20 +55,41 @@ class JouerScreen extends StatelessWidget {
               Text(j('sous_titre'), textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
               SectionDestiny(titre: j('humains.titre'), enfants: [
                 Paragraphe(j('humains.sous_titre')),
-                for (final (cle, texte) in [
-                  ('episode', g.serie.episode),
-                  ('saison', g.serie.saison),
-                  ('serie', g.serie.serie),
-                ])
-                  LigneInfo(j('humains.$cle.titre'), texte),
+                ElementListe(
+                  titre: t.t('serie.nouvel_episode'),
+                  sousTitre: g.serie.episode,
+                  devant: Icon(Icons.movie_creation_outlined, color: c.titre),
+                  onTap: () => ouvrir(CreerSerieScreen(contexte: serie, saison: false)),
+                ),
+                ElementListe(
+                  titre: t.t('serie.nouvelle_saison'),
+                  sousTitre: g.serie.saison,
+                  devant: Icon(Icons.video_library_outlined, color: c.titre),
+                  onTap: () => ouvrir(CreerSerieScreen(contexte: serie, saison: true)),
+                ),
+                ListenableBuilder(
+                  listenable: serie.store,
+                  builder: (context, _) {
+                    final recentes = serie.store.series.take(2).toList();
+                    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                      for (final s in recentes)
+                        ElementListe(
+                          titre: s.nom.isEmpty ? t.t('serie.sans_titre') : s.nom,
+                          sousTitre: ouEnEst(context, s),
+                          devant: Icon(Icons.play_circle_outline_rounded, color: c.bleuDestiny),
+                          onTap: () => ouvrirFiche(context, serie, s.id),
+                        ),
+                    ]);
+                  },
+                ),
                 FilledButton.icon(
                   icon: const Icon(Icons.groups_rounded),
-                  onPressed: () => ouvrir(CampagneListeScreen(
-                    store: campagneStore,
-                    audioService: audioService,
-                    musicController: musicController,
-                  )),
+                  onPressed: () => ouvrir(SeriesScreen(contexte: serie)),
                   label: Text(j('humains.ouvrir')),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Text(g.serie.serie, style: Theme.of(context).textTheme.bodySmall),
                 ),
               ]),
               SectionDestiny(titre: j('ia.titre'), enfants: [

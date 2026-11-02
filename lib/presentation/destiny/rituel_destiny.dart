@@ -275,7 +275,7 @@ class _Frise extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (libelles.isEmpty || etape == EtapeRituel.palier) return const SizedBox.shrink();
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+    return Wrap(alignment: WrapAlignment.center, crossAxisAlignment: WrapCrossAlignment.center, children: [
       for (var i = 0; i < libelles.length; i++) ...[
         Text(
           libelles[i],

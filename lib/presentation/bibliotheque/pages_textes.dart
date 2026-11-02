@@ -248,9 +248,9 @@ class KidsScreen extends StatelessWidget {
         ]),
         SectionDestiny(titre: l('palier4'), enfants: [Paragraphe(k.palier4)]),
         SectionDestiny(titre: t.t('bibliotheque.serie.titre'), enfants: [
-          LigneInfo(t.t('jouer.humains.episode.titre'), g.serie.episode),
-          LigneInfo(t.t('jouer.humains.saison.titre'), g.serie.saison),
-          LigneInfo(t.t('jouer.humains.serie.titre'), g.serie.serie),
+          LigneInfo(t.t('serie.natures.episode'), g.serie.episode),
+          LigneInfo(t.t('serie.natures.saison'), g.serie.saison),
+          LigneInfo(t.t('serie.natures.serie'), g.serie.serie),
         ]),
       ],
     );

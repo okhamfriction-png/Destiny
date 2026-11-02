@@ -5,12 +5,12 @@ import 'application/services/audio_service.dart';
 import 'application/services/llm_service.dart';
 import 'application/services/random_picker_service.dart';
 import 'application/state/ai_settings.dart';
-import 'application/state/campagne_store.dart';
 import 'application/state/chat_controller.dart';
 import 'application/state/location_details.dart';
 import 'application/state/music_controller.dart';
 import 'application/state/reglages_destiny.dart';
 import 'application/state/relation_cheatsheet.dart';
+import 'application/state/serie_store.dart';
 import 'application/state/spectacle_controller.dart';
 import 'application/state/spectacle_store.dart';
 import 'application/state/troupe_store.dart';
@@ -102,8 +102,8 @@ Future<void> _boot() async {
   final relationCheatsheet = RelationCheatsheet();
   final locationDetails = LocationDetailsStore();
   await locationDetails.load();
-  final campagneStore = CampagneStore(llm: llmService, aiSettings: aiSettings);
-  await campagneStore.load();
+  final serieStore = SerieStore(llm: llmService, aiSettings: aiSettings);
+  await serieStore.charger(grammaire: grammaire.grammaire);
   final reglages = ReglagesDestiny();
   await reglages.charger();
   final troupeStore = TroupeStore();
@@ -122,7 +122,7 @@ Future<void> _boot() async {
     spectacleController: spectacleController,
     relationCheatsheet: relationCheatsheet,
     locationDetails: locationDetails,
-    campagneStore: campagneStore,
+    serieStore: serieStore,
     troupeStore: troupeStore,
     reglages: reglages,
   ));
@@ -168,7 +168,7 @@ class DestinyApp extends StatelessWidget {
     required this.spectacleController,
     required this.relationCheatsheet,
     required this.locationDetails,
-    required this.campagneStore,
+    required this.serieStore,
     required this.troupeStore,
     required this.reglages,
     super.key,
@@ -187,7 +187,7 @@ class DestinyApp extends StatelessWidget {
   final SpectacleController spectacleController;
   final RelationCheatsheet relationCheatsheet;
   final LocationDetailsStore locationDetails;
-  final CampagneStore campagneStore;
+  final SerieStore serieStore;
   final TroupeStore troupeStore;
   final ReglagesDestiny reglages;
 
@@ -216,7 +216,7 @@ class DestinyApp extends StatelessWidget {
         spectacleController: spectacleController,
         relationCheatsheet: relationCheatsheet,
         locationDetails: locationDetails,
-        campagneStore: campagneStore,
+        serieStore: serieStore,
         troupeStore: troupeStore,
         reglages: reglages,
       ),

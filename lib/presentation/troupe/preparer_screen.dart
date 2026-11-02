@@ -167,7 +167,7 @@ class _PreparerScreenState extends State<PreparerScreen> {
         ),
         SwitchListTile(
           contentPadding: EdgeInsets.zero,
-          title: Row(children: [Text(p('kids')), const SizedBox(width: 8), const SigleKids(petit: true)]),
+          title: Wrap(spacing: 8, crossAxisAlignment: WrapCrossAlignment.center, children: [Text(p('kids')), const SigleKids(petit: true)]),
           value: s.kids,
           onChanged: (v) {
             setState(() => s.kids = v);

@@ -58,6 +58,9 @@ void main() {
       'campagne_store',
       'seancejouee',
       'entities/campagne',
+      'serie_store',
+      'domain/serie',
+      'troupe_store',
     ];
     for (final f in dossier.listSync().whereType<File>()) {
       if (!f.path.endsWith('.dart')) continue;

@@ -2,7 +2,7 @@ import 'package:destiny/application/services/audio_service.dart';
 import 'package:destiny/application/services/llm_service.dart';
 import 'package:destiny/application/services/random_picker_service.dart';
 import 'package:destiny/application/state/ai_settings.dart';
-import 'package:destiny/application/state/campagne_store.dart';
+import 'package:destiny/application/state/serie_store.dart';
 import 'package:destiny/application/state/chat_controller.dart';
 import 'package:destiny/application/state/location_details.dart';
 import 'package:destiny/application/state/music_controller.dart';
@@ -97,7 +97,7 @@ void main() {
         spectacleController: spectacleController,
         relationCheatsheet: RelationCheatsheet(),
         locationDetails: LocationDetailsStore(),
-        campagneStore: CampagneStore(),
+        serieStore: SerieStore(),
         troupeStore: TroupeStore(),
         reglages: ReglagesDestiny(),
       ),

@@ -213,17 +213,6 @@
     "humains": {
       "titre": "Entre humains",
       "sous_titre": "Un maître du jeu, des joueurs, et l'appli pour le chrono, la musique et la régie.",
-      "episode": {
-        "titre": "Épisode"
-      },
-      "saison": {
-        "titre": "Saison"
-      },
-      "serie": {
-        "titre": "Série"
-      },
-      "faire_la_suite": "Faire la suite",
-      "note": "Les descriptions de l'épisode, de la saison et de la série viennent de la grammaire (clé « serie »).",
       "ouvrir": "Mes séries"
     },
     "ia": {

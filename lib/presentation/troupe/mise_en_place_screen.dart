@@ -120,7 +120,7 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
                 onSelected: (_) => _choisirLieu(l),
               ),
           ]),
-          Row(children: [
+          Wrap(children: [
             TextButton.icon(
               onPressed: () => setState(_proposerLieux),
               icon: const Icon(Icons.refresh_rounded),
@@ -174,7 +174,7 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
                 onSelected: (_) => _choisirDanger(d),
               ),
           ]),
-          Row(children: [
+          Wrap(children: [
             TextButton.icon(
               onPressed: () => setState(_proposerDangers),
               icon: const Icon(Icons.refresh_rounded),

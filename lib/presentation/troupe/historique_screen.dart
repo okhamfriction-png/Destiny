@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:printing/printing.dart';
 
 import '../../application/services/export_pdf.dart';
@@ -58,12 +57,7 @@ class FicheSession extends StatelessWidget {
   Future<void> _exporter(BuildContext context) async {
     final g = context.grammaire;
     final t = context.textes;
-    final polices = PolicesPdf(
-      titre: await rootBundle.load('assets/fonts/Cinzel-Bold.ttf'),
-      texte: await rootBundle.load('assets/fonts/Montserrat-Regular.ttf'),
-      texteGras: await rootBundle.load('assets/fonts/Montserrat-Bold.ttf'),
-      italique: await rootBundle.load('assets/fonts/Montserrat-Italic.ttf'),
-    );
+    final polices = await PolicesPdf.chargerDepuisAssets();
     final octets = await fichePdfSession(s: session, g: g, t: t, polices: polices);
     await Printing.sharePdf(bytes: octets, filename: 'destiny-${session.date.toIso8601String().substring(0, 10)}.pdf');
   }

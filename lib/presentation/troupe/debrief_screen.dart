@@ -147,18 +147,20 @@ class _DebriefScreenState extends State<DebriefScreen> {
         if (memeBesoin) Paragraphe(d('meme_phrase'), gras: true),
         Text(d('choix'), style: Theme.of(context).textTheme.labelMedium),
         const SizedBox(height: 6),
-        SegmentedButton<ChoixFinal>(
-          emptySelectionAllowed: true,
-          segments: [
-            ButtonSegment(value: ChoixFinal.vouloir, label: Text(d('choix_vouloir'))),
-            ButtonSegment(value: ChoixFinal.besoin, label: Text(d('choix_besoin'))),
-          ],
-          selected: {if (p.choixFinal != ChoixFinal.aucun) p.choixFinal},
-          onSelectionChanged: (v) {
-            setState(() => p.choixFinal = v.isEmpty ? ChoixFinal.aucun : v.first);
-            _sauver();
-          },
-        ),
+        Wrap(spacing: 8, runSpacing: 6, children: [
+          for (final (choix, libelle) in [
+            (ChoixFinal.vouloir, d('choix_vouloir')),
+            (ChoixFinal.besoin, d('choix_besoin')),
+          ])
+            ChoiceChip(
+              label: Text(libelle),
+              selected: p.choixFinal == choix,
+              onSelected: (oui) {
+                setState(() => p.choixFinal = oui ? choix : ChoixFinal.aucun);
+                _sauver();
+              },
+            ),
+        ]),
         const SizedBox(height: 8),
         champ(d('prix'), p.prixPaye, (v) => p.prixPaye = v),
       ]),

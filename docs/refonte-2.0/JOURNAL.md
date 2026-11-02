@@ -234,3 +234,104 @@ L'ancien Guide reste joignable depuis le chrono TOP, et l'ancien catalogue depui
 | Hibou | Débrouillard | avoir raison | « corrige les autres, impose son analyse » |
 
 Je propose de réécrire leurs quatre niveaux pour leur nouvel archétype, et de te les soumettre avant de les mettre dans l'appli. D'accord ?
+
+**Réponse (2 novembre)** : « Adapte tout. » C'est fait en phase 5 (voir ci-dessous).
+
+---
+
+## Phase 5 — Jouer entre humains : épisode, saison, série ✅
+
+La Campagne devient la **Série**, avec le vocabulaire de la télé.
+
+### Ce qui a été fait
+
+- **Tes quatre réponses** :
+  - **les 42 méchants d'univers** ont chacun un archétype ; les 12 archétypes sont présents, chez les adultes comme chez les enfants (tableau dans `DECISIONS.md`) ;
+  - **pas de chrono kids** : avec des enfants, « Sans chrono » est choisi d'office, et le maître du jeu lance Destiny quand il veut ;
+  - **la consigne enfant de l'IA** dit « des frissons doux, jamais d'effroi » ; un personnage ne meurt pas, il quitte l'histoire. Même règle dans l'IA du jeu ;
+  - **le corps du rat, du coq, du lapin, du mouton et du hibou** est réécrit pour leur archétype. L'ancienne version reste dans le fichier.
+- **Jouer → Entre humains** :
+  - deux portes : **Nouvel épisode** et **Nouvelle saison** ;
+  - les deux séries les plus récentes, pour reprendre en un geste ;
+  - **Mes séries**, avec le sigle KIDS et la ligne « où on en est ».
+- **Un épisode** (le one-shot) :
+  - le public (adultes ou avec des enfants), l'univers (ou Destiny sans univers), le lore, le ton, le contexte ;
+  - les réglages de la série : traître (désactivé), registre (activé), combat, pièce du destin ;
+  - **les personnages, gardés toute la série** : un archétype et un animal par joueur, avec une distribution équilibrée. À moins de quatre joueurs, l'alarmiste est joué par le maître du jeu. Chacun a aussi un nom, sa place dans le lieu, son peuple, sa blessure et son besoin (le contrôle « jamais un objet » est actif). En kids, chacun a son pouvoir, avec des idées ;
+  - **la préparation** :
+    - le lieu : ceux de l'univers, puis ceux de Destiny, avec leurs espaces, et la sortie de l'épisode précédent en rappel ;
+    - le groupe, le danger et ses quatre paliers (en kids, le palier 4 sans mort), les trois objets et le mystère ;
+    - le vouloir de chacun, avec des idées ;
+    - les figurants du lieu et les sbires ;
+    - ce qu'on ressort du registre ;
+    - le chrono : 20, 30, 45 minutes, ou sans ;
+    - le micro ;
+  - **le jeu** :
+    - le chrono ou pas, **Destiny et son rituel** (comme en Troupe), la frise des paliers, et les rappels acte par acte (fixer le besoin au premier figé, le nommer à l'acte 3, choisir à l'acte 4) ;
+    - l'escalade ;
+    - les personnages et leur montée à ce palier, les figurants et les sbires ;
+    - les outils : le combat (cœurs, malus, bonus), la pièce du destin, la régie son et les notes ;
+  - **le bilan** :
+    - le choix de chacun (vouloir ou besoin), le prix payé, et si le besoin a été nommé ;
+    - qui a quitté l'histoire, et qui est passé au service du méchant ;
+    - la sortie du palier 4 (le lieu suivant) ;
+    - ce qui a marché, la phrase qu'on garde, le registre ;
+    - le résumé IA, avec le texte exact qui part, sans prénoms.
+- **Faire la suite** : depuis la fiche d'un épisode, il devient le **premier d'une saison**. Son danger était le premier coup du méchant.
+- **Une saison** :
+  - on choisit le protagoniste visé, et l'appli propose ses **méchants reflets** (même archétype) : les grands méchants, puis ceux de l'univers. En kids, seulement les méchants kids. On peut aussi tirer au hasard ;
+  - **les quatre présages** : ceux d'un méchant d'univers sont déjà écrits ; sinon l'IA les propose, ou le maître du jeu les écrit, guidé par les quatre paliers. Il les valide ;
+  - **épisodes 1 à 3** : le méchant reste dans l'ombre. Sa carte est consultable par le maître du jeu ; les marches de l'escalade sont jouées par ses sbires et par le danger ;
+  - **épisode 4** : le final. Le méchant apparaît en personne, avec sa faille ;
+  - **en fin de saison** : ce que le méchant laisse, et ceux qui ont payé leur besoin peuvent changer d'archétype ;
+  - **saison suivante** : nouveau méchant, nouveau besoin. En kids, ceux qui avaient quitté l'histoire reviennent.
+- **Le traître** (si on l'active) : le méchant recrute un joueur, au hasard, jamais sa cible ni le personnage du maître du jeu. **L'écran caché** demande « Personne d'autre ne regarde ? », montre l'offre, puis « J'accepte » ou « Je refuse ». Il se révèle à l'épisode 3.
+- **Les figurants et les sbires** :
+  - un tableau en jeu, avec l'interrupteur figurant / sbire (couleur et icône) ;
+  - le bouton **Jouer** ouvre la fiche jouable, avec la carte de l'animal ;
+  - le geste **« Il a accepté l'offre »** fait basculer un figurant, et le registre le note ;
+  - l'aide-mémoire des 8 types ;
+  - ceux qui ont quitté l'histoire ne reviennent pas.
+- **Le registre** :
+  - un écran par série, rangé par catégorie, qu'on peut corriger, compléter et **exporter en PDF** ;
+  - il se remplit au bilan, par l'IA et par l'appli (sorties, bascules, traître, sortie du lieu, héritage) ;
+  - il passe d'une saison à l'autre.
+- **Les données des univers** (écrites avec trois agents, puis vérifiées par un script) :
+  - les **42 méchants d'univers** ont maintenant une posture, un animal à eux, un besoin, une faille, une cible (le reflet) et une offre au traître ;
+  - leurs **70 sbires** ont un archétype et un animal des comédiens, ce qu'ils veulent, d'où ils viennent et ce qu'ils font ; ils sont jouables ;
+  - les **42 lieux d'univers** ont chacun trois figurants (un aide, un témoin, une victime ou assimilés) ;
+  - les univers, les lores, les peuples et les tons sont sortis du code (`univers.json`).
+- **La migration** : les anciennes campagnes deviennent des séries, une seule fois.
+  - Les clés v1 restent intactes. Une série supprimée ne revient pas.
+  - Chaque épisode joué est gardé, marqué « Ancienne campagne » : intitulé, phrase, ce qui a marché, transcription, morts et blessés.
+  - Les sbires tombés retrouvent l'id de leur sbire.
+- **Le ménage** : l'ancienne Campagne est supprimée, à savoir ses 4 écrans, son store, ses entités, son constructeur, ses visuels, le cube de dé animé et le test du constructeur. Les fichiers de données restent.
+- **Sur téléphone** : les parcours de la Série et du mode Troupe sont testés à 390 px de large. Les débordements trouvés sont corrigés, y compris trois dans le mode Troupe de la phase 4 (frise du rituel, bascule kids, choix du débrief).
+
+### Tests
+
+**146 tests passent** (l'ancien test du constructeur de campagne est parti avec son code). Les nouveaux tests :
+- le modèle, le catalogue des univers, le reflet, l'escalade (le méchant n'apparaît pas avant l'épisode 4), les figurants, la distribution à 1 à 8 joueurs, le traître, les suggestions du registre ;
+- la migration : rien ne se perd, la continuité passe aux ids, et en kids personne n'est mort ;
+- **la vie privée** : aucun prénom ne part vers l'IA (résumé, présages, ressortis), et le registre n'en garde aucun, même si l'IA en répète un ;
+- **un parcours complet, à 390 px de large** : épisode, Destiny, bilan, « Faire la suite », méchant reflet, présages, épisode 2 dans l'ombre avec ses sbires ;
+- **l'écran caché du traître** ;
+- chaque texte des écrans de la Série existe dans le fichier de textes.
+
+### Décisions que j'ai prises (à revoir si tu veux)
+
+1. **Les dangers d'un épisode** sont ceux de Destiny (38, filtrés en kids), quel que soit l'univers. Les lieux, eux, viennent de l'univers puis de Destiny.
+2. **Les données des univers** (méchants, sbires, figurants) sont écrites. Relis-les quand tu veux : elles sont dans `campagne_mechants.json` et `campagne_lieux.json`. Quatorze méchants d'univers n'avaient qu'un sbire ; je n'en ai pas inventé d'autre.
+3. **Hors saison**, un épisode peut avoir un méchant (facultatif). C'est l'ancienne règle : ses sbires agissent d'abord, il prend les deux dernières marches.
+4. **Les anciens épisodes de campagne** restent « hors saison ». Pour continuer une ancienne campagne, on crée les personnages, puis la saison 1.
+
+### Ce qui reste (prévu plus tard)
+
+- Les prompts du Maître du destin et l'IA du jeu (phase 6), dont « habiller » un des 24 grands méchants dans un univers.
+- Les réglages par défaut dans l'écran Réglages : public, traître, registre (phase 7).
+- Le livret de règles : Série, Méchants, Sbires, Figurants, Mode kids (phase 7).
+
+### Questions
+
+1. **Des dangers propres à chaque univers ?** Je peux écrire, pour chacun des 21 univers, 3 dangers à 4 paliers (avec leur version kids). Aujourd'hui, on prend ceux de Destiny.
+2. **Les méchants d'univers dans la Bibliothèque ?** Aujourd'hui, elle montre les 24 grands méchants. Je peux y ajouter les 42 méchants d'univers, rangés par univers.
