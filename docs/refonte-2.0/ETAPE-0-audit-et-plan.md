@@ -3,6 +3,8 @@
 > **Statut : en attente de ton feu vert.** Aucune ligne de code n'a été modifiée. Seuls ont été ajoutés au dépôt : le fichier de grammaire (`assets/data/destiny_grammaire.json`, pas encore branché) et ce dossier `docs/refonte-2.0/`.
 >
 > Annexes : [A — dangers et lieux, grammaire contre catalogue](annexe-A-dangers-lieux.md).
+>
+> **Tu m'as envoyé une seconde version du cahier des charges** : voir l'[addendum](ADDENDUM-deux-versions-du-cahier-des-charges.md) (décisions D27 et D28).
 
 ## Sommaire
 
@@ -690,3 +692,5 @@ Aujourd'hui, il note le joueur sur 100 et utilise une grille CROW sur 16. Je pro
 | **D24** | Exercices : ton prompt cite 5 thèmes, il en existe 6 (Dialogue) + Solo | Les garder tous, ajouter les 3 nouveaux |
 | **D25** | Durée par défaut du spectacle | 30 min (actes 10 / 8 / 8 / 4). Le Guide parle de 45 min (Destiny à 10, 22, 35) : lequel est juste ? |
 | **D26** | Version de Flutter | 3.41.9 (tous les tests passent) ; dis-moi si ta CI en utilise une autre |
+| **D27** | Quelle version du cahier des charges fait foi (addendum) | La V1, avec éventuellement la navigation de la V2 |
+| **D28** | Navigation : 4 onglets (V1) ou Jouer, Troupe, Bibliothèque, Exercices, Réglages (V2) | À ton goût ; avec la V2, l'onglet Musique passe dans la régie son |
