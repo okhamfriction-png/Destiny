@@ -1,219 +1,177 @@
-# DestinyStory — Documentation des fonctionnalités
+# DestinyStory — Les fonctionnalités
 
-> Application Flutter (Android / iOS) pour l'**improvisation théâtrale**.
-> Tout fonctionne **hors‑ligne** à partir de fichiers JSON et d'une base SQLite locale ;
-> seuls les modes « IA » nécessitent une clé d'API.
+> Application Flutter (Android, iOS, web) pour l'**improvisation dramatique**, avec la grammaire de Destiny.
+> Tout fonctionne **hors ligne**, à partir des fichiers de l'appli et d'une base locale. Seuls les modes « avec l'IA » demandent une clé d'API.
 >
-> Version documentée : **1.5.0** — voir [CHANGELOG / Releases](https://github.com/okhamfriction-png/Destiny/releases).
+> Version documentée : **2.0.0** — voir le [CHANGELOG](../CHANGELOG.md).
 
 ## Aperçu
 
-| Accueil (Générateur) | Épisode de Campagne |
-|:---:|:---:|
-| ![Accueil](store_assets/screens/accueil.png) | ![Campagne](store_assets/screens/campagne.png) |
-| **Gestion de combat** | **Pièce du destin** |
-| ![Combat](store_assets/screens/combat.png) | ![Pièce du destin](store_assets/screens/piece_destin.png) |
+| Découvrir Destiny | Le danger et le rituel | Troupe |
+|:---:|:---:|:---:|
+| ![Découvrir Destiny](store_assets/screens_2_0/01_decouvrir.png) | ![Le danger et le rituel](store_assets/screens_2_0/02_danger_et_rituel.png) | ![Troupe](store_assets/screens_2_0/03_troupe.png) |
+| **Exercices : Destiny** | **Bibliothèque** | |
+| ![Exercices](store_assets/screens_2_0/04_exercices_destiny.png) | ![Bibliothèque](store_assets/screens_2_0/05_bibliotheque.png) | |
 
-> *Visuels représentatifs de l'interface (thème, couleurs et composants réels de la version 1.5.0).*
+> *Captures de la version web 2.0.0, en thème sombre.*
 
 ---
 
 ## 1. Vue d'ensemble
 
-DestinyStory est une **boîte à outils de meneur de jeu / d'atelier d'impro**. Elle se compose de
-quatre univers accessibles depuis la barre de navigation du bas :
+**La promesse : rien n'est écrit.** Un lieu, un groupe qui se connaît, un danger qui monte en quatre paliers, et Destiny entre les actes. Chaque personnage a un **archétype** (sa conviction face au danger), un **animal** (son corps), une **blessure**, un **vouloir** et un **besoin**. À l'acte 4, il paie le prix : il choisit entre son vouloir et son besoin.
 
-| Onglet | Rôle |
-|--------|------|
-| **Générateur** | Tirer une situation (lieu + danger + héros) et la jouer au chrono. |
-| **Musique** | Lancer des ambiances et musiques pendant le jeu. |
-| **Histoire** | Raconter une histoire suivie : mode **IA** (interactif) ou **Campagne** (sans IA). |
-| **Scène** | Jouer une scène : **Spectacle (IA)** solo ou **Exercices** de théâtre. |
+Trois onglets en bas de l'écran :
 
-Un bouton **Réglages** (roue crantée) et un **Guide Destiny** (livre) sont accessibles depuis l'en‑tête.
+| Onglet | Pour quoi faire |
+|---|---|
+| **Jouer** | Le jeu de rôle entre humains (épisode, saison, série), ou une partie avec l'IA. |
+| **Troupe** | Préparer, jouer et débriefer un spectacle ou une répétition. L'appli s'ouvre ici. |
+| **Exercices** | Des échauffements et des jeux de théâtre, chronométrés. |
 
-**Principes de design transverses :**
-- Thème sombre unifié, **couleur porteuse de sens** (or = méchant/accent, teal = lieu/peuple,
-  corail = escalade, violet = figurants/IA, bleu = rôles).
-- **Statuts de jeu** colorés partout (haut = ambre, bas = bleu, neutre = blanc).
-- Animations signature : **cube DESTINY** (lancer du dé) et **pièce du destin** (Brave/Smart).
-- Retour **haptique** sur les actions clés.
+En haut à droite : la **Bibliothèque**, la **Musique**, les **Réglages** et le **son**.
+
+**Le design** suit la direction artistique de la grammaire : la nuit et l'or, Cinzel pour les titres, Montserrat pour le texte. Trois couleurs pour les trois familles (vert : elles tiennent le groupe ; bleu : elles interprètent le danger ; rouge : elles fissurent le groupe), le bleu Destiny pour le rituel, et le sigle jaune **KIDS** sur tout ce qui se joue avec des enfants. Thème **sombre**, **clair**, ou celui du téléphone.
 
 ---
 
-## 2. Générateur
+## 2. Découvrir Destiny
 
-### 2.1 Réglage du tirage
-- **Modes** : `Histoire` (Théâtre — tout est permis), `Rue` (uniquement les dangers « fun »),
-  `Spin-off` (variations).
-- **Nombre de joueurs** : réglable (−/+).
-- Bouton **« Générer une histoire »**.
-- Icône **historique** : revoir les derniers tirages.
+Au premier lancement, quatre écrans pour comprendre le format en deux minutes, tous tirés de la grammaire :
+1. la promesse ;
+2. le lieu et le groupe ;
+3. le danger en quatre paliers, et le rituel Destiny ;
+4. les personnages : les trois familles, le vouloir et le besoin.
 
-### 2.2 Écran de résultat
-Chaque tirage produit une fiche :
-- **Danger** (avec son style) et **Lieu**, chacun illustré par une vignette
-  (image réaliste, vectorielle ou minimale selon les réglages).
-- **Fonctions du lieu** : rôles suggérés (puces) ; toucher pour voir les sous‑espaces et le vocabulaire.
-- **Héros** : un archétype par joueur, avec tempérament · port · moteur, coloré par statut de jeu.
-- **Étapes du danger** : les 4 marches de montée en tension.
-- Boutons **Rejouer / Relancer / Effacer** et **TOP — chrono**.
-
-### 2.3 Mémoire anti‑répétition (SQLite)
-Les combinaisons **lieu × danger** déjà tirées ne reviennent pas tant que toutes les autres
-n'ont pas été vues. Un **compteur de cycle** s'incrémente à chaque épuisement du catalogue.
-
-### 2.4 Chrono « TOP »
-- Durée réglable (30 / 40 / 45 / 50 min ; 30 par défaut).
-- **3 DESTINY** minutés (curseurs de placement, par défaut 10 / 18 / 27 min sur 30 min).
-- Écran de jeu **sans défilement** (mise à l'échelle automatique) : lieu, danger, héros, étapes,
-  gros compte à rebours, rappel « DESTINY à … ».
-- Boutons **Pause · Régler/relancer · Régie son** (sur une seule ligne).
-- **Écran maintenu allumé** pendant le chrono.
-
-### 2.5 Le dé DESTINY
-À chaque DESTINY, le dé tire un **type** (Archétype / Danger / Destin) selon des **poids réglables**
-(mettre 0 pour désactiver un type). L'**animation du cube doré** joue au lancement et à chaque DESTINY
-(activée par défaut).
-
-### 2.6 Musique scénarisée automatique
-Pendant le chrono d'histoire :
-- **Commencement** au démarrage,
-- **ambiance du lieu** peu après,
-- **Conclusion** après le 3ᵉ DESTINY.
-
-### 2.7 Transcription (optionnelle)
-Interrupteur « Transcrire la scène » (si un moteur de reconnaissance vocale est disponible) :
-le téléphone écrit le texte **localement**, aucun son n'est conservé.
+On peut les passer, et les revoir depuis la Bibliothèque ou les Réglages.
 
 ---
 
-## 3. Musique
-Menu dédié, indépendant des effets sonores : pistes classées par catégorie, lecture simple.
-Voir aussi la **Régie son** (§7) accessible pendant le jeu.
+## 3. Troupe : le spectacle
+
+L'accueil montre la promesse et, un jour sur deux, la règle d'or ou la réplique du jour. Puis :
+
+1. **Préparer** : spectacle ou répétition, avec ou sans enfants, 4, 5 ou 6 joueurs et leurs prénoms.
+   - La distribution se fait par choix concerté, tirage équilibré ou exemple tout prêt.
+   - L'alarmiste est toujours là, et chaque famille est représentée. Une distribution déséquilibrée est refusée, avec une phrase qui dit pourquoi et une correction en un geste.
+   - Chaque joueur choisit son animal parmi les deux de son archétype.
+2. **L'échauffement** : la carte de chaque joueur, les trois questions (« Comment je me tiens ? »…), la limite (« le corps, pas l'histoire ») et un minuteur.
+3. **Avant d'entrer en scène** : les règles d'or, les quatre paliers et la phrase des débriefs. Aucune critique.
+4. **La mise en place** : trois lieux et trois dangers à voter à main levée (ou un choix libre), le groupe, deux liens pour commencer, les trois objets, le mystère et sa réponse, le chrono (20, 30 ou 45 min). Avec l'IA, l'appli peut proposer les objets et le mystère.
+5. **La régie** :
+   - un gros chrono et l'acte en cours ;
+   - le **bouton Destiny**, réservé à la régie. Il se déclenche aussi tout seul aux minutes prévues, selon le réglage ;
+   - le rituel en plein écran : le tonnerre, le rire du destin, la lumière bleue, le figé, l'ellipse ; puis la nouvelle de l'alarmiste ;
+   - au premier figé, le rappel de fixer le besoin ;
+   - à chaque acte, le geste (Dire, Bloquer, Nommer, Choisir) ; pour chaque joueur, ce que fait son archétype et le corps de son animal à ce palier ;
+   - à l'acte 4, le dilemme du danger ;
+   - les moments forts notés avec l'heure, et la régie son.
+6. **Le débrief**, pour chaque personnage : « il veut… mais il a besoin de… », face à la phrase fixée au premier figé ; le choix de l'acte 4 et le prix payé ; ce qui a marché. Avec l'IA, un coach peut proposer ses phrases (les prénoms ne partent pas).
+7. **L'historique** des spectacles et des répétitions, chacun exportable en **PDF**.
 
 ---
 
-## 4. Histoire
+## 4. Jouer entre humains : la Série
 
-Le hub « Raconter une histoire » propose deux modes.
+- **L'épisode** : un lieu, un groupe, un danger en quatre paliers, quatre actes. Il se suffit à lui-même. **« Faire la suite »** en fait le premier épisode d'une saison.
+- **La saison** : quatre épisodes et un **méchant** qui agit dans l'ombre. Chaque danger est l'un de ses coups ; on voit d'abord ses **deux sbires** ; il n'apparaît qu'à l'épisode 4, et on le vainc par sa **faille**. Le besoin du personnage appartient à la saison : fixé à l'épisode 1, nommé à l'épisode 3, payé au final.
+- **La série** enchaîne les saisons. Entre deux saisons, un personnage qui a payé son besoin peut changer d'archétype.
+- **21 univers** (12 pour adultes, 10 pour enfants, Super-héros est des deux) avec leurs lores, leurs peuples, leurs lieux, leurs **figurants** (trois par lieu), leurs **dangers** (trois par univers) et leurs **méchants**.
+- **Les figurants et les sbires** : deux modes distincts. Un figurant peut basculer en sbire, et c'est noté au registre.
+- **Le registre** garde les figurants, les sbires, les objets, les lieux, les secrets, les promesses, les morts (adultes seulement), le traître et ce que le méchant a laissé. Au début d'un épisode, l'IA peut proposer deux ou trois éléments à ressortir. Il ne contient **jamais les prénoms des joueurs**, seulement les personnages. Il s'exporte en PDF.
+- **Le traître** : une option, désactivée par défaut. En saison, c'est le méchant qui le recrute, en secret.
+- **Le combat** et **la pièce du destin** restent, en option.
+- **La transcription** (facultative) : le téléphone écrit la scène localement pour aider au résumé ; aucun son n'est gardé, et l'on voit ce qui part avant tout envoi à l'IA.
 
-### 4.1 Mode IA
-Histoire interactive menée par l'IA : elle propose, le joueur décide (une partie par choix).
-**Nécessite une clé d'API** (voir Réglages → Configurer l'IA).
+### Le mode kids
 
-### 4.2 Mode Campagne (sans IA)
-Des **épisodes qui se suivent** dans un même monde, avec un méchant qui revient.
-**21 univers** (12 adultes + 9 enfants), alignés sur ceux du mode IA.
-
-#### Création d'une campagne
-- **Public** : Adulte (par défaut) ou Enfant — bascule l'ensemble des univers proposés.
-- **Univers** (21), **Ton** (10 : drôle, aventureux, enquête, épique, tendre, tranquille,
-  sombre, dramatique, burlesque, mystérieux).
-- **Lore** : une couche de personnages/ambiance (10 références connues par univers).
-- **Contexte** (facultatif) : détail à garder d'un épisode à l'autre — *utilisé uniquement par l'IA
-  au moment du résumé* (badge « IA seulement »).
-
-#### Préparation d'un épisode
-- **Qui joue** : 2 à 5 joueurs. Pour chacun :
-  - **Prénom** (vide par défaut),
-  - **Peuple** — cohérent avec l'**univers ET le lore**, valeur la plus évidente par défaut, éditable,
-  - **Archétype** (animal) attribué selon la **parité des statuts** (au moins un haut, un bas, un neutre),
-    éditable,
-  - **Fonction** dans le lieu — pré‑renseignée depuis le lieu, éditable (ou saisie libre).
-  Un détail d'archétype (tempérament · port · moteur) est affiché sous chaque joueur.
-- **Le temps** : durée d'épisode (30 min par défaut). Le **danger 1 démarre l'épisode** ;
-  les dangers 2/3/4 tombent aux moments réglés (≈ 30 / 60 / 90 %) ; le chrono **vire au rouge**
-  après le dernier.
-- **Le micro** : transcription optionnelle de l'épisode.
-
-#### Écran de jeu (épisode)
-- **Lieu** + **Figurants** (chacun a sa propre affaire en cours), **Méchant** (son but, ses manœuvres,
-  ses **4 présages**, ses **sbires**), **Escalade** (les 4 dangers, révélés au fil du temps avec
-  **animation du cube**), **Rôles** (les joueurs, leur fonction, peuple et archétype).
-- **Gestion de combat par le meneur**, directement à côté de chaque personnage :
-  - **Cœur à 3 états** (distincts par la forme) : plein rouge = *en forme* → brisé = *blessé* →
-    contour = *mort*.
-  - **Malus / Bonus** (−/+) pour ajuster la force.
-  - Le **nom est barré** quand le personnage meurt.
-  - Aide contextuelle (bouton ⓘ) + retour haptique ; cibles tactiles confortables.
-- **Pièce du destin** (bouton **Destin**) : le meneur la lance à volonté — tirage aléatoire
-  **BRAVE / SMART** avec animation de flip 3D et son.
-- **Régie son** (bouton **Régie**) : ambiances en direct.
-- Indicateur de **transcription** si activée.
-
-#### Bilan & continuité
-En fin d'épisode, un **bilan** permet de demander à l'IA (si configurée) un **résumé** et une
-**accroche** pour l'épisode suivant. La campagne est **persistée** ; l'écran « Ce qui s'est passé »
-liste les épisodes joués. Suppression protégée par confirmation.
-
-#### Composition déterministe & confidentialité
-- Le **méchant** est stable sur toute la campagne ; les **figurants** sont stables ; le **lieu** et
-  les **joueurs** varient par épisode (tirage graine).
-- L'assistant de campagne est **isolé** : il ne connaît que l'univers, le ton, le contexte et la
-  transcription, et **retire les prénoms** avant tout envoi.
+- Seuls les éléments marqués **KIDS** sont proposés : lieux, dangers, méchants, sbires.
+- Chaque enfant choisit **un pouvoir**, gardé toute la saison. Il aide, il ne résout jamais tout seul.
+- **Personne ne meurt** : au palier 4, on renonce à quelque chose, ou on se sépare un moment.
+- Le parent tient le destin : il lance le danger, fait les présages, joue les sbires et les figurants.
 
 ---
 
-## 5. Scène
+## 5. Jouer avec l'IA
 
-Le hub « Jouer une scène » propose deux modes.
+Facultatif : il faut une clé d'API (Anthropic ou OpenAI), à régler dans **Réglages › IA**. Les prompts sont réunis dans `lib/application/prompts/`, versionnés et testés ; chacun contient la grammaire en version courte, générée depuis le fichier.
 
-### 5.1 Spectacle (IA)
-Une partie **solo** menée par une IA qui joue les partenaires, le régisseur et le coach.
-**Nécessite une clé d'API.**
-
-### 5.2 Exercices
-Échauffements et jeux de théâtre courts, chronométrés, pour lancer une séance.
-Classés **par thème** en onglets : **Échauffement** (par défaut), **Statut**, **Spontanéité**,
-**Écoute**, **Imagination**. Un bandeau « principe d'impro » accompagne chaque thème.
+- **L'histoire avec l'IA** : on choisit son archétype, son animal, et si on veut une blessure et un vouloir. L'IA joue les autres, avec une distribution équilibrée. Quatre chapitres, un par palier ; **Destiny tombe entre deux chapitres**. La **pièce du destin** tranche chaque action. Au dernier chapitre, on choisit : le vouloir ou le besoin. Le résumé suit le coach de débrief.
+- **Le spectacle avec l'IA** : quatre personnages tirés en distribution équilibrée, quatre actes, Destiny avec un bouton, et un **débrief positif** : l'histoire, ton personnage, la phrase clé, ce qui a marché, une piste pour la prochaine fois.
+- Les univers viennent de `univers.json`. Chaque mode a sa version **enfant** : des frissons doux, jamais d'effroi.
+- Modèles Claude proposés : Opus 5.5 (par défaut), Sonnet 5.5, Haiku 5.5, Fable 5.1, et les précédents.
 
 ---
 
-## 6. Régie son (mixeur du régisseur)
-Panneau accessible pendant le chrono d'histoire et l'épisode de campagne :
-- Toutes les pistes classées par **catégorie colorée** (Émotions, Lieux, Ambiances, Thèmes, Univers),
-  avec des **icônes adaptées**.
-- Catégories **repliables** (par défaut seules Émotions et Lieux sont dépliées).
-- Contrôles simplifiés du régisseur : **lecture en boucle** (par défaut) et **volume**.
+## 6. Exercices
+
+- **Les thèmes du carnet** : Échauffement, Statut, Spontanéité, Écoute, Dialogue, Imagination, avec **le principe du jour**.
+- **Les 20 exercices de la grammaire**, en trois thèmes, chacun ouvert par son principe :
+  - **CROW** (qui, avec qui, pour quoi, où) ;
+  - **Lieu** (un seul lieu, bien installé) ;
+  - **Destiny** (le danger, les archétypes, le prix à payer).
+
+  Chaque fiche donne le but, les consignes, des exemples, la question du débrief, la variante et la source, avec le badge **« Avec Mark Jane »**. Elle propose un chrono réglé sur la durée conseillée, des **cartes à tirer** au hasard, et un lien vers la notion dans la Bibliothèque.
+- **Solo** : 50 virelangues, avec un tirage au hasard.
+- Chaque exercice se joue au **chrono**, avec une célébration à la fin. Sans score.
 
 ---
 
-## 7. Réglages
-- **Tutoriel** — comment fonctionne l'application.
-- **Gérer lieux & dangers** — ajouter, renommer, supprimer ; activer Rue / Théâtre.
-- **Détails des lieux** — sous‑espaces et vocabulaire par lieu.
-- **Antisèche de relations** — liens génériques (points de départ), éditables.
-- **Dilemmes par danger** — ajouter / modifier / supprimer des dilemmes.
-- **Catalogue de données** — parcourir lieux, dangers et archétypes (lecture seule).
-- **Apparence** — taille et écriture du Chat, **visuels des cartes** (Réaliste / Vectoriel / Minimal),
-  **affichage du résultat** (Côté / Grand / Full), durée du TOP, **poids du dé DESTINY**.
-- **Mode admin** — autorise l'édition du Guide et de la configuration (désactivé = lecture seule).
-- **Configurer l'IA** — fournisseur, modèle, jeton d'API (pour les modes IA).
-- **Base de données** — compteur d'histoires et réinitialisation.
-- **Me contacter · Crédits · À propos.**
+## 7. La Bibliothèque
+
+- **Découvrir Destiny** (les quatre écrans du début).
+- **Le livret de règles** : le but, le matériel, les rôles, la mise en place, le déroulé, la fin, les variantes (4 à 6 joueurs, Série, méchants, sbires, figurants, registre, traître, mode kids) et les règles d'or. Chaque règle vient de la grammaire. **Export PDF.**
+- **Les archétypes** : les 12, rangés en trois familles, avec leur montée palier par palier, leurs deux animaux, leurs modèles dans les œuvres et leurs méchants reflets. **Cartes à imprimer en PDF** : un recto par archétype (12 cartes) ou par animal (24 cartes), un verso Destiny, neuf cartes de 63 × 88 mm par page.
+- **Les animaux** : les 24, avec leur port, leur posture, leur statut de départ, leur réplique (et sa version kids) et leur corps à chaque palier.
+- **Vouloir et besoin** : les six couches du personnage, la phrase clé, le piège (« un besoin n'est jamais un objet »).
+- **Les dangers** et **les lieux**, avec leurs paliers, leurs espaces, leurs rôles et leurs figurants.
+- **Les œuvres** : des séries, des pièces et des films lus avec la grammaire.
+- **Les méchants** : les 24 grands méchants et ceux des 21 univers, avec leurs sbires et leurs présages.
+- **Les figurants**, **le mode kids**, **les outils de jeu** (les mains occupées, le sous-texte, les silences…) et **le lexique** (ce qu'on dit, et ce qu'on ne dit plus).
 
 ---
 
-## 8. Autres outils
+## 8. Musique et régie son
 
-- **Guide Destiny** — guide d'impro intégré (dont la section « Quand tu ne sais plus quoi faire »).
-- **Tableaux de suivi** — suivi de partie.
-- **Détails du lieu** — accès direct depuis le chrono.
-
----
-
-## 9. Confidentialité & données
-- Fonctionnement **hors‑ligne** par défaut ; catalogues en JSON, données de jeu en **SQLite local**.
-- La **transcription** reste sur l'appareil ; aucun audio conservé ; l'utilisateur voit exactement
-  ce qui part avant tout résumé IA.
-- Les modes IA n'échangent que le strict nécessaire, **sans prénoms** côté campagne.
-- Politique de confidentialité : [`docs/privacy.html`](privacy.html).
+- **La Musique** : les pistes classées par catégorie (Émotions, Lieux, Ambiances, Thèmes, Univers), avec un lecteur.
+- **La régie son** : un mixeur accessible pendant le jeu, avec la lecture en boucle et le volume.
+- **Les quatre moments** du spectacle ont leur musique, dans les Réglages : le début, le son de Destiny, l'ambiance de l'acte 2 et la fin. On peut importer ses propres musiques, et en associer une à chaque Destiny.
 
 ---
 
-## 10. Build & publication
-- **Android** : `flutter build appbundle --release` (.aab pour Google Play) /
-  `flutter build apk --release` (installation directe).
-- **CI/CD** : voir [`docs/cicd_setup.md`](cicd_setup.md).
-- **Fiche Play Store** : [`docs/play_store_listing.md`](play_store_listing.md).
+## 9. Réglages
+
+- **Destiny** : les chronos (durée et minute de chaque Destiny, retour aux valeurs par défaut), le déclenchement (automatique, manuel ou les deux), le rituel (lumière bleue, durée du figé, texte de l'ellipse, rappels), les musiques, la distribution par défaut, le jeu de rôle (kids, traître, registre, combat, pièce, évolution d'archétype), l'échauffement, les cartes.
+- **IA** : le fournisseur, le modèle et la clé.
+- **Apparence** : le thème (sombre, clair, comme le téléphone), les visuels des cartes, la taille et l'écriture manuscrite du texte de l'histoire.
+- **Données** : les lieux et les dangers (espaces, rôles, quatre paliers nommés comme dans la grammaire, palier 4 en version kids, sigle KIDS), les détails des lieux, l'antisèche des relations, les **dilemmes de l'acte 4**, et le rapport de synchronisation avec la grammaire.
+- **Mode admin** : la vérification de la grammaire et la lecture des archétypes.
+- **Aide** : Découvrir Destiny, Me contacter, Crédits (dont les licences des polices), À propos.
+
+---
+
+## 10. Accessibilité
+
+- L'appli suit la **taille de texte du téléphone** ; les écrans principaux sont testés avec des caractères 60 % plus grands, sur un téléphone de 390 px de large.
+- Chaque bouton a un **nom lu par les lecteurs d'écran**.
+- Les couleurs du texte ont un **contraste d'au moins 4,5** en clair comme en sombre.
+- **« Réduire les animations »** calme le rituel (le réglage du téléphone est aussi suivi).
+- L'écran reste allumé pendant le jeu.
+
+---
+
+## 11. Confidentialité et données
+
+- **Hors ligne** par défaut. La régie, le rituel et la Série ne dépendent jamais du réseau.
+- Seuls les modes IA envoient du texte, avec la clé de l'utilisateur, au fournisseur choisi. Les prénoms des comédiens ne partent pas ; le registre ne garde que des personnages.
+- La transcription reste sur l'appareil ; aucun son n'est gardé.
+- **Rien n'est perdu à la mise à jour** : les anciennes campagnes deviennent des séries, les anciennes histoires se relisent, les lieux et dangers modifiés sont gardés, une sauvegarde illisible n'est jamais écrasée.
+- Politique de confidentialité : [`privacy.html`](privacy.html).
+
+---
+
+## 12. Build et publication
+
+- **Android** : `flutter build appbundle --release` (Google Play) ou `flutter build apk --release`.
+- **Web** : `flutter build web --release --base-href /Destiny/app/`, copié dans `docs/app` (GitHub Pages).
+- **CI/CD** : [`cicd_setup.md`](cicd_setup.md). **Fiche Play Store** : [`play_store_listing.md`](play_store_listing.md).

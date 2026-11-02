@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -192,6 +193,9 @@ class DestinyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'DestinyStory',
+      // Sur la version web et sur ordinateur, les listes et les onglets se
+      // font aussi glisser à la souris.
+      scrollBehavior: const MaterialScrollBehavior().copyWith(dragDevices: PointerDeviceKind.values.toSet()),
       theme: themeDestiny(grammaire.grammaire, sombre: false),
       darkTheme: themeDestiny(grammaire.grammaire, sombre: true),
       themeMode: switch (reglages.theme) {

@@ -1,56 +1,46 @@
 # DestinyStory
 
-Application Flutter (Android + iOS) pour l'**improvisation théâtrale** : générer des situations,
-mener des histoires suivies et animer des ateliers, à partir de fichiers JSON locaux et d'une base
-SQLite. Fonctionne **hors‑ligne** ; seuls les modes « IA » nécessitent une clé d'API.
+Application Flutter (Android, iOS, web) pour l'**improvisation dramatique** avec la grammaire de Destiny : un lieu, un groupe qui se connaît, un danger qui monte en quatre paliers, et Destiny entre les actes. **Rien n'est écrit.**
 
-> 📖 **Documentation complète des fonctionnalités : [`docs/FEATURES.md`](docs/FEATURES.md)**
+Tout fonctionne **hors ligne**. Seuls les modes « avec l'IA » demandent une clé d'API (Anthropic ou OpenAI), celle de l'utilisateur.
+
+> 📖 Les fonctionnalités en détail : [`docs/FEATURES.md`](docs/FEATURES.md) · Les nouveautés : [`CHANGELOG.md`](CHANGELOG.md)
 
 ## Lancer le projet
 
-1. Installer Flutter SDK
+1. Installer Flutter **3.41.9** (la version de `pubspec.lock`).
 2. Dans le dossier du projet :
    - `flutter pub get`
    - `flutter run`
+   - `flutter test` (les tests vérifient aussi les écrans à 390 px de large).
 
-> Sur desktop (macOS/Windows/Linux), SQLite est initialisé via `sqflite_common_ffi`. Sur iOS/macOS, lancer `pod install` (CocoaPods) lors du premier build pour les plugins natifs (`sqflite`, `audioplayers`, `path_provider`).
+> Sur desktop, SQLite passe par `sqflite_common_ffi`. Sur iOS et macOS, lancer `pod install` au premier build.
 
-## Fonctionnalités (survol)
+## En bref
 
-Quatre univers accessibles depuis la barre de navigation :
+- **Troupe** : préparer un spectacle ou une répétition, l'échauffement, la mise en place, la régie avec le bouton Destiny, le débrief et l'historique (PDF).
+- **Jouer** : entre humains (épisode, saison, série, avec méchants, sbires, figurants et registre ; mode kids), ou avec l'IA (une histoire, ou un spectacle).
+- **Exercices** : les thèmes du carnet, les 20 exercices de la grammaire (CROW, Lieu, Destiny) et les virelangues.
+- **Bibliothèque** : Découvrir Destiny, le livret de règles (PDF), les archétypes et leurs animaux (cartes à imprimer), les dangers, les lieux, les œuvres, les méchants, les figurants, le mode kids, les outils de jeu et le lexique.
+- **Réglages** : les chronos et le rituel, les musiques, la distribution, le jeu de rôle, l'apparence (thème clair ou sombre), l'IA et les éditeurs.
 
-- **Générateur** — tire un lieu, un danger (avec son style) et distribue archétypes + rôles ;
-  chrono « TOP » avec 3 DESTINY, dé animé et musique scénarisée. Modes *Histoire (Théâtre)*,
-  *Rue* et *Spin-off*. Mémoire anti‑répétition (SQLite).
-- **Musique** — ambiances et musiques ; régie son (mixeur) accessible en jeu.
-- **Histoire** — mode **IA** (interactif) ou **Campagne** (sans IA) : 21 univers, peuples,
-  méchant récurrent, escalade, gestion de combat par le meneur, pièce du destin.
-- **Scène** — **Spectacle (IA)** solo ou **Exercices** de théâtre par thème.
+## La grammaire, source unique
 
-Le détail complet (écrans, réglages, confidentialité, etc.) est dans
-[`docs/FEATURES.md`](docs/FEATURES.md).
+- `assets/data/destiny_grammaire.json` (v2.1) contient toute la grammaire : familles, archétypes, animaux, paliers, actes, rituel, distribution, personnage, dangers, lieux, œuvres, Série, méchants, figurants, mode kids, exercices.
+- `assets/data/destiny_textes.json` contient tous les textes de l'interface. Aucun texte de la grammaire n'est écrit dans le code ; un test vérifie que chaque clé utilisée existe.
+- `assets/data/univers.json`, `campagne_lieux.json` et `campagne_mechants.json` décrivent les univers du jeu de rôle.
 
 ## Architecture
 
-- `lib/domain` : entités, repositories abstraits (`StoryRepository`, `CombinationMemory`), use cases.
-- `lib/application` : état UI, services applicatifs (random, audio, transcription, assistants).
-- `lib/infrastructure` : datasource JSON, mémoire SQLite, implémentations de repository.
-- `lib/presentation` : écrans (générateur, histoire/campagne, scène, réglages…), navigation, widgets,
-  visuels et thème.
+- `lib/domain` : la grammaire (`grammaire/`), la Série (`serie/`), la Troupe (`troupe/`), les entités du catalogue.
+- `lib/application` : l'état (réglages, séries, troupe, IA), les prompts versionnés (`prompts/`), le livret, les exports PDF, l'audio.
+- `lib/infrastructure` : la lecture des fichiers, le catalogue SQLite, les sauvegardes.
+- `lib/presentation` : le design system (`destiny/`, `theme/`), puis un dossier par partie (`troupe/`, `serie/`, `jouer/`, `exercices/`, `bibliotheque/`, `reglages/`, `accueil/`).
 
-## Données locales
-
-Les catalogues sont dans `assets/data/` — notamment :
-- `locations.json` — lieux + rôles, `dangers.json` — dangers (+ `style`, éligibilité `fun` au mode Rue),
-- `archetypes.json` — archétypes animaux (avec statut de jeu),
-- `campagne_lieux.json`, `campagne_mechants.json`, `campagne_archetypes.json` — catalogue Campagne,
-- `exercices.json` — exercices de théâtre par thème.
-
-Les sons sont dans `assets/audio/` et `assets/music/`.
+La refonte 2.0 est racontée phase par phase dans [`docs/refonte-2.0/JOURNAL.md`](docs/refonte-2.0/JOURNAL.md), avec les décisions dans [`DECISIONS.md`](docs/refonte-2.0/DECISIONS.md).
 
 ## Publication
 
-- **Android** : `.aab` (Google Play) et `.apk` (installation directe) — voir les
-  [Releases](https://github.com/okhamfriction-png/Destiny/releases).
-- **CI/CD** : [`docs/cicd_setup.md`](docs/cicd_setup.md) · **Fiche Play Store** :
-  [`docs/play_store_listing.md`](docs/play_store_listing.md).
+- **Android** : `.aab` (Google Play) et `.apk`. Voir les [Releases](https://github.com/okhamfriction-png/Destiny/releases).
+- **Web** : `flutter build web --release --base-href /Destiny/app/`, puis copier `build/web` dans `docs/app` (GitHub Pages).
+- **CI/CD** : [`docs/cicd_setup.md`](docs/cicd_setup.md) · **Fiche Play Store** : [`docs/play_store_listing.md`](docs/play_store_listing.md).

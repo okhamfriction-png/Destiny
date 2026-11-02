@@ -96,12 +96,13 @@ class _DecouvrirScreenState extends State<DecouvrirScreen> {
                 ]),
               ),
               const SizedBox(width: 12),
-              const Spacer(),
-              Flexible(
-                flex: 4,
-                child: FilledButton(
-                  onPressed: _suivant,
-                  child: Text(dernier ? k('commencer') : k('suivant'), overflow: TextOverflow.ellipsis),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: FilledButton(
+                    onPressed: _suivant,
+                    child: Text(dernier ? k('commencer') : k('suivant'), overflow: TextOverflow.ellipsis),
+                  ),
                 ),
               ),
             ]),

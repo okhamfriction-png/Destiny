@@ -1,0 +1,110 @@
+# Ce qui a changé dans DestinyStory
+
+Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
+
+## 2.0.0 — La grammaire de Destiny (novembre 2026)
+
+**Rien n'est écrit.** L'appli est entièrement refaite autour de la grammaire de Destiny, celle qu'on joue sur scène : un lieu, un groupe qui se connaît, un danger qui monte en quatre paliers, et Destiny entre les actes.
+
+### En bref
+
+- **Trois onglets** : Jouer, Troupe, Exercices. L'appli s'ouvre sur Troupe.
+- **Au premier lancement**, « Découvrir Destiny » explique le format en quatre écrans.
+- **Le dé a disparu.** C'est la régie, ou l'appli au chrono, qui lance Destiny.
+- **Un thème clair**, en plus du thème sombre, ou celui du téléphone.
+
+### Pour les troupes : préparer et jouer un spectacle
+
+- **Préparer** : 4, 5 ou 6 joueurs, et une distribution toujours équilibrée. L'alarmiste est là, et chaque famille est représentée : ceux qui tiennent le groupe, ceux qui interprètent le danger, ceux qui le fissurent. Si quelque chose manque, l'appli le dit en une phrase et propose une correction.
+- **Chaque joueur choisit son animal** parmi les deux de son archétype : c'est son corps et sa posture.
+- **L'échauffement** : la carte de chacun, les trois questions, et un minuteur.
+- **La mise en place** : le lieu et le danger à voter à main levée, le groupe, deux liens pour commencer, les trois objets et le mystère.
+- **La régie** : un gros chrono de 20, 30 ou 45 minutes, et **le bouton Destiny**. Le rituel joue le tonnerre, le rire du destin et la lumière bleue ; les comédiens se figent, puis l'alarmiste apporte la nouvelle. À chaque acte, l'appli rappelle le geste à jouer (Dire, Bloquer, Nommer, Choisir), et ce que fait chaque archétype à ce palier.
+- **Le débrief** : pour chaque personnage, « il veut… mais il a besoin de… », le choix de l'acte 4 et le prix payé. Tout se garde dans l'historique, et s'exporte en PDF.
+
+### Jouer entre humains : épisode, saison, série
+
+- **L'épisode** se suffit à lui-même. **« Faire la suite »** en fait le premier d'une saison.
+- **La saison** compte quatre épisodes, et un méchant qui agit dans l'ombre. On voit d'abord ses deux sbires ; lui n'apparaît qu'au final, et on le vainc par sa faille.
+- **La série** enchaîne les saisons. Un **registre** garde les figurants, les objets, les secrets et les promesses, à ressortir plus tard.
+- **21 univers**, chacun avec ses lieux, ses figurants, ses dangers et ses méchants.
+- **Le traître** est une option, désactivée par défaut.
+
+### Avec des enfants
+
+- **Le mode kids** ne propose que ce qui se joue avec des enfants, marqué du **sigle KIDS** : lieux, dangers, méchants, sbires.
+- Chaque enfant choisit **un pouvoir** pour toute la saison. Le pouvoir aide, mais il ne résout jamais tout seul.
+- **Personne ne meurt** : au dernier palier, on renonce à quelque chose, ou on se sépare un moment.
+- L'IA reste douce : des frissons, jamais d'effroi.
+
+### Avec l'IA (facultatif, avec votre propre clé)
+
+- **L'histoire avec l'IA** : vous jouez votre personnage (archétype, animal, blessure, vouloir), en quatre chapitres, avec Destiny entre deux chapitres. La pièce du destin tranche vos actions.
+- **Le spectacle avec l'IA** : quatre actes, un bouton Destiny, et un débrief bienveillant à la place de la note sur 100.
+- **Des coups de main pendant le jeu** : proposer les objets et le mystère, des idées pour le corps à l'échauffement, un coach au débrief, la voix de l'alarmiste. Les prénoms des comédiens ne partent jamais vers l'IA.
+- Les modèles Claude les plus récents sont proposés.
+
+### Exercices
+
+- **Vingt nouveaux exercices**, en trois thèmes : **CROW**, **Lieu** et **Destiny**, avec le principe de chaque thème.
+- Chaque fiche donne le but, les consignes, des exemples, la question du débrief et une variante. Un badge signale ceux de la séance avec **Mark Jane**.
+- Des **cartes à tirer** au hasard, un chrono, et un lien vers la notion dans la Bibliothèque.
+- Les anciens exercices et les virelangues sont toujours là.
+
+### La Bibliothèque
+
+- **Le livret de règles**, complet, à lire ou à imprimer en PDF.
+- **Les cartes d'archétypes à imprimer** : un recto par archétype ou par animal, et un verso Destiny.
+- Les 12 archétypes et leurs 24 animaux, les dangers, les lieux, des œuvres lues avec la grammaire, les méchants, les figurants, le mode kids, les outils de jeu et le lexique.
+
+### Réglages
+
+- **Les chronos** se règlent : la durée, et la minute de chaque Destiny.
+- **Le rituel** : la lumière bleue, la durée du figé, le texte de l'ellipse.
+- **Quatre musiques** : celle du début, le son de Destiny, l'ambiance de l'acte 2 et la musique de fin. Vos musiques importées restent.
+- **L'apparence** : thème, visuels des cartes, taille du texte, écriture manuscrite.
+- **Les éditeurs** des lieux, des dangers et des dilemmes de l'acte 4.
+
+### Vos données
+
+**Rien n'est perdu.**
+- Vos anciennes campagnes deviennent des séries.
+- Vos anciennes histoires avec l'IA se relisent.
+- Vos lieux et dangers modifiés sont gardés tels quels.
+- Vos réglages de son sont repris.
+
+### Ce qui disparaît
+
+Le dé et ses cartes Destin, le Générateur et ses modes Rue et Spin-off, et l'ancien chrono TOP. Destiny se joue désormais sans hasard : c'est l'histoire qui décide.
+
+### Plus confortable
+
+- L'appli suit la taille de texte du téléphone, jusqu'aux très grands caractères.
+- Chaque bouton a un nom lu par les lecteurs d'écran.
+- Les couleurs restent lisibles en clair comme en sombre.
+- La régie fonctionne sans réseau.
+
+## 1.5.7 (octobre 2026)
+
+- Une musique importée peut accompagner chaque Destiny.
+- Une version web de l'appli.
+
+## 1.5.6
+
+- Les sons du chrono se choisissent.
+
+## 1.5.5
+
+- Les moteurs des archétypes, avec leur grille d'escalade.
+
+## 1.5.1
+
+- Les rôles détaillés des lieux, et la continuité d'un épisode à l'autre.
+
+## 1.5.0
+
+- La Campagne s'enrichit : la pièce du destin, les peuples, le combat géré par le meneur.
+
+## 1.4.0
+
+- La Campagne en famille, la transcription de la voix, l'IA et les univers alignés.

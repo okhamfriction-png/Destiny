@@ -488,3 +488,52 @@ La Campagne devient la **Série**, avec le vocabulaire de la télé.
 ### Question
 
 **Le logo de l'appli est un cube**, avec un lieu, des masques et un éclair sur ses faces. On peut le lire comme un dé. Je l'ai gardé : c'est l'icône de l'appli et le dos des cartes. Veux-tu le garder, ou faut-il prévoir un nouveau logo (par exemple l'éclair seul, ou le losange doré) ?
+
+---
+
+## Phase 8 — Finitions, version 2.0.0+20 ✅
+
+### Ce qui a été fait
+
+- **La version 2.0.0+20** : le `pubspec.yaml` et l'écran À propos disent la même chose, et un test le vérifie.
+- **Le changelog en français**, `CHANGELOG.md`, écrit pour les comédiens, les troupes et les parents : ce qui change, ce qui disparaît, et « rien n'est perdu ».
+- **Un vrai bug trouvé et corrigé** : le fichier `univers.json` n'était pas déclaré dans les fichiers de l'appli. Sur un téléphone, le catalogue des 21 univers (leurs lieux, figurants, dangers et méchants) ne se serait pas chargé. Les tests ne le voyaient pas, parce qu'ils lisent les fichiers directement. Il est déclaré, et **un nouveau test vérifie que chaque fichier lu par l'appli est bien embarqué**. C'est la version web qui l'a révélé.
+- **L'accessibilité** :
+  - chaque bouton-icône a un nom, lu par les lecteurs d'écran (14 en manquaient) ;
+  - les couleurs du texte ont un contraste d'au moins 4,5, en clair comme en sombre. Le bleu Destiny et le nom des familles étaient un peu justes : ils sont éclaircis en sombre et assombris en clair, seulement quand ils colorent du texte ;
+  - avec des caractères 60 % plus grands, sur un téléphone de 390 px, les écrans principaux tiennent. Trois débordements trouvés et corrigés : les cadres à liseré (le liseré suit maintenant le contenu), le bas de Découvrir Destiny, et la pastille d'une famille ;
+  - « Réduire les animations » calme le rituel, et suit aussi le réglage du téléphone.
+- **Hors ligne** : un test vérifie que la régie, le rituel et la Série n'importent jamais le service d'IA ni le réseau. **La version web embarque maintenant son moteur d'affichage**, au lieu de le télécharger chez Google à chaque visite.
+- **Le ménage** : les visuels des anciennes entités et la fenêtre de détails d'un lieu sont retirés ; les images des lieux et des dangers ne sont plus embarquées (**5,6 Mo de moins**), mais restent dans le dépôt.
+- **La documentation** : le README, `docs/FEATURES.md` (refait entièrement pour la 2.0) et la fiche Play Store (descriptions courte et longue, section « Data safety », modèle de politique de confidentialité qui parle de l'IA).
+- **La version web** est recompilée dans `docs/app`, et vérifiée dans un navigateur (Découvrir Destiny, Troupe, Exercices, Bibliothèque). Cinq captures de la 2.0 sont dans `docs/store_assets/screens_2_0/`, et dans `FEATURES.md`.
+- **Sur ordinateur et sur la version web**, les listes et les onglets se font maintenant glisser à la souris : sans ça, les onglets CROW, Lieu et Destiny restaient hors de portée.
+
+### Tests
+
+**216 tests passent** (205 à la fin de la phase 7). Les nouveaux :
+- les contrastes, en clair et en sombre ;
+- aucun bouton-icône sans nom ;
+- la régie, le rituel et la Série sans réseau ;
+- Troupe, Découvrir Destiny, la Bibliothèque, le livret, les Exercices, une fiche, les Réglages et À propos, avec un texte agrandi de 60 % ;
+- chaque fichier lu par l'appli est embarqué ;
+- la version 2.0.0+20, et le changelog qui commence par la 2.0.0.
+
+### Décisions que j'ai prises (à revoir si tu veux)
+
+1. **Les écrans de l'histoire et du spectacle avec l'IA, de la Musique et de la configuration de l'IA** gardent leur thème sombre d'origine, même en thème clair : ils fonctionnent, et les refaire entièrement au nouveau design serait un gros chantier. Leurs boutons ont maintenant tous un nom.
+2. **Les images des lieux et des dangers** ne sont plus dans l'appli (plus rien ne les affichait), mais je ne les ai pas effacées du dépôt.
+3. **La version web** n'utilise plus le CDN de Google : un peu plus lourde à publier, mais autonome.
+4. **Le Data safety** de la fiche Play Store et le modèle de politique de confidentialité disent maintenant que les modes IA envoient le texte de jeu au fournisseur choisi. La page en ligne `docs/privacy.html` n'est **pas** modifiée : c'est un texte légal, je te laisse valider.
+
+### Ce qui reste, hors de ce que je peux faire ici
+
+- Les captures pour le Play Store, sur un vrai téléphone.
+- La publication : construire le `.aab` signé et l'envoyer sur la Console.
+- Fusionner la branche `claude/destiny-story-2-refonte-cyw02u` dans `main`, pour que GitHub Pages serve la nouvelle version web.
+
+### Questions
+
+1. **La politique de confidentialité en ligne** (`docs/privacy.html`) ne parle pas des modes IA. Je propose le texte du § 6 de `docs/play_store_listing.md`. Je l'applique ?
+2. **Les images des lieux et des dangers** : je les efface du dépôt, ou je les montre dans la Bibliothèque (pages Lieux et Dangers) ?
+3. **Le logo en forme de cube** (question de la phase 7) : on le garde ?

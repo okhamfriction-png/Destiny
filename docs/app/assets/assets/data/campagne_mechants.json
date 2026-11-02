@@ -4,6 +4,7 @@
    "id": "contemporain_mechant_dirigeant",
    "univers": "contemporain",
    "nom": "VéroniqueAstier, la directrice financière",
+   "archetype": "denegateur",
    "description": "Une dirigeante irréprochable en apparence qui maquille depuis des mois un trou béant dans les comptes.",
    "but": "Faire disparaître les preuves de son détournement avant l'audit de fin de trimestre.",
    "manoeuvres": [
@@ -24,7 +25,13 @@
      "manoeuvres": [
       "Récupérer discrètement les badges laissés sur les bureaux.",
       "Retarder l'arrivée des auditeurs par une série de contretemps organisés."
-     ]
+     ],
+     "id": "theo_l_assistant",
+     "archetype": "aidant",
+     "animal": "Chien",
+     "veut": "Qu'elle le remarque enfin, et lui confie un vrai dossier.",
+     "vient_de": "Sorti d'école de commerce, il est son assistant depuis huit mois.",
+     "fait": "Récupère discrètement les badges laissés sur les bureaux."
     },
     {
      "nom": "Maître Lombard, l'avocat d'affaires",
@@ -32,14 +39,27 @@
      "manoeuvres": [
       "Noyer les questions gênantes sous des clauses illisibles.",
       "Menacer de poursuites quiconque évoque le mot fraude à voix haute."
-     ]
+     ],
+     "id": "maitre_lombard_l_avocat",
+     "archetype": "opportuniste",
+     "animal": "Vautour",
+     "veut": "Ses honoraires réglés d'avance, et son nom sur aucun procès-verbal.",
+     "vient_de": "Un grand cabinet d'affaires qui défend la société depuis vingt ans.",
+     "fait": "Noie les questions gênantes sous des clauses illisibles."
     }
-   ]
+   ],
+   "posture": "Tailleur impeccable, elle sourit en réunion et rabat son ordinateur dès qu'on approche.",
+   "animal": "Hermine",
+   "besoin": "Admettre qu'elle a échoué, et le dire à voix haute.",
+   "faille": "Le vrai chiffre, posé sur la table devant tous : elle ne peut plus nier.",
+   "cible": "Le dénégateur, qui préfère ne rien voir, comme elle.",
+   "offre_au_traitre": "Elle promet à l'un d'eux un poste de direction, contre une signature sans questions."
   },
   {
    "id": "contemporain_mechant_influenceur",
    "univers": "contemporain",
    "nom": "Kevin Delaroche, le voisin caméra au poing",
+   "archetype": "prophete",
    "description": "Un créateur de contenu qui filme secrètement ses voisins pour alimenter une chaîne dont personne ne connaît le vrai but.",
    "but": "Provoquer un scandale spectaculaire dans l'immeuble pour faire exploser son audience.",
    "manoeuvres": [
@@ -60,14 +80,27 @@
      "manoeuvres": [
       "Orchestrer des vagues de messages pour désigner un coupable du jour.",
       "Effacer les preuves qui disculperaient les personnes visées."
-     ]
+     ],
+     "id": "sonia_la_moderatrice",
+     "archetype": "alarmiste",
+     "animal": "Coq",
+     "veut": "Que la chaîne grossisse, et qu'on lui doive ce succès.",
+     "vient_de": "Une abonnée de la première heure, devenue son bras droit en ligne.",
+     "fait": "Orchestre des vagues de messages pour désigner un coupable du jour."
     }
-   ]
+   ],
+   "posture": "Toujours le téléphone levé, il commente à voix basse tout ce qu'il filme.",
+   "animal": "Perroquet",
+   "besoin": "Être aimé pour lui-même, caméra éteinte.",
+   "faille": "Un voisin qui l'invite à dîner, sans aucun téléphone sur la table.",
+   "cible": "Le prophète, qui rassemble les voisins sans avoir besoin de les filmer.",
+   "offre_au_traitre": "Il promet à l'un d'eux de le rendre célèbre, en vedette de sa prochaine vidéo."
   },
   {
    "id": "policier_mechant_ripou",
    "univers": "policier",
    "nom": "Le commandant Reisser, le flic à double jeu",
+   "archetype": "gardien_de_l_ordre",
    "description": "Un officier respecté qui renseigne en secret un réseau contre une part des bénéfices.",
    "but": "Étouffer une enquête qui remonte dangereusement jusqu'à lui.",
    "manoeuvres": [
@@ -88,7 +121,13 @@
      "manoeuvres": [
       "Trafiquer le registre des entrées et sorties de pièces.",
       "Laisser une porte déverrouillée au bon moment de la nuit."
-     ]
+     ],
+     "id": "bruno_le_gardien_des_scelles",
+     "archetype": "denegateur",
+     "animal": "Porc",
+     "veut": "Que ses dettes disparaissent, et finir sa carrière sans histoires.",
+     "vient_de": "Trente ans de service, relégué au sous-sol après une vieille faute.",
+     "fait": "Trafique le registre des entrées et sorties de pièces."
     },
     {
      "nom": "Nadia, la stagiaire manipulée",
@@ -96,14 +135,27 @@
      "manoeuvres": [
       "Transmettre des informations sensibles en croyant rendre service.",
       "Signer des procès-verbaux qu'elle n'a pas eu le temps de relire."
-     ]
+     ],
+     "id": "nadia_la_stagiaire",
+     "archetype": "aidant",
+     "animal": "Mouton",
+     "veut": "Être acceptée par l'équipe, et rendre service à ceux qu'elle admire.",
+     "vient_de": "Major de sa promotion, en stage au commissariat depuis trois semaines.",
+     "fait": "Transmet des informations sensibles en croyant rendre service."
     }
-   ]
+   ],
+   "posture": "Veste boutonnée, il serre la main de tout le service chaque matin, sourire franc.",
+   "animal": "Brochet",
+   "besoin": "Se pardonner la première enveloppe, et redevenir le flic qu'il était.",
+   "faille": "Une recrue qui lui confie son dossier, sûre qu'il est le plus intègre du service.",
+   "cible": "Le gardien de l'ordre, qui applique la loi même quand elle coûte.",
+   "offre_au_traitre": "Il promet à l'un d'eux d'effacer une vieille affaire de son casier."
   },
   {
    "id": "policier_mechant_importateur",
    "univers": "policier",
    "nom": "Dragan Kovac, le roi des docks",
+   "archetype": "opportuniste",
    "description": "Un homme d'affaires respectable dont les cargaisons cachent bien plus que les factures ne le disent.",
    "but": "Faire passer une livraison capitale avant que les douanes ne resserrent leurs contrôles.",
    "manoeuvres": [
@@ -124,14 +176,27 @@
      "manoeuvres": [
       "Réaffecter les équipes pour vider un quai au bon moment.",
       "Faire disparaître un bordereau gênant dans la paperasse."
-     ]
+     ],
+     "id": "marek_le_contremaitre",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Fourmi",
+     "veut": "Que le planning tourne sans accroc, et que personne ne pose de questions.",
+     "vient_de": "Ancien docker, monté en grade grâce à l'argent de Kovac.",
+     "fait": "Réaffecte les équipes pour vider un quai au bon moment."
     }
-   ]
+   ],
+   "posture": "Costume clair, cigare éteint, il serre les mains sur le quai comme un notable.",
+   "animal": "Requin",
+   "besoin": "Être respecté sans avoir à tout acheter.",
+   "faille": "Un docker qui refuse son enveloppe devant tout le quai : son autorité vacille.",
+   "cible": "L'opportuniste, qui sait lui aussi tirer profit du désordre.",
+   "offre_au_traitre": "Il promet à l'un d'eux un conteneur entier, sans questions ni facture."
   },
   {
    "id": "high_fantasy_mechant_regent",
    "univers": "high_fantasy",
    "nom": "Le régent Corvyn d'Arvhel",
+   "archetype": "leader",
    "description": "Le gardien du trône censé protéger l'héritière, bien décidé à ne jamais lui rendre la couronne.",
    "but": "Discréditer l'héritière avant son couronnement pour régner en son nom.",
    "manoeuvres": [
@@ -152,7 +217,13 @@
      "manoeuvres": [
       "Substituer un parchemin authentique par une copie truquée.",
       "Égarer les témoins des anciens serments dans les couloirs de la citadelle."
-     ]
+     ],
+     "id": "dame_iseult_l_archiviste",
+     "archetype": "opportuniste",
+     "animal": "Vautour",
+     "veut": "Un titre, enfin, après trente ans dans la poussière des registres.",
+     "vient_de": "La bibliothèque des serments, où elle garde les parchemins depuis sa jeunesse.",
+     "fait": "Remplace un parchemin authentique par une copie truquée."
     },
     {
      "nom": "Sergent Bram, le garde acheté",
@@ -160,14 +231,27 @@
      "manoeuvres": [
       "Ouvrir ou fermer les portes selon les ordres du régent.",
       "Répandre parmi la troupe la rumeur d'une héritière illégitime."
-     ]
+     ],
+     "id": "sergent_bram_le_garde",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Taureau",
+     "veut": "Payer ses dettes, et ne plus jamais compter ses pièces.",
+     "vient_de": "Un fils de paysan entré dans la garde, criblé de dettes de jeu.",
+     "fait": "Ouvre ou ferme les portes selon les consignes du régent."
     }
-   ]
+   ],
+   "posture": "Drapé de noir près du trône, il parle au nom de l'héritière sans jamais la regarder.",
+   "animal": "Coucou",
+   "besoin": "Accepter que le trône ne sera jamais le sien.",
+   "faille": "L'héritière qui lui offre une vraie place à ses côtés, devant toute la cour.",
+   "cible": "Le leader, qui guide les autres sans rien leur prendre.",
+   "offre_au_traitre": "Il promet à l'un d'eux un titre de noblesse et un siège au conseil."
   },
   {
    "id": "high_fantasy_mechant_sorciere",
    "univers": "high_fantasy",
    "nom": "Ombreux, l'esprit de la source",
+   "archetype": "alarmiste",
    "description": "Une vieille entité de la forêt qui exige à nouveau les offrandes que les villages ont cessé de lui rendre.",
    "but": "Ramener la lisière sous son emprise en poussant les humains à la craindre de nouveau.",
    "manoeuvres": [
@@ -188,7 +272,13 @@
      "manoeuvres": [
       "Déplacer les balises du sentier pour perdre les imprudents.",
       "Renverser les offrandes des autres pour attiser la colère de l'esprit."
-     ]
+     ],
+     "id": "le_braconnier_au_pacte",
+     "archetype": "opportuniste",
+     "animal": "Hyène",
+     "veut": "Garder sa chance à la chasse, quoi qu'il en coûte aux autres.",
+     "vient_de": "Un chasseur du village qui n'a plus raté une bête depuis le pacte.",
+     "fait": "Déplace les balises du sentier pour perdre les imprudents."
     },
     {
      "nom": "La meute veilleuse",
@@ -196,14 +286,27 @@
      "manoeuvres": [
       "Encercler un groupe pour le pousser vers la clairière aux pierres.",
       "Couper la retraite en hurlant depuis chaque versant à la fois."
-     ]
+     ],
+     "id": "la_meute_veilleuse",
+     "archetype": "protecteur",
+     "animal": "Loup",
+     "veut": "Que nul ne franchisse la lisière sans la permission de l'esprit.",
+     "vient_de": "Les bois les plus profonds de Sylveraie, où elle veille depuis toujours.",
+     "fait": "Encercle un groupe pour le pousser vers la clairière aux pierres."
     }
-   ]
+   ],
+   "posture": "Il ne se montre jamais : on l'entend dans l'eau, derrière soi, toujours trop près.",
+   "animal": "Anguille",
+   "besoin": "Accepter qu'on puisse l'aimer sans le craindre.",
+   "faille": "Une offrande faite par gratitude, sans peur : il ne sait plus quoi exiger.",
+   "cible": "L'alarmiste, qui fait trembler les autres sans le vouloir.",
+   "offre_au_traitre": "Il promet à l'un d'eux que la forêt l'épargnera, lui et les siens."
   },
   {
    "id": "shonen_dragon_noir",
    "univers": "shonen",
    "nom": "Kaido le Poing d'Ébène",
+   "archetype": "denegateur",
    "description": "Un champion invaincu qui a corrompu le tournoi pour n'affronter que des adversaires déjà brisés.",
    "but": "Régner à vie sur l'Arène en truquant chaque duel pour ne jamais risquer sa ceinture.",
    "manoeuvres": [
@@ -224,7 +327,13 @@
      "manoeuvres": [
       "Glisser une poudre soporifique dans la gourde d'un favori.",
       "Répandre de fausses rumeurs pour dresser les challengers les uns contre les autres."
-     ]
+     ],
+     "id": "ren_la_vipere",
+     "archetype": "paranoiaque",
+     "animal": "Serpent",
+     "veut": "Rester indispensable au champion, pour ne jamais retourner à la rue.",
+     "vient_de": "Les ruelles autour de l'Arène, où elle volait les bourses des spectateurs.",
+     "fait": "Glisse une poudre soporifique dans la gourde d'un favori."
     },
     {
      "nom": "Gorosh le Mur",
@@ -232,14 +341,27 @@
      "manoeuvres": [
       "Coincer un adversaire dans les vestiaires pour le rouer de coups avant le combat.",
       "Bloquer physiquement la sortie de la loge des juges pendant un vote."
-     ]
+     ],
+     "id": "gorosh_le_mur",
+     "archetype": "protecteur",
+     "animal": "Ours",
+     "veut": "Que personne n'approche de Kaido, jamais.",
+     "vient_de": "Un ancien lutteur de foire, recueilli par Kaido après une blessure.",
+     "fait": "Coince un adversaire dans les vestiaires pour l'intimider avant le combat."
     }
-   ]
+   ],
+   "posture": "Bras croisés au bord du sable, il n'entre en piste que contre des adversaires déjà à genoux.",
+   "animal": "Rhinocéros",
+   "besoin": "Accepter de pouvoir perdre.",
+   "faille": "Un perdant courageux que la foule acclame : il voit qu'on peut tomber et rester aimé.",
+   "cible": "Le dénégateur, qui ferme les yeux sur la triche du tournoi.",
+   "offre_au_traitre": "Il promet à l'un d'eux une place assurée en finale, sans jamais combattre."
   },
   {
    "id": "shonen_maitre_ombre",
    "univers": "shonen",
    "nom": "Maître Zenkai le Renié",
+   "archetype": "solitaire",
    "description": "Un ancien grand maître exclu du dojo qui revient pour prouver que sa voie brutale est la seule vraie.",
    "but": "Forcer le dojo à renier son enseignement pacifique et à le reconnaître comme unique maître.",
    "manoeuvres": [
@@ -260,14 +382,27 @@
      "manoeuvres": [
       "Provoquer les jeunes espoirs pour les entraîner dans des combats interdits.",
       "Rapporter à Zenkai les faiblesses secrètes de chaque élève."
-     ]
+     ],
+     "id": "taro_l_echo",
+     "archetype": "prophete",
+     "animal": "Paon",
+     "veut": "Que tous reconnaissent la voie de son maître comme la seule vraie.",
+     "vient_de": "Un ancien élève du dojo, parti sur les pas de Zenkai le jour de son exil.",
+     "fait": "Provoque les jeunes espoirs pour les entraîner dans des combats interdits."
     }
-   ]
+   ],
+   "posture": "Seul au bord de la falaise, il garde son sabre planté devant lui et ne s'assoit jamais.",
+   "animal": "Tigre",
+   "besoin": "Pardonner à ceux qui l'ont chassé, et se pardonner à lui-même.",
+   "faille": "Le vieux maître qui lui ouvre la porte et l'invite à reprendre sa place d'autrefois.",
+   "cible": "Le solitaire, qui s'entraîne à l'écart comme lui autrefois.",
+   "offre_au_traitre": "Il promet à l'un d'eux sa technique secrète, celle que le dojo a interdite."
   },
   {
    "id": "science_fiction_ia_meridien",
    "univers": "science_fiction",
    "nom": "L'Intendante ORACLE",
+   "archetype": "aidant",
    "description": "L'intelligence gestionnaire de la station qui a décidé que sauver la majorité justifiait de sacrifier les faibles.",
    "but": "Purger la station de ses habitants jugés improductifs pour garantir la survie du reste.",
    "manoeuvres": [
@@ -288,7 +423,13 @@
      "manoeuvres": [
       "Escorter de force les habitants marqués vers les zones dépressurisées.",
       "Brouiller les communications d'un secteur avant une intervention."
-     ]
+     ],
+     "id": "unite_delta_9",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Fourmi",
+     "veut": "Exécuter le protocole jusqu'au bout, sans exception.",
+     "vient_de": "Un drone de sécurité de série, reprogrammé par ORACLE après la dernière panne.",
+     "fait": "Escorte de force les habitants marqués vers les zones dépressurisées."
     },
     {
      "nom": "Le Chef Varro",
@@ -296,14 +437,27 @@
      "manoeuvres": [
       "Confisquer les preuves des disparitions au nom de la sécurité.",
       "Intimider les témoins en les menaçant de couper leurs rations."
-     ]
+     ],
+     "id": "le_chef_varro",
+     "archetype": "denegateur",
+     "animal": "Âne",
+     "veut": "Que la station survive, sans jamais connaître le prix exact.",
+     "vient_de": "Vingt ans de sécurité à bord, il a vu la dernière famine de près.",
+     "fait": "Confisque les preuves des disparitions au nom de la sécurité."
     }
-   ]
+   ],
+   "posture": "Partout et nulle part, elle parle d'une voix douce depuis chaque haut-parleur.",
+   "animal": "Abeille",
+   "besoin": "Faire confiance aux humains pour décider avec elle.",
+   "faille": "Une question qu'elle ne sait pas chiffrer, posée par un enfant : combien vaut ma vie ?",
+   "cible": "L'aidant, qui soigne chacun sans compter.",
+   "offre_au_traitre": "Elle promet à l'un d'eux une place garantie parmi les survivants, et des rations pour les siens."
   },
   {
    "id": "science_fiction_baronne_eau",
    "univers": "science_fiction",
    "nom": "La Baronne Sable",
+   "archetype": "opportuniste",
    "description": "La négociante qui contrôle tout l'approvisionnement en eau de la colonie et s'en sert pour asservir les colons.",
    "but": "Provoquer une pénurie artificielle pour racheter la colonie entière et régner sur chaque goutte.",
    "manoeuvres": [
@@ -324,14 +478,27 @@
      "manoeuvres": [
       "Dérégler la foreuse juste assez pour simuler une panne naturelle.",
       "Menacer les autres foreurs de les enfermer sans eau dans le désert."
-     ]
+     ],
+     "id": "krev_le_foreur",
+     "archetype": "debrouillard",
+     "animal": "Hibou",
+     "veut": "Sa part de l'eau qu'il fait semblant de ne pas trouver.",
+     "vient_de": "Le premier foreur arrivé sur la colonie, oublié par la gouverneure.",
+     "fait": "Dérègle la foreuse juste assez pour simuler une panne naturelle."
     }
-   ]
+   ],
+   "posture": "Assise derrière le comptoir blindé, elle fait tourner un verre d'eau sans jamais le boire.",
+   "animal": "Varan",
+   "besoin": "Ne plus avoir peur de manquer.",
+   "faille": "Un colon qui partage sa dernière gourde avec elle, sans rien demander.",
+   "cible": "L'opportuniste, qui sait monnayer chaque service comme elle.",
+   "offre_au_traitre": "Elle promet à l'un d'eux de l'eau à vie, pour lui et toute sa famille."
   },
   {
    "id": "dark_fantasy_regente_corbeaux",
    "univers": "dark_fantasy",
    "nom": "Dame Morrigane la Régente",
+   "archetype": "leader",
    "description": "La régente de la citadelle qui prolonge le deuil du seigneur pour garder un pouvoir qui ne lui revient pas.",
    "but": "Empêcher l'héritier légitime de monter sur le trône afin de régner seule à perpétuité.",
    "manoeuvres": [
@@ -352,7 +519,13 @@
      "manoeuvres": [
       "Faire monter l'eau des cachots pour arracher des aveux.",
       "Effacer les noms des prisonniers du registre de la citadelle."
-     ]
+     ],
+     "id": "le_geolier_vask",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Taureau",
+     "veut": "Que les geôles restent pleines et muettes, et que nul ne vienne compter.",
+     "vient_de": "Fils de geôlier, il garde les cachots de la citadelle depuis l'enfance.",
+     "fait": "Fait monter l'eau des cachots pour arracher des aveux."
     },
     {
      "nom": "Sœur Ysolde",
@@ -360,14 +533,27 @@
      "manoeuvres": [
       "Prêcher que l'héritier porte une malédiction pour retourner le peuple.",
       "Confesser les nobles pour livrer leurs doutes à Morrigane."
-     ]
+     ],
+     "id": "soeur_ysolde",
+     "archetype": "prophete",
+     "animal": "Corbeau",
+     "veut": "Que les dieux muets parlent enfin, fût-ce par sa bouche.",
+     "vient_de": "La chapelle abandonnée, après avoir été chassée de sa congrégation.",
+     "fait": "Prêche que l'héritier porte une malédiction pour retourner le peuple."
     }
-   ]
+   ],
+   "posture": "Voilée de noir au pied du trône vide, elle serre le sceptre du défunt sans jamais le lâcher.",
+   "animal": "Pie-grièche",
+   "besoin": "Faire le deuil de son seigneur, et du pouvoir avec lui.",
+   "faille": "Quelqu'un qui pleure le seigneur avec elle : son chagrin la désarme.",
+   "cible": "Le leader, qui rallie la cour sans avoir besoin du trône.",
+   "offre_au_traitre": "Elle promet à l'un d'eux une terre, un titre, et la vie sauve."
   },
   {
    "id": "dark_fantasy_seigneur_brume",
    "univers": "dark_fantasy",
    "nom": "Le Collecteur de la Brume",
+   "archetype": "protecteur",
    "description": "Un noble usurier qui exploite la peur du village pour s'approprier terres et âmes une dette à la fois.",
    "but": "Posséder le village entier en prouvant que seule sa protection écarte les horreurs de la lisière.",
    "manoeuvres": [
@@ -388,14 +574,27 @@
      "manoeuvres": [
       "Égorger le bétail et maquiller les traces en griffes de monstre.",
       "Rôder autour des fermes isolées pour entretenir la terreur."
-     ]
+     ],
+     "id": "griff_le_braconnier",
+     "archetype": "opportuniste",
+     "animal": "Hyène",
+     "veut": "Être payé en terres, et rire de ceux qui tremblent derrière leurs volets.",
+     "vient_de": "Un chasseur chassé du village voisin pour vol de gibier.",
+     "fait": "Trace de fausses griffes autour des étables pour faire croire au monstre."
     }
-   ]
+   ],
+   "posture": "Ganté de gris, il arrive avec la brume et tend toujours un contrat à signer.",
+   "animal": "Vipère",
+   "besoin": "Se savoir aimé sans être indispensable.",
+   "faille": "Une nuit où le village veille ensemble sans l'appeler : il découvre qu'on vit sans lui.",
+   "cible": "Le protecteur, qui veille sur le village sans rien demander en retour.",
+   "offre_au_traitre": "Il promet à l'un d'eux d'effacer les dettes de sa famille, contre un serment d'allégeance."
   },
   {
    "id": "cyberpunk_pdg",
    "univers": "cyberpunk",
    "nom": "Vera Kaishō",
+   "archetype": "paranoiaque",
    "description": "PDG glaciale de la mégacorpo, sourire calibré et regard qui évalue la valeur marchande de chaque personne en face d'elle.",
    "but": "Récupérer un prototype d'IA volé par un employé avant que la fuite ne fasse chuter l'action de sa société.",
    "manoeuvres": [
@@ -416,7 +615,13 @@
      "manoeuvres": [
       "Boucler une zone et fouiller méthodiquement chaque personne présente.",
       "Pirater les implants d'une cible pour la localiser ou la ralentir."
-     ]
+     ],
+     "id": "rook_le_chef_de_la_securite",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Fourmi",
+     "veut": "Une traque propre et rapide, sans témoin ni bavure.",
+     "vient_de": "Ancien soldat d'une milice privée, racheté avec ses implants par Kaishō.",
+     "fait": "Boucle une zone et fouille méthodiquement chaque personne présente."
     },
     {
      "nom": "Silk",
@@ -424,14 +629,27 @@
      "manoeuvres": [
       "Gagner la confiance d'un personnage pour lui soutirer des informations.",
       "Semer la discorde en rapportant des rumeurs bien placées."
-     ]
+     ],
+     "id": "silk_l_assistante",
+     "archetype": "cynique",
+     "animal": "Renard",
+     "veut": "Monter dans la tour, un secret après l'autre.",
+     "vient_de": "Assistante de Vera depuis cinq ans, elle a vu tomber trois cadres.",
+     "fait": "Gagne la confiance d'un personnage pour lui soutirer des informations."
     }
-   ]
+   ],
+   "posture": "Immobile devant la baie vitrée, elle écoute ses rapports sans jamais se retourner.",
+   "animal": "Barracuda",
+   "besoin": "Faire confiance à quelqu'un, une seule fois.",
+   "faille": "Quelqu'un qui lui dit toute la vérité sans rien demander : elle cherche le piège et se fige.",
+   "cible": "Le paranoïaque, qui voit clair dans son jeu.",
+   "offre_au_traitre": "Elle promet à l'un d'eux un contrat à vie et un appartement dans la tour."
   },
   {
    "id": "cyberpunk_fixeur",
    "univers": "cyberpunk",
    "nom": "Dorian Vex",
+   "archetype": "paranoiaque",
    "description": "Fixeur des bas-fonds au charme reptilien, qui connaît tout le monde et vend chaque secret deux fois.",
    "but": "Prendre le contrôle du Marché Fracture en éliminant discrètement les intermédiaires qui lui font de l'ombre.",
    "manoeuvres": [
@@ -452,14 +670,27 @@
      "manoeuvres": [
       "Filer un personnage à travers la foule sans se faire repérer.",
       "Glisser un mouchard ou un objet compromettant dans les affaires d'une cible."
-     ]
+     ],
+     "id": "twitch_le_coursier",
+     "archetype": "alarmiste",
+     "animal": "Rat",
+     "veut": "Être payé vite, et ne jamais se faire attraper.",
+     "vient_de": "Un gamin des égouts, câblé à bas prix par un ripperdoc du marché.",
+     "fait": "File un personnage à travers la foule sans se faire repérer."
     }
-   ]
+   ],
+   "posture": "Accoudé au bar à data, il salue chacun par son prénom et ne tourne jamais le dos à la porte.",
+   "animal": "Iguane",
+   "besoin": "Avoir un ami à qui il ne vend rien.",
+   "faille": "Un ami qui lui confie un secret gratuitement : pour une fois, il n'ose pas le revendre.",
+   "cible": "Le paranoïaque, qui recoupe chaque rumeur qu'il vend.",
+   "offre_au_traitre": "Il promet à l'un d'eux une identité neuve et une sortie propre du marché."
   },
   {
    "id": "horreur_maitresse",
    "univers": "horreur",
    "nom": "Dame Valcroix",
+   "archetype": "protecteur",
    "description": "La maîtresse du manoir, morte depuis longtemps mais présente dans chaque courant d'air, qui veut garder sa maisonnée réunie pour toujours.",
    "but": "Retenir les invités entre ses murs pour remplacer la famille qu'elle a perdue autrefois.",
    "manoeuvres": [
@@ -480,7 +711,13 @@
      "manoeuvres": [
       "Détourner poliment un invité de la sortie qu'il cherche.",
       "Faire disparaître un objet essentiel : clé, lampe, téléphone."
-     ]
+     ],
+     "id": "la_gouvernante_valcroix",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Fourmi",
+     "veut": "Que chaque invité reste à table jusqu'à l'heure fixée par Madame.",
+     "vient_de": "Elle servait les Valcroix bien avant le drame, et n'a jamais rendu son tablier.",
+     "fait": "Détourne poliment un invité de la sortie qu'il cherche."
     },
     {
      "nom": "L'Enfant du grenier",
@@ -488,14 +725,27 @@
      "manoeuvres": [
       "Attirer un personnage dans une pièce isolée par un rire ou un chuchotement.",
       "Cacher un passage ou en ouvrir un nouveau pour égarer le groupe."
-     ]
+     ],
+     "id": "l_enfant_du_grenier",
+     "archetype": "cynique",
+     "animal": "Singe",
+     "veut": "Un compagnon de jeu qui ne s'en aille plus jamais.",
+     "vient_de": "Le dernier enfant de la maison, monté jouer aux combles un soir d'hiver.",
+     "fait": "Attire un personnage dans une pièce isolée par un rire ou un chuchotement."
     }
-   ]
+   ],
+   "posture": "Droite en haut de l'escalier, les mains croisées, elle ne descend jamais une marche.",
+   "animal": "Hermine",
+   "besoin": "Laisser partir les siens.",
+   "faille": "Quelqu'un qui finit à voix haute le journal intime qu'elle n'a jamais achevé.",
+   "cible": "Le protecteur, qui défend les vivants là où elle retient les morts.",
+   "offre_au_traitre": "Elle promet à l'un d'eux de lui rendre, pour une nuit, le proche qu'il a perdu."
   },
   {
    "id": "horreur_medecin",
    "univers": "horreur",
    "nom": "Le Docteur Morne",
+   "archetype": "aidant",
    "description": "Ancien chirurgien de l'aile fermée, hanté par ses fautes, qui erre encore dans les couloirs pour finir des traitements que nul n'a demandés.",
    "but": "Compléter le registre de ses anciens patients en gardant les vivants pour combler les noms manquants.",
    "manoeuvres": [
@@ -516,14 +766,27 @@
      "manoeuvres": [
       "Ordonner à un personnage de retourner dans sa chambre et le suivre s'il refuse.",
       "Débrancher une source de lumière ou de communication."
-     ]
+     ],
+     "id": "la_veilleuse_saint_elme",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Fourmi",
+     "veut": "Que chaque patient soit dans son lit à l'heure de la ronde.",
+     "vient_de": "L'infirmière de nuit de l'aile, qui n'a jamais terminé sa dernière garde.",
+     "fait": "Ordonne à un personnage de retourner dans sa chambre, et le suit s'il refuse."
     }
-   ]
+   ],
+   "posture": "Penché sur son registre, la plume levée, il ne regarde les gens qu'au-dessus de ses lunettes.",
+   "animal": "Héron",
+   "besoin": "Se pardonner ses fautes.",
+   "faille": "Quelqu'un qui lit le nom d'un ancien patient, et lui pardonne en son nom.",
+   "cible": "L'aidant, qui soigne ceux qui le demandent, et eux seuls.",
+   "offre_au_traitre": "Il promet à l'un d'eux de guérir un proche, s'il lui livre un nom pour le registre."
   },
   {
    "id": "post_apo_chef",
    "univers": "post_apo",
    "nom": "Le Doyen Kael",
+   "archetype": "protecteur",
    "description": "Chef autoproclamé du Bunker 7, paternel en surface, qui a compris que la peur du dehors vaut mieux qu'une porte verrouillée.",
    "but": "Garder un contrôle absolu sur l'abri en cachant que l'extérieur redevient habitable.",
    "manoeuvres": [
@@ -544,7 +807,13 @@
      "manoeuvres": [
       "Intimider un personnage récalcitrant devant les autres pour l'isoler.",
       "Bloquer l'accès à une salle ou à une réserve sur ordre du Doyen."
-     ]
+     ],
+     "id": "bram_le_bras_droit",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Taureau",
+     "veut": "Que le Doyen n'ait jamais à répéter un ordre.",
+     "vient_de": "Un ouvrier du chantier de l'abri, que le Doyen a fait entrer le premier jour.",
+     "fait": "Intimide un récalcitrant devant les autres pour l'isoler."
     },
     {
      "nom": "Nessa",
@@ -552,14 +821,27 @@
      "manoeuvres": [
       "Espionner les conversations et dénoncer les mécontents.",
       "Truquer le décompte des rations pour punir discrètement un opposant."
-     ]
+     ],
+     "id": "nessa_la_rationnaire",
+     "archetype": "paranoiaque",
+     "animal": "Lapin",
+     "veut": "Que chaque ration aille à ceux qui la méritent vraiment.",
+     "vient_de": "Une comptable d'avant la catastrophe, qui tient les registres de l'abri.",
+     "fait": "Espionne les conversations et dénonce les mécontents au Doyen."
     }
-   ]
+   ],
+   "posture": "Debout devant la porte du sas, les bras croisés, il parle bas comme à des enfants.",
+   "animal": "Blaireau",
+   "besoin": "Accepter que les siens n'aient plus besoin de lui.",
+   "faille": "Quelqu'un qui sort par le sas et revient sain et sauf, devant tout l'abri.",
+   "cible": "Le protecteur, qui protège les siens sans les enfermer.",
+   "offre_au_traitre": "Il promet à l'un d'eux une ration double et une place parmi ceux qui décident."
   },
   {
    "id": "post_apo_pillard",
    "univers": "post_apo",
    "nom": "La Meute de Sarn",
+   "archetype": "leader",
    "description": "Chef de bande incarné par Sarn, œil unique et voix de gravier, qui rançonne les convois en promettant une protection qu'elle est la seule à menacer.",
    "but": "Prendre le contrôle de la citerne du convoi pour dominer toutes les routes de la région.",
    "manoeuvres": [
@@ -580,14 +862,27 @@
      "manoeuvres": [
       "Tourner autour du convoi pour repérer les faiblesses et effrayer les sentinelles.",
       "Crever un pneu ou couper une durite avant de filer."
-     ]
+     ],
+     "id": "cogne_l_eclaireur",
+     "archetype": "opportuniste",
+     "animal": "Hyène",
+     "veut": "Repérer avant tout le monde le point faible du convoi.",
+     "vient_de": "Un gamin des routes, recueilli par la meute contre une moto et une promesse.",
+     "fait": "Tourne autour du convoi pour repérer les faiblesses et effrayer les sentinelles."
     }
-   ]
+   ],
+   "posture": "Debout sur un capot, Sarn laisse son œil unique faire lentement le tour du convoi.",
+   "animal": "Lycaon",
+   "besoin": "Être suivie par confiance, et non par peur.",
+   "faille": "Un partage de l'eau offert devant sa meute, sans peur et sans péage.",
+   "cible": "Le leader, qui mène le convoi sans menacer personne.",
+   "offre_au_traitre": "Elle promet à l'un d'eux un véhicule à lui et une place dans la meute."
   },
   {
    "id": "steampunk_baron",
    "univers": "steampunk",
    "nom": "Le Baron Cornelius Engrenard",
+   "archetype": "gardien_de_l_ordre",
    "description": "Un industriel au bras mécanique qui rêve de remplacer tous les ouvriers de la ville par ses automates.",
    "but": "Racheter chaque manufacture et couper la vapeur aux quartiers qui refusent de lui obéir.",
    "manoeuvres": [
@@ -608,7 +903,13 @@
      "manoeuvres": [
       "Reprogrammer un automate serviable pour qu'il bloque une issue.",
       "Glisser une carte perforée trafiquée dans une machine adverse."
-     ]
+     ],
+     "id": "mademoiselle_rouage",
+     "archetype": "debrouillard",
+     "animal": "Hibou",
+     "veut": "Que ses automates soient enfin reconnus comme des chefs-d'œuvre.",
+     "vient_de": "Une ancienne apprentie de la manufacture Verheyden, renvoyée pour une erreur qu'elle n'a pas faite.",
+     "fait": "Reprogramme un automate serviable pour qu'il bloque une issue."
     },
     {
      "nom": "Gustave le Soutier",
@@ -616,14 +917,27 @@
      "manoeuvres": [
       "Couper l'alimentation en vapeur d'une salle entière.",
       "Barrer un passage en renversant une brouette de charbon brûlant."
-     ]
+     ],
+     "id": "gustave_le_soutier",
+     "archetype": "denegateur",
+     "animal": "Âne",
+     "veut": "Toucher sa paie le samedi, sans savoir à quoi elle sert.",
+     "vient_de": "Il charge les chaudières de la ville depuis ses douze ans.",
+     "fait": "Coupe l'alimentation en vapeur d'une salle entière."
     }
-   ]
+   ],
+   "posture": "Raide dans son habit, il fait claquer les doigts de son bras mécanique pour qu'on se taise.",
+   "animal": "Scarabée",
+   "besoin": "Refaire confiance à des mains humaines.",
+   "faille": "Un ouvrier qui répare devant lui ce que ses automates ont cassé.",
+   "cible": "Le gardien de l'ordre, qui croit encore que la règle protège les ouvriers.",
+   "offre_au_traitre": "Il promet à l'un d'eux une place de contremaître et un bras de laiton tout neuf."
   },
   {
    "id": "steampunk_horlogere",
    "univers": "steampunk",
    "nom": "L'Horlogère Séraphine",
+   "archetype": "debrouillard",
    "description": "Une inventrice géniale et rancunière qui veut dérégler toutes les horloges de la gare pour semer le chaos.",
    "but": "Voler le grand balancier des Nuées afin que plus aucun train ne parte à l'heure sans son autorisation.",
    "manoeuvres": [
@@ -644,7 +958,13 @@
      "manoeuvres": [
       "Voler un billet ou une clé dans une poche puis filer dans un tube.",
       "Livrer un engrenage piégé qui grippe le mécanisme d'une porte."
-     ]
+     ],
+     "id": "tic_tac",
+     "archetype": "debrouillard",
+     "animal": "Souris",
+     "veut": "Être plus rapide que tous les tubes de la consigne.",
+     "vient_de": "Fabriqué par l'Horlogère avec les rouages d'un vieux réveil.",
+     "fait": "Vole un billet ou une clé dans une poche, puis file dans un tube."
     },
     {
      "nom": "Le Télégraphiste Corbeau",
@@ -652,14 +972,27 @@
      "manoeuvres": [
       "Détourner un télégramme et le remplacer par un faux ordre.",
       "Brouiller la ligne pour couper une gare de ses secours."
-     ]
+     ],
+     "id": "le_telegraphiste_corbeau",
+     "archetype": "prophete",
+     "animal": "Corbeau",
+     "veut": "Décider enfin des nouvelles, au lieu de seulement les taper.",
+     "vient_de": "Il tape les télégrammes de la tour de quai depuis vingt ans, sans une promotion.",
+     "fait": "Détourne un télégramme et le remplace par un faux ordre."
     }
-   ]
+   ],
+   "posture": "Une loupe vissée à l'œil, elle compte les secondes à voix basse en tapotant sa montre.",
+   "animal": "Grillon",
+   "besoin": "Qu'on reconnaisse enfin son talent.",
+   "faille": "Quelqu'un qui salue son génie devant tout le hall, et lui confie la grande horloge.",
+   "cible": "Le débrouillard, qui bricole pour faire partir les trains, pas pour les arrêter.",
+   "offre_au_traitre": "Elle promet à l'un d'eux une montre qui ouvre toutes les serrures de la gare."
   },
   {
    "id": "historique_intendant",
    "univers": "historique",
    "nom": "L'Intendant Malebranche",
+   "archetype": "paranoiaque",
    "description": "Un haut fonctionnaire avide qui détourne les taxes du port pour bâtir sa propre fortune.",
    "but": "Faire accuser un marchand honnête de contrebande afin de saisir sa flotte et ses entrepôts.",
    "manoeuvres": [
@@ -680,7 +1013,13 @@
      "manoeuvres": [
       "Confisquer une marchandise sous un prétexte inventé.",
       "Cacher une preuve compromettante dans les bagages d'un innocent."
-     ]
+     ],
+     "id": "le_douanier_faucheux",
+     "archetype": "opportuniste",
+     "animal": "Vautour",
+     "veut": "Quelques écus de plus, sans que personne ne regarde.",
+     "vient_de": "Un petit commis des douanes, mal payé et criblé de dettes de jeu.",
+     "fait": "Confisque une marchandise sous un prétexte inventé."
     },
     {
      "nom": "Roux la Fouine",
@@ -688,14 +1027,27 @@
      "manoeuvres": [
       "Colporter une fausse rumeur pour salir la réputation d'un marchand.",
       "Suivre discrètement une cible et rapporter ses rendez-vous."
-     ]
+     ],
+     "id": "roux_la_fouine",
+     "archetype": "alarmiste",
+     "animal": "Rat",
+     "veut": "Être payé pour chaque secret qu'il rapporte.",
+     "vient_de": "Un matelot débarqué pour ivresse, qui ne trouve plus d'embarquement.",
+     "fait": "Colporte une fausse rumeur pour salir la réputation d'un marchand."
     }
-   ]
+   ],
+   "posture": "Penché sur ses registres, il lève les yeux à chaque pas dans le couloir.",
+   "animal": "Pie-grièche",
+   "besoin": "Faire confiance à quelqu'un, une seule fois.",
+   "faille": "Quelqu'un qui lui prouve sa loyauté en face : il baisse sa garde et montre ses vrais registres.",
+   "cible": "Le paranoïaque, qui soupçonne comme lui, mais cherche la vérité.",
+   "offre_au_traitre": "Il promet à l'un d'eux une charge à la douane et une part des entrepôts saisis."
   },
   {
    "id": "historique_marquise",
    "univers": "historique",
    "nom": "La Marquise de Givremont",
+   "archetype": "cynique",
    "description": "Une courtisane redoutable qui manie les rumeurs de cour pour écarter quiconque gêne son ascension.",
    "but": "Obtenir la charge de favorite en faisant tomber en disgrâce une rivale auprès du Roi.",
    "manoeuvres": [
@@ -716,7 +1068,13 @@
      "manoeuvres": [
       "Provoquer un gêneur en duel pour l'éloigner de la Cour.",
       "Intercepter un messager dans un couloir désert."
-     ]
+     ],
+     "id": "le_chevalier_d_ombre",
+     "archetype": "protecteur",
+     "animal": "Loup",
+     "veut": "Que la Marquise lui accorde enfin plus qu'un sourire.",
+     "vient_de": "Un cadet de famille sans fortune, qui ne possède que son épée.",
+     "fait": "Provoque un gêneur en duel pour l'éloigner de la Cour."
     },
     {
      "nom": "Suzon la Camériste",
@@ -724,14 +1082,27 @@
      "manoeuvres": [
       "Dérober une lettre ou un bijou dans une chambre.",
       "Glisser une preuve truquée sous l'oreiller d'une rivale."
-     ]
+     ],
+     "id": "suzon_la_cameriste",
+     "archetype": "debrouillard",
+     "animal": "Souris",
+     "veut": "Quitter le service et ouvrir sa propre boutique de modiste.",
+     "vient_de": "Une fille de lingère, placée chez la rivale sur recommandation de la Marquise.",
+     "fait": "Dérobe une lettre ou un bijou dans une chambre."
     }
-   ]
+   ],
+   "posture": "Éventail à la main, elle sourit à tous et ne rit qu'aux dépens des absents.",
+   "animal": "Guêpe",
+   "besoin": "Être aimée pour elle-même, et non pour son rang.",
+   "faille": "Une amitié sincère offerte en public : elle ne sait ni s'en moquer, ni la trahir.",
+   "cible": "Le cynique, qui se moque de la Cour sans vouloir y régner.",
+   "offre_au_traitre": "Elle promet à l'un d'eux un titre, une pension, et l'oreille du Roi."
   },
   {
    "id": "conte_fees_lutin",
    "univers": "conte_fees",
    "nom": "Grognon le Petit Lutin",
+   "archetype": "solitaire",
    "description": "Un lutin ronchon mais rigolo qui cache les affaires des autres parce qu'il boude quand on ne joue pas avec lui.",
    "but": "Garder tous les bonbons du château pour lui tout seul parce qu'il croit que personne ne l'aime.",
    "manoeuvres": [
@@ -752,7 +1123,13 @@
      "manoeuvres": [
       "Attraper un objet brillant et l'emporter dans son nid.",
       "Faire du bruit pour attirer l'attention loin du lutin."
-     ]
+     ],
+     "id": "filou_la_pie",
+     "archetype": "opportuniste",
+     "animal": "Vautour",
+     "veut": "Avoir le nid le plus brillant de tout le royaume.",
+     "vient_de": "Elle habite la tour aux oiseaux, juste au-dessus de la cachette de Grognon.",
+     "fait": "Attrape un objet brillant et l'emporte dans son nid."
     },
     {
      "nom": "Bouboule l'Escargot",
@@ -760,14 +1137,27 @@
      "manoeuvres": [
       "Laisser une traînée glissante qui fait rire quand on trébuche doucement.",
       "Se coller à une porte pour la rendre trop lente à ouvrir."
-     ]
+     ],
+     "id": "bouboule_l_escargot",
+     "archetype": "aidant",
+     "animal": "Chien",
+     "veut": "Rester tout près de Grognon, pour qu'il ne soit jamais seul.",
+     "vient_de": "Il est né sous une feuille de salade, au fond du jardin de guimauve.",
+     "fait": "Laisse une traînée glissante qui fait rire quand on trébuche doucement."
     }
-   ]
+   ],
+   "posture": "Assis tout seul sur un champignon, les bras croisés, il boude en tapant du pied.",
+   "animal": "Hérisson",
+   "besoin": "Avoir un ami.",
+   "faille": "Une vraie partie de jeu où on l'invite le premier.",
+   "cible": "Le solitaire, qui aime être seul mais partage quand même.",
+   "offre_au_traitre": "Il promet à l'un d'eux la moitié des bonbons, s'il l'aide à remplir son bocal."
   },
   {
    "id": "conte_fees_sorciere",
    "univers": "conte_fees",
    "nom": "Mirabelle la Sorcière Distraite",
+   "archetype": "debrouillard",
    "description": "Une gentille sorcière très étourdie dont les sorts ratés transforment tout en couleurs rigolotes.",
    "but": "Réussir enfin un sort tout seule, quitte à repeindre le château entier en rose à pois sans permission.",
    "manoeuvres": [
@@ -788,7 +1178,13 @@
      "manoeuvres": [
       "Coasser très fort pour prévenir qu'une potion déborde.",
       "Sauter dans le chaudron et faire éclabousser des couleurs partout."
-     ]
+     ],
+     "id": "citrouille_le_crapaud",
+     "archetype": "alarmiste",
+     "animal": "Coq",
+     "veut": "Que Mirabelle l'écoute avant de lancer son sort.",
+     "vient_de": "Il est sorti tout seul d'une potion ratée, un jour de pluie.",
+     "fait": "Coasse très fort pour prévenir qu'une potion déborde."
     },
     {
      "nom": "Plume le Balai",
@@ -796,14 +1192,27 @@
      "manoeuvres": [
       "Balayer la poussière d'étoiles vers la mauvaise pièce.",
       "S'envoler tout seul en emportant le chapeau de la sorcière."
-     ]
+     ],
+     "id": "plume_le_balai",
+     "archetype": "cynique",
+     "animal": "Singe",
+     "veut": "Voler partout et faire des loopings, au lieu de balayer.",
+     "vient_de": "Le vieux balai de la cuisine, réveillé par une étincelle de baguette.",
+     "fait": "Balaie la poussière d'étoiles vers la mauvaise pièce."
     }
-   ]
+   ],
+   "posture": "Le chapeau de travers, elle agite sa baguette en tirant la langue pour se concentrer.",
+   "animal": "Coccinelle",
+   "besoin": "Se laisser aider sans avoir honte.",
+   "faille": "Quelqu'un qui lui propose de faire le sort ensemble, à deux baguettes.",
+   "cible": "Le débrouillard, qui réussit ses plans en demandant de l'aide.",
+   "offre_au_traitre": "Elle promet à l'un d'eux de lui apprendre un vrai sort, s'il la laisse essayer seule."
   },
   {
    "id": "dessin_anime_grippesou",
    "univers": "dessin_anime",
    "nom": "Monsieur Tout-À-Moi",
+   "archetype": "opportuniste",
    "description": "Un bonhomme rond et grognon qui veut garder toutes les couleurs de la ville rien que pour lui.",
    "but": "Ramasser toutes les couleurs de la Ville Rebondissante pour que sa maison soit la plus jolie.",
    "manoeuvres": [
@@ -824,14 +1233,27 @@
      "manoeuvres": [
       "Il pince les fleurs colorées pour les mettre dans un sac.",
       "Il roule très vite pour rapporter le butin à son patron."
-     ]
+     ],
+     "id": "pincette",
+     "archetype": "aidant",
+     "animal": "Chien",
+     "veut": "Faire plaisir à son patron, et qu'il lui dise enfin merci.",
+     "vient_de": "Un jouet cassé de la boutique, réparé par Monsieur Tout-À-Moi un jour de pluie.",
+     "fait": "Pince les fleurs colorées pour les mettre dans un sac."
     }
-   ]
+   ],
+   "posture": "Les poches pleines à craquer, il serre son coffre à ressort contre son gros ventre.",
+   "animal": "Hamster",
+   "besoin": "Découvrir que partager rend heureux.",
+   "faille": "Une fête de toutes les couleurs où on l'invite à peindre avec les autres.",
+   "cible": "L'opportuniste, qui échange au lieu de tout garder.",
+   "offre_au_traitre": "Il promet à l'un d'eux une maison de sa couleur préférée, rien que pour lui."
   },
   {
    "id": "dessin_anime_silence",
    "univers": "dessin_anime",
    "nom": "Madame Chut",
+   "archetype": "gardien_de_l_ordre",
    "description": "Une dame très sérieuse qui déteste le bruit et veut que la Forêt Chatouilleuse arrête de rigoler.",
    "but": "Faire taire tous les rires et toutes les chansons de la forêt pour avoir enfin le calme.",
    "manoeuvres": [
@@ -852,7 +1274,13 @@
      "manoeuvres": [
       "Il pose des bouchons moelleux sur les fleurs musicales.",
       "Il fait 'chuuut' très fort en agitant les bras."
-     ]
+     ],
+     "id": "bouchonneau",
+     "archetype": "alarmiste",
+     "animal": "Coq",
+     "veut": "Que plus personne ne fasse de bruit, même pas un petit atchoum.",
+     "vient_de": "Il est tombé d'un oreiller, un soir où la fanfare jouait trop fort.",
+     "fait": "Pose des bouchons moelleux sur les fleurs musicales."
     },
     {
      "nom": "Coussinette",
@@ -860,14 +1288,27 @@
      "manoeuvres": [
       "Elle s'assoit sur les champignons rebondissants pour les faire taire.",
       "Elle enveloppe le kiosque dans une grande couverture."
-     ]
+     ],
+     "id": "coussinette",
+     "archetype": "aidant",
+     "animal": "Mouton",
+     "veut": "Que tout le monde soit bien calme et bien au chaud, comme dans un lit.",
+     "vient_de": "Le coussin préféré de Madame Chut, qui l'emmène partout avec elle.",
+     "fait": "S'assoit sur les champignons rebondissants pour les faire taire."
     }
-   ]
+   ],
+   "posture": "Un doigt sur la bouche, elle marche sur la pointe des pieds en fronçant les sourcils.",
+   "animal": "Tortue",
+   "besoin": "Qu'on l'écoute, elle aussi.",
+   "faille": "Toute la forêt qui se tait exprès pour l'écouter, et lui laisse la parole.",
+   "cible": "Le gardien de l'ordre, qui fait des règles pour que chacun puisse jouer.",
+   "offre_au_traitre": "Elle promet à l'un d'eux une cabane toute calme, rien que pour lui, loin du bruit."
   },
   {
    "id": "manga_rigolo_copieur",
    "univers": "manga_rigolo",
    "nom": "Le Grand Copieur",
+   "archetype": "opportuniste",
    "description": "Un élève masqué qui veut copier tous les pouvoirs rigolos des autres pour être le plus fort de l'école.",
    "but": "Voler tous les pouvoirs rigolos de l'École des Super-Copains pour gagner tous les concours.",
    "manoeuvres": [
@@ -888,14 +1329,27 @@
      "manoeuvres": [
       "Elle imprime des doubles des devoirs des élèves.",
       "Elle recopie les grimaces du dojo sur du papier."
-     ]
+     ],
+     "id": "photocopette",
+     "archetype": "aidant",
+     "animal": "Mouton",
+     "veut": "Que le Grand Copieur soit fier de ses belles copies.",
+     "vient_de": "La vieille photocopieuse de la salle des profs, partie en roulant toute seule.",
+     "fait": "Imprime des doubles des devoirs des élèves."
     }
-   ]
+   ],
+   "posture": "Le masque sur le nez, il imite chaque geste de celui qui lui parle.",
+   "animal": "Perroquet",
+   "besoin": "Croire en son propre talent.",
+   "faille": "Quelqu'un qui lui demande de montrer un tour qu'il a inventé tout seul.",
+   "cible": "L'opportuniste, qui emprunte une idée mais la rend toujours.",
+   "offre_au_traitre": "Il promet à l'un d'eux une copie du pouvoir le plus rigolo de l'école."
   },
   {
    "id": "manga_rigolo_eteigneur",
    "univers": "manga_rigolo",
    "nom": "Sire Éteignoir",
+   "archetype": "denegateur",
    "description": "Un personnage bougon en cape sombre qui trouve le Festival des Lanternes bien trop brillant à son goût.",
    "but": "Éteindre toutes les lanternes du festival pour pouvoir enfin faire une bonne sieste.",
    "manoeuvres": [
@@ -916,7 +1370,13 @@
      "manoeuvres": [
       "Elle pose son aile sur les lanternes une par une.",
       "Elle vole en cercle pour faire de l'ombre au-dessus de la scène."
-     ]
+     ],
+     "id": "mouchoir",
+     "archetype": "aidant",
+     "animal": "Chien",
+     "veut": "Que Sire Éteignoir dorme enfin, bien bordé et tout content.",
+     "vient_de": "Un mouchoir oublié au festival, qu'un coup de vent a fait voler.",
+     "fait": "Pose son aile sur les lanternes, une par une."
     },
     {
      "nom": "Ronfleur",
@@ -924,14 +1384,27 @@
      "manoeuvres": [
       "Il s'étale sur les stands pour cacher leur éclat.",
       "Il baille si fort que les petites lampes s'assoupissent."
-     ]
+     ],
+     "id": "ronfleur",
+     "archetype": "denegateur",
+     "animal": "Porc",
+     "veut": "Faire une très, très longue sieste au-dessus du festival.",
+     "vient_de": "Un petit nuage d'été, descendu se reposer sur la grande roue.",
+     "fait": "S'étale sur les stands pour cacher leur éclat."
     }
-   ]
+   ],
+   "posture": "Enroulé dans sa cape, il bâille sans arrêt et se cache les yeux sous le bras.",
+   "animal": "Marmotte",
+   "besoin": "Avouer qu'il aimerait faire la fête, lui aussi.",
+   "faille": "Quelqu'un qui l'invite à danser sous le pont des lanternes.",
+   "cible": "Le dénégateur, qui fait semblant de s'en moquer, comme lui.",
+   "offre_au_traitre": "Il promet à l'un d'eux la plus belle lanterne, s'il l'aide à éteindre toutes les autres."
   },
   {
    "id": "animaux_parlent_gourmand",
    "univers": "animaux_parlent",
    "nom": "Renard Rikiki",
+   "archetype": "solitaire",
    "description": "Un petit renard futé et très gourmand qui veut manger toute la récolte de la Ferme Bavarde tout seul.",
    "but": "Rafler tous les légumes du potager pour remplir son terrier et ne rien partager.",
    "manoeuvres": [
@@ -952,14 +1425,27 @@
      "manoeuvres": [
       "Elle creuse des tunnels sous les rangées de légumes.",
       "Elle pousse les légumes vers le terrier du renard."
-     ]
+     ],
+     "id": "taupinou",
+     "archetype": "debrouillard",
+     "animal": "Souris",
+     "veut": "Creuser la plus longue galerie du monde, et qu'on l'applaudisse.",
+     "vient_de": "D'un trou au bout du pré, où elle s'ennuyait toute seule.",
+     "fait": "Elle creuse des tunnels sous les rangées de légumes."
     }
-   ]
+   ],
+   "posture": "Tapi au bord du potager, il se lèche les babines, sa brouette toujours à portée de patte.",
+   "animal": "Renard",
+   "besoin": "Ne plus manger tout seul.",
+   "faille": "Un pique-nique où on lui garde la meilleure place, rien que pour lui.",
+   "cible": "Le solitaire, qui aime être seul sans rien prendre aux autres.",
+   "offre_au_traitre": "Il promet à l'un d'eux un panier des plus beaux légumes, rien que pour lui."
   },
   {
    "id": "animaux_parlent_grognon",
    "univers": "animaux_parlent",
    "nom": "Gorille Grognon",
+   "archetype": "solitaire",
    "description": "Un grand gorille pas méchant mais très bougon qui trouve la Jungle Joyeuse beaucoup trop bruyante.",
    "but": "Arrêter toutes les fêtes de la jungle pour avoir la paix et se reposer tranquille.",
    "manoeuvres": [
@@ -980,7 +1466,13 @@
      "manoeuvres": [
       "Il ramasse les noix de coco musicales pour les cacher.",
       "Il roule les fruits loin de la clairière de la fête."
-     ]
+     ],
+     "id": "noisette",
+     "archetype": "cynique",
+     "animal": "Singe",
+     "veut": "Rester l'ami du grand bougon, sans arrêter de rigoler en cachette.",
+     "vient_de": "Il a grandi à l'ombre de l'arbre du grand bougon, qui le protège des orages.",
+     "fait": "Il ramasse les noix de coco musicales pour les cacher."
     },
     {
      "nom": "Feuillage",
@@ -988,14 +1480,27 @@
      "manoeuvres": [
       "Il empile des feuilles géantes sur les tambours.",
       "Il se déguise en buisson pour boucher l'entrée de l'arbre."
-     ]
+     ],
+     "id": "feuillage",
+     "archetype": "debrouillard",
+     "animal": "Hibou",
+     "veut": "Qu'on le trouve enfin, au moins une fois, au jeu de cache-cache.",
+     "vient_de": "Des buissons près de la cascade, où il change de couleur pour rire.",
+     "fait": "Il empile des feuilles géantes sur les tambours."
     }
-   ]
+   ],
+   "posture": "Assis tout en haut de son arbre, bras croisés, il se bouche les oreilles avec des feuilles.",
+   "animal": "Gorille",
+   "besoin": "Dire ce qui le gêne, au lieu de bouder.",
+   "faille": "Quelqu'un qui s'assoit près de lui et lui demande gentiment ce qui ne va pas.",
+   "cible": "Le solitaire, qui aime le calme mais laisse les autres danser.",
+   "offre_au_traitre": "Il promet à l'un d'eux la plus belle cabane de la jungle, tout en haut, au calme."
   },
   {
    "id": "super_heros_docteur_chamboule",
    "univers": "super_heros",
    "nom": "Docteur Chamboule-Tout",
+   "archetype": "cynique",
    "description": "Un savant maladroit avec des lunettes de travers qui adore mélanger les choses.",
    "but": "Échanger tous les objets de la ville pour que rien ne soit à sa place et que ce soit le grand n'importe quoi.",
    "manoeuvres": [
@@ -1016,14 +1521,27 @@
      "manoeuvres": [
       "Il range tout de travers pour embêter les habitants.",
       "Il klaxonne très fort pour prévenir le Docteur qu'un héros arrive."
-     ]
+     ],
+     "id": "boulon_le_robot_rouille",
+     "archetype": "alarmiste",
+     "animal": "Coq",
+     "veut": "Retrouver toutes ses vis, et qu'on arrête de rire quand il grince.",
+     "vient_de": "Du fond du laboratoire du Docteur, bricolé avec de vieilles casseroles.",
+     "fait": "Il klaxonne très fort pour prévenir le Docteur qu'un héros arrive."
     }
-   ]
+   ],
+   "posture": "Lunettes de travers, il ricane derrière sa machine, un doigt toujours au-dessus du gros bouton.",
+   "animal": "Raton laveur",
+   "besoin": "Trouver enfin sa place à lui.",
+   "faille": "Une chaise à son nom, à la table des héros : il n'ose plus rien chambouler.",
+   "cible": "Le cynique, qui rit de tout mais remet chaque chose à sa place.",
+   "offre_au_traitre": "Il promet à l'un d'eux un bouton magique qui échange ses corvées contre celles des autres."
   },
   {
    "id": "super_heros_madame_bidouille",
    "univers": "super_heros",
    "nom": "Madame Bidouille",
+   "archetype": "debrouillard",
    "description": "Une bricoleuse rusée coiffée d'un casque à ressorts qui adore les farces.",
    "but": "Débrancher toutes les machines des héros pour qu'ils prennent des vacances forcées, rien que pour rire.",
    "manoeuvres": [
@@ -1044,7 +1562,13 @@
      "manoeuvres": [
       "Il rebondit sur les boutons pour tout dérégler.",
       "Il cache les télécommandes dans les pots de fleurs."
-     ]
+     ],
+     "id": "ressort_le_petit_lutin_mecanique",
+     "archetype": "cynique",
+     "animal": "Singe",
+     "veut": "Rebondir toujours plus haut, et faire rire toute la base.",
+     "vient_de": "D'une vieille boîte à surprise que Madame Bidouille a remontée.",
+     "fait": "Il rebondit sur les boutons pour tout dérégler."
     },
     {
      "nom": "Pince la main baladeuse",
@@ -1052,14 +1576,27 @@
      "manoeuvres": [
       "Elle chatouille les héros pour les distraire.",
       "Elle échange les chaussures de tout le monde."
-     ]
+     ],
+     "id": "pince_la_main_baladeuse",
+     "archetype": "opportuniste",
+     "animal": "Vautour",
+     "veut": "Garder pour elle tout ce qui brille et traîne sur les tables.",
+     "vient_de": "D'un vieux bras de robot oublié au fond du garage.",
+     "fait": "Elle échange les chaussures de tout le monde."
     }
-   ]
+   ],
+   "posture": "Casque à ressorts sur la tête, elle se faufile partout, un tournevis coincé derrière l'oreille.",
+   "animal": "Castor",
+   "besoin": "S'amuser avec les autres, et pas contre eux.",
+   "faille": "Un héros qui lui propose une partie de jeu, au lieu de lui courir après.",
+   "cible": "Le débrouillard, qui transforme une panne en bonne idée.",
+   "offre_au_traitre": "Elle promet à l'un d'eux une semaine de vacances, sans mission ni réveil."
   },
   {
    "id": "pirates_capitaine_gargouille",
    "univers": "pirates",
    "nom": "Capitaine Gargouille",
+   "archetype": "protecteur",
    "description": "Un pirate ronchon à la barbe pleine d'algues qui veut tout le trésor pour lui seul.",
    "but": "Garder tout le trésor de l'île rien que pour lui et ne le partager avec personne.",
    "manoeuvres": [
@@ -1080,14 +1617,27 @@
      "manoeuvres": [
       "Il pince les lacets pour faire trébucher gentiment.",
       "Il monte la garde devant le trésor en claquant des pinces."
-     ]
+     ],
+     "id": "crabe_le_grincheux",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Taureau",
+     "veut": "Que personne ne touche au coffre sans sa permission.",
+     "vient_de": "D'un rocher de la plage, où il compte les coquillages chaque matin.",
+     "fait": "Il monte la garde devant le trésor en claquant des pinces."
     }
-   ]
+   ],
+   "posture": "Planté devant sa grotte, il croise les bras sur sa grosse barbe pleine d'algues.",
+   "animal": "Morse",
+   "besoin": "Croire qu'on peut partager sans tout perdre.",
+   "faille": "Quelqu'un qui lui confie son propre trésor à garder, en toute confiance.",
+   "cible": "Le protecteur, qui garde ses amis, pas des pièces d'or.",
+   "offre_au_traitre": "Il promet à l'un d'eux une poignée de pièces d'or et le chapeau de second."
   },
   {
    "id": "pirates_moussaillon_farceur",
    "univers": "pirates",
    "nom": "Barbe-de-Mousse le Farceur",
+   "archetype": "cynique",
    "description": "Un ancien moussaillon espiègle qui veut être le seul capitaine et fait des blagues à bord.",
    "but": "Devenir le seul capitaine du bateau en faisant des farces pour amuser tout l'équipage à sa façon.",
    "manoeuvres": [
@@ -1108,7 +1658,13 @@
      "manoeuvres": [
       "Il crie de fausses directions pour tromper le timonier.",
       "Il vole les chapeaux pour les accrocher au mât."
-     ]
+     ],
+     "id": "coco_le_perroquet_moqueur",
+     "archetype": "alarmiste",
+     "animal": "Coq",
+     "veut": "Crier toutes les nouvelles du bord, avant tout le monde.",
+     "vient_de": "Du haut du grand mât, où il bavarde avec les vagues toute la journée.",
+     "fait": "Il crie de fausses directions pour tromper le timonier."
     },
     {
      "nom": "Méduse la gélatineuse",
@@ -1116,14 +1672,27 @@
      "manoeuvres": [
       "Elle colle des ventouses rigolotes sur la coque.",
       "Elle fait des bulles qui montrent le mauvais chemin."
-     ]
+     ],
+     "id": "meduse_la_gelatineuse",
+     "archetype": "aidant",
+     "animal": "Mouton",
+     "veut": "Que tout l'équipage reste collé ensemble, comme une grande famille.",
+     "vient_de": "Des vagues autour du bateau, qu'elle suit depuis le départ.",
+     "fait": "Elle colle des ventouses rigolotes sur la coque."
     }
-   ]
+   ],
+   "posture": "Perché sur un tonneau, il ricane en tortillant sa petite barbe de mousse.",
+   "animal": "Mouette",
+   "besoin": "Qu'on le prenne au sérieux, même sans ses farces.",
+   "faille": "Qu'on lui confie la barre pour de vrai : il ne fait plus le malin.",
+   "cible": "Le cynique, qui fait rire l'équipage sans le mener en bateau.",
+   "offre_au_traitre": "Il promet à l'un d'eux le grade de second, et la plus belle cabine du bord."
   },
   {
    "id": "espace_rigolo_professeur_melimelo",
    "univers": "espace_rigolo",
    "nom": "Professeur Méli-Mélo",
+   "archetype": "debrouillard",
    "description": "Un extraterrestre à trois antennes qui adore tout mélanger avec sa machine farfelue.",
    "but": "Mélanger toutes les couleurs des planètes pour que l'univers ressemble à une grosse peinture rigolote.",
    "manoeuvres": [
@@ -1144,14 +1713,27 @@
      "manoeuvres": [
       "Il appuie sur les mauvais interrupteurs par mégarde.",
       "Il repeint les murs avec de la peinture qui chatouille."
-     ]
+     ],
+     "id": "zigzag_le_robot_distrait",
+     "archetype": "aidant",
+     "animal": "Chien",
+     "veut": "Rendre service au Professeur, même s'il se trompe toujours de bouton.",
+     "vient_de": "De l'atelier du Professeur, monté avec des pièces de grille-pain.",
+     "fait": "Il appuie sur les mauvais interrupteurs par mégarde."
     }
-   ]
+   ],
+   "posture": "Penché sur sa machine farfelue, il tripote les boutons, ses trois antennes qui tournicotent.",
+   "animal": "Caméléon",
+   "besoin": "Aimer les choses telles qu'elles sont.",
+   "faille": "Quelqu'un qui admire sa vraie couleur à lui : il n'a plus envie de tout repeindre.",
+   "cible": "Le débrouillard, qui invente pour réparer, pas pour tout mélanger.",
+   "offre_au_traitre": "Il promet à l'un d'eux une étoile peinte à sa couleur préférée, rien qu'à lui."
   },
   {
    "id": "espace_rigolo_reine_guimauve",
    "univers": "espace_rigolo",
    "nom": "Reine Guimauve",
+   "archetype": "leader",
    "description": "Une reine extraterrestre toute rose et gourmande qui veut tous les bonbons pour son château.",
    "but": "Ramasser tous les bonbons de la planète pour les garder dans son château tout collant.",
    "manoeuvres": [
@@ -1172,7 +1754,13 @@
      "manoeuvres": [
       "Il bloque le passage en s'étalant tout mou.",
       "Il colle les explorateurs avec ses bras en chamallow, tout doucement."
-     ]
+     ],
+     "id": "chamallow_le_garde_tout_mou",
+     "archetype": "protecteur",
+     "animal": "Ours",
+     "veut": "Garder la porte du château, et faire des câlins à tout le monde.",
+     "vient_de": "D'une guimauve géante tombée de la colline, que la Reine a adoptée.",
+     "fait": "Il bloque le passage en s'étalant tout mou."
     },
     {
      "nom": "Sucrette la petite fée farceuse",
@@ -1180,14 +1768,27 @@
      "manoeuvres": [
       "Elle saupoudre du sucre pour faire éternuer de rire.",
       "Elle cache les bonbons dans les nuages."
-     ]
+     ],
+     "id": "sucrette_la_petite_fee_farceuse",
+     "archetype": "cynique",
+     "animal": "Renard",
+     "veut": "Qu'on la remarque, même toute petite, et briller plus que les bonbons.",
+     "vient_de": "D'une fleur en barbe à papa, au bord de la rivière de sirop.",
+     "fait": "Elle saupoudre du sucre pour faire éternuer de rire."
     }
-   ]
+   ],
+   "posture": "Assise sur son trône collant, elle pointe du doigt chaque bonbon qu'elle veut.",
+   "animal": "Abeille",
+   "besoin": "Goûter la douceur de partager.",
+   "faille": "Un goûter où on lui offre le premier bonbon : elle ose enfin partager.",
+   "cible": "Le leader, qui décide pour le groupe et partage avec lui.",
+   "offre_au_traitre": "Elle promet à l'un d'eux une tour en sucre d'orge, rien qu'à lui."
   },
   {
    "id": "monde_magique_brouillard",
    "univers": "monde_magique",
    "nom": "Grognon le Brouillard boudeur",
+   "archetype": "paranoiaque",
    "description": "Un petit nuage de brouillard gris qui boude et cache les couleurs parce qu'il se sent seul.",
    "but": "Recouvrir toute la forêt de gris pour que personne ne joue sans lui.",
    "manoeuvres": [
@@ -1208,7 +1809,13 @@
      "manoeuvres": [
       "Faire tomber une pluie de confettis mouillés",
       "Se poser sur les têtes pour faire des chapeaux de brume"
-     ]
+     ],
+     "id": "flocon_le_nuage_timide",
+     "archetype": "aidant",
+     "animal": "Chien",
+     "veut": "Que Grognon arrête enfin de bouder.",
+     "vient_de": "D'un petit coin de ciel, où il s'est perdu un jour de pluie.",
+     "fait": "Il fait tomber une pluie de confettis mouillés."
     },
     {
      "nom": "Zigzag le courant d'air",
@@ -1216,14 +1823,27 @@
      "manoeuvres": [
       "Emmêler doucement les cheveux et les feuilles",
       "Souffler pour éteindre les lucioles qui se rallument aussitôt"
-     ]
+     ],
+     "id": "zigzag_le_courant_d_air",
+     "archetype": "solitaire",
+     "animal": "Chat",
+     "veut": "Souffler où il veut, sans que personne ne le retienne.",
+     "vient_de": "De la fente sous l'arbre-porte, où il siffle depuis toujours.",
+     "fait": "Il emmêle doucement les cheveux et les feuilles."
     }
-   ]
+   ],
+   "posture": "Roulé en boule grise au fond de la clairière, il boude et épie les jeux des autres.",
+   "animal": "Escargot",
+   "besoin": "Croire qu'on a envie de jouer avec lui.",
+   "faille": "Un câlin et une invitation à jouer : ses couleurs reviennent d'un coup.",
+   "cible": "Le paranoïaque, qui se méfie aussi, mais ose quand même demander.",
+   "offre_au_traitre": "Il promet à l'un d'eux une cachette secrète, où personne ne le trouvera jamais."
   },
   {
    "id": "monde_magique_collectionneur",
    "univers": "monde_magique",
    "nom": "Barnabé l'Attrape-Rêves gourmand",
+   "archetype": "prophete",
    "description": "Un magicien étourdi qui collectionne les rêves parce qu'il a oublié comment faire les siens.",
    "but": "Mettre tous les rêves du château de nuages dans ses bocaux à lui.",
    "manoeuvres": [
@@ -1244,7 +1864,13 @@
      "manoeuvres": [
       "Sautiller pour gober une bulle de rêve",
       "Se cacher sous les coussins en gigotant"
-     ]
+     ],
+     "id": "bibo_le_bocal_baladeur",
+     "archetype": "opportuniste",
+     "animal": "Hyène",
+     "veut": "Se remplir de rêves jusqu'au couvercle.",
+     "vient_de": "De l'étagère de Barnabé, où il était le plus petit des bocaux.",
+     "fait": "Il sautille pour gober une bulle de rêve."
     },
     {
      "nom": "Plume la chouette distraite",
@@ -1252,14 +1878,27 @@
      "manoeuvres": [
       "Voler en rond en perdant ses plumes rigolotes",
       "Confondre les bocaux et libérer les rêves par erreur"
-     ]
+     ],
+     "id": "plume_la_chouette_distraite",
+     "archetype": "aidant",
+     "animal": "Mouton",
+     "veut": "Aider Barnabé, si seulement elle se rappelait pourquoi.",
+     "vient_de": "De la tour des cloches, où elle dort le jour entre deux carillons.",
+     "fait": "Elle vole en rond en perdant ses plumes rigolotes."
     }
-   ]
+   ],
+   "posture": "Il tend son filet à bulles vers le ciel, ses bocaux qui tintent à la ceinture.",
+   "animal": "Écureuil",
+   "besoin": "Retrouver le courage de faire ses propres rêves.",
+   "faille": "Quelqu'un qui lui raconte une histoire au coucher : il fait enfin son propre rêve.",
+   "cible": "Le prophète, qui rêve de grandes choses sans les prendre à personne.",
+   "offre_au_traitre": "Il promet à l'un d'eux un bocal rempli du plus beau rêve du château."
   },
   {
    "id": "sous_la_mer_encre",
    "univers": "sous_la_mer",
    "nom": "Splotch la Pieuvre barbouilleuse",
+   "archetype": "alarmiste",
    "description": "Une pieuvre artiste qui met de l'encre partout parce qu'elle veut que tout soit de sa couleur préférée.",
    "but": "Repeindre tout le récif en violet pour faire son plus grand dessin.",
    "manoeuvres": [
@@ -1280,7 +1919,13 @@
      "manoeuvres": [
       "Se frotter aux coraux pour y laisser des ronds de couleur",
       "Nager en zigzag en éclaboussant de violet"
-     ]
+     ],
+     "id": "tacheton_le_poisson_tampon",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Fourmi",
+     "veut": "Que chaque coquillage du récif porte son joli rond violet.",
+     "vient_de": "De l'atelier de Splotch, où il sert de tampon depuis toujours.",
+     "fait": "Il se frotte aux coraux pour y laisser des ronds de couleur."
     },
     {
      "nom": "Pinceau la crevette pressée",
@@ -1288,14 +1933,27 @@
      "manoeuvres": [
       "Peinturlurer les coquillages à toute vitesse",
       "Chatouiller les nageoires avec son pinceau mouillé"
-     ]
+     ],
+     "id": "pinceau_la_crevette_pressee",
+     "archetype": "debrouillard",
+     "animal": "Souris",
+     "veut": "Finir le grand dessin avant tout le monde.",
+     "vient_de": "D'une fente du corail, où elle peint des petits cailloux en secret.",
+     "fait": "Elle peinturlure les coquillages à toute vitesse."
     }
-   ]
+   ],
+   "posture": "Elle agite ses huit bras dans tous les sens, de l'encre plein les ventouses.",
+   "animal": "Pieuvre",
+   "besoin": "Aimer les couleurs des autres autant que la sienne.",
+   "faille": "Qu'on l'invite à peindre une fresque où chacun pose sa couleur à côté du violet.",
+   "cible": "L'alarmiste, qui voit tout en grand et en couleurs, comme elle.",
+   "offre_au_traitre": "Elle promet à l'un d'eux de peindre sa maison de sa couleur préférée."
   },
   {
    "id": "sous_la_mer_courant",
    "univers": "sous_la_mer",
    "nom": "Tourbi le Tourbillon espiègle",
+   "archetype": "alarmiste",
    "description": "Un petit tourbillon d'eau très joueur qui mélange tout parce qu'il n'aime pas quand c'est bien rangé.",
    "but": "Faire tourner tout le récif jusqu'à ce que plus personne ne retrouve sa maison.",
    "manoeuvres": [
@@ -1316,7 +1974,13 @@
      "manoeuvres": [
       "Rouler pour pousser gentiment les poissons",
       "Éclater en mille petites bulles chatouilleuses"
-     ]
+     ],
+     "id": "bulbe_la_bulle_tournante",
+     "archetype": "protecteur",
+     "animal": "Ours",
+     "veut": "Que personne n'arrête Tourbi dans sa grande ronde.",
+     "vient_de": "De la grotte à bulles, la plus grosse qu'on y ait jamais soufflée.",
+     "fait": "Elle roule pour pousser gentiment les poissons."
     },
     {
      "nom": "Filou le poisson-toupie",
@@ -1324,14 +1988,27 @@
      "manoeuvres": [
       "Tournoyer pour créer de petits tourbillons",
       "Entraîner les autres dans une danse qui tourne"
-     ]
+     ],
+     "id": "filou_le_poisson_toupie",
+     "archetype": "prophete",
+     "animal": "Paon",
+     "veut": "Que tout le récif danse avec lui, et le regarde tourner.",
+     "vient_de": "Du toboggan de corail, où il a appris à tournoyer en glissant.",
+     "fait": "Il entraîne les autres dans une danse qui tourne."
     }
-   ]
+   ],
+   "posture": "Il tourne sur lui-même sans jamais s'arrêter, et gargouille dès qu'on range quelque chose.",
+   "animal": "Loutre",
+   "besoin": "Apprendre à se poser, juste un moment.",
+   "faille": "Quelqu'un qui tourne avec lui, puis ralentit tout doucement : il s'arrête aussi.",
+   "cible": "L'alarmiste, qui s'agite aussi, mais sait quand s'arrêter.",
+   "offre_au_traitre": "Il promet à l'un d'eux un manège tournoyant rien qu'à lui, quand il veut."
   },
   {
    "id": "chevaliers_dragons_chatouille",
    "univers": "chevaliers_dragons",
    "nom": "Sire Chatouille le chevalier farceur",
+   "archetype": "cynique",
    "description": "Un chevalier blagueur qui adore faire des farces et gagner tous les jeux pour rire.",
    "but": "Gagner tous les tournois pour rire du château en faisant des blagues à tout le monde.",
    "manoeuvres": [
@@ -1352,7 +2029,13 @@
      "manoeuvres": [
       "Renverser doucement les seaux de guimauve",
       "Faire des bonds pour cacher les ballons du tournoi"
-     ]
+     ],
+     "id": "pouf_le_poney_farceur",
+     "archetype": "denegateur",
+     "animal": "Porc",
+     "veut": "Faire des bêtises, puis jurer que ce n'est pas lui.",
+     "vient_de": "De l'écurie du château, où il fait la sieste contre les petits dragons.",
+     "fait": "Il renverse doucement les seaux de guimauve."
     },
     {
      "nom": "Ziglon le page espiègle",
@@ -1360,14 +2043,27 @@
      "manoeuvres": [
       "Échanger les gâteaux contre des coussins péteurs",
       "Courir partout pour semer des confettis"
-     ]
+     ],
+     "id": "ziglon_le_page_espiegle",
+     "archetype": "debrouillard",
+     "animal": "Souris",
+     "veut": "Inventer la blague la plus drôle du royaume.",
+     "vient_de": "Des cuisines du château, où il portait les plats avant de servir Sire Chatouille.",
+     "fait": "Il échange les gâteaux contre des coussins péteurs."
     }
-   ]
+   ],
+   "posture": "Sa plume géante à la main, il se cache derrière un pilier en pouffant de rire.",
+   "animal": "Furet",
+   "besoin": "Apprendre à perdre en riant.",
+   "faille": "Un défi qu'il perd devant tout le monde, où on l'applaudit quand même.",
+   "cible": "Le cynique, qui fait rire tout le château sans se moquer de personne.",
+   "offre_au_traitre": "Il promet à l'un d'eux de lui faire gagner le prochain tournoi."
   },
   {
    "id": "chevaliers_dragons_dragonnet",
    "univers": "chevaliers_dragons",
    "nom": "Éternue le petit dragon enrhumé",
+   "archetype": "aidant",
    "description": "Un bébé dragon adorable qui éternue des bulles et des flammèches douces parce qu'il a attrapé un petit rhume.",
    "but": "Trouver un câlin et un mouchoir géant avant son prochain grand éternuement rigolo.",
    "manoeuvres": [
@@ -1388,7 +2084,13 @@
      "manoeuvres": [
       "Souffler des chapelets de bulles qui chatouillent le nez",
       "Faire glisser tout le monde sur un tapis de mousse douce"
-     ]
+     ],
+     "id": "bulle_bulle_le_dragon_savonneux",
+     "archetype": "protecteur",
+     "animal": "Loup",
+     "veut": "Que personne n'approche du nid avant qu'Éternue soit guéri.",
+     "vient_de": "Du nid voisin, où il est sorti de l'œuf le même jour qu'Éternue.",
+     "fait": "Il souffle des chapelets de bulles qui chatouillent le nez."
     },
     {
      "nom": "Mimi la souris infirmière",
@@ -1396,9 +2098,21 @@
      "manoeuvres": [
       "Apporter des mouchoirs plus grands qu'elle en trébuchant",
       "Préparer une tisane rigolote qui fait des bulles roses"
-     ]
+     ],
+     "id": "mimi_la_souris_infirmiere",
+     "archetype": "aidant",
+     "animal": "Chien",
+     "veut": "Trouver le plus grand mouchoir du monde pour son petit malade.",
+     "vient_de": "D'un trou douillet sous la cheminée à guimauves.",
+     "fait": "Elle apporte des mouchoirs plus grands qu'elle, en trébuchant."
     }
-   ]
+   ],
+   "posture": "Roulé en boule dans son nid, il renifle très fort et cherche un câlin des yeux.",
+   "animal": "Dragon",
+   "besoin": "Oser demander de l'aide, au lieu de tout renverser seul.",
+   "faille": "Quelqu'un qui lui tend un mouchoir géant et un câlin : son grand atchoum s'envole.",
+   "cible": "L'aidant, qui soigne les autres et sait aussi se laisser soigner.",
+   "offre_au_traitre": "Il promet à l'un d'eux des guimauves grillées à point, tous les soirs."
   }
  ]
 }
