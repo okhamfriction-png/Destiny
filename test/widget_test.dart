@@ -24,6 +24,8 @@ import 'package:destiny/main.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'outils/grammaire_partagee.dart';
+
 /// Mémoire en mémoire vive pour les tests (pas de SQLite).
 class InMemoryCombinationMemory implements CombinationMemory {
   final Set<String> _used = {};
@@ -56,6 +58,7 @@ class InMemoryCombinationMemory implements CombinationMemory {
 void main() {
   testWidgets('Destiny app starts', (tester) async {
     SharedPreferences.setMockInitialValues({});
+    final grammaire = (await tester.runAsync(chargerGrammaire))!;
     final dataSource = LocalJsonDataSource();
     final catalogStore = InMemoryCatalogStore(seedSource: dataSource);
     final repository = StoryRepositoryImpl(
@@ -86,6 +89,7 @@ void main() {
 
     await tester.pumpWidget(
       DestinyApp(
+        grammaire: grammaire,
         controller: controller,
         audioService: AudioService(),
         visualSettings: VisualSettings(),

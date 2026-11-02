@@ -30,7 +30,8 @@ import 'infrastructure/platform/chat_store_factory.dart';
 import 'infrastructure/platform/combination_memory_factory.dart';
 import 'infrastructure/repositories/story_repository_impl.dart';
 import 'presentation/screens/root_screen.dart';
-import 'presentation/theme/app_theme.dart';
+import 'presentation/destiny/donnees.dart';
+import 'presentation/theme/destiny_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -68,7 +69,7 @@ Future<void> _boot() async {
 
   // La grammaire de Destiny : chargée et vérifiée une seule fois.
   final grammaireSource = GrammaireSource();
-  await grammaireSource.charger();
+  final grammaire = await grammaireSource.charger();
   final dataSource = LocalJsonDataSource(grammaire: grammaireSource);
   final catalogStore = createCatalogStore(dataSource);
   final repository = StoryRepositoryImpl(
@@ -123,6 +124,7 @@ Future<void> _boot() async {
   await campagneStore.load();
 
   runApp(DestinyApp(
+    grammaire: grammaire,
     controller: controller,
     audioService: audioService,
     visualSettings: visualSettings,
@@ -170,6 +172,7 @@ class _BootError extends StatelessWidget {
 
 class DestinyApp extends StatelessWidget {
   const DestinyApp({
+    required this.grammaire,
     required this.controller,
     required this.audioService,
     required this.visualSettings,
@@ -191,6 +194,8 @@ class DestinyApp extends StatelessWidget {
     super.key,
   });
 
+  /// La grammaire de Destiny et les textes de l'appli.
+  final GrammaireChargee grammaire;
   final StoryController controller;
   final AudioService audioService;
   final VisualSettings visualSettings;
@@ -215,7 +220,14 @@ class DestinyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'DestinyStory',
-      theme: AppTheme.darkCinematic,
+      theme: themeDestiny(grammaire.grammaire, sombre: false),
+      darkTheme: themeDestiny(grammaire.grammaire, sombre: true),
+      themeMode: ThemeMode.dark,
+      builder: (context, child) => DestinyDonnees(
+        grammaire: grammaire.grammaire,
+        textes: grammaire.textes,
+        child: child ?? const SizedBox.shrink(),
+      ),
       home: RootScreen(
         controller: controller,
         audioService: audioService,

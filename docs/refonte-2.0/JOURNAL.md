@@ -58,7 +58,7 @@ Tu m'as envoyé la grammaire 2.1 et deux cahiers des charges (refonte v2, et la 
 
 ### Ce qui a été fait
 
-- **La grammaire 2.1 remplace la 2.0.** Archétypes, animaux, paliers, dangers et lieux sont inchangés : mêmes noms, mêmes textes. Elle ajoute :
+- **La grammaire 2.1 remplace la 2.0.** Archétypes, paliers, dangers et lieux sont inchangés. Neuf répliques d'animaux sont retouchées (par exemple « La loi, c'est moi ! » pour le taureau, « Tous pour un, un pour tous ! » pour le mouton). Elle ajoute :
   - la **série** (épisode, saison, série, les 7 règles du méchant, le registre et ses 10 catégories) ;
   - les **24 grands méchants**, deux par archétype, chacun avec son animal à lui, son histoire, son vouloir, son besoin, sa faille, sa cible et son offre au traître ;
   - leurs **48 sbires**, jouables : chacun a un archétype et un animal des comédiens ;
@@ -75,10 +75,44 @@ Tu m'as envoyé la grammaire 2.1 et deux cahiers des charges (refonte v2, et la 
 
 1. **Chrono kids** : je propose un 4ᵉ chrono de base de **24 minutes, Destiny à 6, 12 et 18**, pour les épisodes kids (20 à 30 minutes). D'accord ?
 2. **La consigne enfant de l'IA** dit aujourd'hui « aucune peur ». Certains méchants kids donnent de petits frissons, comme la Dame blanche ou le Seigneur des brumes. Je propose de la remplacer par : « des frissons doux, jamais d'effroi ». D'accord ?
-3. **La réplique adulte du loup** n'est pas la même aux deux endroits du fichier :
-   - dans `archetypes` : « Je vous trouverai, et je vous tuerai. » ;
-   - dans `mode_kids.repliques_remplacees` : « Je vous chercherai, je vous trouverai et je vous tuerai. »
+3. **Les 42 méchants d'univers** gardent leur place. Je leur proposerai un archétype chacun (phase 5), à valider avant de l'appliquer.
+4. **Les présages des 24 méchants** : je propose qu'ils soient écrits par l'IA à la création de la saison, puis validés ou réécrits par le maître du jeu. Sans IA, le maître du jeu les écrit lui-même, guidé par les quatre paliers.
 
-   Laquelle garder ? En attendant, j'affiche celle d'`archetypes`.
-4. **Les 42 méchants d'univers** gardent leur place. Je leur proposerai un archétype chacun (phase 5), à valider avant de l'appliquer.
-5. **Les présages des 24 méchants** : je propose qu'ils soient écrits par l'IA à la création de la saison, puis validés ou réécrits par le maître du jeu. Sans IA, le maître du jeu les écrit lui-même, guidé par les quatre paliers.
+---
+
+## Phase 2 — Design system ✅
+
+### Ce qui a été fait
+
+- **Les polices** Cinzel (700, 900) et Montserrat (400 à 700, avec l'italique) sont embarquées dans l'appli, avec leur licence libre (OFL) dans `assets/fonts/`.
+- **Le thème Destiny** (`lib/presentation/theme/destiny_theme.dart`) :
+  - un mode sombre (fond nuit, titres or) et un mode clair (cartes blanches sur fond crème, filets dorés) ;
+  - toutes les couleurs sont lues dans la direction artistique de la grammaire : nuit, or, crème, encre, couleurs et teintes claires des familles, bleu Destiny, couleurs des statuts, sigle KIDS ;
+  - une extension de thème (`DestinyCouleurs`) donne ces couleurs à tous les écrans ;
+  - la frise des paliers va de l'or clair vers la braise. C'est un dégradé d'intensité, qu'on ne confond pas avec le rouge de la famille Fissure.
+
+  L'appli entière utilise maintenant ce thème. L'ancien thème violet est supprimé.
+- **Les composants, à réutiliser partout** (`lib/presentation/destiny/`) :
+  - le sigle KIDS, la puce de famille, la pastille de statut, le médaillon d'animal cerclé d'or (il respecte le réglage réaliste, vectoriel ou minimal), l'encart de réplique, le bandeau façon affiche et la frise des quatre paliers ;
+  - la **carte d'archétype** en trois variantes (par archétype, par animal, kids) et son **dos** (le dé Destiny et « Rien n'est écrit », dans un contour épais de la couleur de la famille). La source d'une réplique n'apparaît jamais sur une carte.
+- **L'animation Destiny** se déroule dans cet ordre :
+  1. le tonnerre (éclair et secousse ; c'est là que joue le son Destiny, qui contient le rire) ;
+  2. la lumière bleue ;
+  3. le figé : l'écran derrière devient flou et gris. Au premier figé, le rappel « il veut… mais il a besoin de… » s'affiche ;
+  4. l'ellipse (« Quelques heures plus tard… ») ;
+  5. la carte du nouveau palier, avec la nouvelle à souffler à l'alarmiste et le geste de l'acte.
+
+  La régie peut sauter une étape. Si « réduire les animations » est activé, il n'y a ni secousse ni flou, et le rituel est plus court.
+- **Tous les libellés** de ces composants viennent des fichiers de données. Aucun texte de grammaire n'est écrit dans le code.
+
+### Tests
+
+**102 tests passent** :
+- 6 rendus de référence : carte d'archétype en sombre et en clair, carte d'animal, carte kids, dos de carte, frise des paliers ;
+- des tests de contenu : la carte montre la réplique mais jamais sa source, la carte kids montre la réplique kids et le sigle ;
+- deux tests du déroulé du rituel, en normal et en animations réduites.
+
+### À savoir
+
+- **Les anciens écrans** prennent déjà les couleurs et les polices du nouveau thème, mais gardent leur mise en page. Ils seront remplacés aux phases 3 à 7.
+- Les images des animaux s'affichent dans l'appli. Les rendus de test utilisent le visuel « minimal », qui ne dépend pas du chargement des images.

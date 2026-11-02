@@ -5,7 +5,15 @@
     "titre": "Destiny",
     "texte_ellipse": "Quelques heures plus tard…",
     "rappel_premier_fige": "Premier figé : chacun choisit en silence sa phrase, « il veut… mais il a besoin de… ».",
-    "nouvelle_alarmiste": "La nouvelle à souffler à l'alarmiste :"
+    "nouvelle_alarmiste": "La nouvelle à souffler à l'alarmiste :",
+    "etapes_courtes": [
+      "Tonnerre",
+      "Rire",
+      "Lumière bleue",
+      "Figé"
+    ],
+    "acte": "Acte {numero}",
+    "reprendre": "Reprendre"
   },
   "distribution": {
     "ok": "Distribution équilibrée : chaque famille est là, et l'alarmiste porte le danger.",
@@ -221,5 +229,19 @@
       "titre": "Avec l'IA",
       "sous_titre": "L'IA mène le jeu : elle raconte, fait monter le danger et joue les autres personnages."
     }
+  },
+  "statuts": {
+    "haut": "statut haut",
+    "neutre": "statut neutre",
+    "bas": "statut bas"
+  },
+  "cartes": {
+    "montee": "La montée",
+    "port": "port",
+    "posture": "Posture",
+    "corps": "Le corps à ce palier",
+    "source": "Réplique tirée de",
+    "famille": "Famille",
+    "palier_courant": "Palier en cours"
   }
 }
