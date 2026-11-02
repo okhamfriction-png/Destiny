@@ -70,29 +70,32 @@ class DestinyCouleurs extends ThemeExtension<DestinyCouleurs> {
   static const Color rose = Color(0xFFD06A95);
   static const Color lavande = Color(0xFF9B7FE0);
 
-  /// Fond des pages : un noir chaud neutre en sombre (moins boueux que la
-  /// nuit pure), une crème un peu plus soutenue en clair, pour que les cartes
-  /// blanches s'en détachent.
-  Color get fond => sombre ? const Color(0xFF131210) : const Color(0xFFF4EEE2);
+  // La palette d'interface, dans l'esprit des thèmes sombres et clairs des
+  // éditeurs de code (VS Code, IntelliJ) : des gris neutres, sans teinte
+  // brune, un vrai noir en sombre, du blanc en clair, et l'or seulement pour
+  // les titres, les sélections et les boutons principaux.
 
-  /// Fond des cartes : nettement plus clair que la page.
-  Color get carte => sombre ? const Color(0xFF262420) : Colors.white;
+  /// Fond des pages : un quasi noir neutre en sombre, un gris très pâle en clair.
+  Color get fond => sombre ? const Color(0xFF0B0B0C) : const Color(0xFFF5F5F6);
+
+  /// Fond des cartes : un anthracite net en sombre, blanc en clair.
+  Color get carte => sombre ? const Color(0xFF19191C) : Colors.white;
 
   /// Fond des champs, des puces et des segments non choisis.
-  Color get champ => sombre ? const Color(0xFF322F2A) : Colors.white;
+  Color get champ => sombre ? const Color(0xFF222226) : Colors.white;
 
-  /// Fond de la barre de navigation et des feuilles du bas.
-  Color get barre => sombre ? const Color(0xFF1D1B18) : Colors.white;
+  /// Fond de la barre du haut, de la navigation et des feuilles du bas.
+  Color get barre => sombre ? const Color(0xFF111113) : Colors.white;
 
   /// Fond d'un élément choisi (segment, puce, onglet) : une teinte d'or.
-  Color get selection => sombre ? const Color(0xFF5A4B2E) : const Color(0xFFF3E4C2);
+  Color get selection => sombre ? const Color(0xFF3A3122) : const Color(0xFFF6E8C8);
 
   /// Le texte posé sur l'or (boutons pleins).
-  Color get surOr => const Color(0xFF1E1A12);
+  Color get surOr => const Color(0xFF141414);
 
-  /// Texte principal et secondaire.
-  Color get texte => sombre ? creme : encre;
-  Color get texteSecondaire => sombre ? const Color(0xFFCBC2B2) : texteDoux;
+  /// Texte principal et secondaire : un blanc cassé net, un gris lisible.
+  Color get texte => sombre ? const Color(0xFFEDEDEF) : const Color(0xFF1C1C1E);
+  Color get texteSecondaire => sombre ? const Color(0xFFA9A9B0) : const Color(0xFF5B5B63);
 
   /// Couleur des titres (or en sombre, or foncé en clair).
   Color get titre => sombre ? or : orFonce;
@@ -104,17 +107,18 @@ class DestinyCouleurs extends ThemeExtension<DestinyCouleurs> {
 
   /// Filets : neutres et discrets. Une bordure dorée ou colorée doit dire
   /// quelque chose (un choix, une famille).
-  Color get filet => sombre ? const Color(0xFF3B3732) : trait;
+  Color get filet => sombre ? const Color(0xFF2A2A2F) : const Color(0xFFE4E4E8);
 
   /// Contour des commandes non choisies (segments, champs, puces).
-  Color get ligne => sombre ? const Color(0xFF57514A) : const Color(0xFFD3C6AC);
+  Color get ligne => sombre ? const Color(0xFF3C3C43) : const Color(0xFFCFCFD6);
 
-  /// L'ombre douce des cartes.
+  /// L'ombre des cartes : aucune en sombre (le contraste suffit, comme dans
+  /// un éditeur), très douce en clair.
   List<BoxShadow> get ombre => sombre
-      ? const [BoxShadow(color: Color(0x66000000), blurRadius: 10, offset: Offset(0, 3))]
+      ? const []
       : const [
-          BoxShadow(color: Color(0x14503C1E), blurRadius: 14, offset: Offset(0, 4)),
-          BoxShadow(color: Color(0x0F000000), blurRadius: 2, offset: Offset(0, 1)),
+          BoxShadow(color: Color(0x12000000), blurRadius: 12, offset: Offset(0, 3)),
+          BoxShadow(color: Color(0x0A000000), blurRadius: 2, offset: Offset(0, 1)),
         ];
 
   /// La couleur d'une icône d'accent : éclaircie en sombre, assombrie en
@@ -213,8 +217,8 @@ ThemeData themeDestiny(Grammaire g, {required bool sombre}) {
     surfaceContainerLowest: c.fond,
     surfaceContainerLow: c.carte,
     surfaceContainer: c.carte,
-    surfaceContainerHigh: sombre ? const Color(0xFF2C2925) : Colors.white,
-    surfaceContainerHighest: sombre ? c.champ : const Color(0xFFECE4D4),
+    surfaceContainerHigh: sombre ? const Color(0xFF202024) : Colors.white,
+    surfaceContainerHighest: sombre ? c.champ : const Color(0xFFEDEDF0),
     outline: c.ligne,
     outlineVariant: c.filet,
     shadow: Colors.black,
