@@ -1,0 +1,678 @@
+{
+ "version": 1,
+ "note": "Les univers du jeu de rôle (Jouer entre humains). Les lieux et les méchants de chaque univers sont dans campagne_lieux.json et campagne_mechants.json.",
+ "univers": [
+  {
+   "id": "contemporain",
+   "nom": "Contemporain",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Breaking Bad",
+    "Peaky Blinders",
+    "The Wire",
+    "Les Soprano",
+    "Better Call Saul",
+    "Narcos",
+    "Gomorra",
+    "Succession",
+    "Le Parrain",
+    "Scarface"
+   ],
+   "peuples": [
+    "Civils",
+    "Policiers",
+    "Truands",
+    "Notables",
+    "Marginaux",
+    "Journalistes"
+   ]
+  },
+  {
+   "id": "policier",
+   "nom": "Policier",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Sherlock Holmes",
+    "True Detective",
+    "Columbo",
+    "Les Experts",
+    "Engrenages",
+    "Fargo",
+    "Seven",
+    "Mindhunter",
+    "Agatha Christie",
+    "Blake et Mortimer"
+   ],
+   "peuples": [
+    "Enquêteurs",
+    "Témoins",
+    "Suspects",
+    "Notables",
+    "Petites frappes",
+    "Légistes"
+   ]
+  },
+  {
+   "id": "high_fantasy",
+   "nom": "High Fantasy",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Le Seigneur des Anneaux",
+    "Game of Thrones",
+    "The Witcher",
+    "Donjons & Dragons",
+    "Warhammer",
+    "Le Monde de Narnia",
+    "Elden Ring",
+    "Dragon Age",
+    "Kaamelott",
+    "Harry Potter"
+   ],
+   "peuples": [
+    "Humains",
+    "Elfes",
+    "Nains",
+    "Halfelins",
+    "Orcs",
+    "Gobelins",
+    "Fées"
+   ]
+  },
+  {
+   "id": "shonen",
+   "nom": "Shonen",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Dragon Ball",
+    "Naruto",
+    "One Piece",
+    "Bleach",
+    "My Hero Academia",
+    "Demon Slayer",
+    "L'Attaque des Titans",
+    "Hunter x Hunter",
+    "Jujutsu Kaisen",
+    "Fairy Tail"
+   ],
+   "peuples": [
+    "Humains",
+    "Guerriers",
+    "Ninjas",
+    "Mages",
+    "Esprits",
+    "Démons",
+    "Créatures"
+   ]
+  },
+  {
+   "id": "science_fiction",
+   "nom": "Science-Fiction",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Star Wars",
+    "Star Trek",
+    "Dune",
+    "Blade Runner",
+    "The Expanse",
+    "Fondation",
+    "Alien",
+    "Mass Effect",
+    "Interstellar",
+    "Matrix"
+   ],
+   "peuples": [
+    "Humains",
+    "Androïdes",
+    "Extraterrestres",
+    "Cyborgs",
+    "Clones",
+    "Mutants"
+   ]
+  },
+  {
+   "id": "dark_fantasy",
+   "nom": "Dark Fantasy",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "The Witcher",
+    "Berserk",
+    "Dark Souls",
+    "Bloodborne",
+    "Elden Ring",
+    "Warhammer",
+    "Game of Thrones",
+    "Castlevania",
+    "Diablo",
+    "Hellboy"
+   ],
+   "peuples": [
+    "Humains",
+    "Sorciers",
+    "Morts-vivants",
+    "Démons",
+    "Chasseurs",
+    "Maudits",
+    "Bêtes"
+   ]
+  },
+  {
+   "id": "cyberpunk",
+   "nom": "Cyberpunk",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Cyberpunk 2077",
+    "Blade Runner",
+    "Ghost in the Shell",
+    "Deus Ex",
+    "Akira",
+    "Neuromancer",
+    "Matrix",
+    "Altered Carbon",
+    "Shadowrun",
+    "Watch Dogs"
+   ],
+   "peuples": [
+    "Humains",
+    "Cyborgs",
+    "Hackers",
+    "Corpos",
+    "Androïdes",
+    "Gangs des rues"
+   ]
+  },
+  {
+   "id": "horreur",
+   "nom": "Horreur",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Lovecraft",
+    "Stranger Things",
+    "The Thing",
+    "Alien",
+    "Silent Hill",
+    "Resident Evil",
+    "Ça (It)",
+    "Scream",
+    "The Walking Dead",
+    "Conjuring"
+   ],
+   "peuples": [
+    "Survivants",
+    "Villageois",
+    "Possédés",
+    "Monstres",
+    "Cultistes",
+    "Fantômes"
+   ]
+  },
+  {
+   "id": "post_apo",
+   "nom": "Post-apocalyptique",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Mad Max",
+    "Fallout",
+    "The Last of Us",
+    "The Walking Dead",
+    "Metro",
+    "La Route",
+    "Snowpiercer",
+    "Le Livre d'Eli",
+    "Je suis une légende",
+    "Waterworld"
+   ],
+   "peuples": [
+    "Survivants",
+    "Pillards",
+    "Mutants",
+    "Charognards",
+    "Colons",
+    "Nomades"
+   ]
+  },
+  {
+   "id": "steampunk",
+   "nom": "Steampunk",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Arcane",
+    "Bioshock",
+    "Dishonored",
+    "Le Château ambulant",
+    "Les Mystérieuses Cités d'or",
+    "20000 lieues sous les mers",
+    "Wild Wild West",
+    "Sherlock Holmes (Guy Ritchie)",
+    "Fullmetal Alchemist",
+    "Girl Genius"
+   ],
+   "peuples": [
+    "Humains",
+    "Ingénieurs",
+    "Aristocrates",
+    "Automates",
+    "Aviateurs",
+    "Bas-fonds"
+   ]
+  },
+  {
+   "id": "super_heros",
+   "nom": "Super-héros",
+   "adulte": true,
+   "kids": true,
+   "lores": [
+    "Marvel (Avengers)",
+    "DC (Justice League)",
+    "Spider-Man",
+    "Batman",
+    "X-Men",
+    "The Boys",
+    "Invincible",
+    "Watchmen",
+    "Hellboy",
+    "My Hero Academia"
+   ],
+   "peuples": [
+    "Humains",
+    "Super-héros",
+    "Super-vilains",
+    "Mutants",
+    "Extraterrestres",
+    "Androïdes"
+   ]
+  },
+  {
+   "id": "historique",
+   "nom": "Historique",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Rome",
+    "Vikings",
+    "Gladiator",
+    "Kingdom",
+    "Braveheart",
+    "Assassin's Creed",
+    "Napoléon",
+    "Les Trois Mousquetaires",
+    "Peaky Blinders",
+    "Versailles"
+   ],
+   "peuples": [
+    "Roturiers",
+    "Nobles",
+    "Soldats",
+    "Marchands",
+    "Clergé",
+    "Artisans",
+    "Hors-la-loi"
+   ]
+  },
+  {
+   "id": "conte_fees",
+   "nom": "Conte de fées",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "La Belle au bois dormant",
+    "Cendrillon",
+    "Blanche-Neige",
+    "Raiponce",
+    "La Reine des Neiges",
+    "Shrek",
+    "Les frères Grimm",
+    "Andersen",
+    "La Belle et la Bête",
+    "Peter Pan"
+   ],
+   "peuples": [
+    "Humains",
+    "Fées",
+    "Princes et princesses",
+    "Lutins",
+    "Ogres",
+    "Sorcières",
+    "Animaux enchantés"
+   ]
+  },
+  {
+   "id": "dessin_anime",
+   "nom": "Dessin animé",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "Tom et Jerry",
+    "Les Simpson",
+    "Bob l'éponge",
+    "Scooby-Doo",
+    "Les Razmoket",
+    "Astérix",
+    "Kirikou",
+    "Pat' Patrouille",
+    "Miraculous",
+    "Oggy et les cafards"
+   ],
+   "peuples": [
+    "Enfants",
+    "Animaux rigolos",
+    "Voisins",
+    "Héros du quartier",
+    "Farceurs",
+    "Robots"
+   ]
+  },
+  {
+   "id": "manga_rigolo",
+   "nom": "Manga rigolo",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "Doraemon",
+    "Pokémon",
+    "Dr. Slump",
+    "Crayon Shin-chan",
+    "Beyblade",
+    "Digimon",
+    "Yo-kai Watch",
+    "Bakugan",
+    "Chi une vie de chat",
+    "Hamtaro"
+   ],
+   "peuples": [
+    "Enfants",
+    "Créatures de poche",
+    "Écoliers",
+    "Robots",
+    "Petits monstres",
+    "Mascottes"
+   ]
+  },
+  {
+   "id": "animaux_parlent",
+   "nom": "Animaux qui parlent",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "Le Roi Lion",
+    "Zootopie",
+    "Madagascar",
+    "Le Livre de la jungle",
+    "La Ferme se rebelle",
+    "Kung Fu Panda",
+    "Robin des Bois (Disney)",
+    "Ratatouille",
+    "Rox et Rouky",
+    "Bambi"
+   ],
+   "peuples": [
+    "Animaux de la savane",
+    "Animaux de la ferme",
+    "Animaux de la jungle",
+    "Animaux de la forêt",
+    "Animaux de la ville"
+   ]
+  },
+  {
+   "id": "pirates",
+   "nom": "Pirates",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "One Piece",
+    "Pirates des Caraïbes",
+    "Peter Pan",
+    "L'Île au trésor",
+    "Tintin",
+    "Astérix",
+    "Jake et les Pirates",
+    "Sinbad",
+    "Vaiana",
+    "Barbe Rouge"
+   ],
+   "peuples": [
+    "Pirates",
+    "Marins",
+    "Habitants des îles",
+    "Corsaires",
+    "Sirènes",
+    "Chasseurs de trésor"
+   ]
+  },
+  {
+   "id": "espace_rigolo",
+   "nom": "Espace rigolo",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "Toy Story (Buzz)",
+    "Wall-E",
+    "Buzz l'Éclair",
+    "Planète 51",
+    "Les Gardiens de la Galaxie",
+    "E.T.",
+    "Star Wars",
+    "Lightyear",
+    "Astro Boy",
+    "Les Minions"
+   ],
+   "peuples": [
+    "Astronautes",
+    "Petits aliens",
+    "Robots",
+    "Explorateurs",
+    "Cosmonautes"
+   ]
+  },
+  {
+   "id": "monde_magique",
+   "nom": "Monde magique",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "Harry Potter",
+    "Le Monde de Narnia",
+    "Merlin",
+    "Kirikou",
+    "Fantasia",
+    "Raiponce",
+    "La Reine des Neiges",
+    "Aladdin",
+    "Winx",
+    "Le Petit Sorcier"
+   ],
+   "peuples": [
+    "Apprentis sorciers",
+    "Fées",
+    "Créatures magiques",
+    "Magiciens",
+    "Lutins",
+    "Elfes"
+   ]
+  },
+  {
+   "id": "sous_la_mer",
+   "nom": "Sous la mer",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "Le Monde de Nemo",
+    "La Petite Sirène",
+    "Vaiana",
+    "Bob l'éponge",
+    "Atlantide",
+    "Bubulle Guppies",
+    "Aquaman",
+    "Océane",
+    "Splash",
+    "20000 lieues sous les mers"
+   ],
+   "peuples": [
+    "Poissons",
+    "Sirènes",
+    "Créatures des récifs",
+    "Crustacés",
+    "Dauphins",
+    "Peuples des abysses"
+   ]
+  },
+  {
+   "id": "chevaliers_dragons",
+   "nom": "Chevaliers & dragons",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "Dragons (Krokmou)",
+    "Shrek",
+    "Merlin",
+    "Le Seigneur des Anneaux",
+    "Kaamelott",
+    "Zelda",
+    "Excalibur",
+    "Les Chevaliers du Zodiaque",
+    "Mulan",
+    "Rebelle"
+   ],
+   "peuples": [
+    "Chevaliers",
+    "Dragons",
+    "Villageois",
+    "Magiciens",
+    "Écuyers",
+    "Princesses"
+   ]
+  }
+ ],
+ "peuples_par_lore": {
+  "Le Roi Lion": [
+   "Lions",
+   "Hyènes",
+   "Suricates",
+   "Éléphants",
+   "Zèbres",
+   "Oiseaux"
+  ],
+  "Le Livre de la jungle": [
+   "Loups",
+   "Panthères",
+   "Ours",
+   "Singes",
+   "Serpents",
+   "Éléphants"
+  ],
+  "La Ferme se rebelle": [
+   "Vaches",
+   "Cochons",
+   "Poules",
+   "Chevaux",
+   "Moutons",
+   "Chiens"
+  ],
+  "Zootopie": [
+   "Prédateurs",
+   "Proies",
+   "Animaux de la ville",
+   "Renards",
+   "Lapins",
+   "Fauves"
+  ],
+  "Madagascar": [
+   "Lions",
+   "Zèbres",
+   "Girafes",
+   "Hippopotames",
+   "Lémuriens",
+   "Pingouins"
+  ],
+  "Ratatouille": [
+   "Rats",
+   "Humains",
+   "Cuisiniers"
+  ],
+  "One Piece": [
+   "Pirates",
+   "Marines",
+   "Humains",
+   "Hommes-poissons",
+   "Géants"
+  ],
+  "Naruto": [
+   "Ninjas",
+   "Villageois",
+   "Clans",
+   "Bêtes à queues",
+   "Sages"
+  ],
+  "Peter Pan": [
+   "Enfants perdus",
+   "Pirates",
+   "Fées",
+   "Sirènes",
+   "Indiens"
+  ],
+  "Le Monde de Nemo": [
+   "Poissons",
+   "Requins",
+   "Tortues",
+   "Crustacés",
+   "Méduses"
+  ]
+ },
+ "peuples_par_defaut": [
+  "Habitants",
+  "Voyageurs",
+  "Notables",
+  "Marginaux"
+ ],
+ "tons": [
+  {
+   "id": "drole",
+   "nom": "Drôle"
+  },
+  {
+   "id": "aventureux",
+   "nom": "Aventureux"
+  },
+  {
+   "id": "enquete",
+   "nom": "Enquête"
+  },
+  {
+   "id": "epique",
+   "nom": "Épique"
+  },
+  {
+   "id": "tendre",
+   "nom": "Tendre"
+  },
+  {
+   "id": "tranquille",
+   "nom": "Tranquille"
+  },
+  {
+   "id": "sombre",
+   "nom": "Sombre"
+  },
+  {
+   "id": "dramatique",
+   "nom": "Dramatique"
+  },
+  {
+   "id": "burlesque",
+   "nom": "Burlesque"
+  },
+  {
+   "id": "mysterieux",
+   "nom": "Mystérieux"
+  }
+ ]
+}
