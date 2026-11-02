@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../application/assistant/campagne_assistant.dart';
 import '../../application/state/serie_store.dart';
 import '../../domain/grammaire/distribution.dart';
+import '../../domain/serie/pbta.dart';
 import '../../domain/serie/serie.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
@@ -13,8 +14,9 @@ import 'fiche_serie_screen.dart';
 import 'registre_screen.dart';
 
 /// Le bilan d'un épisode : ce que chacun a vécu (son choix, le prix payé, son
-/// besoin), qui a quitté l'histoire, qui est passé au service du méchant, le
-/// traître, la sortie vers le lieu suivant, ce qui a marché, et le registre.
+/// besoin, ses blessures, et s'il quitte l'histoire), qui est passé au
+/// service du méchant, le traître, la sortie vers le lieu suivant, ce qui a
+/// marché, et le registre.
 /// En fin de saison : ce que le méchant laisse, et le changement d'archétype
 /// de ceux qui ont payé leur besoin.
 class BilanEpisodeScreen extends StatefulWidget {
@@ -96,8 +98,13 @@ class _BilanEpisodeScreenState extends State<BilanEpisodeScreen> {
       final traitre = _saison?.traitre;
       if (traitre != null && traitre.revele && e.numero == 3 && traitre.accepte == true) {
         final m = widget.contexte.mechant(context.grammaire, _saison!.mechantId);
-        _entree(CategorieRegistre.traitre, s.personnage(traitre.personnageId)?.appel ?? '',
-            detail: m?.offreAuTraitre ?? '');
+        final p = s.personnage(traitre.personnageId);
+        // Le registre ne garde jamais un prénom de joueur : le nom du
+        // personnage, sinon son archétype.
+        final nom = p == null
+            ? ''
+            : (p.nomSansPrenom.isNotEmpty ? p.nomSansPrenom : context.grammaire.archetype(p.archetypeId)?.nom ?? '');
+        _entree(CategorieRegistre.traitre, nom, detail: m?.offreAuTraitre ?? '');
       }
       if (e.sortie.isNotEmpty) _entree(CategorieRegistre.lieu, e.lieuNom, detail: e.sortie);
       if (_finDeSaison && _saison != null) {
@@ -176,7 +183,7 @@ class _BilanEpisodeScreenState extends State<BilanEpisodeScreen> {
             for (final x in sortis) Puce(x),
           ]),
         if (e.blessesAnciens.isNotEmpty)
-          SectionDestiny(titre: t.t('serie.combat.brise'), enfants: [for (final x in e.blessesAnciens) Puce(x)]),
+          SectionDestiny(titre: k('blesses_anciens'), enfants: [for (final x in e.blessesAnciens) Puce(x)]),
         if (bascules.isNotEmpty) SectionDestiny(titre: k('bascules'), enfants: [for (final x in bascules) Puce(x)]),
         if (traitre != null && traitre.accepte != null && e.numero >= 3)
           SectionDestiny(titre: k('traitre'), enfants: [
@@ -289,6 +296,7 @@ class _BilanEpisodeScreenState extends State<BilanEpisodeScreen> {
     final p = s.personnage(r.personnageId);
     if (p == null) return const SizedBox.shrink();
     final arch = g.archetype(p.archetypeId);
+    final blessure = ReglesPbta.depuis(t).etatBlessure(r.blessures, kids: s.kids);
     return CadreLisere(
       couleur: arch == null ? c.or : c.famille(arch.famille),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -296,6 +304,7 @@ class _BilanEpisodeScreenState extends State<BilanEpisodeScreen> {
             style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, color: c.texte)),
         LigneInfo(t.t('serie.jeu.veut'), r.vouloir),
         LigneInfo(t.t('serie.jeu.besoin'), p.besoin),
+        LigneInfo(t.t('pbta.blessures.titre'), blessure),
         const SizedBox(height: 6),
         Text(k('choix'), style: Theme.of(context).textTheme.bodySmall),
         const SizedBox(height: 4),
@@ -332,6 +341,17 @@ class _BilanEpisodeScreenState extends State<BilanEpisodeScreen> {
             _sauver();
           },
         ),
+        if (!_dejaRange && !e.ancienneGrammaire)
+          CheckboxListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(s.kids ? k('quitte_kids') : k('quitte')),
+            subtitle: r.horsJeu ? Text(k('quitte_aide')) : null,
+            value: r.sante == Sante.sorti,
+            onChanged: (v) {
+              setState(() => r.sante = v == true ? Sante.sorti : Sante.enForme);
+              _sauver();
+            },
+          ),
         if (_finDeSaison && r.choix == ChoixFinal.besoin && !p.pnj && widget.contexte.reglages.evolutionArchetype) ...[
           Paragraphe(k('changer_archetype'), italique: true),
           Align(

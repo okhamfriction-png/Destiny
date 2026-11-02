@@ -8,17 +8,20 @@ import '../../domain/entities/location.dart';
 import '../../domain/grammaire/modeles.dart';
 import '../../domain/serie/regles_serie.dart';
 import '../../domain/serie/serie.dart';
-import '../../domain/serie/univers.dart';
+import '../bibliotheque/bibliotheque_screen.dart' show ContexteBibliotheque;
+import '../bibliotheque/dangers_lieux_screen.dart' show FicheDanger, FicheLieu;
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
 import '../theme/destiny_theme.dart';
 import 'composants_serie.dart';
 import 'contexte_serie.dart';
+import 'pbta_composants.dart';
 
-/// Préparer un épisode : le présage (en saison), le lieu et ses figurants, le
-/// groupe, le danger et ses quatre paliers, les objets et le mystère, le
-/// vouloir de chacun, ce qu'on ressort du registre, le chrono et le micro.
+/// Préparer un épisode : le présage (en saison), le lieu et le danger tirés
+/// du catalogue de Destiny (avec leur image et leur fiche), les figurants du
+/// lieu, le groupe, les objets et le mystère, le vouloir de chacun, ce qu'on
+/// ressort du registre, le chrono et le micro.
 class PreparationEpisodeScreen extends StatefulWidget {
   const PreparationEpisodeScreen({super.key, required this.contexte, required this.serie, required this.episode});
 
@@ -34,8 +37,7 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
   final Random _hasard = Random();
   List<Location> _lieux = const [];
   List<Danger> _dangers = const [];
-  List<Location> _propLieux = const [];
-  List<Danger> _propDangers = const [];
+  bool _catalogueCharge = false;
   final Map<String, TextEditingController> _champs = {};
   List<EntreeRegistre> _suggestions = const [];
   final Map<String, String> _commentaires = {};
@@ -68,10 +70,44 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
     setState(() {
       _lieux = [for (final l in lieux) if (l.actif && (!s.kids || l.kids)) l];
       _dangers = [for (final d in dangers) if (d.actif && d.paliers.length == 4 && (!s.kids || d.kids)) d];
-      _propLieux = _trois(_lieux);
-      _propDangers = _trois(_dangers);
+      _catalogueCharge = true;
     });
+    // À l'arrivée, le lieu et le danger sont déjà tirés : on peut les changer.
+    if (e.lieuNom.isEmpty) _tirerLieu();
+    if (e.dangerNom.isEmpty) _tirerDanger();
   }
+
+  T? _auHasard<T>(List<T> l, bool Function(T) actuel) {
+    final autres = [for (final x in l) if (!actuel(x)) x];
+    final pool = autres.isEmpty ? l : autres;
+    return pool.isEmpty ? null : pool[_hasard.nextInt(pool.length)];
+  }
+
+  void _tirerLieu() {
+    final l = _auHasard(_lieux, (x) => x.id == e.lieuId);
+    if (l != null) _choisirLieu(l);
+  }
+
+  void _tirerDanger() {
+    final d = _auHasard(_dangers, (x) => x.id == e.dangerId);
+    if (d != null) _choisirDanger(d);
+  }
+
+  Location? get _lieu {
+    for (final l in _lieux) {
+      if (l.id == e.lieuId) return l;
+    }
+    return null;
+  }
+
+  Danger? get _danger {
+    for (final d in _dangers) {
+      if (d.id == e.dangerId) return d;
+    }
+    return null;
+  }
+
+  void _ouvrir(Widget page) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
 
   @override
   void dispose() {
@@ -81,34 +117,24 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
     super.dispose();
   }
 
-  List<T> _trois<T>(List<T> l) => ([...l]..shuffle(_hasard)).take(3).toList();
-
   TextEditingController _champ(String cle, String valeur) => _champs[cle] ??= TextEditingController(text: valeur);
 
   Future<void> _sauver() => widget.contexte.store.enregistrer(s);
 
   Mechant? get _mechant => widget.contexte.mechant(context.grammaire, e.mechantId);
 
-  /// Les PNJ de l'épisode : les figurants du lieu, puis les sbires du
-  /// méchant.
+  ContexteBibliotheque get _bibliotheque =>
+      ContexteBibliotheque(catalogue: widget.contexte.catalogue, visuels: widget.contexte.visuels);
+
+  /// Les PNJ de l'épisode : les trois figurants du lieu de la grammaire (ou,
+  /// pour un lieu ajouté à la main, trois figurants tirés), puis les sbires
+  /// du méchant.
   void _composerPnj({List<FigurantPret> prets = const [], List<String> fonctions = const []}) {
     final g = context.grammaire;
     e.pnjs = [
       ...figurantsDuLieu(g, prets: prets, fonctions: fonctions, sortis: s.pnjSortis, prefixe: e.lieuId, hasard: _hasard),
       ...sbiresDuMechant(_mechant, sortis: s.pnjSortis),
     ];
-  }
-
-  void _choisirLieuUnivers(LieuUnivers l) {
-    setState(() {
-      e
-        ..lieuId = l.id
-        ..lieuNom = l.nom
-        ..lieuDescription = l.description
-        ..espaces = [for (final x in l.espaces) x.nom];
-      _composerPnj(prets: l.figurants, fonctions: l.roles);
-    });
-    _sauver();
   }
 
   void _choisirLieu(Location l) {
@@ -129,16 +155,6 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
       e
         ..dangerId = d.id
         ..dangerNom = d.name
-        ..paliers = d.paliersPour(kids: s.kids);
-    });
-    _sauver();
-  }
-
-  void _choisirDangerUnivers(DangerUnivers d) {
-    setState(() {
-      e
-        ..dangerId = d.id
-        ..dangerNom = d.nom
         ..paliers = d.paliersPour(kids: s.kids);
     });
     _sauver();
@@ -208,8 +224,6 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
     final c = context.destiny;
     String k(String x, [Map<String, String> v = const {}]) => t.t('serie.preparation.$x', v);
     String m(String x, [Map<String, String> v = const {}]) => t.t('mise_en_place.$x', v);
-    final cat = widget.contexte.store.catalogue;
-    final lieuxUnivers = cat.lieuxDe(s.univers);
     final mechant = _mechant;
     final precedent = [for (final x in s.episodes) if (x != e && x.etape == EtapeEpisode.termine) x];
     final sortiePrecedente = precedent.isEmpty ? '' : precedent.last.sortie;
@@ -243,42 +257,62 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
               ),
           ]),
         ],
-        SectionDestiny(titre: k('lieu'), enfants: [
+        SectionDestiny(titre: k('lieu_danger'), enfants: [
           if (sortiePrecedente.isNotEmpty) Paragraphe(k('sortie_precedente', {'sortie': sortiePrecedente}), italique: true),
-          if (lieuxUnivers.isNotEmpty) ...[
-            Text(k('lieux_univers'), style: Theme.of(context).textTheme.bodySmall),
-            const SizedBox(height: 6),
-            Wrap(spacing: 8, runSpacing: 8, children: [
-              for (final l in lieuxUnivers)
-                ChoiceChip(label: Text(l.nom), selected: e.lieuId == l.id, onSelected: (_) => _choisirLieuUnivers(l)),
+          if (e.saison > 0) Text(k('danger_aide'), style: Theme.of(context).textTheme.bodySmall),
+          if (_catalogueCharge && _lieux.isEmpty && _dangers.isEmpty)
+            Paragraphe(k('catalogue_vide'), italique: true)
+          else
+            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Expanded(
+                child: VignetteCatalogue(
+                  dossier: 'locations',
+                  id: e.lieuId,
+                  surtitre: m('lieu'),
+                  nom: e.lieuNom,
+                  icone: Icons.place_rounded,
+                  source: widget.contexte.visuels.source,
+                  onRelancer: _tirerLieu,
+                  relancer: k('autre_lieu'),
+                  onListe: () async {
+                    final l = await _choixLibre(_lieux, (x) => x.name);
+                    if (l != null) _choisirLieu(l);
+                  },
+                  liste: k('liste_lieux'),
+                  onInfo: _lieu == null ? null : () => _ouvrir(FicheLieu(lieu: _lieu!, contexte: _bibliotheque)),
+                  info: k('info_de', {'nom': e.lieuNom}),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: VignetteCatalogue(
+                  dossier: 'dangers',
+                  id: e.dangerId,
+                  surtitre: m('danger'),
+                  nom: e.dangerNom,
+                  icone: Icons.bolt_rounded,
+                  source: widget.contexte.visuels.source,
+                  onRelancer: _tirerDanger,
+                  relancer: k('autre_danger'),
+                  onListe: () async {
+                    final d = await _choixLibre(_dangers, (x) => x.name);
+                    if (d != null) _choisirDanger(d);
+                  },
+                  liste: k('liste_dangers'),
+                  onInfo: _danger == null ? null : () => _ouvrir(FicheDanger(danger: _danger!)),
+                  info: k('info_de', {'nom': e.dangerNom}),
+                ),
+              ),
             ]),
+          if (e.espaces.isNotEmpty) ...[
             const SizedBox(height: 10),
-            Text(k('lieux_destiny'), style: Theme.of(context).textTheme.bodySmall),
-            const SizedBox(height: 6),
-          ],
-          Wrap(spacing: 8, runSpacing: 8, children: [
-            for (final l in _propLieux)
-              ChoiceChip(label: Text(l.name), selected: e.lieuId == l.id, onSelected: (_) => _choisirLieu(l)),
-          ]),
-          Wrap(children: [
-            TextButton.icon(
-              onPressed: () => setState(() => _propLieux = _trois(_lieux)),
-              icon: const Icon(Icons.refresh_rounded),
-              label: Text(m('nouvelles')),
-            ),
-            TextButton.icon(
-              onPressed: () async {
-                final l = await _choixLibre(_lieux, (x) => x.name);
-                if (l != null) _choisirLieu(l);
-              },
-              icon: const Icon(Icons.list_rounded),
-              label: Text(m('choix_libre')),
-            ),
-          ]),
-          if (e.lieuNom.isNotEmpty) ...[
-            Text(e.lieuNom, style: Theme.of(context).textTheme.titleLarge),
-            if (e.lieuDescription.isNotEmpty) Paragraphe(e.lieuDescription),
+            Text(k('espaces'), style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: 4),
             Wrap(spacing: 6, runSpacing: 6, children: [for (final x in e.espaces) Chip(label: Text(x))]),
+          ],
+          if (e.paliers.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            FrisePaliers(textes: e.paliers, compacte: true),
           ],
         ]),
         SectionDestiny(titre: m('groupe'), enfants: [
@@ -294,41 +328,6 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
             },
           ),
         ]),
-        SectionDestiny(titre: k('danger'), enfants: [
-          if (e.saison > 0) Text(k('danger_aide'), style: Theme.of(context).textTheme.bodySmall),
-          if (cat.dangersDe(s.univers, kids: s.kids).isNotEmpty) ...[
-            const SizedBox(height: 6),
-            Text(k('dangers_univers'), style: Theme.of(context).textTheme.bodySmall),
-            const SizedBox(height: 6),
-            Wrap(spacing: 8, runSpacing: 8, children: [
-              for (final d in cat.dangersDe(s.univers, kids: s.kids))
-                ChoiceChip(label: Text(d.nom), selected: e.dangerId == d.id, onSelected: (_) => _choisirDangerUnivers(d)),
-            ]),
-            const SizedBox(height: 10),
-            Text(k('dangers_destiny'), style: Theme.of(context).textTheme.bodySmall),
-          ],
-          const SizedBox(height: 6),
-          Wrap(spacing: 8, runSpacing: 8, children: [
-            for (final d in _propDangers)
-              ChoiceChip(label: Text(d.name), selected: e.dangerId == d.id, onSelected: (_) => _choisirDanger(d)),
-          ]),
-          Wrap(children: [
-            TextButton.icon(
-              onPressed: () => setState(() => _propDangers = _trois(_dangers)),
-              icon: const Icon(Icons.refresh_rounded),
-              label: Text(m('nouvelles')),
-            ),
-            TextButton.icon(
-              onPressed: () async {
-                final d = await _choixLibre(_dangers, (x) => x.name);
-                if (d != null) _choisirDanger(d);
-              },
-              icon: const Icon(Icons.list_rounded),
-              label: Text(m('choix_libre')),
-            ),
-          ]),
-          if (e.paliers.isNotEmpty) FrisePaliers(textes: e.paliers),
-        ]),
         if (e.saison == 0)
           SectionDestiny(titre: k('mechant_hors_saison'), enfants: [
             Text(k('mechant_hors_saison_aide'), style: Theme.of(context).textTheme.bodySmall),
@@ -338,18 +337,25 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
                   label: Text(k('aucun_mechant')),
                   selected: e.mechantId.isEmpty,
                   onSelected: (_) => _choisirMechantHorsSaison('')),
-              for (final mu in cat.mechantsDe(s.univers))
-                if (!s.kids || mu.mechant.kids)
-                  ChoiceChip(
-                    label: Text(mu.mechant.nom),
-                    selected: e.mechantId == mu.mechant.id,
-                    onSelected: (_) => _choisirMechantHorsSaison(mu.mechant.id),
-                  ),
+              if (mechant != null)
+                ChoiceChip(
+                  label: Text(mechant.nom),
+                  selected: true,
+                  onSelected: (_) => ouvrirCarteMechant(context, mechant, kids: s.kids),
+                ),
               ActionChip(
                 avatar: const Icon(Icons.list_rounded, size: 16),
-                label: Text(m('choix_libre')),
+                label: Text(k('choisir_mechant')),
                 onPressed: () async {
-                  final x = await _choixLibre(mechantsDisponibles(g, cat, kids: s.kids), (y) => y.nom);
+                  final x = await _choixLibre(mechantsDisponibles(g, kids: s.kids), (y) => y.nom);
+                  if (x != null) _choisirMechantHorsSaison(x.id);
+                },
+              ),
+              ActionChip(
+                avatar: const Icon(Icons.shuffle_rounded, size: 16),
+                label: Text(k('mechant_hasard')),
+                onPressed: () {
+                  final x = tirerMechant(g, kids: s.kids, exclus: [e.mechantId], hasard: _hasard);
                   if (x != null) _choisirMechantHorsSaison(x.id);
                 },
               ),

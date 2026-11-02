@@ -6,8 +6,10 @@ library;
 
 import '../grammaire/modeles.dart' show ModePnj;
 import '../troupe/session.dart' show ChoixFinal, EvenementDestiny, NoteRegie;
+import 'pbta.dart' show FacePiece, kCasesBlessure;
 
 export '../troupe/session.dart' show ChoixFinal, EvenementDestiny, NoteRegie;
+export 'pbta.dart' show FacePiece;
 
 /// Pour qui on joue.
 enum PublicSerie {
@@ -34,8 +36,11 @@ enum EtapeEpisode {
   }
 }
 
-/// L'état d'un personnage pendant l'épisode (le combat, outil du maître du
-/// jeu). En public enfant, personne ne meurt : on « quitte l'histoire ».
+/// Qui a quitté l'histoire pendant l'épisode (un personnage au bilan, un
+/// figurant, un sbire ou le méchant mis hors jeu). L'état « blessé » vient de
+/// l'ancien module de combat : il reste lisible, mais les blessures se
+/// comptent maintenant en cases ([RoleEpisode.blessures]). En public enfant,
+/// personne ne meurt : on « quitte l'histoire ».
 enum Sante {
   enForme,
   blesse,
@@ -124,10 +129,13 @@ class ReglagesSerie {
   /// Le registre (la mémoire de la série) : activé par défaut.
   bool registre;
 
-  /// Les cœurs, les malus et les bonus.
+  /// L'ancien module de combat (cœurs, malus, bonus). Gardé pour relire les
+  /// anciennes séries ; les blessures en cases l'ont remplacé.
   bool combat;
 
-  /// La pièce du destin BRAVE / SMART.
+  /// L'ancien interrupteur de la pièce du destin. Gardé pour relire les
+  /// anciennes séries : la pièce est au cœur du jeu de rôle, elle est
+  /// toujours là.
   bool piece;
 
   Map<String, dynamic> versJson() =>
@@ -158,6 +166,7 @@ class PersonnageSerie {
     this.besoinNomme = false,
     this.besoinPaye = false,
     this.pouvoir = '',
+    this.bonus,
     this.sorti = false,
     this.pnj = false,
   }) : anciensArchetypes = anciensArchetypes ?? [];
@@ -171,10 +180,11 @@ class PersonnageSerie {
   /// Le nom du personnage (facultatif).
   String nom;
 
-  /// Sa place dans le lieu ou dans le groupe (« la serveuse », « le vigile »).
+  /// Sa place dans le lieu (« la serveuse »). Ancien champ : il n'est plus
+  /// demandé ni affiché, mais il reste lu pour les anciennes séries.
   String fonction;
 
-  /// Son peuple, selon l'univers.
+  /// Son peuple, selon l'univers. Ancien champ, comme [fonction].
   String peuple;
   String archetypeId;
   String animalId;
@@ -193,14 +203,23 @@ class PersonnageSerie {
   /// En kids : un pouvoir, choisi avec son animal, gardé toute la saison.
   String pouvoir;
 
+  /// Son bonus à la pièce du destin, BRAVE ou SMART (null : pas encore
+  /// choisi, comme dans les séries d'avant le jeu de rôle). Quand il agit
+  /// avec son bonus, il lance la pièce deux fois.
+  FacePiece? bonus;
+
   /// Il a quitté l'histoire (mort, en adulte).
   bool sorti;
 
   /// Tenu par le maître du jeu (l'alarmiste quand on est moins de quatre).
   bool pnj;
 
-  /// Le nom à afficher : le personnage, sinon sa fonction, sinon le joueur.
-  String get appel => [nom, fonction].firstWhere((x) => x.trim().isNotEmpty, orElse: () => joueur);
+  /// Le nom à afficher : le personnage, sinon le joueur.
+  String get appel => nom.trim().isNotEmpty ? nom : joueur;
+
+  /// Un nom qui ne dit rien du joueur : le personnage (ou son ancienne
+  /// fonction), sinon vide. C'est lui qui va dans le registre.
+  String get nomSansPrenom => [nom, fonction].firstWhere((x) => x.trim().isNotEmpty, orElse: () => '');
 
   Map<String, dynamic> versJson() => {
         'id': id,
@@ -216,6 +235,7 @@ class PersonnageSerie {
         'besoin_nomme': besoinNomme,
         'besoin_paye': besoinPaye,
         'pouvoir': pouvoir,
+        'bonus': bonus?.name ?? '',
         'sorti': sorti,
         'pnj': pnj,
       };
@@ -234,6 +254,7 @@ class PersonnageSerie {
         besoinNomme: _b(j['besoin_nomme']),
         besoinPaye: _b(j['besoin_paye']),
         pouvoir: _s(j['pouvoir']),
+        bonus: FacePiece.depuisTexte(j['bonus'] as String?),
         sorti: _b(j['sorti']),
         pnj: _b(j['pnj']),
       );
@@ -248,7 +269,10 @@ class RoleEpisode {
     this.prixPaye = '',
     this.sante = Sante.enForme,
     this.mod = 0,
-  });
+    int blessures = 0,
+    this.vouloirDit = false,
+    this.elan = false,
+  }) : _blessures = blessures.clamp(0, kCasesBlessure);
 
   final String personnageId;
 
@@ -256,10 +280,36 @@ class RoleEpisode {
   String vouloir;
   ChoixFinal choix;
   String prixPaye;
+
+  /// [Sante.sorti] : il quitte l'histoire (décidé au bilan). Les autres
+  /// états viennent de l'ancien module de combat.
   Sante sante;
 
-  /// Bonus (+) ou malus (−).
+  /// L'ancien bonus (+) ou malus (−) du combat, gardé pour la relecture.
   int mod;
+
+  int _blessures;
+
+  /// Les cases de blessures cochées (0 à 3). À la troisième, il est hors jeu
+  /// pour l'épisode.
+  int get blessures => _blessures;
+  set blessures(int v) => _blessures = v.clamp(0, kCasesBlessure);
+
+  /// Le Maître du destin coche une case.
+  void marquerBlessure() => blessures = _blessures + 1;
+
+  /// « Soigner » efface une case.
+  void soigner() => blessures = _blessures - 1;
+
+  /// Les trois cases sont cochées : il ne peut plus agir dans cet épisode.
+  bool get horsJeu => _blessures >= kCasesBlessure;
+
+  /// Il a dit son vouloir à voix haute (une fois par épisode).
+  bool vouloirDit;
+
+  /// Sa prochaine action se joue avec le second lancer (il vient de dire son
+  /// vouloir).
+  bool elan;
 
   Map<String, dynamic> versJson() => {
         'personnage': personnageId,
@@ -268,6 +318,9 @@ class RoleEpisode {
         'prix_paye': prixPaye,
         'sante': sante.name,
         'mod': mod,
+        'blessures': _blessures,
+        'vouloir_dit': vouloirDit,
+        'elan': elan,
       };
 
   factory RoleEpisode.depuisJson(Map<String, dynamic> j) => RoleEpisode(
@@ -277,6 +330,9 @@ class RoleEpisode {
         prixPaye: _s(j['prix_paye']),
         sante: Sante.depuisTexte(j['sante'] as String?),
         mod: _i(j['mod']),
+        blessures: _i(j['blessures']),
+        vouloirDit: _b(j['vouloir_dit']),
+        elan: _b(j['elan']),
       );
 }
 
@@ -317,7 +373,12 @@ class PnjEpisode {
 
   /// Un figurant qui a accepté l'offre du méchant : il est passé sbire.
   bool aBascule;
+
+  /// [Sante.sorti] : il est hors jeu, il a quitté l'histoire et ne reviendra
+  /// pas.
   Sante sante;
+
+  /// L'ancien bonus ou malus du combat, gardé pour la relecture.
   int mod;
 
   Map<String, dynamic> versJson() => {
@@ -737,7 +798,9 @@ class Serie {
   String nom;
   PublicSerie public;
 
-  /// L'univers (vide : Destiny, sans univers particulier).
+  /// L'univers, le ton et le lore des anciennes séries. Le jeu de rôle entre
+  /// humains n'en a plus : ce sont les joueurs qui inventent leur monde. Ils
+  /// restent lus, pour ne rien perdre, mais ne sont ni montrés ni envoyés.
   String univers;
   String ton;
   String lore;

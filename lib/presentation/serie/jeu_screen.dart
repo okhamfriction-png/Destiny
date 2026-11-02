@@ -9,6 +9,7 @@ import '../../application/services/transcription_service.dart';
 import '../../application/state/reglages_destiny.dart';
 import '../../domain/grammaire/modeles.dart';
 import '../../domain/grammaire/progression.dart';
+import '../../domain/serie/pbta.dart';
 import '../../domain/serie/regles_serie.dart';
 import '../../domain/serie/serie.dart';
 import '../destiny/bouton_ia.dart';
@@ -19,13 +20,18 @@ import '../destiny/rituel_destiny.dart';
 import '../theme/destiny_theme.dart';
 import '../widgets/piece_destin_flip.dart';
 import '../widgets/sound_mixer_sheet.dart';
+import 'aide_mj_screen.dart';
 import 'composants_serie.dart';
 import 'contexte_serie.dart';
+import 'pbta_composants.dart';
+import 'piece_serie.dart';
 
-/// L'écran du maître du jeu pendant un épisode : le chrono (ou pas), Destiny
-/// et son rituel, les paliers, le présage et le méchant (dans l'ombre avant
-/// l'épisode 4), l'escalade, les personnages et leur montée, les figurants et
-/// les sbires, le combat, la pièce du destin, la régie son et les notes.
+/// Le poste du Maître du destin pendant un épisode : le chrono (ou pas),
+/// Destiny et son rituel, « Tirer la pièce » (BRAVE ou SMART), les deux
+/// horloges (les paliers du danger, les présages du méchant), l'aide du MJ,
+/// le méchant (dans l'ombre avant l'épisode 4), l'escalade, la fiche de
+/// chaque personnage avec ses blessures, les figurants et les sbires, la
+/// régie son et les notes.
 class JeuEpisodeScreen extends StatefulWidget {
   const JeuEpisodeScreen({super.key, required this.contexte, required this.serie, required this.episode});
 
@@ -48,9 +54,11 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
   TranscriptionService? _micro;
   String _microRaison = '';
 
-  bool _piece = false;
-  bool _pieceBrave = true;
+  /// La pièce en l'air (null : aucune).
+  FacePiece? _faceAnimee;
   int _pieceNo = 0;
+  String _titrePiece = '';
+  Completer<void>? _finPiece;
   final Random _hasard = Random();
 
   Serie get s => widget.serie;
@@ -63,6 +71,9 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
   @override
   void initState() {
     super.initState();
+    for (final p in s.personnagesActifs) {
+      if (e.role(p.id) == null) e.roles.add(RoleEpisode(personnageId: p.id));
+    }
     if (e.destinys.isNotEmpty) _ecoule = e.destinys.last.secondes;
     if (!e.avecChrono && e.destinys.isEmpty) _lancerMusique();
     if (e.transcrire) _demarrerMicro();
@@ -173,15 +184,68 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
     }));
   }
 
-  void _lancerPiece() {
-    if (_piece) return;
-    HapticFeedback.mediumImpact();
-    widget.contexte.audio.playCoin();
-    setState(() {
-      _pieceBrave = _hasard.nextBool();
-      _pieceNo++;
-      _piece = true;
-    });
+  /// L'aide du MJ ; après un échec, elle s'ouvre sur ses mouvements.
+  void _aideMj([OngletAideMj onglet = OngletAideMj.piece]) => Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (_) => AideMjScreen(kids: s.kids, palier: e.palierAtteint, onglet: onglet),
+      ));
+
+  /// « Tirer la pièce » : on choisit qui agit, sa ligne du destin et ce qui
+  /// donne le second lancer, la pièce tourne (une ou deux fois), puis le
+  /// résultat s'affiche avec, après un échec, les mouvements du MJ.
+  Future<void> _tirerPiece([String? personnageId]) async {
+    if (_faceAnimee != null) return;
+    final regles = ReglesPbta.depuis(context.textes);
+    final choix = await ouvrirChoixPiece(context, serie: s, episode: e, regles: regles, personnageId: personnageId);
+    if (choix == null || !mounted) return;
+    final resultat = choix.lancers == null
+        ? lancerPiece(approche: choix.approche, mode: choix.mode, palier: e.palierAtteint, hasard: _hasard)
+        : ResultatPiece(approche: choix.approche, mode: choix.mode, lancers: choix.lancers!, palier: e.palierAtteint);
+    final role = e.role(choix.personnageId);
+    // Le second lancer du vouloir dit ne sert qu'une fois.
+    if (role != null && role.elan) role.elan = false;
+    _sauver();
+    if (choix.lancers == null) await _animer(resultat);
+    if (!mounted) return;
+    setState(() {});
+    final p = s.personnage(choix.personnageId);
+    await ouvrirResultatPiece(
+      context,
+      resultat: resultat,
+      regles: regles,
+      kids: s.kids,
+      nom: p?.appel ?? '',
+      mouvement: regles.mouvement(choix.mouvementId),
+      hasard: _hasard,
+      onBlessure: role == null
+          ? null
+          : () {
+              setState(role.marquerBlessure);
+              _sauver();
+            },
+      onAideMj: () => _aideMj(OngletAideMj.maitre),
+    );
+  }
+
+  /// La pièce tourne, une fois par lancer.
+  Future<void> _animer(ResultatPiece resultat) async {
+    final t = context.textes;
+    for (final (i, f) in resultat.lancers.indexed) {
+      HapticFeedback.mediumImpact();
+      widget.contexte.audio.playCoin();
+      final fin = Completer<void>();
+      setState(() {
+        _faceAnimee = f;
+        _pieceNo++;
+        _titrePiece = (resultat.mode == ModeLancer.simple
+                ? t.t('pbta.piece.titre')
+                : t.t('serie.piece.lancer_n', {'n': '${i + 1}'}))
+            .toUpperCase();
+        _finPiece = fin;
+      });
+      await fin.future;
+      if (!mounted) return;
+    }
+    setState(() => _faceAnimee = null);
   }
 
   Future<void> _noter() async {
@@ -263,6 +327,7 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
     final c = context.destiny;
     String rg(String x, [Map<String, String> v = const {}]) => t.t('regie.$x', v);
     String k(String x, [Map<String, String> v = const {}]) => t.t('serie.jeu.$x', v);
+    final regles = ReglesPbta.depuis(t);
     final palier = g.palier(_palier);
     final acte = g.actes.firstWhere((a) => a.palier == _palier);
     final geste = gestePourActe(g, palier.acte);
@@ -277,21 +342,16 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
     final reste = _total - _ecoule;
     final figurants = [for (final p in e.pnjs) if (p.mode == ModePnj.figurant) p];
     final sbires = [for (final p in e.pnjs) if (p.mode == ModePnj.sbire) p];
+    final texteDuPalier = e.paliers.length > _palier.index ? e.paliers[_palier.index] : '';
 
-    Widget? combatPnj(PnjEpisode p) => s.reglages.combat
-        ? CombatEnLigne(
-            sante: p.sante,
-            mod: p.mod,
-            onSante: (v) {
-              setState(() => p.sante = v);
-              _sauver();
-            },
-            onMod: (v) {
-              setState(() => p.mod = v);
-              _sauver();
-            },
-          )
-        : null;
+    Widget horsJeu(PnjEpisode p) => InterrupteurHorsJeu(
+          horsJeu: p.sante == Sante.sorti,
+          libelle: k('hors_jeu'),
+          onChange: (v) {
+            setState(() => p.sante = v ? Sante.sorti : Sante.enForme);
+            _sauver();
+          },
+        );
 
     final page = PageDestiny(
       titre: e.saison > 0 ? '${t.t('serie.saison_n', {'n': '${e.saison}'})} · ${k('titre', {'n': '${e.numero}'})}' : k('titre', {'n': '${e.numero}'}),
@@ -305,12 +365,11 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
               Text(k('micro_on'), style: TextStyle(fontSize: 12, color: c.famille(FamilleId.fissure))),
             ]),
           ),
-        if (s.reglages.combat)
-          IconButton(
-            tooltip: k('combat_aide'),
-            icon: const Icon(Icons.info_outline_rounded),
-            onPressed: () => expliquerCombat(context, kids: s.kids),
-          ),
+        IconButton(
+          tooltip: t.t('serie.aide_mj.titre'),
+          icon: const Icon(Icons.menu_book_outlined),
+          onPressed: _aideMj,
+        ),
         IconButton(
           tooltip: t.t('navigation.regie_son'),
           icon: const Icon(Icons.graphic_eq_rounded),
@@ -372,7 +431,51 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
           ),
         ],
         const SizedBox(height: 12),
-        FrisePaliers(textes: e.paliers, courant: _palier),
+        FilledButton.icon(
+          style: FilledButton.styleFrom(
+            minimumSize: const Size(48, 56),
+            textStyle: const TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w900, fontSize: 18),
+          ),
+          onPressed: _faceAnimee == null ? () => _tirerPiece() : null,
+          icon: const Icon(Icons.toll_rounded),
+          label: Text(k('tirer_piece')),
+        ),
+        const SizedBox(height: 8),
+        Wrap(alignment: WrapAlignment.center, spacing: 8, runSpacing: 6, children: [
+          OutlinedButton.icon(
+            onPressed: _aideMj,
+            icon: const Icon(Icons.menu_book_outlined),
+            label: Text(t.t('serie.aide_mj.titre')),
+          ),
+          OutlinedButton.icon(
+            onPressed: () => showSoundMixer(context, widget.contexte.musique),
+            icon: const Icon(Icons.tune_rounded),
+            label: Text(k('regie')),
+          ),
+        ]),
+        SectionDestiny(titre: t.t('pbta.horloges.titre'), enfants: [
+          HorlogeQuatre(
+            titre: k('horloge_episode'),
+            rempli: e.palierAtteint,
+            icone: Icons.bolt_rounded,
+            legende: [palier.nom, texteDuPalier].where((x) => x.isNotEmpty).join(' · '),
+          ),
+          if (e.saison > 0)
+            HorlogeQuatre(
+              titre: k('horloge_saison'),
+              rempli: e.numero,
+              icone: Icons.local_fire_department_outlined,
+              legende: e.presage,
+            ),
+          Text(
+            k('gravite', {
+              'gravite': graviteAuPalier(e.palierAtteint) == GraviteMouvement.doux ? t.t('serie.piece.doux') : t.t('serie.piece.dur'),
+            }),
+            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, fontWeight: FontWeight.w700, color: c.texteSecondaire),
+          ),
+          const SizedBox(height: 10),
+          FrisePaliers(textes: e.paliers, courant: _palier, compacte: true),
+        ]),
         if (r.rappelsRegie)
           SectionDestiny(titre: rg('rappel'), enfants: [
             if (geste != null) LigneInfo(geste.verbe, geste.consigne),
@@ -391,10 +494,6 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
           ),
         if (traitre != null && traitre.accepte != null && e.numero == 3 && !traitre.revele)
           _revelationTraitre(traitre),
-        if (e.saison > 0 && e.presage.isNotEmpty)
-          SectionDestiny(titre: k('presage'), enfants: [
-            EncartReplique(e.presage, couleur: c.palier(PalierId.deNumero(e.numero.clamp(1, 4)))),
-          ]),
         if (mechant != null)
           SectionDestiny(titre: k('mechant'), enfants: [
             CadreLisere(
@@ -412,26 +511,23 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
                             color: c.texte,
                             decoration: e.mechantSante == Sante.sorti ? TextDecoration.lineThrough : null)),
                   ),
-                  Chip(label: Text(enPersonne ? k('en_personne') : k('dans_l_ombre'))),
                 ]),
+                Text(enPersonne ? k('en_personne') : k('dans_l_ombre'),
+                    style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, color: c.texteSecondaire)),
                 LigneInfo(t.t('bibliotheque.fiche.il_veut'), mechant.veut),
                 if (enPersonne) LigneInfo(k('sa_faille'), mechant.faillePour(kids: s.kids)),
-                Wrap(spacing: 6, crossAxisAlignment: WrapCrossAlignment.center, children: [
+                Wrap(spacing: 6, runSpacing: 4, crossAxisAlignment: WrapCrossAlignment.center, children: [
                   ActionChip(
                     avatar: const Icon(Icons.open_in_full_rounded, size: 16),
                     label: Text(k('voir_carte')),
                     onPressed: () => ouvrirCarteMechant(context, mechant, kids: s.kids),
                   ),
-                  if (enPersonne && s.reglages.combat)
-                    CombatEnLigne(
-                      sante: e.mechantSante,
-                      mod: e.mechantMod,
-                      onSante: (v) {
-                        setState(() => e.mechantSante = v);
-                        _sauver();
-                      },
-                      onMod: (v) {
-                        setState(() => e.mechantMod = v);
+                  if (enPersonne)
+                    InterrupteurHorsJeu(
+                      horsJeu: e.mechantSante == Sante.sorti,
+                      libelle: k('hors_jeu'),
+                      onChange: (v) {
+                        setState(() => e.mechantSante = v ? Sante.sorti : Sante.enForme);
                         _sauver();
                       },
                     ),
@@ -463,7 +559,7 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
             ),
         ]),
         SectionDestiny(titre: k('personnages'), enfants: [
-          for (final p in s.personnagesActifs) _personnage(p),
+          for (final p in s.personnagesActifs) _personnage(p, regles),
         ]),
         if (figurants.isNotEmpty)
           SectionDestiny(titre: k('figurants'), enfants: [
@@ -477,7 +573,7 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
                   _sauver();
                 },
                 onBascule: mechant == null ? null : () => _bascule(p),
-                combat: combatPnj(p),
+                etat: horsJeu(p),
               ),
           ]),
         if (sbires.isNotEmpty)
@@ -491,26 +587,13 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
                   setState(() => p.mode = m);
                   _sauver();
                 },
-                combat: combatPnj(p),
+                etat: horsJeu(p),
               ),
           ]),
         TextButton.icon(
           onPressed: () => ouvrirTypesFigurants(context),
           icon: const Icon(Icons.help_outline_rounded),
           label: Text(k('types')),
-        ),
-        const SizedBox(height: 8),
-        if (s.reglages.piece)
-          FilledButton.icon(
-            onPressed: _lancerPiece,
-            icon: const Icon(Icons.toll_rounded),
-            label: Text(k('piece')),
-          ),
-        const SizedBox(height: 8),
-        OutlinedButton.icon(
-          onPressed: () => showSoundMixer(context, widget.contexte.musique),
-          icon: const Icon(Icons.tune_rounded),
-          label: Text(k('regie')),
         ),
         SectionDestiny(titre: rg('objets_mystere'), enfants: [
           for (final (i, o) in e.objets.indexed)
@@ -538,18 +621,22 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
       ],
     );
 
+    final face = _faceAnimee;
     return Stack(children: [
       page,
-      if (_piece)
+      if (face != null)
         Positioned.fill(
           child: LayoutBuilder(builder: (context, cs) {
             final taille = (cs.biggest.shortestSide * 0.6).clamp(180.0, 320.0).toDouble();
             return PieceDestinFlip(
               key: ValueKey(_pieceNo),
-              brave: _pieceBrave,
+              brave: face == FacePiece.brave,
               size: taille,
+              titre: _titrePiece,
+              legende: t.t('pbta.piece.faces.${face.name}.legende'),
               onFini: () {
-                if (mounted) setState(() => _piece = false);
+                final fin = _finPiece;
+                if (fin != null && !fin.isCompleted) fin.complete();
               },
             );
           }),
@@ -582,41 +669,72 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
     ]);
   }
 
-  Widget _personnage(PersonnageSerie p) {
+  /// La fiche compacte d'un personnage : son animal, son archétype et son
+  /// bonus, ce qu'il fait à ce palier, son vouloir et son besoin, son pouvoir
+  /// (kids), ses blessures, et quand il lance deux fois.
+  Widget _personnage(PersonnageSerie p, ReglesPbta regles) {
     final g = context.grammaire;
     final t = context.textes;
     final c = context.destiny;
-    String k(String x) => t.t('serie.jeu.$x');
+    String k(String x, [Map<String, String> v = const {}]) => t.t('serie.jeu.$x', v);
     final role = e.role(p.id);
     final m = monteeAttendue(g, archetypeId: p.archetypeId, animalId: p.animalId, palier: _palier);
     final arch = g.archetype(p.archetypeId);
+    final animal = g.animal(p.animalId);
     final couleur = arch == null ? c.or : c.famille(arch.famille);
-    final sorti = role?.sante == Sante.sorti;
+    final horsJeu = role?.horsJeu ?? false;
     final besoin = _besoins[p.id] ??= TextEditingController(text: p.besoin);
+    final bonus = p.bonus;
+    final deuxLancers = [
+      if (bonus != null) k('rappel_bonus', {'face': nomFace(context, bonus)}),
+      k('rappel_aide'),
+      if (role != null && !role.vouloirDit) k('rappel_vouloir'),
+      if (s.kids && p.pouvoir.isNotEmpty) k('rappel_pouvoir'),
+    ];
     return CadreLisere(
       couleur: couleur,
       marge: 8,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          if (m?.animal != null) MedaillonAnimal(m!.animal!, taille: 40, source: widget.contexte.visuels.source),
+          if (animal != null) MedaillonAnimal(animal, taille: 40, source: widget.contexte.visuels.source),
           const SizedBox(width: 10),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
-                [p.appel, if (p.joueur.isNotEmpty && p.joueur != p.appel) '(${p.joueur})', arch?.nom ?? ''].join(' · '),
+                [p.appel, if (p.joueur.isNotEmpty && p.joueur != p.appel) '(${p.joueur})'].where((x) => x.isNotEmpty).join(' '),
                 style: TextStyle(
-                    fontFamily: kPoliceTitres,
-                    fontWeight: FontWeight.w700,
-                    color: c.texte,
-                    decoration: sorti ? TextDecoration.lineThrough : null),
+                  fontFamily: kPoliceTitres,
+                  fontWeight: FontWeight.w700,
+                  color: c.texte,
+                  decoration: horsJeu ? TextDecoration.lineThrough : null,
+                ),
               ),
-              if (m != null)
-                Text(m.ceQuIlFait, style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w600, color: couleur)),
-              if (m != null && m.corps.isNotEmpty)
-                Text(m.corps, style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire)),
+              Text(
+                [arch?.nom ?? '', animal?.nom ?? '', if (p.pnj) t.t('serie.personnages.pnj')].where((x) => x.isNotEmpty).join(' · '),
+                style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w600, fontSize: 12.5, color: c.texteSecondaire),
+              ),
             ]),
           ),
+          if (!p.pnj && !horsJeu)
+            IconButton(
+              tooltip: k('tirer_pour', {'nom': p.appel.isEmpty ? (arch?.nom ?? '') : p.appel}),
+              icon: Icon(Icons.toll_rounded, color: c.titre),
+              onPressed: _faceAnimee == null ? () => _tirerPiece(p.id) : null,
+            ),
         ]),
+        if (bonus != null || (s.kids && p.pouvoir.isNotEmpty)) ...[
+          const SizedBox(height: 6),
+          Wrap(spacing: 6, runSpacing: 4, children: [
+            if (bonus != null) PuceFace(bonus, suffixe: t.t('serie.piece.bonus')),
+            if (s.kids && p.pouvoir.isNotEmpty) Chip(visualDensity: VisualDensity.compact, label: Text(p.pouvoir)),
+          ]),
+        ],
+        if (m != null) ...[
+          const SizedBox(height: 4),
+          Text(m.ceQuIlFait, style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w600, color: couleur)),
+          if (m.corps.isNotEmpty)
+            Text(m.corps, style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire)),
+        ],
         LigneInfo(k('veut'), role?.vouloir ?? ''),
         if (p.besoin.isNotEmpty || e.destinys.isEmpty)
           LigneInfo(k('besoin'), p.besoin)
@@ -629,23 +747,48 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
               _sauver();
             },
           ),
-        if (s.kids) LigneInfo(k('pouvoir'), p.pouvoir),
-        if (s.reglages.combat && role != null)
-          Align(
-            alignment: Alignment.centerRight,
-            child: CombatEnLigne(
-              sante: role.sante,
-              mod: role.mod,
-              onSante: (v) {
-                setState(() => role.sante = v);
-                _sauver();
-              },
-              onMod: (v) {
-                setState(() => role.mod = v);
-                _sauver();
-              },
-            ),
+        if (role != null) ...[
+          const SizedBox(height: 4),
+          Text(t.t('pbta.blessures.titre'), style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire)),
+          PisteBlessures(
+            cases: role.blessures,
+            libelles: regles.blessures(kids: s.kids),
+            soigner: k('soigner'),
+            onChange: (v) {
+              setState(() => role.blessures = v);
+              _sauver();
+            },
           ),
+          if (horsJeu)
+            Paragraphe(s.kids ? t.t('pbta.blessures.hors_jeu_kids') : t.t('pbta.blessures.hors_jeu'), italique: true),
+          if (!p.pnj) ...[
+            Text(k('deux_lancers', {'liste': deuxLancers.join(' · ')}),
+                style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire)),
+            const SizedBox(height: 4),
+            Wrap(spacing: 6, runSpacing: 4, children: [
+              if (!role.vouloirDit)
+                ActionChip(
+                  visualDensity: VisualDensity.compact,
+                  avatar: const Icon(Icons.record_voice_over_outlined, size: 16),
+                  label: Text(k('dit_vouloir')),
+                  onPressed: () {
+                    setState(() {
+                      role
+                        ..vouloirDit = true
+                        ..elan = true;
+                    });
+                    _sauver();
+                  },
+                ),
+              if (role.elan)
+                Chip(
+                  visualDensity: VisualDensity.compact,
+                  avatar: Icon(Icons.auto_awesome_rounded, size: 16, color: c.titre),
+                  label: Text(k('elan')),
+                ),
+            ]),
+          ],
+        ],
       ]),
     );
   }

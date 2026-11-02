@@ -143,7 +143,13 @@ void main() {
         reglages: ReglagesSerie(traitre: true, combat: false),
         personnages: [
           PersonnageSerie(
-              id: 'p1', joueur: 'Naël', nom: 'Pip', archetypeId: 'aidant', animalId: 'chien', pouvoir: 'parler aux arbres'),
+              id: 'p1',
+              joueur: 'Naël',
+              nom: 'Pip',
+              archetypeId: 'aidant',
+              animalId: 'chien',
+              pouvoir: 'parler aux arbres',
+              bonus: FacePiece.smart),
           PersonnageSerie(id: 'p2', archetypeId: 'alarmiste', animalId: 'coq', pnj: true),
         ],
         saisons: [
@@ -162,7 +168,15 @@ void main() {
             date: DateTime(2026, 11, 2, 18),
             saison: 1,
             paliers: ['1', '2', '3', '4'],
-            roles: [RoleEpisode(personnageId: 'p1', vouloir: 'Ouvrir la porte', choix: ChoixFinal.besoin)],
+            roles: [
+              RoleEpisode(
+                  personnageId: 'p1',
+                  vouloir: 'Ouvrir la porte',
+                  choix: ChoixFinal.besoin,
+                  blessures: 2,
+                  vouloirDit: true,
+                  elan: true),
+            ],
             pnjs: [PnjEpisode(id: 'x.0', nom: 'Lou', mode: ModePnj.figurant, aBascule: true, sante: Sante.blesse)],
             destinys: [const EvenementDestiny(numero: 1, secondes: 600, manuel: true)],
             notes: [const NoteRegie(secondes: 30, texte: 'Bravo')],
@@ -178,6 +192,55 @@ void main() {
       expect(relue.nature, NatureSerie.saison);
       expect(relue.prochainNumero, 2);
       expect(relue.episodes.single.pnjs.single.aBascule, isTrue);
+      expect(relue.personnages.first.bonus, FacePiece.smart);
+      expect(relue.personnages.last.bonus, isNull);
+      expect(relue.episodes.single.roles.single.blessures, 2);
+      expect(relue.episodes.single.roles.single.elan, isTrue);
+    });
+
+    test('une série d\'avant le jeu de rôle se relit : univers, ton, fonction, peuple, combat', () {
+      final ancienne = {
+        'version': 2,
+        'id': 'v',
+        'creee': '2026-10-01T10:00:00.000',
+        'nom': 'Les pirates',
+        'public': 'adulte',
+        'univers': 'pirates',
+        'ton': 'drole',
+        'lore': 'Peter Pan',
+        'reglages': {'traitre': false, 'registre': true, 'combat': true, 'piece': true},
+        'personnages': [
+          {'id': 'p1', 'joueur': 'Léa', 'fonction': 'la vigie', 'peuple': 'Pirates', 'archetype': 'leader', 'animal': 'lion'},
+        ],
+        'episodes': [
+          {
+            'id': 'e1',
+            'date': '2026-10-01T10:00:00.000',
+            'roles': [
+              {'personnage': 'p1', 'vouloir': 'Le trésor', 'sante': 'blesse', 'mod': -1},
+            ],
+          },
+        ],
+      };
+      final s = Serie.depuisJson(jsonDecode(jsonEncode(ancienne)) as Map<String, dynamic>);
+      expect(s.univers, 'pirates');
+      expect(s.ton, 'drole');
+      final p = s.personnages.single;
+      expect(p.fonction, 'la vigie');
+      expect(p.peuple, 'Pirates');
+      expect(p.bonus, isNull);
+      // Le registre et l'IA reçoivent le personnage, jamais le prénom.
+      expect(p.nomSansPrenom, 'la vigie');
+      final r = s.episodes.single.roles.single;
+      expect(r.sante, Sante.blesse);
+      expect(r.mod, -1);
+      expect(r.blessures, 0);
+      expect(r.vouloirDit, isFalse);
+      // Et elle se réécrit sans rien perdre.
+      final relue = Serie.depuisJson(jsonDecode(jsonEncode(s.versJson())) as Map<String, dynamic>);
+      expect(relue.univers, 'pirates');
+      expect(relue.personnages.single.fonction, 'la vigie');
+      expect(relue.reglages.combat, isTrue);
     });
 
     test('un épisode seul est un épisode ; deux saisons font une série', () {
@@ -191,7 +254,7 @@ void main() {
   group('Le méchant de saison', () {
     test('ses reflets ont l\'archétype du protagoniste visé', () {
       for (final a in g.archetypes) {
-        final reflets = mechantsReflets(g, catalogue, archetypeId: a.id, kids: false);
+        final reflets = mechantsReflets(g, archetypeId: a.id, kids: false);
         expect(reflets.length, greaterThanOrEqualTo(2), reason: a.id);
         expect(reflets.every((m) => m.archetypeId == a.id), isTrue);
       }
@@ -199,24 +262,37 @@ void main() {
 
     test('en kids, seulement des méchants kids, et au moins un par archétype', () {
       for (final a in g.archetypes) {
-        final reflets = mechantsReflets(g, catalogue, archetypeId: a.id, kids: true);
+        final reflets = mechantsReflets(g, archetypeId: a.id, kids: true);
         expect(reflets, isNotEmpty, reason: a.id);
         expect(reflets.every((m) => m.kids), isTrue);
       }
     });
 
-    test('les méchants de l\'univers de la série s\'ajoutent aux 24', () {
-      final reflets = mechantsReflets(g, catalogue, archetypeId: 'protecteur', kids: true, univers: 'pirates');
-      expect(reflets.map((m) => m.id), contains('pirates_capitaine_gargouille'));
+    test('entre humains, seulement les 24 grands méchants (pas d\'univers), chacun avec ses deux sbires', () {
+      final ids = {for (final m in g.mechants) m.id};
+      expect(mechantsDisponibles(g, kids: false), hasLength(24));
+      expect(mechantsDisponibles(g, kids: true), hasLength(g.mechants.where((m) => m.kids).length));
+      for (final a in g.archetypes) {
+        for (final kids in [false, true]) {
+          for (final m in mechantsReflets(g, archetypeId: a.id, kids: kids)) {
+            expect(ids, contains(m.id));
+            expect(m.sbires, hasLength(2));
+          }
+        }
+      }
+      for (var graine = 0; graine < 30; graine++) {
+        expect(ids, contains(tirerMechant(g, kids: graine.isEven, hasard: Random(graine))!.id));
+      }
     });
 
-    test('un méchant d\'univers apporte ses quatre présages', () {
-      expect(presagesConnus(catalogue, 'pirates_capitaine_gargouille').where((p) => p.isNotEmpty), hasLength(4));
-      expect(presagesConnus(catalogue, 'le_seigneur_des_brumes'), ['', '', '', '']);
+    test('le méchant d\'univers d\'une ancienne série se relit toujours', () {
+      expect(trouverMechant(g, catalogue, 'pirates_capitaine_gargouille')?.nom, isNotEmpty);
+      expect(trouverMechant(g, catalogue, 'le_seigneur_des_brumes')?.id, 'le_seigneur_des_brumes');
+      expect(trouverMechant(g, catalogue, ''), isNull);
     });
 
     test('le tirage évite les méchants déjà joués', () {
-      final m = tirerMechant(g, catalogue,
+      final m = tirerMechant(g,
           kids: false, archetypeId: 'leader', exclus: ['le_seigneur_des_brumes'], hasard: Random(1));
       expect(m, isNotNull);
       expect(m!.id, isNot('le_seigneur_des_brumes'));
@@ -471,7 +547,7 @@ void main() {
     test('créer, enregistrer, relire', () async {
       SharedPreferences.setMockInitialValues({});
       final m = await magasin();
-      final s = await m.creer(nom: 'La brume', public: PublicSerie.kids, univers: 'monde_magique');
+      final s = await m.creer(nom: 'La brume', public: PublicSerie.kids);
       s.personnages.add(PersonnageSerie(id: 'p1', archetypeId: 'aidant', pouvoir: 'voler'));
       await m.enregistrer(s);
       final m2 = await magasin();
@@ -520,6 +596,24 @@ void main() {
       // En kids, personne ne meurt.
       expect(s.registre.any((r) => r.categorie == CategorieRegistre.mort), isFalse);
       expect(s.registre.last.statut, StatutRegistre.parti);
+    });
+
+    test('rien de l\'univers, du ton ni du lore ne part vers l\'IA, même pour une ancienne série', () async {
+      final (m, llm, s) = await preparer('{"resume": "R", "suite": "S", "presages": ["a", "b", "c", "d"], "choix": []}');
+      s
+        ..univers = 'pirates'
+        ..ton = 'drole'
+        ..lore = 'Peter Pan';
+      await m.resumer(s, transcription: 'Ils ouvrent la porte.');
+      await m.proposerPresages(s, g.mechant('le_seigneur_des_brumes')!, paliers: [for (final x in g.paliers) x.nom]);
+      await m.proposerRessortis(s, [EntreeRegistre(id: 'r', categorie: CategorieRegistre.objet, nom: 'La clé')]);
+      expect(llm.envois, hasLength(3));
+      for (final envoi in llm.envois) {
+        expect(envoi, isNot(contains('Univers')));
+        expect(envoi, isNot(contains('Ton :')));
+        expect(envoi, isNot(contains('Peter Pan')));
+        expect(envoi.toLowerCase(), isNot(contains('pirates')));
+      }
     });
 
     test('les présages et les ressortis passent par l\'assistant, sans prénom', () async {

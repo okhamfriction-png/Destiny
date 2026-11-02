@@ -12,9 +12,11 @@ import '../assistant/campagne_assistant.dart';
 import '../services/llm_service.dart';
 import 'ai_settings.dart';
 
-/// Les séries (le jeu de rôle entre humains) et leur catalogue d'univers.
-/// Tout reste sur l'appareil ; seul l'assistant parle à l'IA, avec des textes
-/// déjà nettoyés des prénoms.
+/// Les séries (le jeu de rôle entre humains). Le catalogue des univers est
+/// chargé ici pour les modes avec l'IA, la Bibliothèque et la relecture des
+/// anciennes campagnes : le jeu entre humains, lui, n'a pas d'univers. Tout
+/// reste sur l'appareil ; seul l'assistant parle à l'IA, avec des textes déjà
+/// nettoyés des prénoms, et sans univers ni ton.
 class SerieStore extends ChangeNotifier {
   SerieStore({Future<String> Function(String chemin)? lire, LlmService? llm, AiSettings? aiSettings})
       : _lire = lire ?? rootBundle.loadString,
@@ -144,9 +146,6 @@ class SerieStore extends ChangeNotifier {
   Future<Serie> creer({
     String nom = '',
     PublicSerie public = PublicSerie.adulte,
-    String univers = '',
-    String ton = '',
-    String lore = '',
     String contexte = '',
     ReglagesSerie? reglages,
   }) async {
@@ -155,9 +154,6 @@ class SerieStore extends ChangeNotifier {
       creee: DateTime.now(),
       nom: nom,
       public: public,
-      univers: univers,
-      ton: ton,
-      lore: lore,
       contexte: contexte,
       reglages: reglages,
     );
@@ -191,11 +187,8 @@ class SerieStore extends ChangeNotifier {
   static Map<String, String> rolesParPrenom(Serie s, {String parDefaut = 'un personnage'}) => {
         for (final p in s.personnages)
           if (p.joueur.trim().isNotEmpty)
-            p.joueur.trim(): [p.nom, p.fonction].firstWhere((x) => x.trim().isNotEmpty, orElse: () => parDefaut),
+            p.joueur.trim(): p.nomSansPrenom.isNotEmpty ? p.nomSansPrenom : parDefaut,
       };
-
-  String _univers(Serie s) => _catalogue.universDe(s.univers)?.nom ?? s.univers;
-  String _ton(Serie s) => _catalogue.tons[s.ton] ?? s.ton;
 
   /// Le résumé, l'accroche et les entrées du registre d'un épisode. Le texte
   /// part sans prénoms, et ce qui revient est nettoyé encore une fois.
@@ -204,12 +197,9 @@ class SerieStore extends ChangeNotifier {
     final roles = rolesParPrenom(s);
     final m = await _assistant!.resumer(
       settings: _aiSettings!,
-      univers: _univers(s),
-      ton: _ton(s),
       contexte: sansPrenoms(s.contexte, roles),
       transcription: sansPrenoms(transcription, roles),
       public: s.kids ? 'enfant' : 'adulte',
-      lore: s.lore,
       categoriesRegistre: s.reglages.registre ? categories : const [],
     );
     return m.sansPrenoms(roles);
@@ -227,8 +217,6 @@ class SerieStore extends ChangeNotifier {
     ].join('\n');
     final p = await _assistant!.proposerPresages(
       settings: _aiSettings!,
-      univers: _univers(s),
-      ton: _ton(s),
       contexte: sansPrenoms(s.contexte, roles),
       mechant: texte,
       paliers: paliers,
@@ -243,8 +231,6 @@ class SerieStore extends ChangeNotifier {
     final roles = rolesParPrenom(s);
     return _assistant!.proposerRessortis(
       settings: _aiSettings!,
-      univers: _univers(s),
-      ton: _ton(s),
       contexte: sansPrenoms(s.contexte, roles),
       entrees: [for (final e in entrees) sansPrenoms('${e.nom} — ${e.detail}', roles)],
       prochainEpisode: sansPrenoms(prochain, roles),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show HapticFeedback;
 
 import '../../application/state/visual_settings.dart';
 import '../../domain/grammaire/modeles.dart';
@@ -126,90 +125,6 @@ class InterrupteurMode extends StatelessWidget {
   }
 }
 
-/// Le combat d'un personnage, sur une ligne : le cœur (en forme → blessé →
-/// sorti), le malus, la valeur, le bonus.
-class CombatEnLigne extends StatelessWidget {
-  const CombatEnLigne({super.key, required this.sante, required this.mod, required this.onSante, required this.onMod});
-
-  final Sante sante;
-  final int mod;
-  final ValueChanged<Sante> onSante;
-  final ValueChanged<int> onMod;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.destiny;
-    final (icone, couleur) = switch (sante) {
-      Sante.enForme => (Icons.favorite, c.famille(FamilleId.fissure)),
-      Sante.blesse => (Icons.heart_broken, c.or),
-      Sante.sorti => (Icons.favorite_border, c.texteSecondaire),
-    };
-    final vert = c.famille(FamilleId.tient);
-    Widget bouton(IconData i, Color col, bool actif, VoidCallback f) => InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: () {
-            HapticFeedback.selectionClick();
-            f();
-          },
-          child: SizedBox(
-              width: 36, height: 36, child: Icon(i, size: 19, color: actif ? col : c.texteSecondaire.withValues(alpha: 0.5))),
-        );
-    return Row(mainAxisSize: MainAxisSize.min, children: [
-      bouton(icone, couleur, true, () => onSante(sante.suivante)),
-      bouton(Icons.remove_circle_outline, c.or, mod < 0, () => onMod(mod - 1)),
-      SizedBox(
-        width: 22,
-        child: Text(mod == 0 ? '0' : (mod > 0 ? '+$mod' : '$mod'),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontFamily: kPoliceTexte,
-                fontWeight: FontWeight.w800,
-                fontSize: 13,
-                color: mod > 0 ? vert : (mod < 0 ? c.or : c.texteSecondaire))),
-      ),
-      bouton(Icons.add_circle_outline, vert, mod > 0, () => onMod(mod + 1)),
-    ]);
-  }
-}
-
-/// La légende du combat.
-Future<void> expliquerCombat(BuildContext context, {required bool kids}) {
-  final t = context.textes;
-  final c = context.destiny;
-  String k(String x) => t.t('serie.combat.$x');
-  Widget ligne(IconData i, Color col, String titre, String texte) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Icon(i, color: col, size: 22),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text.rich(TextSpan(children: [
-              TextSpan(text: '$titre — ', style: TextStyle(color: col, fontWeight: FontWeight.w800)),
-              TextSpan(text: texte),
-            ])),
-          ),
-        ]),
-      );
-  return showDialog<void>(
-    context: context,
-    builder: (ctx) => AlertDialog(
-      title: Text(k('titre')),
-      content: SingleChildScrollView(
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Text(k('aide'), style: Theme.of(ctx).textTheme.bodySmall),
-          const SizedBox(height: 8),
-          ligne(Icons.favorite, c.famille(FamilleId.fissure), k('coeur'), k('en_forme')),
-          ligne(Icons.heart_broken, c.or, k('brise'), k('blesse')),
-          ligne(Icons.favorite_border, c.texteSecondaire, k('vide'), kids ? k('sorti_kids') : k('sorti')),
-          ligne(Icons.remove_circle_outline, c.or, k('moins'), k('malus')),
-          ligne(Icons.add_circle_outline, c.famille(FamilleId.tient), k('plus'), k('bonus')),
-        ]),
-      ),
-      actions: [FilledButton(onPressed: () => Navigator.pop(ctx), child: Text(k('compris')))],
-    ),
-  );
-}
-
 /// L'aide-mémoire des huit types de figurants.
 Future<void> ouvrirTypesFigurants(BuildContext context) {
   final g = context.grammaire;
@@ -260,7 +175,7 @@ Future<void> ouvrirCarteMechant(BuildContext context, Mechant m, {required bool 
     );
 
 /// Une ligne de PNJ : son animal, son nom, son type, son mode, le bouton pour
-/// le jouer, et (en jeu) son combat.
+/// le jouer, et (en jeu) son état : hors jeu ou pas.
 class LignePnj extends StatelessWidget {
   const LignePnj({
     super.key,
@@ -268,7 +183,7 @@ class LignePnj extends StatelessWidget {
     required this.kids,
     this.onMode,
     this.onBascule,
-    this.combat,
+    this.etat,
     this.source = VisualSource.ai,
   });
 
@@ -278,7 +193,9 @@ class LignePnj extends StatelessWidget {
 
   /// « Il a accepté l'offre » (seulement pour un figurant).
   final VoidCallback? onBascule;
-  final Widget? combat;
+
+  /// En jeu : l'interrupteur « hors jeu ».
+  final Widget? etat;
   final VisualSource source;
 
   @override
@@ -339,7 +256,7 @@ class LignePnj extends StatelessWidget {
               label: Text(t.t('serie.jeu.accepte_offre')),
               onPressed: onBascule,
             ),
-          if (combat != null) combat!,
+          if (etat != null) etat!,
         ]),
       ]),
     );

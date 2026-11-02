@@ -6,6 +6,7 @@ import 'package:destiny/application/services/export_pdf.dart';
 import 'package:destiny/application/state/reglages_destiny.dart';
 import 'package:destiny/domain/grammaire/modeles.dart';
 import 'package:destiny/domain/grammaire/textes.dart';
+import 'package:destiny/domain/serie/pbta.dart';
 import 'package:destiny/presentation/accueil/decouvrir_screen.dart';
 import 'package:destiny/presentation/bibliotheque/livret_screen.dart';
 import 'package:destiny/presentation/destiny/donnees.dart';
@@ -95,13 +96,51 @@ void main() {
       expect(texte, contains(t.t('module_traitre.explication')));
     });
 
-    test('les variantes : Série, méchants, sbires, figurants, registre, traître, kids, 4 à 6 joueurs', () {
+    test('les variantes : Série et son jeu de rôle, méchants, sbires, figurants, registre, traître, kids, 4 à 6 joueurs', () {
       final variantes = livret.sections.firstWhere((s) => s.id == 'variantes');
       final intertitres = [for (final b in variantes.blocs) if (b is IntertitreLivret) b.texte];
       expect(intertitres, [
-        for (final k in ['a_456', 'serie', 'mechants', 'sbires', 'figurants', 'registre', 'traitre', 'kids'])
-          t.t('livret.sous.$k'),
+        for (final k in ['a_456', 'serie']) t.t('livret.sous.$k'),
+        for (final k in [
+          'piece.titre',
+          'bonus.titre',
+          'mouvements_titre',
+          'agenda_titre',
+          'principes_titre',
+          'mouvements_mj.titre',
+          'horloges.titre',
+          'blessures.titre',
+        ])
+          t.t('pbta.$k'),
+        for (final k in ['mechants', 'sbires', 'figurants', 'registre', 'traitre', 'kids']) t.t('livret.sous.$k'),
       ]);
+    });
+
+    test('le jeu de rôle de la Série : la pièce BRAVE / SMART, les mouvements, le Maître du destin, les blessures', () {
+      final variantes = livret.sections.firstWhere((s) => s.id == 'variantes');
+      final texte = [for (final b in variantes.blocs) b.texte].join('\n');
+      final r = ReglesPbta.depuis(t);
+      for (final cle in ['piece.principe', 'piece.succes_texte', 'piece.echec_texte', 'piece.doux', 'piece.dur', 'bonus.principe', 'bonus.seconde_chance', 'bonus.gene']) {
+        expect(texte, contains(t.t('pbta.$cle')), reason: cle);
+      }
+      for (final f in FacePiece.values) {
+        expect(texte, contains(t.t('pbta.piece.faces.${f.name}.approche')));
+      }
+      for (final m in r.mouvements) {
+        expect(texte, contains(m.nom));
+        expect(texte, contains(m.quand));
+        expect(texte, contains(m.avecPiece ? m.echec : m.effet));
+      }
+      for (final x in [...r.agenda, ...r.principes]) {
+        expect(texte, contains(x));
+      }
+      for (final m in r.mouvementsMj) {
+        expect(texte, contains(m.texte));
+      }
+      for (final x in [...r.blessures(kids: false), ...r.blessures(kids: true)]) {
+        expect(texte, contains(x));
+      }
+      expect(texte, contains(t.t('pbta.horloges.saison')));
     });
 
     test('aucun texte manquant, ni dé, ni sidéré', () {

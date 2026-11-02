@@ -56,12 +56,14 @@ class _SaisonScreenState extends State<SaisonScreen> {
 
   PersonnageSerie? get _cible => s.personnage(_cibleId);
 
+  /// Un autre méchant : ses présages sont à écrire (par l'IA ou le maître
+  /// du jeu).
   void _choisirMechant(Mechant m) {
-    final connus = presagesConnus(widget.contexte.store.catalogue, m.id);
+    if (m.id == _mechantId) return;
     setState(() {
       _mechantId = m.id;
-      for (var i = 0; i < 4; i++) {
-        _presages[i].text = connus[i];
+      for (final c in _presages) {
+        c.clear();
       }
     });
   }
@@ -70,10 +72,8 @@ class _SaisonScreenState extends State<SaisonScreen> {
     final g = context.grammaire;
     final m = tirerMechant(
       g,
-      widget.contexte.store.catalogue,
       kids: s.kids,
       archetypeId: _cible?.archetypeId ?? '',
-      univers: s.univers,
       exclus: [for (final x in s.saisons) x.mechantId],
       hasard: _hasard,
     );
@@ -175,8 +175,7 @@ class _SaisonScreenState extends State<SaisonScreen> {
     final cible = _cible;
     final reflets = cible == null
         ? const <Mechant>[]
-        : mechantsReflets(g, widget.contexte.store.catalogue,
-            archetypeId: cible.archetypeId, kids: s.kids, univers: s.univers);
+        : mechantsReflets(g, archetypeId: cible.archetypeId, kids: s.kids);
     final mechant = widget.contexte.mechant(g, _mechantId);
     final precedente = s.saisons.isEmpty ? null : s.saisons.last;
     final pret = _mechantId.isNotEmpty && _presages.every((p) => p.text.trim().isNotEmpty);

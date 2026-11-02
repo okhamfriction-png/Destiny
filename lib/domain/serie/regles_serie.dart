@@ -10,62 +10,43 @@ import '../grammaire/modeles.dart';
 import 'serie.dart';
 import 'univers.dart';
 
-/// Tous les méchants qu'on peut choisir pour une saison : les 24 grands
-/// méchants, puis ceux des univers. En kids, seulement les méchants kids.
-List<Mechant> mechantsDisponibles(Grammaire g, CatalogueUnivers catalogue, {required bool kids}) => [
+/// Les méchants qu'on peut choisir pour une saison : les 24 grands méchants
+/// de la grammaire, chacun avec ses deux sbires. En kids, seulement les
+/// méchants kids. (Les méchants d'univers restent dans la Bibliothèque et
+/// dans les modes avec l'IA : entre humains, on n'a pas d'univers.)
+List<Mechant> mechantsDisponibles(Grammaire g, {required bool kids}) => [
       for (final m in g.mechants)
         if (!kids || m.kids) m,
-      for (final m in catalogue.mechants)
-        if (!kids || m.mechant.kids) m.mechant,
     ];
 
-/// Retrouve un méchant par son id (grand méchant ou méchant d'univers).
+/// Retrouve un méchant par son id : un grand méchant, ou le méchant d'univers
+/// d'une ancienne série (pour la relire telle quelle).
 Mechant? trouverMechant(Grammaire g, CatalogueUnivers catalogue, String id) {
   if (id.isEmpty) return null;
   return g.mechant(id) ?? catalogue.mechantUnivers(id)?.mechant;
 }
 
-/// Les méchants reflets du protagoniste visé : ceux qui ont le même archétype
-/// que lui. D'abord les grands méchants, puis ceux de l'univers de la série.
-List<Mechant> mechantsReflets(
-  Grammaire g,
-  CatalogueUnivers catalogue, {
-  required String archetypeId,
-  required bool kids,
-  String univers = '',
-}) =>
-    [
-      ...g.mechantsReflets(archetypeId, kids: kids),
-      for (final m in catalogue.mechantsDe(univers))
-        if (m.mechant.archetypeId == archetypeId && (!kids || m.mechant.kids)) m.mechant,
-    ];
+/// Les méchants reflets du protagoniste visé : les grands méchants qui ont
+/// le même archétype que lui.
+List<Mechant> mechantsReflets(Grammaire g, {required String archetypeId, required bool kids}) =>
+    g.mechantsReflets(archetypeId, kids: kids);
 
 /// Un méchant au hasard. Avec un [archetypeId], parmi ses reflets.
 Mechant? tirerMechant(
-  Grammaire g,
-  CatalogueUnivers catalogue, {
+  Grammaire g, {
   required bool kids,
   String archetypeId = '',
-  String univers = '',
   Iterable<String> exclus = const [],
   Random? hasard,
 }) {
   final rng = hasard ?? Random();
   var pool = archetypeId.isEmpty
-      ? mechantsDisponibles(g, catalogue, kids: kids)
-      : mechantsReflets(g, catalogue, archetypeId: archetypeId, kids: kids, univers: univers);
+      ? mechantsDisponibles(g, kids: kids)
+      : mechantsReflets(g, archetypeId: archetypeId, kids: kids);
   final restants = [for (final m in pool) if (!exclus.contains(m.id)) m];
   if (restants.isNotEmpty) pool = restants;
   if (pool.isEmpty) return null;
   return pool[rng.nextInt(pool.length)];
-}
-
-/// Les quatre présages déjà écrits d'un méchant d'univers (vides pour un
-/// grand méchant : l'IA les propose, ou le maître du jeu les écrit).
-List<String> presagesConnus(CatalogueUnivers catalogue, String mechantId) {
-  final m = catalogue.mechantUnivers(mechantId);
-  if (m == null || m.presages.isEmpty) return ['', '', '', ''];
-  return [for (var i = 0; i < 4; i++) i < m.presages.length ? m.presages[i] : ''];
 }
 
 /// Qui agit sur une marche de l'escalade.
@@ -159,9 +140,10 @@ const List<List<String>> kTypesParRang = [
   ['victime', 'sceptique', 'innocent'],
 ];
 
-/// Les figurants de l'épisode, pris d'abord dans le lieu (la grammaire, puis
-/// les lieux d'univers). S'il n'y en a pas, on en tire trois parmi les 24
-/// animaux, un par rang (aide, témoin, victime), avec les fonctions du lieu.
+/// Les figurants de l'épisode : les trois figurants prêts à jouer du lieu de
+/// la grammaire. S'il n'y en a pas (un lieu ajouté à la main), on en tire
+/// trois parmi les 24 animaux, un par rang (aide, témoin, victime), avec les
+/// rôles du lieu.
 /// Les figurants qui ont quitté l'histoire ne reviennent pas.
 List<PnjEpisode> figurantsDuLieu(
   Grammaire g, {

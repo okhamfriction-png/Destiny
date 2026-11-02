@@ -6,10 +6,11 @@ import '../services/llm_service.dart';
 import '../state/ai_settings.dart';
 
 // Ce module est la SEULE porte par laquelle des paroles quittent l'appareil.
-// Il ne connaît que : l'univers, le ton, le contexte écrit par le maître du
-// jeu, les textes du méchant et du registre, et la transcription qu'il a vue
-// et validée. Jamais un prénom d'enfant, jamais rien sur les joueurs : il ne
-// parle que des personnages. Un test scanne ce dossier pour le vérifier.
+// Il ne connaît que : le contexte écrit par le maître du jeu, les textes du
+// méchant et du registre, et la transcription qu'il a vue et validée. Le jeu
+// de rôle entre humains n'a pas d'univers : rien de tel ne part. Jamais un
+// prénom d'enfant, jamais rien sur les joueurs : il ne parle que des
+// personnages. Un test scanne ce dossier pour le vérifier.
 
 /// Remplace chaque prénom par son rôle : mot entier uniquement, insensible à la
 /// casse, en Unicode. « Naël » dans « Naelle » ne désigne pas l'enfant et n'est
@@ -140,36 +141,19 @@ class CampagneAssistant {
   const CampagneAssistant(this._llm);
   final LlmService _llm;
 
-  String _entete({
-    required String univers,
-    required String ton,
-    required String contexte,
-    String lore = '',
-  }) {
-    final b = StringBuffer();
-    if (univers.trim().isNotEmpty) b.writeln('Univers : $univers');
-    if (ton.trim().isNotEmpty) b.writeln('Ton : $ton');
-    if (lore.trim().isNotEmpty) {
-      b.writeln('Lore/ambiance à évoquer (personnages et décor peuvent s\'en inspirer) : ${lore.trim()}');
-    }
-    if (contexte.trim().isNotEmpty) b.writeln('Contexte : ${contexte.trim()}');
-    return b.toString();
-  }
+  String _entete(String contexte) => contexte.trim().isEmpty ? '' : 'Contexte : ${contexte.trim()}\n';
 
   /// Le résumé de l'épisode. Avec des [categoriesRegistre], l'IA rend aussi
   /// les entrées du registre.
   Future<MemoireEpisode> resumer({
     required AiSettings settings,
-    required String univers,
-    required String ton,
     required String contexte,
     required String transcription,
     String public = 'enfant',
-    String lore = '',
     List<String> categoriesRegistre = const [],
   }) async {
     final kids = public != 'adulte';
-    final contenu = StringBuffer(_entete(univers: univers, ton: ton, contexte: contexte, lore: lore))
+    final contenu = StringBuffer(_entete(contexte))
       ..writeln('Transcription :')
       ..write(transcription.trim());
     final consigne = consigneResume(kids: kids, categoriesRegistre: categoriesRegistre);
@@ -186,15 +170,13 @@ class CampagneAssistant {
   /// réécrit.
   Future<List<String>> proposerPresages({
     required AiSettings settings,
-    required String univers,
-    required String ton,
     required String contexte,
     required String mechant,
     required List<String> paliers,
     String public = 'enfant',
   }) async {
     final kids = public != 'adulte';
-    final contenu = StringBuffer(_entete(univers: univers, ton: ton, contexte: contexte))
+    final contenu = StringBuffer(_entete(contexte))
       ..writeln('Le méchant de la saison :')
       ..writeln(mechant.trim())
       ..writeln('Les quatre paliers de sa machination :');
@@ -214,8 +196,6 @@ class CampagneAssistant {
   /// Deux ou trois entrées du registre à ressortir dans l'épisode à venir.
   Future<List<Ressorti>> proposerRessortis({
     required AiSettings settings,
-    required String univers,
-    required String ton,
     required String contexte,
     required List<String> entrees,
     String prochainEpisode = '',
@@ -223,7 +203,7 @@ class CampagneAssistant {
   }) async {
     if (entrees.isEmpty) return const [];
     final kids = public != 'adulte';
-    final contenu = StringBuffer(_entete(univers: univers, ton: ton, contexte: contexte));
+    final contenu = StringBuffer(_entete(contexte));
     if (prochainEpisode.trim().isNotEmpty) contenu.writeln('Le prochain épisode : ${prochainEpisode.trim()}');
     contenu.writeln('Le registre de la série :');
     for (final (i, e) in entrees.indexed) {

@@ -8,6 +8,7 @@ import '../destiny/page.dart';
 import '../theme/destiny_theme.dart';
 import 'composants_serie.dart';
 import 'contexte_serie.dart';
+import 'pbta_composants.dart';
 import 'personnages_screen.dart';
 import 'registre_screen.dart';
 import 'saison_screen.dart';
@@ -118,7 +119,6 @@ class _FicheSerieScreenState extends State<FicheSerieScreen> {
     final enCours = s.episodeEnCours;
     final saison = s.saisonEnCours;
     final prochain = s.prochainNumero;
-    final univers = ctx.store.catalogue.universDe(s.univers);
     final horsSaison = s.episodesDe(0);
 
     return PageDestiny(
@@ -138,9 +138,6 @@ class _FicheSerieScreenState extends State<FicheSerieScreen> {
       enfants: [
         Wrap(alignment: WrapAlignment.center, spacing: 8, runSpacing: 6, crossAxisAlignment: WrapCrossAlignment.center, children: [
           Chip(label: Text(t.t('serie.natures.${s.nature.name}'))),
-          if (univers != null) Chip(label: Text(univers.nom)),
-          if (s.ton.isNotEmpty) Chip(label: Text(ctx.store.catalogue.tons[s.ton] ?? s.ton)),
-          if (s.lore.isNotEmpty) Chip(label: Text(s.lore)),
           if (s.kids) const SigleKids(),
         ]),
         const SizedBox(height: 12),
@@ -192,6 +189,7 @@ class _FicheSerieScreenState extends State<FicheSerieScreen> {
               sousTitre: [
                 g.archetype(p.archetypeId)?.nom ?? '',
                 g.animal(p.animalId)?.nom ?? '',
+                if (p.bonus != null) '${t.t('serie.piece.bonus')} ${nomFace(context, p.bonus!)}',
                 if (p.pnj) t.t('serie.personnages.pnj'),
                 if (s.kids && p.pouvoir.isNotEmpty) p.pouvoir,
               ].where((x) => x.isNotEmpty).join(' · '),
@@ -208,8 +206,6 @@ class _FicheSerieScreenState extends State<FicheSerieScreen> {
           for (final (cle, valeur, changer) in [
             ('traitre', s.reglages.traitre, (bool v) => s.reglages.traitre = v),
             ('registre', s.reglages.registre, (bool v) => s.reglages.registre = v),
-            ('combat', s.reglages.combat, (bool v) => s.reglages.combat = v),
-            ('piece', s.reglages.piece, (bool v) => s.reglages.piece = v),
           ])
             SwitchListTile(
               contentPadding: EdgeInsets.zero,

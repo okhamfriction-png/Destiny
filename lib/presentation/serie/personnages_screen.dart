@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../domain/grammaire/controle_besoin.dart';
 import '../../domain/grammaire/distribution.dart';
 import '../../domain/grammaire/modeles.dart';
+import '../../domain/serie/pbta.dart';
 import '../../domain/serie/regles_serie.dart';
 import '../../domain/serie/serie.dart';
 import '../destiny/donnees.dart';
@@ -12,15 +13,16 @@ import '../destiny/page.dart';
 import '../theme/destiny_theme.dart';
 import 'composants_serie.dart';
 import 'contexte_serie.dart';
+import 'pbta_composants.dart';
 import 'saison_screen.dart';
 
 /// Ce qui vient après les personnages.
 enum ApresPersonnages { episode, saison, fiche }
 
-/// Les personnages de la série : un archétype et un animal par joueur, leur
-/// nom, leur place dans le lieu, leur blessure, leur besoin, et leur pouvoir
-/// en kids. À moins de quatre joueurs, l'alarmiste est tenu par le maître du
-/// jeu.
+/// Les personnages de la série : un archétype et un animal par joueur, le
+/// prénom du joueur et le nom du personnage, son bonus à la pièce du destin
+/// (BRAVE ou SMART), sa blessure, son besoin, et son pouvoir en kids. À moins
+/// de quatre joueurs, l'alarmiste est tenu par le maître du jeu.
 class PersonnagesScreen extends StatefulWidget {
   const PersonnagesScreen({super.key, required this.contexte, required this.serie, required this.apres});
 
@@ -90,14 +92,21 @@ class _PersonnagesScreenState extends State<PersonnagesScreen> {
     final joueurs = _joueurs;
     final d = tirerDistributionJeu(g, joueurs.length, hasard: _hasard);
     for (var i = 0; i < joueurs.length; i++) {
-      if (joueurs[i].archetypeId != d.joueurs[i]) {
-        joueurs[i]
-          ..archetypeId = d.joueurs[i]
-          ..animalId = tirerAnimal(g, d.joueurs[i], hasard: _hasard);
-      }
+      if (joueurs[i].archetypeId != d.joueurs[i]) _donnerArchetype(g, joueurs[i], d.joueurs[i]);
     }
     _ajusterAlarmiste(g);
   }
+
+  /// Un nouvel archétype : un de ses deux animaux, et le bonus qu'il propose
+  /// (le joueur peut le changer).
+  void _donnerArchetype(Grammaire g, PersonnageSerie p, String id) {
+    p
+      ..archetypeId = id
+      ..animalId = tirerAnimal(g, id, hasard: _hasard)
+      ..bonus = _regles.bonusSuggere(id) ?? p.bonus;
+  }
+
+  ReglesPbta get _regles => ReglesPbta.depuis(context.textes);
 
   /// L'alarmiste tenu par le maître du jeu existe quand il manque un
   /// alarmiste parmi les joueurs.
@@ -109,6 +118,7 @@ class _PersonnagesScreenState extends State<PersonnagesScreen> {
         id: widget.contexte.store.nouvelId('p'),
         archetypeId: Grammaire.alarmisteId,
         animalId: tirerAnimal(g, Grammaire.alarmisteId, hasard: _hasard),
+        bonus: _regles.bonusSuggere(Grammaire.alarmisteId),
         pnj: true,
       ));
     } else if (!manque && pnj.isNotEmpty) {
@@ -121,9 +131,7 @@ class _PersonnagesScreenState extends State<PersonnagesScreen> {
     final id = await choisirArchetype(context);
     if (id == null || id == p.archetypeId) return;
     setState(() {
-      p
-        ..archetypeId = id
-        ..animalId = tirerAnimal(g, id, hasard: _hasard);
+      _donnerArchetype(g, p, id);
       _ajusterAlarmiste(g);
     });
     _sauver();
@@ -214,10 +222,10 @@ class _PersonnagesScreenState extends State<PersonnagesScreen> {
     final g = context.grammaire;
     final t = context.textes;
     final c = context.destiny;
-    String k(String x) => t.t('serie.personnages.$x');
+    String k(String x, [Map<String, String> v = const {}]) => t.t('serie.personnages.$x', v);
     final arch = g.archetype(p.archetypeId);
     final couleur = arch == null ? c.filet : c.famille(arch.famille);
-    final peuples = s.univers.isEmpty ? const <String>[] : widget.contexte.store.catalogue.peuplesPour(s.univers, s.lore);
+    final suggere = _regles.bonusSuggere(p.archetypeId);
     final avis = controlerBesoin(p.besoin, t);
     final messageBesoinTexte = p.besoin.trim().isEmpty ? '' : messageBesoin(avis, g, t);
 
@@ -227,8 +235,6 @@ class _PersonnagesScreenState extends State<PersonnagesScreen> {
           p.joueur = v.trim();
         case 'nom':
           p.nom = v.trim();
-        case 'fonction':
-          p.fonction = v.trim();
         case 'blessure':
           p.blessure = v.trim();
         case 'besoin':
@@ -256,26 +262,26 @@ class _PersonnagesScreenState extends State<PersonnagesScreen> {
     return CadreLisere(
       couleur: couleur,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Row(children: [
-          Expanded(
-            child: p.pnj
-                ? Text(p.archetypeId == Grammaire.alarmisteId ? k('pnj_alarmiste') : k('pnj'),
-                    style: Theme.of(context).textTheme.titleSmall)
-                : TextField(
-                    controller: _champ(p, 'joueur', p.joueur),
-                    textCapitalization: TextCapitalization.words,
-                    decoration: InputDecoration(labelText: k('prenom'), helperText: k('prenom_aide'), isDense: true),
-                    onChanged: (v) => champ('joueur', v),
-                  ),
-          ),
-          const SizedBox(width: 10),
+        // L'archétype d'abord, puis le prénom : à texte agrandi, la puce ne
+        // pousse plus le champ hors de l'écran.
+        Wrap(spacing: 10, runSpacing: 6, crossAxisAlignment: WrapCrossAlignment.center, children: [
           ActionChip(
             avatar: arch == null ? const Icon(Icons.add, size: 16) : null,
             label: Text(arch?.nom ?? t.t('preparer.choisir_archetype')),
             side: BorderSide(color: couleur),
             onPressed: p.pnj ? null : () => _changerArchetype(p),
           ),
+          if (p.pnj)
+            Text(p.archetypeId == Grammaire.alarmisteId ? k('pnj_alarmiste') : k('pnj'),
+                style: Theme.of(context).textTheme.titleSmall),
         ]),
+        if (!p.pnj)
+          TextField(
+            controller: _champ(p, 'joueur', p.joueur),
+            textCapitalization: TextCapitalization.words,
+            decoration: InputDecoration(labelText: k('prenom'), helperText: k('prenom_aide'), isDense: true),
+            onChanged: (v) => champ('joueur', v),
+          ),
         if (p.anciensArchetypes.isNotEmpty)
           Text(
             k('archetype_change').replaceAll('{anciens}',
@@ -295,23 +301,20 @@ class _PersonnagesScreenState extends State<PersonnagesScreen> {
           ),
         ],
         texte('nom', p.nom, k('nom')),
-        texte('fonction', p.fonction, k('fonction')),
-        if (peuples.isNotEmpty) ...[
-          const SizedBox(height: 8),
-          Text(k('peuple'), style: Theme.of(context).textTheme.bodySmall),
-          Wrap(spacing: 6, runSpacing: 4, children: [
-            for (final pe in peuples)
-              ChoiceChip(
-                visualDensity: VisualDensity.compact,
-                label: Text(pe),
-                selected: p.peuple == pe,
-                onSelected: (sel) {
-                  setState(() => p.peuple = sel ? pe : '');
-                  _sauver();
-                },
-              ),
-          ]),
-        ],
+        const SizedBox(height: 10),
+        Text(k('bonus'), style: Theme.of(context).textTheme.titleSmall),
+        const SizedBox(height: 4),
+        ChoixFace(
+          face: p.bonus,
+          onChoisi: (f) {
+            setState(() => p.bonus = f);
+            _sauver();
+          },
+        ),
+        Text(
+          suggere == null ? k('bonus_aide') : '${k('bonus_aide')} ${k('bonus_propose', {'face': nomFace(context, suggere)})}',
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
         texte('blessure', p.blessure, s.kids ? t.t('mode_enfant.mots.blessure') : k('blessure'),
             aide: k('blessure_aide'), idees: s.kids ? t.liste('mode_enfant.exemples_de_soucis') : const []),
         texte('besoin', p.besoin, k('besoin'), aide: k('besoin_aide')),

@@ -605,7 +605,7 @@
   },
   "serie": {
     "titre": "Mes séries",
-    "intro": "Le jeu de rôle entre humains : un maître du jeu, des joueurs, et l'appli pour le chrono, la musique et la régie.",
+    "intro": "Le jeu de rôle entre humains : un Maître du destin, des joueurs, la pièce du destin BRAVE / SMART, et l'appli pour les horloges, la musique et la régie.",
     "vide": "Pas encore de série. Commencez par un épisode : si vous voulez la suite, il deviendra le premier d'une saison.",
     "nouvel_episode": "Nouvel épisode",
     "nouvel_episode_aide": "Une histoire complète : un lieu, un danger, quatre actes.",
@@ -641,18 +641,12 @@
     "creer": {
       "titre_episode": "Nouvel épisode",
       "titre_saison": "Nouvelle saison",
+      "intro": "Un jeu de rôle : les joueurs inventent leur monde et disent ce que font leurs personnages, le Maître du destin le fait vivre, et la pièce du destin tranche quand l'issue est incertaine.",
       "nom": "Titre",
       "nom_aide": "Facultatif.",
       "public": "Pour qui ?",
       "adulte": "Adultes",
       "kids": "Avec des enfants",
-      "univers": "Univers",
-      "sans_univers": "Destiny, sans univers",
-      "univers_aide": "L'univers apporte ses lieux, ses méchants et ses peuples.",
-      "ton": "Ton",
-      "lore": "Lore",
-      "lore_aide": "Facultatif : une œuvre connue pour colorer les personnages et le décor.",
-      "aucun_lore": "Aucun",
       "contexte": "Contexte",
       "contexte_aide": "Ce que l'IA doit savoir de votre histoire. Jamais de prénom d'enfant.",
       "reglages": "Réglages de la série",
@@ -661,27 +655,25 @@
       "traitre_kids": "Avec des enfants, il reste désactivé tant que le parent ne l'active pas.",
       "registre": "Le registre",
       "registre_aide": "L'IA note les figurants, les objets, les secrets et les promesses, pour les ressortir plus tard.",
-      "combat": "Le combat : cœurs, malus et bonus",
-      "piece": "La pièce du destin",
       "suivant": "Les personnages"
     },
     "personnages": {
       "titre": "Les personnages",
-      "intro": "Chaque joueur a un archétype et un animal. L'alarmiste est toujours là : à moins de quatre joueurs, c'est le maître du jeu qui le joue.",
+      "intro": "Chaque joueur a un archétype, un animal et un bonus à la pièce du destin (BRAVE ou SMART). L'alarmiste est toujours là : à moins de quatre joueurs, c'est le maître du jeu qui le joue.",
       "joueurs": "Combien de joueurs ?",
       "tirer": "Tirer une distribution",
       "prenom": "Prénom du joueur",
       "prenom_aide": "Il reste sur l'appareil.",
       "nom": "Nom du personnage",
-      "fonction": "Sa place dans le lieu",
-      "peuple": "Peuple",
+      "bonus": "Son bonus à la pièce du destin",
+      "bonus_aide": "Quand il agit avec son bonus, il lance la pièce deux fois. C'est le joueur qui choisit.",
+      "bonus_propose": "Son archétype propose {face}.",
       "blessure": "Sa blessure",
       "blessure_aide": "Une phrase sur son passé, dite sans explication.",
       "besoin": "Son besoin",
       "besoin_aide": "Ce qui le soignerait vraiment. On peut le fixer au premier Destiny.",
       "pouvoir": "Son pouvoir",
       "pouvoir_aide": "Choisi avec son animal, gardé toute la saison. Il aide, il ne résout pas.",
-      "idees": "Des idées",
       "pnj_alarmiste": "L'alarmiste, joué par le maître du jeu",
       "pnj": "Joué par le maître du jeu",
       "archetype_change": "Ancien archétype : {anciens}",
@@ -735,11 +727,15 @@
       "presage": "Le présage de l'épisode",
       "ombre": "Le méchant reste dans l'ombre : on voit ses sbires et ses coups, pas lui.",
       "final": "Le final : le méchant apparaît enfin, dans le lieu. On le vainc par sa faille plutôt que par la force.",
-      "lieu": "Le lieu",
-      "lieux_univers": "Les lieux de l'univers",
-      "lieux_destiny": "Les lieux de Destiny",
+      "lieu_danger": "Le lieu et le danger",
+      "catalogue_vide": "Le catalogue n'a ni lieu ni danger à proposer : ajoutez-en dans les Réglages.",
+      "autre_lieu": "Un autre lieu",
+      "autre_danger": "Un autre danger",
+      "liste_lieux": "Choisir le lieu dans la liste",
+      "liste_dangers": "Choisir le danger dans la liste",
+      "info_de": "La fiche : {nom}",
+      "espaces": "Ses espaces",
       "sortie_precedente": "La sortie de l'épisode précédent : {sortie}",
-      "danger": "Le danger",
       "danger_aide": "En saison, c'est l'un des coups du méchant.",
       "sans_chrono": "Sans chrono",
       "sans_chrono_aide": "Le maître du jeu lance Destiny quand il veut.",
@@ -757,16 +753,15 @@
       "micro_aide": "La reconnaissance vocale du téléphone écrit l'épisode ; l'appli ne garde aucun son. Le texte reste sur l'appareil, et ne part vers l'IA que si vous le demandez au bilan, sans les prénoms.",
       "micro_absent": "Aucun moteur de reconnaissance sur cet appareil.",
       "mechant_hors_saison": "Un méchant pour cet épisode ?",
-      "mechant_hors_saison_aide": "Facultatif. Ses sbires agissent d'abord, puis il prend les deux dernières marches.",
+      "mechant_hors_saison_aide": "Facultatif : un des 24 grands méchants, avec ses deux sbires. Ses sbires agissent d'abord, puis il prend les deux dernières marches.",
       "aucun_mechant": "Aucun",
       "manque": "Il manque encore : {liste}.",
       "commencer": "Lever le rideau",
-      "dangers_univers": "Les dangers de l'univers",
-      "dangers_destiny": "Les dangers de Destiny"
+      "choisir_mechant": "Choisir parmi les grands méchants",
+      "mechant_hasard": "Au hasard"
     },
     "jeu": {
       "titre": "Épisode {n}",
-      "presage": "Le présage",
       "mechant": "Le méchant",
       "dans_l_ombre": "Dans l'ombre",
       "en_personne": "En personne",
@@ -785,7 +780,6 @@
       "jouer": "Jouer",
       "accepte_offre": "Il a accepté l'offre",
       "bascule": "{nom} passe au service du méchant.",
-      "piece": "Pièce du destin",
       "regie": "Régie son",
       "rappel_fixer": "Premier figé : chacun fixe en silence « il veut… mais il a besoin de… ».",
       "rappel_nommer": "Acte 3 : le besoin sort, souvent par la bouche d'un autre.",
@@ -796,23 +790,20 @@
       "terminer_confirmer": "Terminer l'épisode et passer au bilan ?",
       "micro_on": "transcription",
       "micro_echec": "Le micro n'a pas démarré ({raison}). L'épisode continue.",
-      "combat_aide": "À quoi servent les icônes de combat ?"
-    },
-    "combat": {
-      "titre": "Le combat, en un coup d'œil",
-      "aide": "Tapez une icône à côté d'un personnage pour changer son état.",
-      "en_forme": "en forme. Tapez pour passer blessé, puis sorti, puis de nouveau en forme.",
-      "blesse": "blessé.",
-      "sorti": "il est tombé (son nom est barré).",
-      "sorti_kids": "il a quitté l'histoire (son nom est barré).",
-      "malus": "malus : affaibli (−1, −2…).",
-      "bonus": "bonus : renforcé (+1, +2…).",
-      "coeur": "Cœur rouge",
-      "brise": "Cœur brisé",
-      "vide": "Cœur vidé",
-      "moins": "Moins",
-      "plus": "Plus",
-      "compris": "Compris"
+      "tirer_piece": "Tirer la pièce",
+      "tirer_pour": "Tirer la pièce pour {nom}",
+      "horloge_episode": "L'épisode · les paliers du danger",
+      "horloge_saison": "La saison · les présages du méchant",
+      "gravite": "En ce moment, un échec appelle un mouvement {gravite}.",
+      "hors_jeu": "Hors jeu",
+      "soigner": "Soigner",
+      "deux_lancers": "Deux lancers quand : {liste}.",
+      "rappel_bonus": "il agit en {face}",
+      "rappel_aide": "on l'aide",
+      "rappel_vouloir": "il dit son vouloir",
+      "rappel_pouvoir": "il utilise son pouvoir",
+      "dit_vouloir": "Il dit son vouloir",
+      "elan": "Prochaine action : deux lancers"
     },
     "bilan": {
       "titre": "Bravo !",
@@ -841,7 +832,11 @@
       "transcription_aide": "Elle est gardée avec l'épisode, sur l'appareil.",
       "resumer": "Faire résumer l'épisode",
       "terminer": "Ranger l'épisode",
-      "fin_saison": "Fin de la saison {n}."
+      "fin_saison": "Fin de la saison {n}.",
+      "quitte": "Il quitte l'histoire",
+      "quitte_kids": "Il quitte l'histoire jusqu'à la saison suivante",
+      "quitte_aide": "Il a fini l'épisode hors jeu.",
+      "blesses_anciens": "Les blessés (ancienne campagne)"
     },
     "resume": {
       "titre": "Résumé",
@@ -914,6 +909,294 @@
         "tombe": "a quitté l'histoire",
         "retourne": "retourné"
       }
+    },
+    "piece": {
+      "personne": "Personne ne peut lancer la pièce : tous les personnages sont hors jeu.",
+      "qui": "Qui agit ?",
+      "approche": "Sa ligne du destin",
+      "bonus": "bonus",
+      "mouvement": "Le mouvement (facultatif)",
+      "aucun_mouvement": "Aucun",
+      "second_lancer": "Le second lancer",
+      "aide": "Un autre personnage l'aide",
+      "vouloir": "Il vient de dire son vouloir",
+      "vouloir_aide": "La première fois de l'épisode : sa prochaine action se joue avec deux lancers.",
+      "pouvoir": "Il utilise son pouvoir",
+      "gene": "Un autre personnage le gêne",
+      "mode_simple": "Un lancer : il faut {face}.",
+      "mode_seconde": "Deux lancers : un seul {face} suffit.",
+      "mode_gene": "Deux lancers : il faut {face} les deux fois.",
+      "lancer": "Lancer la pièce",
+      "vraie_piece": "J'ai lancé ma vraie pièce",
+      "tombee": "Lancer {n} : sur quelle face est-elle tombée ?",
+      "lancer_n": "Lancer {n}",
+      "succes_phrase": "Tu as suivi la ligne du destin.",
+      "echec_phrase": "Tu t'es trompé de ligne du destin.",
+      "ligne": "Sa ligne :",
+      "tombees": "La pièce :",
+      "gravite": "Mouvement {gravite} · palier {n}",
+      "doux": "doux",
+      "dur": "dur",
+      "idees": "Des mouvements pour le Maître du destin :",
+      "autres_idees": "D'autres idées",
+      "marquer_blessure": "Marquer une blessure",
+      "blessure_marquee": "Blessure marquée",
+      "fermer": "Fermer"
+    },
+    "aide_mj": {
+      "titre": "Aide du MJ",
+      "maintenant": "Palier {n} : un échec appelle un mouvement {gravite}.",
+      "onglets": [
+        "La pièce",
+        "Les joueurs",
+        "Le MJ",
+        "Horloges et blessures"
+      ]
+    }
+  },
+  "pbta": {
+    "titre": "Le jeu de rôle",
+    "intro": "Entre humains, on joue avec les codes du jeu de rôle : les joueurs disent ce que font leurs personnages, le Maître du destin décrit le monde et le fait réagir, et la pièce du destin tranche quand l'issue est incertaine. Rien n'est écrit : on joue pour découvrir ce qui arrive.",
+    "effet": "Effet",
+    "piece": {
+      "titre": "La pièce du destin",
+      "principe": "Une seule pièce, deux faces : BRAVE, l'éclair, et SMART, le masque. Avant de lancer, tu choisis ta ligne du destin : comment ton personnage s'y prend.",
+      "quand": "On lance la pièce quand un personnage tente quelque chose de risqué et que l'issue est incertaine. Sinon, il le fait, tout simplement.",
+      "faces": {
+        "brave": {
+          "nom": "BRAVE",
+          "approche": "La force, le courage, la puissance, la bagarre.",
+          "legende": "BRAVE — la force"
+        },
+        "smart": {
+          "nom": "SMART",
+          "approche": "La perception, l'intelligence, le charisme, la ruse, la parole.",
+          "legende": "SMART — la ruse"
+        }
+      },
+      "succes": "Succès",
+      "echec": "Échec",
+      "succes_texte": "La pièce tombe sur ta face : tu as suivi la ligne du destin. Tu fais ce que tu voulais.",
+      "echec_texte": "La pièce tombe sur l'autre face : tu t'es trompé de ligne du destin. Le Maître du destin fait un mouvement.",
+      "doux": "Aux paliers 1 et 2, son mouvement est doux : il annonce ce qui menace, et on peut encore réagir.",
+      "dur": "Aux paliers 3 et 4, son mouvement est dur : ce qui menaçait arrive, tout de suite, et ça coûte."
+    },
+    "bonus": {
+      "titre": "Le bonus et le second lancer",
+      "principe": "Chaque personnage a un bonus : BRAVE ou SMART. Quand il agit avec son bonus, il lance la pièce deux fois, et il réussit si l'une des deux tombe sur sa face. Avec l'autre approche, un seul lancer.",
+      "choisir": "C'est le joueur qui choisit le bonus de son personnage. L'appli en propose un d'après son archétype.",
+      "seconde_chance": "Le second lancer vient aussi quand un autre personnage t'aide, juste après avoir dit ton vouloir pour la première fois, et, avec des enfants, quand tu utilises ton pouvoir. On ne lance jamais plus de deux fois.",
+      "gene": "Quand un autre personnage te gêne, tu lances deux fois : la moindre pièce sur l'autre face te fait échouer. Une aide et une gêne s'annulent : un seul lancer."
+    },
+    "bonus_suggere": {
+      "leader": "brave",
+      "protecteur": "brave",
+      "aidant": "smart",
+      "debrouillard": "smart",
+      "alarmiste": "smart",
+      "denegateur": "brave",
+      "prophete": "smart",
+      "cynique": "smart",
+      "opportuniste": "smart",
+      "gardien_de_l_ordre": "brave",
+      "solitaire": "brave",
+      "paranoiaque": "smart"
+    },
+    "mouvements_titre": "Les mouvements des joueurs",
+    "mouvements": [
+      {
+        "id": "affronter",
+        "nom": "Affronter le danger",
+        "quand": "Quand tu agis malgré la menace, ou que tu tentes quelque chose de risqué…",
+        "approche": "BRAVE ou SMART, selon comment tu t'y prends.",
+        "approches": [
+          "brave",
+          "smart"
+        ],
+        "reussite": "Tu le fais, comme tu le voulais.",
+        "echec": "Tu le fais à moitié, ou à un prix : le Maître du destin fait un mouvement."
+      },
+      {
+        "id": "lire_situation",
+        "nom": "Lire la situation",
+        "quand": "Quand tu observes le lieu et le danger pour comprendre ce qui se passe…",
+        "approche": "SMART.",
+        "approches": [
+          "smart"
+        ],
+        "reussite": "Pose deux questions au Maître du destin sur le lieu et le danger : il te répond franchement.",
+        "echec": "Pose une seule question, et le destin s'en mêle : le Maître du destin fait un mouvement."
+      },
+      {
+        "id": "lire_quelqu_un",
+        "nom": "Lire quelqu'un",
+        "quand": "Quand tu observes quelqu'un, ou que tu le fais parler…",
+        "approche": "SMART.",
+        "approches": [
+          "smart"
+        ],
+        "reussite": "Tu perces son vouloir ou son besoin : son joueur, ou le Maître du destin, te le dit.",
+        "echec": "Tu te trompes sur lui, ou c'est lui qui te perce à jour : le Maître du destin fait un mouvement."
+      },
+      {
+        "id": "s_opposer",
+        "nom": "S'opposer",
+        "quand": "Quand tu affrontes quelqu'un, en te battant ou en parlant…",
+        "approche": "BRAVE si tu te bats ; SMART si tu parles, ruses ou convaincs.",
+        "approches": [
+          "brave",
+          "smart"
+        ],
+        "reussite": "Tu prends le dessus : il cède, il recule, ou il marque une blessure.",
+        "echec": "Il prend le dessus : tu marques une blessure, ou tu perds ce que tu tenais."
+      },
+      {
+        "id": "soigner",
+        "nom": "Soigner",
+        "quand": "Quand tu prends soin de quelqu'un, ou de toi, dans un moment de répit…",
+        "approche": "SMART, ou BRAVE si tu le portes à l'abri.",
+        "approches": [
+          "smart",
+          "brave"
+        ],
+        "reussite": "Efface une case de blessure.",
+        "echec": "Le soin prend du temps, ou il coûte : le Maître du destin fait un mouvement."
+      },
+      {
+        "id": "aider_gener",
+        "nom": "Aider ou gêner",
+        "quand": "Quand tu aides ou gênes un autre personnage, et que tu dis comment…",
+        "approche": "Pas de lancer pour toi.",
+        "effet": "Tu l'aides : il lance la pièce deux fois. Tu le gênes : il lance deux fois, et la moindre pièce sur l'autre face le fait échouer. Dans les deux cas, tu partages ce qui arrive."
+      },
+      {
+        "id": "dire_vouloir",
+        "nom": "Dire son vouloir",
+        "quand": "La première fois de l'épisode que tu dis ton vouloir à voix haute…",
+        "approche": "Pas de lancer.",
+        "effet": "Ta prochaine action se joue avec deux lancers."
+      },
+      {
+        "id": "pouvoir",
+        "nom": "Utiliser son pouvoir",
+        "quand": "Quand tu utilises ton pouvoir…",
+        "approche": "BRAVE ou SMART, selon ce que tu en fais.",
+        "effet": "Ton action se joue avec deux lancers. Le pouvoir aide, il ne résout jamais tout seul.",
+        "kids": true
+      },
+      {
+        "id": "payer_le_prix",
+        "nom": "Payer le prix",
+        "quand": "Au final : à l'acte 4, et à l'épisode 4 d'une saison…",
+        "approche": "Pas de pièce.",
+        "effet": "Tu choisis : ton vouloir ou ton besoin. Le prix se paie en scène, devant tout le monde."
+      }
+    ],
+    "agenda_titre": "L'agenda du Maître du destin",
+    "agenda": [
+      "Fais monter le danger, palier par palier.",
+      "Rends les personnages vivants : leur vouloir, leur besoin, leur prix.",
+      "Joue pour découvrir ce qui arrive : rien n'est écrit."
+    ],
+    "principes_titre": "Ses principes",
+    "principes": [
+      "Parle aux personnages, pas aux joueurs : « Que fais-tu, le Lion ? »",
+      "Pose des questions, et bâtis sur les réponses.",
+      "Sois fan des personnages : mets-les en difficulté pour les voir briller.",
+      "Fais naître chaque mouvement de ce qui vient de se passer.",
+      "Ne nomme jamais ton mouvement : raconte ce qui arrive.",
+      "Pense hors champ : le méchant agit dans l'ombre, et on voit ses sbires d'abord.",
+      "Donne un nom et un vouloir à chaque figurant.",
+      "Laisse la pièce trancher quand l'issue est incertaine ; sinon, dis oui."
+    ],
+    "mouvements_mj": {
+      "titre": "Les mouvements du Maître du destin",
+      "principe": "Il fait un mouvement quand la pièce tombe sur l'autre face, quand les joueurs le regardent en attendant la suite, ou quand ils laissent passer une occasion.",
+      "regle": "Un mouvement doux annonce ce qui vient. Si personne ne réagit, il devient dur.",
+      "que_fais_tu": "Après chaque mouvement, demande : « Que fais-tu ? »",
+      "doux_titre": "Doux, aux paliers 1 et 2",
+      "durs_titre": "Durs, aux paliers 3 et 4",
+      "doux": [
+        {
+          "id": "presage",
+          "nom": "Annoncer un présage hors champ",
+          "texte": "Un bruit, une ombre, un signe : le méchant ou le danger se rapproche, sans se montrer."
+        },
+        {
+          "id": "besoin",
+          "nom": "Mettre un personnage face à son besoin",
+          "texte": "Une situation qui touche sa blessure, et qu'il ne réglera pas avec son vouloir."
+        },
+        {
+          "id": "occasion",
+          "nom": "Offrir une occasion, avec un prix",
+          "texte": "Ce qu'il veut est là, à portée de main… s'il accepte d'en payer le prix."
+        },
+        {
+          "id": "pnj",
+          "nom": "Faire agir un sbire ou un figurant",
+          "texte": "Il veut quelque chose, maintenant : il le dit, il le prend, ou il s'interpose."
+        },
+        {
+          "id": "objet",
+          "nom": "Utiliser un objet du lieu",
+          "texte": "Un des trois objets, ou un coin du lieu, entre en jeu : il aide, il gêne, ou il révèle."
+        }
+      ],
+      "durs": [
+        {
+          "id": "destiny",
+          "nom": "Faire monter le danger d'un palier",
+          "texte": "Lance le rituel Destiny : le tonnerre, la lumière bleue, et le danger monte d'un cran."
+        },
+        {
+          "id": "separer",
+          "nom": "Séparer le groupe",
+          "texte": "Une porte se ferme, un couloir s'effondre, la foule les écarte : chacun se retrouve seul face au danger."
+        },
+        {
+          "id": "retourner",
+          "nom": "Retourner leur action contre eux",
+          "texte": "Ce qu'ils viennent de faire se retourne : l'alliée se méfie, la clé casse, le feu prend."
+        },
+        {
+          "id": "verite",
+          "nom": "Révéler une vérité",
+          "texte": "Le traître, la réponse du mystère, la faille du méchant : une vérité éclate, et elle change tout."
+        },
+        {
+          "id": "blessure",
+          "nom": "Infliger une blessure ou une perte",
+          "texte": "Coche une case de blessure, ou retire-lui ce qu'il tenait.",
+          "kids": "Une case de fatigue, ou un renoncement : un trésor qu'on laisse, un pouvoir qui s'éteint le temps d'une scène. Jamais la mort."
+        },
+        {
+          "id": "annonce",
+          "nom": "Faire arriver ce qui était annoncé",
+          "texte": "Le présage qu'on a laissé passer se réalise : ce qui menaçait est là."
+        }
+      ]
+    },
+    "horloges": {
+      "titre": "Les horloges",
+      "episode": "L'horloge de l'épisode : les quatre paliers du danger. Chaque Destiny l'avance d'un cran ; au quatrième, il faut choisir.",
+      "saison": "L'horloge de la saison : les quatre présages du méchant, un par épisode. Au quatrième, il apparaît en personne."
+    },
+    "blessures": {
+      "titre": "Les blessures",
+      "principe": "Chaque personnage a trois cases. Le Maître du destin en coche une quand le destin frappe ; « Soigner » en efface une.",
+      "adultes": [
+        "Secoué",
+        "Blessé",
+        "Hors jeu"
+      ],
+      "kids": [
+        "Fatigué",
+        "Épuisé",
+        "Doit se reposer"
+      ],
+      "hors_jeu": "Hors jeu : il ne peut plus agir dans cet épisode. Au bilan, on décide ensemble s'il quitte l'histoire.",
+      "hors_jeu_kids": "Doit se reposer : il ne joue plus jusqu'à la fin de l'épisode, puis il revient. Personne ne meurt."
     }
   },
   "ia_jeu": {
@@ -1187,8 +1470,6 @@
     "kids_defaut": "Avec des enfants, par défaut",
     "traitre_defaut": "Le module traître, par défaut",
     "registre_defaut": "Le registre, par défaut",
-    "combat_defaut": "Le combat, par défaut",
-    "piece_defaut": "La pièce du destin, par défaut",
     "evolution": "Changer d'archétype entre deux saisons",
     "evolution_aide": "Permis à ceux qui ont payé leur besoin.",
     "echauffement": "L'échauffement",

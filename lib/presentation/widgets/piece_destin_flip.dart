@@ -14,6 +14,8 @@ class PieceDestinFlip extends StatefulWidget {
     required this.brave,
     required this.onFini,
     this.size = 240,
+    this.titre,
+    this.legende,
     super.key,
   });
 
@@ -21,6 +23,14 @@ class PieceDestinFlip extends StatefulWidget {
   final bool brave;
   final double size;
   final VoidCallback onFini;
+
+  /// Le titre au-dessus de la pièce (« Lancer 1 sur 2 »), lu dans les textes
+  /// par l'écran qui la lance. Sans titre : « PIÈCE DU DESTIN ».
+  final String? titre;
+
+  /// La légende qui apparaît quand la pièce se pose. Sans légende : le nom
+  /// de la face.
+  final String? legende;
 
   @override
   State<PieceDestinFlip> createState() => _PieceDestinFlipState();
@@ -76,8 +86,9 @@ class _PieceDestinFlipState extends State<PieceDestinFlip>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('PIÈCE DU DESTIN',
-                style: TextStyle(
+            Text(widget.titre ?? 'PIÈCE DU DESTIN',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
                     color: Colors.white70,
                     fontSize: 13,
                     letterSpacing: 4,
@@ -115,7 +126,8 @@ class _PieceDestinFlipState extends State<PieceDestinFlip>
               builder: (context, _) => Opacity(
                 opacity: _c.isCompleted ? 1 : 0,
                 child: Text(
-                  widget.brave ? 'BRAVE — le courage' : 'SMART — la ruse',
+                  widget.legende ?? (widget.brave ? 'BRAVE — le courage' : 'SMART — la ruse'),
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                       color: widget.brave
                           ? const Color(0xFFF57C00)

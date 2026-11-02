@@ -153,8 +153,6 @@ class ReglagesDestinyScreen extends StatelessWidget {
               _Bascule(k('traitre_defaut'), r.moduleTraitre, (v) => r.changer(moduleTraitre: v),
                   aide: t.t('module_traitre.explication')),
               _Bascule(k('registre_defaut'), r.registreParDefaut, (v) => r.changer(registreParDefaut: v)),
-              _Bascule(k('combat_defaut'), r.combatParDefaut, (v) => r.changer(combatParDefaut: v)),
-              _Bascule(k('piece_defaut'), r.pieceParDefaut, (v) => r.changer(pieceParDefaut: v)),
               _Bascule(k('evolution'), r.evolutionArchetype, (v) => r.changer(evolutionArchetype: v),
                   aide: k('evolution_aide')),
             ]),
