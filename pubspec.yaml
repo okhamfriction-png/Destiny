@@ -73,8 +73,6 @@ flutter:
     - assets/audio/reveal.wav
     - assets/audio/ambiences/
     - assets/audio/universes/
-    - assets/images/locations/
-    - assets/images/dangers/
     - assets/images/archetypes/
     - assets/images/destiny_cube.png
     - assets/images/logo_destiny.png
