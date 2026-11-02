@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/archetype.dart';
 import '../../domain/entities/danger.dart';
 import '../../domain/entities/location.dart';
 
@@ -29,38 +28,6 @@ class EntityVisual {
 class EntityVisuals {
   EntityVisuals._();
 
-  // --- Statut de jeu d'un archétype (couleur du nom) ---
-  /// Ambre : statut haut (domine, occupe l'espace).
-  static const Color statutHaut = Color(0xFFFFB74D);
-
-  /// Bleu : statut bas (se soumet, cherche l'abri).
-  static const Color statutBas = Color(0xFF64B5F6);
-
-  /// Couleur du nom d'un archétype selon son statut ('haut' / 'bas' / neutre).
-  static Color colorForStatut(String statut) {
-    switch (statut) {
-      case 'haut':
-        return statutHaut;
-      case 'bas':
-        return statutBas;
-      default:
-        return Colors.white;
-    }
-  }
-
-  /// Libellé lisible d'un statut.
-  static String labelForStatut(String statut) {
-    switch (statut) {
-      case 'haut':
-        return 'Statut haut';
-      case 'bas':
-        return 'Statut bas';
-      default:
-        return 'Statut neutre';
-    }
-  }
-
-  // --- Palettes de dégradés pour les lieux (choisies par hash de l'id) ---
   static const List<List<Color>> _locationPalettes = [
     [Color(0xFF2E3192), Color(0xFF1BFFFF)],
     [Color(0xFF373B44), Color(0xFF4286f4)],
@@ -134,33 +101,6 @@ class EntityVisuals {
     'Social / Dilemme': [Color(0xFFF7971E), Color(0xFFFFD200)],
     'Survie / Dilemme': [Color(0xFF11998E), Color(0xFF38EF7D)],
     'Thriller': [Color(0xFF232526), Color(0xFFE53935)],
-  };
-
-  static const Map<String, String> _archetypeEmojis = {
-    'aigle': '🦅',
-    'ane': '🫏',
-    'cerf': '🦌',
-    'chat': '🐱',
-    'chien': '🐶',
-    'coq': '🐓',
-    'corbeau': '🐦‍⬛',
-    'fourmi': '🐜',
-    'hibou': '🦉',
-    'hyene': '🐆',
-    'lapin': '🐰',
-    'lion': '🦁',
-    'loup': '🐺',
-    'mouton': '🐑',
-    'ours': '🐻',
-    'paon': '🦚',
-    'porc': '🐷',
-    'rat': '🐀',
-    'renard': '🦊',
-    'serpent': '🐍',
-    'singe': '🐵',
-    'souris': '🐭',
-    'taureau': '🐂',
-    'vautour': '🦅',
   };
 
   // --- Termes de recherche (anglais) pour les vraies photos ---
@@ -250,33 +190,6 @@ class EntityVisuals {
     'sabotage_en_cours': 'sabotage wires',
   };
 
-  static const Map<String, String> _archetypeQueries = {
-    'aigle': 'eagle',
-    'ane': 'donkey',
-    'cerf': 'deer stag',
-    'chat': 'cat',
-    'chien': 'dog',
-    'coq': 'rooster',
-    'corbeau': 'crow raven',
-    'fourmi': 'ant',
-    'hibou': 'owl',
-    'hyene': 'hyena',
-    'lapin': 'rabbit',
-    'lion': 'lion',
-    'loup': 'wolf',
-    'mouton': 'sheep',
-    'ours': 'bear',
-    'paon': 'peacock',
-    'porc': 'pig',
-    'rat': 'rat',
-    'renard': 'fox',
-    'serpent': 'snake',
-    'singe': 'monkey',
-    'souris': 'mouse',
-    'taureau': 'bull',
-    'vautour': 'vulture',
-  };
-
   static List<Color> _paletteFor(String id) {
     final index = id.hashCode.abs() % _locationPalettes.length;
     return _locationPalettes[index];
@@ -306,32 +219,4 @@ class EntityVisuals {
 
   static List<Color> styleGradient(String style) =>
       _styleGradients[style] ?? const [Color(0xFF434343), Color(0xFF000000)];
-
-  static EntityVisual forArchetype(Archetype archetype) {
-    return EntityVisual(
-      gradient: _paletteFor(archetype.id),
-      emoji: _archetypeEmojis[archetype.id] ?? '🎭',
-      query: _archetypeQueries[archetype.id] ?? archetype.name,
-      assetPath: 'assets/images/archetypes/${archetype.id}.jpg',
-    );
-  }
-
-  /// Emoji animal d'un archétype désigné par son NOM (ex. « Corbeau », « Âne »),
-  /// pour rappeler l'archétype d'un personnage dans les dialogues. Null si
-  /// inconnu.
-  static String? emojiForArchetypeName(String name) {
-    final id = archetypeSlug(name);
-    return _archetypeEmojis[id];
-  }
-
-  /// Normalise un nom d'archétype en identifiant (minuscule, sans accent).
-  static String archetypeSlug(String name) {
-    var s = name.toLowerCase().trim();
-    const from = 'àâäáãåçéèêëíìîïñóòôöõúùûüýÿœæ';
-    const to = 'aaaaaaceeeeiiiinooooouuuuyyoa';
-    for (var i = 0; i < from.length; i++) {
-      s = s.replaceAll(from[i], to[i]);
-    }
-    return s.replaceAll(RegExp(r'[^a-z0-9]+'), '');
-  }
 }

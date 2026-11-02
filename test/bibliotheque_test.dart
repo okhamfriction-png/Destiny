@@ -5,6 +5,7 @@ import 'package:destiny/domain/entities/location.dart';
 import 'package:destiny/domain/grammaire/modeles.dart';
 import 'package:destiny/domain/grammaire/textes.dart';
 import 'package:destiny/domain/repositories/catalog_store.dart';
+import 'package:destiny/domain/serie/univers.dart';
 import 'package:destiny/presentation/bibliotheque/bibliotheque_screen.dart';
 import 'package:destiny/presentation/bibliotheque/mechants_screen.dart';
 import 'package:destiny/presentation/destiny/cartes.dart';
@@ -17,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'outils/grammaire_partagee.dart';
 import 'outils/polices.dart';
+import 'serie_test.dart' show chargerCatalogue;
 
 /// Un catalogue déjà chargé (pas d'accès disque pendant le test).
 class CatalogueDeTest implements CatalogStore {
@@ -173,6 +175,31 @@ void main() {
     for (final s in m.sbires) {
       expect(find.text(s.nom), findsOneWidget);
     }
+  });
+
+  testWidgets('les 42 méchants des univers, rangés par univers, avec leurs présages', (tester) async {
+    late CatalogueUnivers univers;
+    await tester.runAsync(() async => univers = await chargerCatalogue(g));
+    tester.view.physicalSize = const Size(900, 80000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(MaterialApp(
+      theme: themeDestiny(g, sombre: true),
+      builder: (context, child) => DestinyDonnees(grammaire: g, textes: t, child: child!),
+      home: MechantsScreen(
+        contexte: ContexteBibliotheque(catalogue: catalogue, visuels: VisualSettings(), univers: univers),
+      ),
+    ));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(t.t('bibliotheque.serie.mechants_univers')));
+    await tester.pumpAndSettle();
+    expect(find.byType(CarteMechant), findsNWidgets(42));
+    final m = univers.mechantsDe('pirates').first;
+    expect(find.text(m.mechant.nom.toUpperCase()), findsOneWidget);
+    expect(find.text(m.presages.first), findsOneWidget);
+    await tester.tap(find.byType(FilterChip));
+    await tester.pumpAndSettle();
+    expect(find.byType(CarteMechant), findsNWidgets(univers.mechants.where((x) => x.mechant.kids).length));
   });
 
   testWidgets('un sbire se joue depuis sa fiche', (tester) async {

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import '../../domain/entities/danger.dart';
 import '../../domain/entities/location.dart';
 import '../../domain/troupe/session.dart';
+import '../../application/prompts/prompts.dart';
+import '../destiny/bouton_ia.dart';
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
@@ -95,6 +97,40 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
           ),
         ),
       );
+
+  /// L'IA propose les trois objets et le mystère ; elle ne remplit que ce
+  /// qui est encore vide.
+  Future<void> _proposerAvecIa() async {
+    final r = await widget.contexte.ia!.miseEnPlace(
+      ScenePrompt(
+        lieu: s.lieuNom,
+        groupe: s.groupe,
+        danger: s.dangerNom,
+        paliers: s.paliers,
+        objets: s.objets,
+        mystere: s.mystere,
+      ),
+      kids: s.kids,
+    );
+    if (!mounted) return;
+    setState(() {
+      for (var i = 0; i < 3 && i < r.objets.length; i++) {
+        if (s.objets[i].trim().isEmpty) {
+          s.objets[i] = r.objets[i];
+          _objets[i].text = r.objets[i];
+        }
+      }
+      if (s.mystere.trim().isEmpty && r.mystere.isNotEmpty) {
+        s.mystere = r.mystere;
+        _mystere.text = r.mystere;
+      }
+      if (s.reponseMystere.trim().isEmpty && r.reponse.isNotEmpty) {
+        s.reponseMystere = r.reponse;
+        _reponse.text = r.reponse;
+      }
+    });
+    await widget.contexte.store.enregistrer(s);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -204,6 +240,12 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
               ),
             ),
         ]),
+        if (widget.contexte.ia != null)
+          BoutonIA(
+            libelle: t.t('ia_jeu.proposer_objets'),
+            disponible: widget.contexte.ia!.disponible,
+            action: _proposerAvecIa,
+          ),
         SectionDestiny(titre: m('mystere'), enfants: [
           Text(m('mystere_aide'), style: Theme.of(context).textTheme.bodySmall),
           const SizedBox(height: 6),

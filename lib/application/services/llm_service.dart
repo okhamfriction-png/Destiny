@@ -34,9 +34,9 @@ class LlmService {
 
   Future<String> _openai(
       AiSettings s, String system, List<ChatMessage> messages) async {
+    // Pas de température imposée : les modèles de raisonnement la refusent.
     final body = jsonEncode({
       'model': s.model,
-      'temperature': 0.9,
       'messages': [
         {'role': 'system', 'content': system},
         ...messages.map((m) => {'role': m.role, 'content': m.content}),
@@ -54,15 +54,31 @@ class LlmService {
         .timeout(const Duration(seconds: 90));
     if (r.statusCode != 200) throw LlmException(_err(r.body, r.statusCode));
     final d = jsonDecode(r.body) as Map<String, dynamic>;
-    return (d['choices'][0]['message']['content'] as String).trim();
+    final texte = (d['choices']?[0]?['message']?['content'] as String?)?.trim() ?? '';
+    if (texte.isEmpty) throw LlmException('Réponse vide de l\'IA.');
+    return texte;
   }
+
+  /// Les modèles Claude de la génération 5 et les Opus/Sonnet 4.6 à 4.8
+  /// acceptent le réglage d'effort ; le jeu demande des réponses vives.
+  static bool _accepteEffort(String modele) =>
+      RegExp(r'^claude-(opus|sonnet|haiku|fable)-5').hasMatch(modele) ||
+      RegExp(r'^claude-(opus-4-[678]|sonnet-4-6)').hasMatch(modele);
+
+  /// Les modèles qui ont un repli côté serveur quand ils déclinent une
+  /// demande (Claude Haiku 5.5 n'en a pas).
+  static bool _avecRepli(String modele) =>
+      RegExp(r'^claude-(fable-5-1|opus-5-5|opus-5|sonnet-5-5)$').hasMatch(modele);
 
   Future<String> _anthropic(
       AiSettings s, String system, List<ChatMessage> messages) async {
+    final repli = _avecRepli(s.model);
     final body = jsonEncode({
       'model': s.model,
-      'max_tokens': 1024,
+      'max_tokens': 16000,
       'system': system,
+      if (_accepteEffort(s.model)) 'output_config': {'effort': 'low'},
+      if (repli) 'fallbacks': 'default',
       'messages': messages.map((m) => {'role': m.role, 'content': m.content}).toList(),
     });
     final r = await http
@@ -71,20 +87,28 @@ class LlmService {
           headers: {
             'x-api-key': s.token,
             'anthropic-version': '2023-06-01',
+            if (repli) 'anthropic-beta': 'server-side-fallback-2026-07-01',
             'anthropic-dangerous-direct-browser-access': 'true',
             'Content-Type': 'application/json',
           },
           body: body,
         )
-        .timeout(const Duration(seconds: 90));
+        .timeout(const Duration(seconds: 120));
     if (r.statusCode != 200) throw LlmException(_err(r.body, r.statusCode));
     final d = jsonDecode(r.body) as Map<String, dynamic>;
-    final content = d['content'] as List<dynamic>;
+    // Un refus arrive en HTTP 200 : on le regarde avant de lire le contenu.
+    if (d['stop_reason'] == 'refusal') {
+      throw LlmException(
+          'L\'IA a décliné cette demande. Reformule-la, ou choisis un autre modèle dans les Réglages.');
+    }
+    final content = d['content'] as List<dynamic>? ?? const [];
     final text = content
         .where((c) => c['type'] == 'text')
         .map((c) => c['text'] as String)
-        .join('\n');
-    return text.trim();
+        .join('\n')
+        .trim();
+    if (text.isEmpty) throw LlmException('Réponse vide de l\'IA.');
+    return text;
   }
 
   Future<String> _google(

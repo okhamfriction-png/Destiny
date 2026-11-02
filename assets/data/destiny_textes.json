@@ -226,7 +226,8 @@
         "titre": "Un spectacle avec l'IA",
         "texte": "Tu joues un personnage ; l'IA joue les partenaires, la régie et le coach."
       },
-      "cle": "Il faut une clé d'IA (Réglages)."
+      "cle": "Il faut une clé d'IA (Réglages).",
+      "ancienne": "Une histoire de l'ancienne grammaire : elle se relit, mais ne se reprend pas."
     },
     "titre": "Jouer",
     "sous_titre": "Le jeu de rôle Destiny : avec tes amis, ou avec l'IA."
@@ -279,7 +280,7 @@
       },
       "mechants": {
         "titre": "Grands méchants",
-        "texte": "Les méchants de saison et leurs sbires."
+        "texte": "Les méchants de saison et leurs sbires : les 24 grands méchants, et ceux des univers."
       },
       "figurants": {
         "titre": "Figurants",
@@ -410,7 +411,11 @@
     "serie": {
       "titre": "Épisode, saison, série",
       "regles_mechant": "Les règles du méchant",
-      "registre": "Le registre de la série"
+      "registre": "Le registre de la série",
+      "grands_mechants": "Les 24 grands méchants",
+      "mechants_univers": "Les méchants des univers",
+      "mechants_univers_aide": "Deux par univers. Chacun a un archétype : il en veut au protagoniste qui a le même.",
+      "presages": "Ses présages"
     }
   },
   "modes_pnj": {
@@ -732,7 +737,9 @@
       "mechant_hors_saison_aide": "Facultatif. Ses sbires agissent d'abord, puis il prend les deux dernières marches.",
       "aucun_mechant": "Aucun",
       "manque": "Il manque encore : {liste}.",
-      "commencer": "Lever le rideau"
+      "commencer": "Lever le rideau",
+      "dangers_univers": "Les dangers de l'univers",
+      "dangers_destiny": "Les dangers de Destiny"
     },
     "jeu": {
       "titre": "Épisode {n}",
@@ -885,5 +892,22 @@
         "retourne": "retourné"
       }
     }
+  },
+  "ia_jeu": {
+    "en_cours": "L'IA réfléchit…",
+    "echec": "L'IA n'a pas répondu : {erreur}",
+    "proposer_objets": "Proposer les objets et le mystère (IA)",
+    "idees_echauffement": "Des idées pour le corps (IA)",
+    "idees_titre": "Des idées pour l'échauffement",
+    "coach": "Demander au coach (IA)",
+    "coach_titre": "Ce que le coach a vu",
+    "coach_seme": "Le besoin semé",
+    "coach_nomme": "Le besoin nommé",
+    "coach_choix": "Le choix de l'acte 4",
+    "reprendre": "Reprendre ses phrases là où c'est vide",
+    "alarmiste": "Souffler la nouvelle à l'alarmiste (IA)",
+    "alarmiste_titre": "Pour l'alarmiste",
+    "fermer": "Fermer",
+    "personnage": "Personnage"
   }
 }

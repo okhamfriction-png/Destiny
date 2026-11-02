@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../application/assistant/campagne_assistant.dart' show sansPrenoms;
+import '../../application/prompts/prompts.dart';
 import '../../domain/grammaire/controle_besoin.dart';
 import '../../domain/troupe/session.dart';
+import '../destiny/bouton_ia.dart';
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
@@ -34,6 +37,79 @@ class _DebriefScreenState extends State<DebriefScreen> {
 
   Future<void> _sauver() => widget.contexte.store.enregistrer(s);
 
+  /// Le coach de débrief : il lit les notes et propose, pour chacun, « il
+  /// veut… mais il a besoin de… ». Les prénoms des comédiens ne partent pas :
+  /// on envoie « Personnage 1 », « Personnage 2 »…
+  Future<void> _coach() async {
+    final t = context.textes;
+    String nom(int i) => '${t.t('ia_jeu.personnage')} ${i + 1}';
+    final roles = {
+      for (final (i, p) in s.personnages.indexed)
+        if (p.joueur.trim().isNotEmpty) p.joueur.trim(): nom(i),
+    };
+    final notes = [for (final n in s.notes) '${n.horodatage} ${n.texte}'].join('\n');
+    final d = await widget.contexte.ia!.debrief(
+      personnages: [
+        for (final (i, p) in s.personnages.indexed)
+          PersonnagePrompt(
+            nom: nom(i),
+            archetypeId: p.archetypeId,
+            animalId: p.animalId,
+            vouloir: p.fixeVeut,
+            besoin: p.fixeBesoin,
+          ),
+      ],
+      notes: sansPrenoms(notes, roles),
+      kids: s.kids,
+    );
+    if (!mounted) return;
+    final reprendre = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => DraggableScrollableSheet(
+        expand: false,
+        initialChildSize: 0.85,
+        builder: (ctx, scroll) => ListView(
+          controller: scroll,
+          padding: const EdgeInsets.all(16),
+          children: [
+            Text(t.t('ia_jeu.coach_titre'), style: Theme.of(ctx).textTheme.titleLarge, textAlign: TextAlign.center),
+            for (final l in d.personnages)
+              SectionDestiny(titre: l.nom, enfants: [
+                LigneInfo(t.t('debrief.veut'), l.veut),
+                LigneInfo(t.t('debrief.besoin'), l.besoin),
+                LigneInfo(t.t('ia_jeu.coach_seme'), l.seme),
+                LigneInfo(t.t('ia_jeu.coach_nomme'), l.nomme),
+                LigneInfo(t.t('ia_jeu.coach_choix'), l.choix),
+              ]),
+            if (d.ceQuiAMarche.isNotEmpty)
+              SectionDestiny(titre: t.t('debrief.ce_qui_a_marche'), enfants: [for (final m in d.ceQuiAMarche) Puce(m)]),
+            const SizedBox(height: 12),
+            FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(t.t('ia_jeu.reprendre'))),
+            TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(t.t('ia_jeu.fermer'))),
+          ],
+        ),
+      ),
+    );
+    if (reprendre != true || !mounted) return;
+    setState(() {
+      for (final (i, l) in d.personnages.indexed) {
+        if (i >= s.personnages.length) break;
+        final p = s.personnages[i];
+        if (p.groupeVeut.trim().isEmpty) p.groupeVeut = l.veut;
+        if (p.groupeBesoin.trim().isEmpty) p.groupeBesoin = l.besoin;
+      }
+      for (final m in d.ceQuiAMarche) {
+        if (!s.ceQuiAMarche.contains(m)) s.ceQuiAMarche.add(m);
+      }
+      _version++;
+    });
+    await _sauver();
+  }
+
+  /// Change quand le coach a rempli des champs (pour les reconstruire).
+  int _version = 0;
+
   @override
   Widget build(BuildContext context) {
     final t = context.textes;
@@ -43,7 +119,9 @@ class _DebriefScreenState extends State<DebriefScreen> {
       titre: d('titre'),
       enfants: [
         Paragraphe(d('intro'), gras: true),
-        for (final p in s.personnages) _personnage(context, p),
+        if (widget.contexte.ia != null)
+          BoutonIA(libelle: t.t('ia_jeu.coach'), disponible: widget.contexte.ia!.disponible, action: _coach),
+        for (final p in s.personnages) KeyedSubtree(key: ValueKey('$_version-${p.hashCode}'), child: _personnage(context, p)),
         SectionDestiny(titre: d('ce_qui_a_marche'), enfants: [
           Row(children: [
             Expanded(

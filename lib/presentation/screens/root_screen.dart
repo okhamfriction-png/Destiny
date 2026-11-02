@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../application/services/assistant_jeu.dart';
 import '../../application/services/audio_service.dart';
 import '../../application/state/ai_settings.dart';
 import '../../application/state/chat_controller.dart';
@@ -42,6 +43,7 @@ class RootScreen extends StatefulWidget {
     required this.serieStore,
     required this.troupeStore,
     required this.reglages,
+    this.assistantJeu,
     super.key,
   });
 
@@ -59,6 +61,7 @@ class RootScreen extends StatefulWidget {
   final SerieStore serieStore;
   final TroupeStore troupeStore;
   final ReglagesDestiny reglages;
+  final AssistantJeu? assistantJeu;
 
   @override
   State<RootScreen> createState() => _RootScreenState();
@@ -75,6 +78,7 @@ class _RootScreenState extends State<RootScreen> {
           catalogue: widget.catalogStore,
           visuels: widget.visualSettings,
           detailsLieux: widget.locationDetails,
+          univers: widget.serieStore.catalogue,
         ),
       ));
 
@@ -108,6 +112,7 @@ class _RootScreenState extends State<RootScreen> {
       visuels: widget.visualSettings,
       relations: widget.relationCheatsheet,
       detailsLieux: widget.locationDetails,
+      ia: widget.assistantJeu,
     );
     final pages = [
       JouerScreen(
@@ -118,6 +123,7 @@ class _RootScreenState extends State<RootScreen> {
           audio: widget.audioService,
           musique: widget.musicController,
           visuels: widget.visualSettings,
+          ia: widget.assistantJeu,
         ),
         chatController: widget.chatController,
         spectacleController: widget.spectacleController,

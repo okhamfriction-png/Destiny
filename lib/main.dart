@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import 'application/services/assistant_jeu.dart';
 import 'application/services/audio_service.dart';
 import 'application/services/llm_service.dart';
-import 'application/services/random_picker_service.dart';
 import 'application/state/ai_settings.dart';
 import 'application/state/chat_controller.dart';
 import 'application/state/location_details.dart';
@@ -18,7 +18,6 @@ import 'application/state/visual_settings.dart';
 import 'domain/repositories/catalog_store.dart';
 import 'domain/repositories/combination_memory.dart';
 import 'domain/repositories/story_repository.dart';
-import 'domain/usecases/generate_story_usecase.dart';
 import 'infrastructure/datasources/grammaire_source.dart';
 import 'infrastructure/datasources/local_json_datasource.dart';
 import 'infrastructure/platform/catalog_store_factory.dart';
@@ -68,16 +67,8 @@ Future<void> _boot() async {
   final grammaire = await grammaireSource.charger();
   final dataSource = LocalJsonDataSource(grammaire: grammaireSource);
   final catalogStore = createCatalogStore(dataSource);
-  final repository = StoryRepositoryImpl(
-    dataSource: dataSource,
-    catalogStore: catalogStore,
-  );
+  final repository = StoryRepositoryImpl(catalogStore: catalogStore);
   final combinationMemory = createCombinationMemory();
-  final useCase = GenerateStoryUseCase(
-    storyRepository: repository,
-    randomPickerService: RandomPickerService(),
-    combinationMemory: combinationMemory,
-  );
   final audioService = AudioService();
   final visualSettings = VisualSettings();
   final musicController = MusicController();
@@ -87,11 +78,12 @@ Future<void> _boot() async {
     chatStore: createChatStore(),
     llm: llmService,
     aiSettings: aiSettings,
-    generateStoryUseCase: useCase,
-    dataSource: dataSource,
+    catalogue: catalogStore,
+    grammaire: grammaire,
   );
   final spectacleController = SpectacleController(
-    repository: repository,
+    catalogue: catalogStore,
+    grammaire: grammaire,
     llm: llmService,
     aiSettings: aiSettings,
     store: SpectacleStore(),
@@ -109,6 +101,8 @@ Future<void> _boot() async {
   final troupeStore = TroupeStore();
   await troupeStore.charger();
 
+  final assistantJeu = AssistantJeu(llm: llmService, reglages: aiSettings, grammaire: grammaire.grammaire);
+
   runApp(DestinyApp(
     grammaire: grammaire,
     audioService: audioService,
@@ -125,6 +119,7 @@ Future<void> _boot() async {
     serieStore: serieStore,
     troupeStore: troupeStore,
     reglages: reglages,
+    assistantJeu: assistantJeu,
   ));
 }
 
@@ -171,6 +166,7 @@ class DestinyApp extends StatelessWidget {
     required this.serieStore,
     required this.troupeStore,
     required this.reglages,
+    this.assistantJeu,
     super.key,
   });
 
@@ -190,6 +186,7 @@ class DestinyApp extends StatelessWidget {
   final SerieStore serieStore;
   final TroupeStore troupeStore;
   final ReglagesDestiny reglages;
+  final AssistantJeu? assistantJeu;
 
   @override
   Widget build(BuildContext context) {
@@ -219,6 +216,7 @@ class DestinyApp extends StatelessWidget {
         serieStore: serieStore,
         troupeStore: troupeStore,
         reglages: reglages,
+        assistantJeu: assistantJeu,
       ),
     );
   }

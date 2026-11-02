@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../application/state/spectacle_controller.dart';
 import '../../domain/entities/spectacle_turn.dart';
-import '../visuals/entity_visuals.dart';
+import '../destiny/composants.dart';
 import 'spectacle_archives_screen.dart';
 
 const Color _gold = Color(0xFFFFC24B);
@@ -49,35 +49,9 @@ const List<String> _spectacleTones = [
   'Action',
 ];
 
-/// Décennies proposées pour le mode Spin-off (film).
-const List<String> _spinoffDecades = [
-  'années 1970',
-  'années 1980',
-  'années 1990',
-  'années 2000',
-  'années 2010',
-  'années 2020',
-];
-
-/// Genres de film pour le mode Spin-off.
-const List<String> _spinoffGenres = [
-  'Action',
-  'Aventure',
-  'Comédie',
-  'Drame',
-  'Horreur',
-  'Science-Fiction',
-  'Fantastique',
-  'Thriller',
-  'Policier',
-  'Guerre',
-  'Animation',
-  'Romance',
-];
-
-/// Petit avatar emoji d'un archétype (par son nom), ou null si inconnu.
-Widget? _archEmoji(String archetypeName, {double size = 18}) {
-  final emoji = EntityVisuals.emojiForArchetypeName(archetypeName);
+/// Petit avatar emoji d'un animal (par son nom ou son id), ou null si inconnu.
+Widget? _archEmoji(String nomOuId, {double size = 18}) {
+  final emoji = emojiAnimal(nomOuId);
   if (emoji == null) return null;
   return Text(emoji, style: TextStyle(fontSize: size));
 }
@@ -187,28 +161,23 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
             ),
           ),
         const SizedBox(height: 8),
-        Text('Type', style: theme.textTheme.titleSmall),
+        if (c.sessionIgnoree)
+          Card(
+            color: theme.colorScheme.primary.withValues(alpha: 0.10),
+            child: const Padding(
+              padding: EdgeInsets.all(12),
+              child: Text('Une partie commencée avec l\'ancienne version n\'a pas été reprise : '
+                  'les règles du spectacle ont changé (quatre actes, Destiny lancé par toi, débrief).'),
+            ),
+          ),
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          title: const Wrap(spacing: 8, crossAxisAlignment: WrapCrossAlignment.center, children: [Text('Avec des enfants'), SigleKids(petit: true)]),
+          subtitle: const Text('Lieux et dangers kids, des frissons doux, personne ne meurt.'),
+          value: c.kids,
+          onChanged: c.setKids,
+        ),
         const SizedBox(height: 8),
-        SegmentedButton<SpectacleKind>(
-          showSelectedIcon: false,
-          segments: const [
-            ButtonSegment(
-                value: SpectacleKind.spectacle, label: Text('Spectacle')),
-            ButtonSegment(
-                value: SpectacleKind.spinoff, label: Text('Spin-off (film)')),
-          ],
-          selected: {c.kind},
-          onSelectionChanged: (s) => c.setKind(s.first),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          c.isSpinoff
-              ? 'Spin-off : on rejoue un vrai film (top 100 de sa décennie), en '
-                  'partant du danger. L\'IA choisit le film et les archétypes.'
-              : 'Spectacle : lieu, danger et archétypes tirés des catalogues.',
-          style: theme.textTheme.bodySmall?.copyWith(color: Colors.white38),
-        ),
-        const SizedBox(height: 16),
         Text('Sous-mode', style: theme.textTheme.titleSmall),
         const SizedBox(height: 8),
         SegmentedButton<SpectacleMode>(
@@ -226,10 +195,9 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
           c.mode == SpectacleMode.classique
               ? 'Classique : 4 répliques proposées à chaque tour, une seule est '
                   'dans la langue de ton archétype.'
-              : 'Libre : tu écris ta réplique, l\'IA la note sur 7 critères.',
+              : 'Libre : tu écris ta réplique, le coach te dit si elle est dans la langue de ton archétype.',
           style: theme.textTheme.bodySmall?.copyWith(color: Colors.white38),
         ),
-        if (!c.isSpinoff) ...[
         const SizedBox(height: 16),
         // Univers et Ton côte à côte.
         Row(
@@ -312,13 +280,14 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
           'Par défaut « Contemporain », ton « Drame ». Le lieu, le danger et '
           'les paliers ne changent pas — seuls l\'univers et le ton s\'adaptent. '
           'Chaque scène vise ${c.sceneTarget} répliques ; tu choisis ton '
-          'personnage à chaque nouvelle scène.',
+          'personnage à chaque nouvelle scène, et tu lances Destiny quand tu veux '
+          'faire monter le danger (quatre actes).',
           style: theme.textTheme.bodySmall?.copyWith(color: Colors.white38),
         ),
         const SizedBox(height: 18),
         FilledButton.icon(
           onPressed: () => c.drawDecor(),
-          icon: const Icon(Icons.casino),
+          icon: const Icon(Icons.shuffle_rounded),
           label: Text(draw == null ? 'Tirer le décor' : 'Retirer le décor'),
         ),
         if (c.error != null) ...[
@@ -337,7 +306,7 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
             children: [
               for (var i = 0; i < draw.archetypes.length; i++)
                 ChoiceChip(
-                  avatar: _archEmoji(draw.archetypes[i].name),
+                  avatar: _archEmoji(draw.archetypes[i].animalId),
                   label: Text(draw.archetypes[i].name),
                   selected: c.playerIndex == i,
                   onSelected: (_) => c.setPlayerIndex(i),
@@ -363,101 +332,6 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
             ),
           ),
         ],
-        ] else ...[
-          // --- Spin-off (film) ---
-          const SizedBox(height: 16),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Décennie', style: theme.textTheme.titleSmall),
-                    const SizedBox(height: 8),
-                    DropdownButtonFormField<String>(
-                      initialValue: _spinoffDecades.contains(c.decade)
-                          ? c.decade
-                          : _spinoffDecades.first,
-                      isExpanded: true,
-                      decoration: const InputDecoration(
-                          isDense: true, border: OutlineInputBorder()),
-                      items: [
-                        for (final d in _spinoffDecades)
-                          DropdownMenuItem(value: d, child: Text(d)),
-                      ],
-                      onChanged: (v) =>
-                          c.setDecade(v ?? _spinoffDecades.first),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Genre', style: theme.textTheme.titleSmall),
-                    const SizedBox(height: 8),
-                    DropdownButtonFormField<String>(
-                      initialValue: _spinoffGenres.contains(c.genre)
-                          ? c.genre
-                          : _spinoffGenres.first,
-                      isExpanded: true,
-                      decoration: const InputDecoration(
-                          isDense: true, border: OutlineInputBorder()),
-                      items: [
-                        for (final g in _spinoffGenres)
-                          DropdownMenuItem(value: g, child: Text(g)),
-                      ],
-                      onChanged: (v) => c.setGenre(v ?? _spinoffGenres.first),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Text('Longueur des scènes', style: theme.textTheme.titleSmall),
-          const SizedBox(height: 8),
-          SegmentedButton<SceneLength>(
-            showSelectedIcon: false,
-            style: const ButtonStyle(
-                visualDensity: VisualDensity.compact,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-            segments: const [
-              ButtonSegment(value: SceneLength.court, label: Text('Court 10')),
-              ButtonSegment(
-                  value: SceneLength.normal, label: Text('Normal 20')),
-              ButtonSegment(value: SceneLength.long, label: Text('Long 30')),
-            ],
-            selected: {c.sceneLength},
-            onSelectionChanged: (s) => c.setSceneLength(s.first),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Un vrai film du top 100 le plus populaire de la décennie et du '
-            'genre choisis. On récupère lieu, danger et 4 protagonistes ; on '
-            'démarre sur le danger et l\'escalade se crée à la volée. Tu ne '
-            'choisis pas ton archétype : l\'IA te l\'assigne.',
-            style: theme.textTheme.bodySmall?.copyWith(color: Colors.white38),
-          ),
-          if (c.error != null) ...[
-            const SizedBox(height: 10),
-            Text(c.error!, style: const TextStyle(color: Colors.redAccent)),
-          ],
-          const SizedBox(height: 18),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton.icon(
-              onPressed: c.configured ? () => c.start() : null,
-              icon: const Icon(Icons.movie_creation_outlined),
-              label: const Text('Lever le rideau'),
-              style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 14)),
-            ),
-          ),
-        ],
       ],
     );
   }
@@ -474,8 +348,6 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
             controller: _scroll,
             padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
             children: [
-              if (c.filmContext != null)
-                _FilmContextCard(context: c.filmContext!),
               if (turn?.isDestiny ?? false) const _DestinyBanner(),
               for (final item in c.log) _LogBubble(item: item),
               if (turn?.correction != null)
@@ -483,7 +355,7 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
               if (turn?.crow != null) _CrowCard(crow: turn!.crow!),
               if (turn?.feedback != null)
                 _FeedbackCard(child: _renderDynamic(theme, turn!.feedback)),
-              if (turn?.isScore ?? false) _ScoreCard(turn: turn!),
+              if (turn?.isFin ?? false) _DebriefCard(turn: turn!),
               if (c.error != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
@@ -577,6 +449,14 @@ String _pretty(String key) {
   const map = {
     'histoire': 'L\'histoire',
     'personnage': 'Ton personnage',
+    'phrase_cle': 'La phrase clé',
+    'ce_qui_a_marche': 'Ce qui a marché',
+    'a_essayer': 'À essayer la prochaine fois',
+    'veut': 'Il veut',
+    'besoin': 'Il a besoin de',
+    'choix': 'Son choix',
+    'prix': 'Le prix payé',
+    'nom': 'Nom',
     'scoreGlobal': 'Score',
     'detail': 'Détail',
     'acte1': 'Acte 1',
@@ -609,9 +489,13 @@ class _DecorCard extends StatelessWidget {
             _kv(theme, 'LIEU', draw.lieu),
             const SizedBox(height: 6),
             _kv(theme, 'DANGER', draw.danger),
-            if (draw.roles.isNotEmpty) ...[
+            if (draw.groupe.isNotEmpty) ...[
               const SizedBox(height: 6),
-              _kv(theme, 'RÔLES', draw.roles.join(', ')),
+              _kv(theme, 'GROUPE', draw.groupe),
+            ],
+            if (draw.espaces.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              _kv(theme, 'ESPACES', draw.espaces.join(', ')),
             ],
             if (draw.paliers.isNotEmpty) ...[
               const SizedBox(height: 10),
@@ -628,14 +512,14 @@ class _DecorCard extends StatelessWidget {
                 ),
             ],
             const SizedBox(height: 10),
-            Text('Archétypes',
+            Text('Les quatre personnages',
                 style: theme.textTheme.labelMedium
                     ?.copyWith(color: theme.colorScheme.primary)),
             const SizedBox(height: 4),
             for (final a in draw.archetypes)
               Padding(
                 padding: const EdgeInsets.only(bottom: 3),
-                child: Text(a.line,
+                child: Text('${emojiAnimal(a.animalId) ?? ''} ${a.name} — ${a.line}',
                     style: theme.textTheme.bodySmall
                         ?.copyWith(color: Colors.white70, height: 1.3)),
               ),
@@ -708,76 +592,6 @@ class _GameHeader extends StatelessWidget {
             icon: const Icon(Icons.close),
             onPressed: onQuit,
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _FilmContextCard extends StatelessWidget {
-  const _FilmContextCard({required this.context});
-
-  final FilmContext context;
-
-  @override
-  Widget build(BuildContext ctx) {
-    final theme = Theme.of(ctx);
-    final c = context;
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: _gold.withValues(alpha: 0.10),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: _gold.withValues(alpha: 0.4)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.movie, color: _gold, size: 18),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  c.annee.isEmpty ? c.film : '${c.film} (${c.annee})',
-                  style: theme.textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w800),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          if (c.lieu.isNotEmpty)
-            Text('Lieu : ${c.lieu}', style: theme.textTheme.bodySmall),
-          if (c.danger.isNotEmpty)
-            Text('Danger : ${c.danger}', style: theme.textTheme.bodySmall),
-          if (c.protagonistes.isNotEmpty) ...[
-            const SizedBox(height: 6),
-            for (final p in c.protagonistes)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 2),
-                child: Row(
-                  children: [
-                    Text(
-                        EntityVisuals.emojiForArchetypeName(p.archetype) ??
-                            '🎭',
-                        style: const TextStyle(fontSize: 15)),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        '${p.prenom}${p.role.isEmpty ? '' : ' — ${p.role}'}'
-                        '  ·  ${p.archetype}',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                            color: p.antagoniste
-                                ? const Color(0xFFFF5252)
-                                : Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-          ],
         ],
       ),
     );
@@ -1035,8 +849,8 @@ class _FeedbackCard extends StatelessWidget {
   }
 }
 
-class _ScoreCard extends StatelessWidget {
-  const _ScoreCard({required this.turn});
+class _DebriefCard extends StatelessWidget {
+  const _DebriefCard({required this.turn});
 
   final SpectacleTurn turn;
 
@@ -1067,7 +881,7 @@ class _ScoreCard extends StatelessWidget {
                     letterSpacing: 1)),
           ),
           const SizedBox(height: 12),
-          _renderDynamic(theme, turn.score),
+          _renderDynamic(theme, turn.debrief),
         ],
       ),
     );
@@ -1118,7 +932,7 @@ class _ActionBar extends StatelessWidget {
             children: [
               for (var i = 0; i < draw.archetypes.length; i++)
                 ActionChip(
-                  avatar: _archEmoji(draw.archetypes[i].name),
+                  avatar: _archEmoji(draw.archetypes[i].animalId),
                   label: Text(draw.archetypes[i].name),
                   onPressed: () => c.chooseSceneCharacter(i),
                 ),
@@ -1126,7 +940,7 @@ class _ActionBar extends StatelessWidget {
           ),
         ],
       );
-    } else if (turn?.isScore ?? false) {
+    } else if (turn?.isFin ?? false) {
       content = Row(
         children: [
           Expanded(
@@ -1196,10 +1010,26 @@ class _ActionBar extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (c.peutLancerDestiny)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(children: [
+                Expanded(
+                  child: Text('Acte ${c.palier} · le danger monte quand tu lances Destiny.',
+                      style: theme.textTheme.bodySmall?.copyWith(color: Colors.white54)),
+                ),
+                FilledButton.icon(
+                  style: FilledButton.styleFrom(backgroundColor: const Color(0xFF2E5BFF), foregroundColor: Colors.white),
+                  onPressed: c.lancerDestiny,
+                  icon: const Icon(Icons.flash_on_rounded),
+                  label: const Text('DESTINY'),
+                ),
+              ]),
+            ),
           if (c.mode == SpectacleMode.classique &&
               !c.loading &&
               !c.needsCharacterChoice &&
-              !(turn?.isScore ?? false) &&
+              !(turn?.isFin ?? false) &&
               (turn?.propositions.isNotEmpty ?? false))
             Builder(builder: (context) {
               final name = c.currentArchetypeName;

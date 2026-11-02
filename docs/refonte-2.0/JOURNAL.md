@@ -335,3 +335,72 @@ La Campagne devient la **Série**, avec le vocabulaire de la télé.
 
 1. **Des dangers propres à chaque univers ?** Je peux écrire, pour chacun des 21 univers, 3 dangers à 4 paliers (avec leur version kids). Aujourd'hui, on prend ceux de Destiny.
 2. **Les méchants d'univers dans la Bibliothèque ?** Aujourd'hui, elle montre les 24 grands méchants. Je peux y ajouter les 42 méchants d'univers, rangés par univers.
+
+**Réponses (2 novembre)** : « Oui, enchaîne, et oui aux deux questions. » Les dangers d'univers et les méchants d'univers dans la Bibliothèque sont faits en phase 6.
+
+---
+
+## Phase 6 — Jouer avec l'IA, et les prompts ✅
+
+### Ce qui a été fait
+
+- **Tes deux réponses** :
+  - **chaque univers a ses 3 dangers**, avec leurs 4 paliers et leur version kids (63 dangers, écrits avec trois agents puis vérifiés par un script). À la préparation d'un épisode, ils sont proposés avant ceux de Destiny ;
+  - **la Bibliothèque montre les 42 méchants d'univers**, rangés par univers, avec leurs sbires, leurs quatre présages, et les filtres par archétype et KIDS.
+- **Les prompts sont réunis dans un seul dossier**, `lib/application/prompts/`.
+  - Ils sont **versionnés** (2.0.0) et **testés**.
+  - Chacun contient la grammaire en version courte, **générée depuis le fichier de grammaire** : rien n'est recopié à la main.
+  - Les six rôles sont là : le **Maître du destin**, la **mise en place**, le **personnage** (il refuse un besoin qui est un objet), la **voix de l'alarmiste**, le **coach de débrief** et le **coach d'échauffement**.
+  - On y trouve aussi le Spectacle IA et les consignes de l'assistant de la Série.
+  - Chaque rôle a sa version adulte et sa version enfant (« des frissons doux, jamais d'effroi »).
+  - Les règles sont dans chaque prompt : un lieu, un groupe qui se connaît, quatre paliers, pas de traître, pas de dé, et on ne nomme jamais un archétype ni un animal.
+- **L'histoire avec l'IA** (le chat) :
+  - on choisit l'un des **12 archétypes**, puis l'un de ses **deux animaux** (la carte s'affiche), et si on veut une blessure et un vouloir ;
+  - les autres membres du groupe sont joués par l'IA, avec une distribution équilibrée ; s'il n'y a pas d'alarmiste parmi les héros, l'IA en joue un ;
+  - le lieu et le danger viennent du catalogue de Destiny (en kids, seulement les lieux et les dangers kids) ;
+  - **quatre chapitres**, un par palier. **Destiny tombe entre deux chapitres** : l'éclair, le tonnerre, puis la nouvelle de l'alarmiste. Au dernier chapitre, les deux actions sont le choix final, le vouloir ou le besoin ;
+  - **la pièce du destin** tranche chaque action : le mot « dés » a disparu. « La pièce est plus dure après Destiny » (deux réussites) devient une option, désactivée par défaut ;
+  - le résumé suit le coach de débrief : ce qui s'est passé, puis « Ce que tu veux, c'est… mais ce dont tu as besoin, c'est… » pour chaque héros ;
+  - les anciennes histoires se relisent, mais ne se reprennent pas.
+- **Le spectacle avec l'IA** :
+  - quatre personnages tirés en distribution équilibrée, chacun avec son archétype et son animal ;
+  - **quatre actes**, et **Destiny se lance avec un bouton**, quand on veut ;
+  - **un débrief positif à la place de la note sur 100** : l'histoire, ton personnage, la phrase clé, ce qui a marché, une seule piste pour la prochaine fois ;
+  - CROW reste, comme outil du coach ;
+  - le **Spin-off** est retiré, comme tu l'avais décidé ;
+  - un mode enfant ;
+  - une partie commencée avec les anciens prompts n'est pas reprise, et l'écran le dit.
+- **L'IA dans le jeu entre humains** (facultative ; sans clé, les boutons n'apparaissent pas) :
+  - en Troupe, **« Proposer les objets et le mystère »** à la mise en place ; elle ne remplit que ce qui est vide ;
+  - en Troupe, **« Des idées pour le corps »** à l'échauffement, pour chaque comédien ;
+  - en Troupe, **« Demander au coach »** au débrief. Les prénoms des comédiens ne partent pas : on envoie « Personnage 1 », « Personnage 2 »… On peut reprendre ses phrases là où c'est vide ;
+  - en Série, **« Souffler la nouvelle à l'alarmiste »** quand c'est le maître du jeu qui joue l'alarmiste.
+- **Le service d'IA est corrigé** :
+  - les **modèles Claude** sont à jour : Claude Opus 5.5 par défaut, puis Sonnet 5.5, Haiku 5.5, Fable 5.1, etc. ;
+  - les réponses ne sont plus tronquées : 16 000 jetons au lieu de 1 024 ;
+  - une réponse refusée par l'IA donne un message clair ;
+  - OpenAI ne reçoit plus de température imposée (les modèles de raisonnement la refusaient).
+- **Le ménage** :
+  - **retirés** : l'ancien prompt du maître du jeu, l'ancien prompt du Spectacle (avec son Spin-off), le générateur d'histoire (et son test), l'ancienne entité « archétype = animal », sa lecture et ses visuels ;
+  - **fichiers de données gardés** : `archetypes.json` sert toujours au corps des animaux.
+
+### Tests
+
+**169 tests passent**. Les nouveaux :
+- les **prompts** : la grammaire courte vient du fichier ; chaque rôle contient ses règles ; il n'y a plus aucune trace de l'ancienne grammaire (« Résultat des dés », « moteur », « 3 actes », les anciens noms des paliers) ; les versions adulte et enfant diffèrent ;
+- **l'histoire avec l'IA** : 4 chapitres égaux, Destiny entre les chapitres, la pièce qui tranche, le prompt gardé avec sa version, les anciennes histoires en lecture seule ;
+- **le spectacle avec l'IA** : une distribution valide, Destiny par le bouton, l'ancienne partie ignorée ;
+- **l'IA du jeu** : la mise en place, l'échauffement, le coach, la voix de l'alarmiste, et une réponse illisible qui ne casse rien ;
+- **les écrans de l'histoire et du spectacle, à 390 px de large** : deux débordements corrigés.
+
+### Décisions que j'ai prises (à revoir si tu veux)
+
+1. **L'effort des modèles Claude est réglé sur « bas »** (`low`) : le jeu demande des réponses vives, et les résumés et propositions sont courts.
+2. **Le repli automatique quand Claude décline une demande** est activé sur les modèles qui l'acceptent (Opus 5.5, Sonnet 5.5, Fable 5.1, Opus 5). L'IA réessaie alors sur un autre modèle, sans que tu aies rien à faire. Claude Haiku 5.5 n'a pas de repli : en cas de refus, l'appli affiche un message.
+3. **Les univers et les tons** du chat et du Spectacle restent ceux de leurs écrans. Je les relierai à `univers.json` en phase 7, avec la relecture des textes.
+
+### Ce qui reste (phase 7)
+
+- Les Réglages : retirer les poids du dé de l'écran Apparence, l'écran des réglages Destiny (chronos, musiques, rituel, distribution, traître, public par défaut), le thème clair, sombre ou automatique.
+- Le tutoriel, l'« À propos » et les exercices parlent encore du dé.
+- Le livret de règles, l'export PDF des cartes, les éditeurs, la relecture des textes.

@@ -44,78 +44,6 @@ class SpectacleCorrection {
   }
 }
 
-/// Un personnage du film (mode Spin-off) — protagoniste ou antagoniste.
-class FilmProtagonist {
-  const FilmProtagonist({
-    required this.prenom,
-    required this.archetype,
-    required this.role,
-    this.antagoniste = false,
-  });
-  final String prenom;
-  final String archetype;
-  final String role;
-
-  /// Vrai si c'est un antagoniste (affiché en rouge), faux = protagoniste.
-  final bool antagoniste;
-
-  Map<String, dynamic> toJson() => {
-        'prenom': prenom,
-        'archetype': archetype,
-        'role': role,
-        'antagoniste': antagoniste,
-      };
-}
-
-/// Contexte du film choisi (mode Spin-off), envoyé au premier tour.
-class FilmContext {
-  const FilmContext({
-    required this.film,
-    required this.annee,
-    required this.lieu,
-    required this.danger,
-    required this.protagonistes,
-  });
-
-  final String film;
-  final String annee;
-  final String lieu;
-  final String danger;
-  final List<FilmProtagonist> protagonistes;
-
-  Map<String, dynamic> toJson() => {
-        'film': film,
-        'annee': annee,
-        'lieu': lieu,
-        'danger': danger,
-        'protagonistes': [for (final p in protagonistes) p.toJson()],
-      };
-
-  /// Parse un FilmContext depuis une réponse JSON brute (tolère fences/prose).
-  static FilmContext? tryParse(String raw) => fromJson(extractJsonObject(raw));
-
-  static FilmContext? fromJson(Object? v) {
-    if (v is! Map) return null;
-    final j = v.cast<String, dynamic>();
-    return FilmContext(
-      film: j['film'] as String? ?? '',
-      annee: '${j['annee'] ?? ''}',
-      lieu: j['lieu'] as String? ?? '',
-      danger: j['danger'] as String? ?? '',
-      protagonistes: [
-        for (final p in (j['protagonistes'] as List<dynamic>? ?? const []))
-          if (p is Map)
-            FilmProtagonist(
-              prenom: p['prenom'] as String? ?? '',
-              archetype: p['archetype'] as String? ?? '',
-              role: p['role'] as String? ?? '',
-              antagoniste: p['antagoniste'] as bool? ?? false,
-            ),
-      ],
-    );
-  }
-}
-
 /// Bloc CROW (fin de scène d'Acte 1), hors fiction.
 class SpectacleCrow {
   const SpectacleCrow({
@@ -168,9 +96,7 @@ class SpectacleTurn {
     required this.crow,
     required this.propositions,
     required this.feedback,
-    required this.score,
-    required this.joueurArchetype,
-    required this.contexte,
+    required this.debrief,
     required this.raw,
   });
 
@@ -193,20 +119,15 @@ class SpectacleTurn {
   /// Retour libre / confirmation (chaîne ou structure). Rendu tel quel.
   final Object? feedback;
 
-  /// Bloc de score final (objet). Rendu génériquement.
-  final Object? score;
-
-  /// Archétype que le joueur incarne dans la scène courante (mode Spin-off :
-  /// assigné par l'IA). Vide si non fourni.
-  final String joueurArchetype;
-
-  /// Contexte du film (mode Spin-off) — présent au premier tour seulement.
-  final FilmContext? contexte;
+  /// Le débrief positif de la fin (objet), rendu génériquement. Les
+  /// anciennes parties avaient un « score » à la place : il est lu ici aussi.
+  final Object? debrief;
 
   /// Map brute complète (repli d'affichage).
   final Map<String, dynamic> raw;
 
-  bool get isScore => phase == 'score' || score != null;
+  /// La fin du spectacle : le débrief.
+  bool get isFin => phase == 'debrief' || phase == 'score' || debrief != null;
   bool get isDestiny => phase == 'destiny';
 
   factory SpectacleTurn.fromMap(Map<String, dynamic> j) {
@@ -249,9 +170,7 @@ class SpectacleTurn {
       crow: SpectacleCrow.fromJson(j['crow']),
       propositions: props,
       feedback: j['feedback'],
-      score: j['score'],
-      joueurArchetype: j['joueur_archetype'] as String? ?? '',
-      contexte: FilmContext.fromJson(j['contexte']),
+      debrief: j['debrief'] ?? j['score'],
       raw: j,
     );
   }

@@ -1,6 +1,5 @@
 import 'package:destiny/application/services/audio_service.dart';
 import 'package:destiny/application/services/llm_service.dart';
-import 'package:destiny/application/services/random_picker_service.dart';
 import 'package:destiny/application/state/ai_settings.dart';
 import 'package:destiny/application/state/serie_store.dart';
 import 'package:destiny/application/state/chat_controller.dart';
@@ -12,7 +11,6 @@ import 'package:destiny/application/state/relation_cheatsheet.dart';
 import 'package:destiny/application/state/spectacle_controller.dart';
 import 'package:destiny/application/state/visual_settings.dart';
 import 'package:destiny/domain/repositories/combination_memory.dart';
-import 'package:destiny/domain/usecases/generate_story_usecase.dart';
 import 'package:destiny/infrastructure/datasources/in_memory_catalog_store.dart';
 import 'package:destiny/infrastructure/datasources/in_memory_chat_store.dart';
 import 'package:destiny/infrastructure/datasources/local_json_datasource.dart';
@@ -58,27 +56,20 @@ void main() {
     final grammaire = (await tester.runAsync(chargerGrammaire))!;
     final dataSource = LocalJsonDataSource();
     final catalogStore = InMemoryCatalogStore(seedSource: dataSource);
-    final repository = StoryRepositoryImpl(
-      dataSource: dataSource,
-      catalogStore: catalogStore,
-    );
+    final repository = StoryRepositoryImpl(catalogStore: catalogStore);
     final memory = InMemoryCombinationMemory();
-    final useCase = GenerateStoryUseCase(
-      storyRepository: repository,
-      randomPickerService: RandomPickerService(),
-      combinationMemory: memory,
-    );
     final aiSettings = await AiSettings.load();
     final llmService = LlmService();
     final chatController = ChatController(
       chatStore: InMemoryChatStore(),
       llm: llmService,
       aiSettings: aiSettings,
-      generateStoryUseCase: useCase,
-      dataSource: dataSource,
+      catalogue: catalogStore,
+      grammaire: grammaire,
     );
     final spectacleController = SpectacleController(
-      repository: repository,
+      catalogue: catalogStore,
+      grammaire: grammaire,
       llm: llmService,
       aiSettings: aiSettings,
     );

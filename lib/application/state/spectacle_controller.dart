@@ -4,9 +4,13 @@ import 'package:flutter/foundation.dart';
 
 import '../../domain/entities/chat_message.dart';
 import '../../domain/entities/spectacle_turn.dart';
-import '../../domain/repositories/story_repository.dart';
+import '../../domain/grammaire/distribution.dart';
+import '../../domain/grammaire/modeles.dart';
+import '../../domain/repositories/catalog_store.dart';
+import '../../infrastructure/datasources/grammaire_source.dart';
+import '../prompts/prompts.dart';
+import '../prompts/spectacle.dart';
 import '../services/llm_service.dart';
-import '../services/spectacle_prompt.dart';
 import 'ai_settings.dart';
 import 'spectacle_store.dart';
 
@@ -15,21 +19,9 @@ enum SpectacleMode {
   classique,
   libre;
 
-  String get label =>
-      this == SpectacleMode.classique ? 'Classique' : 'Libre';
+  String get label => this == SpectacleMode.classique ? 'Classique' : 'Libre';
   String get wire => this == SpectacleMode.classique ? 'classique' : 'libre';
-}
-
-/// Source du contexte : catalogue (Spectacle) ou film (Spin-off).
-enum SpectacleKind {
-  spectacle,
-  spinoff;
-
-  bool get isSpinoff => this == SpectacleKind.spinoff;
-  String get wire => name;
-
-  static SpectacleKind fromName(String? n) =>
-      n == 'spinoff' ? SpectacleKind.spinoff : SpectacleKind.spectacle;
+  ModeSpectacle get prompt => this == SpectacleMode.classique ? ModeSpectacle.classique : ModeSpectacle.libre;
 }
 
 /// Longueur d'une scène (nombre de répliques cible).
@@ -60,21 +52,74 @@ enum SceneLength {
   }
 }
 
-/// Le décor tiré au hasard (lieu + danger + 4 archétypes).
+/// Un des quatre personnages du spectacle : un archétype et son animal.
+class PersonnageSpectacle {
+  const PersonnageSpectacle({required this.archetypeId, required this.animalId, required this.name, this.line = ''});
+
+  final String archetypeId;
+  final String animalId;
+
+  /// « Leader · Lion ».
+  final String name;
+
+  /// Ce qu'il fait face au danger.
+  final String line;
+
+  Map<String, dynamic> versJson() => {'archetype': archetypeId, 'animal': animalId, 'name': name, 'line': line};
+
+  factory PersonnageSpectacle.depuisJson(Map<String, dynamic> j) => PersonnageSpectacle(
+        archetypeId: j['archetype'] as String? ?? '',
+        animalId: j['animal'] as String? ?? '',
+        name: j['name'] as String? ?? '',
+        line: j['line'] as String? ?? '',
+      );
+}
+
+/// Le décor tiré au hasard : lieu, groupe, danger et quatre personnages.
 class SpectacleDraw {
   const SpectacleDraw({
     required this.lieu,
-    required this.roles,
+    this.espaces = const [],
+    this.groupe = '',
     required this.danger,
     required this.paliers,
     required this.archetypes,
   });
 
   final String lieu;
-  final List<String> roles;
+  final List<String> espaces;
+  final String groupe;
   final String danger;
   final List<String> paliers;
-  final List<SpectacleArchetype> archetypes;
+
+  /// Les quatre personnages (J1 à J4).
+  final List<PersonnageSpectacle> archetypes;
+
+  Map<String, dynamic> versJson() => {
+        'lieu': lieu,
+        'espaces': espaces,
+        'groupe': groupe,
+        'danger': danger,
+        'paliers': paliers,
+        'personnages': [for (final p in archetypes) p.versJson()],
+      };
+
+  static SpectacleDraw? depuisJson(Object? v) {
+    if (v is! Map) return null;
+    final j = v.cast<String, dynamic>();
+    List<String> ls(Object? x) => [for (final e in (x as List? ?? const [])) '$e'];
+    return SpectacleDraw(
+      lieu: j['lieu'] as String? ?? '',
+      espaces: ls(j['espaces']),
+      groupe: j['groupe'] as String? ?? '',
+      danger: j['danger'] as String? ?? '',
+      paliers: ls(j['paliers']),
+      archetypes: [
+        for (final p in (j['personnages'] as List? ?? const []))
+          if (p is Map) PersonnageSpectacle.depuisJson(p.cast<String, dynamic>()),
+      ],
+    );
+  }
 }
 
 /// Une bulle du fil de jeu.
@@ -92,7 +137,7 @@ class SpectacleLogItem {
   final String didascalie;
   final String personnage;
 
-  /// Archétype (animal) du personnage — pour l'icône dans la bulle.
+  /// L'animal du personnage, pour l'icône dans la bulle.
   final String archetype;
   final String texte;
 
@@ -100,101 +145,78 @@ class SpectacleLogItem {
   bool? success;
 }
 
-/// Orchestration du Mode Spectacle : tirage du décor, appel LLM tour par tour,
-/// parsing du protocole JSON.
+/// Le Spectacle avec l'IA : le joueur joue un personnage par scène, l'IA joue
+/// les partenaires, la régie et le coach. Quatre actes ; Destiny se lance de
+/// l'extérieur (le bouton du joueur) ; à la fin, un débrief positif.
 class SpectacleController extends ChangeNotifier {
   SpectacleController({
-    required StoryRepository repository,
+    required CatalogStore catalogue,
+    required GrammaireChargee grammaire,
     required LlmService llm,
     required AiSettings aiSettings,
     this.store,
-  })  : _repository = repository,
+    Random? hasard,
+  })  : _catalogue = catalogue,
+        _grammaire = grammaire,
         _llm = llm,
-        _ai = aiSettings;
+        _ai = aiSettings,
+        _rng = hasard ?? Random();
 
-  final StoryRepository _repository;
+  final CatalogStore _catalogue;
+  final GrammaireChargee _grammaire;
   final LlmService _llm;
   final AiSettings _ai;
   final SpectacleStore? store;
-  final Random _rng = Random();
+  final Random _rng;
+
+  Grammaire get _g => _grammaire.grammaire;
 
   // --- Configuration ---
   SpectacleMode _mode = SpectacleMode.classique;
-  SpectacleKind _kind = SpectacleKind.spectacle;
   int _playerIndex = 0;
   String _universe = 'Contemporain';
   String _tone = 'Drame';
   SceneLength _sceneLength = SceneLength.normal;
-  String _decade = 'années 1990';
-  String _genre = 'Action';
+  bool _kids = false;
 
   SpectacleMode get mode => _mode;
-  SpectacleKind get kind => _kind;
-  bool get isSpinoff => _kind.isSpinoff;
   int get playerIndex => _playerIndex;
   String get universe => _universe;
   String get tone => _tone;
   SceneLength get sceneLength => _sceneLength;
   int get sceneTarget => _sceneLength.count;
-  String get decade => _decade;
-  String get genre => _genre;
+  bool get kids => _kids;
 
-  /// Contexte du film (mode Spin-off), une fois la partie lancée.
-  FilmContext? _filmContext;
-  FilmContext? get filmContext => _filmContext;
-
-  /// Archétype que le joueur incarne actuellement (assigné par l'IA en Spin-off,
-  /// choisi au setup/par scène en Spectacle).
-  String get currentArchetypeName {
-    if (_kind.isSpinoff) return _current?.joueurArchetype ?? '';
-    return playerArchetype?.name ?? '';
-  }
+  String get currentArchetypeName => playerArchetype?.name ?? '';
 
   void setMode(SpectacleMode m) {
-    if (m == _mode || _started) return;
     _mode = m;
     notifyListeners();
   }
 
-  void setKind(SpectacleKind k) {
-    if (k == _kind || _started) return;
-    _kind = k;
-    notifyListeners();
-  }
-
-  void setDecade(String d) {
-    if (d == _decade || _started) return;
-    _decade = d;
-    notifyListeners();
-  }
-
-  void setGenre(String g) {
-    if (g == _genre || _started) return;
-    _genre = g;
-    notifyListeners();
-  }
-
   void setPlayerIndex(int i) {
-    if (i == _playerIndex || _started) return;
     _playerIndex = i;
     notifyListeners();
   }
 
   void setUniverse(String u) {
-    if (u == _universe || _started) return;
     _universe = u;
     notifyListeners();
   }
 
   void setTone(String t) {
-    if (t == _tone || _started) return;
     _tone = t;
     notifyListeners();
   }
 
   void setSceneLength(SceneLength l) {
-    if (l == _sceneLength || _started) return;
     _sceneLength = l;
+    notifyListeners();
+  }
+
+  void setKids(bool v) {
+    _kids = v;
+    _draw = null;
     notifyListeners();
   }
 
@@ -204,11 +226,11 @@ class SpectacleController extends ChangeNotifier {
   bool _loading = false;
   String? _error;
   SpectacleTurn? _current;
-  bool _awaitingCharacter = false; // il faut choisir le perso de la scène
-  int _sceneNumber = 1;
   final List<SpectacleLogItem> _log = [];
   final List<ChatMessage> _messages = [];
   String _system = '';
+  bool _awaitingCharacter = false;
+  int _sceneNumber = 1;
 
   SpectacleDraw? get draw => _draw;
   bool get started => _started;
@@ -218,23 +240,43 @@ class SpectacleController extends ChangeNotifier {
   List<SpectacleLogItem> get log => List.unmodifiable(_log);
   bool get configured => _ai.configured;
 
-  /// Vrai quand il faut choisir le personnage pour la scène qui s'ouvre.
-  /// (Jamais en Spin-off : l'IA assigne le personnage.)
-  bool get needsCharacterChoice =>
-      _started && !_loading && _awaitingCharacter && !_kind.isSpinoff;
+  /// Vrai quand l'application doit demander au joueur quel personnage il
+  /// incarne pour la scène qui s'ouvre (après une transition ou un Destiny).
+  bool get needsCharacterChoice => _started && !_loading && _awaitingCharacter;
 
   /// Numéro de la scène qui va s'ouvrir (pour l'invite de choix).
   int get sceneNumber => _sceneNumber;
 
+  /// Le palier atteint (d'après le dernier tour de l'IA).
+  int get palier => (_current?.palier ?? 1).clamp(1, 4);
+
+  /// Destiny se lance de l'extérieur : seulement en cours de partie, avant le
+  /// palier 4, et pas pendant qu'on attend l'IA.
+  bool get peutLancerDestiny =>
+      _started && !_loading && !(_current?.isFin ?? false) && _current != null && palier < 4;
+
   // --- Reprise d'une partie en cours ---
   Map<String, dynamic>? _savedSession;
+  bool _sessionIgnoree = false;
 
   /// Vrai si une partie en cours a été trouvée (à charger avec [resume]).
   bool get canResume => _savedSession != null && !_started;
 
-  /// Charge (au démarrage) la partie sauvegardée, s'il y en a une.
+  /// Vrai si une partie de l'ancienne grammaire a été trouvée et laissée de
+  /// côté (elle ne se reprend pas avec les nouveaux prompts).
+  bool get sessionIgnoree => _sessionIgnoree;
+
+  /// Charge (au démarrage) la partie sauvegardée, s'il y en a une. Une
+  /// partie commencée avec d'autres prompts n'est pas reprise.
   Future<void> loadSavedSession() async {
-    _savedSession = await store?.loadSession();
+    final s = await store?.loadSession();
+    if (s != null && s['version_prompts'] != kVersionPrompts) {
+      _sessionIgnoree = true;
+      await store?.clearSession();
+      _savedSession = null;
+    } else {
+      _savedSession = s;
+    }
     notifyListeners();
   }
 
@@ -244,18 +286,15 @@ class SpectacleController extends ChangeNotifier {
     if (s == null) return;
     try {
       _mode = (s['mode'] == 'libre') ? SpectacleMode.libre : SpectacleMode.classique;
-      _kind = SpectacleKind.fromName(s['kind'] as String?);
-      _decade = s['decade'] as String? ?? 'années 1990';
-      _genre = s['genre'] as String? ?? 'Action';
-      _filmContext = FilmContext.fromJson(s['filmContext']);
       _playerIndex = (s['playerIndex'] as num?)?.toInt() ?? 0;
       _universe = s['universe'] as String? ?? 'Contemporain';
       _tone = s['tone'] as String? ?? 'Drame';
+      _kids = s['kids'] as bool? ?? false;
       _sceneLength = SceneLength.fromName(s['sceneLength'] as String?);
       _sceneNumber = (s['sceneNumber'] as num?)?.toInt() ?? 1;
       _awaitingCharacter = s['awaitingCharacter'] as bool? ?? false;
       _system = s['system'] as String? ?? '';
-      _draw = _drawFromJson(s['draw']);
+      _draw = SpectacleDraw.depuisJson(s['draw']);
       _messages
         ..clear()
         ..addAll([
@@ -265,10 +304,8 @@ class SpectacleController extends ChangeNotifier {
       _log
         ..clear()
         ..addAll([
-          for (final l in (s['log'] as List<dynamic>? ?? const []))
-            _logItemFromJson((l as Map).cast<String, dynamic>()),
+          for (final l in (s['log'] as List<dynamic>? ?? const [])) _logItemFromJson((l as Map).cast<String, dynamic>()),
         ]);
-      // Restaure le tour courant depuis le dernier message de l'IA.
       SpectacleTurn? last;
       for (var i = _messages.length - 1; i >= 0; i--) {
         if (_messages[i].role == 'assistant') {
@@ -287,56 +324,59 @@ class SpectacleController extends ChangeNotifier {
     }
   }
 
-  /// Oublie la partie sauvegardée (sans y toucher en base tant que non écrasée).
+  /// Oublie la partie sauvegardée.
   void discardSaved() {
     _savedSession = null;
     store?.clearSession();
     notifyListeners();
   }
 
-  Future<List<Map<String, dynamic>>> loadHistory() async =>
-      (await store?.history()) ?? const [];
+  Future<List<Map<String, dynamic>>> loadHistory() async => (await store?.history()) ?? const [];
 
   Future<void> clearHistory() async => store?.clearHistory();
 
-  SpectacleArchetype? get playerArchetype {
+  PersonnageSpectacle? get playerArchetype {
     final d = _draw;
     if (d == null || _playerIndex >= d.archetypes.length) return null;
     return d.archetypes[_playerIndex];
   }
 
-  /// Tire un nouveau décor (lieu + danger + 4 archétypes).
+  /// Tire un nouveau décor : un lieu, un danger (filtrés en mode enfant), un
+  /// groupe, et quatre personnages en distribution équilibrée.
   Future<void> drawDecor() async {
     _error = null;
     try {
-      final locations =
-          (await _repository.getLocations()).where((l) => l.actif).toList();
-      final dangers = (await _repository.getDangers())
-          .where((d) => d.actif && d.paliers.isNotEmpty)
-          .toList();
-      final archetypes = await _repository.getArchetypes();
-      if (locations.isEmpty || dangers.isEmpty || archetypes.length < 4) {
-        _error = 'Catalogue insuffisant pour le Mode Spectacle.';
+      final lieux = [for (final l in await _catalogue.getLocations()) if (l.actif && (!_kids || l.kids)) l];
+      final dangers = [
+        for (final d in await _catalogue.getDangers())
+          if (d.actif && d.paliers.length == 4 && (!_kids || d.kids)) d,
+      ];
+      if (lieux.isEmpty || dangers.isEmpty) {
+        _error = 'Catalogue insuffisant pour le spectacle.';
         notifyListeners();
         return;
       }
-      final loc = locations[_rng.nextInt(locations.length)];
-      final dan = dangers[_rng.nextInt(dangers.length)];
-      final pool = [...archetypes]..shuffle(_rng);
-      final four = pool.take(4).toList();
+      final lieu = lieux[_rng.nextInt(lieux.length)];
+      final danger = dangers[_rng.nextInt(dangers.length)];
+      final groupes = _grammaire.textes.liste('mise_en_place.groupes');
+      final ids = tirerDistribution(_g, 4, hasard: _rng);
       _draw = SpectacleDraw(
-        lieu: loc.name,
-        roles: loc.roles,
-        danger: dan.name,
-        paliers: dan.paliers,
+        lieu: lieu.name,
+        espaces: lieu.espaces,
+        groupe: groupes.isEmpty ? '' : groupes[_rng.nextInt(groupes.length)],
+        danger: danger.name,
+        paliers: danger.paliersPour(kids: _kids),
         archetypes: [
-          for (final a in four)
-            SpectacleArchetype(
-              name: a.name,
-              temperament: a.temperament,
-              port: a.port,
-              moteur: a.moteur,
-            ),
+          for (final id in ids)
+            () {
+              final animal = tirerAnimal(_g, id, hasard: _rng);
+              return PersonnageSpectacle(
+                archetypeId: id,
+                animalId: animal,
+                name: '${_g.archetype(id)?.nom ?? id} · ${_g.animal(animal)?.nom ?? animal}',
+                line: _g.archetype(id)?.ceQuIlFait ?? '',
+              );
+            }(),
         ],
       );
       _started = false;
@@ -353,118 +393,92 @@ class SpectacleController extends ChangeNotifier {
     }
   }
 
+  String _j(int i) => 'J${i + 1}';
+
   /// Lève le rideau : construit le prompt et lance l'ouverture.
   Future<void> start() async {
-    if (_loading) return;
-    if (!_kind.isSpinoff && _draw == null) return;
+    if (_loading || _draw == null) return;
     if (!_ai.configured) {
-      _error = 'Configure l\'IA (Paramètres → IA) pour jouer.';
+      _error = 'Configure l\'IA (Réglages → IA) pour jouer.';
       notifyListeners();
       return;
     }
+    final d = _draw!;
     final cible = _sceneLength.count;
     _messages.clear();
     _log.clear();
     _current = null;
-    _filmContext = null;
     _awaitingCharacter = false;
     _sceneNumber = 1;
     _savedSession = null;
+    _sessionIgnoree = false;
     _started = true;
-
-    if (_kind.isSpinoff) {
-      _system = buildSpinoffSystem(
-        decade: _decade,
-        genre: _genre,
-        mode: _mode.wire,
-        cible: cible,
-      );
-      final suite = _mode == SpectacleMode.classique
-          ? 'puis mes 4 propositions dans la langue de mon personnage'
-          : 'puis attends ma réplique';
-      await _send(
-        'Lève le rideau. Choisis un film réel du TOP 100 le plus populaire de '
-        'la décennie « $_decade », genre « $genre ». Renseigne le champ '
-        '"contexte" (film, année, lieu, danger, 4 protagonistes + archétypes). '
-        'Assigne-moi un protagoniste (champ joueur_archetype), DÉMARRE '
-        'directement sur le danger, ouvre la scène 1 avec UNE réplique d\'entrée '
-        'du partenaire, $suite. Réponds uniquement avec le premier objet JSON.',
-      );
-      return;
-    }
-
-    final d = _draw!;
-    _system = buildSpectacleSystem(
-      lieu: d.lieu,
-      roles: d.roles,
-      danger: d.danger,
-      paliers: d.paliers,
-      archetypes: d.archetypes,
-      playerIndex: _playerIndex,
-      mode: _mode.wire,
-      universe: _universe,
-      tone: _tone,
+    _system = promptSpectacle(
+      g: _g,
+      scene: ScenePrompt(
+        lieu: d.lieu,
+        espaces: d.espaces,
+        groupe: d.groupe,
+        danger: d.danger,
+        paliers: d.paliers,
+        univers: _universe,
+        ton: _tone,
+      ),
+      personnages: [
+        for (final p in d.archetypes)
+          PersonnagePrompt(nom: p.name, archetypeId: p.archetypeId, animalId: p.animalId, joueur: false),
+      ],
+      mode: _mode.prompt,
       cible: cible,
+      kids: _kids,
     );
-    final name = playerArchetype?.name ?? 'mon personnage';
-    final suite = _mode == SpectacleMode.classique
-        ? 'puis mes 4 propositions dans la langue de $name'
-        : 'puis attends ma réplique';
     await _send(
-      'Lève le rideau : Acte 1, scène 1, in media res. Je joue $name. '
-      'Ouvre la scène avec UNE seule réplique d\'entrée du partenaire, $suite. '
-      'Termine la scène par un tour phase="transition" une fois la cible de '
-      '$cible répliques atteinte. Réponds uniquement avec le premier objet JSON.',
+      'Lève le rideau : acte 1, scène 1, au palier 1. Je joue ${_j(_playerIndex)} (${playerArchetype?.name ?? ''}). '
+      'Ouvre la scène avec UNE seule réplique d\'entrée du partenaire, '
+      '${_mode == SpectacleMode.classique ? 'puis mes 4 propositions' : 'puis attends ma réplique'}. '
+      'Réponds uniquement avec le premier objet JSON.',
     );
   }
 
-  /// Choisit le personnage pour la scène qui s'ouvre (après une transition).
+  /// Choisit le personnage pour la scène qui s'ouvre.
   Future<void> chooseSceneCharacter(int index) async {
     final d = _draw;
     if (d == null || index < 0 || index >= d.archetypes.length) return;
     _playerIndex = index;
     _awaitingCharacter = false;
-    final name = d.archetypes[index].name;
     notifyListeners();
-    final suite = _mode == SpectacleMode.classique
-        ? 'puis mes 4 propositions dans la langue de $name'
-        : 'puis attends ma réplique';
     await _send(
-      'Scène $_sceneNumber : je joue $name. Ouvre la scène avec UNE seule '
-      'réplique d\'entrée du partenaire, $suite. Termine la scène par un tour '
-      'phase="transition" à ${_sceneLength.count} répliques. Réponds en JSON.',
+      'Scène $_sceneNumber : je joue ${_j(index)} (${d.archetypes[index].name}). Ouvre la scène avec UNE seule '
+      'réplique d\'entrée du partenaire, '
+      '${_mode == SpectacleMode.classique ? 'puis mes 4 propositions' : 'puis attends ma réplique'}. '
+      'Réponds en JSON.',
     );
+  }
+
+  /// La régie lance Destiny : le danger monte d'un palier.
+  Future<void> lancerDestiny() async {
+    if (!peutLancerDestiny) return;
+    _awaitingCharacter = false;
+    await _send('[DESTINY] La régie lance Destiny. Écris le rituel et la nouvelle de l\'alarmiste, en JSON.');
   }
 
   /// Mode classique : le joueur choisit une proposition.
   Future<void> choose(SpectacleProposition p) async {
-    final me =
-        currentArchetypeName.isNotEmpty ? currentArchetypeName : 'mon personnage';
-    _log.add(SpectacleLogItem(
-      isPlayer: true,
-      texte: p.texte,
-      archetype: me,
-      success: p.correcte,
-    ));
+    final me = currentArchetypeName.isNotEmpty ? currentArchetypeName : 'mon personnage';
+    _log.add(SpectacleLogItem(isPlayer: true, texte: p.texte, archetype: playerArchetype?.animalId ?? '', success: p.correcte));
     notifyListeners();
-    await _send(
-      'Je joue $me. Je choisis la proposition ${p.id} : « ${p.texte} ». '
-      'Donne le feedback puis enchaîne le tour suivant en JSON.',
-    );
+    await _send('Je joue $me. Je choisis la proposition ${p.id} : « ${p.texte} ». '
+        'Donne le feedback puis enchaîne le tour suivant en JSON.');
   }
 
   /// Mode libre : le joueur écrit sa réplique.
   Future<void> submitFree(String text) async {
     final line = text.trim();
     if (line.isEmpty) return;
-    final me =
-        currentArchetypeName.isNotEmpty ? currentArchetypeName : 'mon personnage';
-    _log.add(SpectacleLogItem(isPlayer: true, texte: line, archetype: me));
+    final me = currentArchetypeName.isNotEmpty ? currentArchetypeName : 'mon personnage';
+    _log.add(SpectacleLogItem(isPlayer: true, texte: line, archetype: playerArchetype?.animalId ?? ''));
     notifyListeners();
-    await _send(
-      'Je joue $me. Ma réplique : « $line ». Note-la puis enchaîne le tour '
-      'suivant en JSON.',
-    );
+    await _send('Je joue $me. Ma réplique : « $line ». Donne ton verdict puis enchaîne le tour suivant en JSON.');
   }
 
   /// Revient à l'écran de configuration (garde le décor tiré).
@@ -472,7 +486,6 @@ class SpectacleController extends ChangeNotifier {
     _started = false;
     _loading = false;
     _current = null;
-    _filmContext = null;
     _awaitingCharacter = false;
     _sceneNumber = 1;
     _error = null;
@@ -490,19 +503,13 @@ class SpectacleController extends ChangeNotifier {
 
     _messages.add(ChatMessage(role: 'user', content: userContent));
     try {
-      final reply = await _llm.complete(
-        settings: _ai,
-        system: _system,
-        messages: _messages,
-      );
+      final reply = await _llm.complete(settings: _ai, system: _system, messages: _messages);
       _messages.add(ChatMessage(role: 'assistant', content: reply));
       final turn = SpectacleTurn.tryParse(reply);
       if (turn == null) {
         _error = 'Réponse illisible de l\'IA (JSON attendu).';
       } else {
         _current = turn;
-        if (turn.contexte != null) _filmContext = turn.contexte;
-        // Note la dernière réplique libre du joueur d'après le verdict.
         _gradeLastFreeLine(turn.feedback);
         if (turn.texte.isNotEmpty || turn.didascalie.isNotEmpty) {
           _log.add(SpectacleLogItem(
@@ -513,9 +520,8 @@ class SpectacleController extends ChangeNotifier {
             texte: turn.texte,
           ));
         }
-        // Fin de scène : on demande le personnage de la scène suivante.
-        // (En Spin-off, l'IA enchaîne seule : pas d'attente de choix.)
-        if (turn.phase == 'transition' && !turn.isScore && !_kind.isSpinoff) {
+        // Fin de scène ou Destiny : on demande le personnage de la suivante.
+        if ((turn.phase == 'transition' || turn.isDestiny) && !turn.isFin) {
           _sceneNumber += 1;
           _awaitingCharacter = true;
         }
@@ -534,7 +540,7 @@ class SpectacleController extends ChangeNotifier {
   void _persist() {
     if (!_started) return;
     final t = _current;
-    if (t != null && t.isScore) {
+    if (t != null && t.isFin) {
       store?.addToHistory(_archiveRecord(t));
       store?.clearSession();
       _savedSession = null;
@@ -544,74 +550,30 @@ class SpectacleController extends ChangeNotifier {
   }
 
   Map<String, dynamic> _snapshot() => {
+        'version_prompts': kVersionPrompts,
         'mode': _mode.wire,
-        'kind': _kind.wire,
-        'decade': _decade,
-        'genre': _genre,
-        'filmContext': _filmContext?.toJson(),
         'playerIndex': _playerIndex,
         'universe': _universe,
         'tone': _tone,
+        'kids': _kids,
         'sceneLength': _sceneLength.wire,
         'sceneNumber': _sceneNumber,
         'awaitingCharacter': _awaitingCharacter,
         'system': _system,
-        'draw': _draw == null ? null : _drawToJson(_draw!),
+        'draw': _draw?.versJson(),
         'messages': [for (final m in _messages) m.toJson()],
         'log': [for (final i in _log) _logItemToJson(i)],
       };
 
-  Map<String, dynamic> _archiveRecord(SpectacleTurn score) => {
+  Map<String, dynamic> _archiveRecord(SpectacleTurn fin) => {
         'createdAt': DateTime.now().millisecondsSinceEpoch,
-        'mode': _kind.isSpinoff ? 'spin-off' : _mode.wire,
-        'lieu': _kind.isSpinoff
-            ? (_filmContext?.film ?? 'Film')
-            : (_draw?.lieu ?? ''),
-        'danger': _kind.isSpinoff
-            ? (_filmContext?.danger ?? '')
-            : (_draw?.danger ?? ''),
+        'mode': _mode.wire,
+        'lieu': _draw?.lieu ?? '',
+        'danger': _draw?.danger ?? '',
         'archetype': currentArchetypeName,
-        'score': score.score,
+        'debrief': fin.debrief,
         'log': [for (final i in _log) _logItemToJson(i)],
       };
-
-  Map<String, dynamic> _drawToJson(SpectacleDraw d) => {
-        'lieu': d.lieu,
-        'roles': d.roles,
-        'danger': d.danger,
-        'paliers': d.paliers,
-        'archetypes': [
-          for (final a in d.archetypes)
-            {
-              'name': a.name,
-              'temperament': a.temperament,
-              'port': a.port,
-              'moteur': a.moteur,
-            },
-        ],
-      };
-
-  SpectacleDraw? _drawFromJson(Object? v) {
-    if (v is! Map) return null;
-    final j = v.cast<String, dynamic>();
-    return SpectacleDraw(
-      lieu: j['lieu'] as String? ?? '',
-      roles: [for (final r in (j['roles'] as List<dynamic>? ?? const [])) r as String],
-      danger: j['danger'] as String? ?? '',
-      paliers: [
-        for (final p in (j['paliers'] as List<dynamic>? ?? const [])) p as String
-      ],
-      archetypes: [
-        for (final a in (j['archetypes'] as List<dynamic>? ?? const []))
-          SpectacleArchetype(
-            name: (a as Map)['name'] as String? ?? '',
-            temperament: a['temperament'] as String? ?? '',
-            port: a['port'] as String? ?? '',
-            moteur: a['moteur'] as String? ?? '',
-          ),
-      ],
-    );
-  }
 
   Map<String, dynamic> _logItemToJson(SpectacleLogItem i) => {
         'isPlayer': i.isPlayer,
@@ -631,8 +593,7 @@ class SpectacleController extends ChangeNotifier {
         success: j['success'] as bool?,
       );
 
-  /// En mode libre, colore la dernière bulle joueur d'après le verdict (✓/✗)
-  /// contenu dans le feedback du modèle.
+  /// En mode libre, colore la dernière bulle joueur d'après le verdict (✓/✗).
   void _gradeLastFreeLine(Object? feedback) {
     if (feedback is! String) return;
     for (var k = _log.length - 1; k >= 0; k--) {

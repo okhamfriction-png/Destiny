@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../application/state/spectacle_controller.dart';
-import '../visuals/entity_visuals.dart';
+import '../destiny/composants.dart';
 
 /// Historique des parties de Mode Spectacle terminées.
 class SpectacleArchivesScreen extends StatefulWidget {
@@ -98,7 +98,7 @@ class _SpectacleArchivesScreenState extends State<SpectacleArchivesScreen> {
                       final arch = r['archetype'] as String? ?? '';
                       final emoji = arch.isEmpty
                           ? null
-                          : EntityVisuals.emojiForArchetypeName(arch);
+                          : emojiAnimal(arch);
                       return Card(
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         child: ListTile(
@@ -154,8 +154,8 @@ class _ArchiveDetailScreen extends StatelessWidget {
             const SizedBox(height: 12),
             // Transcript.
             for (final item in log) _ArchiveBubble(item: item),
-            // Score.
-            if (record['score'] != null) ...[
+            // Le débrief (les anciennes parties avaient un score).
+            if ((record['debrief'] ?? record['score']) != null) ...[
               const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(12),
@@ -168,11 +168,11 @@ class _ArchiveDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Score',
+                    Text(record['debrief'] != null ? 'Le débrief' : 'Score (ancienne version)',
                         style: theme.textTheme.titleSmall
                             ?.copyWith(color: const Color(0xFFFFC24B))),
                     const SizedBox(height: 8),
-                    _renderDynamic(theme, record['score']),
+                    _renderDynamic(theme, record['debrief'] ?? record['score']),
                   ],
                 ),
               ),
@@ -195,7 +195,7 @@ class _ArchiveBubble extends StatelessWidget {
     final isPlayer = item['isPlayer'] as bool? ?? false;
     final arch = item['archetype'] as String? ?? '';
     final emoji =
-        arch.isEmpty ? null : EntityVisuals.emojiForArchetypeName(arch);
+        arch.isEmpty ? null : emojiAnimal(arch);
     final personnage = item['personnage'] as String? ?? '';
     final texte = item['texte'] as String? ?? '';
     final didascalie = item['didascalie'] as String? ?? '';

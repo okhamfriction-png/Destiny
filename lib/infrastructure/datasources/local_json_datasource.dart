@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
-import '../../domain/entities/archetype.dart';
 import '../../domain/entities/danger.dart';
 import '../../domain/entities/dilemma.dart';
 import '../../domain/entities/location.dart';
@@ -110,13 +109,5 @@ class LocalJsonDataSource {
           '${e.key}': ls((e.value as Map)['roles']),
       },
     );
-  }
-
-  Future<List<Archetype>> loadArchetypes() async {
-    final decoded = await _json('assets/data/archetypes.json');
-    final values = decoded['archetypes'] as List<dynamic>;
-    return values
-        .map((item) => Archetype.fromJson(item as Map<String, dynamic>))
-        .toList(growable: false);
   }
 }

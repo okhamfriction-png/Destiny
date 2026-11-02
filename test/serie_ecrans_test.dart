@@ -216,7 +216,7 @@ void main() {
     for (final f in Directory('lib/presentation/serie').listSync().whereType<File>()) {
       final code = f.readAsStringSync();
       // Les chemins écrits en entier.
-      for (final m in RegExp(r"t\.t\('((?:serie|regie|mise_en_place|debrief|modes_pnj|navigation|bibliotheque|preparer|rituel|mode_enfant)\.[a-z_\.]+)'").allMatches(code)) {
+      for (final m in RegExp(r"t\.t\('((?:serie|regie|mise_en_place|debrief|modes_pnj|navigation|bibliotheque|preparer|rituel|mode_enfant|ia_jeu)\.[a-z_\.]+)'").allMatches(code)) {
         if (!existe(m.group(1)!)) manquants.add('${f.path} : ${m.group(1)}');
       }
       // Les raccourcis locaux : String k(String x) => t.t('serie.saison.$x').

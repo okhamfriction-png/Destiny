@@ -134,6 +134,16 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
     _sauver();
   }
 
+  void _choisirDangerUnivers(DangerUnivers d) {
+    setState(() {
+      e
+        ..dangerId = d.id
+        ..dangerNom = d.nom
+        ..paliers = d.paliersPour(kids: s.kids);
+    });
+    _sauver();
+  }
+
   void _choisirMechantHorsSaison(String id) {
     setState(() {
       e.mechantId = id;
@@ -286,6 +296,17 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
         ]),
         SectionDestiny(titre: k('danger'), enfants: [
           if (e.saison > 0) Text(k('danger_aide'), style: Theme.of(context).textTheme.bodySmall),
+          if (cat.dangersDe(s.univers, kids: s.kids).isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(k('dangers_univers'), style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: 6),
+            Wrap(spacing: 8, runSpacing: 8, children: [
+              for (final d in cat.dangersDe(s.univers, kids: s.kids))
+                ChoiceChip(label: Text(d.nom), selected: e.dangerId == d.id, onSelected: (_) => _choisirDangerUnivers(d)),
+            ]),
+            const SizedBox(height: 10),
+            Text(k('dangers_destiny'), style: Theme.of(context).textTheme.bodySmall),
+          ],
           const SizedBox(height: 6),
           Wrap(spacing: 8, runSpacing: 8, children: [
             for (final d in _propDangers)

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../domain/serie/univers.dart';
 import '../../application/state/location_details.dart';
 import '../../application/state/visual_settings.dart';
 import '../../domain/repositories/catalog_store.dart';
@@ -19,12 +20,16 @@ class ContexteBibliotheque {
     required this.catalogue,
     required this.visuels,
     this.detailsLieux,
+    this.univers = CatalogueUnivers.vide,
   });
 
   /// Le catalogue modifiable (dangers et lieux tels que la troupe les joue).
   final CatalogStore catalogue;
   final VisualSettings visuels;
   final LocationDetailsStore? detailsLieux;
+
+  /// Les univers du jeu de rôle (leurs méchants et leurs sbires).
+  final CatalogueUnivers univers;
 }
 
 /// La Bibliothèque : remplace le Guide et le Catalogue.

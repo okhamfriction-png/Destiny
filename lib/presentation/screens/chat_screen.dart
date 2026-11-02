@@ -9,11 +9,12 @@ import '../../application/state/music_controller.dart';
 import '../../application/state/visual_settings.dart';
 import 'ai_config_screen.dart';
 import 'chat_archives_screen.dart';
-import '../../domain/entities/archetype.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../domain/entities/chat_story.dart';
-import '../visuals/entity_visuals.dart';
-import '../widgets/entity_image.dart';
+import '../destiny/cartes.dart';
+import '../destiny/composants.dart';
+import '../destiny/donnees.dart';
+import '../theme/destiny_theme.dart';
 
 const List<({String name, IconData icon})> _universes = [
   (name: 'Contemporain', icon: Icons.location_city),
@@ -265,12 +266,17 @@ class _ChatScreenState extends State<ChatScreen>
     final nameCtrls = [TextEditingController(), TextEditingController()];
     String? universe;
     String? tone;
-    final chosen = <Archetype?>[null, null];
+    final archetypesChoisis = <String?>[null, null];
+    final animauxChoisis = <String?>[null, null];
+    final blessures = [TextEditingController(), TextEditingController()];
+    final vouloirs = [TextEditingController(), TextEditingController()];
     var playerCount = 1;
     var directAddress = true;
     var maxResponses = 30;
     var childMode = false;
-    final archetypes = widget.controller.archetypes;
+    var malus = false;
+    final g = context.grammaire;
+    final t = context.textes;
 
     final ok = await showModalBottomSheet<bool>(
       context: context,
@@ -280,7 +286,7 @@ class _ChatScreenState extends State<ChatScreen>
           final theme = Theme.of(context);
           var ready = universe != null && tone != null;
           for (var i = 0; i < playerCount; i++) {
-            if (nameCtrls[i].text.trim().isEmpty || chosen[i] == null) {
+            if (nameCtrls[i].text.trim().isEmpty || archetypesChoisis[i] == null || animauxChoisis[i] == null) {
               ready = false;
             }
           }
@@ -292,7 +298,8 @@ class _ChatScreenState extends State<ChatScreen>
               );
 
           Widget playerBlock(int i) {
-            final a = chosen[i];
+            final a = g.archetype(archetypesChoisis[i] ?? '');
+            final c = context.destiny;
             return Card(
               margin: const EdgeInsets.symmetric(vertical: 6),
               child: Padding(
@@ -301,8 +308,7 @@ class _ChatScreenState extends State<ChatScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(playerCount > 1 ? 'Joueur ${i + 1}' : 'Ton héros',
-                        style: theme.textTheme.titleSmall
-                            ?.copyWith(color: theme.colorScheme.primary)),
+                        style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.primary)),
                     const SizedBox(height: 8),
                     TextField(
                       controller: nameCtrls[i],
@@ -315,8 +321,8 @@ class _ChatScreenState extends State<ChatScreen>
                       onChanged: (_) => setLocal(() {}),
                     ),
                     const SizedBox(height: 10),
-                    DropdownButtonFormField<Archetype>(
-                      initialValue: a,
+                    DropdownButtonFormField<String>(
+                      initialValue: archetypesChoisis[i],
                       isExpanded: true,
                       decoration: const InputDecoration(
                         labelText: 'Archétype',
@@ -324,35 +330,63 @@ class _ChatScreenState extends State<ChatScreen>
                         isDense: true,
                       ),
                       items: [
-                        for (final ar in archetypes)
+                        for (final ar in g.archetypes)
                           DropdownMenuItem(
-                            value: ar,
-                            child: Row(
-                              children: [
-                                Text(
-                                    EntityVisuals.forArchetype(ar).emoji ?? '🎭',
-                                    style: const TextStyle(fontSize: 20)),
-                                const SizedBox(width: 8),
-                                Flexible(
-                                    child: Text(ar.name,
-                                        overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                            value: ar.id,
+                            child: Row(children: [
+                              Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(shape: BoxShape.circle, color: c.famille(ar.famille)),
+                              ),
+                              const SizedBox(width: 8),
+                              Flexible(child: Text(ar.nom, overflow: TextOverflow.ellipsis)),
+                            ]),
                           ),
                       ],
-                      onChanged: (v) {
-                        if (v == null) return;
-                        setLocal(() => chosen[i] = v);
-                        _revealArchetype(v);
-                      },
+                      onChanged: (v) => setLocal(() {
+                        archetypesChoisis[i] = v;
+                        animauxChoisis[i] = null;
+                      }),
                     ),
-                    if (a != null)
+                    if (a != null) ...[
                       Padding(
                         padding: const EdgeInsets.only(top: 6, left: 4),
-                        child: Text(a.traits,
-                            style: theme.textTheme.bodySmall
-                                ?.copyWith(color: Colors.white54)),
+                        child: Text(a.ceQuIlFait, style: theme.textTheme.bodySmall?.copyWith(color: Colors.white54)),
                       ),
+                      const SizedBox(height: 8),
+                      Wrap(spacing: 8, children: [
+                        for (final an in g.animauxDe(a.id))
+                          ChoiceChip(
+                            avatar: Text(kEmojiAnimal[an.id] ?? ''),
+                            label: Text(an.nom),
+                            selected: animauxChoisis[i] == an.id,
+                            onSelected: (_) {
+                              setLocal(() => animauxChoisis[i] = an.id);
+                              _revealArchetype(an.id, kids: childMode);
+                            },
+                          ),
+                      ]),
+                    ],
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: blessures[i],
+                      decoration: InputDecoration(
+                        labelText: childMode ? t.t('mode_enfant.mots.blessure') : 'Sa blessure (facultatif)',
+                        helperText: g.personnage.couches.length > 2 ? 'Une phrase sur son passé, sans explication.' : null,
+                        border: const OutlineInputBorder(),
+                        isDense: true,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: vouloirs[i],
+                      decoration: const InputDecoration(
+                        labelText: 'Ce qu\'il veut, ce soir (facultatif)',
+                        border: OutlineInputBorder(),
+                        isDense: true,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -478,7 +512,14 @@ class _ChatScreenState extends State<ChatScreen>
                           onSelectionChanged: (s) =>
                               setLocal(() => directAddress = s.first),
                         ),
-                        label('Longueur : $maxResponses réponses'),
+                        SwitchListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('La pièce est plus dure après Destiny'),
+                          subtitle: const Text('L\'action qui suit un Destiny demande deux réussites.'),
+                          value: malus,
+                          onChanged: (v) => setLocal(() => malus = v),
+                        ),
+                        label('Longueur : $maxResponses réponses, en quatre chapitres'),
                         Slider(
                           value: maxResponses.toDouble(),
                           min: 10,
@@ -511,13 +552,17 @@ class _ChatScreenState extends State<ChatScreen>
     if (ok == true && universe != null && tone != null) {
       final players = <ChatPlayer>[];
       for (var i = 0; i < playerCount; i++) {
-        final a = chosen[i];
-        if (a == null) continue;
+        final a = g.archetype(archetypesChoisis[i] ?? '');
+        final animal = animauxChoisis[i];
+        if (a == null || animal == null) continue;
         players.add(ChatPlayer(
           name: nameCtrls[i].text.trim(),
-          archetype: a.name,
-          traits: a.traits,
-          emoji: EntityVisuals.forArchetype(a).emoji,
+          archetypeId: a.id,
+          animalId: animal,
+          archetype: a.nom,
+          blessure: blessures[i].text.trim(),
+          vouloir: vouloirs[i].text.trim(),
+          emoji: kEmojiAnimal[animal],
         ));
       }
       if (players.isEmpty) return;
@@ -528,12 +573,13 @@ class _ChatScreenState extends State<ChatScreen>
         directAddress: directAddress,
         maxResponses: maxResponses,
         childMode: childMode,
+        malus: malus,
       );
     }
   }
 
   /// Révélation plein écran de l'archétype choisi, avec un son de tambour/foudre.
-  Future<void> _revealArchetype(Archetype a) async {
+  Future<void> _revealArchetype(String animalId, {required bool kids}) async {
     widget.audioService.playReveal();
     await showGeneralDialog<void>(
       context: context,
@@ -542,7 +588,7 @@ class _ChatScreenState extends State<ChatScreen>
       barrierColor: Colors.black.withValues(alpha: 0.88),
       transitionDuration: const Duration(milliseconds: 420),
       pageBuilder: (_, __, ___) =>
-          _ArchetypeReveal(archetype: a, source: widget.visualSettings.source),
+          _ArchetypeReveal(animalId: animalId, kids: kids, source: widget.visualSettings.source),
       transitionBuilder: (_, anim, __, child) => FadeTransition(
         opacity: anim,
         child: ScaleTransition(
@@ -707,7 +753,8 @@ class _ChatScreenState extends State<ChatScreen>
         ],
       );
     }
-    return Row(
+    return Wrap(
+      alignment: WrapAlignment.spaceBetween,
       children: [
         TextButton.icon(
           icon: const Icon(Icons.checklist),
@@ -721,7 +768,6 @@ class _ChatScreenState extends State<ChatScreen>
                       ..addAll(visible.map((s) => s.id)); // « tout » par défaut
                   }),
         ),
-        const Spacer(),
         TextButton.icon(
           icon: const Icon(Icons.archive_outlined),
           label: Text('Archives (${c.archivedStories.length})'),
@@ -1022,13 +1068,13 @@ class _ChatScreenState extends State<ChatScreen>
     );
   }
 
-  /// Sous-titre du résultat : détail des dés (et tension du danger).
+  /// Sous-titre du résultat : les lancers de la pièce (et l'option « plus dure »).
   Widget _rollSubtitle(bool success) {
     final c = widget.controller;
     final dice = c.lastRolls.length;
     if (dice == 0) return const SizedBox.shrink();
     final heads = c.lastRolls.where((h) => h).length;
-    final parts = <String>['🎲 $heads/$dice'];
+    final parts = <String>['🪙 $heads/$dice'];
     if (c.lastRequired >= 2) parts.add('Tension ×2');
 
     return Padding(
@@ -1464,6 +1510,14 @@ class _ChatScreenState extends State<ChatScreen>
 
   Widget _choices(ChatController c, ThemeData theme) {
     if (c.busy) return const SizedBox.shrink();
+    if (c.lectureSeule) {
+      return Padding(
+        padding: const EdgeInsets.all(12),
+        child: Text(context.textes.t('jouer.ia.ancienne'),
+            textAlign: TextAlign.center,
+            style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary)),
+      );
+    }
     if (c.choices.isEmpty) {
       if (c.error == null) {
         return Padding(
@@ -1632,11 +1686,12 @@ class _ChatScreenState extends State<ChatScreen>
   }
 }
 
-/// Révélation plein écran d'un archétype : image du catalogue + nom (auto-ferme).
+/// Révélation plein écran de la carte de l'animal choisi (auto-ferme).
 class _ArchetypeReveal extends StatefulWidget {
-  const _ArchetypeReveal({required this.archetype, required this.source});
+  const _ArchetypeReveal({required this.animalId, required this.kids, required this.source});
 
-  final Archetype archetype;
+  final String animalId;
+  final bool kids;
   final VisualSource source;
 
   @override
@@ -1654,71 +1709,13 @@ class _ArchetypeRevealState extends State<_ArchetypeReveal> {
 
   @override
   Widget build(BuildContext context) {
-    final a = widget.archetype;
-    final color = Theme.of(context).colorScheme.primary;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => Navigator.of(context).maybePop(),
       child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Image telle qu'elle apparaît dans le catalogue d'images.
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(28),
-                boxShadow: [
-                  BoxShadow(color: color.withValues(alpha: 0.6), blurRadius: 50),
-                ],
-              ),
-              child: EntityImage(
-                visual: EntityVisuals.forArchetype(a),
-                source: widget.source,
-                size: 240,
-                radius: 28,
-              ),
-            ),
-            const SizedBox(height: 18),
-            Text(
-              a.name,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 34,
-                fontWeight: FontWeight.w900,
-                shadows: [
-                  Shadow(color: color, blurRadius: 28),
-                  const Shadow(color: Colors.black, blurRadius: 8),
-                ],
-              ),
-            ),
-            if (a.temperament.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Text(a.temperament,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white70, fontSize: 16)),
-            ],
-            if (a.port.isNotEmpty)
-              // « Port » = entrée en scène → italique.
-              Text(a.port,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      color: Colors.white60,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 15)),
-            if (a.moteur.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              // « Moteur » = objectif → gras, couleur d'accent.
-              Text(a.moteur,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: color,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 18,
-                      letterSpacing: 0.5)),
-            ],
-          ],
-        ),
+        child: widget.kids
+            ? CarteArchetype.kids(widget.animalId, source: widget.source)
+            : CarteArchetype.animal(widget.animalId, source: widget.source),
       ),
     );
   }

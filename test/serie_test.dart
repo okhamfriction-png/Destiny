@@ -99,6 +99,23 @@ void main() {
       expect(catalogue.vouloirs, isNotEmpty);
     });
 
+    test('chaque univers a ses trois dangers à quatre paliers ; en kids, le palier 4 est sans mort', () {
+      for (final u in catalogue.univers) {
+        expect(u.dangers, hasLength(3), reason: u.id);
+        for (final d in u.dangers) {
+          expect(d.paliers, hasLength(4), reason: d.id);
+          expect(d.paliers.every((p) => p.isNotEmpty), isTrue, reason: d.id);
+          if (d.kids) {
+            expect(d.supprimeKids, isNotEmpty, reason: d.id);
+            expect(d.paliersPour(kids: true).last, d.supprimeKids);
+          }
+        }
+        if (u.kids && !u.adulte) {
+          expect(catalogue.dangersDe(u.id, kids: true), hasLength(3), reason: u.id);
+        }
+      }
+    });
+
     test('les méchants des univers enfants sont kids', () {
       for (final m in catalogue.mechantsDe('pirates')) {
         expect(m.mechant.kids, isTrue);

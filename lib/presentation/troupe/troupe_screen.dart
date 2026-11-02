@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../application/services/assistant_jeu.dart';
 import '../../application/services/audio_service.dart';
 import '../../application/state/location_details.dart';
 import '../../application/state/music_controller.dart';
@@ -31,6 +32,7 @@ class ContexteTroupe {
     required this.visuels,
     this.relations,
     this.detailsLieux,
+    this.ia,
   });
 
   final TroupeStore store;
@@ -41,6 +43,9 @@ class ContexteTroupe {
   final VisualSettings visuels;
   final RelationCheatsheet? relations;
   final LocationDetailsStore? detailsLieux;
+
+  /// L'IA au service du jeu (facultative).
+  final AssistantJeu? ia;
 }
 
 /// Ouvre l'écran de l'étape où en est la session.

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../application/services/assistant_jeu.dart';
 import '../../application/services/audio_service.dart';
 import '../../application/state/music_controller.dart';
 import '../../application/state/reglages_destiny.dart';
@@ -22,6 +23,7 @@ class ContexteSerie {
     required this.audio,
     required this.musique,
     required this.visuels,
+    this.ia,
   });
 
   final SerieStore store;
@@ -32,6 +34,9 @@ class ContexteSerie {
   final AudioService audio;
   final MusicController musique;
   final VisualSettings visuels;
+
+  /// L'IA au service du jeu (facultative).
+  final AssistantJeu? ia;
 
   /// Le méchant d'une saison ou d'un épisode.
   Mechant? mechant(Grammaire g, String id) => trouverMechant(g, store.catalogue, id);

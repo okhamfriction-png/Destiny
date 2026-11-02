@@ -10,7 +10,49 @@ import '../grammaire/modeles.dart';
 List<String> _ls(Object? v) => [for (final x in (v as List? ?? const [])) '$x'];
 String _s(Object? v) => v is String ? v.trim() : '';
 
-/// Un univers : son nom, pour qui, ses lores et ses peuples.
+/// Un danger propre à un univers, en quatre paliers (et sa version kids du
+/// palier 4).
+class DangerUnivers {
+  const DangerUnivers({
+    required this.id,
+    required this.univers,
+    required this.nom,
+    required this.paliers,
+    this.kids = false,
+    this.supprimeKids = '',
+  });
+
+  final String id;
+  final String univers;
+  final String nom;
+
+  /// Les quatre phrases, dans l'ordre des paliers.
+  final List<String> paliers;
+  final bool kids;
+  final String supprimeKids;
+
+  /// Les paliers à jouer : en kids, le palier 4 sans mort.
+  List<String> paliersPour({bool kids = false}) => [
+        for (var i = 0; i < paliers.length; i++)
+          i == 3 && kids && supprimeKids.isNotEmpty ? supprimeKids : paliers[i],
+      ];
+
+  factory DangerUnivers.depuisJson(Map<String, dynamic> j, {required String univers}) {
+    final p = j['paliers'];
+    return DangerUnivers(
+      id: _s(j['id']),
+      univers: univers,
+      nom: _s(j['nom']),
+      paliers: p is Map
+          ? [for (final cle in const ['signale', 'enferme', 'envahit', 'supprime']) _s(p[cle])]
+          : _ls(p),
+      kids: j['kids'] == true,
+      supprimeKids: _s(j['supprime_kids']),
+    );
+  }
+}
+
+/// Un univers : son nom, pour qui, ses lores, ses peuples et ses dangers.
 class UniversJeu {
   const UniversJeu({
     required this.id,
@@ -19,6 +61,7 @@ class UniversJeu {
     required this.kids,
     this.lores = const [],
     this.peuples = const [],
+    this.dangers = const [],
   });
 
   final String id;
@@ -27,6 +70,7 @@ class UniversJeu {
   final bool kids;
   final List<String> lores;
   final List<String> peuples;
+  final List<DangerUnivers> dangers;
 
   bool pour({required bool kids}) => kids ? this.kids : adulte;
 }
@@ -205,6 +249,12 @@ class CatalogueUnivers {
 
   List<MechantUnivers> mechantsDe(String universId) => [for (final m in mechants) if (m.univers == universId) m];
 
+  /// Les dangers d'un univers (en kids, seulement les dangers kids).
+  List<DangerUnivers> dangersDe(String universId, {bool kids = false}) => [
+        for (final d in universDe(universId)?.dangers ?? const <DangerUnivers>[])
+          if (!kids || d.kids) d,
+      ];
+
   LieuUnivers? lieu(String id) {
     for (final l in lieux) {
       if (l.id == id) return l;
@@ -248,6 +298,10 @@ class CatalogueUnivers {
             kids: u['kids'] == true,
             lores: _ls(u['lores']),
             peuples: _ls(u['peuples']),
+            dangers: [
+              for (final d in (u['dangers'] as List? ?? const []))
+                if (d is Map) DangerUnivers.depuisJson(Map<String, dynamic>.from(d), univers: _s(u['id'])),
+            ],
           ),
     ];
     // Un univers proposé aux deux publics (Super-héros) garde des méchants

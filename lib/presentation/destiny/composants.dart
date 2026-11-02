@@ -112,6 +112,18 @@ const Map<String, String> kEmojiAnimal = {
   'chat': '🐈', 'cerf': '🦌', 'lapin': '🐇', 'serpent': '🐍',
 };
 
+/// L'icône d'un animal, à partir de son id (« hyene »), de son nom (« Hyène »)
+/// ou d'un libellé « Opportuniste · Hyène » (on prend le dernier mot).
+String? emojiAnimal(String nomOuId) {
+  var s = nomOuId.split('·').last.toLowerCase().trim();
+  const accents = 'àâäáãåçéèêëíìîïñóòôöõúùûüýÿ';
+  const sans = 'aaaaaaceeeeiiiinooooouuuuyy';
+  for (var i = 0; i < accents.length; i++) {
+    s = s.replaceAll(accents[i], sans[i]);
+  }
+  return kEmojiAnimal[s.replaceAll(RegExp(r'[^a-z]'), '')];
+}
+
 /// Le médaillon d'un animal : rond, cerclé d'or.
 class MedaillonAnimal extends StatelessWidget {
   const MedaillonAnimal(

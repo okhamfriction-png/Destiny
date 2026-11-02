@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../domain/troupe/session.dart';
+import '../destiny/bouton_ia.dart';
 import '../destiny/cartes.dart';
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
@@ -49,6 +50,31 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
   void dispose() {
     _minuteur?.cancel();
     super.dispose();
+  }
+
+  /// Le coach d'échauffement : des idées pour les trois questions.
+  Future<void> _idees(String archetypeId, String animalId) async {
+    final idees = await widget.contexte.ia!
+        .echauffement(archetypeId: archetypeId, animalId: animalId, kids: widget.session.kids);
+    if (!mounted) return;
+    final t = context.textes;
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => DraggableScrollableSheet(
+        expand: false,
+        initialChildSize: 0.7,
+        builder: (ctx, scroll) => ListView(
+          controller: scroll,
+          padding: const EdgeInsets.all(16),
+          children: [
+            Text(t.t('ia_jeu.idees_titre'), style: Theme.of(ctx).textTheme.titleLarge, textAlign: TextAlign.center),
+            for (final q in idees)
+              SectionDestiny(titre: q.question, enfants: [for (final i in q.idees) Puce(i)]),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -103,6 +129,17 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
                 widget.session.kids
                     ? CarteArchetype.kids(p.animalId, source: widget.contexte.visuels.source)
                     : CarteArchetype.animal(p.animalId, source: widget.contexte.visuels.source),
+              if (widget.contexte.ia != null && p.archetypeId.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Center(
+                    child: BoutonIA(
+                      libelle: t.t('ia_jeu.idees_echauffement'),
+                      disponible: widget.contexte.ia!.disponible,
+                      action: () => _idees(p.archetypeId, p.animalId),
+                    ),
+                  ),
+                ),
             ]),
           ),
         const SizedBox(height: 22),

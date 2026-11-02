@@ -4,12 +4,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show HapticFeedback;
 
+import '../../application/prompts/prompts.dart';
 import '../../application/services/transcription_service.dart';
 import '../../application/state/reglages_destiny.dart';
 import '../../domain/grammaire/modeles.dart';
 import '../../domain/grammaire/progression.dart';
 import '../../domain/serie/regles_serie.dart';
 import '../../domain/serie/serie.dart';
+import '../destiny/bouton_ia.dart';
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
@@ -227,6 +229,28 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
     if (mounted) await ouvrirEpisode(context, widget.contexte, s, e, remplacer: true);
   }
 
+  /// La voix de l'alarmiste : une ou deux répliques pour la nouvelle du
+  /// palier, quand c'est le maître du jeu qui joue l'alarmiste.
+  Future<void> _soufflerAlarmiste() async {
+    final alarmiste = s.personnagesActifs.firstWhere((p) => p.pnj && p.archetypeId == Grammaire.alarmisteId);
+    final texte = await widget.contexte.ia!.voixAlarmiste(
+      scene: ScenePrompt(lieu: e.lieuNom, espaces: e.espaces, groupe: e.groupe, danger: e.dangerNom, paliers: e.paliers),
+      palier: _palier,
+      animalId: alarmiste.animalId,
+      kids: s.kids,
+    );
+    if (!mounted) return;
+    final t = context.textes;
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(t.t('ia_jeu.alarmiste_titre')),
+        content: Text(texte),
+        actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: Text(t.t('ia_jeu.fermer')))],
+      ),
+    );
+  }
+
   String _horloge(int secondes) {
     final v = secondes.abs();
     return '${secondes < 0 ? '-' : ''}${(v ~/ 60).toString().padLeft(2, '0')}:${(v % 60).toString().padLeft(2, '0')}';
@@ -359,6 +383,12 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
             if (_palier == PalierId.supprime && finale) Puce(k('rappel_forcer')),
             if (s.kids && _palier.index >= PalierId.envahit.index) Puce(k('rappel_kids')),
           ]),
+        if (widget.contexte.ia != null && s.personnagesActifs.any((p) => p.pnj && p.archetypeId == Grammaire.alarmisteId))
+          BoutonIA(
+            libelle: t.t('ia_jeu.alarmiste'),
+            disponible: widget.contexte.ia!.disponible,
+            action: _soufflerAlarmiste,
+          ),
         if (traitre != null && traitre.accepte != null && e.numero == 3 && !traitre.revele)
           _revelationTraitre(traitre),
         if (e.saison > 0 && e.presage.isNotEmpty)
