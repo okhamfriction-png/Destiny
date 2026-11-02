@@ -17,6 +17,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'outils/grammaire_partagee.dart';
+import 'outils/textes_utilises.dart';
 import 'troupe_test.dart' show CatalogueDeTest;
 
 late GrammaireChargee chargee;
@@ -112,5 +113,20 @@ void main() {
     expect(find.text(t.t('reglages.destiny')), findsOneWidget);
     expect(find.textContaining('dé'), findsNothing);
     expect(find.textContaining('2.0.0'), findsOneWidget);
+  });
+
+  test('chaque texte des réglages existe', () {
+    expect(
+      textesManquants([
+        'lib/presentation/reglages',
+        'lib/presentation/screens/settings_screen.dart',
+        'lib/presentation/screens/appearance_screen.dart',
+        'lib/presentation/troupe',
+        'lib/presentation/jouer',
+        'lib/presentation/bibliotheque',
+        'lib/presentation/destiny',
+      ]),
+      isEmpty,
+    );
   });
 }

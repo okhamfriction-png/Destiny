@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:destiny/application/services/audio_service.dart';
 import 'package:destiny/application/state/music_controller.dart';
@@ -20,6 +19,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'outils/grammaire_partagee.dart';
+import 'outils/textes_utilises.dart';
 import 'troupe_test.dart' show CatalogueDeTest;
 
 late Grammaire g;
@@ -202,41 +202,6 @@ void main() {
   });
 
   test('chaque texte des écrans de la Série existe', () {
-    final textes = jsonDecode(File('assets/data/destiny_textes.json').readAsStringSync()) as Map<String, dynamic>;
-    bool existe(String chemin) {
-      Object? v = textes;
-      for (final cle in chemin.split('.')) {
-        if (v is! Map) return false;
-        v = v[cle];
-      }
-      return v is String || v is List || v is Map;
-    }
-
-    final manquants = <String>[];
-    for (final f in Directory('lib/presentation/serie').listSync().whereType<File>()) {
-      final code = f.readAsStringSync();
-      // Les chemins écrits en entier.
-      for (final m in RegExp(r"t\.t\('((?:serie|regie|mise_en_place|debrief|modes_pnj|navigation|bibliotheque|preparer|rituel|mode_enfant|ia_jeu)\.[a-z_\.]+)'").allMatches(code)) {
-        if (!existe(m.group(1)!)) manquants.add('${f.path} : ${m.group(1)}');
-      }
-      // Les raccourcis locaux : String k(String x) => t.t('serie.saison.$x').
-      final prefixes = {
-        for (final m in RegExp(r"String (\w+)\(String \w+(?:, \[Map<String, String> \w+ = const \{\}\])?\) => t\.t\('([a-z_\.]+)\.\$").allMatches(code))
-          m.group(1)!: _prefixes(code, m.group(1)!),
-      };
-      for (final e in prefixes.entries) {
-        for (final m in RegExp("\\b${e.key}\\('([a-z_\\.]+)'").allMatches(code)) {
-          if (!e.value.any((p) => existe('$p.${m.group(1)}'))) manquants.add('${f.path} : ${e.key}(${m.group(1)})');
-        }
-      }
-    }
-    expect(manquants, isEmpty);
+    expect(textesManquants(['lib/presentation/serie']), isEmpty);
   });
 }
-
-/// Tous les préfixes qu'un raccourci prend dans un fichier.
-List<String> _prefixes(String code, String nom) => [
-      for (final m in RegExp("String $nom\\(String \\w+(?:, \\[Map<String, String> \\w+ = const \\{\\}\\])?\\) => t\\.t\\('([a-z_\\.]+)\\.\\\$")
-          .allMatches(code))
-        m.group(1)!,
-    ];

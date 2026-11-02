@@ -15,14 +15,14 @@ import '../../application/state/visual_settings.dart';
 import '../../domain/repositories/catalog_store.dart';
 import '../bibliotheque/bibliotheque_screen.dart';
 import '../destiny/donnees.dart';
+import '../exercices/exercices_screen.dart';
 import '../jouer/jouer_screen.dart';
 import '../serie/contexte_serie.dart';
 import '../theme/destiny_theme.dart';
 import '../troupe/troupe_screen.dart';
-import 'exercices_screen.dart';
+import '../widgets/ecran_sombre.dart';
 import 'music_screen.dart';
 import 'settings_screen.dart';
-import '../widgets/ecran_sombre.dart';
 
 /// Les trois onglets : Jouer · Troupe · Exercices. L'appli s'ouvre sur
 /// Troupe. La Bibliothèque, la musique et les réglages sont de petits boutons.
@@ -68,14 +68,14 @@ class _RootScreenState extends State<RootScreen> {
 
   void _ouvrir(Widget page) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
 
-  void _ouvrirBibliotheque() => _ouvrir(BibliothequeScreen(
-        contexte: ContexteBibliotheque(
-          catalogue: widget.catalogStore,
-          visuels: widget.visualSettings,
-          detailsLieux: widget.locationDetails,
-          univers: widget.serieStore.catalogue,
-        ),
-      ));
+  ContexteBibliotheque get _contexteBibliotheque => ContexteBibliotheque(
+        catalogue: widget.catalogStore,
+        visuels: widget.visualSettings,
+        detailsLieux: widget.locationDetails,
+        univers: widget.serieStore.catalogue,
+      );
+
+  void _ouvrirBibliotheque() => _ouvrir(BibliothequeScreen(contexte: _contexteBibliotheque));
 
   void _ouvrirMusique() => _ouvrir(ThemeSombre(
         child: Scaffold(
@@ -133,7 +133,7 @@ class _RootScreenState extends State<RootScreen> {
         versExercices: () => setState(() => _index = 2),
         versBibliotheque: _ouvrirBibliotheque,
       ),
-      ThemeSombre(child: ExercicesScreen(audioService: widget.audioService)),
+      ExercicesScreen(audioService: widget.audioService, bibliotheque: _contexteBibliotheque),
     ];
 
     return Scaffold(

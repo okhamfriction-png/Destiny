@@ -32,6 +32,31 @@ class ContexteBibliotheque {
   final CatalogueUnivers univers;
 }
 
+/// Les entrées de la Bibliothèque : clé (celle des textes
+/// `bibliotheque.entrees`), icône, page.
+List<(String, IconData, Widget Function())> entreesBibliotheque(ContexteBibliotheque contexte) => [
+      ('regles', Icons.auto_stories_outlined, () => const ReglesScreen()),
+      ('archetypes', Icons.style_outlined, () => ArchetypesScreen(contexte: contexte)),
+      ('animaux', Icons.pets_outlined, () => AnimauxScreen(contexte: contexte)),
+      ('vouloir_besoin', Icons.favorite_border_rounded, () => const VouloirBesoinScreen()),
+      ('dangers', Icons.bolt_outlined, () => DangersScreen(contexte: contexte)),
+      ('lieux', Icons.place_outlined, () => LieuxScreen(contexte: contexte)),
+      ('oeuvres', Icons.movie_filter_outlined, () => OeuvresScreen(contexte: contexte)),
+      ('mechants', Icons.nightlight_outlined, () => MechantsScreen(contexte: contexte)),
+      ('figurants', Icons.groups_2_outlined, () => FigurantsScreen(contexte: contexte)),
+      ('kids', Icons.child_care_outlined, () => const KidsScreen()),
+      ('outils', Icons.handyman_outlined, () => const OutilsScreen()),
+      ('lexique', Icons.translate_rounded, () => const LexiqueScreen()),
+    ];
+
+/// La page de la Bibliothèque qui porte la clé [cle], ou null.
+Widget? pageBibliotheque(String cle, ContexteBibliotheque contexte) {
+  for (final (k, _, page) in entreesBibliotheque(contexte)) {
+    if (k == cle) return page();
+  }
+  return null;
+}
+
 /// La Bibliothèque : remplace le Guide et le Catalogue.
 class BibliothequeScreen extends StatelessWidget {
   const BibliothequeScreen({super.key, required this.contexte});
@@ -47,20 +72,7 @@ class BibliothequeScreen extends StatelessWidget {
     String texte(String k) => t.t('bibliotheque.entrees.$k.texte');
     void ouvrir(Widget page) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
 
-    final entrees = <(String, IconData, Widget Function())>[
-      ('regles', Icons.auto_stories_outlined, () => const ReglesScreen()),
-      ('archetypes', Icons.style_outlined, () => ArchetypesScreen(contexte: contexte)),
-      ('animaux', Icons.pets_outlined, () => AnimauxScreen(contexte: contexte)),
-      ('vouloir_besoin', Icons.favorite_border_rounded, () => const VouloirBesoinScreen()),
-      ('dangers', Icons.bolt_outlined, () => DangersScreen(contexte: contexte)),
-      ('lieux', Icons.place_outlined, () => LieuxScreen(contexte: contexte)),
-      ('oeuvres', Icons.movie_filter_outlined, () => OeuvresScreen(contexte: contexte)),
-      ('mechants', Icons.nightlight_outlined, () => MechantsScreen(contexte: contexte)),
-      ('figurants', Icons.groups_2_outlined, () => FigurantsScreen(contexte: contexte)),
-      ('kids', Icons.child_care_outlined, () => const KidsScreen()),
-      ('outils', Icons.handyman_outlined, () => const OutilsScreen()),
-      ('lexique', Icons.translate_rounded, () => const LexiqueScreen()),
-    ];
+    final entrees = entreesBibliotheque(contexte);
 
     return PageDestiny(
       titre: t.t('bibliotheque.titre'),
