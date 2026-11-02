@@ -2,6 +2,17 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.0.1 — Préparer en un geste (novembre 2026)
+
+Après un premier essai en répétition :
+
+- **La répétition est le choix par défaut**, avant le spectacle.
+- **Plus de prénoms** en spectacle et en répétition : on se les donne sur le plateau. Ils restent dans le jeu de rôle (Jouer).
+- **« Tirer » donne tout d'un coup** : le lieu et le danger, avec leur image, puis les archétypes en version compacte, chacun avec ses deux animaux possibles. À l'arrivée, c'est déjà tiré.
+- **Un bouton « i » à chaque niveau** : le lieu, le danger, chaque archétype et chaque animal ouvrent leur fiche.
+- **On passe à l'échauffement tout de suite** : choisir son animal est facultatif. Sans choix, l'échauffement montre l'archétype et ses deux animaux.
+- **Les images des lieux et des dangers sont de retour.**
+
 ## 2.0.0 — La grammaire de Destiny (novembre 2026)
 
 **Rien n'est écrit.** L'appli est entièrement refaite autour de la grammaire de Destiny, celle qu'on joue sur scène : un lieu, un groupe qui se connaît, un danger qui monte en quatre paliers, et Destiny entre les actes.

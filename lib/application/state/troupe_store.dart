@@ -45,7 +45,7 @@ class TroupeStore extends ChangeNotifier {
   }
 
   /// Crée une nouvelle session et la rend « en cours ».
-  Future<SessionTroupe> nouvelle({TypeSession type = TypeSession.spectacle}) async {
+  Future<SessionTroupe> nouvelle({TypeSession type = TypeSession.repetition}) async {
     final s = SessionTroupe(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
       date: DateTime.now(),

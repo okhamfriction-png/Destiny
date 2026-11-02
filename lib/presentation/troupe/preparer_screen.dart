@@ -2,17 +2,25 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../../application/state/visual_settings.dart';
+import '../../domain/entities/danger.dart';
+import '../../domain/entities/location.dart';
 import '../../domain/grammaire/distribution.dart';
 import '../../domain/grammaire/modeles.dart';
 import '../../domain/troupe/session.dart';
+import '../bibliotheque/archetypes_screen.dart';
+import '../bibliotheque/bibliotheque_screen.dart';
+import '../bibliotheque/dangers_lieux_screen.dart';
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
 import '../theme/destiny_theme.dart';
 import 'troupe_screen.dart';
 
-/// Préparer : le nombre de joueurs, leurs prénoms, la distribution des
-/// archétypes (concertée, tirée ou d'après un exemple) et le choix des animaux.
+/// Préparer une répétition ou un spectacle. Sans prénoms : on se les donne
+/// sur le plateau. « Tirer » donne d'un seul geste le lieu, le danger et la
+/// distribution des archétypes, chacun avec ses deux animaux possibles, et
+/// un bouton pour en savoir plus à chaque niveau.
 class PreparerScreen extends StatefulWidget {
   const PreparerScreen({super.key, required this.contexte, required this.session});
 
@@ -27,41 +35,105 @@ class _PreparerScreenState extends State<PreparerScreen> {
   final Random _hasard = Random();
   late String _mode = widget.contexte.reglages.modeDistribution;
   int _exemple = 0;
-  final List<TextEditingController> _prenoms = [];
+  List<Location> _lieux = const [];
+  List<Danger> _dangers = const [];
+  bool _catalogueCharge = false;
 
   SessionTroupe get s => widget.session;
+  Grammaire get g => context.grammaire;
+
+  ContexteBibliotheque get _bibliotheque => ContexteBibliotheque(
+        catalogue: widget.contexte.catalogue,
+        visuels: widget.contexte.visuels,
+        detailsLieux: widget.contexte.detailsLieux,
+      );
 
   @override
   void initState() {
     super.initState();
-    if (s.personnages.isEmpty) {
+    final nouvelle = s.personnages.isEmpty;
+    if (nouvelle) {
       final n = widget.contexte.reglages.joueursParDefaut;
       s.personnages = [for (var i = 0; i < n; i++) PersonnageTroupe(joueur: '', archetypeId: '')];
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_mode != 'concerte') _distribuer();
-      });
     }
-    _synchroniserChamps();
+    _chargerCatalogue().then((_) {
+      if (!mounted) return;
+      // À l'arrivée, tout est déjà tiré : on n'a plus qu'à jouer.
+      if (nouvelle && _mode != 'concerte') _distribuer();
+      if (s.lieuNom.isEmpty) _tirerLieu();
+      if (s.dangerNom.isEmpty) _tirerDanger();
+      _sauver();
+    });
   }
 
-  void _synchroniserChamps() {
-    while (_prenoms.length < s.personnages.length) {
-      _prenoms.add(TextEditingController(text: s.personnages[_prenoms.length].joueur));
-    }
-    while (_prenoms.length > s.personnages.length) {
-      _prenoms.removeLast().dispose();
-    }
+  Future<void> _chargerCatalogue() async {
+    final lieux = await widget.contexte.catalogue.getLocations();
+    final dangers = await widget.contexte.catalogue.getDangers();
+    if (!mounted) return;
+    setState(() {
+      _lieux = lieux;
+      _dangers = dangers;
+      _catalogueCharge = true;
+    });
   }
 
-  @override
-  void dispose() {
-    for (final c in _prenoms) {
-      c.dispose();
+  List<Location> get _lieuxPossibles => [
+        for (final l in _lieux)
+          if (l.actif && (!s.kids || l.kids)) l
+      ];
+  List<Danger> get _dangersPossibles => [
+        for (final d in _dangers)
+          if (d.actif && d.paliers.length == 4 && (!s.kids || d.kids)) d
+      ];
+
+  Location? get _lieu {
+    for (final l in _lieux) {
+      if (l.id == s.lieuId) return l;
     }
-    super.dispose();
+    return null;
   }
 
-  Grammaire get g => context.grammaire;
+  Danger? get _danger {
+    for (final d in _dangers) {
+      if (d.id == s.dangerId) return d;
+    }
+    return null;
+  }
+
+  T? _autre<T>(List<T> liste, bool Function(T) estActuel) {
+    final choix = [
+      for (final e in liste)
+        if (!estActuel(e)) e
+    ];
+    final pool = choix.isEmpty ? liste : choix;
+    return pool.isEmpty ? null : pool[_hasard.nextInt(pool.length)];
+  }
+
+  void _tirerLieu() {
+    final l = _autre(_lieuxPossibles, (l) => l.id == s.lieuId);
+    setState(() {
+      s.lieuId = l?.id ?? '';
+      s.lieuNom = l?.name ?? '';
+    });
+  }
+
+  void _tirerDanger() {
+    final d = _autre(_dangersPossibles, (d) => d.id == s.dangerId);
+    setState(() {
+      s.dangerId = d?.id ?? '';
+      s.dangerNom = d?.name ?? '';
+      s.paliers = d?.paliersPour(kids: s.kids) ?? [];
+    });
+  }
+
+  /// « Tirer » : le lieu, le danger et la distribution, d'un seul geste.
+  void _toutTirer() {
+    _tirerLieu();
+    _tirerDanger();
+    if (_mode == 'exemple') _exemple++;
+    if (_mode != 'concerte') _distribuer();
+    _sauver();
+  }
 
   void _changerNombre(int n) {
     setState(() {
@@ -71,9 +143,17 @@ class _PreparerScreenState extends State<PreparerScreen> {
       while (s.personnages.length > n) {
         s.personnages.removeLast();
       }
-      _synchroniserChamps();
     });
     if (_mode != 'concerte') _distribuer();
+    _sauver();
+  }
+
+  void _changerKids(bool kids) {
+    setState(() => s.kids = kids);
+    // En kids, seuls les lieux et les dangers kids se jouent.
+    if (_lieu != null && kids && !_lieu!.kids) _tirerLieu();
+    if (_danger != null && kids && !_danger!.kids) _tirerDanger();
+    if (_danger != null) s.paliers = _danger!.paliersPour(kids: kids);
     _sauver();
   }
 
@@ -96,12 +176,14 @@ class _PreparerScreenState extends State<PreparerScreen> {
       final exemples = exemplesDistribution(g, n);
       _attribuer(exemples[_exemple % exemples.length]..shuffle(_hasard));
     } else {
-      _attribuer(tirerDistribution(g, n,
-          hasard: _hasard, leaderObligatoire: widget.contexte.reglages.leaderObligatoire));
+      _attribuer(
+          tirerDistribution(g, n, hasard: _hasard, leaderObligatoire: widget.contexte.reglages.leaderObligatoire));
     }
   }
 
   Future<void> _sauver() => widget.contexte.store.enregistrer(s);
+
+  void _ouvrir(Widget page) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
 
   Future<void> _choisirArchetype(int i) async {
     final c = context.destiny;
@@ -146,17 +228,15 @@ class _PreparerScreenState extends State<PreparerScreen> {
     final t = context.textes;
     final c = context.destiny;
     final ids = [for (final p in s.personnages) p.archetypeId];
-    final verdict = validerDistribution(g, ids,
-        leaderObligatoire: widget.contexte.reglages.leaderObligatoire);
-    final animauxChoisis = s.personnages.every((p) => p.animalId.isNotEmpty);
-    String p(String k) => t.t('preparer.$k');
+    final verdict = validerDistribution(g, ids, leaderObligatoire: widget.contexte.reglages.leaderObligatoire);
+    String p(String k, [Map<String, String> v = const {}]) => t.t('preparer.$k', v);
 
     return PageDestiny(
       titre: p('titre'),
       enfants: [
         SegmentedButton<TypeSession>(
           segments: [
-            for (final ty in TypeSession.values)
+            for (final ty in [TypeSession.repetition, TypeSession.spectacle])
               ButtonSegment(value: ty, label: Text(t.t('troupe.types.${ty.name}'))),
           ],
           selected: {s.type},
@@ -167,70 +247,120 @@ class _PreparerScreenState extends State<PreparerScreen> {
         ),
         SwitchListTile(
           contentPadding: EdgeInsets.zero,
-          title: Wrap(spacing: 8, crossAxisAlignment: WrapCrossAlignment.center, children: [Text(p('kids')), const SigleKids(petit: true)]),
+          title: Wrap(
+            spacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [Text(p('kids')), const SigleKids(petit: true)],
+          ),
           value: s.kids,
-          onChanged: (v) {
-            setState(() => s.kids = v);
-            _sauver();
-          },
+          onChanged: _changerKids,
         ),
-        SectionDestiny(titre: p('joueurs'), enfants: [
+        SectionDestiny(titre: p('joueurs'), espace: 8, enfants: [
           SegmentedButton<int>(
-            segments: [for (final n in [4, 5, 6]) ButtonSegment(value: n, label: Text('$n'))],
+            segments: [
+              for (final n in [4, 5, 6]) ButtonSegment(value: n, label: Text('$n'))
+            ],
             selected: {s.personnages.length},
             onSelectionChanged: (v) => _changerNombre(v.first),
           ),
         ]),
         SectionDestiny(titre: p('distribution'), enfants: [
-          SegmentedButton<String>(
-            segments: [
-              for (final m in ['concerte', 'tirage', 'exemple'])
-                ButtonSegment(value: m, label: Text(t.t('distribution.modes.$m'))),
-            ],
-            selected: {_mode},
-            onSelectionChanged: (v) {
-              setState(() => _mode = v.first);
-              if (_mode != 'concerte') _distribuer();
-            },
+          Wrap(spacing: 8, runSpacing: 6, children: [
+            for (final m in ['tirage', 'exemple', 'concerte'])
+              ChoiceChip(
+                label: Text(t.t('distribution.modes.$m')),
+                selected: _mode == m,
+                onSelected: (_) {
+                  setState(() => _mode = m);
+                  if (_mode != 'concerte') _distribuer();
+                },
+              ),
+          ]),
+        ]),
+        const SizedBox(height: 14),
+        SizedBox(
+          width: double.infinity,
+          child: FilledButton.icon(
+            onPressed: _toutTirer,
+            icon: const Icon(Icons.shuffle_rounded),
+            label: Text(p('tirer')),
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              textStyle: const TextStyle(fontFamily: kPoliceTexte, fontSize: 17, fontWeight: FontWeight.w700),
+            ),
           ),
+        ),
+        const SizedBox(height: 4),
+        Text(p('tirer_aide'),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire)),
+        SectionDestiny(titre: p('tirage'), enfants: [
+          if (_catalogueCharge && _lieuxPossibles.isEmpty && _dangersPossibles.isEmpty)
+            Paragraphe(p('catalogue_vide'), italique: true)
+          else
+            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Expanded(
+                child: _VignetteTirage(
+                  dossier: 'locations',
+                  id: s.lieuId,
+                  surtitre: p('lieu'),
+                  nom: s.lieuNom,
+                  icone: Icons.place_rounded,
+                  source: widget.contexte.visuels.source,
+                  onRelancer: () {
+                    _tirerLieu();
+                    _sauver();
+                  },
+                  relancer: p('autre_lieu'),
+                  onInfo: _lieu == null ? null : () => _ouvrir(FicheLieu(lieu: _lieu!, contexte: _bibliotheque)),
+                  info: p('info_de', {'nom': s.lieuNom}),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _VignetteTirage(
+                  dossier: 'dangers',
+                  id: s.dangerId,
+                  surtitre: p('danger'),
+                  nom: s.dangerNom,
+                  icone: Icons.bolt_rounded,
+                  source: widget.contexte.visuels.source,
+                  onRelancer: () {
+                    _tirerDanger();
+                    _sauver();
+                  },
+                  relancer: p('autre_danger'),
+                  onInfo: _danger == null ? null : () => _ouvrir(FicheDanger(danger: _danger!)),
+                  info: p('info_de', {'nom': s.dangerNom}),
+                ),
+              ),
+            ]),
+        ]),
+        SectionDestiny(titre: p('archetypes'), enfants: [
+          Text(p('animaux_aide'), style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire)),
           const SizedBox(height: 8),
-          if (_mode == 'tirage')
-            OutlinedButton.icon(
-              onPressed: _distribuer,
-              icon: const Icon(Icons.shuffle_rounded),
-              label: Text(p('tirer')),
-            ),
-          if (_mode == 'exemple')
-            OutlinedButton.icon(
-              onPressed: () {
-                _exemple++;
-                _distribuer();
-              },
-              icon: const Icon(Icons.skip_next_rounded),
-              label: Text(p('autre_exemple')),
-            ),
-          const SizedBox(height: 12),
-          for (var i = 0; i < s.personnages.length; i++) _ligneJoueur(i),
+          for (var i = 0; i < s.personnages.length; i++) _ligneArchetype(i),
           _Verdict(
             ok: verdict.valide,
             texte: verdict.raison(g, t),
             correction: verdict.phraseCorrection(g, t),
             onCorriger: verdict.correction == null ? null : () => _attribuer(verdict.correction!.appliquer(ids)),
           ),
-          if (verdict.valide && !animauxChoisis)
-            Paragraphe(p('animaux_manquants'), italique: true),
         ]),
         const SizedBox(height: 18),
-        FilledButton.icon(
-          onPressed: verdict.valide && animauxChoisis
-              ? () async {
-                  s.etape = EtapeSession.echauffement;
-                  await _sauver();
-                  if (context.mounted) ouvrirEtape(context, widget.contexte, s, remplacer: true);
-                }
-              : null,
-          icon: const Icon(Icons.self_improvement_rounded),
-          label: Text(p('vers_echauffement')),
+        SizedBox(
+          width: double.infinity,
+          child: FilledButton.icon(
+            onPressed: verdict.valide
+                ? () async {
+                    s.etape = EtapeSession.echauffement;
+                    await _sauver();
+                    if (context.mounted) ouvrirEtape(context, widget.contexte, s, remplacer: true);
+                  }
+                : null,
+            icon: const Icon(Icons.self_improvement_rounded),
+            label: Text(p('vers_echauffement')),
+          ),
         ),
         const SizedBox(height: 8),
         TextButton(
@@ -241,70 +371,64 @@ class _PreparerScreenState extends State<PreparerScreen> {
     );
   }
 
-  Widget _ligneJoueur(int i) {
+  /// Un archétype, en version compacte : son nom, ce qu'il fait, et ses deux
+  /// animaux possibles, avec un bouton info à chaque niveau.
+  Widget _ligneArchetype(int i) {
     final t = context.textes;
     final c = context.destiny;
     final pers = s.personnages[i];
     final arch = g.archetype(pers.archetypeId);
     final couleur = arch == null ? c.filet : c.famille(arch.famille);
+    String p(String k, [Map<String, String> v = const {}]) => t.t('preparer.$k', v);
     return CadreLisere(
       couleur: couleur,
+      marge: 8,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(children: [
           Expanded(
-            child: TextField(
-              controller: _prenoms[i],
-              decoration: InputDecoration(labelText: '${t.t('preparer.prenom')} ${i + 1}', isDense: true),
-              textCapitalization: TextCapitalization.words,
-              onChanged: (v) {
-                pers.joueur = v.trim();
-                _sauver();
-              },
+            child: Text(
+              arch?.nom ?? p('choisir_archetype'),
+              style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 16, color: c.texte),
             ),
           ),
-          const SizedBox(width: 10),
-          ActionChip(
-            avatar: arch == null ? const Icon(Icons.add, size: 16) : null,
-            label: Text(arch?.nom ?? t.t('preparer.choisir_archetype')),
-            side: BorderSide(color: couleur),
+          IconButton(
+            tooltip: p('changer_archetype'),
+            visualDensity: VisualDensity.compact,
+            icon: Icon(Icons.swap_horiz_rounded, color: c.texteSecondaire),
             onPressed: () => _choisirArchetype(i),
           ),
+          if (arch != null)
+            IconButton(
+              tooltip: p('info_de', {'nom': arch.nom}),
+              visualDensity: VisualDensity.compact,
+              icon: Icon(Icons.info_outline_rounded, color: c.titre),
+              onPressed: () => _ouvrir(FicheArchetype(archetypeId: arch.id, contexte: _bibliotheque)),
+            ),
         ]),
         if (arch != null) ...[
-          const SizedBox(height: 8),
+          Text(arch.ceQuIlFait,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, height: 1.3, color: c.texteSecondaire)),
+          const SizedBox(height: 6),
           Row(children: [
-            for (final a in g.animauxDe(arch.id))
+            for (final (j, a) in g.animauxDe(arch.id).indexed) ...[
+              if (j > 0) const SizedBox(width: 8),
               Expanded(
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(12),
-                  onTap: () {
-                    setState(() => pers.animalId = a.id);
+                child: _PuceAnimal(
+                  animal: a,
+                  choisi: pers.animalId == a.id,
+                  couleur: couleur,
+                  source: widget.contexte.visuels.source,
+                  onChoisir: () {
+                    setState(() => pers.animalId = pers.animalId == a.id ? '' : a.id);
                     _sauver();
                   },
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: pers.animalId == a.id ? couleur : c.filet,
-                        width: pers.animalId == a.id ? 2 : 1,
-                      ),
-                      color: pers.animalId == a.id ? couleur.withValues(alpha: 0.12) : null,
-                    ),
-                    child: Row(children: [
-                      MedaillonAnimal(a, taille: 36, source: widget.contexte.visuels.source),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(a.nom,
-                            style: TextStyle(
-                                fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, color: c.texte)),
-                      ),
-                      if (pers.animalId == a.id) Icon(Icons.check_circle_rounded, color: couleur, size: 18),
-                    ]),
-                  ),
+                  info: p('info_de', {'nom': a.nom}),
+                  onInfo: () => _ouvrir(FicheAnimal(animalId: a.id, contexte: _bibliotheque)),
                 ),
               ),
+            ],
           ]),
         ],
       ]),
@@ -327,6 +451,164 @@ class _PreparerScreenState extends State<PreparerScreen> {
       await widget.contexte.store.supprimer(s.id);
       if (context.mounted) Navigator.of(context).pop();
     }
+  }
+}
+
+/// La vignette du lieu ou du danger tiré : son image, son nom, un bouton pour
+/// en tirer un autre et un bouton pour en savoir plus.
+class _VignetteTirage extends StatelessWidget {
+  const _VignetteTirage({
+    required this.dossier,
+    required this.id,
+    required this.surtitre,
+    required this.nom,
+    required this.icone,
+    required this.source,
+    required this.onRelancer,
+    required this.relancer,
+    required this.onInfo,
+    required this.info,
+  });
+
+  final String dossier;
+  final String id;
+  final String surtitre;
+  final String nom;
+  final IconData icone;
+  final VisualSource source;
+  final VoidCallback onRelancer;
+  final String relancer;
+  final VoidCallback? onInfo;
+  final String info;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.destiny;
+    Widget repli() => Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [c.orFonce, c.nuit],
+            ),
+          ),
+          child: Center(child: Icon(icone, size: 48, color: c.orClair)),
+        );
+    Widget bouton(IconData i, String tip, VoidCallback? onTap) => Material(
+          color: Colors.black.withValues(alpha: 0.45),
+          shape: const CircleBorder(),
+          child: IconButton(
+            tooltip: tip,
+            visualDensity: VisualDensity.compact,
+            iconSize: 20,
+            color: Colors.white,
+            icon: Icon(i),
+            onPressed: onTap,
+          ),
+        );
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(14),
+      child: AspectRatio(
+        aspectRatio: 0.85,
+        child: Stack(fit: StackFit.expand, children: [
+          if (id.isNotEmpty && source == VisualSource.ai)
+            Image.asset('assets/images/$dossier/$id.jpg', fit: BoxFit.cover, errorBuilder: (_, __, ___) => repli())
+          else
+            repli(),
+          // Le dégradé du bas, pour que le nom se lise sur l'image.
+          const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [0.45, 1],
+                colors: [Colors.transparent, Color(0xE6000000)],
+              ),
+            ),
+          ),
+          Positioned(
+            left: 10,
+            right: 10,
+            bottom: 10,
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+              Text(surtitre.toUpperCase(),
+                  style: const TextStyle(
+                      fontFamily: kPoliceTexte,
+                      fontSize: 10.5,
+                      letterSpacing: 1.6,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFFE8D5A8))),
+              const SizedBox(height: 2),
+              Text(nom.isEmpty ? '—' : nom,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 15, color: Colors.white)),
+            ]),
+          ),
+          Positioned(top: 6, left: 6, child: bouton(Icons.shuffle_rounded, relancer, onRelancer)),
+          Positioned(top: 6, right: 6, child: bouton(Icons.info_outline_rounded, info, onInfo)),
+        ]),
+      ),
+    );
+  }
+}
+
+/// Un des deux animaux possibles d'un archétype : on le touche pour le
+/// choisir (facultatif), et « i » ouvre sa fiche.
+class _PuceAnimal extends StatelessWidget {
+  const _PuceAnimal({
+    required this.animal,
+    required this.choisi,
+    required this.couleur,
+    required this.source,
+    required this.onChoisir,
+    required this.info,
+    required this.onInfo,
+  });
+
+  final Animal animal;
+  final bool choisi;
+  final Color couleur;
+  final VisualSource source;
+  final VoidCallback onChoisir;
+  final String info;
+  final VoidCallback onInfo;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.destiny;
+    return Material(
+      color: choisi ? couleur.withValues(alpha: c.sombre ? 0.22 : 0.12) : Colors.transparent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: choisi ? couleur : c.filet, width: choisi ? 2 : 1),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onChoisir,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(6, 4, 0, 4),
+          child: Row(children: [
+            MedaillonAnimal(animal, taille: 30, source: source),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(animal.nom,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 13.5, color: c.texte)),
+            ),
+            IconButton(
+              tooltip: info,
+              visualDensity: VisualDensity.compact,
+              iconSize: 18,
+              icon: Icon(Icons.info_outline_rounded, color: c.texteSecondaire),
+              onPressed: onInfo,
+            ),
+          ]),
+        ),
+      ),
+    );
   }
 }
 

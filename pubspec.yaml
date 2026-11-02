@@ -2,7 +2,7 @@ name: destiny
 description: DestinyStory - generateur de situations d'improvisation theatrale.
 publish_to: "none"
 
-version: 2.0.0+20
+version: 2.0.1+21
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
@@ -75,6 +75,8 @@ flutter:
     - assets/audio/ambiences/
     - assets/audio/universes/
     - assets/images/archetypes/
+    - assets/images/locations/
+    - assets/images/dangers/
     - assets/images/destiny_cube.png
     - assets/images/logo_destiny.png
     - assets/music/

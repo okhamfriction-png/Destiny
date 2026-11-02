@@ -5,6 +5,7 @@ import 'package:destiny/application/state/music_controller.dart';
 import 'package:destiny/application/state/reglages_destiny.dart';
 import 'package:destiny/application/state/relation_cheatsheet.dart';
 import 'package:destiny/application/state/visual_settings.dart';
+import 'package:destiny/application/version.dart';
 import 'package:destiny/domain/grammaire/textes.dart';
 import 'package:destiny/infrastructure/datasources/grammaire_source.dart';
 import 'package:destiny/presentation/destiny/donnees.dart';
@@ -112,7 +113,7 @@ void main() {
     );
     expect(find.text(t.t('reglages.destiny')), findsOneWidget);
     expect(find.textContaining('dé'), findsNothing);
-    expect(find.textContaining('2.0.0'), findsOneWidget);
+    expect(find.textContaining(kVersionAppli), findsOneWidget);
   });
 
   test('chaque texte des réglages existe', () {

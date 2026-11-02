@@ -128,7 +128,10 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
               if (p.animalId.isNotEmpty)
                 widget.session.kids
                     ? CarteArchetype.kids(p.animalId, source: widget.contexte.visuels.source)
-                    : CarteArchetype.animal(p.animalId, source: widget.contexte.visuels.source),
+                    : CarteArchetype.animal(p.animalId, source: widget.contexte.visuels.source)
+              // Animal pas encore choisi : l'archétype et ses deux animaux.
+              else if (p.archetypeId.isNotEmpty)
+                CarteArchetype.archetype(p.archetypeId, source: widget.contexte.visuels.source),
               if (widget.contexte.ia != null && p.archetypeId.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),

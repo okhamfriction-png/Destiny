@@ -584,3 +584,35 @@ La Campagne devient la **Série**, avec le vocabulaire de la télé.
 2. **Le logo cube** est gardé.
 3. **Les images des lieux et des dangers** restent dans le dépôt, sans être embarquées dans l'appli.
 4. **Les effets plein écran** de l'histoire avec l'IA (réussite, échec, orage) gardent leurs couleurs propres dans les deux thèmes.
+
+---
+
+## 2.0.1 — Préparer en un geste ✅
+
+### Ton retour
+
+« Les noms, tu peux oublier en spectacle et en répétition. Par défaut, répétition. Quand on tire, je veux directement le lieu, le danger avec les images comme avant, et en dessous les quatre archétypes en contracté avec leurs deux animaux. Des boutons info à tous les niveaux. Et là, je n'arrive même pas à appuyer sur le bouton : il est grisé. »
+
+### Ce qui a été fait
+
+- **Le bouton grisé** venait de l'obligation de choisir un animal pour chaque joueur. Ce choix est maintenant facultatif : sans choix, l'échauffement montre l'archétype et ses deux animaux, et la régie fonctionne déjà sans animal.
+- **Préparer**, en spectacle comme en répétition :
+  - la répétition par défaut ;
+  - plus aucun prénom (ils restent dans la Série, côté Jouer) ;
+  - un grand bouton **« Tirer »** qui donne d'un seul geste le lieu, le danger et la distribution. À l'arrivée, tout est déjà tiré ;
+  - le lieu et le danger en vignettes, avec leur image, un bouton pour en tirer un autre et un bouton « i » pour leur fiche ;
+  - chaque archétype en version compacte : son nom, ce qu'il fait, ses deux animaux. Il y a un bouton « i » pour l'archétype et pour chaque animal, et un bouton pour changer l'archétype ;
+  - le mode de distribution en puces (« Tirage équilibré » ne se coupe plus en deux).
+- **Les images des lieux et des dangers** sont de nouveau embarquées.
+- **Version 2.0.1+21**, pour que GitHub publie une nouvelle release avec le nouvel APK.
+
+### Tests
+
+**253 tests passent**. Les nouveaux vérifient :
+- l'arrivée sur Préparer : répétition, tout est tiré, aucun champ de prénom ;
+- le passage à l'échauffement sans animal ;
+- le choix d'un animal, qui se défait ;
+- « Tirer », « Un autre lieu » et « Un autre danger » ;
+- les quatre boutons info ;
+- le mode kids ;
+- l'écran à 390 px avec un texte agrandi, en clair et en sombre.
