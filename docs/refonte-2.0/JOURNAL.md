@@ -697,3 +697,11 @@ La Campagne devient la **Série**, avec le vocabulaire de la télé.
 - la tablette son, et son comportement quand le son est coupé ;
 - les bulles d'info ;
 - chaque écran Troupe en clair et en sombre, avec un texte agrandi.
+
+## Publication de la 2.0.1 (APK)
+
+La version web a été mise en ligne dans une page Claude pour être essayée avant l'APK. Elle comprend les images, les sons de la régie, les musiques et les ambiances. Les pages Claude refusent le format des fichiers son : dans cette copie de test seulement, ils ont été renommés dans un format accepté. Le dépôt n'a pas changé.
+
+Validée par l'utilisateur, la 2.0.1 part en APK : le workflow crée la release v2.0.1 et la marque comme dernière version.
+
+Au passage, la transcription vocale passe la langue et la durée d'écoute par les options d'écoute du paquet, au lieu des deux paramètres dépréciés. Le comportement ne change pas, et l'analyse ne signale plus rien.

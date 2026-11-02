@@ -95,10 +95,10 @@ class TranscriptionService {
     }
     try {
       await _speech.listen(
-        localeId: 'fr_FR',
         onResult: _onResult,
-        listenFor: reste,
         listenOptions: SpeechListenOptions(
+          localeId: 'fr_FR',
+          listenFor: reste,
           partialResults: false, // résultats finaux seulement
           listenMode: ListenMode.dictation,
           cancelOnError: false, // l'erreur ne coupe pas l'écoute
