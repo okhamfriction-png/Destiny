@@ -27,8 +27,38 @@ ContexteBibliotheque bibliothequeDe(ContexteTroupe c) => ContexteBibliotheque(
       detailsLieux: c.detailsLieux,
     );
 
-void _ouvrir(BuildContext context, Widget page) =>
-    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
+/// Une fiche (lieu, danger, archétype, animal), dans une fenêtre.
+void _ouvrir(BuildContext context, Widget page) => ouvrirEnFenetre(context, page);
+
+/// Choisir un archétype à la main : les douze, rangés par famille. Rend son
+/// identifiant, ou null si on ferme sans choisir.
+Future<String?> choisirArchetype(BuildContext context) {
+  final g = context.grammaire;
+  final c = context.destiny;
+  final t = context.textes;
+  return showModalBottomSheet<String>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    builder: (ctx) => ListView(
+      shrinkWrap: true,
+      padding: const EdgeInsets.all(16),
+      children: [
+        Text(t.t('preparer.choisir_archetype'), style: Theme.of(ctx).textTheme.titleLarge, textAlign: TextAlign.center),
+        for (final f in FamilleId.values) ...[
+          Padding(padding: const EdgeInsets.only(top: 12, bottom: 6), child: PuceFamille(f)),
+          for (final a in g.archetypesDe(f))
+            ElementListe(
+              titre: a.nom,
+              sousTitre: a.ceQuIlFait,
+              couleur: c.famille(f),
+              onTap: () => Navigator.of(ctx).pop(a.id),
+            ),
+        ],
+      ],
+    ),
+  );
+}
 
 /// La petite bulle d'info : un « i » qui ouvre une fiche de la Bibliothèque.
 class BulleInfo extends StatelessWidget {
@@ -56,10 +86,13 @@ class BulleInfo extends StatelessWidget {
 /// l'animal s'il a été choisi, le nom de l'archétype, une ligne courte, et la
 /// bulle d'info. Sert aussi d'en-tête aux cartes du débrief.
 class EnteteArchetype extends StatelessWidget {
-  const EnteteArchetype({super.key, required this.personnage, required this.contexte, this.palier});
+  const EnteteArchetype({super.key, required this.personnage, required this.contexte, this.palier, this.onChanger});
 
   final PersonnageTroupe personnage;
   final ContexteTroupe contexte;
+
+  /// Changer d'archétype à la main (un bouton « ⇄ » à côté de la bulle).
+  final VoidCallback? onChanger;
 
   /// À la régie : la ligne montre la montée à ce palier, et le corps de
   /// l'animal. Sinon : ce que fait l'archétype.
@@ -140,6 +173,16 @@ class EnteteArchetype extends StatelessWidget {
         ),
       ),
       const SizedBox(width: 4),
+      if (onChanger != null)
+        IconButton(
+          key: ValueKey('changer_${personnage.archetypeId}'),
+          tooltip: context.textes.t('preparer.changer_archetype'),
+          constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+          padding: EdgeInsets.zero,
+          iconSize: 22,
+          icon: Icon(Icons.swap_horiz_rounded, color: c.texteSecondaire),
+          onPressed: onChanger,
+        ),
       BulleInfo(
         nom: a.nom,
         onPressed: () => _ouvrir(context, FicheArchetype(archetypeId: a.id, contexte: bibliotheque)),
@@ -184,6 +227,7 @@ class RectangleArchetype extends StatelessWidget {
     required this.contexte,
     this.palier,
     this.reactions = false,
+    this.onChanger,
     this.pied,
   });
 
@@ -195,6 +239,9 @@ class RectangleArchetype extends StatelessWidget {
 
   /// À l'échauffement : ses quatre réactions au danger, une par palier.
   final bool reactions;
+
+  /// Changer d'archétype à la main (voir [EnteteArchetype]).
+  final VoidCallback? onChanger;
 
   /// Sous le rectangle (un bouton d'idées de l'IA, par exemple).
   final Widget? pied;
@@ -208,7 +255,7 @@ class RectangleArchetype extends StatelessWidget {
       couleur: c.famille(a.famille),
       marge: 10,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        EnteteArchetype(personnage: personnage, contexte: contexte, palier: palier),
+        EnteteArchetype(personnage: personnage, contexte: contexte, palier: palier, onChanger: onChanger),
         if (reactions) Padding(padding: const EdgeInsets.only(top: 8), child: ReactionsArchetype(archetype: a)),
         if (pied != null) Padding(padding: const EdgeInsets.only(top: 8), child: pied),
       ]),

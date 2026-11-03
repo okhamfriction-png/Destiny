@@ -135,7 +135,7 @@ void main() {
       await tester.tap(find.byTooltip(t.t('preparer.info_de', {'nom': nom})).first);
       await tester.pumpAndSettle();
       expect(find.byType(fiche), findsOneWidget, reason: nom);
-      await tester.pageBack();
+      await tester.tap(find.byKey(const ValueKey('fermer_fenetre')));
       await tester.pumpAndSettle();
     }
 

@@ -186,7 +186,9 @@ void main() {
     // La mise en place : lieu, groupe et danger.
     await tester.tap(find.byType(ChoiceChip).first);
     await tester.pump();
-    await tester.tap(find.text(t.liste('mise_en_place.groupes').first));
+    // Le bouton du groupe : le groupe tiré d'office peut avoir le même texte
+    // dans le champ.
+    await tester.tap(find.widgetWithText(ActionChip, t.liste('mise_en_place.groupes').first));
     await tester.pump();
     final puceDanger = find.byType(ChoiceChip).at(3);
     await tester.tap(puceDanger);

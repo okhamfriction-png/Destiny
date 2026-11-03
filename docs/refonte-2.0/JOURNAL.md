@@ -852,3 +852,34 @@ Le test de la frise vérifie aussi les heures prévues sous les repères, et les
 - ce qui a disparu de l'échauffement.
 
 Le parcours complet du spectacle passe maintenant par le fil des étapes.
+
+## 2.0.2 : les fiches en fenêtre, changer d'archétype à l'échauffement
+
+### La demande
+
+« Les boutons info doivent ouvrir une pop-up, et garder la possibilité, dans la Troupe, de changer manuellement d'archétype. »
+
+### Ce qui a été fait
+
+- **Les fiches en fenêtre** (`ouvrirEnFenetre`, dans `page.dart`) :
+  - les bulles « i » ouvrent la fiche du lieu, du danger, de l'archétype ou de l'animal dans une fenêtre qui couvre presque tout l'écran ;
+  - c'est le cas dans la Troupe (Préparer, l'échauffement, la mise en place, la régie, le débrief, la fiche d'un spectacle) et dans la préparation d'un épisode de série ;
+  - la page ouverte en fenêtre (`EnFenetre`) a une croix à droite au lieu d'une flèche de retour ;
+  - l'écran d'en dessous reste en place : le chrono de la régie continue.
+  - Dans la Bibliothèque, les listes ouvrent toujours les fiches en pleine page : ce sont des lectures, pas des bulles d'info.
+- **Changer d'archétype** :
+  - le choix des douze archétypes, par famille, est partagé entre Préparer et l'échauffement (`choisirArchetype`) ;
+  - à l'échauffement, chaque archétype a son bouton « ⇄ » à côté de la bulle « i » ;
+  - l'animal repart à zéro ;
+  - si la distribution n'est plus équilibrée (plus d'alarmiste, par exemple), un message le dit, sans bloquer.
+
+### Un test instable corrigé
+
+« Un spectacle de bout en bout » échouait environ une fois sur sept. Le groupe tiré d'office à la mise en place s'écrit aussi dans le champ texte. Quand le tirage tombait sur « une famille », le premier de la liste, le test trouvait ce texte deux fois. Il vise maintenant le bouton du groupe. L'appli n'était pas en cause.
+
+### Tests
+
+**313 tests passent**, trois fois de suite. Les nouveaux portent sur :
+- la fiche en fenêtre, avec l'écran et le chrono qui restent dessous ;
+- le changement d'archétype à l'échauffement ;
+- le message quand la distribution n'est plus équilibrée.

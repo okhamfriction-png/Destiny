@@ -13,6 +13,8 @@ Après un essai de la 2.0.1 sur téléphone : la régie arrivait trois écrans p
   - chaque archétype avec **ses quatre réactions au danger**, une par palier ;
   - les trois Destiny prévus, sur la frise du spectacle.
   Les trois questions, la régie son et les boutons du bas disparaissent : le fil des étapes mène à la suite. L'écran « Avant d'entrer en scène » disparaît avec son bouton.
+- **Les bulles « i » ouvrent leur fiche dans une fenêtre** : le lieu, le danger, l'archétype, l'animal, de Préparer à la régie et dans la préparation d'un épisode. On la ferme avec la croix, en la glissant vers le bas ou en touchant à côté, et on retrouve l'écran tel quel (le chrono continue).
+- **On change un archétype à la main** à l'échauffement, comme à Préparer, avec le bouton « ⇄ ». Son animal repart à zéro. Si la distribution n'est plus équilibrée, l'appli le dit, sans bloquer.
 - **On fait glisser les Destiny sur la frise**, à la minute près, à l'échauffement, à la mise en place et à la régie (sauf ceux déjà lancés). Un Destiny s'arrête juste avant le suivant, juste après le précédent, et jamais avant le chrono ni après la fin. Les Destiny déplacés restent jusqu'au lever de rideau.
 - **Le chrono choisi à la mise en place** compte tout de suite, même si on file à la régie par le fil des étapes.
 - **La régie son tient dans un bouton.** La grande tablette son laisse la place à un bouton « Son », à côté de DESTINY dans le panneau du chrono. Il ouvre toute la régie son dans une fenêtre qu'on ferme d'un geste ; le chrono continue pendant ce temps.

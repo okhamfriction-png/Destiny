@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../domain/grammaire/distribution.dart';
 import '../../domain/troupe/session.dart';
 import '../destiny/bouton_ia.dart';
 import '../destiny/donnees.dart';
@@ -79,6 +80,30 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
     );
   }
 
+  /// Changer l'archétype d'un personnage à la main ; son animal repart à
+  /// zéro. Si la distribution n'est plus équilibrée, on le dit, sans bloquer.
+  Future<void> _changerArchetype(PersonnageTroupe p) async {
+    final id = await choisirArchetype(context);
+    if (id == null || id == p.archetypeId || !mounted) return;
+    setState(() {
+      p.archetypeId = id;
+      p.animalId = '';
+    });
+    await widget.contexte.store.enregistrer(widget.session);
+    if (!mounted) return;
+    final g = context.grammaire;
+    final t = context.textes;
+    final verdict = validerDistribution(
+      g,
+      [for (final x in widget.session.personnages) x.archetypeId],
+      leaderObligatoire: widget.contexte.reglages.leaderObligatoire,
+    );
+    if (verdict.valide) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(verdict.raison(g, t)), duration: const Duration(seconds: 5)));
+  }
+
   /// Fait glisser un Destiny sur la frise : mêmes règles qu'à la régie.
   bool _placer(int index, int minute) {
     final s = widget.session;
@@ -143,6 +168,7 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
               personnage: p,
               contexte: widget.contexte,
               reactions: true,
+              onChanger: () => _changerArchetype(p),
               pied: widget.contexte.ia?.disponible == true && p.archetypeId.isNotEmpty
                   ? BoutonIA(
                       libelle: t.t('ia_jeu.idees_echauffement'),

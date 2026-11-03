@@ -2,6 +2,28 @@ import 'package:flutter/material.dart';
 
 import '../theme/destiny_theme.dart';
 
+/// Ouvre une page (une fiche) dans une fenêtre par-dessus l'écran en cours :
+/// on la ferme avec la croix, en la glissant vers le bas ou en touchant à
+/// côté, et on retrouve l'écran tel quel (le chrono continue).
+Future<void> ouvrirEnFenetre(BuildContext context, Widget page) => showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      clipBehavior: Clip.antiAlias,
+      builder: (_) => FractionallySizedBox(heightFactor: 0.92, child: EnFenetre(child: page)),
+    );
+
+/// Marque une page ouverte en fenêtre ([ouvrirEnFenetre]) : sa barre a une
+/// croix à droite plutôt qu'une flèche de retour.
+class EnFenetre extends InheritedWidget {
+  const EnFenetre({super.key, required super.child});
+
+  static bool de(BuildContext context) => context.dependOnInheritedWidgetOfExactType<EnFenetre>() != null;
+
+  @override
+  bool updateShouldNotify(EnFenetre oldWidget) => false;
+}
+
 /// Une page Destiny : barre de titre en Cinzel, contenu centré et lisible.
 class PageDestiny extends StatelessWidget {
   const PageDestiny({
@@ -23,8 +45,18 @@ class PageDestiny extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final fenetre = EnFenetre.de(context);
     return Scaffold(
-      appBar: AppBar(title: Text(titre), actions: actions),
+      appBar: AppBar(
+        title: Text(titre),
+        primary: !fenetre,
+        automaticallyImplyLeading: !fenetre,
+        actions: [
+          ...?actions,
+          if (fenetre)
+            CloseButton(key: const ValueKey('fermer_fenetre'), onPressed: () => Navigator.of(context).maybePop()),
+        ],
+      ),
       body: SafeArea(
         top: false,
         child: Column(children: [

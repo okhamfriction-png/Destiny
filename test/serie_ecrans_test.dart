@@ -225,11 +225,11 @@ void main() {
     // Les fiches de la Bibliothèque, depuis les vignettes.
     await _taper(tester, find.byTooltip(t.t('serie.preparation.info_de', {'nom': e.lieuNom})));
     expect(find.byType(FicheLieu), findsOneWidget);
-    await tester.pageBack();
+    await tester.tap(find.byKey(const ValueKey('fermer_fenetre')));
     await tester.pumpAndSettle();
     await _taper(tester, find.byTooltip(t.t('serie.preparation.info_de', {'nom': e.dangerNom})));
     expect(find.byType(FicheDanger), findsOneWidget);
-    await tester.pageBack();
+    await tester.tap(find.byKey(const ValueKey('fermer_fenetre')));
     await tester.pumpAndSettle();
     await _taper(tester, find.text(t.liste('mise_en_place.groupes').first));
     await _taper(tester, find.text(t.t('serie.preparation.commencer')));

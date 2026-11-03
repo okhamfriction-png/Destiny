@@ -105,7 +105,8 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
     return null;
   }
 
-  void _ouvrir(Widget page) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
+  /// Une fiche (lieu, danger, archétype, animal), dans une fenêtre.
+  void _ouvrir(Widget page) => ouvrirEnFenetre(context, page);
 
   List<T> _trois<T>(List<T> liste) => ([...liste]..shuffle(_hasard)).take(3).toList();
   void _proposerLieux() => _propLieux = _trois(_lieux);

@@ -107,7 +107,8 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
     return null;
   }
 
-  void _ouvrir(Widget page) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
+  /// Une fiche (lieu, danger, archétype, animal), dans une fenêtre.
+  void _ouvrir(Widget page) => ouvrirEnFenetre(context, page);
 
   @override
   void dispose() {

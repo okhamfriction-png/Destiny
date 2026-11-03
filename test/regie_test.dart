@@ -429,12 +429,26 @@ void main() {
     await tester.tap(find.byTooltip(t.t('troupe.info_de', {'nom': alarmiste.nom})));
     await tester.pumpAndSettle();
     expect(find.byType(FicheArchetype), findsOneWidget);
-    await tester.pageBack();
+    await tester.tap(find.byKey(const ValueKey('fermer_fenetre')));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip(t.t('troupe.info_de', {'nom': g.animal('rat')!.nom})));
     await tester.pumpAndSettle();
     expect(find.byType(FicheAnimal), findsOneWidget);
     expect(b.session.personnages, hasLength(4));
+  });
+
+  testWidgets('une bulle « i » ouvre la fiche dans une fenêtre : l\'écran reste dessous, le chrono aussi', (tester) async {
+    final b = await _regie(tester);
+    await tester.tap(find.byTooltip(t.t('troupe.info_de', {'nom': b.session.lieuNom})).first);
+    await tester.pumpAndSettle();
+    expect(find.byType(FicheLieu), findsOneWidget);
+    expect(find.byType(BottomSheet), findsOneWidget);
+    expect(find.byType(RegieScreen), findsOneWidget);
+    expect(find.byType(BackButton), findsNothing, reason: 'une croix, pas une flèche');
+    await tester.tap(find.byKey(const ValueKey('fermer_fenetre')));
+    await tester.pumpAndSettle();
+    expect(find.byType(FicheLieu), findsNothing);
+    expect(find.byKey(const ValueKey('bouton_destiny')), findsOneWidget);
   });
 
   testWidgets('le lieu et le danger ont leur bulle d\'info (régie, mise en place, débrief)', (tester) async {
@@ -444,12 +458,12 @@ void main() {
       await tester.tap(find.byTooltip(t.t('troupe.info_de', {'nom': s.lieuNom})).first);
       await tester.pumpAndSettle();
       expect(find.byType(FicheLieu), findsOneWidget);
-      await tester.pageBack();
+      await tester.tap(find.byKey(const ValueKey('fermer_fenetre')));
       await tester.pumpAndSettle();
       await tester.tap(find.byTooltip(t.t('troupe.info_de', {'nom': s.dangerNom})).first);
       await tester.pumpAndSettle();
       expect(find.byType(FicheDanger), findsOneWidget);
-      await tester.pageBack();
+      await tester.tap(find.byKey(const ValueKey('fermer_fenetre')));
       await tester.pumpAndSettle();
     }
 
@@ -543,6 +557,40 @@ void main() {
       expect(find.text(g.personnage.echauffement.limite), findsNothing);
       expect(find.byType(FilledButton), findsNothing);
       expect(find.byType(OutlinedButton), findsOneWidget, reason: 'le minuteur seul');
+    });
+
+    testWidgets('on change un archétype à la main ; son animal repart à zéro', (tester) async {
+      final b = await echauffement(tester);
+      final s = b.session;
+      final cynique = s.personnages.firstWhere((p) => p.archetypeId == 'cynique');
+      expect(cynique.animalId, 'singe');
+      final libre = g.archetypes.firstWhere((a) => s.personnages.every((p) => p.archetypeId != a.id));
+      await tester.tap(find.byKey(const ValueKey('changer_cynique')));
+      await tester.pumpAndSettle();
+      final choix = find.descendant(of: find.byType(BottomSheet), matching: find.text(libre.nom));
+      await tester.ensureVisible(choix);
+      await tester.pumpAndSettle();
+      await tester.tap(choix);
+      await tester.pumpAndSettle();
+      expect(cynique.archetypeId, libre.id);
+      expect(cynique.animalId, isEmpty);
+      expect(find.text(libre.nom), findsOneWidget);
+    });
+
+    testWidgets('si la distribution n\'est plus équilibrée, on le dit sans bloquer', (tester) async {
+      final b = await echauffement(tester);
+      final s = b.session;
+      final libre = g.archetypes.firstWhere((a) => a.id != 'alarmiste' && s.personnages.every((p) => p.archetypeId != a.id));
+      await tester.tap(find.byKey(const ValueKey('changer_alarmiste')));
+      await tester.pumpAndSettle();
+      final choix = find.descendant(of: find.byType(BottomSheet), matching: find.text(libre.nom));
+      await tester.ensureVisible(choix);
+      await tester.pumpAndSettle();
+      await tester.tap(choix);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(s.personnages.any((p) => p.archetypeId == 'alarmiste'), isFalse);
+      expect(find.byType(SnackBar), findsOneWidget);
     });
 
     testWidgets('chaque archétype montre ses quatre réactions au danger, une par palier', (tester) async {

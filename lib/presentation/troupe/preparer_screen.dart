@@ -184,37 +184,11 @@ class _PreparerScreenState extends State<PreparerScreen> {
 
   Future<void> _sauver() => widget.contexte.store.enregistrer(s);
 
-  void _ouvrir(Widget page) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
+  /// Une fiche (lieu, danger, archétype, animal), dans une fenêtre.
+  void _ouvrir(Widget page) => ouvrirEnFenetre(context, page);
 
   Future<void> _choisirArchetype(int i) async {
-    final c = context.destiny;
-    final choisi = await showModalBottomSheet<String>(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => SafeArea(
-        child: ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.all(16),
-          children: [
-            Text(context.textes.t('preparer.choisir_archetype'),
-                style: Theme.of(ctx).textTheme.titleLarge, textAlign: TextAlign.center),
-            for (final f in FamilleId.values) ...[
-              Padding(
-                padding: const EdgeInsets.only(top: 12, bottom: 6),
-                child: PuceFamille(f),
-              ),
-              for (final a in g.archetypesDe(f))
-                ElementListe(
-                  titre: a.nom,
-                  sousTitre: a.ceQuIlFait,
-                  couleur: c.famille(f),
-                  onTap: () => Navigator.of(ctx).pop(a.id),
-                ),
-            ],
-          ],
-        ),
-      ),
-    );
+    final choisi = await choisirArchetype(context);
     if (choisi != null) {
       setState(() {
         s.personnages[i].archetypeId = choisi;
