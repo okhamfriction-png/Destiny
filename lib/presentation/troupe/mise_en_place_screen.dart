@@ -13,6 +13,7 @@ import '../destiny/donnees.dart';
 import '../destiny/page.dart';
 import '../theme/destiny_theme.dart';
 import 'composants_troupe.dart';
+import 'regie_screen.dart';
 import 'troupe_screen.dart';
 
 /// La mise en place : le lieu et le danger tirés à la préparation (chacun
@@ -37,16 +38,25 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
   late final TextEditingController _groupe = TextEditingController(text: s.groupe);
   late final TextEditingController _mystere = TextEditingController(text: s.mystere);
   late final TextEditingController _reponse = TextEditingController(text: s.reponseMystere);
-  /// Le chrono de la session parmi ceux des réglages (celui des réglages si
-  /// la session n'en a pas encore).
-  late int _chrono = () {
+  /// Le chrono de la session parmi ceux des réglages, reconnu à sa durée
+  /// (ses Destiny ont pu être déplacés à la main) ; celui des réglages sinon.
+  late int _chrono = _chronoDeLaSession() ?? widget.contexte.reglages.chronoChoisi;
+
+  int? _chronoDeLaSession() {
     final chronos = widget.contexte.reglages.chronos;
     for (var i = 0; i < chronos.length; i++) {
-      final ch = chronos[i];
-      if (ch.dureeMinutes == s.dureeMinutes && ch.destinyMinutes.join(',') == s.destinyMinutes.join(',')) return i;
+      if (chronos[i].dureeMinutes == s.dureeMinutes) return i;
     }
-    return widget.contexte.reglages.chronoChoisi;
-  }();
+    return null;
+  }
+
+  /// Fait glisser un Destiny sur la frise : mêmes règles qu'à la régie.
+  bool _placer(int index, int minute) {
+    if (refusDestiny(s, index: index, minute: minute, ecouleSecondes: 0) != null) return false;
+    setState(() => s.destinyMinutes = [...s.destinyMinutes]..[index] = minute);
+    widget.contexte.store.enregistrer(s);
+    return true;
+  }
 
   SessionTroupe get s => widget.session;
 
@@ -63,9 +73,10 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
         _groupe.text = s.groupe;
       });
     });
-    // Le chrono choisi va dans la session tout de suite : le fil des étapes
-    // peut mener à la régie sans passer par « Lever le rideau ».
-    appliquerChrono(s, widget.contexte.reglages.chronos[_chrono]);
+    // La session a toujours un chrono : le fil des étapes peut mener à la
+    // régie sans passer par « Lever le rideau ». Les Destiny déplacés à la
+    // main restent.
+    if (_chronoDeLaSession() == null) appliquerChrono(s, widget.contexte.reglages.chronos[_chrono]);
   }
 
   Future<void> _charger() async {
@@ -283,16 +294,14 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
           ]),
           const SizedBox(height: 14),
           FriseDestiny(
-            totalSecondes: chronos[_chrono].dureeMinutes * 60,
+            totalSecondes: s.dureeMinutes * 60,
             ecouleSecondes: 0,
             curseur: false,
-            reperes: [
-              for (final (i, minute) in chronos[_chrono].destinyMinutes.indexed)
-                RepereDestiny(numero: i + 1, secondes: minute * 60, etat: EtatDestiny.avenir),
-            ],
+            reperes: reperesDestiny(s),
+            deplacer: _placer,
           ),
           const SizedBox(height: 6),
-          Text(m('destiny_a', {'liste': chronos[_chrono].destinyMinutes.map((x) => '$x').join(' · ')}),
+          Text(m('destiny_a', {'liste': s.destinyMinutes.map((x) => '$x').join(' · ')}),
               style: TextStyle(fontFamily: kPoliceTexte, color: c.texteSecondaire)),
         ]),
         if (s.kids) const Padding(padding: EdgeInsets.only(top: 12), child: Align(alignment: Alignment.centerLeft, child: SigleKids())),
@@ -300,7 +309,6 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
         FilledButton.icon(
           onPressed: pret
               ? () async {
-                  appliquerChrono(s, chronos[_chrono]);
                   s.etape = EtapeSession.regie;
                   await widget.contexte.store.enregistrer(s);
                   if (context.mounted) ouvrirEtape(context, widget.contexte, s, remplacer: true);

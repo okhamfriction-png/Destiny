@@ -177,14 +177,10 @@ void main() {
     await tester.tap(find.text(t.t('preparer.vers_echauffement')));
     await tester.pumpAndSettle();
 
-    // L'échauffement (chaque archétype en petit rectangle), puis l'écran
-    // d'avant scène.
-    expect(find.text(g.personnage.echauffement.questions.first), findsOneWidget);
+    // L'échauffement (chaque archétype en petit rectangle), puis la mise en
+    // place par le fil des étapes.
     expect(find.byType(RectangleArchetype), findsNWidgets(4));
-    await tester.tap(find.text(t.t('echauffement.vers_avant_scene')));
-    await tester.pumpAndSettle();
-    expect(find.textContaining(g.personnage.phraseCle), findsOneWidget);
-    await tester.tap(find.text(t.t('avant_scene.entrer')));
+    await tester.tap(find.text(t.t('troupe.fil.miseEnPlace')));
     await tester.pumpAndSettle();
 
     // La mise en place : lieu, groupe et danger.

@@ -514,24 +514,15 @@
   },
   "echauffement": {
     "titre": "Échauffement",
-    "intro": "Chacun se pose les trois questions sur son archétype. Touche le « i » pour relire sa fiche.",
+    "intro": "Chacun prépare son archétype et son corps. Touche le « i » pour relire sa fiche.",
     "demarrer": "Lancer le minuteur",
     "pause": "Pause",
     "reprendre": "Reprendre",
     "fini": "L'échauffement est terminé. À vous de jouer !",
-    "vers_avant_scene": "Avant d'entrer en scène",
     "personnages": "Les personnages",
     "temps": "Temps d'échauffement",
     "destinys": "Les Destiny du spectacle",
-    "plan": "Spectacle de {duree} min : Destiny à {liste} min.",
-    "destinys_aide": "Tu choisis le chrono à la mise en place. À la régie, tu décales chaque Destiny ou tu le lances plus tôt, même pendant le jeu.",
-    "vers_regie": "Aller directement à la régie"
-  },
-  "avant_scene": {
-    "titre": "Avant d'entrer en scène",
-    "message": "Vous êtes prêts. Écoutez-vous, prenez votre temps : le danger fera le reste.",
-    "entrer": "On y va : la mise en place",
-    "distribution": "La distribution"
+    "plan": "Spectacle de {duree} min : Destiny à {liste} min."
   },
   "mise_en_place": {
     "titre": "La mise en place",
@@ -604,6 +595,7 @@
     "marque_passe": "Destiny {n}, lancé à {t}",
     "marque_prochain": "Destiny {n}, le prochain, à {t}",
     "marque_avenir": "Destiny {n}, à {t}",
+    "glisser": "Fais-le glisser sur la ligne pour changer son heure.",
     "scene": "Lieu et danger",
     "son": "La régie son",
     "son_ouvrir": "Régie son",

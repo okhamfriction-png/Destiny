@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../../application/state/visual_settings.dart';
@@ -182,6 +183,7 @@ class RectangleArchetype extends StatelessWidget {
     required this.personnage,
     required this.contexte,
     this.palier,
+    this.reactions = false,
     this.pied,
   });
 
@@ -190,6 +192,9 @@ class RectangleArchetype extends StatelessWidget {
 
   /// À la régie : la montée à ce palier (voir [EnteteArchetype]).
   final PalierId? palier;
+
+  /// À l'échauffement : ses quatre réactions au danger, une par palier.
+  final bool reactions;
 
   /// Sous le rectangle (un bouton d'idées de l'IA, par exemple).
   final Widget? pied;
@@ -204,9 +209,70 @@ class RectangleArchetype extends StatelessWidget {
       marge: 10,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         EnteteArchetype(personnage: personnage, contexte: contexte, palier: palier),
+        if (reactions) Padding(padding: const EdgeInsets.only(top: 8), child: ReactionsArchetype(archetype: a)),
         if (pied != null) Padding(padding: const EdgeInsets.only(top: 8), child: pied),
       ]),
     );
+  }
+}
+
+/// Les quatre réactions d'un archétype au danger, une par palier, numérotées
+/// dans la couleur du palier.
+class ReactionsArchetype extends StatelessWidget {
+  const ReactionsArchetype({super.key, required this.archetype});
+
+  final Archetype archetype;
+
+  @override
+  Widget build(BuildContext context) {
+    final g = context.grammaire;
+    final c = context.destiny;
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      for (final p in g.paliers)
+        if (archetype.monteeA(p.id).isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Semantics(
+              label: '${p.numero}. ${p.nom} : ${archetype.monteeA(p.id)}',
+              excludeSemantics: true,
+              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                SizedBox.square(
+                  dimension: 22,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: c.teinte(c.palier(p.id)),
+                      border: Border.all(color: c.palier(p.id), width: 1.5),
+                    ),
+                    child: Center(
+                      child: MediaQuery.withNoTextScaling(
+                        child: Text(
+                          '${p.numero}',
+                          style: TextStyle(
+                            fontFamily: kPoliceTexte,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 12,
+                            color: c.accent(c.palier(p.id)),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      archetype.monteeA(p.id),
+                      style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.3, color: c.texte),
+                    ),
+                  ),
+                ),
+              ]),
+            ),
+          ),
+    ]);
   }
 }
 
@@ -413,14 +479,16 @@ String horloge(int secondes) {
 
 /// La frise du chrono : toute la durée, la position actuelle, et les trois
 /// Destiny numérotés (ceux passés cochés, le prochain mis en avant), avec
-/// leur heure en dessous : prévue, ou celle où ils ont été lancés.
-class FriseDestiny extends StatelessWidget {
+/// leur heure en dessous : prévue, ou celle où ils ont été lancés. Avec
+/// [deplacer], on fait glisser un Destiny pas encore lancé, à la minute près.
+class FriseDestiny extends StatefulWidget {
   const FriseDestiny({
     super.key,
     required this.totalSecondes,
     required this.ecouleSecondes,
     required this.reperes,
     this.curseur = true,
+    this.deplacer,
   });
 
   final int totalSecondes;
@@ -430,8 +498,15 @@ class FriseDestiny extends StatelessWidget {
   /// Montrer où en est le chrono (pas pour un simple aperçu).
   final bool curseur;
 
+  /// Place le Destiny d'index (0 à 2) à une minute ; rend faux si les règles
+  /// le refusent (le repère s'arrête alors à la dernière place permise).
+  final bool Function(int index, int minute)? deplacer;
+
   static const double _hauteur = 36;
   static const double _rayon = 16;
+
+  /// La zone qu'on attrape autour d'un repère.
+  static const double _prise = 44;
 
   /// La ligne des heures, sous les repères.
   static const double _hauteurHeures = 20;
@@ -457,24 +532,100 @@ class FriseDestiny extends StatelessWidget {
   }
 
   @override
+  State<FriseDestiny> createState() => _FriseDestinyState();
+}
+
+class _FriseDestinyState extends State<FriseDestiny> {
+  /// Les repères sous le doigt quand le geste commence (deux s'ils sont
+  /// collés), puis celui qu'on fait glisser.
+  List<int> _candidats = const [];
+  int? _saisi;
+
+  int get _total => widget.totalSecondes <= 0 ? 1 : widget.totalSecondes;
+
+  bool _mobile(RepereDestiny r) => widget.deplacer != null && r.etat != EtatDestiny.passe;
+
+  double _x(int secondes, double largeur) =>
+      FriseDestiny._rayon + (largeur - 2 * FriseDestiny._rayon) * (secondes / _total).clamp(0.0, 1.0);
+
+  void _debut(Offset local, double largeur) {
+    _candidats = [
+      for (final (i, r) in widget.reperes.indexed)
+        if (_mobile(r) && (_x(r.secondes, largeur) - local.dx).abs() <= FriseDestiny._prise / 2) i,
+    ];
+    _saisi = _candidats.length == 1 ? _candidats.single : null;
+  }
+
+  void _glisser(DragUpdateDetails d, double largeur) {
+    if (_candidats.isEmpty) return;
+    // Deux repères collés : vers la gauche, on prend celui de gauche ; vers
+    // la droite, celui de droite (l'autre ne pourrait pas passer).
+    _saisi ??= d.delta.dx < 0 ? _candidats.first : _candidats.last;
+    final r = widget.reperes[_saisi!];
+    final index = r.numero - 1;
+    final minute = (r.secondes / 60).round();
+    final part = ((d.localPosition.dx - FriseDestiny._rayon) / (largeur - 2 * FriseDestiny._rayon)).clamp(0.0, 1.0);
+    final nouvelle = (part * _total / 60).round();
+    // Refusé (trop près d'un autre Destiny, du chrono ou de la fin) : on
+    // s'arrête à la minute permise la plus proche du doigt.
+    final pas = nouvelle > minute ? -1 : 1;
+    for (var m = nouvelle; m != minute; m += pas) {
+      if (widget.deplacer!(index, m)) break;
+    }
+  }
+
+  void _fin() {
+    _candidats = const [];
+    _saisi = null;
+  }
+
+  /// Un repère : son nom pour les lecteurs d'écran et, s'il peut bouger,
+  /// « plus tard / plus tôt » au clavier ou au lecteur d'écran, et la main
+  /// qui glisse à la souris.
+  Widget _repere(RepereDestiny r) {
+    final t = context.textes;
+    final mobile = _mobile(r);
+    final index = r.numero - 1;
+    final minute = (r.secondes / 60).round();
+    final repere = Semantics(
+      excludeSemantics: true,
+      label: t.t(
+        switch (r.etat) {
+          EtatDestiny.passe => 'regie.marque_passe',
+          EtatDestiny.prochain => 'regie.marque_prochain',
+          EtatDestiny.avenir => 'regie.marque_avenir',
+        },
+        {'n': '${r.numero}', 't': horloge(r.secondes)},
+      ),
+      hint: mobile ? t.t('regie.glisser') : null,
+      onIncrease: mobile ? () => widget.deplacer!(index, minute + 1) : null,
+      onDecrease: mobile ? () => widget.deplacer!(index, minute - 1) : null,
+      child: _Repere(key: ValueKey('repere_destiny_${r.numero}'), repere: r),
+    );
+    return mobile ? MouseRegion(cursor: SystemMouseCursors.resizeLeftRight, child: repere) : repere;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final c = context.destiny;
-    final t = context.textes;
-    final total = totalSecondes <= 0 ? 1 : totalSecondes;
-    final avance = (ecouleSecondes / total).clamp(0.0, 1.0);
+    final reperes = widget.reperes;
+    final avance = (widget.ecouleSecondes / _total).clamp(0.0, 1.0);
+    const hauteur = FriseDestiny._hauteur;
+    const rayon = FriseDestiny._rayon;
+    const prise = FriseDestiny._prise;
     return MediaQuery.withNoTextScaling(
       child: SizedBox(
-        height: _hauteur + _hauteurHeures,
+        height: hauteur + FriseDestiny._hauteurHeures,
         child: LayoutBuilder(builder: (context, contraintes) {
           final largeur = contraintes.maxWidth;
-          double x(int secondes) => _rayon + (largeur - 2 * _rayon) * (secondes / total).clamp(0.0, 1.0);
-          final heures = placerHeures([for (final r in reperes) x(r.secondes)], largeur);
-          return Stack(clipBehavior: Clip.none, children: [
+          double x(int secondes) => _x(secondes, largeur);
+          final heures = FriseDestiny.placerHeures([for (final r in reperes) x(r.secondes)], largeur);
+          final frise = Stack(clipBehavior: Clip.none, children: [
             // La barre, et ce qui est déjà joué.
             Positioned(
-              left: _rayon,
-              right: _rayon,
-              top: _hauteur / 2 - 3,
+              left: rayon,
+              right: rayon,
+              top: hauteur / 2 - 3,
               height: 6,
               child: DecoratedBox(
                 decoration: BoxDecoration(color: c.filet, borderRadius: BorderRadius.circular(3)),
@@ -492,29 +643,18 @@ class FriseDestiny extends StatelessWidget {
             ),
             for (final r in reperes)
               Positioned(
-                left: x(r.secondes) - _rayon,
-                top: _hauteur / 2 - _rayon,
-                width: _rayon * 2,
-                height: _rayon * 2,
-                child: Semantics(
-                  excludeSemantics: true,
-                  label: t.t(
-                    switch (r.etat) {
-                      EtatDestiny.passe => 'regie.marque_passe',
-                      EtatDestiny.prochain => 'regie.marque_prochain',
-                      EtatDestiny.avenir => 'regie.marque_avenir',
-                    },
-                    {'n': '${r.numero}', 't': horloge(r.secondes)},
-                  ),
-                  child: _Repere(key: ValueKey('repere_destiny_${r.numero}'), repere: r),
-                ),
+                left: x(r.secondes) - prise / 2,
+                top: 0,
+                width: prise,
+                height: hauteur,
+                child: _repere(r),
               ),
             // L'heure de chaque Destiny, sous son repère.
             for (final (i, r) in reperes.indexed)
               Positioned(
                 left: heures[i],
-                top: _hauteur + 2,
-                width: _largeurHeure,
+                top: hauteur + 2,
+                width: FriseDestiny._largeurHeure,
                 child: ExcludeSemantics(
                   child: Text(
                     horloge(r.secondes),
@@ -533,12 +673,12 @@ class FriseDestiny extends StatelessWidget {
                 ),
               ),
             // Le curseur : où en est le chrono.
-            if (curseur)
+            if (widget.curseur)
               Positioned(
-                left: x(ecouleSecondes) - 2,
+                left: x(widget.ecouleSecondes) - 2,
                 top: 2,
                 width: 4,
-                height: _hauteur - 4,
+                height: hauteur - 4,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: c.titre,
@@ -548,6 +688,16 @@ class FriseDestiny extends StatelessWidget {
                 ),
               ),
           ]);
+          if (widget.deplacer == null) return frise;
+          return GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            dragStartBehavior: DragStartBehavior.down,
+            onHorizontalDragStart: (d) => _debut(d.localPosition, largeur),
+            onHorizontalDragUpdate: (d) => _glisser(d, largeur),
+            onHorizontalDragEnd: (_) => _fin(),
+            onHorizontalDragCancel: _fin,
+            child: frise,
+          );
         }),
       ),
     );

@@ -7,14 +7,15 @@ Les nouveautés de chaque version, racontées pour les comédiens, les troupes e
 Après un essai de la 2.0.1 sur téléphone : la régie arrivait trois écrans plus loin, et rien ne le disait. Et les objets du lieu ne servaient pas.
 
 - **Le fil des étapes** : en haut de Préparer, de l'échauffement, d'« Avant d'entrer en scène » et de la mise en place, on voit où on en est : Préparer, Échauffement, Mise en place, Régie. Un appui mène à l'étape voulue, la régie comprise, sans passer par les autres. Le groupe est alors tiré d'office, et le chrono est celui des réglages.
-- **L'échauffement a ce qu'il faut pour la régie** :
+- **L'échauffement, épuré** :
+  - le minuteur, nommé « Temps d'échauffement » pour ne pas le confondre avec le chrono du spectacle ;
   - le lieu et le danger, avec leur image et leur bulle « i » ;
-  - la tablette son, pour s'échauffer en musique ;
-  - les trois Destiny prévus, sur la frise du spectacle ;
-  - un bouton « Aller directement à la régie ».
-- **Le minuteur d'échauffement est nommé** « Temps d'échauffement », pour ne pas le confondre avec le chrono du spectacle.
+  - chaque archétype avec **ses quatre réactions au danger**, une par palier ;
+  - les trois Destiny prévus, sur la frise du spectacle.
+  Les trois questions, la régie son et les boutons du bas disparaissent : le fil des étapes mène à la suite. L'écran « Avant d'entrer en scène » disparaît avec son bouton.
+- **On fait glisser les Destiny sur la frise**, à la minute près, à l'échauffement, à la mise en place et à la régie (sauf ceux déjà lancés). Un Destiny s'arrête juste avant le suivant, juste après le précédent, et jamais avant le chrono ni après la fin. Les Destiny déplacés restent jusqu'au lever de rideau.
 - **Le chrono choisi à la mise en place** compte tout de suite, même si on file à la régie par le fil des étapes.
-- **La régie son tient dans un bouton.** La grande tablette son laisse la place à un bouton « Son », à côté de DESTINY dans le panneau du chrono (et « Régie son » à l'échauffement). Il ouvre toute la régie son dans une fenêtre qu'on ferme d'un geste ; le chrono continue pendant ce temps.
+- **La régie son tient dans un bouton.** La grande tablette son laisse la place à un bouton « Son », à côté de DESTINY dans le panneau du chrono. Il ouvre toute la régie son dans une fenêtre qu'on ferme d'un geste ; le chrono continue pendant ce temps.
 - **On voit quand tombent les Destiny** : l'heure de chacun est écrite sous son repère, sur la frise du chrono, à l'échauffement et à la mise en place. Un Destiny déjà lancé montre l'heure où il l'a été.
 - **Plus d'objets.** Les trois objets du lieu disparaissent partout :
   - à la mise en place, à la régie, à la préparation d'un épisode et pendant le jeu ;

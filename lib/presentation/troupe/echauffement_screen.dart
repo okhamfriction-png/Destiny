@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../../domain/troupe/session.dart';
 import '../destiny/bouton_ia.dart';
-import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
 import '../theme/destiny_theme.dart';
@@ -13,9 +12,9 @@ import 'regie_screen.dart';
 import 'troupe_screen.dart';
 
 /// L'échauffement : le fil des étapes (la régie à un appui), le minuteur
-/// (30 minutes par défaut), le lieu et le danger, la régie son pour
-/// s'échauffer en musique, les trois questions, chaque archétype en petit
-/// rectangle (sa fiche à portée d'une bulle d'info) et les Destiny prévus.
+/// (30 minutes par défaut), le lieu et le danger, chaque archétype en petit
+/// rectangle (sa fiche à portée d'une bulle d'info), et les Destiny prévus,
+/// qu'on fait glisser sur la frise.
 class EchauffementScreen extends StatefulWidget {
   const EchauffementScreen({super.key, required this.contexte, required this.session});
 
@@ -80,12 +79,19 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
     );
   }
 
+  /// Fait glisser un Destiny sur la frise : mêmes règles qu'à la régie.
+  bool _placer(int index, int minute) {
+    final s = widget.session;
+    if (refusDestiny(s, index: index, minute: minute, ecouleSecondes: 0) != null) return false;
+    setState(() => s.destinyMinutes = [...s.destinyMinutes]..[index] = minute);
+    widget.contexte.store.enregistrer(s);
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final g = context.grammaire;
     final t = context.textes;
     final c = context.destiny;
-    final e = g.personnage.echauffement;
     final m = _reste ~/ 60;
     final s = _reste % 60;
     final session = widget.session;
@@ -131,26 +137,12 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
         SectionDestiny(titre: t.t('regie.scene'), enfants: [
           LieuEtDanger(contexte: widget.contexte, session: session),
         ]),
-        Padding(
-          padding: const EdgeInsets.only(top: 18),
-          child: BoutonRegieSon(contexte: widget.contexte, session: session),
-        ),
-        SectionDestiny(titre: t.t('bibliotheque.regles.questions'), enfants: [
-          for (final (i, q) in e.questions.indexed) Puce(q, numero: i + 1),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: c.or),
-            ),
-            child: Paragraphe(e.limite, italique: true),
-          ),
-        ]),
         SectionDestiny(titre: t.t('echauffement.personnages'), enfants: [
           for (final p in widget.session.personnages)
             RectangleArchetype(
               personnage: p,
               contexte: widget.contexte,
+              reactions: true,
               pied: widget.contexte.ia?.disponible == true && p.archetypeId.isNotEmpty
                   ? BoutonIA(
                       libelle: t.t('ia_jeu.idees_echauffement'),
@@ -166,6 +158,7 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
             ecouleSecondes: 0,
             curseur: false,
             reperes: reperesDestiny(session),
+            deplacer: _placer,
           ),
           const SizedBox(height: 6),
           Text(
@@ -173,68 +166,11 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
               'duree': '${session.dureeMinutes}',
               'liste': session.destinyMinutes.map((x) => '$x').join(' · '),
             }),
+            key: const ValueKey('plan_destiny'),
             style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w600, color: c.texte),
           ),
-          Paragraphe(t.t('echauffement.destinys_aide'), italique: true),
         ]),
-        const SizedBox(height: 22),
-        FilledButton.icon(
-          icon: const Icon(Icons.wb_sunny_outlined),
-          onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (_) => AvantSceneScreen(contexte: widget.contexte, session: widget.session))),
-          label: Text(t.t('echauffement.vers_avant_scene')),
-        ),
-        const SizedBox(height: 10),
-        OutlinedButton.icon(
-          icon: const Icon(Icons.play_circle_rounded),
-          onPressed: () => allerAEtape(context, widget.contexte, session, EtapeSession.regie),
-          label: Text(t.t('echauffement.vers_regie')),
-        ),
-      ],
-    );
-  }
-}
-
-/// Avant d'entrer en scène : un écran qui donne envie de jouer. La
-/// distribution, les règles d'or, les quatre paliers, la phrase des débriefs.
-/// Jamais de critique.
-class AvantSceneScreen extends StatelessWidget {
-  const AvantSceneScreen({super.key, required this.contexte, required this.session});
-
-  final ContexteTroupe contexte;
-  final SessionTroupe session;
-
-  @override
-  Widget build(BuildContext context) {
-    final g = context.grammaire;
-    final t = context.textes;
-    final c = context.destiny;
-    return PageDestiny(
-      titre: t.t('avant_scene.titre'),
-      enfants: [
-        FilEtapes(contexte: contexte, session: session, courante: EtapeSession.echauffement),
-        const SizedBox(height: 14),
-        BandeauAffiche(titre: g.promesse.toUpperCase(), sousTitre: t.t('avant_scene.message')),
-        SectionDestiny(titre: t.t('avant_scene.distribution'), enfants: [
-          for (final p in session.personnages) RectangleArchetype(personnage: p, contexte: contexte),
-        ]),
-        SectionDestiny(titre: t.t('bibliotheque.regles.regles_d_or'), enfants: [
-          for (final r in g.reglesDOr) Puce(r.titre),
-        ]),
-        SectionDestiny(titre: t.t('bibliotheque.regles.paliers'), enfants: const [FrisePaliers()]),
-        SectionDestiny(titre: t.t('bibliotheque.vouloir_besoin.phrase_cle'), enfants: [
-          EncartReplique(g.personnage.phraseCle, couleur: c.bleuDestiny, taille: 15),
-        ]),
-        const SizedBox(height: 24),
-        FilledButton.icon(
-          icon: const Icon(Icons.theater_comedy_rounded),
-          onPressed: () async {
-            session.etape = EtapeSession.miseEnPlace;
-            await contexte.store.enregistrer(session);
-            if (context.mounted) ouvrirEtape(context, contexte, session, remplacer: true);
-          },
-          label: Text(t.t('avant_scene.entrer')),
-        ),
+        const SizedBox(height: 12),
       ],
     );
   }

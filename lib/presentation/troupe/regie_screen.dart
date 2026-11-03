@@ -169,8 +169,11 @@ class _RegieScreenState extends State<RegieScreen> {
 
   /// Avance ou recule le Destiny [index] de [delta] minutes. Rend le message
   /// du refus si c'est impossible.
-  String? _deplacer(int index, int delta) {
-    final minute = s.destinyMinutes[index] + delta;
+  String? _deplacer(int index, int delta) => _placer(index, s.destinyMinutes[index] + delta);
+
+  /// Place le Destiny [index] à [minute] (les boutons, ou le doigt sur la
+  /// frise). Rend le message du refus si c'est impossible.
+  String? _placer(int index, int minute) {
     final refus = refusDestiny(s, index: index, minute: minute, ecouleSecondes: _ecoule);
     if (refus != null) return _messageRefus(refus, index);
     setState(() => s.destinyMinutes = [...s.destinyMinutes]..[index] = minute);
@@ -364,7 +367,12 @@ class _RegieScreenState extends State<RegieScreen> {
           ),
         ]),
         const SizedBox(height: 12),
-        FriseDestiny(totalSecondes: _total, ecouleSecondes: _ecoule, reperes: reperesDestiny(s)),
+        FriseDestiny(
+          totalSecondes: _total,
+          ecouleSecondes: _ecoule,
+          reperes: reperesDestiny(s),
+          deplacer: (i, minute) => _placer(i, minute) == null,
+        ),
         const SizedBox(height: 8),
         if (prochain != null) ...[
           Text(

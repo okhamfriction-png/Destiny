@@ -815,3 +815,40 @@ Rien n'est perdu.
 - les heures ne se chevauchent pas.
 
 Le test de la frise vérifie aussi les heures prévues sous les repères, et les tests de la régie son ouvrent d'abord la fenêtre.
+
+## 2.0.2 : l'échauffement épuré, les Destiny qu'on fait glisser, les réactions au danger
+
+### Les demandes
+
+- Sur trois captures de l'échauffement (les boutons du bas, « Régie son », les trois questions) : « Retire tout ça. »
+- Sur la frise : « On doit pouvoir bouger manuellement sur la ligne le timing des Destiny. »
+- Sur les personnages de l'échauffement : « Ajoute sur les archétypes les 4 étapes de réaction au danger. »
+
+### Ce qui a été fait
+
+- **L'échauffement** garde le fil des étapes, le minuteur, le lieu et le danger, les personnages et la frise des Destiny. Ce qui a été retiré :
+  - les trois questions et leur encadré ;
+  - le bouton « Régie son » (il reste à la régie) ;
+  - la phrase d'aide sous la frise ;
+  - « Avant d'entrer en scène » et « Aller directement à la régie ». Le fil des étapes mène à la mise en place et à la régie.
+  L'écran « Avant d'entrer en scène » n'avait plus d'accès : il est retiré, avec ses textes. L'intro de l'échauffement ne parle plus des trois questions.
+- **Les réactions au danger** (`ReactionsArchetype`) : sous chaque archétype, sa montée de la grammaire pour les quatre paliers, numérotée dans la couleur du palier.
+- **Faire glisser un Destiny** (`FriseDestiny`, maintenant avec un état) :
+  - une seule zone de geste pour toute la frise ;
+  - au début du geste, on prend le repère sous le doigt. Si deux repères sont collés, on prend celui de gauche quand on va à gauche, et celui de droite quand on va à droite ;
+  - le repère avance à la minute près. Les règles sont celles de « −1 min » et « +1 min » (`refusDestiny`) : jamais un Destiny déjà lancé, ni avant le chrono, ni à côté du précédent ou du suivant, ni après la fin ;
+  - un geste trop rapide s'arrête à la minute permise la plus proche du doigt ;
+  - à la souris, le curseur devient une double flèche ;
+  - un lecteur d'écran a « plus tard » et « plus tôt ».
+- **La mise en place** reconnaît le chrono de la session à sa durée : des Destiny déplacés à la main restent. « Lever le rideau » ne réécrit plus le chrono.
+
+### Tests
+
+**310 tests passent**. Les nouveaux portent sur :
+- le glisser à l'échauffement : sans dépasser le suivant ni le précédent, et enregistré ;
+- les Destiny déplacés gardés jusqu'à la régie ;
+- le glisser à la régie, où un Destiny lancé ne bouge plus ;
+- les quatre réactions de chaque archétype ;
+- ce qui a disparu de l'échauffement.
+
+Le parcours complet du spectacle passe maintenant par le fil des étapes.
