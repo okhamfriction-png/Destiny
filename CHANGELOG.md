@@ -6,7 +6,7 @@ Les nouveautés de chaque version, racontées pour les comédiens, les troupes e
 
 Après un essai de la 2.0.1 sur téléphone : la régie arrivait trois écrans plus loin, et rien ne le disait. Et les objets du lieu ne servaient pas.
 
-- **Le fil des étapes** : en haut de Préparer, de l'échauffement, d'« Avant d'entrer en scène » et de la mise en place, on voit où on en est : Préparer, Échauffement, Mise en place, Régie. Un appui mène à l'étape voulue, la régie comprise, sans passer par les autres. Le groupe est alors tiré d'office, et le chrono est celui des réglages.
+- **Le fil des étapes** : en haut de Préparer, de l'échauffement et de la mise en place, on voit où on en est : Préparer, Échauffement, Mise en place, Régie. Un appui mène à l'étape voulue, la régie comprise, sans passer par les autres. Le groupe est alors tiré d'office, et le chrono est celui des réglages.
 - **L'échauffement, épuré** :
   - le minuteur, nommé « Temps d'échauffement » pour ne pas le confondre avec le chrono du spectacle ;
   - le lieu et le danger, avec leur image et leur bulle « i » ;
