@@ -631,13 +631,10 @@ class _LigneReglage extends StatelessWidget {
 /// spectacle, le son de Destiny et Stop, plus tout le mixeur. Elle respecte
 /// le son coupé. Elle s'ouvre dans une fenêtre ([ouvrirRegieSon]).
 class TabletteSon extends StatefulWidget {
-  const TabletteSon({super.key, required this.contexte, required this.session, this.enSection = true});
+  const TabletteSon({super.key, required this.contexte, required this.session});
 
   final ContexteTroupe contexte;
   final SessionTroupe session;
-
-  /// Avec son titre de section (faux dans la fenêtre, qui a le sien).
-  final bool enSection;
 
   @override
   State<TabletteSon> createState() => _TabletteSonState();
@@ -778,9 +775,7 @@ class _TabletteSonState extends State<TabletteSon> {
               ]),
             ),
         ];
-        return widget.enSection
-            ? SectionDestiny(titre: rg('son'), espace: 18, enfants: enfants)
-            : Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: enfants);
+        return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: enfants);
       },
     );
   }
@@ -809,7 +804,7 @@ Future<void> ouvrirRegieSon(BuildContext context, ContexteTroupe contexte, Sessi
           ),
         ]),
         const SizedBox(height: 8),
-        TabletteSon(contexte: contexte, session: session, enSection: false),
+        TabletteSon(contexte: contexte, session: session),
       ]),
     ),
   );
