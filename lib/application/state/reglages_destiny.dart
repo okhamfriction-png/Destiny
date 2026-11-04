@@ -135,6 +135,9 @@ class ReglagesDestiny extends ChangeNotifier {
   String get modeDistribution => _modeDistribution;
   bool get leaderObligatoire => _leaderObligatoire;
   bool get moduleTraitre => _moduleTraitre;
+  /// Ancien « public par défaut » (avant la 2.1.0) : gardé, mais l'appli ne
+  /// s'en sert plus. Le mode enfant ou adulte se choisit en entrant dans le
+  /// jeu de rôle, et le théâtre se joue toujours en adulte.
   bool get kidsParDefaut => _kidsParDefaut;
   int get minuteurEchauffement => _minuteurEchauffement;
   bool get afficherRepliques => _afficherRepliques;

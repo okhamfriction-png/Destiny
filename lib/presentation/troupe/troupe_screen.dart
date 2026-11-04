@@ -55,6 +55,12 @@ class ContexteTroupe {
 /// Ouvre l'écran de l'étape où en est la session.
 Future<void> ouvrirEtape(BuildContext context, ContexteTroupe ctx, SessionTroupe s,
     {bool remplacer = false}) {
+  // Le théâtre se joue toujours en mode adulte : le mode enfant est celui du
+  // jeu de rôle. Une ancienne session marquée kids repasse en adulte.
+  if (s.kids) {
+    s.kids = false;
+    ctx.store.enregistrer(s);
+  }
   final Widget page = switch (s.etape) {
     EtapeSession.preparation => PreparerScreen(contexte: ctx, session: s),
     EtapeSession.echauffement => EchauffementScreen(contexte: ctx, session: s),
@@ -217,7 +223,6 @@ class TroupeScreen extends StatelessWidget {
 
   Future<void> _nouveau(BuildContext context) async {
     final s = await contexte.store.nouvelle();
-    s.kids = contexte.reglages.kidsParDefaut;
     if (context.mounted) await ouvrirEtape(context, contexte, s);
   }
 }

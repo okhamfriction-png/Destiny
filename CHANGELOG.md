@@ -2,10 +2,16 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
-## 2.0.3 — Une musique par acte, une régie plus légère (novembre 2026)
+## 2.1.0 — Le jeu de rôle en mode enfant ou adulte, une musique par acte (novembre 2026)
 
 Après un essai de la 2.0.2.
 
+- **Le jeu de rôle commence par le mode : Adulte ou Enfant.** L'onglet Jouer s'ouvre sur deux grandes cartes. Une fois le mode choisi, tout le suit, sans qu'on le redemande :
+  - les épisodes, les saisons et la liste des séries (on ne voit que celles de ce mode) ;
+  - les lieux, les dangers, les méchants et les règles (en enfant : le sigle KIDS, personne ne meurt, un pouvoir par enfant) ;
+  - l'histoire et le spectacle avec l'IA.
+  Le mode s'affiche en bandeau en haut de chaque écran.
+- **Le théâtre se joue en adulte.** Préparer n'a plus d'interrupteur kids : le mode enfant est celui du jeu de rôle. Le réglage « Public par défaut » disparaît aussi.
 - **Chaque acte a sa musique**, dans les Réglages (Destiny, « Les musiques ») :
   - acte 1 au début du chrono ;
   - acte 2 après le 1er Destiny ;

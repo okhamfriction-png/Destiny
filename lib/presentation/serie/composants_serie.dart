@@ -309,3 +309,38 @@ class ChampAvecIdees extends StatelessWidget {
     ]);
   }
 }
+
+/// Le bandeau du mode : « Mode adulte », ou « Mode enfant » avec le sigle
+/// KIDS. Il rappelle que tout suit ce choix.
+class BandeauMode extends StatelessWidget {
+  const BandeauMode({super.key, required this.public});
+
+  final PublicSerie public;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.textes;
+    final c = context.destiny;
+    final kids = public == PublicSerie.kids;
+    final couleur = kids ? c.kidsFond : c.or;
+    return Container(
+      key: ValueKey('bandeau_mode_${public.name}'),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: c.teinte(couleur),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: couleur, width: 1.5),
+      ),
+      child: Row(children: [
+        if (kids) const SigleKids() else Icon(Icons.theater_comedy_rounded, color: c.accent(couleur)),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            t.t('jouer.mode.${public.name}.bandeau'),
+            style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 14.5, height: 1.3, color: c.texte),
+          ),
+        ),
+      ]),
+    );
+  }
+}

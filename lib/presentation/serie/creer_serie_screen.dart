@@ -1,29 +1,33 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/serie/serie.dart';
-import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
+import 'composants_serie.dart';
 import 'contexte_serie.dart';
 import 'personnages_screen.dart';
 
-/// Créer un épisode (qui pourra devenir une saison) ou une saison : le
-/// public, le titre et les réglages. Pas d'univers ni de ton : entre humains,
-/// ce sont les joueurs qui inventent leur monde.
+/// Créer un épisode (qui pourra devenir une saison) ou une saison, dans le
+/// mode choisi en entrant dans le jeu de rôle (adulte ou enfant) : le titre
+/// et les réglages. Pas d'univers ni de ton : entre humains, ce sont les
+/// joueurs qui inventent leur monde.
 class CreerSerieScreen extends StatefulWidget {
-  const CreerSerieScreen({super.key, required this.contexte, required this.saison});
+  const CreerSerieScreen({super.key, required this.contexte, required this.saison, required this.public});
 
   final ContexteSerie contexte;
 
   /// Vrai : on commence directement une saison.
   final bool saison;
 
+  /// Le mode du jeu de rôle, choisi en entrant.
+  final PublicSerie public;
+
   @override
   State<CreerSerieScreen> createState() => _CreerSerieScreenState();
 }
 
 class _CreerSerieScreenState extends State<CreerSerieScreen> {
-  late PublicSerie _public = widget.contexte.reglages.kidsParDefaut ? PublicSerie.kids : PublicSerie.adulte;
+  PublicSerie get _public => widget.public;
   final TextEditingController _nom = TextEditingController();
   final TextEditingController _contexte = TextEditingController();
   late final ReglagesSerie _reglages = ReglagesSerie(
@@ -39,12 +43,6 @@ class _CreerSerieScreenState extends State<CreerSerieScreen> {
     _contexte.dispose();
     super.dispose();
   }
-
-  void _changerPublic(PublicSerie p) => setState(() {
-        _public = p;
-        // En kids, le traître reste éteint tant que le parent ne l'active pas.
-        if (_kids) _reglages.traitre = false;
-      });
 
   Future<void> _creer() async {
     final s = await widget.contexte.store.creer(
@@ -71,22 +69,9 @@ class _CreerSerieScreenState extends State<CreerSerieScreen> {
     return PageDestiny(
       titre: widget.saison ? k('titre_saison') : k('titre_episode'),
       enfants: [
+        BandeauMode(public: _public),
+        const SizedBox(height: 12),
         Paragraphe(k('intro')),
-        SectionDestiny(titre: k('public'), espace: 0, enfants: [
-          Wrap(spacing: 8, runSpacing: 8, crossAxisAlignment: WrapCrossAlignment.center, children: [
-            ChoiceChip(
-              label: Text(k('adulte')),
-              selected: !_kids,
-              onSelected: (_) => _changerPublic(PublicSerie.adulte),
-            ),
-            ChoiceChip(
-              avatar: const SigleKids(petit: true),
-              label: Text(k('kids')),
-              selected: _kids,
-              onSelected: (_) => _changerPublic(PublicSerie.kids),
-            ),
-          ]),
-        ]),
         SectionDestiny(titre: k('nom'), enfants: [
           TextField(controller: _nom, decoration: InputDecoration(helperText: k('nom_aide'), isDense: true)),
           // Le contexte ne sert qu'à l'IA : sans elle, on ne le demande pas.

@@ -149,14 +149,6 @@ class _PreparerScreenState extends State<PreparerScreen> {
     _sauver();
   }
 
-  void _changerKids(bool kids) {
-    setState(() => s.kids = kids);
-    // En kids, seuls les lieux et les dangers kids se jouent.
-    if (_lieu != null && kids && !_lieu!.kids) _tirerLieu();
-    if (_danger != null && kids && !_danger!.kids) _tirerDanger();
-    if (_danger != null) s.paliers = _danger!.paliersPour(kids: kids);
-    _sauver();
-  }
 
   void _attribuer(List<String> ids) {
     setState(() {
@@ -226,20 +218,6 @@ class _PreparerScreenState extends State<PreparerScreen> {
             setState(() => s.type = v.first);
             _sauver();
           },
-        ),
-        SwitchListTile(
-          contentPadding: EdgeInsets.zero,
-          title: Wrap(
-            spacing: 8,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              Text(p('kids'),
-                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 16, fontWeight: FontWeight.w600, color: c.texte)),
-              const SigleKids(petit: true),
-            ],
-          ),
-          value: s.kids,
-          onChanged: _changerKids,
         ),
         SectionDestiny(titre: p('joueurs'), espace: 14, enfants: [
           SegmentedButton<int>(

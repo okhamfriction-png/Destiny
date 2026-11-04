@@ -15,6 +15,7 @@ import 'package:destiny/domain/grammaire/textes.dart';
 import 'package:destiny/domain/serie/univers.dart';
 import 'package:destiny/infrastructure/datasources/grammaire_source.dart';
 import 'package:destiny/infrastructure/datasources/in_memory_chat_store.dart';
+import 'package:destiny/presentation/destiny/composants.dart';
 import 'package:destiny/presentation/destiny/donnees.dart';
 import 'package:destiny/presentation/jouer/jouer_screen.dart';
 import 'package:destiny/presentation/jouer/univers_ia.dart';
@@ -245,6 +246,11 @@ void main() {
         ),
         sombre: sombre,
       );
+      // On entre dans le jeu de rôle par un mode.
+      final adulte = find.byKey(const ValueKey('mode_adulte'));
+      await tester.scrollUntilVisible(adulte, 300, scrollable: find.byType(Scrollable).first);
+      await tester.tap(adulte);
+      await tester.pumpAndSettle();
       for (final (cle, ecran) in [
         ('jouer.ia.histoire.titre', ChatScreen),
         ('jouer.ia.spectacle.titre', SpectacleScreen),
@@ -266,6 +272,64 @@ void main() {
       }
     });
   }
+
+  testWidgets('Jouer : on choisit d\'abord le mode, et l\'IA le suit sans le redemander', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final ia = (await tester.runAsync(AiSettings.load))!;
+    final store = SerieStore(lire: lireFichier);
+    await tester.runAsync(() => store.charger(grammaire: chargee.grammaire));
+    final audio = AudioService()..setMuted(true);
+    final musique = MusicController();
+    final visuels = VisualSettings();
+    final spectacle = SpectacleController(catalogue: catalogue, grammaire: chargee, llm: FauxLlm(''), aiSettings: ia);
+    await _ouvrir(
+      tester,
+      Scaffold(
+        body: JouerScreen(
+          serie: ContexteSerie(
+            store: store,
+            reglages: ReglagesDestiny(),
+            catalogue: catalogue,
+            audio: audio,
+            musique: musique,
+            visuels: visuels,
+          ),
+          chatController: ChatController(
+              chatStore: InMemoryChatStore(), llm: FauxLlm(''), aiSettings: ia, catalogue: catalogue, grammaire: chargee),
+          spectacleController: spectacle,
+          audioService: audio,
+          visualSettings: visuels,
+          musicController: musique,
+        ),
+      ),
+      sombre: true,
+    );
+    // Deux grandes cartes : adulte et enfant ; rien d'autre à choisir avant.
+    expect(find.byKey(const ValueKey('mode_adulte')), findsOneWidget);
+    expect(find.byKey(const ValueKey('mode_kids')), findsOneWidget);
+    expect(find.text(t.t('jouer.ia.histoire.titre')), findsNothing);
+    await tester.tap(find.byKey(const ValueKey('mode_kids')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('bandeau_mode_kids')), findsOneWidget);
+    expect(find.byType(SigleKids), findsWidgets);
+    // Le spectacle avec l'IA suit le mode : plus d'interrupteur kids.
+    final entreeSpectacle = find.text(t.t('jouer.ia.spectacle.titre'));
+    await tester.ensureVisible(entreeSpectacle);
+    await tester.pumpAndSettle();
+    await tester.tap(entreeSpectacle);
+    await tester.pumpAndSettle();
+    expect(spectacle.kids, isTrue);
+    expect(find.widgetWithText(SwitchListTile, t.t('spectacle_ia.kids')), findsNothing);
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    // L'histoire avec l'IA aussi.
+    final entreeHistoire = find.text(t.t('jouer.ia.histoire.titre'));
+    await tester.ensureVisible(entreeHistoire);
+    await tester.pumpAndSettle();
+    await tester.tap(entreeHistoire);
+    await tester.pumpAndSettle();
+    expect(tester.widget<ChatScreen>(find.byType(ChatScreen)).kids, isTrue);
+  });
 
   test('chaque texte des deux écrans IA existe', () {
     expect(textesManquants([_ecranHistoire, _ecranSpectacle, 'lib/presentation/jouer']), isEmpty);

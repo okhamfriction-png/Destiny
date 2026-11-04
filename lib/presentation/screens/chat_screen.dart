@@ -45,6 +45,7 @@ class ChatScreen extends StatefulWidget {
     required this.visualSettings,
     required this.musicController,
     this.univers = CatalogueUnivers.vide,
+    this.kids,
     super.key,
   });
 
@@ -56,11 +57,19 @@ class ChatScreen extends StatefulWidget {
   /// Les univers de `univers.json`.
   final CatalogueUnivers univers;
 
+  /// Le mode du jeu de rôle, choisi en entrant (enfant ou adulte) : on ne
+  /// voit que ses histoires, et les nouvelles le suivent sans le redemander.
+  /// Nul : on choisit le mode à chaque histoire (comme avant).
+  final bool? kids;
+
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
+  /// Une histoire du mode choisi en entrant (toutes, sans mode).
+  bool _duMode(ChatStory s) => widget.kids == null || s.childMode == widget.kids;
+
   final ScrollController _scroll = ScrollController();
   final TextEditingController _custom = TextEditingController();
 
@@ -261,7 +270,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     var playerCount = 1;
     var directAddress = true;
     var maxResponses = 30;
-    var childMode = false;
+    var childMode = widget.kids ?? false;
     var malus = false;
     final g = context.grammaire;
     final t = context.textes;
@@ -389,21 +398,25 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                   const SizedBox(height: 12),
                   Row(
                     children: [
-                      Expanded(
-                        child: SegmentedButton<bool>(
-                          showSelectedIcon: false,
-                          segments: [
-                            ButtonSegment(value: false, label: Text(k('creer.adulte'))),
-                            ButtonSegment(value: true, label: Text(k('creer.enfant'))),
-                          ],
-                          selected: {childMode},
-                          onSelectionChanged: (s) => setLocal(() {
-                            childMode = s.first;
-                            universe = null; // univers différents selon le mode
-                          }),
+                      // Le mode vient du jeu de rôle quand on y est entré par
+                      // un mode : on ne le redemande pas.
+                      if (widget.kids == null) ...[
+                        Expanded(
+                          child: SegmentedButton<bool>(
+                            showSelectedIcon: false,
+                            segments: [
+                              ButtonSegment(value: false, label: Text(k('creer.adulte'))),
+                              ButtonSegment(value: true, label: Text(k('creer.enfant'))),
+                            ],
+                            selected: {childMode},
+                            onSelectionChanged: (s) => setLocal(() {
+                              childMode = s.first;
+                              universe = null; // univers différents selon le mode
+                            }),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
+                        const SizedBox(width: 8),
+                      ],
                       Expanded(
                         child: SegmentedButton<int>(
                           showSelectedIcon: false,
@@ -628,14 +641,15 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               if (c.error != null) Paragraphe(c.error!, gras: true),
               _listToolbar(c),
               SectionDestiny(titre: k('mes_histoires'), espace: 8, enfants: [
-                if (c.activeStories.isEmpty)
+                if (!c.activeStories.any(_duMode))
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Text(k('aucune'),
                         textAlign: TextAlign.center,
                         style: TextStyle(fontFamily: kPoliceTexte, fontStyle: FontStyle.italic, color: d.texteSecondaire)),
                   ),
-                for (final s in c.activeStories) _storyTile(c, s),
+                for (final s in c.activeStories)
+                  if (_duMode(s)) _storyTile(c, s),
               ]),
             ])
               centre(w),

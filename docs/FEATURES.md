@@ -51,7 +51,7 @@ On peut les passer, et les revoir depuis la Bibliothèque ou les Réglages.
 
 L'accueil montre la promesse et, un jour sur deux, la règle d'or ou la réplique du jour. Puis :
 
-1. **Préparer** : spectacle ou répétition, avec ou sans enfants, 4, 5 ou 6 joueurs et leurs prénoms.
+1. **Préparer** : spectacle ou répétition, 4, 5 ou 6 joueurs.
    - La distribution se fait par choix concerté, tirage équilibré ou exemple tout prêt.
    - L'alarmiste est toujours là, et chaque famille est représentée. Une distribution déséquilibrée est refusée, avec une phrase qui dit pourquoi et une correction en un geste.
    - Chaque joueur choisit son animal parmi les deux de son archétype.
@@ -84,6 +84,8 @@ L'accueil montre la promesse et, un jour sur deux, la règle d'or ou la répliqu
 - **La transcription** (facultative) : la reconnaissance vocale du téléphone écrit la scène pour aider au résumé ; l'appli ne garde aucun son, et l'on voit ce qui part avant tout envoi à l'IA.
 
 ### Le mode kids
+
+Le jeu de rôle commence par le choix du mode, **adulte** ou **enfant** : tout le reste suit (les séries, les lieux, les dangers, les méchants, les règles et l'IA). Le théâtre se joue toujours en adulte.
 
 - Seuls les éléments marqués **KIDS** sont proposés : lieux, dangers, méchants, sbires.
 - Chaque enfant choisit **un pouvoir**, gardé toute la saison. Il aide, il ne résout jamais tout seul.
@@ -141,7 +143,7 @@ Facultatif : il faut une clé d'API (Anthropic, OpenAI ou Google), à régler da
 
 ## 9. Réglages
 
-- **Destiny** : les chronos (durée et minute de chaque Destiny, retour aux valeurs par défaut), le déclenchement (automatique, manuel ou les deux), le rituel (lumière bleue, durée du figé, texte de l'ellipse, rappels), les musiques, la distribution par défaut, le jeu de rôle (kids, traître, registre, combat, pièce, évolution d'archétype), l'échauffement, les cartes.
+- **Destiny** : les chronos (durée et minute de chaque Destiny, retour aux valeurs par défaut), le déclenchement (automatique, manuel ou les deux), le rituel (lumière bleue, durée du figé, texte de l'ellipse, rappels), les musiques, la distribution par défaut, le jeu de rôle (traître, registre, combat, pièce, évolution d'archétype), l'échauffement, les cartes.
 - **IA** : le fournisseur, le modèle et la clé.
 - **Apparence** : le thème (sombre, clair, comme le téléphone), les visuels des cartes, la taille et l'écriture manuscrite du texte de l'histoire.
 - **Données** : les lieux et les dangers (espaces, rôles, quatre paliers nommés comme dans la grammaire, palier 4 en version kids, sigle KIDS), les détails des lieux, l'antisèche des relations, les **dilemmes de l'acte 4**, et le rapport de synchronisation avec la grammaire.

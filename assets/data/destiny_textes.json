@@ -230,7 +230,23 @@
       "ancienne": "Une histoire de l'ancienne grammaire : elle se relit, mais ne se reprend pas."
     },
     "titre": "Jouer",
-    "sous_titre": "Le jeu de rôle Destiny : avec tes amis, ou avec l'IA."
+    "sous_titre": "Le jeu de rôle Destiny : avec tes amis, ou avec l'IA. Choisis d'abord le mode.",
+    "mode": {
+      "titre": "Le jeu de rôle",
+      "aide": "Adulte ou enfant : tout suit ce choix, les lieux, les dangers, les méchants, les règles et l'IA.",
+      "adulte": {
+        "nom": "Adulte",
+        "texte": "Toutes les histoires, jusqu'au prix le plus lourd.",
+        "titre": "Jeu de rôle · adulte",
+        "bandeau": "Mode adulte : tous les lieux, tous les dangers, tous les méchants."
+      },
+      "kids": {
+        "nom": "Enfant",
+        "texte": "Des frissons doux, personne ne meurt, et chaque enfant a son pouvoir.",
+        "titre": "Jeu de rôle · enfant",
+        "bandeau": "Mode enfant : seulement ce qui se joue avec des enfants, et personne ne meurt."
+      }
+    }
   },
   "statuts": {
     "haut": "statut haut",
@@ -491,7 +507,6 @@
   "preparer": {
     "titre": "Préparer",
     "type": "Spectacle ou répétition",
-    "kids": "Avec des enfants",
     "joueurs": "Combien de joueurs ?",
     "distribution": "La distribution",
     "tirer": "Tirer",
@@ -668,9 +683,6 @@
       "intro": "Un jeu de rôle : les joueurs inventent leur monde et disent ce que font leurs personnages, le Maître du destin le fait vivre, et la pièce du destin tranche quand l'issue est incertaine.",
       "nom": "Titre",
       "nom_aide": "Facultatif.",
-      "public": "Pour qui ?",
-      "adulte": "Adultes",
-      "kids": "Avec des enfants",
       "contexte": "Contexte",
       "contexte_aide": "Ce que l'IA doit savoir de votre histoire. Jamais de prénom d'enfant.",
       "reglages": "Réglages de la série",
@@ -679,7 +691,9 @@
       "traitre_kids": "Avec des enfants, il reste désactivé tant que le parent ne l'active pas.",
       "registre": "Le registre",
       "registre_aide": "L'IA note les figurants, les secrets et les promesses, pour les ressortir plus tard.",
-      "suivant": "Les personnages"
+      "suivant": "Les personnages",
+      "adulte": "Adultes",
+      "kids": "Avec des enfants"
     },
     "personnages": {
       "titre": "Les personnages",
@@ -1489,7 +1503,6 @@
     "mode_distribution": "Le mode de distribution",
     "leader_obligatoire": "Le leader est obligatoire",
     "jeu_de_role": "Le jeu de rôle (Série)",
-    "kids_defaut": "Avec des enfants, par défaut",
     "traitre_defaut": "Le module traître, par défaut",
     "registre_defaut": "Le registre, par défaut",
     "evolution": "Changer d'archétype entre deux saisons",

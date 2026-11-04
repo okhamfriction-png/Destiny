@@ -911,3 +911,42 @@ Sur deux captures (le dessous de la frise, puis la fenêtre de la régie son) : 
 - les quatre lignes et l'interrupteur dans les Réglages ;
 - la régie sans bouton « Son » ;
 - l'heure en rouge quand le prochain Destiny est en retard.
+
+## 2.1.0 : le jeu de rôle commence par le mode, adulte ou enfant
+
+### La demande
+
+Après la relecture des deux prompts mis à jour (refonte 2.0 et Série/kids) :
+- les blessures façon PbtA restent ;
+- les univers restent pour l'IA seulement ;
+- et pour les enfants : « Faut pas l'interrupteur, faut un mode. Le mode théâtre, tu peux laisser tel quel ; tu mets pas le mode enfant dans le mode théâtre. Dans le mode jeu de rôle, tu fais deux modes : quand on commence, tu choisis le mode enfant ou le mode adulte, et après, en fonction, tu fais les trucs. »
+
+### Ce qui a été fait
+
+- **L'onglet Jouer** s'ouvre sur deux grandes cartes, **Adulte** et **Enfant (KIDS)**.
+- **`JeuDeRoleScreen`** : le jeu de rôle dans un mode (`PublicSerie`, déjà le public des séries). Un bandeau (`BandeauMode`) rappelle le mode en haut de l'écran. On y trouve :
+  - le nouvel épisode et la nouvelle saison ;
+  - les séries récentes de ce mode, et « Mes séries », filtrées sur ce mode ;
+  - l'histoire et le spectacle avec l'IA.
+- **Le mode suit partout, sans être redemandé** :
+  - `CreerSerieScreen` et `SeriesScreen` le reçoivent : plus de puces « Pour qui ? » ;
+  - `ChatScreen(kids:)` cache le choix adulte/enfant et ne montre que les histoires du mode ;
+  - `SpectacleScreen(kids:)` règle le spectacle sur le mode et cache son interrupteur.
+  Appelés sans mode, ces deux écrans gardent leur choix d'avant.
+- **Le théâtre se joue en adulte** :
+  - Préparer n'a plus d'interrupteur kids, ni la mise en place de sigle ;
+  - une ancienne session marquée kids repasse en adulte en s'ouvrant ;
+  - le réglage « Public par défaut » est retiré, son champ est gardé.
+- **Version 2.1.0** : elle reprend la 2.0.3 (une musique par acte, la régie plus légère), jamais publiée en APK.
+
+### En attente
+
+La nouvelle dramaturgie des prompts n'est pas encore faite : les liens dits avec le mot, l'acte 2 en ascenseur, l'acte 4 où le danger prend d'abord, les 9 règles d'or, « Répondre », le débrief et les paliers 4. Elle renvoie à un fichier de données plus récent (`liens`, `acte_2`, `acte_4`, `jeu_de_role`), qui n'a pas encore été fourni.
+
+### Tests
+
+**317 tests passent.** Les nouveaux portent sur :
+- les deux cartes de Jouer, et l'IA qui suit le mode ;
+- la création d'une série en mode enfant, sans le redemander, et la liste filtrée ;
+- le théâtre sans interrupteur kids ;
+- l'ancienne session kids qui repasse en adulte.

@@ -724,6 +724,24 @@ void main() {
     expect(SessionTroupe.depuisJson(b.session.versJson()).objets, anciens);
   });
 
+  testWidgets('le théâtre se joue en adulte : une ancienne session kids y repasse', (tester) async {
+    final b = await _banc(tester);
+    b.session.kids = true;
+    await _ouvrir(
+      tester,
+      Builder(
+        builder: (context) => TextButton(
+          onPressed: () => ouvrirEtape(context, b.contexte, b.session),
+          child: const Text('ouvrir'),
+        ),
+      ),
+    );
+    await tester.tap(find.text('ouvrir'));
+    await tester.pumpAndSettle();
+    expect(find.byType(RegieScreen), findsOneWidget);
+    expect(b.session.kids, isFalse);
+  });
+
   test('chaque texte des écrans Troupe existe', () {
     expect(textesManquants(['lib/presentation/troupe']), isEmpty);
   });

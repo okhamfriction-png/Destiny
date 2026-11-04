@@ -4,7 +4,6 @@ import '../../application/services/audio_service.dart';
 import '../../application/state/music_controller.dart';
 import '../../application/state/reglages_destiny.dart';
 import '../../domain/grammaire/chronos.dart';
-import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
 import '../theme/destiny_theme.dart';
@@ -135,16 +134,6 @@ class ReglagesDestinyScreen extends StatelessWidget {
               _Bascule(k('leader_obligatoire'), r.leaderObligatoire, (v) => r.changer(leaderObligatoire: v)),
             ]),
             SectionDestiny(titre: k('jeu_de_role'), enfants: [
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Wrap(
-                  spacing: 8,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [Text(k('kids_defaut')), const SigleKids(petit: true)],
-                ),
-                value: r.kidsParDefaut,
-                onChanged: (v) => r.changer(kidsParDefaut: v),
-              ),
               _Bascule(k('traitre_defaut'), r.moduleTraitre, (v) => r.changer(moduleTraitre: v),
                   aide: t.t('module_traitre.explication')),
               _Bascule(k('registre_defaut'), r.registreParDefaut, (v) => r.changer(registreParDefaut: v)),

@@ -305,7 +305,6 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
           Text(m('destiny_a', {'liste': s.destinyMinutes.map((x) => '$x').join(' · ')}),
               style: TextStyle(fontFamily: kPoliceTexte, color: c.texteSecondaire)),
         ]),
-        if (s.kids) const Padding(padding: EdgeInsets.only(top: 12), child: Align(alignment: Alignment.centerLeft, child: SigleKids())),
         const SizedBox(height: 22),
         FilledButton.icon(
           onPressed: pret

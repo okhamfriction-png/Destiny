@@ -5,18 +5,16 @@ import '../../application/state/chat_controller.dart';
 import '../../application/state/music_controller.dart';
 import '../../application/state/spectacle_controller.dart';
 import '../../application/state/visual_settings.dart';
+import '../../domain/serie/serie.dart';
+import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
-import '../screens/chat_screen.dart';
-import '../screens/spectacle_screen.dart';
 import '../serie/contexte_serie.dart';
-import '../serie/creer_serie_screen.dart';
-import '../serie/fiche_serie_screen.dart';
-import '../serie/series_screen.dart';
 import '../theme/destiny_theme.dart';
+import 'jeu_de_role_screen.dart';
 
-/// L'onglet Jouer : le jeu de rôle, entre humains ou avec l'IA (comme aux
-/// échecs : avec quelqu'un, ou contre l'ordinateur).
+/// L'onglet Jouer : le jeu de rôle. On choisit d'abord le mode, adulte ou
+/// enfant ; tout le reste suit ce choix ([JeuDeRoleScreen]).
 class JouerScreen extends StatelessWidget {
   const JouerScreen({
     super.key,
@@ -41,7 +39,16 @@ class JouerScreen extends StatelessWidget {
     final t = context.textes;
     final c = context.destiny;
     String j(String k) => t.t('jouer.$k');
-    void ouvrir(Widget page) => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
+    final contexte = ContexteJeuDeRole(
+      serie: serie,
+      chatController: chatController,
+      spectacleController: spectacleController,
+      audioService: audioService,
+      visualSettings: visualSettings,
+      musicController: musicController,
+    );
+    void entrer(PublicSerie public) => Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (_) => JeuDeRoleScreen(contexte: contexte, public: public)));
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
@@ -55,67 +62,10 @@ class JouerScreen extends StatelessWidget {
               Text(j('sous_titre'),
                   textAlign: TextAlign.center,
                   style: TextStyle(fontFamily: kPoliceTexte, fontSize: 15, color: c.texteSecondaire)),
-              SectionDestiny(titre: j('humains.titre'), enfants: [
-                Paragraphe(j('humains.sous_titre')),
-                ElementListe(
-                  titre: t.t('serie.nouvel_episode'),
-                  sousTitre: g.serie.episode,
-                  devant: const Icon(Icons.movie_creation_outlined, color: DestinyCouleurs.corail),
-                  onTap: () => ouvrir(CreerSerieScreen(contexte: serie, saison: false)),
-                ),
-                ElementListe(
-                  titre: t.t('serie.nouvelle_saison'),
-                  sousTitre: g.serie.saison,
-                  devant: Icon(Icons.video_library_outlined, color: c.or),
-                  onTap: () => ouvrir(CreerSerieScreen(contexte: serie, saison: true)),
-                ),
-                ListenableBuilder(
-                  listenable: serie.store,
-                  builder: (context, _) {
-                    final recentes = serie.store.series.take(2).toList();
-                    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                      for (final s in recentes)
-                        ElementListe(
-                          titre: s.nom.isEmpty ? t.t('serie.sans_titre') : s.nom,
-                          sousTitre: ouEnEst(context, s),
-                          devant: Icon(Icons.play_circle_outline_rounded, color: c.bleuDestiny),
-                          onTap: () => ouvrirFiche(context, serie, s.id),
-                        ),
-                    ]);
-                  },
-                ),
-                const SizedBox(height: 4),
-                FilledButton.icon(
-                  icon: const Icon(Icons.groups_rounded),
-                  onPressed: () => ouvrir(SeriesScreen(contexte: serie)),
-                  label: Text(j('humains.ouvrir')),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Text(g.serie.serie,
-                      style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.4, color: c.texteSecondaire)),
-                ),
-              ]),
-              SectionDestiny(titre: j('ia.titre'), enfants: [
-                Paragraphe(j('ia.sous_titre')),
-                ElementListe(
-                  titre: j('ia.histoire.titre'),
-                  sousTitre: '${j('ia.histoire.texte')}\n${j('ia.cle')}',
-                  devant: const Icon(Icons.auto_stories_outlined, color: DestinyCouleurs.ia),
-                  onTap: () => ouvrir(ChatScreen(
-                    controller: chatController,
-                    audioService: audioService,
-                    visualSettings: visualSettings,
-                    musicController: musicController,
-                    univers: serie.store.catalogue,
-                  )),
-                ),
-                ElementListe(
-                  titre: j('ia.spectacle.titre'),
-                  sousTitre: '${j('ia.spectacle.texte')}\n${j('ia.cle')}',
-                  devant: const Icon(Icons.theater_comedy_outlined, color: DestinyCouleurs.ia),
-                  onTap: () => ouvrir(SpectacleScreen(controller: spectacleController, univers: serie.store.catalogue)),
-                ),
+              SectionDestiny(titre: j('mode.titre'), enfants: [
+                Paragraphe(j('mode.aide')),
+                for (final public in PublicSerie.values)
+                  _CarteMode(public: public, onTap: () => entrer(public)),
               ]),
               const SizedBox(height: 20),
               Text(g.promesse,
@@ -125,6 +75,61 @@ class JouerScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Une grande carte de mode : adulte, ou enfant avec le sigle KIDS.
+class _CarteMode extends StatelessWidget {
+  const _CarteMode({required this.public, required this.onTap});
+
+  final PublicSerie public;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.textes;
+    final c = context.destiny;
+    final kids = public == PublicSerie.kids;
+    final couleur = kids ? c.kidsFond : c.or;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Material(
+        color: c.carte,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: BorderSide(color: couleur, width: 2),
+        ),
+        child: InkWell(
+          key: ValueKey('mode_${public.name}'),
+          borderRadius: BorderRadius.circular(18),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(18),
+            child: Row(children: [
+              if (kids)
+                const SigleKids()
+              else
+                PastilleIcone(Icons.theater_comedy_rounded, couleur: couleur, taille: 52),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(
+                    t.t('jouer.mode.${public.name}.nom'),
+                    style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, fontSize: 22, color: c.titre),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    t.t('jouer.mode.${public.name}.texte'),
+                    style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14.5, height: 1.35, color: c.texteSecondaire),
+                  ),
+                ]),
+              ),
+              Icon(Icons.chevron_right_rounded, color: c.texteSecondaire),
+            ]),
+          ),
+        ),
+      ),
     );
   }
 }

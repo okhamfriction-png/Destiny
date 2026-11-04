@@ -4,6 +4,7 @@ import '../../domain/serie/serie.dart';
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
+import 'composants_serie.dart';
 import 'contexte_serie.dart';
 import 'creer_serie_screen.dart';
 import 'fiche_serie_screen.dart';
@@ -35,9 +36,12 @@ String ouEnEst(BuildContext context, Serie s) {
 
 /// « Mes séries » : les épisodes, saisons et séries entre humains.
 class SeriesScreen extends StatelessWidget {
-  const SeriesScreen({super.key, required this.contexte});
+  const SeriesScreen({super.key, required this.contexte, required this.public});
 
   final ContexteSerie contexte;
+
+  /// Le mode du jeu de rôle : on ne voit et ne crée que ses séries.
+  final PublicSerie public;
 
   @override
   Widget build(BuildContext context) {
@@ -47,20 +51,22 @@ class SeriesScreen extends StatelessWidget {
     return ListenableBuilder(
       listenable: contexte.store,
       builder: (context, _) {
-        final series = contexte.store.series;
+        final series = [for (final x in contexte.store.series) if (x.public == public) x];
         return PageDestiny(
           titre: s('titre'),
           enfants: [
+            BandeauMode(public: public),
+            const SizedBox(height: 12),
             Paragraphe(s('intro')),
             if (contexte.store.lectureEchouee) Paragraphe(s('lecture_echouee'), gras: true),
             FilledButton.icon(
-              onPressed: () => ouvrir(CreerSerieScreen(contexte: contexte, saison: false)),
+              onPressed: () => ouvrir(CreerSerieScreen(contexte: contexte, saison: false, public: public)),
               icon: const Icon(Icons.movie_creation_outlined),
               label: Text(s('nouvel_episode')),
             ),
             const SizedBox(height: 8),
             OutlinedButton.icon(
-              onPressed: () => ouvrir(CreerSerieScreen(contexte: contexte, saison: true)),
+              onPressed: () => ouvrir(CreerSerieScreen(contexte: contexte, saison: true, public: public)),
               icon: const Icon(Icons.video_library_outlined),
               label: Text(s('nouvelle_saison')),
             ),

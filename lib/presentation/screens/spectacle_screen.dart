@@ -32,12 +32,16 @@ Color _couleurPersonnage(BuildContext context, PersonnageSpectacle p) {
 
 /// Le spectacle avec l'IA : jeu d'impro long form en solo.
 class SpectacleScreen extends StatefulWidget {
-  const SpectacleScreen({required this.controller, this.univers = CatalogueUnivers.vide, super.key});
+  const SpectacleScreen({required this.controller, this.univers = CatalogueUnivers.vide, this.kids, super.key});
 
   final SpectacleController controller;
 
   /// Les univers de `univers.json`.
   final CatalogueUnivers univers;
+
+  /// Le mode du jeu de rôle, choisi en entrant (enfant ou adulte) : le
+  /// spectacle le suit, sans interrupteur. Nul : l'interrupteur reste.
+  final bool? kids;
 
   @override
   State<SpectacleScreen> createState() => _SpectacleScreenState();
@@ -67,6 +71,12 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
   void initState() {
     super.initState();
     widget.controller.addListener(_onChange);
+    final kids = widget.kids;
+    if (kids != null && widget.controller.kids != kids) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) widget.controller.setKids(kids);
+      });
+    }
   }
 
   @override
@@ -133,17 +143,20 @@ class _SpectacleScreenState extends State<SpectacleScreen> {
         ),
       if (!c.configured) CadreLisere(couleur: DestinyCouleurs.ia, child: Text(k('sans_cle'), style: TextStyle(color: d.texte))),
       if (c.sessionIgnoree) CadreLisere(couleur: d.or, child: Text(k('ancienne'), style: TextStyle(color: d.texte))),
-      SwitchListTile(
-        contentPadding: EdgeInsets.zero,
-        title: Wrap(
-          spacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [Text(k('kids')), const SigleKids(petit: true)],
-        ),
-        subtitle: Text(k('kids_aide')),
-        value: c.kids,
-        onChanged: c.setKids,
-      ),
+      if (widget.kids == null)
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          title: Wrap(
+            spacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [Text(k('kids')), const SigleKids(petit: true)],
+          ),
+          subtitle: Text(k('kids_aide')),
+          value: c.kids,
+          onChanged: c.setKids,
+        )
+      else if (widget.kids!)
+        const Padding(padding: EdgeInsets.only(bottom: 8), child: Align(alignment: Alignment.centerLeft, child: SigleKids())),
       SectionDestiny(titre: k('sous_mode'), espace: 8, enfants: [
         SegmentedButton<SpectacleMode>(
           showSelectedIcon: false,

@@ -146,13 +146,11 @@ void main() {
     await info(g.animauxDe(arch.id).first.nom, FicheAnimal);
   });
 
-  testWidgets('en kids, le lieu et le danger sont kids', (tester) async {
+  testWidgets('le théâtre se joue en adulte : plus d\'interrupteur kids', (tester) async {
     final (_, s) = await _preparer(tester);
-    await tester.tap(find.byType(Switch));
-    await tester.pumpAndSettle();
-    expect(s.kids, isTrue);
-    expect(catalogue.lieux.firstWhere((l) => l.id == s.lieuId).kids, isTrue);
-    expect(catalogue.dangers.firstWhere((d) => d.id == s.dangerId).kids, isTrue);
+    expect(find.byType(Switch), findsNothing);
+    expect(find.byType(SigleKids), findsNothing);
+    expect(s.kids, isFalse);
   });
 
   for (final sombre in [true, false]) {

@@ -170,11 +170,30 @@ void main() {
     catalogue = CatalogueDeTest(await d.loadDangers(), await d.loadLocations());
   });
 
+  testWidgets('le mode vient de l\'entrée : on crée en enfant sans le redemander, et on ne voit que ses séries', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    _telephone(tester, hauteur: 8000);
+    final ctx = await _contexte(tester);
+    await tester.runAsync(() => ctx.store.creer(nom: 'Les grands', public: PublicSerie.adulte));
+    await tester.pumpWidget(_appli(SeriesScreen(contexte: ctx, public: PublicSerie.kids)));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('bandeau_mode_kids')), findsOneWidget);
+    expect(find.text('Les grands'), findsNothing, reason: 'une série adulte ne se voit pas en mode enfant');
+    await _taper(tester, find.text(t.t('serie.nouvel_episode')));
+    // Plus de choix « pour qui ? » : le mode est déjà choisi.
+    expect(find.byType(ChoiceChip), findsNothing);
+    expect(find.byKey(const ValueKey('bandeau_mode_kids')), findsOneWidget);
+    await _taper(tester, find.text(t.t('serie.creer.suivant')));
+    final enfant = ctx.store.series.firstWhere((s) => s.nom != 'Les grands');
+    expect(enfant.public, PublicSerie.kids);
+    expect(enfant.reglages.traitre, isFalse, reason: 'en kids, le traître reste éteint');
+  });
+
   testWidgets('un épisode, puis « Faire la suite » : il devient le premier d\'une saison', (tester) async {
     SharedPreferences.setMockInitialValues({});
     _telephone(tester, hauteur: 8000);
     final ctx = await _contexte(tester);
-    await tester.pumpWidget(_appli(SeriesScreen(contexte: ctx)));
+    await tester.pumpWidget(_appli(SeriesScreen(contexte: ctx, public: PublicSerie.adulte)));
     await tester.pumpAndSettle();
     expect(find.text(t.t('serie.vide')), findsOneWidget);
 
@@ -403,7 +422,10 @@ void main() {
       _telephone(tester);
       final ctx = await _contexte(tester);
 
-      await tester.pumpWidget(_appli(CreerSerieScreen(contexte: ctx, saison: false), sombre: sombre, echelle: 1.6));
+      await tester.pumpWidget(_appli(
+          CreerSerieScreen(contexte: ctx, saison: false, public: PublicSerie.kids),
+          sombre: sombre,
+          echelle: 1.6));
       await tester.pumpAndSettle();
       await _parcourir(tester, 'créer');
 
