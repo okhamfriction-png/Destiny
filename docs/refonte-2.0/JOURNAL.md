@@ -883,3 +883,31 @@ Le parcours complet du spectacle passe maintenant par le fil des étapes.
 - la fiche en fenêtre, avec l'écran et le chrono qui restent dessous ;
 - le changement d'archétype à l'échauffement ;
 - le message quand la distribution n'est plus équilibrée.
+
+## 2.0.3 : une musique par acte, une régie plus légère
+
+### La demande
+
+Sur deux captures (le dessous de la frise, puis la fenêtre de la régie son) : « Retire cette ligne, et un bouton pour retirer la régie. Fais que je puisse paramétrer chaque son à chaque acte, donc après chaque Destiny, dans les paramètres. »
+
+### Ce qui a été fait
+
+- **Une musique par acte** (`ReglagesDestiny.musiquesActes`, `musiqueActe`, `changerMusiqueActe`) :
+  - acte 1 au début du chrono, puis l'acte n + 1 15 secondes après le n-ième Destiny, à la régie comme dans la Série ;
+  - « Aucune » laisse jouer ce qui joue ;
+  - les anciens réglages sont repris : le début devient l'acte 1, l'ambiance d'après le 2ᵉ Destiny l'acte 3, la fin l'acte 4 ; rien après le 1er Destiny, comme avant ;
+  - les anciennes clés restent écrites, pour une version plus ancienne ;
+  - dans les Réglages (Destiny, « Les musiques »), quatre lignes, une par acte.
+- **La tablette son** : une tuile par acte (à défaut de réglage : le début, l'ambiance du lieu, puis la fin), l'ambiance du lieu, le son de Destiny, Stop et le mixeur.
+- **Le bouton « Son » se retire** : un interrupteur dans les Réglages (`regieSon`). Éteint, le bouton disparaît du panneau du chrono, et DESTINY prend toute la largeur.
+- **Le panneau du chrono** perd le compte à rebours, « dernier acte », « −1 min / +1 min » et la feuille « Régler les Destiny ». On fait glisser les Destiny sur la frise. Le code et les textes qui ne servaient plus sont retirés.
+- **Le retard** : quand le chrono a passé l'heure du prochain Destiny sans qu'il soit lancé (déclenchement à la main), son heure passe en rouge sur la frise, et un lecteur d'écran l'annonce.
+
+### Tests
+
+**314 tests passent.** Les quatre tests des boutons « ±1 min » et de la feuille de réglage sont retirés : le glisser applique les mêmes règles, et ses tests les couvrent. Les nouveaux portent sur :
+- la musique de chaque acte après chaque Destiny, avec « Aucune » ;
+- la reprise des anciennes musiques ;
+- les quatre lignes et l'interrupteur dans les Réglages ;
+- la régie sans bouton « Son » ;
+- l'heure en rouge quand le prochain Destiny est en retard.

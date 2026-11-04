@@ -2,6 +2,20 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.0.3 — Une musique par acte, une régie plus légère (novembre 2026)
+
+Après un essai de la 2.0.2.
+
+- **Chaque acte a sa musique**, dans les Réglages (Destiny, « Les musiques ») :
+  - acte 1 au début du chrono ;
+  - acte 2 après le 1er Destiny ;
+  - acte 3 après le 2ᵉ ;
+  - acte 4 après le 3ᵉ.
+  Chaque musique part toute seule, 15 secondes après le Destiny. « Aucune » laisse jouer ce qui joue. Vos anciens réglages sont repris : le début devient l'acte 1, l'ambiance d'après le 2ᵉ Destiny l'acte 3, la fin l'acte 4.
+- **La tablette son** a une tuile par acte, plus l'ambiance du lieu, le son de Destiny, Stop et le mixeur.
+- **Le bouton « Son » se retire** dans les Réglages, pour les troupes qui laissent les musiques partir toutes seules.
+- **Un panneau du chrono plus léger** : plus de « Destiny 1 dans… », ni de « −1 min / +1 min » ni de réglage à part. On fait glisser les Destiny sur la frise. Quand le prochain Destiny est en retard (déclenchement à la main), son heure passe en rouge.
+
 ## 2.0.2 — La régie dès l'échauffement, et plus d'objets (novembre 2026)
 
 Après un essai de la 2.0.1 sur téléphone : la régie arrivait trois écrans plus loin, et rien ne le disait. Et les objets du lieu ne servaient pas.

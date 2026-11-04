@@ -108,7 +108,9 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
 
   void _lancerMusique() {
     _demarre = true;
-    if (!widget.contexte.audio.muted) widget.contexte.musique.jouerChoix(r.musiqueDebut, lieu: e.lieuNom);
+    if (!widget.contexte.audio.muted && r.musiqueActe(1) != ChoixMusique.aucune) {
+      widget.contexte.musique.jouerChoix(r.musiqueActe(1), lieu: e.lieuNom);
+    }
   }
 
   Future<void> _sauver() => widget.contexte.store.enregistrer(s);
@@ -170,15 +172,12 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
     if (mounted) setState(() {});
   }
 
-  /// L'ambiance du 2ᵉ Destiny et la musique de fin du 3ᵉ, 15 s après.
+  /// La musique de l'acte qui commence, 15 s après le Destiny [numero] (celle
+  /// des réglages : l'acte 2 après le 1er Destiny, et ainsi de suite).
   void _programmerMusiques(int numero) {
     if (widget.contexte.audio.muted) return;
-    final choix = switch (numero) {
-      2 => r.ambianceActe2,
-      3 => r.musiqueFin,
-      _ => null,
-    };
-    if (choix == null) return;
+    final choix = r.musiqueActe(numero + 1);
+    if (choix == ChoixMusique.aucune) return;
     _musiques.add(Timer(const Duration(seconds: 15), () {
       if (mounted) widget.contexte.musique.jouerChoix(choix, lieu: e.lieuNom);
     }));

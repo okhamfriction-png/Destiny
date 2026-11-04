@@ -626,6 +626,11 @@ class _FriseDestinyState extends State<FriseDestiny> {
     _saisi = null;
   }
 
+  /// Le prochain Destiny, quand le chrono a passé son heure sans qu'on l'ait
+  /// lancé (déclenchement à la main) : son heure passe en rouge.
+  bool _enRetard(RepereDestiny r) =>
+      widget.curseur && r.etat == EtatDestiny.prochain && r.secondes <= widget.ecouleSecondes;
+
   /// Un repère : son nom pour les lecteurs d'écran et, s'il peut bouger,
   /// « plus tard / plus tôt » au clavier ou au lecteur d'écran, et la main
   /// qui glisse à la souris.
@@ -636,14 +641,16 @@ class _FriseDestinyState extends State<FriseDestiny> {
     final minute = (r.secondes / 60).round();
     final repere = Semantics(
       excludeSemantics: true,
-      label: t.t(
-        switch (r.etat) {
-          EtatDestiny.passe => 'regie.marque_passe',
-          EtatDestiny.prochain => 'regie.marque_prochain',
-          EtatDestiny.avenir => 'regie.marque_avenir',
-        },
-        {'n': '${r.numero}', 't': horloge(r.secondes)},
-      ),
+      label: _enRetard(r)
+          ? t.t('regie.en_retard', {'n': '${r.numero}'})
+          : t.t(
+              switch (r.etat) {
+                EtatDestiny.passe => 'regie.marque_passe',
+                EtatDestiny.prochain => 'regie.marque_prochain',
+                EtatDestiny.avenir => 'regie.marque_avenir',
+              },
+              {'n': '${r.numero}', 't': horloge(r.secondes)},
+            ),
       hint: mobile ? t.t('regie.glisser') : null,
       onIncrease: mobile ? () => widget.deplacer!(index, minute + 1) : null,
       onDecrease: mobile ? () => widget.deplacer!(index, minute - 1) : null,
@@ -714,7 +721,9 @@ class _FriseDestinyState extends State<FriseDestiny> {
                       fontSize: 12.5,
                       height: 1.2,
                       fontFeatures: const [FontFeature.tabularFigures()],
-                      color: r.etat == EtatDestiny.avenir ? c.texteSecondaire : c.bleuTexte,
+                      color: _enRetard(r)
+                          ? Theme.of(context).colorScheme.error
+                          : (r.etat == EtatDestiny.avenir ? c.texteSecondaire : c.bleuTexte),
                     ),
                   ),
                 ),

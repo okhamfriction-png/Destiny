@@ -113,10 +113,29 @@ void main() {
       expect(r.sonDestiny, 'thunder'); // repris des réglages 1.x
       expect(r.chronos.map((c) => c.dureeMinutes), [20, 30, 45]);
       await r.changer(declenchement: Declenchement.manuel, musiqueFin: 'aucune');
+      await r.changerMusiqueActe(2, 'music/atm_cave.m4a');
       final relu = ReglagesDestiny();
       await relu.charger();
       expect(relu.declenchement, Declenchement.manuel);
       expect(relu.musiqueFin, 'aucune');
+      expect(relu.musiquesActes, [ChoixMusique.commencement, 'music/atm_cave.m4a', ChoixMusique.lieu, 'aucune']);
+      expect(relu.regieSon, isTrue);
+    });
+
+    test('les musiques d\'avant la 2.0.3 deviennent celles des actes 1, 3 et 4', () async {
+      SharedPreferences.setMockInitialValues({
+        'reglages_destiny_v1': jsonEncode({
+          'musique_debut': 'music/a.m4a',
+          'ambiance_acte2': 'music/b.m4a',
+          'musique_fin': 'music/c.m4a',
+        }),
+      });
+      final r = ReglagesDestiny();
+      await r.charger();
+      expect(r.musiquesActes, ['music/a.m4a', ChoixMusique.aucune, 'music/b.m4a', 'music/c.m4a']);
+      // Une version plus ancienne relit toujours ses clés.
+      expect(r.versJson()['musique_fin'], 'music/c.m4a');
+      expect(r.versJson()['ambiance_acte2'], 'music/b.m4a');
     });
   });
 
@@ -205,7 +224,7 @@ void main() {
       expect(find.byKey(ValueKey('repere_destiny_$n')), findsOneWidget);
     }
     expect(find.byKey(const ValueKey('bouton_regie_son')), findsOneWidget);
-    expect(find.text(t.t('regie.son_debut')), findsNothing, reason: 'la régie son est rangée dans sa fenêtre');
+    expect(find.text(t.t('regie.son_acte', {'n': '1'})), findsNothing, reason: 'la régie son est rangée dans sa fenêtre');
     await tester.tap(find.text(t.t('regie.destiny_n', {'n': '1'}).toUpperCase()));
     await tester.pump();
     await tester.pump();

@@ -97,8 +97,8 @@ class _RegieScreenState extends State<RegieScreen> {
     }
     if (!_demarre) {
       _demarre = true;
-      if (!widget.contexte.audio.muted) {
-        widget.contexte.musique.jouerChoix(r.musiqueDebut, lieu: s.lieuNom);
+      if (!widget.contexte.audio.muted && r.musiqueActe(1) != ChoixMusique.aucune) {
+        widget.contexte.musique.jouerChoix(r.musiqueActe(1), lieu: s.lieuNom);
       }
     }
     _minuteur = Timer.periodic(const Duration(seconds: 1), (_) => _seconde());
@@ -153,114 +153,24 @@ class _RegieScreenState extends State<RegieScreen> {
     if (mounted) setState(() {});
   }
 
-  /// L'ambiance du 2ᵉ Destiny et la musique de fin du 3ᵉ, 15 s après.
+  /// La musique de l'acte qui commence, 15 s après le Destiny [numero] (celle
+  /// des réglages : l'acte 2 après le 1er Destiny, et ainsi de suite).
   void _programmerMusiques(int numero) {
     if (widget.contexte.audio.muted) return;
-    final choix = switch (numero) {
-      2 => r.ambianceActe2,
-      3 => r.musiqueFin,
-      _ => null,
-    };
-    if (choix == null) return;
+    final choix = r.musiqueActe(numero + 1);
+    if (choix == ChoixMusique.aucune) return;
     _musiques.add(Timer(const Duration(seconds: 15), () {
       if (mounted) widget.contexte.musique.jouerChoix(choix, lieu: s.lieuNom);
     }));
   }
 
-  /// Avance ou recule le Destiny [index] de [delta] minutes. Rend le message
-  /// du refus si c'est impossible.
-  String? _deplacer(int index, int delta) => _placer(index, s.destinyMinutes[index] + delta);
-
-  /// Place le Destiny [index] à [minute] (les boutons, ou le doigt sur la
-  /// frise). Rend le message du refus si c'est impossible.
-  String? _placer(int index, int minute) {
-    final refus = refusDestiny(s, index: index, minute: minute, ecouleSecondes: _ecoule);
-    if (refus != null) return _messageRefus(refus, index);
+  /// Place le Destiny [index] à [minute], au doigt sur la frise. Rend faux
+  /// si les règles le refusent.
+  bool _placer(int index, int minute) {
+    if (refusDestiny(s, index: index, minute: minute, ecouleSecondes: _ecoule) != null) return false;
     setState(() => s.destinyMinutes = [...s.destinyMinutes]..[index] = minute);
     widget.contexte.store.enregistrer(s);
-    return null;
-  }
-
-  String _messageRefus(RefusDestiny refus, int index) {
-    final t = context.textes;
-    final n = '${index + 1}';
-    return switch (refus) {
-      RefusDestiny.dejaLance => t.t('regie.lance_a', {'t': horloge(s.destinys[index].secondes)}),
-      RefusDestiny.avantChrono => t.t('regie.refus_chrono', {'t': horloge(_ecoule)}),
-      RefusDestiny.avantPrecedent => t.t('regie.refus_precedent', {'n': n, 'm': '$index'}),
-      RefusDestiny.apresSuivant => t.t('regie.refus_suivant', {'n': n, 'm': '${index + 2}'}),
-      RefusDestiny.apresFin => t.t('regie.refus_fin', {'n': n}),
-    };
-  }
-
-  /// « −1 min » / « +1 min » sur le prochain Destiny.
-  void _decalerProchain(int delta) {
-    final i = _prochain;
-    if (i == null) return;
-    final refus = _deplacer(i, delta);
-    final messager = ScaffoldMessenger.of(context)..hideCurrentSnackBar();
-    if (refus != null) {
-      messager.showSnackBar(SnackBar(content: Text(refus), duration: const Duration(seconds: 3)));
-    }
-  }
-
-  /// La feuille « Régler les Destiny » : un réglage pour chaque Destiny qui
-  /// reste, avec les mêmes règles.
-  Future<void> _regler() async {
-    String? refus;
-    await showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (ctx) => StatefulBuilder(builder: (ctx, majFeuille) {
-        final t = ctx.textes;
-        final c = ctx.destiny;
-        String rg(String k, [Map<String, String> v = const {}]) => t.t('regie.$k', v);
-        void decaler(int i, int delta) => majFeuille(() => refus = _deplacer(i, delta));
-        return SafeArea(
-          child: ListView(
-            shrinkWrap: true,
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-            children: [
-              Text(rg('regler'), style: Theme.of(ctx).textTheme.titleLarge, textAlign: TextAlign.center),
-              const SizedBox(height: 10),
-              Paragraphe(rg('regler_aide')),
-              Paragraphe(r.declenchement == Declenchement.manuel ? rg('manuel') : rg('auto'), italique: true),
-              const SizedBox(height: 4),
-              for (var i = 0; i < s.destinyMinutes.length; i++)
-                _LigneReglage(
-                  numero: i + 1,
-                  minute: s.destinyMinutes[i],
-                  lanceA: i < s.destinys.length ? s.destinys[i].secondes : null,
-                  prochain: i == s.destinys.length,
-                  onMoins: () => decaler(i, -1),
-                  onPlus: () => decaler(i, 1),
-                ),
-              if (refus != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text(
-                    refus!,
-                    key: const ValueKey('refus_reglage'),
-                    style: TextStyle(
-                      fontFamily: kPoliceTexte,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.5,
-                      color: Theme.of(ctx).colorScheme.error,
-                    ),
-                  ),
-                ),
-              const SizedBox(height: 12),
-              FilledButton(
-                onPressed: () => Navigator.pop(ctx),
-                style: FilledButton.styleFrom(backgroundColor: c.or, foregroundColor: c.surOr),
-                child: Text(t.t('troupe.retour')),
-              ),
-            ],
-          ),
-        );
-      }),
-    );
+    return true;
   }
 
   Future<void> _noter() async {
@@ -302,7 +212,6 @@ class _RegieScreenState extends State<RegieScreen> {
     final palier = g.palier(_palier);
     final reste = _total - _ecoule;
     final prochain = _prochain;
-    final enRetard = prochain != null && s.destinyMinutes[prochain] * 60 <= _ecoule;
     final couleurReste = reste <= 0 ? Theme.of(context).colorScheme.error : c.titre;
 
     // Le panneau reste compact même avec un texte très agrandi : ses chiffres
@@ -371,50 +280,8 @@ class _RegieScreenState extends State<RegieScreen> {
           totalSecondes: _total,
           ecouleSecondes: _ecoule,
           reperes: reperesDestiny(s),
-          deplacer: (i, minute) => _placer(i, minute) == null,
+          deplacer: _placer,
         ),
-        const SizedBox(height: 8),
-        if (prochain != null) ...[
-          Text(
-            enRetard
-                ? rg('en_retard', {'n': '${prochain + 1}'})
-                : rg('dans', {'n': '${prochain + 1}', 't': horloge(s.destinyMinutes[prochain] * 60 - _ecoule)}),
-            key: const ValueKey('compte_a_rebours'),
-            style: TextStyle(
-              fontFamily: kPoliceTexte,
-              fontWeight: FontWeight.w700,
-              fontSize: 15.5,
-              height: 1.3,
-              color: c.bleuTexte,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Row(children: [
-            Expanded(
-              child: _BoutonDecalage(
-                libelle: rg('moins_une'),
-                aide: rg('plus_tot', {'n': '${prochain + 1}'}),
-                onPressed: () => _decalerProchain(-1),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: _BoutonDecalage(
-                libelle: rg('plus_une'),
-                aide: rg('plus_tard', {'n': '${prochain + 1}'}),
-                onPressed: () => _decalerProchain(1),
-              ),
-            ),
-            const SizedBox(width: 4),
-            IconButton(
-              tooltip: rg('regler'),
-              icon: Icon(Icons.tune_rounded, color: c.titre),
-              onPressed: _regler,
-            ),
-          ]),
-        ] else
-          Text(rg('dernier_acte'),
-              style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w600, color: c.texteSecondaire)),
         if (reste <= 0)
           Padding(
             padding: const EdgeInsets.only(top: 8),
@@ -444,8 +311,11 @@ class _RegieScreenState extends State<RegieScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 10),
-          BoutonRegieSon(contexte: widget.contexte, session: s, compact: true),
+          // La régie son, sauf si on l'a retirée dans les réglages.
+          if (r.regieSon) ...[
+            const SizedBox(width: 10),
+            BoutonRegieSon(contexte: widget.contexte, session: s, compact: true),
+          ],
         ]),
       ]),
     );
@@ -528,105 +398,6 @@ class _RegieScreenState extends State<RegieScreen> {
   }
 }
 
-/// « −1 min » ou « +1 min » : déplace le prochain Destiny.
-class _BoutonDecalage extends StatelessWidget {
-  const _BoutonDecalage({required this.libelle, required this.aide, required this.onPressed});
-
-  final String libelle;
-  final String aide;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.destiny;
-    return Tooltip(
-      message: aide,
-      child: OutlinedButton(
-        onPressed: onPressed,
-        style: OutlinedButton.styleFrom(
-          minimumSize: const Size(48, 42),
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          side: BorderSide(color: c.bleuDestiny.withValues(alpha: 0.7), width: 1.4),
-          foregroundColor: c.bleuTexte,
-          textStyle: const TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 15),
-        ),
-        child: Text(libelle, semanticsLabel: aide),
-      ),
-    );
-  }
-}
-
-/// Une ligne de la feuille « Régler les Destiny ».
-class _LigneReglage extends StatelessWidget {
-  const _LigneReglage({
-    required this.numero,
-    required this.minute,
-    required this.lanceA,
-    required this.prochain,
-    required this.onMoins,
-    required this.onPlus,
-  });
-
-  final int numero;
-  final int minute;
-
-  /// Déjà lancé, à cette seconde (sinon null).
-  final int? lanceA;
-  final bool prochain;
-  final VoidCallback onMoins;
-  final VoidCallback onPlus;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.textes;
-    final c = context.destiny;
-    String rg(String k, [Map<String, String> v = const {}]) => t.t('regie.$k', v);
-    final lance = lanceA != null;
-    return Container(
-      key: ValueKey('reglage_destiny_$numero'),
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.fromLTRB(14, 8, 6, 8),
-      decoration: decorCarte(c, bordure: prochain ? c.bleuDestiny : null),
-      child: Row(children: [
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(rg('destiny_n', {'n': '$numero'}),
-                style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w800, fontSize: 16, color: c.texte)),
-            Text(
-              lance ? rg('lance_a', {'t': horloge(lanceA!)}) : rg('prevu_a', {'t': horloge(minute * 60)}),
-              style: TextStyle(
-                fontFamily: kPoliceTexte,
-                fontSize: 14,
-                fontWeight: prochain ? FontWeight.w700 : FontWeight.w400,
-                color: prochain ? c.bleuTexte : c.texteSecondaire,
-              ),
-            ),
-          ]),
-        ),
-        if (lance)
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: Icon(Icons.check_circle_rounded, color: c.bleuTexte),
-          )
-        else ...[
-          IconButton(
-            tooltip: rg('plus_tot', {'n': '$numero'}),
-            icon: const Icon(Icons.remove_circle_outline_rounded),
-            color: c.titre,
-            onPressed: onMoins,
-          ),
-          IconButton(
-            tooltip: rg('plus_tard', {'n': '$numero'}),
-            icon: const Icon(Icons.add_circle_outline_rounded),
-            color: c.titre,
-            onPressed: onPlus,
-          ),
-        ],
-      ]),
-    );
-  }
-}
-
 /// La régie son, en tablette : de grandes tuiles pour les musiques du
 /// spectacle, le son de Destiny et Stop, plus tout le mixeur. Elle respecte
 /// le son coupé. Elle s'ouvre dans une fenêtre ([ouvrirRegieSon]).
@@ -681,11 +452,14 @@ class _TabletteSonState extends State<TabletteSon> {
     final c = context.destiny;
     String rg(String k, [Map<String, String> v = const {}]) => t.t('regie.$k', v);
     final muet = _audio.muted;
+    // La musique de chaque acte (celle des réglages, ou à défaut le début,
+    // l'ambiance du lieu, puis la fin), et l'ambiance du lieu.
+    const icones = [Icons.looks_one_rounded, Icons.looks_two_rounded, Icons.looks_3_rounded, Icons.looks_4_rounded];
+    const defauts = [ChoixMusique.commencement, ChoixMusique.lieu, ChoixMusique.lieu, ChoixMusique.conclusion];
     final musiques = [
-      (Icons.music_note_rounded, rg('son_debut'), _ou(_r.musiqueDebut, ChoixMusique.commencement)),
+      for (var acte = 1; acte <= 4; acte++)
+        (icones[acte - 1], rg('son_acte', {'n': '$acte'}), _ou(_r.musiqueActe(acte), defauts[acte - 1])),
       (Icons.place_rounded, rg('son_lieu'), ChoixMusique.lieu),
-      (Icons.waves_rounded, rg('son_acte2'), _ou(_r.ambianceActe2, ChoixMusique.lieu)),
-      (Icons.nightlight_round, rg('son_fin'), _ou(_r.musiqueFin, ChoixMusique.conclusion)),
     ];
 
     return ListenableBuilder(

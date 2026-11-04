@@ -78,22 +78,16 @@ class ReglagesDestinyScreen extends StatelessWidget {
             ]),
             SectionDestiny(titre: k('musiques'), enfants: [
               Text(k('musiques_aide'), style: Theme.of(context).textTheme.bodySmall),
-              _ChoixMusiqueLigne(
-                  libelle: k('musique_debut'),
-                  valeur: r.musiqueDebut,
+              // La musique de chaque acte : au début, puis après chaque Destiny.
+              for (final (i, libelle) in t.liste('reglages.musiques_actes').indexed)
+                _ChoixMusiqueLigne(
+                  key: ValueKey('musique_acte_${i + 1}'),
+                  libelle: libelle,
+                  valeur: r.musiqueActe(i + 1),
                   musique: musique,
-                  onChoix: (v) => r.changer(musiqueDebut: v)),
+                  onChoix: (v) => r.changerMusiqueActe(i + 1, v),
+                ),
               _ChoixSon(libelle: k('son_destiny'), valeur: r.sonDestiny, audio: audio, onChoix: (v) => r.changer(sonDestiny: v)),
-              _ChoixMusiqueLigne(
-                  libelle: k('ambiance_acte2'),
-                  valeur: r.ambianceActe2,
-                  musique: musique,
-                  onChoix: (v) => r.changer(ambianceActe2: v)),
-              _ChoixMusiqueLigne(
-                  libelle: k('musique_fin'),
-                  valeur: r.musiqueFin,
-                  musique: musique,
-                  onChoix: (v) => r.changer(musiqueFin: v)),
               const SizedBox(height: 8),
               Text(k('musique_destiny'), style: Theme.of(context).textTheme.titleSmall),
               Wrap(spacing: 8, runSpacing: 6, children: [
@@ -116,6 +110,7 @@ class ReglagesDestinyScreen extends StatelessWidget {
               ]),
               const SizedBox(height: 8),
               _MusiquesImportees(musique: musique, reglages: r),
+              _Bascule(k('regie_son'), r.regieSon, (v) => r.changer(regieSon: v), aide: k('regie_son_aide')),
             ]),
             SectionDestiny(titre: k('distribution'), enfants: [
               Text(k('joueurs'), style: Theme.of(context).textTheme.titleSmall),
@@ -297,7 +292,7 @@ class _EditeurChrono extends StatelessWidget {
 /// Le choix d'une musique pour un moment : aucune, l'ambiance du lieu, ou un
 /// morceau de l'appli.
 class _ChoixMusiqueLigne extends StatelessWidget {
-  const _ChoixMusiqueLigne({required this.libelle, required this.valeur, required this.musique, required this.onChoix});
+  const _ChoixMusiqueLigne({super.key, required this.libelle, required this.valeur, required this.musique, required this.onChoix});
 
   final String libelle;
   final String valeur;

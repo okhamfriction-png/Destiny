@@ -63,12 +63,20 @@ class ReglagesDestiny extends ChangeNotifier {
   int _chronoChoisi = 1;
   Declenchement _declenchement = Declenchement.lesDeux;
 
-  // Musiques des quatre moments, et la musique importée à chaque Destiny.
-  String _musiqueDebut = ChoixMusique.commencement;
+  // La musique de chaque acte (la 1ʳᵉ au début, puis une après chaque
+  // Destiny), le son de Destiny et la musique importée à chaque Destiny.
+  static const List<String> musiquesActesParDefaut = [
+    ChoixMusique.commencement,
+    ChoixMusique.aucune,
+    ChoixMusique.lieu,
+    ChoixMusique.conclusion,
+  ];
+  List<String> _musiquesActes = [...musiquesActesParDefaut];
   String _sonDestiny = 'storm';
-  String _ambianceActe2 = ChoixMusique.lieu;
-  String _musiqueFin = ChoixMusique.conclusion;
   String _musiqueDestiny = ChoixMusique.aucune;
+
+  /// Le bouton « Son » de la régie (la tablette son en fenêtre).
+  bool _regieSon = true;
 
   // Rituel.
   bool _lumiereBleue = true;
@@ -103,11 +111,18 @@ class ReglagesDestiny extends ChangeNotifier {
   int get chronoChoisi => _chronoChoisi.clamp(0, _chronos.length - 1);
   ChronoSpectacle get chrono => _chronos[chronoChoisi];
   Declenchement get declenchement => _declenchement;
-  String get musiqueDebut => _musiqueDebut;
+  /// La musique de l'acte [acte] (1 à 4) : l'acte 1 au début du spectacle,
+  /// l'acte n + 1 après le n-ième Destiny.
+  String musiqueActe(int acte) => _musiquesActes[(acte - 1).clamp(0, 3)];
+  List<String> get musiquesActes => List.unmodifiable(_musiquesActes);
+
+  /// Les noms d'avant la 2.0.3 : l'acte 1, l'acte 3 et l'acte 4.
+  String get musiqueDebut => musiqueActe(1);
+  String get ambianceActe2 => musiqueActe(3);
+  String get musiqueFin => musiqueActe(4);
   String get sonDestiny => _sonDestiny;
-  String get ambianceActe2 => _ambianceActe2;
-  String get musiqueFin => _musiqueFin;
   String get musiqueDestiny => _musiqueDestiny;
+  bool get regieSon => _regieSon;
   bool get lumiereBleue => _lumiereBleue;
   int get dureeFigeSecondes => _dureeFigeSecondes;
 
@@ -157,11 +172,22 @@ class ReglagesDestiny extends ChangeNotifier {
     if (chronos.length == kChronosParDefaut.length) _chronos = chronos;
     _chronoChoisi = (j['chrono_choisi'] as num?)?.toInt() ?? _chronoChoisi;
     _declenchement = Declenchement.depuisTexte(j['declenchement'] as String?);
-    _musiqueDebut = j['musique_debut'] as String? ?? _musiqueDebut;
+    final actes = [for (final x in (j['musiques_actes'] as List? ?? const [])) if (x is String) x];
+    if (actes.length == 4) {
+      _musiquesActes = actes;
+    } else {
+      // Avant la 2.0.3 : le début, l'ambiance après le 2ᵉ Destiny et la fin ;
+      // rien après le 1er.
+      _musiquesActes = [
+        j['musique_debut'] as String? ?? _musiquesActes[0],
+        ChoixMusique.aucune,
+        j['ambiance_acte2'] as String? ?? _musiquesActes[2],
+        j['musique_fin'] as String? ?? _musiquesActes[3],
+      ];
+    }
     _sonDestiny = j['son_destiny'] as String? ?? _sonDestiny;
-    _ambianceActe2 = j['ambiance_acte2'] as String? ?? _ambianceActe2;
-    _musiqueFin = j['musique_fin'] as String? ?? _musiqueFin;
     _musiqueDestiny = j['musique_destiny'] as String? ?? _musiqueDestiny;
+    _regieSon = j['regie_son'] as bool? ?? _regieSon;
     _lumiereBleue = j['lumiere_bleue'] as bool? ?? _lumiereBleue;
     _dureeFigeSecondes = (j['duree_fige'] as num?)?.toInt() ?? _dureeFigeSecondes;
     _texteEllipse = j['texte_ellipse'] as String? ?? _texteEllipse;
@@ -187,11 +213,14 @@ class ReglagesDestiny extends ChangeNotifier {
         'chronos': [for (final c in _chronos) c.versJson()],
         'chrono_choisi': _chronoChoisi,
         'declenchement': _declenchement.name,
-        'musique_debut': _musiqueDebut,
+        'musiques_actes': _musiquesActes,
+        // Les anciennes clés, gardées pour une version d'avant la 2.0.3.
+        'musique_debut': musiqueActe(1),
+        'ambiance_acte2': musiqueActe(3),
+        'musique_fin': musiqueActe(4),
         'son_destiny': _sonDestiny,
-        'ambiance_acte2': _ambianceActe2,
-        'musique_fin': _musiqueFin,
         'musique_destiny': _musiqueDestiny,
+        'regie_son': _regieSon,
         'lumiere_bleue': _lumiereBleue,
         'duree_fige': _dureeFigeSecondes,
         'texte_ellipse': _texteEllipse,
@@ -239,6 +268,13 @@ class ReglagesDestiny extends ChangeNotifier {
     await _sauver();
   }
 
+  /// Change la musique de l'acte [acte] (1 à 4).
+  Future<void> changerMusiqueActe(int acte, String choix) async {
+    if (acte < 1 || acte > 4) return;
+    _musiquesActes = [..._musiquesActes]..[acte - 1] = choix;
+    await _sauver();
+  }
+
   Future<void> changer({
     Declenchement? declenchement,
     String? musiqueDebut,
@@ -246,6 +282,7 @@ class ReglagesDestiny extends ChangeNotifier {
     String? ambianceActe2,
     String? musiqueFin,
     String? musiqueDestiny,
+    bool? regieSon,
     bool? lumiereBleue,
     int? dureeFigeSecondes,
     String? texteEllipse,
@@ -267,11 +304,16 @@ class ReglagesDestiny extends ChangeNotifier {
     bool? decouverteVue,
   }) async {
     _declenchement = declenchement ?? _declenchement;
-    _musiqueDebut = musiqueDebut ?? _musiqueDebut;
+    // Les anciens noms : l'acte 1, l'acte 3 et l'acte 4.
+    _musiquesActes = [
+      musiqueDebut ?? _musiquesActes[0],
+      _musiquesActes[1],
+      ambianceActe2 ?? _musiquesActes[2],
+      musiqueFin ?? _musiquesActes[3],
+    ];
     _sonDestiny = sonDestiny ?? _sonDestiny;
-    _ambianceActe2 = ambianceActe2 ?? _ambianceActe2;
-    _musiqueFin = musiqueFin ?? _musiqueFin;
     _musiqueDestiny = musiqueDestiny ?? _musiqueDestiny;
+    _regieSon = regieSon ?? _regieSon;
     _lumiereBleue = lumiereBleue ?? _lumiereBleue;
     _dureeFigeSecondes = (dureeFigeSecondes ?? _dureeFigeSecondes).clamp(1, 15);
     _texteEllipse = texteEllipse ?? _texteEllipse;

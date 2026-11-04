@@ -222,12 +222,15 @@ void main() {
     });
   });
 
-  testWidgets('la frise montre les trois Destiny et le compte à rebours du prochain', (tester) async {
+  testWidgets('la frise montre les trois Destiny et leur heure ; plus de compte à rebours ni de « ±1 min »', (tester) async {
     await _regie(tester);
     for (final n in [1, 2, 3]) {
       expect(find.byKey(ValueKey('repere_destiny_$n')), findsOneWidget);
     }
-    expect(find.text(_rg('dans', {'n': '1', 't': '10:00'})), findsOneWidget);
+    expect(find.byKey(const ValueKey('compte_a_rebours')), findsNothing);
+    expect(find.text('−1 min'), findsNothing);
+    expect(find.text('+1 min'), findsNothing);
+    expect(find.byIcon(Icons.tune_rounded), findsNothing);
     expect(find.text('30:00'), findsOneWidget, reason: 'le temps qui reste, en grand');
     expect(find.text(_rg('destiny_n', {'n': '1'}).toUpperCase()), findsOneWidget);
     // L'heure de chaque Destiny, sous son repère.
@@ -258,7 +261,25 @@ void main() {
     await tester.drag(find.byKey(const ValueKey('repere_destiny_2')), const Offset(400, 0));
     await tester.pumpAndSettle();
     expect(s.destinyMinutes, [10, 26, 27]);
-    expect(find.text(_rg('dans', {'n': '2', 't': horloge(26 * 60 - (9 * 60 + 41))})), findsOneWidget);
+    expect(tester.widget<Text>(find.byKey(const ValueKey('heure_destiny_2'))).data, '26:00');
+    // Jamais avant le chrono (il en est à 09:41).
+    await tester.drag(find.byKey(const ValueKey('repere_destiny_2')), const Offset(-400, 0));
+    await tester.pumpAndSettle();
+    expect(s.destinyMinutes[1], 10);
+  });
+
+  testWidgets('déclenchement à la main : le prochain Destiny en retard a son heure en rouge', (tester) async {
+    await _regie(tester, destiny: [1, 18, 27], declenchement: Declenchement.manuel);
+    Color couleur() => tester.widget<Text>(find.byKey(const ValueKey('heure_destiny_1'))).style!.color!;
+    final rouge = Theme.of(tester.element(find.byType(RegieScreen))).colorScheme.error;
+    expect(couleur(), isNot(rouge));
+    await tester.tap(find.byTooltip(_rg('demarrer')));
+    for (var i = 0; i < 61; i++) {
+      await tester.pump(const Duration(seconds: 1));
+    }
+    expect(couleur(), rouge);
+    await tester.tap(find.byTooltip(_rg('pause')));
+    await tester.pump();
   });
 
   test('les heures des Destiny ne se chevauchent jamais, et restent dans la frise', () {
@@ -277,62 +298,6 @@ void main() {
     }
   });
 
-  testWidgets('« +1 min » déplace le prochain Destiny, et le garde', (tester) async {
-    final b = await _regie(tester);
-    await tester.tap(find.text(_rg('plus_une')));
-    await tester.pump();
-    expect(b.session.destinyMinutes, [11, 18, 27]);
-    expect(find.text(_rg('dans', {'n': '1', 't': '11:00'})), findsOneWidget);
-    await tester.tap(find.text(_rg('moins_une')));
-    await tester.tap(find.text(_rg('moins_une')));
-    await tester.pump();
-    expect(b.session.destinyMinutes, [9, 18, 27]);
-    final relu = TroupeStore();
-    await tester.runAsync(relu.charger);
-    expect(relu.sessions.single.destinyMinutes, [9, 18, 27]);
-  });
-
-  testWidgets('« +1 min » est refusé quand il dépasserait le Destiny suivant', (tester) async {
-    final b = await _regie(tester, destiny: [17, 18, 27]);
-    await tester.tap(find.text(_rg('plus_une')));
-    await tester.pump();
-    expect(b.session.destinyMinutes, [17, 18, 27]);
-    expect(find.text(_rg('refus_suivant', {'n': '1', 'm': '2'})), findsOneWidget);
-  });
-
-  testWidgets('« −1 min » est refusé quand le chrono a déjà passé la minute', (tester) async {
-    final b = await _regie(tester, destiny: [1, 18, 27]);
-    await tester.tap(find.text(_rg('moins_une')));
-    await tester.pump();
-    expect(b.session.destinyMinutes.first, 1);
-    expect(find.text(_rg('refus_chrono', {'t': '00:00'})), findsOneWidget);
-  });
-
-  testWidgets('« Régler les Destiny » : chaque Destiny restant, avec les mêmes règles', (tester) async {
-    final b = await _regie(tester, destiny: [10, 11, 28]);
-    await tester.tap(find.byTooltip(_rg('regler')));
-    await tester.pumpAndSettle();
-    for (final n in [1, 2, 3]) {
-      expect(find.byKey(ValueKey('reglage_destiny_$n')), findsOneWidget);
-    }
-    Finder dansLaFeuille(String aide) => find.descendant(of: find.byType(BottomSheet), matching: find.byTooltip(aide));
-    await tester.tap(dansLaFeuille(_rg('plus_tard', {'n': '3'})));
-    await tester.pump();
-    expect(b.session.destinyMinutes, [10, 11, 29]);
-    await tester.tap(dansLaFeuille(_rg('plus_tard', {'n': '3'})));
-    await tester.pump();
-    expect(b.session.destinyMinutes, [10, 11, 29], reason: 'la fin est à 30 min');
-    expect(find.text(_rg('refus_fin', {'n': '3'})), findsOneWidget);
-    await tester.tap(dansLaFeuille(_rg('plus_tot', {'n': '2'})));
-    await tester.pump();
-    expect(b.session.destinyMinutes, [10, 11, 29]);
-    expect(find.text(_rg('refus_precedent', {'n': '2', 'm': '1'})), findsOneWidget);
-    await tester.tap(dansLaFeuille(_rg('plus_tot', {'n': '1'})));
-    await tester.pump();
-    expect(b.session.destinyMinutes, [9, 11, 29]);
-    expect(find.text(_rg('refus_precedent', {'n': '2', 'm': '1'})), findsNothing);
-  });
-
   testWidgets('DESTINY lance le prochain tout de suite, même en déclenchement automatique', (tester) async {
     final b = await _regie(tester, declenchement: Declenchement.automatique);
     final bouton = find.byKey(const ValueKey('bouton_destiny'));
@@ -342,7 +307,6 @@ void main() {
     expect(b.session.palierAtteint, 2);
     expect(b.session.destinys.single.manuel, isTrue);
     expect(find.text(_rg('destiny_n', {'n': '2'}).toUpperCase()), findsOneWidget);
-    expect(find.text(_rg('dans', {'n': '2', 't': '18:00'})), findsOneWidget);
     expect(b.audio.effets, contains(b.contexte.reglages.sonDestiny));
   });
 
@@ -368,9 +332,9 @@ void main() {
   testWidgets('la régie son : un bouton qui l\'ouvre dans une fenêtre, qu\'on ferme', (tester) async {
     await _regie(tester);
     expect(find.byType(TabletteSon), findsNothing, reason: 'elle ne prend plus de place à l\'écran');
-    expect(find.text(_rg('son_debut')), findsNothing);
+    expect(find.text(_rg('son_acte', {'n': '1'})), findsNothing);
     await _ouvrirSon(tester);
-    expect(find.text(_rg('son_debut')), findsOneWidget);
+    expect(find.text(_rg('son_acte', {'n': '1'})), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('fermer_regie_son')));
     await tester.pumpAndSettle();
     expect(find.byType(TabletteSon), findsNothing);
@@ -381,16 +345,17 @@ void main() {
     final b = await _regie(tester);
     final r = b.contexte.reglages;
     await _ouvrirSon(tester);
-    Future<void> tuile(String cle) async {
-      await tester.tap(find.text(_rg(cle)));
+    Future<void> tuile(String cle, [Map<String, String> v = const {}]) async {
+      await tester.tap(find.text(_rg(cle, v)));
       await tester.pump();
     }
 
-    await tuile('son_debut');
+    for (var acte = 1; acte <= 4; acte++) {
+      await tuile('son_acte', {'n': '$acte'});
+    }
     await tuile('son_lieu');
-    await tuile('son_acte2');
-    await tuile('son_fin');
-    expect(b.musique.joues, [r.musiqueDebut, ChoixMusique.lieu, r.ambianceActe2, r.musiqueFin]);
+    // L'acte 2 n'a pas de musique par défaut : sa tuile joue l'ambiance du lieu.
+    expect(b.musique.joues, [r.musiqueActe(1), ChoixMusique.lieu, r.musiqueActe(3), r.musiqueActe(4), ChoixMusique.lieu]);
     await tuile('son_destiny');
     expect(b.audio.effets, [r.sonDestiny]);
     await tuile('son_stop');
@@ -405,7 +370,7 @@ void main() {
     final b = await _regie(tester, muet: true);
     await _ouvrirSon(tester);
     expect(find.text(_rg('son_coupe')), findsOneWidget);
-    await tester.tap(find.text(_rg('son_debut')), warnIfMissed: false);
+    await tester.tap(find.text(_rg('son_acte', {'n': '1'})), warnIfMissed: false);
     await tester.tap(find.text(_rg('son_destiny')), warnIfMissed: false);
     await tester.pump();
     expect(b.musique.joues, isEmpty);
@@ -413,9 +378,47 @@ void main() {
     await tester.tap(find.text(_rg('son_remettre')));
     await tester.pump();
     expect(b.audio.muted, isFalse);
-    await tester.tap(find.text(_rg('son_debut')));
+    await tester.tap(find.text(_rg('son_acte', {'n': '1'})));
     await tester.pump();
-    expect(b.musique.joues, [b.contexte.reglages.musiqueDebut]);
+    expect(b.musique.joues, [b.contexte.reglages.musiqueActe(1)]);
+  });
+
+  testWidgets('la musique de chaque acte part toute seule, 15 s après chaque Destiny', (tester) async {
+    final b = await _banc(tester);
+    final r = b.contexte.reglages;
+    await tester.runAsync(() async {
+      await r.changerMusiqueActe(2, 'music/atm_forest.m4a');
+      await r.changerMusiqueActe(3, ChoixMusique.aucune);
+    });
+    await _ouvrir(tester, RegieScreen(contexte: b.contexte, session: b.session));
+    await tester.tap(find.byTooltip(_rg('demarrer')));
+    await tester.pump();
+    expect(b.musique.joues, [r.musiqueActe(1)]);
+    // Destiny 1 : l'acte 2 et sa musique.
+    await tester.tap(find.byKey(const ValueKey('bouton_destiny')));
+    await _finirRituel(tester);
+    await tester.pump(const Duration(seconds: 15));
+    expect(b.musique.joues, [r.musiqueActe(1), 'music/atm_forest.m4a']);
+    // Destiny 2 : l'acte 3 n'a pas de musique, celle de l'acte 2 continue.
+    await tester.tap(find.byKey(const ValueKey('bouton_destiny')));
+    await _finirRituel(tester);
+    await tester.pump(const Duration(seconds: 15));
+    expect(b.musique.joues, [r.musiqueActe(1), 'music/atm_forest.m4a']);
+    // Destiny 3 : la musique de l'acte 4.
+    await tester.tap(find.byKey(const ValueKey('bouton_destiny')));
+    await _finirRituel(tester);
+    await tester.pump(const Duration(seconds: 15));
+    expect(b.musique.joues.last, r.musiqueActe(4));
+    await tester.tap(find.byTooltip(_rg('pause')));
+    await tester.pump();
+  });
+
+  testWidgets('la régie son se retire dans les réglages : plus de bouton « Son »', (tester) async {
+    final b = await _banc(tester);
+    await tester.runAsync(() => b.contexte.reglages.changer(regieSon: false));
+    await _ouvrir(tester, RegieScreen(contexte: b.contexte, session: b.session));
+    expect(find.byKey(const ValueKey('bouton_regie_son')), findsNothing);
+    expect(find.byKey(const ValueKey('bouton_destiny')), findsOneWidget);
   });
 
   testWidgets('à la régie : la montée de chacun en petit rectangle, avec ses bulles d\'info', (tester) async {

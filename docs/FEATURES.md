@@ -135,7 +135,7 @@ Facultatif : il faut une clé d'API (Anthropic, OpenAI ou Google), à régler da
 
 - **La Musique** : les pistes classées par catégorie (Émotions, Lieux, Ambiances, Thèmes, Univers), avec un lecteur.
 - **La régie son** : un mixeur accessible pendant le jeu, avec la lecture en boucle et le volume.
-- **Les quatre moments** du spectacle ont leur musique, dans les Réglages : le début, le son de Destiny, l'ambiance de l'acte 2 et la fin. On peut importer ses propres musiques, et en associer une à chaque Destiny.
+- **Chaque acte a sa musique**, dans les Réglages : celle de l'acte 1 part au début du chrono, puis celle de l'acte suivant 15 secondes après chaque Destiny. S'y ajoutent le son de Destiny et, si on veut, une musique importée à chaque Destiny. On peut importer ses propres musiques, et retirer le bouton « Son » de la régie.
 
 ---
 

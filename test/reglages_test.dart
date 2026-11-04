@@ -83,6 +83,34 @@ void main() {
     expect(r.declenchement, Declenchement.manuel);
   });
 
+  testWidgets('les musiques : une par acte, et le bouton « Son » de la régie se retire', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final r = ReglagesDestiny();
+    await tester.runAsync(r.charger);
+    await _ouvrir(tester, ReglagesDestinyScreen(reglages: r, audio: AudioService()..setMuted(true), musique: MusicController()));
+    final libelles = t.liste('reglages.musiques_actes');
+    expect(libelles, hasLength(4));
+    for (var acte = 1; acte <= 4; acte++) {
+      final ligne = find.byKey(ValueKey('musique_acte_$acte'));
+      await tester.ensureVisible(ligne);
+      expect(find.descendant(of: ligne, matching: find.text(libelles[acte - 1])), findsOneWidget);
+    }
+    // On choisit « Aucune » pour l'acte 4.
+    await tester.tap(find.byKey(const ValueKey('musique_acte_4')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(t.t('reglages.aucune')).last);
+    await tester.pumpAndSettle();
+    expect(r.musiqueActe(4), ChoixMusique.aucune);
+    // Le bouton « Son » de la régie.
+    final bascule = find.widgetWithText(SwitchListTile, t.t('reglages.regie_son'));
+    await tester.ensureVisible(bascule);
+    await tester.pumpAndSettle();
+    expect(r.regieSon, isTrue);
+    await tester.tap(bascule);
+    await tester.pumpAndSettle();
+    expect(r.regieSon, isFalse);
+  });
+
   testWidgets('l\'apparence : le thème clair', (tester) async {
     SharedPreferences.setMockInitialValues({});
     final r = ReglagesDestiny();
