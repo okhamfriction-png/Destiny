@@ -503,7 +503,11 @@
       "miseEnPlace": "Mise en place",
       "regie": "Régie"
     },
-    "quitter_confirmer": "Quitter le spectacle ? Le chrono et le son s'arrêtent ; tu pourras le reprendre depuis l'accueil."
+    "quitter_confirmer": "Quitter le spectacle ? Le chrono et le son s'arrêtent ; tu pourras le reprendre depuis l'accueil.",
+    "reprendre_type": {
+      "spectacle": "Reprendre le spectacle en cours",
+      "repetition": "Reprendre la répétition en cours"
+    }
   },
   "preparer": {
     "titre": "Préparer",

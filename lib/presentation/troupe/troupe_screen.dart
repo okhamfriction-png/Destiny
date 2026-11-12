@@ -180,7 +180,8 @@ class TroupeScreen extends StatelessWidget {
                     FilledButton.icon(
                       icon: const Icon(Icons.play_arrow_rounded),
                       onPressed: () => ouvrirEtape(context, contexte, enCours),
-                      label: Text(t.t('troupe.reprendre', {'etape': t.t('troupe.etapes.${enCours.etape.name}')})),
+                      // La partie en cours, quelle que soit l'étape : spectacle ou répétition.
+                      label: Text(t.t('troupe.reprendre_type.${enCours.type.name}')),
                     ),
                     const SizedBox(height: 12),
                     OutlinedButton.icon(

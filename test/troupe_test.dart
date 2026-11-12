@@ -160,6 +160,37 @@ void main() {
     expect(octets.length, greaterThan(2000));
   });
 
+  testWidgets('l\'accueil reprend la partie en cours, spectacle ou répétition, quelle que soit l\'étape', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final store = TroupeStore();
+    await tester.runAsync(store.charger);
+    for (final type in TypeSession.values) {
+      final s = (await tester.runAsync(store.nouvelle))!
+        ..type = type
+        ..etape = EtapeSession.regie;
+      await tester.runAsync(() => store.enregistrer(s));
+      final ctx = ContexteTroupe(
+        store: store,
+        reglages: ReglagesDestiny(),
+        catalogue: catalogue,
+        audio: AudioService()..setMuted(true),
+        musique: MusicController(),
+        visuels: VisualSettings(),
+      );
+      await tester.pumpWidget(MaterialApp(
+        key: UniqueKey(),
+        theme: themeDestiny(g, sombre: true),
+        builder: (context, child) => DestinyDonnees(grammaire: g, textes: t, child: child!),
+        home: Scaffold(
+          body: TroupeScreen(contexte: ctx, versJouer: () {}, versExercices: () {}, versBibliotheque: () {}),
+        ),
+      ));
+      await tester.pumpAndSettle();
+      expect(find.text(t.t('troupe.reprendre_type.${type.name}')), findsOneWidget, reason: type.name);
+      expect(find.text(t.t('troupe.reprendre', {'etape': t.t('troupe.etapes.regie')})), findsNothing);
+    }
+  });
+
   testWidgets('un spectacle de bout en bout', (tester) async {
     SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(390, 9000);
