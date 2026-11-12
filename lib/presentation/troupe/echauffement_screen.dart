@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 
 import '../../application/son/conduite_son.dart';
 import '../../application/son/lecteur_son.dart';
+import '../../domain/entities/dilemma.dart';
 import '../../domain/grammaire/distribution.dart';
+import '../../domain/grammaire/modeles.dart';
 import '../../domain/troupe/session.dart';
 import '../destiny/bouton_ia.dart';
 import '../destiny/composants.dart';
@@ -45,11 +47,19 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
     contexteRituel: () => mounted ? context : null,
   );
   bool _regieOuverte = false;
+  List<Dilemma> _dilemmes = const [];
 
   @override
   void initState() {
     super.initState();
     _sp.addListener(_maj);
+    widget.contexte.catalogue.getDilemmas().then((d) {
+      if (!mounted) return;
+      setState(() => _dilemmes = [
+            for (final x in d)
+              if (x.dangerLie == widget.session.dangerId) x,
+          ]);
+    });
     // Arrivé par « Régie » (ou une régie reprise) : elle s'ouvre d'office.
     if (widget.session.etape == EtapeSession.regie) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -62,7 +72,8 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
     if (mounted) setState(() {});
   }
 
-  /// La régie en pop-up, par-dessus le jeu ; sa grande croix ramène ici.
+  /// La régie : la table de régie, directement, en pop-up par-dessus le jeu
+  /// (le chrono et DESTINY en haut) ; sa croix ramène ici.
   Future<void> _ouvrirRegie() async {
     if (_regieOuverte) return;
     _regieOuverte = true;
@@ -72,9 +83,28 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
       await widget.contexte.store.enregistrer(s);
     }
     if (!mounted) return;
-    await ouvrirRegieEnPopup(context, widget.contexte, s, _sp);
+    await ouvrirRegieSon(context, widget.contexte, s, pilote: piloteDe(context, _sp));
     _regieOuverte = false;
     if (mounted) setState(() {});
+  }
+
+  /// « Terminer » : le spectacle s'arrête, il est rangé dans l'historique, et
+  /// l'on revient à l'accueil (pas de débrief).
+  Future<void> _terminer() async {
+    final t = context.textes;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        content: Text(t.t('regie.terminer_confirmer')),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(t.t('troupe.non'))),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(t.t('troupe.oui'))),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    await _sp.terminer();
+    if (mounted) Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
   /// Le bouton retour du téléphone : on demande avant de quitter le spectacle.
@@ -319,6 +349,30 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
             style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w600, color: c.texte),
           ),
         ]),
+        // À l'acte 4, un dilemme du danger, si ça sert l'histoire.
+        if (_sp.palier == PalierId.supprime && _dilemmes.isNotEmpty)
+          SectionDestiny(titre: t.t('regie.dilemme'), enfants: [
+            Paragraphe(t.t('regie.dilemme_aide'), italique: true),
+            for (final d in _dilemmes.take(2))
+              CadreLisere(
+                couleur: c.or,
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(d.nom, style: Theme.of(context).textTheme.titleMedium),
+                  Paragraphe(d.situation),
+                  Puce(d.choixA),
+                  Puce(d.choixB),
+                ]),
+              ),
+          ]),
+        const SizedBox(height: 18),
+        Center(
+          child: OutlinedButton.icon(
+            key: const ValueKey('terminer_spectacle'),
+            onPressed: _terminer,
+            icon: const Icon(Icons.flag_rounded),
+            label: Text(t.t('regie.terminer')),
+          ),
+        ),
         const SizedBox(height: 12),
       ],
     );

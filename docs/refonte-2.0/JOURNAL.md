@@ -995,6 +995,12 @@ Une conduite son automatique quand le pack audio du spectacle est là (`/Volumes
 - **La grande croix** : `PageDestiny.fermer`, un bouton « Fermer » en or, à la place de la flèche.
 - **Terminer** : la session passe à « terminée » et l'on revient à l'accueil ; le débrief n'est plus proposé (l'écran reste pour les anciennes sessions).
 
+### La régie, c'est la table
+
+- **« Régie » ouvre directement la table de régie** (son mini-chrono a DESTINY) : l'ancienne régie en pop-up faisait doublon avec le jeu. « Terminer » (sans « et débriefer ») et le dilemme de l'acte 4 passent sur le jeu. L'écran `RegieScreen` reste, mais l'appli ne l'ouvre plus.
+- **L'ouverture** : la musique de l'acte 1 d'abord (son d'ouverture « aucun » par défaut, nouvelle clé `son_ouverture_v2`) ; le bruitage du palier part à la fin **naturelle** de la musique (`bruitageFinMusique`, acte 1 par défaut). Toute intervention de la régie sur la musique (Destiny, Stop, autre pad) l'annule.
+- **Texte très agrandi** : trois lignes de la table débordaient (titres de section, paliers de « Ce danger », étape en cours) ; leur texte se replie maintenant.
+
 ### Tests
 
-**338 tests passent.** Les nouveaux portent sur la résolution (propre, famille, NFD, absent), les bruitages (vide, remplacement, « Autre »), l'import, le bilan du vrai pack, les séquences avec un faux lecteur (ordre, annulation, son coupé) et la table dans la régie. Les 7 tests de rendu des cartes échouaient déjà avant (images de référence d'une autre machine).
+**340 tests passent.** Les nouveaux portent sur la résolution (propre, famille, NFD, absent), les bruitages (vide, remplacement, « Autre »), l'import, le bilan du vrai pack, les séquences avec un faux lecteur (ordre, annulation, son coupé) et la table dans la régie. Les 7 tests de rendu des cartes échouaient déjà avant (images de référence d'une autre machine).

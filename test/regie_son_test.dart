@@ -290,21 +290,44 @@ void main() {
   });
 
   group('la conduite', () {
-    test('ouverture : le son Destiny jusqu\'à sa vraie fin, puis la musique de l\'acte 1', () async {
+    test('ouverture : le spectacle démarre par la musique de l\'acte 1, le bruitage arrive à sa fin', () async {
       final t = conduiteDeTest();
       t.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
       expect(t.conduite.active, isTrue);
+      await t.conduite.ouverture();
+      await laisserTourner();
+      expect(t.journal, ['musique:jouer:Musiques Destiny/Mystère - Église/Destiny Intro 40 - Église.mp3']);
+      expect(t.lecteurs[BusSon.musique]!.volume, closeTo(0.7, 1e-9));
+      // Tant que la musique joue, pas de bruitage…
+      expect(t.journal.where((e) => e.startsWith('bruitage')), isEmpty);
+      // …et à sa fin, le bruitage du palier 1.
+      t.lecteurs[BusSon.musique]!.finir();
+      await laisserTourner();
+      expect(t.journal, contains(startsWith('bruitageA:jouer:Bruitages/${m.dangers['siege_arme']!.codes(1).first}')));
+    });
+
+    test('une musique coupée par la régie (Stop, Destiny) n\'appelle pas le bruitage', () async {
+      final t = conduiteDeTest();
+      t.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
+      await t.conduite.ouverture();
+      await laisserTourner();
+      await t.conduite.stopTout();
+      await laisserTourner();
+      expect(t.journal.where((e) => e.startsWith('bruitage')), isEmpty);
+    });
+
+    test('un son d\'ouverture choisi passe avant la musique de l\'acte 1', () async {
+      final t = conduiteDeTest(valeurs: ValeursRegieSon()
+        ..decrescendo = false
+        ..sonOuverture = 'storm');
+      t.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
       final fini = t.conduite.ouverture();
       await laisserTourner();
       expect(t.journal, ['destiny:jouer:audio/DestinyStorm.wav']);
-      // Tant que le son Destiny joue, pas de musique.
       t.lecteurs[BusSon.destiny]!.finir();
       await laisserTourner();
       await fini;
-      expect(t.journal.last, 'musique:jouer:Musiques Destiny/Mystère - Église/Destiny Intro 40 - Église.mp3');
-      expect(t.lecteurs[BusSon.musique]!.volume, closeTo(0.7, 1e-9));
-      // Aucun bruitage automatique à l'acte 1.
-      expect(t.journal.where((e) => e.startsWith('bruitage')), isEmpty);
+      expect(t.journal.last, startsWith('musique:jouer:'));
     });
 
     test('DESTINY 2 (acte 3) : sortie, son Destiny, REVEAL, bruitages décalés, puis musique', () async {

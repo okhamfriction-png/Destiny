@@ -594,7 +594,7 @@
     "notes": "Moments forts",
     "note_aide": "Ce qui vient de se passer…",
     "noter": "Noter",
-    "terminer": "Terminer et débriefer",
+    "terminer": "Terminer",
     "terminer_confirmer": "Terminer le spectacle et passer au débrief ?",
     "destiny_n": "Destiny {n}",
     "ecoule": "Écoulé {t}",
@@ -731,7 +731,7 @@
       "repli_famille_aide": "Sinon, silence pour ce lieu.",
       "boucle": "La musique tourne en boucle",
       "son_destiny": "Le son Destiny",
-      "son_ouverture": "Au début du spectacle",
+      "son_ouverture": "Avant la musique de l'acte 1",
       "son_chaque_destiny": "À chaque Destiny",
       "attendre_fin": "La suite attend la fin du son Destiny",
       "chevauchement": "La suite part {n} s avant la fin",
@@ -779,7 +779,8 @@
       "echauffement_aide": "La musique qui part avec le minuteur de l'échauffement. Elle sort en fondu à la pause, et la régie la fait sortir au début du spectacle.",
       "echauffement_aucune": "Aucune",
       "echauffement_lieu": "Ambiance du lieu",
-      "echauffement_acte1": "Musique de l'acte 1"
+      "echauffement_acte1": "Musique de l'acte 1",
+      "bruitage_fin": "Joué à la fin de la musique de l'acte"
     },
     "arreter_voie": "Arrêter cette voie"
   },

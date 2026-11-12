@@ -116,6 +116,11 @@ class RegieSonScreen extends StatelessWidget {
               Text(k('bruitage_auto'), style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 6),
               _PucesActes(valeurs: v.bruitageAuto, k: k, onChange: (a, x) => change((v) => v.bruitageAuto[a] = x)),
+              const SizedBox(height: 10),
+              Text(k('bruitage_fin'), style: Theme.of(context).textTheme.titleSmall),
+              const SizedBox(height: 6),
+              _PucesActes(
+                  valeurs: v.bruitageFinMusique, k: k, onChange: (a, x) => change((v) => v.bruitageFinMusique[a] = x)),
               _Curseur(k('volume'), v.volumeBruitage, 0, 1, 20, (x) => change((v) => v.volumeBruitage = x), pourcent: true),
               _Curseur(k('duree_max'), v.dureeMaxBruitage, 2, 30, 28, (x) => change((v) => v.dureeMaxBruitage = x),
                   suffixe: 's'),

@@ -520,8 +520,10 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
               child: CircularProgressIndicator(strokeWidth: 2, color: Console.or.withValues(alpha: 0.9)),
             ),
             const SizedBox(width: 10),
-            Text(rs('etapes.${etape.name}'),
-                style: const TextStyle(fontFamily: kPoliceTexte, color: Console.or, fontWeight: FontWeight.w600)),
+            Expanded(
+              child: Text(rs('etapes.${etape.name}'),
+                  style: const TextStyle(fontFamily: kPoliceTexte, color: Console.or, fontWeight: FontWeight.w600)),
+            ),
           ]),
         ],
       ]),
@@ -735,12 +737,14 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
             child: Row(children: [
               _Led(allumee: palier == courant, couleur: const Color(0xFFFF7043)),
               const SizedBox(width: 8),
-              Text(
-                '${rs('palier', {'n': '$palier'})} · ${g.palier(PalierId.deNumero(palier)).nom}',
-                style: TextStyle(
-                  fontFamily: kPoliceTexte,
-                  fontWeight: FontWeight.w700,
-                  color: palier == courant ? Console.texte : Console.doux,
+              Expanded(
+                child: Text(
+                  '${rs('palier', {'n': '$palier'})} · ${g.palier(PalierId.deNumero(palier)).nom}',
+                  style: TextStyle(
+                    fontFamily: kPoliceTexte,
+                    fontWeight: FontWeight.w700,
+                    color: palier == courant ? Console.texte : Console.doux,
+                  ),
                 ),
               ),
             ]),
@@ -809,14 +813,17 @@ class _Titre extends StatelessWidget {
         child: Row(children: [
           Icon(icone, size: 18, color: Console.doux),
           const SizedBox(width: 8),
-          Text(
-            texte.toUpperCase(),
-            style: const TextStyle(
-              fontFamily: kPoliceTexte,
-              fontWeight: FontWeight.w800,
-              fontSize: 12.5,
-              letterSpacing: 1.8,
-              color: Console.doux,
+          Flexible(
+            child: Text(
+              texte.toUpperCase(),
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontFamily: kPoliceTexte,
+                fontWeight: FontWeight.w800,
+                fontSize: 12.5,
+                letterSpacing: 1.8,
+                color: Console.doux,
+              ),
             ),
           ),
           const SizedBox(width: 10),

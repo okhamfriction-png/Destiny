@@ -204,6 +204,7 @@ class ConduiteSon extends ChangeNotifier {
 
   /// La musique en cours sort en fondu, puis s'arrête (échauffement en pause).
   Future<void> couperMusique({double fondu = 2}) async {
+    _jetonMusique++;
     final l = lecteurs[BusSon.musique]!;
     if (!l.actif) return;
     final source = l.enCours;
@@ -234,6 +235,7 @@ class ConduiteSon extends ChangeNotifier {
   Future<void> ouverture() async {
     if (!_peutJouer) return;
     final seq = ++_seq;
+    _jetonMusique++;
     _acte = 1;
     _etapeVers(EtapeConduite.ouverture);
     if (lecteurs[BusSon.musique]!.actif) {
@@ -241,9 +243,13 @@ class ConduiteSon extends ChangeNotifier {
       if (seq != _seq) return;
       await lecteurs[BusSon.musique]!.arreter();
     }
-    _etapeVers(EtapeConduite.sonDestiny);
-    await _sonDestiny(_v.sonOuverture, seq);
-    if (seq != _seq) return;
+    // Le spectacle démarre par la musique de l'acte 1 (un son d'ouverture
+    // avant, seulement si on en a choisi un).
+    if (AudioService.assetsEffets.containsKey(_v.sonOuverture)) {
+      _etapeVers(EtapeConduite.sonDestiny);
+      await _sonDestiny(_v.sonOuverture, seq);
+      if (seq != _seq) return;
+    }
     _etapeVers(EtapeConduite.musique);
     await _lancerMusique(1, seq);
     if (seq == _seq) _etapeVers(EtapeConduite.repos);
@@ -256,6 +262,7 @@ class ConduiteSon extends ChangeNotifier {
   Future<void> destiny(int numero) async {
     if (!_peutJouer) return;
     final seq = ++_seq;
+    _jetonMusique++;
     final acte = (numero + 1).clamp(1, 4);
     _acte = acte;
     _jetonBruitage++;
@@ -316,6 +323,7 @@ class ConduiteSon extends ChangeNotifier {
   /// « Fondu de fin » : tout s'éteint ensemble, puis s'arrête.
   Future<void> fonduFin([double? secondes]) async {
     final seq = ++_seq;
+    _jetonMusique++;
     _jetonBruitage++;
     _etapeVers(EtapeConduite.fin);
     await Future.wait([
@@ -348,6 +356,7 @@ class ConduiteSon extends ChangeNotifier {
   /// Arrête tout, tout de suite.
   Future<void> stopTout() async {
     _seq++;
+    _jetonMusique++;
     _jetonBruitage++;
     await _toutArreter();
     _etapeVers(EtapeConduite.repos);
@@ -485,7 +494,26 @@ class ConduiteSon extends ChangeNotifier {
       return;
     }
     unawaited(_decrescendo(source, _dureeMusique(acte, chemin)));
+    unawaited(_bruitageEnFin(acte, source));
     await _fondre(BusSon.musique, _attenue ? _volumeMusique * _v.attenuation : _volumeMusique, _v.fonduEntree[acte - 1]);
+  }
+
+  /// Change à chaque intervention de la régie sur la musique (Destiny, Stop,
+  /// autre pad…) : seule une musique arrivée à sa vraie fin appelle le
+  /// bruitage.
+  int _jetonMusique = 0;
+
+  /// Le bruitage du palier quand la musique de l'acte [acte] arrive à sa fin
+  /// (réglage par acte ; l'acte 1 par défaut).
+  Future<void> _bruitageEnFin(int acte, SourceSon source) async {
+    if (!_v.bruitageFinMusique[acte - 1]) return;
+    final jeton = _jetonMusique;
+    final l = lecteurs[BusSon.musique]!;
+    await l.fin;
+    if (jeton != _jetonMusique || l.enCours != null || !_peutJouer || _acte != acte) return;
+    _etapeVers(EtapeConduite.bruitage);
+    await _jouerBruitages(bruitagesDuPalier(acte), _seq);
+    if (_etape == EtapeConduite.bruitage) _etapeVers(EtapeConduite.repos);
   }
 
   /// La durée de la musique d'un acte, si le manifeste la donne pour ce fichier.
@@ -513,6 +541,7 @@ class ConduiteSon extends ChangeNotifier {
   Future<void> jouerMusique(SourceSon source, {double volume = 0.7, bool? boucle, double fondu = 1.5, double? dureeS}) async {
     if (_muet()) return;
     final seq = ++_seq;
+    _jetonMusique++;
     if (lecteurs[BusSon.musique]!.actif) {
       await _fondre(BusSon.musique, 0, 0.8);
       if (seq != _seq) return;
@@ -570,6 +599,7 @@ class ConduiteSon extends ChangeNotifier {
 
   /// Arrête une voie (bouton stop d'une tranche).
   Future<void> arreterBus(BusSon b) async {
+    if (b == BusSon.musique) _jetonMusique++;
     _annulerFondu(b);
     await lecteurs[b]!.arreter();
     if (b == BusSon.bruitageA || b == BusSon.bruitageB) {

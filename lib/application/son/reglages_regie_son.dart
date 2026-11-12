@@ -35,8 +35,9 @@ class ValeursRegieSon {
   String musiqueEchauffement = 'lieu';
   double volumeEchauffement = 0.6;
 
-  // Son Destiny (clés de `AudioService.effets`).
-  String sonOuverture = 'storm';
+  // Son Destiny (clés de `AudioService.effets`). Le spectacle démarre par
+  // la musique de l'acte 1 : pas de son d'ouverture par défaut (« aucun »).
+  String sonOuverture = 'aucun';
   String sonDestiny = 'storm';
 
   /// Lancer la suite tant de secondes avant la fin du son Destiny (0 : on
@@ -45,6 +46,10 @@ class ValeursRegieSon {
 
   // Bruitage du danger.
   List<bool> bruitageAuto = [false, true, true, true];
+
+  /// Le bruitage du palier quand la musique de l'acte arrive à sa fin
+  /// (l'acte 1 par défaut : la musique d'ouverture, puis le danger se signale).
+  List<bool> bruitageFinMusique = [true, false, false, false];
   double volumeBruitage = 0.9;
   double dureeMaxBruitage = 10;
   double fonduBruitage = 2;
@@ -88,7 +93,9 @@ class ValeursRegieSon {
         'decrescendo_depart': decrescendoDepart,
         'musique_echauffement': musiqueEchauffement,
         'volume_echauffement': volumeEchauffement,
-        'son_ouverture': sonOuverture,
+        // « _v2 » : avant, le son Destiny ouvrait le spectacle.
+        'son_ouverture_v2': sonOuverture,
+        'bruitage_fin_musique': bruitageFinMusique,
         'son_destiny': sonDestiny,
         'chevauchement': chevauchement,
         'bruitage_auto': bruitageAuto,
@@ -137,7 +144,8 @@ class ValeursRegieSon {
       ..decrescendoDepart = d('decrescendo_depart', v.decrescendoDepart)
       ..musiqueEchauffement = j['musique_echauffement'] as String? ?? v.musiqueEchauffement
       ..volumeEchauffement = d('volume_echauffement', v.volumeEchauffement)
-      ..sonOuverture = j['son_ouverture'] as String? ?? v.sonOuverture
+      ..sonOuverture = j['son_ouverture_v2'] as String? ?? v.sonOuverture
+      ..bruitageFinMusique = _quatre(j['bruitage_fin_musique'], v.bruitageFinMusique, booleen)
       ..sonDestiny = j['son_destiny'] as String? ?? v.sonDestiny
       ..chevauchement = d('chevauchement', v.chevauchement)
       ..bruitageAuto = _quatre(j['bruitage_auto'], v.bruitageAuto, booleen)

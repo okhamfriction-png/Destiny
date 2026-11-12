@@ -287,46 +287,6 @@ class _RegieScreenState extends State<RegieScreen> {
   }
 }
 
-/// Ouvre la régie en pop-up par-dessus le jeu : le spectacle ([spectacle])
-/// continue derrière, et la grande croix « Fermer » ramène au jeu.
-Future<void> ouvrirRegieEnPopup(
-    BuildContext context, ContexteTroupe contexte, SessionTroupe session, SpectacleEnCours spectacle) {
-  return showGeneralDialog<void>(
-    context: context,
-    barrierDismissible: false,
-    barrierColor: Colors.black54,
-    transitionDuration: const Duration(milliseconds: 220),
-    pageBuilder: (ctx, _, __) {
-      final large = MediaQuery.sizeOf(ctx).width >= 720;
-      return SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(large ? 20 : 6),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 860),
-              child: Material(
-                clipBehavior: Clip.antiAlias,
-                borderRadius: BorderRadius.circular(22),
-                child: RegieScreen(contexte: contexte, session: session, spectacle: spectacle, enPopup: true),
-              ),
-            ),
-          ),
-        ),
-      );
-    },
-    transitionBuilder: (ctx, a, _, enfant) {
-      final courbe = CurvedAnimation(parent: a, curve: Curves.easeOutCubic);
-      return FadeTransition(
-        opacity: courbe,
-        child: SlideTransition(
-          position: Tween(begin: const Offset(0, 0.05), end: Offset.zero).animate(courbe),
-          child: enfant,
-        ),
-      );
-    },
-  );
-}
-
 /// La régie son : la table de régie (conduite du spectacle, tranches,
 /// banques de sons par catégorie). Elle respecte le son coupé. Elle s'ouvre
 /// en plein écran ([ouvrirRegieSon]).

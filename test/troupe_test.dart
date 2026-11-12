@@ -238,20 +238,17 @@ void main() {
     expect(find.text(t.t('troupe.fil.miseEnPlace')), findsNothing);
     expect(s.paliers, hasLength(4));
 
-    // « Régie » : la régie s'ouvre en pop-up par-dessus le jeu. Le chrono, la
-    // frise des trois Destiny, la régie son ; DESTINY fait monter d'un palier.
+    // « Régie » : la table de régie s'ouvre directement, par-dessus le jeu,
+    // avec le chrono et DESTINY ; DESTINY fait monter d'un palier.
     await tester.tap(find.text(t.t('troupe.fil.regie')));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
-    expect(find.byType(RegieScreen), findsOneWidget);
-    expect(find.byKey(const ValueKey('fermer_popup')), findsOneWidget);
-    expect(find.text(g.palier(PalierId.signale).nom), findsWidgets);
-    for (final n in [1, 2, 3]) {
-      expect(find.byKey(ValueKey('repere_destiny_$n')), findsWidgets);
-    }
-    expect(find.byKey(const ValueKey('bouton_regie_son')), findsOneWidget);
-    expect(find.text(t.t('regie.son_acte', {'n': '1'})), findsNothing, reason: 'la régie son est rangée dans sa fenêtre');
-    await tester.tap(find.byKey(const ValueKey('bouton_destiny')));
+    expect(find.byType(TabletteSon), findsOneWidget);
+    expect(find.byType(RegieScreen), findsNothing);
+    final destiny = find.descendant(
+        of: find.ancestor(of: find.byType(TabletteSon), matching: find.byType(Material)).first,
+        matching: find.byKey(const ValueKey('pilote_destiny')));
+    await tester.tap(destiny);
     await tester.pump();
     await tester.pump();
     await tester.pump(const Duration(seconds: 10));
@@ -262,14 +259,17 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     expect(s.palierAtteint, 2);
     expect(s.destinys.single.manuel, isTrue);
+    await tester.tap(find.byKey(const ValueKey('fermer_regie_son')));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
     // Plus de groupe, de mystère, de moments forts ni de « Pour la régie ».
     expect(find.text(t.t('regie.noter')), findsNothing);
     expect(find.text(t.t('regie.mystere').toUpperCase()), findsNothing);
     expect(find.text(t.t('regie.rappel').toUpperCase()), findsNothing);
     expect(find.text(t.t('mise_en_place.groupe').toUpperCase()), findsNothing);
 
-    // Terminer : plus de débrief, retour à l'accueil.
-    final terminer = find.text(t.t('regie.terminer'));
+    // « Terminer », en bas du jeu : plus de débrief, retour à l'accueil.
+    final terminer = find.byKey(const ValueKey('terminer_spectacle'));
     await tester.ensureVisible(terminer);
     await tester.pumpAndSettle();
     await tester.tap(terminer);
@@ -278,7 +278,6 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text(t.t('debrief.intro')), findsNothing);
     expect(find.byType(TroupeScreen), findsOneWidget);
-    expect(find.byType(RegieScreen), findsNothing);
     expect(find.byType(EchauffementScreen), findsNothing);
     expect(s.etape, EtapeSession.terminee);
   });

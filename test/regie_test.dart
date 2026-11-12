@@ -587,7 +587,8 @@ void main() {
         expect(find.text(q), findsNothing, reason: q);
       }
       expect(find.text(g.personnage.echauffement.limite), findsNothing);
-      expect(find.byType(OutlinedButton), findsOneWidget, reason: 'le minuteur seul');
+      expect(find.byType(OutlinedButton), findsNWidgets(2), reason: 'le minuteur et « Terminer »');
+      expect(find.text(_rg('terminer')), findsOneWidget);
     });
 
     testWidgets('on change un archétype à la main ; son animal repart à zéro', (tester) async {
@@ -658,73 +659,46 @@ void main() {
       expect(relu.sessions.firstWhere((x) => x.id == s.id).destinyMinutes, [10, 11, 27]);
     });
 
-    testWidgets('« Régie » ouvre la régie en pop-up ; sa grande croix ramène au jeu, et le chrono continue',
+    testWidgets('« Régie » ouvre directement la table de régie ; sa croix ramène au jeu, et le chrono continue',
         (tester) async {
       final b = await echauffement(tester);
       await tester.tap(find.text(t.t('troupe.fil.regie')));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
-      final regie = find.byType(RegieScreen);
-      expect(regie, findsOneWidget);
+      expect(find.byType(TabletteSon), findsOneWidget);
+      expect(find.byType(RegieScreen), findsNothing);
       expect(find.byType(EchauffementScreen), findsOneWidget, reason: 'le jeu reste dessous');
       expect(b.session.etape, EtapeSession.regie);
       expect(b.session.groupe, isEmpty, reason: 'plus de groupe tiré d\'office');
-      expect(find.byKey(const ValueKey('bouton_regie_son')), findsOneWidget);
-      // Pas de flèche de retour : une grande croix « Fermer ».
-      final croix = find.byKey(const ValueKey('fermer_popup'));
-      expect(croix, findsOneWidget);
-      expect(find.descendant(of: croix, matching: find.text(_rg('fermer'))), findsOneWidget);
-      expect(find.descendant(of: regie, matching: find.byType(BackButton)), findsNothing);
-      // Le chrono part dans la régie…
-      await tester.tap(find.descendant(of: regie, matching: find.byTooltip(_rg('demarrer'))));
+      // Le chrono part depuis la table…
+      final table = find.byType(TabletteSon);
+      final pilote = find.ancestor(of: table, matching: find.byType(Material)).first;
+      await tester.tap(find.descendant(of: pilote, matching: find.byKey(const ValueKey('pilote_basculer'))));
       await tester.pump(const Duration(seconds: 3));
       expect(find.text('29:57'), findsWidgets);
-      // …et continue une fois la régie fermée.
-      await tester.tap(croix);
+      // …et continue une fois la table fermée.
+      await tester.tap(find.byKey(const ValueKey('fermer_regie_son')));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
-      expect(find.byType(RegieScreen), findsNothing);
+      expect(find.byType(TabletteSon), findsNothing);
       await tester.pump(const Duration(seconds: 2));
       expect(tester.widget<Text>(find.byKey(const ValueKey('pilote_reste'))).data, '29:55');
-      // On la rouvre depuis le jeu : même chrono.
-      await tester.tap(find.byKey(const ValueKey('ouvrir_regie')));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 400));
-      expect(tester.widget<Text>(find.byKey(const ValueKey('chrono_reste'))).data, '29:55');
-      await tester.tap(find.descendant(of: find.byType(RegieScreen), matching: find.byTooltip(_rg('pause'))));
+      await tester.tap(find.byKey(const ValueKey('pilote_basculer')));
       await tester.pump();
     });
 
-    testWidgets('les Destiny déplacés au jeu restent dans la régie', (tester) async {
+    testWidgets('« Terminer », en bas du jeu : plus de débrief, retour à l\'accueil', (tester) async {
       final b = await echauffement(tester);
-      final s = b.session;
-      await tester.drag(find.byKey(const ValueKey('repere_destiny_1')), const Offset(-400, 0));
-      await tester.pumpAndSettle();
-      expect(s.destinyMinutes, [1, 18, 27]);
-      final bouton = find.byKey(const ValueKey('ouvrir_regie'));
-      await tester.ensureVisible(bouton);
-      await tester.tap(bouton);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 400));
-      expect(find.byType(RegieScreen), findsOneWidget);
-      expect(s.destinyMinutes, [1, 18, 27]);
-    });
-
-    testWidgets('« Terminer » : plus de débrief, retour à l\'accueil', (tester) async {
-      final b = await echauffement(tester);
-      await tester.tap(find.byKey(const ValueKey('ouvrir_regie')));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 400));
-      final terminer = find.text(_rg('terminer'));
+      final terminer = find.byKey(const ValueKey('terminer_spectacle'));
       await tester.ensureVisible(terminer);
       await tester.pumpAndSettle();
+      expect(find.descendant(of: terminer, matching: find.text('Terminer')), findsOneWidget);
       await tester.tap(terminer);
       await tester.pumpAndSettle();
       await tester.tap(find.text(t.t('troupe.oui')));
       await tester.pumpAndSettle();
       expect(b.session.etape, EtapeSession.terminee);
       expect(find.byType(DebriefScreen), findsNothing);
-      expect(find.byType(RegieScreen), findsNothing);
     });
   });
 
@@ -746,7 +720,9 @@ void main() {
     final chrono = b.contexte.reglages.chronos[0];
     expect(b.session.dureeMinutes, chrono.dureeMinutes);
     expect(b.session.destinyMinutes, chrono.destinyMinutes);
-    expect(find.byType(RegieScreen), findsOneWidget);
+    // La régie, c'est le jeu avec la table de régie ouverte par-dessus.
+    expect(find.byType(EchauffementScreen), findsOneWidget);
+    expect(find.byType(TabletteSon), findsOneWidget);
   });
 
   testWidgets('à la mise en place, le chrono choisi va tout de suite dans la session', (tester) async {
@@ -799,7 +775,7 @@ void main() {
     );
     await tester.tap(find.text('ouvrir'));
     await tester.pumpAndSettle();
-    expect(find.byType(RegieScreen), findsOneWidget);
+    expect(find.byType(EchauffementScreen), findsOneWidget);
     expect(b.session.kids, isFalse);
   });
 
@@ -817,7 +793,8 @@ void main() {
         jsonDecode(File('assets/data/destiny_audio.json').readAsStringSync()) as Map<String, dynamic>);
     final journal = <String>[];
     final pack = PackAudio.pourTests(m, IndexPack(fichiersDuManifeste(m)));
-    final reglages = ReglagesRegieSon();
+    // Sans l'atténuation progressive : les attentes du test sont immédiates.
+    final reglages = ReglagesRegieSon(ValeursRegieSon()..decrescendo = false);
     final regieSon = RegieSon(
       pack: pack,
       reglages: reglages,
@@ -846,7 +823,7 @@ void main() {
     // Le chrono part : le son Destiny de l'ouverture, pas l'ancienne musique.
     await tester.tap(find.byTooltip(_rg('demarrer')));
     await tester.pump();
-    expect(journal, ['destiny:jouer:audio/DestinyStorm.wav']);
+    expect(journal, [startsWith('musique:jouer:Musiques Destiny/')]);
     expect(b.musique.joues, isEmpty);
 
     // « Danger » : le bruitage du palier 1.
