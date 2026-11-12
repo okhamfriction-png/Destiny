@@ -4,7 +4,18 @@
     {
       "name": "destiny-web",
       "runtimeExecutable": "bash",
-      "runtimeArgs": ["-c", "cd build/web && python3 -m http.server \"$PORT\" --bind 127.0.0.1"],
+      "runtimeArgs": [
+        "-c",
+        "cd build/web && python3 -m http.server \"$PORT\" --bind 127.0.0.1"
+      ],
+      "autoPort": true
+    },
+    {
+      "name": "destiny-regie",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "tool/serveur_regie_web.py"
+      ],
       "autoPort": true
     }
   ]

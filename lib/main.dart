@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import 'application/son/regie_son.dart';
 import 'application/services/assistant_jeu.dart';
 import 'application/services/audio_service.dart';
 import 'application/services/llm_service.dart';
@@ -100,6 +101,9 @@ Future<void> _boot() async {
 
   final assistantJeu = AssistantJeu(llm: llmService, reglages: aiSettings, grammaire: grammaire.grammaire);
 
+  // La régie son du spectacle : le pack audio importé, ses réglages, la conduite.
+  final regieSon = await RegieSon.creer(audio: audioService, musique: musicController);
+
   enregistrerLicencesPolices();
 
   runApp(DestinyApp(
@@ -117,6 +121,7 @@ Future<void> _boot() async {
     troupeStore: troupeStore,
     reglages: reglages,
     assistantJeu: assistantJeu,
+    regieSon: regieSon,
   ));
 }
 
@@ -162,6 +167,7 @@ class DestinyApp extends StatelessWidget {
     required this.troupeStore,
     required this.reglages,
     this.assistantJeu,
+    this.regieSon,
     super.key,
   });
 
@@ -180,6 +186,7 @@ class DestinyApp extends StatelessWidget {
   final TroupeStore troupeStore;
   final ReglagesDestiny reglages;
   final AssistantJeu? assistantJeu;
+  final RegieSon? regieSon;
 
   @override
   Widget build(BuildContext context) {
@@ -222,6 +229,7 @@ class DestinyApp extends StatelessWidget {
         troupeStore: troupeStore,
         reglages: reglages,
         assistantJeu: assistantJeu,
+        regieSon: regieSon,
       ),
     );
   }

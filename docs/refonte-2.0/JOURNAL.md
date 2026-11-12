@@ -950,3 +950,33 @@ La nouvelle dramaturgie des prompts n'est pas encore faite : les liens dits avec
 - la création d'une série en mode enfant, sans le redemander, et la liste filtrée ;
 - le théâtre sans interrupteur kids ;
 - l'ancienne session kids qui repasse en adulte.
+
+
+## 2.2.0 : la régie son du spectacle, une vraie table de régie
+
+### La demande
+
+Une conduite son automatique quand le pack audio du spectacle est là (`/Volumes/ShikaZero/Spectacle`) : une musique par lieu et par acte, le bruitage du danger au bon palier, enchaînés sur le son Destiny. Le pack n'est pas dans l'appli (180 Mo, et ça grossit) : on l'importe. Puis : « La régie, rends-la plus sexy, comme une vraie régie : un vrai pop-up avec une vraie table de régie, des boutons, des logos pour voir plus vite le son à mettre, rangés par catégorie. »
+
+### Ce qui a été fait
+
+- **Le manifeste** du pack (`assets/data/destiny_audio.json`) : familles, lieux, sons, dangers, REVEAL, remplacements. Ses ids sont ceux de l'appli (un test le vérifie).
+- **La résolution**, en Dart pur (`lib/domain/son/`) :
+  - une musique : le nom attendu cherché partout (comparé en NFC, les noms de macOS sont en NFD), puis le fichier du manifeste, puis la musique de la famille, sinon le silence ;
+  - un bruitage : le fichier choisi, ou son remplaçant (MONITEUR → COEUR ; HELICO → rien).
+  Dart n'a pas de normalisation Unicode : une table de recomposition, générée par Python, couvre les lettres latines accentuées.
+- **`PackAudio`** : l'import (zip lu en flux, ou dossier), dans `destiny_pack/` du dossier documents, sans `Sonniss GDC 2026` ; le bilan ; sur le web, le pack est lu à côté de l'appli (`destiny_pack/index.json`), pour répéter dans un navigateur.
+- **`ConduiteSon`** : cinq lecteurs (musique, Destiny, bruitage A, bruitage B, stinger), des fondus par pas de 50 ms, des séquences numérotées qu'on annule sans son orphelin (pause, sortie de la régie, son coupé).
+- **La table de régie** (`lib/presentation/regie_son/`) : conduite, tranches, banques par catégorie. Elle remplace la tablette son ; sans régie son branchée, ses pads jouent comme l'ancienne tablette.
+- **Les réglages** (`ReglagesRegieSon`, à part de ceux de Destiny) et deux écrans : le pack, la régie son (dont la banque de sons et le banc d'essai).
+
+### Choix pris sans Marouane
+
+- Le palier 4 s'appelle « Supprime » dans l'appli : la conduite ne regarde que le numéro du palier.
+- Un manifeste importé avec le pack remplace celui de l'appli s'il est au moins aussi récent.
+- Sur Android, un dossier partagé n'est pas toujours lisible : le .zip est conseillé à l'écran.
+- La séquence Destiny part au tonnerre du rituel ; le son Destiny arrive après le fondu de sortie de la musique (2 s, réglable).
+
+### Tests
+
+**335 tests passent.** Les nouveaux portent sur la résolution (propre, famille, NFD, absent), les bruitages (vide, remplacement, « Autre »), l'import, le bilan du vrai pack, les séquences avec un faux lecteur (ordre, annulation, son coupé) et la table dans la régie. Les 7 tests de rendu des cartes échouaient déjà avant (images de référence d'une autre machine).

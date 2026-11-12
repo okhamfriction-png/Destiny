@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../application/son/regie_son.dart';
 import '../../application/services/assistant_jeu.dart';
 import '../../application/services/audio_service.dart';
 import '../../application/state/ai_settings.dart';
@@ -41,6 +42,7 @@ class RootScreen extends StatefulWidget {
     required this.troupeStore,
     required this.reglages,
     this.assistantJeu,
+    this.regieSon,
     super.key,
   });
 
@@ -57,6 +59,9 @@ class RootScreen extends StatefulWidget {
   final TroupeStore troupeStore;
   final ReglagesDestiny reglages;
   final AssistantJeu? assistantJeu;
+
+  /// La régie son du spectacle (pack audio, conduite).
+  final RegieSon? regieSon;
 
   @override
   State<RootScreen> createState() => _RootScreenState();
@@ -105,6 +110,7 @@ class _RootScreenState extends State<RootScreen> {
         locationDetails: widget.locationDetails,
         audioService: widget.audioService,
         musicController: widget.musicController,
+        regieSon: widget.regieSon,
       ));
 
   @override
@@ -121,6 +127,7 @@ class _RootScreenState extends State<RootScreen> {
       relations: widget.relationCheatsheet,
       detailsLieux: widget.locationDetails,
       ia: widget.assistantJeu,
+      regieSon: widget.regieSon,
     );
     final pages = [
       JouerScreen(

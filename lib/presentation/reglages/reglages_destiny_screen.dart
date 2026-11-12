@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
 
 import '../../application/services/audio_service.dart';
+import '../../application/son/regie_son.dart';
 import '../../application/state/music_controller.dart';
 import '../../application/state/reglages_destiny.dart';
 import '../../domain/grammaire/chronos.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
+import '../regie_son/pack_audio_screen.dart';
+import '../regie_son/regie_son_screen.dart';
 import '../theme/destiny_theme.dart';
 
 /// Les réglages de Destiny : les chronos, le déclenchement et le rituel, les
 /// musiques des quatre moments, la distribution, le jeu de rôle,
 /// l'échauffement et les cartes. Tout est gardé tant qu'on ne le change pas.
 class ReglagesDestinyScreen extends StatelessWidget {
-  const ReglagesDestinyScreen({super.key, required this.reglages, required this.audio, required this.musique});
+  const ReglagesDestinyScreen(
+      {super.key, required this.reglages, required this.audio, required this.musique, this.regieSon});
 
   final ReglagesDestiny reglages;
   final AudioService audio;
   final MusicController musique;
+
+  /// La régie son du spectacle (pack audio et conduite automatique).
+  final RegieSon? regieSon;
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +117,29 @@ class ReglagesDestinyScreen extends StatelessWidget {
               const SizedBox(height: 8),
               _MusiquesImportees(musique: musique, reglages: r),
               _Bascule(k('regie_son'), r.regieSon, (v) => r.changer(regieSon: v), aide: k('regie_son_aide')),
+              if (regieSon != null) ...[
+                const SizedBox(height: 4),
+                ListTile(
+                  key: const ValueKey('ouvrir_regie_son_spectacle'),
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.tune_rounded),
+                  title: Text(t.t('regie_son.r.titre')),
+                  subtitle: Text(t.t('regie_son.r.entree_aide')),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                      builder: (_) => RegieSonScreen(regieSon: regieSon!, musique: musique))),
+                ),
+                ListTile(
+                  key: const ValueKey('ouvrir_pack_audio'),
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.library_music_rounded),
+                  title: Text(t.t('regie_son.pack.titre')),
+                  subtitle: Text(t.t('regie_son.pack.entree_aide')),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => Navigator.of(context)
+                      .push(MaterialPageRoute<void>(builder: (_) => PackAudioScreen(regieSon: regieSon!))),
+                ),
+              ],
             ]),
             SectionDestiny(titre: k('distribution'), enfants: [
               Text(k('joueurs'), style: Theme.of(context).textTheme.titleSmall),

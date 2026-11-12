@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../../application/son/regie_son.dart';
 import '../../application/services/assistant_jeu.dart';
 import '../../application/services/audio_service.dart';
 import '../../application/state/location_details.dart';
@@ -37,6 +38,7 @@ class ContexteTroupe {
     this.relations,
     this.detailsLieux,
     this.ia,
+    this.regieSon,
   });
 
   final TroupeStore store;
@@ -50,6 +52,10 @@ class ContexteTroupe {
 
   /// L'IA au service du jeu (facultative).
   final AssistantJeu? ia;
+
+  /// La régie son du spectacle : pack audio, réglages et conduite automatique
+  /// (facultative : sans elle, la régie garde son comportement d'avant).
+  final RegieSon? regieSon;
 }
 
 /// Ouvre l'écran de l'étape où en est la session.

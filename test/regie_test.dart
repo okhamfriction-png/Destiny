@@ -1,4 +1,15 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:destiny/application/services/audio_service.dart';
+import 'package:destiny/application/son/conduite_son.dart';
+import 'package:destiny/application/son/pack_audio.dart';
+import 'package:destiny/application/son/regie_son.dart';
+import 'package:destiny/application/son/reglages_regie_son.dart';
+import 'package:destiny/domain/son/manifeste_audio.dart';
+import 'package:destiny/domain/son/resolution_son.dart';
+import 'package:destiny/presentation/regie_son/table_regie.dart';
 import 'package:destiny/application/state/music_controller.dart';
 import 'package:destiny/application/state/reglages_destiny.dart';
 import 'package:destiny/application/state/troupe_store.dart';
@@ -25,6 +36,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'outils/grammaire_partagee.dart';
 import 'outils/textes_utilises.dart';
+import 'regie_son_test.dart' show LecteurFactice, fichiersDuManifeste;
 import 'troupe_test.dart' show CatalogueDeTest;
 
 late Grammaire g;
@@ -744,5 +756,71 @@ void main() {
 
   test('chaque texte des écrans Troupe existe', () {
     expect(textesManquants(['lib/presentation/troupe']), isEmpty);
+  });
+
+  test('chaque texte de la régie son existe', () {
+    expect(textesManquants(['lib/presentation/regie_son']), isEmpty);
+  });
+
+  testWidgets('avec le pack : la conduite part au chrono, la table montre la conduite et les banques', (tester) async {
+    final b = await _banc(tester);
+    final m = ManifesteAudio.depuisJson(
+        jsonDecode(File('assets/data/destiny_audio.json').readAsStringSync()) as Map<String, dynamic>);
+    final journal = <String>[];
+    final pack = PackAudio.pourTests(m, IndexPack(fichiersDuManifeste(m)));
+    final reglages = ReglagesRegieSon();
+    final regieSon = RegieSon(
+      pack: pack,
+      reglages: reglages,
+      conduite: ConduiteSon(
+        pack: pack,
+        reglages: reglages,
+        muet: () => b.audio.muted,
+        fabrique: (bus) => LecteurFactice(bus, journal),
+        attendre: (d) => d >= const Duration(seconds: 60) ? Completer<void>().future : Future<void>.value(),
+      ),
+    );
+    final c = b.contexte;
+    final contexte = ContexteTroupe(
+      store: c.store,
+      reglages: c.reglages,
+      catalogue: c.catalogue,
+      audio: c.audio,
+      musique: c.musique,
+      visuels: c.visuels,
+      regieSon: regieSon,
+    );
+    await _ouvrir(tester, RegieScreen(contexte: contexte, session: b.session));
+    expect(regieSon.conduite.active, isTrue);
+    expect(find.byKey(const ValueKey('bouton_danger')), findsOneWidget);
+
+    // Le chrono part : le son Destiny de l'ouverture, pas l'ancienne musique.
+    await tester.tap(find.byTooltip(_rg('demarrer')));
+    await tester.pump();
+    expect(journal, ['destiny:jouer:audio/DestinyStorm.wav']);
+    expect(b.musique.joues, isEmpty);
+
+    // « Danger » : le bruitage du palier 1.
+    await tester.tap(find.byKey(const ValueKey('bouton_danger')));
+    await tester.pump();
+    final codes = m.dangers[b.session.dangerId]!.codes(1);
+    expect(journal, contains(startsWith('bruitageA:jouer:Bruitages/${codes.first}')));
+
+    // La table : la conduite, les tranches, les banques par catégorie.
+    await tester.tap(find.byKey(const ValueKey('bouton_regie_son')));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.byType(TableRegie), findsOneWidget);
+    expect(find.text(t.t('regie_son.danger')), findsWidgets);
+    expect(find.text(t.t('regie_son.bus.musique').toUpperCase()), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('banque_cat:alertes')));
+    await tester.pump();
+    journal.clear();
+    await tester.tap(find.text(m.sons['ALARME']!.nom));
+    await tester.pump();
+    expect(journal, contains(startsWith('bruitageA:jouer:Bruitages/ALARME')));
+    await tester.tap(find.byKey(const ValueKey('fermer_regie_son')));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.tap(find.byTooltip(_rg('pause')));
+    await tester.pump();
   });
 }

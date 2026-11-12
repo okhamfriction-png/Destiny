@@ -65,7 +65,7 @@ L'accueil montre la promesse et, un jour sur deux, la règle d'or ou la répliqu
    - au premier figé, le rappel de fixer le besoin ;
    - à chaque acte, le geste (Dire, Bloquer, Nommer, Choisir) ; pour chaque joueur, ce que fait son archétype et le corps de son animal à ce palier ;
    - à l'acte 4, le dilemme du danger ;
-   - les moments forts notés avec l'heure, et la régie son.
+   - les moments forts notés avec l'heure, et la **table de régie** : la conduite du spectacle, les tranches et les banques de sons par catégorie. Avec le pack audio importé, la **conduite son automatique** enchaîne la musique de chaque acte, le son Destiny et le bruitage du danger.
 6. **Le débrief**, pour chaque personnage : « il veut… mais il a besoin de… », face à la phrase fixée au premier figé ; le choix de l'acte 4 et le prix payé ; ce qui a marché. Avec l'IA, un coach peut proposer ses phrases (les prénoms ne partent pas).
 7. **L'historique** des spectacles et des répétitions, chacun exportable en **PDF**.
 

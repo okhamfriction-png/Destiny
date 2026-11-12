@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../application/services/audio_service.dart';
-import '../../application/state/music_controller.dart';
+import '../../application/son/conduite_son.dart';
 import '../../application/state/reglages_destiny.dart';
 import '../../domain/entities/dilemma.dart';
 import '../../domain/grammaire/modeles.dart';
@@ -13,8 +12,9 @@ import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
 import '../destiny/rituel_destiny.dart';
+import '../regie_son/apparence_sons.dart';
+import '../regie_son/table_regie.dart';
 import '../theme/destiny_theme.dart';
-import '../widgets/sound_mixer_sheet.dart';
 import 'composants_troupe.dart';
 import 'troupe_screen.dart';
 
@@ -62,6 +62,10 @@ class _RegieScreenState extends State<RegieScreen> {
   bool get _enMarche => _minuteur?.isActive ?? false;
   int get _total => s.dureeMinutes * 60;
 
+  /// La conduite son automatique du spectacle (pack audio importé et actif).
+  ConduiteSon? get _conduite => widget.contexte.regieSon?.conduite;
+  bool get _conduiteActive => _conduite?.active ?? false;
+
   /// L'index (0 à 2) du prochain Destiny, ou null s'ils sont tous passés.
   int? get _prochain =>
       s.destinys.length < s.destinyMinutes.length && _palier != PalierId.supprime ? s.destinys.length : null;
@@ -70,6 +74,7 @@ class _RegieScreenState extends State<RegieScreen> {
   void initState() {
     super.initState();
     if (s.destinys.isNotEmpty) _ecoule = s.destinys.last.secondes;
+    _conduite?.preparer(lieuId: s.lieuId, dangerId: s.dangerId, acte: s.palierAtteint);
     widget.contexte.catalogue.getDilemmas().then((d) {
       if (!mounted) return;
       setState(() => _dilemmes = [
@@ -85,6 +90,9 @@ class _RegieScreenState extends State<RegieScreen> {
     for (final t in _musiques) {
       t.cancel();
     }
+    // En quittant la régie, plus rien ne joue : ni séquence, ni son orphelin.
+    final conduite = _conduite;
+    if (conduite != null) unawaited(conduite.stopTout());
     _note.dispose();
     super.dispose();
   }
@@ -92,12 +100,23 @@ class _RegieScreenState extends State<RegieScreen> {
   void _basculer() {
     if (_enMarche) {
       _minuteur?.cancel();
+      // Une séquence Destiny en cours s'arrête net avec le chrono.
+      if (_conduiteActive) unawaited(_conduite!.annulerSequence());
       setState(() {});
       return;
     }
     if (!_demarre) {
       _demarre = true;
-      if (!widget.contexte.audio.muted && r.musiqueActe(1) != ChoixMusique.aucune) {
+      if (_conduiteActive) {
+        // Conduite du spectacle : le son Destiny puis la musique de l'acte 1 ;
+        // une régie reprise en cours de spectacle repart sur son acte.
+        if (s.destinys.isEmpty) {
+          unawaited(_conduite!.ouverture());
+        } else {
+          unawaited(_conduite!.musiqueActe(s.palierAtteint));
+        }
+      } else if (!widget.contexte.audio.muted && r.musiqueActe(1) != ChoixMusique.aucune) {
+        _conduite?.arreterBus(BusSon.musique);
         widget.contexte.musique.jouerChoix(r.musiqueActe(1), lieu: s.lieuNom);
       }
     }
@@ -108,7 +127,18 @@ class _RegieScreenState extends State<RegieScreen> {
   void _seconde() {
     if (!mounted) return;
     setState(() => _ecoule++);
-    if (_ecoule == _total) widget.contexte.audio.playCrack();
+    if (_ecoule == _total) {
+      widget.contexte.audio.playCrack();
+      // Pas de coupure automatique (l'impro peut déborder), sauf si on la veut.
+      final regie = widget.contexte.regieSon;
+      if (_conduiteActive && regie != null) {
+        if (regie.reglages.v.conclusionFinChrono) {
+          unawaited(_conduite!.conclusion());
+        } else if (regie.reglages.v.coupureFinChrono) {
+          unawaited(_conduite!.fonduFin());
+        }
+      }
+    }
     if (_ecoule == _total - 10) widget.contexte.audio.playThunder();
     final auto = r.declenchement != Declenchement.manuel;
     final prochain = _prochain;
@@ -145,6 +175,12 @@ class _RegieScreenState extends State<RegieScreen> {
       ),
       auTonnerre: () {
         if (widget.contexte.audio.muted) return;
+        if (_conduiteActive) {
+          // La conduite enchaîne tout : sortie de la musique, son Destiny,
+          // REVEAL, bruitage du nouveau palier, musique de l'acte.
+          unawaited(_conduite!.destiny(s.destinys.length));
+          return;
+        }
         widget.contexte.audio.playEffet(r.sonDestiny);
         widget.contexte.musique.jouerDestiny(r.musiqueDestiny);
       },
@@ -156,11 +192,13 @@ class _RegieScreenState extends State<RegieScreen> {
   /// La musique de l'acte qui commence, 15 s après le Destiny [numero] (celle
   /// des réglages : l'acte 2 après le 1er Destiny, et ainsi de suite).
   void _programmerMusiques(int numero) {
-    if (widget.contexte.audio.muted) return;
+    if (widget.contexte.audio.muted || _conduiteActive) return;
     final choix = r.musiqueActe(numero + 1);
     if (choix == ChoixMusique.aucune) return;
     _musiques.add(Timer(const Duration(seconds: 15), () {
-      if (mounted) widget.contexte.musique.jouerChoix(choix, lieu: s.lieuNom);
+      if (!mounted) return;
+      _conduite?.arreterBus(BusSon.musique);
+      widget.contexte.musique.jouerChoix(choix, lieu: s.lieuNom);
     }));
   }
 
@@ -311,12 +349,18 @@ class _RegieScreenState extends State<RegieScreen> {
               ),
             ),
           ),
+          // Le bruitage du palier, à la main (conduite du spectacle).
+          if (_conduiteActive) ...[
+            const SizedBox(width: 10),
+            _BoutonDanger(conduite: _conduite!, libelle: t.t('regie_son.danger')),
+          ],
           // La régie son, sauf si on l'a retirée dans les réglages.
           if (r.regieSon) ...[
             const SizedBox(width: 10),
             BoutonRegieSon(contexte: widget.contexte, session: s, compact: true),
           ],
         ]),
+        if (_conduiteActive) _EtatConduite(conduite: _conduite!),
       ]),
     );
     return MediaQuery.withClampedTextScaling(maxScaleFactor: 1.3, child: panneau);
@@ -398,190 +442,102 @@ class _RegieScreenState extends State<RegieScreen> {
   }
 }
 
-/// La régie son, en tablette : de grandes tuiles pour les musiques du
-/// spectacle, le son de Destiny et Stop, plus tout le mixeur. Elle respecte
-/// le son coupé. Elle s'ouvre dans une fenêtre ([ouvrirRegieSon]).
-class TabletteSon extends StatefulWidget {
+/// La régie son : la table de régie (conduite du spectacle, tranches,
+/// banques de sons par catégorie). Elle respecte le son coupé. Elle s'ouvre
+/// en plein écran ([ouvrirRegieSon]).
+class TabletteSon extends StatelessWidget {
   const TabletteSon({super.key, required this.contexte, required this.session});
 
   final ContexteTroupe contexte;
   final SessionTroupe session;
 
   @override
-  State<TabletteSon> createState() => _TabletteSonState();
+  Widget build(BuildContext context) => TableRegie(contexte: contexte, session: session);
 }
 
-class _TabletteSonState extends State<TabletteSon> {
-  MusicController get _musique => widget.contexte.musique;
-  AudioService get _audio => widget.contexte.audio;
-  ReglagesDestiny get _r => widget.contexte.reglages;
-  String get _lieu => widget.session.lieuNom;
+/// Ouvre la table de régie en plein écran, par-dessus la régie : on la ferme
+/// avec la croix. Le chrono continue pendant ce temps.
+Future<void> ouvrirRegieSon(BuildContext context, ContexteTroupe contexte, SessionTroupe session) =>
+    ouvrirTableRegie(context, contexte, session, contenu: TabletteSon(contexte: contexte, session: session));
 
-  /// Un choix « aucune » devient la musique par défaut : si on appuie,
-  /// c'est qu'on veut l'entendre.
-  String _ou(String choix, String defaut) => choix.isEmpty || choix == ChoixMusique.aucune ? defaut : choix;
+/// Le bouton « Danger » du panneau du chrono : rejoue le bruitage du palier
+/// en cours, musique atténuée.
+class _BoutonDanger extends StatelessWidget {
+  const _BoutonDanger({required this.conduite, required this.libelle});
 
-  /// Le fichier que ferait jouer ce choix (pour allumer la tuile qui joue).
-  String? _fichier(String choix) {
-    if (choix != ChoixMusique.lieu) return choix;
-    final nom = _lieu.trim().toLowerCase();
-    for (final piste in _musique.tracks) {
-      if (piste.category == 'Lieux' && piste.title.trim().toLowerCase() == nom) return piste.file;
-    }
-    return null;
-  }
-
-  void _jouer(String choix) {
-    if (_audio.muted) return;
-    _musique.jouerChoix(choix, lieu: _lieu);
-  }
-
-  void _sonDestiny() {
-    if (_audio.muted) return;
-    _audio.playEffet(_r.sonDestiny == 'aucun' ? 'storm' : _r.sonDestiny);
-  }
-
-  void _stop() {
-    _musique.stop();
-    _audio.stopStorm();
-  }
+  final ConduiteSon conduite;
+  final String libelle;
 
   @override
   Widget build(BuildContext context) {
-    final t = context.textes;
     final c = context.destiny;
-    String rg(String k, [Map<String, String> v = const {}]) => t.t('regie.$k', v);
-    final muet = _audio.muted;
-    // La musique de chaque acte (celle des réglages, ou à défaut le début,
-    // l'ambiance du lieu, puis la fin), et l'ambiance du lieu.
-    const icones = [Icons.looks_one_rounded, Icons.looks_two_rounded, Icons.looks_3_rounded, Icons.looks_4_rounded];
-    const defauts = [ChoixMusique.commencement, ChoixMusique.lieu, ChoixMusique.lieu, ChoixMusique.conclusion];
-    final musiques = [
-      for (var acte = 1; acte <= 4; acte++)
-        (icones[acte - 1], rg('son_acte', {'n': '$acte'}), _ou(_r.musiqueActe(acte), defauts[acte - 1])),
-      (Icons.place_rounded, rg('son_lieu'), ChoixMusique.lieu),
-    ];
-
-    return ListenableBuilder(
-      listenable: _musique,
-      builder: (context, _) {
-        final enCours = _musique.playing ? _musique.current : null;
-        final enfants = <Widget>[
-          if (muet)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Wrap(crossAxisAlignment: WrapCrossAlignment.center, spacing: 8, children: [
-                Icon(Icons.volume_off_rounded, color: c.texteSecondaire),
-                Text(rg('son_coupe'), style: TextStyle(fontFamily: kPoliceTexte, color: c.texteSecondaire)),
-                TextButton(
-                  onPressed: () => setState(() => _audio.setMuted(false)),
-                  child: Text(rg('son_remettre')),
-                ),
-              ]),
+    const couleur = Color(0xFFFF7043);
+    return Tooltip(
+      message: libelle,
+      child: SizedBox(
+        width: 64,
+        height: 58,
+        child: OutlinedButton(
+          key: const ValueKey('bouton_danger'),
+          style: OutlinedButton.styleFrom(
+            padding: EdgeInsets.zero,
+            side: const BorderSide(color: couleur, width: 1.5),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          ),
+          onPressed: conduite.danger,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Icon(Icons.warning_rounded, size: 24, color: c.accent(couleur)),
+            Text(
+              libelle,
+              style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 12, color: c.accent(couleur)),
             ),
-          LayoutBuilder(builder: (context, contraintes) {
-            final colonnes = contraintes.maxWidth >= 560 ? 3 : 2;
-            // Texte très agrandi : l'icône passe au-dessus du libellé, pour
-            // ne pas couper les mots.
-            final empilee = MediaQuery.textScalerOf(context).scale(10) > 12.5;
-            final tuiles = [
-              for (final (icone, libelle, choix) in musiques)
-                _TuileSon(
-                  icone: icone,
-                  libelle: libelle,
-                  couleur: c.or,
-                  empilee: empilee,
-                  actif: enCours != null && enCours.file == _fichier(choix),
-                  onTap: muet ? null : () => _jouer(choix),
-                ),
-              _TuileSon(
-                icone: Icons.flash_on_rounded,
-                libelle: rg('son_destiny'),
-                couleur: c.bleuDestiny,
-                empilee: empilee,
-                onTap: muet ? null : _sonDestiny,
-              ),
-              _TuileSon(
-                icone: Icons.stop_rounded,
-                libelle: rg('son_stop'),
-                couleur: Theme.of(context).colorScheme.error,
-                empilee: empilee,
-                onTap: _stop,
-              ),
-            ];
-            return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              // Des rangées de tuiles de même hauteur.
-              for (var i = 0; i < tuiles.length; i += colonnes)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: IntrinsicHeight(
-                    child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                      for (var j = i; j < i + colonnes; j++) ...[
-                        if (j > i) const SizedBox(width: 10),
-                        Expanded(child: j < tuiles.length ? tuiles[j] : const SizedBox.shrink()),
-                      ],
-                    ]),
-                  ),
-                ),
-              _TuileSon(
-                icone: Icons.graphic_eq_rounded,
-                libelle: rg('son_mixeur'),
-                couleur: c.titre,
-                compacte: true,
-                onTap: () => showSoundMixer(context, _musique),
-              ),
-            ]);
-          }),
-          if (enCours != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Row(children: [
-                Icon(Icons.graphic_eq_rounded, size: 18, color: c.titre),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    rg('son_en_cours', {'titre': enCours.title}),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, color: c.texteSecondaire),
-                  ),
-                ),
-              ]),
-            ),
-        ];
-        return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: enfants);
-      },
+          ]),
+        ),
+      ),
     );
   }
 }
 
-/// Ouvre la régie son dans une fenêtre, par-dessus l'écran : on la ferme
-/// avec la croix, en la glissant vers le bas ou en touchant à côté. Le chrono
-/// continue pendant ce temps.
-Future<void> ouvrirRegieSon(BuildContext context, ContexteTroupe contexte, SessionTroupe session) {
-  final t = context.textes;
-  return showModalBottomSheet<void>(
-    context: context,
-    isScrollControlled: true,
-    showDragHandle: true,
-    useSafeArea: true,
-    builder: (ctx) => SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Row(children: [
-          Expanded(child: Text(t.t('regie.son'), style: Theme.of(ctx).textTheme.titleLarge)),
-          IconButton(
-            key: const ValueKey('fermer_regie_son'),
-            tooltip: t.t('regie.son_fermer'),
-            icon: const Icon(Icons.close_rounded),
-            onPressed: () => Navigator.pop(ctx),
-          ),
-        ]),
-        const SizedBox(height: 8),
-        TabletteSon(contexte: contexte, session: session),
-      ]),
-    ),
-  );
+/// Une ligne sous DESTINY : ce que fait la conduite son en ce moment.
+class _EtatConduite extends StatelessWidget {
+  const _EtatConduite({required this.conduite});
+
+  final ConduiteSon conduite;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.destiny;
+    final t = context.textes;
+    return ListenableBuilder(
+      listenable: conduite,
+      builder: (context, _) {
+        final musique = conduite.lecteurs[BusSon.musique]!.enCours;
+        final etape = conduite.etape;
+        final texte = etape != EtapeConduite.repos
+            ? t.t('regie_son.etapes.${etape.name}')
+            : (musique?.titre ?? t.t('regie_son.au_repos'));
+        return Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Row(children: [
+            Icon(etape != EtapeConduite.repos ? Icons.auto_mode_rounded : Icons.graphic_eq_rounded,
+                size: 16, color: etape != EtapeConduite.repos ? Console.or : c.texteSecondaire),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                texte,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13, color: c.texteSecondaire),
+              ),
+            ),
+            if (conduite.attenue)
+              Text(t.t('regie_son.attenuee'),
+                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12, fontWeight: FontWeight.w700, color: c.titre)),
+          ]),
+        );
+      },
+    );
+  }
 }
 
 /// Le bouton de la régie son : il ouvre toute la tablette son dans une
@@ -655,94 +611,6 @@ class BoutonRegieSon extends StatelessWidget {
           ]),
         );
       },
-    );
-  }
-}
-
-/// Une grande tuile de la régie son.
-class _TuileSon extends StatelessWidget {
-  const _TuileSon({
-    required this.icone,
-    required this.libelle,
-    required this.couleur,
-    required this.onTap,
-    this.actif = false,
-    this.compacte = false,
-    this.empilee = false,
-  });
-
-  final IconData icone;
-  final String libelle;
-  final Color couleur;
-  final VoidCallback? onTap;
-  final bool actif;
-
-  /// Une tuile basse, centrée (« Tout le mixeur »).
-  final bool compacte;
-
-  /// L'icône au-dessus du libellé (texte très agrandi).
-  final bool empilee;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.destiny;
-    final pastille = PastilleIcone(icone, couleur: couleur, taille: compacte ? 32 : 38);
-    final temoin = Icon(Icons.volume_up_rounded, size: 18, color: c.accent(couleur));
-    final texte = Text(
-      libelle,
-      maxLines: 3,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(
-        fontFamily: kPoliceTexte,
-        fontWeight: FontWeight.w700,
-        fontSize: 14.5,
-        height: 1.2,
-        color: c.texte,
-      ),
-    );
-    return Semantics(
-      button: true,
-      selected: actif,
-      enabled: onTap != null,
-      child: Opacity(
-        opacity: onTap == null ? 0.5 : 1,
-        child: Material(
-          color: actif ? c.teinte(couleur) : c.carte,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-            side: BorderSide(color: actif ? couleur : c.ligne, width: actif ? 2 : 1),
-          ),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(14),
-            onTap: onTap,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: compacte ? 52 : 68),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
-                child: empilee
-                    ? Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-                        Row(children: [
-                          pastille,
-                          const Spacer(),
-                          if (actif) temoin,
-                        ]),
-                        const SizedBox(height: 6),
-                        texte,
-                      ])
-                    : Row(
-                        mainAxisAlignment: compacte ? MainAxisAlignment.center : MainAxisAlignment.start,
-                        children: [
-                          pastille,
-                          const SizedBox(width: 10),
-                          Flexible(fit: compacte ? FlexFit.loose : FlexFit.tight, child: texte),
-                          if (actif) ...[const SizedBox(width: 6), temoin],
-                        ],
-                      ),
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

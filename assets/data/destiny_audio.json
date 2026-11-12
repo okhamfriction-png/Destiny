@@ -1,0 +1,3708 @@
+{
+ "version": 1,
+ "description": "Pack audio du spectacle Destiny : musiques par lieu et par acte, bruitages du danger par palier, stingers de révélation. Chemins relatifs à la racine du pack (le dossier Spectacle du NAS ShikaZero, ou sa copie importée dans l'app).",
+ "racine_nas": "/Volumes/ShikaZero/Spectacle",
+ "dossiers": {
+  "musiques": "Musiques Destiny",
+  "bruitages": "Bruitages",
+  "a_ignorer": [
+   "Bruitages/Sonniss GDC 2026"
+  ]
+ },
+ "convention_noms_musiques": {
+  "acte_1": "Destiny Intro NN - <Lieu>.mp3",
+  "actes_2_a_4": "Destiny Acte K - NN - <Lieu>.mp3",
+  "note": "NN = numéro du lieu sur 2 chiffres (champ numero), recherche récursive dans le dossier musiques, comparaison en Unicode NFC"
+ },
+ "familles": {
+  "Transports": {
+   "lieu_reference": "avion",
+   "lieux": [
+    "avion",
+    "aeroport",
+    "metro",
+    "navire_croisiere",
+    "port_maritime",
+    "station_service"
+   ]
+  },
+  "Loisirs": {
+   "lieu_reference": "restaurant_gastronomique",
+   "lieux": [
+    "restaurant_gastronomique",
+    "boite_nuit",
+    "casino",
+    "hotel_luxe",
+    "centre_commercial",
+    "supermarche",
+    "salle_sport",
+    "stade",
+    "plateau_tele",
+    "theatre"
+   ]
+  },
+  "Nature": {
+   "lieu_reference": "refuge_montagne",
+   "lieux": [
+    "refuge_montagne",
+    "camping",
+    "ferme",
+    "foret",
+    "zoo",
+    "aquarium"
+   ]
+  },
+  "Science et huis clos": {
+   "lieu_reference": "sous_marin",
+   "lieux": [
+    "sous_marin",
+    "base_spatiale",
+    "laboratoire",
+    "bunker_militaire",
+    "usine",
+    "hopital"
+   ]
+  },
+  "Mystère": {
+   "lieu_reference": "eglise",
+   "lieux": [
+    "eglise",
+    "manoir_abandonne",
+    "musee",
+    "bibliotheque"
+   ]
+  },
+  "Institutions": {
+   "lieu_reference": "commissariat",
+   "lieux": [
+    "commissariat",
+    "prison",
+    "tribunal",
+    "palais_presidentiel",
+    "banque",
+    "bureau",
+    "universite",
+    "ecole"
+   ]
+  }
+ },
+ "lieux": {
+  "aeroport": {
+   "nom": "Aéroport",
+   "numero": 3,
+   "famille": "Transports",
+   "noms_attendus": {
+    "1": "Destiny Intro 03 - Aéroport.mp3",
+    "2": "Destiny Acte 2 - 03 - Aéroport.mp3",
+    "3": "Destiny Acte 3 - 03 - Aéroport.mp3",
+    "4": "Destiny Acte 4 - 03 - Aéroport.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Intro 02 - Avion en vol.mp3",
+     "duree_s": 165.0,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 2 - 02 - Avion en vol.mp3",
+     "duree_s": 173.4,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 3 - 02 - Avion en vol.mp3",
+     "duree_s": 147.2,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 4 - 02 - Avion en vol.mp3",
+     "duree_s": 169.2,
+     "source": "famille"
+    }
+   }
+  },
+  "laboratoire": {
+   "nom": "Laboratoire de recherche",
+   "numero": 17,
+   "famille": "Science et huis clos",
+   "noms_attendus": {
+    "1": "Destiny Intro 17 - Laboratoire de recherche.mp3",
+    "2": "Destiny Acte 2 - 17 - Laboratoire de recherche.mp3",
+    "3": "Destiny Acte 3 - 17 - Laboratoire de recherche.mp3",
+    "4": "Destiny Acte 4 - 17 - Laboratoire de recherche.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Intro 29 - Sous-marin.mp3",
+     "duree_s": 183.6,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 2 - 29 - Sous-marin.mp3",
+     "duree_s": 138.0,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 3 - 29 - Sous-marin.mp3",
+     "duree_s": 104.5,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 4 - 29 - Sous-marin.mp3",
+     "duree_s": 180.0,
+     "source": "famille"
+    }
+   }
+  },
+  "hotel_luxe": {
+   "nom": "Hôtel de luxe",
+   "numero": 16,
+   "famille": "Loisirs",
+   "noms_attendus": {
+    "1": "Destiny Intro 16 - Hôtel de luxe.mp3",
+    "2": "Destiny Acte 2 - 16 - Hôtel de luxe.mp3",
+    "3": "Destiny Acte 3 - 16 - Hôtel de luxe.mp3",
+    "4": "Destiny Acte 4 - 16 - Hôtel de luxe.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Intro 27 - Restaurant gastronomique.mp3",
+     "duree_s": 157.7,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 167.1,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 154.0,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 199.2,
+     "source": "famille"
+    }
+   }
+  },
+  "ferme": {
+   "nom": "Ferme",
+   "numero": 13,
+   "famille": "Nature",
+   "noms_attendus": {
+    "1": "Destiny Intro 13 - Ferme.mp3",
+    "2": "Destiny Acte 2 - 13 - Ferme.mp3",
+    "3": "Destiny Acte 3 - 13 - Ferme.mp3",
+    "4": "Destiny Acte 4 - 13 - Ferme.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Intro 26 - Refuge de montagne.mp3",
+     "duree_s": 151.8,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 2 - 26 - Refuge de montagne.mp3",
+     "duree_s": 163.9,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 3 - 26 - Refuge de montagne.mp3",
+     "duree_s": 148.8,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 4 - 26 - Refuge de montagne.mp3",
+     "duree_s": 197.6,
+     "source": "famille"
+    }
+   }
+  },
+  "bunker_militaire": {
+   "nom": "Bunker militaire",
+   "numero": 7,
+   "famille": "Science et huis clos",
+   "noms_attendus": {
+    "1": "Destiny Intro 07 - Bunker militaire.mp3",
+    "2": "Destiny Acte 2 - 07 - Bunker militaire.mp3",
+    "3": "Destiny Acte 3 - 07 - Bunker militaire.mp3",
+    "4": "Destiny Acte 4 - 07 - Bunker militaire.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Intro 29 - Sous-marin.mp3",
+     "duree_s": 183.6,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 2 - 29 - Sous-marin.mp3",
+     "duree_s": 138.0,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 3 - 29 - Sous-marin.mp3",
+     "duree_s": 104.5,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 4 - 29 - Sous-marin.mp3",
+     "duree_s": 180.0,
+     "source": "famille"
+    }
+   }
+  },
+  "bibliotheque": {
+   "nom": "Bibliothèque",
+   "numero": 5,
+   "famille": "Mystère",
+   "noms_attendus": {
+    "1": "Destiny Intro 05 - Bibliothèque.mp3",
+    "2": "Destiny Acte 2 - 05 - Bibliothèque.mp3",
+    "3": "Destiny Acte 3 - 05 - Bibliothèque.mp3",
+    "4": "Destiny Acte 4 - 05 - Bibliothèque.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Mystère - Église/Destiny Intro 40 - Église.mp3",
+     "duree_s": 115.2,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 2 - 40 - Église.mp3",
+     "duree_s": 103.4,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 3 - 40 - Église.mp3",
+     "duree_s": 110.0,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 4 - 40 - Église.mp3",
+     "duree_s": 415.9,
+     "source": "famille"
+    }
+   }
+  },
+  "usine": {
+   "nom": "Usine",
+   "numero": 37,
+   "famille": "Science et huis clos",
+   "noms_attendus": {
+    "1": "Destiny Intro 37 - Usine.mp3",
+    "2": "Destiny Acte 2 - 37 - Usine.mp3",
+    "3": "Destiny Acte 3 - 37 - Usine.mp3",
+    "4": "Destiny Acte 4 - 37 - Usine.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Intro 29 - Sous-marin.mp3",
+     "duree_s": 183.6,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 2 - 29 - Sous-marin.mp3",
+     "duree_s": 138.0,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 3 - 29 - Sous-marin.mp3",
+     "duree_s": 104.5,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 4 - 29 - Sous-marin.mp3",
+     "duree_s": 180.0,
+     "source": "famille"
+    }
+   }
+  },
+  "restaurant_gastronomique": {
+   "nom": "Restaurant gastronomique",
+   "numero": 27,
+   "famille": "Loisirs",
+   "noms_attendus": {
+    "1": "Destiny Intro 27 - Restaurant gastronomique.mp3",
+    "2": "Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
+    "3": "Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
+    "4": "Destiny Acte 4 - 27 - Restaurant gastronomique.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Intro 27 - Restaurant gastronomique.mp3",
+     "duree_s": 157.7,
+     "source": "lieu"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 167.1,
+     "source": "lieu"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 154.0,
+     "source": "lieu"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 199.2,
+     "source": "lieu"
+    }
+   }
+  },
+  "commissariat": {
+   "nom": "Commissariat",
+   "numero": 12,
+   "famille": "Institutions",
+   "noms_attendus": {
+    "1": "Destiny Intro 12 - Commissariat.mp3",
+    "2": "Destiny Acte 2 - 12 - Commissariat.mp3",
+    "3": "Destiny Acte 3 - 12 - Commissariat.mp3",
+    "4": "Destiny Acte 4 - 12 - Commissariat.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Intro 12 - Commissariat.mp3",
+     "duree_s": 93.2,
+     "source": "lieu"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 2 - 12 - Commissariat.mp3",
+     "duree_s": 189.7,
+     "source": "lieu"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 3 - 12 - Commissariat.mp3",
+     "duree_s": 154.4,
+     "source": "lieu"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 4 - 12 - Commissariat.mp3",
+     "duree_s": 194.8,
+     "source": "lieu"
+    }
+   }
+  },
+  "centre_commercial": {
+   "nom": "Centre commercial",
+   "numero": 11,
+   "famille": "Loisirs",
+   "noms_attendus": {
+    "1": "Destiny Intro 11 - Centre commercial.mp3",
+    "2": "Destiny Acte 2 - 11 - Centre commercial.mp3",
+    "3": "Destiny Acte 3 - 11 - Centre commercial.mp3",
+    "4": "Destiny Acte 4 - 11 - Centre commercial.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Intro 27 - Restaurant gastronomique.mp3",
+     "duree_s": 157.7,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 167.1,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 154.0,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 199.2,
+     "source": "famille"
+    }
+   }
+  },
+  "zoo": {
+   "nom": "Zoo",
+   "numero": 38,
+   "famille": "Nature",
+   "noms_attendus": {
+    "1": "Destiny Intro 38 - Zoo.mp3",
+    "2": "Destiny Acte 2 - 38 - Zoo.mp3",
+    "3": "Destiny Acte 3 - 38 - Zoo.mp3",
+    "4": "Destiny Acte 4 - 38 - Zoo.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Intro 26 - Refuge de montagne.mp3",
+     "duree_s": 151.8,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 2 - 26 - Refuge de montagne.mp3",
+     "duree_s": 163.9,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 3 - 26 - Refuge de montagne.mp3",
+     "duree_s": 148.8,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 4 - 26 - Refuge de montagne.mp3",
+     "duree_s": 197.6,
+     "source": "famille"
+    }
+   }
+  },
+  "musee": {
+   "nom": "Musée",
+   "numero": 19,
+   "famille": "Mystère",
+   "noms_attendus": {
+    "1": "Destiny Intro 19 - Musée.mp3",
+    "2": "Destiny Acte 2 - 19 - Musée.mp3",
+    "3": "Destiny Acte 3 - 19 - Musée.mp3",
+    "4": "Destiny Acte 4 - 19 - Musée.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Mystère - Église/Destiny Intro 40 - Église.mp3",
+     "duree_s": 115.2,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 2 - 40 - Église.mp3",
+     "duree_s": 103.4,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 3 - 40 - Église.mp3",
+     "duree_s": 110.0,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 4 - 40 - Église.mp3",
+     "duree_s": 415.9,
+     "source": "famille"
+    }
+   }
+  },
+  "camping": {
+   "nom": "Camping",
+   "numero": 9,
+   "famille": "Nature",
+   "noms_attendus": {
+    "1": "Destiny Intro 09 - Camping.mp3",
+    "2": "Destiny Acte 2 - 09 - Camping.mp3",
+    "3": "Destiny Acte 3 - 09 - Camping.mp3",
+    "4": "Destiny Acte 4 - 09 - Camping.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Intro 26 - Refuge de montagne.mp3",
+     "duree_s": 151.8,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 2 - 26 - Refuge de montagne.mp3",
+     "duree_s": 163.9,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 3 - 26 - Refuge de montagne.mp3",
+     "duree_s": 148.8,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 4 - 26 - Refuge de montagne.mp3",
+     "duree_s": 197.6,
+     "source": "famille"
+    }
+   }
+  },
+  "plateau_tele": {
+   "nom": "Plateau télé",
+   "numero": 23,
+   "famille": "Loisirs",
+   "noms_attendus": {
+    "1": "Destiny Intro 23 - Plateau télé.mp3",
+    "2": "Destiny Acte 2 - 23 - Plateau télé.mp3",
+    "3": "Destiny Acte 3 - 23 - Plateau télé.mp3",
+    "4": "Destiny Acte 4 - 23 - Plateau télé.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Intro 27 - Restaurant gastronomique.mp3",
+     "duree_s": 157.7,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 167.1,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 154.0,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 199.2,
+     "source": "famille"
+    }
+   }
+  },
+  "boite_nuit": {
+   "nom": "Boîte de nuit",
+   "numero": 6,
+   "famille": "Loisirs",
+   "noms_attendus": {
+    "1": "Destiny Intro 06 - Boîte de nuit.mp3",
+    "2": "Destiny Acte 2 - 06 - Boîte de nuit.mp3",
+    "3": "Destiny Acte 3 - 06 - Boîte de nuit.mp3",
+    "4": "Destiny Acte 4 - 06 - Boîte de nuit.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Intro 27 - Restaurant gastronomique.mp3",
+     "duree_s": 157.7,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 167.1,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 154.0,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 199.2,
+     "source": "famille"
+    }
+   }
+  },
+  "base_spatiale": {
+   "nom": "Station spatiale",
+   "numero": 31,
+   "famille": "Science et huis clos",
+   "noms_attendus": {
+    "1": "Destiny Intro 31 - Station spatiale.mp3",
+    "2": "Destiny Acte 2 - 31 - Station spatiale.mp3",
+    "3": "Destiny Acte 3 - 31 - Station spatiale.mp3",
+    "4": "Destiny Acte 4 - 31 - Station spatiale.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Intro 29 - Sous-marin.mp3",
+     "duree_s": 183.6,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 2 - 29 - Sous-marin.mp3",
+     "duree_s": 138.0,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 3 - 29 - Sous-marin.mp3",
+     "duree_s": 104.5,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 4 - 29 - Sous-marin.mp3",
+     "duree_s": 180.0,
+     "source": "famille"
+    }
+   }
+  },
+  "bureau": {
+   "nom": "Bureau",
+   "numero": 8,
+   "famille": "Institutions",
+   "noms_attendus": {
+    "1": "Destiny Intro 08 - Bureau.mp3",
+    "2": "Destiny Acte 2 - 08 - Bureau.mp3",
+    "3": "Destiny Acte 3 - 08 - Bureau.mp3",
+    "4": "Destiny Acte 4 - 08 - Bureau.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Intro 12 - Commissariat.mp3",
+     "duree_s": 93.2,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 2 - 12 - Commissariat.mp3",
+     "duree_s": 189.7,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 3 - 12 - Commissariat.mp3",
+     "duree_s": 154.4,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 4 - 12 - Commissariat.mp3",
+     "duree_s": 194.8,
+     "source": "famille"
+    }
+   }
+  },
+  "palais_presidentiel": {
+   "nom": "Palais présidentiel",
+   "numero": 22,
+   "famille": "Institutions",
+   "noms_attendus": {
+    "1": "Destiny Intro 22 - Palais présidentiel.mp3",
+    "2": "Destiny Acte 2 - 22 - Palais présidentiel.mp3",
+    "3": "Destiny Acte 3 - 22 - Palais présidentiel.mp3",
+    "4": "Destiny Acte 4 - 22 - Palais présidentiel.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Intro 12 - Commissariat.mp3",
+     "duree_s": 93.2,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 2 - 12 - Commissariat.mp3",
+     "duree_s": 189.7,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 3 - 12 - Commissariat.mp3",
+     "duree_s": 154.4,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 4 - 12 - Commissariat.mp3",
+     "duree_s": 194.8,
+     "source": "famille"
+    }
+   }
+  },
+  "manoir_abandonne": {
+   "nom": "Manoir abandonné",
+   "numero": 18,
+   "famille": "Mystère",
+   "noms_attendus": {
+    "1": "Destiny Intro 18 - Manoir abandonné.mp3",
+    "2": "Destiny Acte 2 - 18 - Manoir abandonné.mp3",
+    "3": "Destiny Acte 3 - 18 - Manoir abandonné.mp3",
+    "4": "Destiny Acte 4 - 18 - Manoir abandonné.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Mystère - Église/Destiny Intro 40 - Église.mp3",
+     "duree_s": 115.2,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 2 - 40 - Église.mp3",
+     "duree_s": 103.4,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 3 - 40 - Église.mp3",
+     "duree_s": 110.0,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 4 - 40 - Église.mp3",
+     "duree_s": 415.9,
+     "source": "famille"
+    }
+   }
+  },
+  "prison": {
+   "nom": "Prison",
+   "numero": 25,
+   "famille": "Institutions",
+   "noms_attendus": {
+    "1": "Destiny Intro 25 - Prison.mp3",
+    "2": "Destiny Acte 2 - 25 - Prison.mp3",
+    "3": "Destiny Acte 3 - 25 - Prison.mp3",
+    "4": "Destiny Acte 4 - 25 - Prison.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Intro 12 - Commissariat.mp3",
+     "duree_s": 93.2,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 2 - 12 - Commissariat.mp3",
+     "duree_s": 189.7,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 3 - 12 - Commissariat.mp3",
+     "duree_s": 154.4,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 4 - 12 - Commissariat.mp3",
+     "duree_s": 194.8,
+     "source": "famille"
+    }
+   }
+  },
+  "stade": {
+   "nom": "Stade",
+   "numero": 30,
+   "famille": "Loisirs",
+   "noms_attendus": {
+    "1": "Destiny Intro 30 - Stade.mp3",
+    "2": "Destiny Acte 2 - 30 - Stade.mp3",
+    "3": "Destiny Acte 3 - 30 - Stade.mp3",
+    "4": "Destiny Acte 4 - 30 - Stade.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Intro 27 - Restaurant gastronomique.mp3",
+     "duree_s": 157.7,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 167.1,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 154.0,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 199.2,
+     "source": "famille"
+    }
+   }
+  },
+  "refuge_montagne": {
+   "nom": "Refuge de montagne",
+   "numero": 26,
+   "famille": "Nature",
+   "noms_attendus": {
+    "1": "Destiny Intro 26 - Refuge de montagne.mp3",
+    "2": "Destiny Acte 2 - 26 - Refuge de montagne.mp3",
+    "3": "Destiny Acte 3 - 26 - Refuge de montagne.mp3",
+    "4": "Destiny Acte 4 - 26 - Refuge de montagne.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Intro 26 - Refuge de montagne.mp3",
+     "duree_s": 151.8,
+     "source": "lieu"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 2 - 26 - Refuge de montagne.mp3",
+     "duree_s": 163.9,
+     "source": "lieu"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 3 - 26 - Refuge de montagne.mp3",
+     "duree_s": 148.8,
+     "source": "lieu"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 4 - 26 - Refuge de montagne.mp3",
+     "duree_s": 197.6,
+     "source": "lieu"
+    }
+   }
+  },
+  "banque": {
+   "nom": "Banque",
+   "numero": 4,
+   "famille": "Institutions",
+   "noms_attendus": {
+    "1": "Destiny Intro 04 - Banque.mp3",
+    "2": "Destiny Acte 2 - 04 - Banque.mp3",
+    "3": "Destiny Acte 3 - 04 - Banque.mp3",
+    "4": "Destiny Acte 4 - 04 - Banque.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Intro 12 - Commissariat.mp3",
+     "duree_s": 93.2,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 2 - 12 - Commissariat.mp3",
+     "duree_s": 189.7,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 3 - 12 - Commissariat.mp3",
+     "duree_s": 154.4,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 4 - 12 - Commissariat.mp3",
+     "duree_s": 194.8,
+     "source": "famille"
+    }
+   }
+  },
+  "aquarium": {
+   "nom": "Aquarium",
+   "numero": 1,
+   "famille": "Nature",
+   "noms_attendus": {
+    "1": "Destiny Intro 01 - Aquarium.mp3",
+    "2": "Destiny Acte 2 - 01 - Aquarium.mp3",
+    "3": "Destiny Acte 3 - 01 - Aquarium.mp3",
+    "4": "Destiny Acte 4 - 01 - Aquarium.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Intro 26 - Refuge de montagne.mp3",
+     "duree_s": 151.8,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 2 - 26 - Refuge de montagne.mp3",
+     "duree_s": 163.9,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 3 - 26 - Refuge de montagne.mp3",
+     "duree_s": 148.8,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 4 - 26 - Refuge de montagne.mp3",
+     "duree_s": 197.6,
+     "source": "famille"
+    }
+   }
+  },
+  "avion": {
+   "nom": "Avion en vol",
+   "numero": 2,
+   "famille": "Transports",
+   "noms_attendus": {
+    "1": "Destiny Intro 02 - Avion en vol.mp3",
+    "2": "Destiny Acte 2 - 02 - Avion en vol.mp3",
+    "3": "Destiny Acte 3 - 02 - Avion en vol.mp3",
+    "4": "Destiny Acte 4 - 02 - Avion en vol.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Intro 02 - Avion en vol.mp3",
+     "duree_s": 165.0,
+     "source": "lieu"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 2 - 02 - Avion en vol.mp3",
+     "duree_s": 173.4,
+     "source": "lieu"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 3 - 02 - Avion en vol.mp3",
+     "duree_s": 147.2,
+     "source": "lieu"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 4 - 02 - Avion en vol.mp3",
+     "duree_s": 169.2,
+     "source": "lieu"
+    }
+   }
+  },
+  "port_maritime": {
+   "nom": "Port maritime",
+   "numero": 24,
+   "famille": "Transports",
+   "noms_attendus": {
+    "1": "Destiny Intro 24 - Port maritime.mp3",
+    "2": "Destiny Acte 2 - 24 - Port maritime.mp3",
+    "3": "Destiny Acte 3 - 24 - Port maritime.mp3",
+    "4": "Destiny Acte 4 - 24 - Port maritime.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Intro 02 - Avion en vol.mp3",
+     "duree_s": 165.0,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 2 - 02 - Avion en vol.mp3",
+     "duree_s": 173.4,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 3 - 02 - Avion en vol.mp3",
+     "duree_s": 147.2,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 4 - 02 - Avion en vol.mp3",
+     "duree_s": 169.2,
+     "source": "famille"
+    }
+   }
+  },
+  "eglise": {
+   "nom": "Église",
+   "numero": 40,
+   "famille": "Mystère",
+   "noms_attendus": {
+    "1": "Destiny Intro 40 - Église.mp3",
+    "2": "Destiny Acte 2 - 40 - Église.mp3",
+    "3": "Destiny Acte 3 - 40 - Église.mp3",
+    "4": "Destiny Acte 4 - 40 - Église.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Mystère - Église/Destiny Intro 40 - Église.mp3",
+     "duree_s": 115.2,
+     "source": "lieu"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 2 - 40 - Église.mp3",
+     "duree_s": 103.4,
+     "source": "lieu"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 3 - 40 - Église.mp3",
+     "duree_s": 110.0,
+     "source": "lieu"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 4 - 40 - Église.mp3",
+     "duree_s": 415.9,
+     "source": "lieu"
+    }
+   }
+  },
+  "salle_sport": {
+   "nom": "Salle de sport",
+   "numero": 28,
+   "famille": "Loisirs",
+   "noms_attendus": {
+    "1": "Destiny Intro 28 - Salle de sport.mp3",
+    "2": "Destiny Acte 2 - 28 - Salle de sport.mp3",
+    "3": "Destiny Acte 3 - 28 - Salle de sport.mp3",
+    "4": "Destiny Acte 4 - 28 - Salle de sport.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Intro 27 - Restaurant gastronomique.mp3",
+     "duree_s": 157.7,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 167.1,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 154.0,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 199.2,
+     "source": "famille"
+    }
+   }
+  },
+  "foret": {
+   "nom": "Forêt",
+   "numero": 14,
+   "famille": "Nature",
+   "noms_attendus": {
+    "1": "Destiny Intro 14 - Forêt.mp3",
+    "2": "Destiny Acte 2 - 14 - Forêt.mp3",
+    "3": "Destiny Acte 3 - 14 - Forêt.mp3",
+    "4": "Destiny Acte 4 - 14 - Forêt.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Intro 26 - Refuge de montagne.mp3",
+     "duree_s": 151.8,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 2 - 26 - Refuge de montagne.mp3",
+     "duree_s": 163.9,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 3 - 26 - Refuge de montagne.mp3",
+     "duree_s": 148.8,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 4 - 26 - Refuge de montagne.mp3",
+     "duree_s": 197.6,
+     "source": "famille"
+    }
+   }
+  },
+  "sous_marin": {
+   "nom": "Sous-marin",
+   "numero": 29,
+   "famille": "Science et huis clos",
+   "noms_attendus": {
+    "1": "Destiny Intro 29 - Sous-marin.mp3",
+    "2": "Destiny Acte 2 - 29 - Sous-marin.mp3",
+    "3": "Destiny Acte 3 - 29 - Sous-marin.mp3",
+    "4": "Destiny Acte 4 - 29 - Sous-marin.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Intro 29 - Sous-marin.mp3",
+     "duree_s": 183.6,
+     "source": "lieu"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 2 - 29 - Sous-marin.mp3",
+     "duree_s": 138.0,
+     "source": "lieu"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 3 - 29 - Sous-marin.mp3",
+     "duree_s": 104.5,
+     "source": "lieu"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 4 - 29 - Sous-marin.mp3",
+     "duree_s": 180.0,
+     "source": "lieu"
+    }
+   }
+  },
+  "metro": {
+   "nom": "Métro",
+   "numero": 20,
+   "famille": "Transports",
+   "noms_attendus": {
+    "1": "Destiny Intro 20 - Métro.mp3",
+    "2": "Destiny Acte 2 - 20 - Métro.mp3",
+    "3": "Destiny Acte 3 - 20 - Métro.mp3",
+    "4": "Destiny Acte 4 - 20 - Métro.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Intro 02 - Avion en vol.mp3",
+     "duree_s": 165.0,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 2 - 02 - Avion en vol.mp3",
+     "duree_s": 173.4,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 3 - 02 - Avion en vol.mp3",
+     "duree_s": 147.2,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 4 - 02 - Avion en vol.mp3",
+     "duree_s": 169.2,
+     "source": "famille"
+    }
+   }
+  },
+  "navire_croisiere": {
+   "nom": "Navire de croisière",
+   "numero": 21,
+   "famille": "Transports",
+   "noms_attendus": {
+    "1": "Destiny Intro 21 - Navire de croisière.mp3",
+    "2": "Destiny Acte 2 - 21 - Navire de croisière.mp3",
+    "3": "Destiny Acte 3 - 21 - Navire de croisière.mp3",
+    "4": "Destiny Acte 4 - 21 - Navire de croisière.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Intro 02 - Avion en vol.mp3",
+     "duree_s": 165.0,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 2 - 02 - Avion en vol.mp3",
+     "duree_s": 173.4,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 3 - 02 - Avion en vol.mp3",
+     "duree_s": 147.2,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 4 - 02 - Avion en vol.mp3",
+     "duree_s": 169.2,
+     "source": "famille"
+    }
+   }
+  },
+  "universite": {
+   "nom": "Université",
+   "numero": 36,
+   "famille": "Institutions",
+   "noms_attendus": {
+    "1": "Destiny Intro 36 - Université.mp3",
+    "2": "Destiny Acte 2 - 36 - Université.mp3",
+    "3": "Destiny Acte 3 - 36 - Université.mp3",
+    "4": "Destiny Acte 4 - 36 - Université.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Intro 12 - Commissariat.mp3",
+     "duree_s": 93.2,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 2 - 12 - Commissariat.mp3",
+     "duree_s": 189.7,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 3 - 12 - Commissariat.mp3",
+     "duree_s": 154.4,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 4 - 12 - Commissariat.mp3",
+     "duree_s": 194.8,
+     "source": "famille"
+    }
+   }
+  },
+  "hopital": {
+   "nom": "Hôpital",
+   "numero": 15,
+   "famille": "Science et huis clos",
+   "noms_attendus": {
+    "1": "Destiny Intro 15 - Hôpital.mp3",
+    "2": "Destiny Acte 2 - 15 - Hôpital.mp3",
+    "3": "Destiny Acte 3 - 15 - Hôpital.mp3",
+    "4": "Destiny Acte 4 - 15 - Hôpital.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Intro 29 - Sous-marin.mp3",
+     "duree_s": 183.6,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 2 - 29 - Sous-marin.mp3",
+     "duree_s": 138.0,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 3 - 29 - Sous-marin.mp3",
+     "duree_s": 104.5,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 4 - 29 - Sous-marin.mp3",
+     "duree_s": 180.0,
+     "source": "famille"
+    }
+   }
+  },
+  "ecole": {
+   "nom": "École",
+   "numero": 39,
+   "famille": "Institutions",
+   "noms_attendus": {
+    "1": "Destiny Intro 39 - École.mp3",
+    "2": "Destiny Acte 2 - 39 - École.mp3",
+    "3": "Destiny Acte 3 - 39 - École.mp3",
+    "4": "Destiny Acte 4 - 39 - École.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Intro 12 - Commissariat.mp3",
+     "duree_s": 93.2,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 2 - 12 - Commissariat.mp3",
+     "duree_s": 189.7,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 3 - 12 - Commissariat.mp3",
+     "duree_s": 154.4,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 4 - 12 - Commissariat.mp3",
+     "duree_s": 194.8,
+     "source": "famille"
+    }
+   }
+  },
+  "supermarche": {
+   "nom": "Supermarché",
+   "numero": 33,
+   "famille": "Loisirs",
+   "noms_attendus": {
+    "1": "Destiny Intro 33 - Supermarché.mp3",
+    "2": "Destiny Acte 2 - 33 - Supermarché.mp3",
+    "3": "Destiny Acte 3 - 33 - Supermarché.mp3",
+    "4": "Destiny Acte 4 - 33 - Supermarché.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Intro 27 - Restaurant gastronomique.mp3",
+     "duree_s": 157.7,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 167.1,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 154.0,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 199.2,
+     "source": "famille"
+    }
+   }
+  },
+  "casino": {
+   "nom": "Casino",
+   "numero": 10,
+   "famille": "Loisirs",
+   "noms_attendus": {
+    "1": "Destiny Intro 10 - Casino.mp3",
+    "2": "Destiny Acte 2 - 10 - Casino.mp3",
+    "3": "Destiny Acte 3 - 10 - Casino.mp3",
+    "4": "Destiny Acte 4 - 10 - Casino.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Intro 27 - Restaurant gastronomique.mp3",
+     "duree_s": 157.7,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 167.1,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 154.0,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 199.2,
+     "source": "famille"
+    }
+   }
+  },
+  "theatre": {
+   "nom": "Théâtre",
+   "numero": 34,
+   "famille": "Loisirs",
+   "noms_attendus": {
+    "1": "Destiny Intro 34 - Théâtre.mp3",
+    "2": "Destiny Acte 2 - 34 - Théâtre.mp3",
+    "3": "Destiny Acte 3 - 34 - Théâtre.mp3",
+    "4": "Destiny Acte 4 - 34 - Théâtre.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Intro 27 - Restaurant gastronomique.mp3",
+     "duree_s": 157.7,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 167.1,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 154.0,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
+     "duree_s": 199.2,
+     "source": "famille"
+    }
+   }
+  },
+  "tribunal": {
+   "nom": "Tribunal",
+   "numero": 35,
+   "famille": "Institutions",
+   "noms_attendus": {
+    "1": "Destiny Intro 35 - Tribunal.mp3",
+    "2": "Destiny Acte 2 - 35 - Tribunal.mp3",
+    "3": "Destiny Acte 3 - 35 - Tribunal.mp3",
+    "4": "Destiny Acte 4 - 35 - Tribunal.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Intro 12 - Commissariat.mp3",
+     "duree_s": 93.2,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 2 - 12 - Commissariat.mp3",
+     "duree_s": 189.7,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 3 - 12 - Commissariat.mp3",
+     "duree_s": 154.4,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 4 - 12 - Commissariat.mp3",
+     "duree_s": 194.8,
+     "source": "famille"
+    }
+   }
+  },
+  "station_service": {
+   "nom": "Station-service",
+   "numero": 32,
+   "famille": "Transports",
+   "noms_attendus": {
+    "1": "Destiny Intro 32 - Station-service.mp3",
+    "2": "Destiny Acte 2 - 32 - Station-service.mp3",
+    "3": "Destiny Acte 3 - 32 - Station-service.mp3",
+    "4": "Destiny Acte 4 - 32 - Station-service.mp3"
+   },
+   "musiques": {
+    "1": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Intro 02 - Avion en vol.mp3",
+     "duree_s": 165.0,
+     "source": "famille"
+    },
+    "2": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 2 - 02 - Avion en vol.mp3",
+     "duree_s": 173.4,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 3 - 02 - Avion en vol.mp3",
+     "duree_s": 147.2,
+     "source": "famille"
+    },
+    "4": {
+     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 4 - 02 - Avion en vol.mp3",
+     "duree_s": 169.2,
+     "source": "famille"
+    }
+   }
+  }
+ },
+ "sons": {
+  "ALARME": {
+   "nom": "Alarme générique",
+   "dossier": "Bruitages/ALARME - Alarme générique",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/ALARME - Alarme générique/1 - CRYO-SFX-Alarm.ogg",
+     "duree_s": 2.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/ALARME - Alarme générique/2 - DP-ONESHOT-WarningAlarm.ogg",
+     "duree_s": 3.3,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/ALARME - Alarme générique/3 - FC2525 - ONE SHOT - Fire Alarm.ogg",
+     "duree_s": 9.1,
+     "boucle": false
+    }
+   ]
+  },
+  "ALARME_INCENDIE": {
+   "nom": "Alarme incendie",
+   "dossier": "Bruitages/ALARME_INCENDIE - Alarme incendie",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/ALARME_INCENDIE - Alarme incendie/1 - FC2525 - ONE SHOT - Fire Alarm.ogg",
+     "duree_s": 9.1,
+     "boucle": false
+    }
+   ]
+  },
+  "ALIEN_SCELLE": {
+   "nom": "Extraterrestres, champ de force",
+   "dossier": "Bruitages/ALIEN_SCELLE - Extraterrestres, champ de force",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/ALIEN_SCELLE - Extraterrestres, champ de force/1 - SHB Force Field Power Up.ogg",
+     "duree_s": 21.3,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/ALIEN_SCELLE - Extraterrestres, champ de force/2 - SF - SFX - Electro Force 1.ogg",
+     "duree_s": 1.7,
+     "boucle": false
+    }
+   ]
+  },
+  "ALIEN_SIGNAL": {
+   "nom": "Extraterrestres, signal",
+   "dossier": "Bruitages/ALIEN_SIGNAL - Extraterrestres, signal",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/ALIEN_SIGNAL - Extraterrestres, signal/1 - ASS ONE SHOT Alien Transmission 1.ogg",
+     "duree_s": 5.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/ALIEN_SIGNAL - Extraterrestres, signal/2 - NEB-1shot-Alien Lifeform.ogg",
+     "duree_s": 25.5,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/ALIEN_SIGNAL - Extraterrestres, signal/3 - AC-SFX-ALien1.ogg",
+     "duree_s": 3.1,
+     "boucle": false
+    }
+   ]
+  },
+  "ALIEN_SONDE": {
+   "nom": "Extraterrestres, sonde et vaisseau",
+   "dossier": "Bruitages/ALIEN_SONDE - Extraterrestres, sonde et vaisseau",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/ALIEN_SONDE - Extraterrestres, sonde et vaisseau/1 - FM Scanner.ogg",
+     "duree_s": 10.2,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/ALIEN_SONDE - Extraterrestres, sonde et vaisseau/2 - SS2-SFX-Scanner1.ogg",
+     "duree_s": 6.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/ALIEN_SONDE - Extraterrestres, sonde et vaisseau/3 - WH-ONESHOT-ProbeLaunch.ogg",
+     "duree_s": 5.6,
+     "boucle": false
+    }
+   ]
+  },
+  "ARME_CHARGEE": {
+   "nom": "Arme qu'on arme",
+   "dossier": "Bruitages/ARME_CHARGEE - Arme qu'on arme",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/ARME_CHARGEE - Arme qu'on arme/1 - Clean Revolver Reload Sound Effect (1).ogg",
+     "duree_s": 3.5,
+     "boucle": false
+    }
+   ]
+  },
+  "BIP_COMPTE": {
+   "nom": "Compte à rebours électronique",
+   "dossier": "Bruitages/BIP_COMPTE - Compte à rebours électronique",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/BIP_COMPTE - Compte à rebours électronique/1 - Droid bleeps.ogg",
+     "duree_s": 3.8,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/BIP_COMPTE - Compte à rebours électronique/2 - SS2-SFX-Beep1.ogg",
+     "duree_s": 6.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/BIP_COMPTE - Compte à rebours électronique/3 - SS2-SFX-Beep2.ogg",
+     "duree_s": 11.6,
+     "boucle": false
+    }
+   ]
+  },
+  "BROUILLARD": {
+   "nom": "Brume qui rend fou",
+   "dossier": "Bruitages/BROUILLARD - Brume qui rend fou",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/BROUILLARD - Brume qui rend fou/1 - Gos Madness 1.ogg",
+     "duree_s": 86.6,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/BROUILLARD - Brume qui rend fou/2 - Wailing_drone_02.ogg",
+     "duree_s": 40.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/BROUILLARD - Brume qui rend fou/3 - CRYO-LOOP-DroneofDoom.ogg",
+     "duree_s": 119.5,
+     "boucle": true
+    }
+   ]
+  },
+  "BULLES": {
+   "nom": "Eau sous la surface, bulles",
+   "dossier": "Bruitages/BULLES - Eau sous la surface, bulles",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/BULLES - Eau sous la surface, bulles/1 - Volcano Lava Bubbles.ogg",
+     "duree_s": 62.2,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/BULLES - Eau sous la surface, bulles/2 - SLOOP Sloppy bubbling.ogg",
+     "duree_s": 23.0,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/BULLES - Eau sous la surface, bulles/3 - ALAB-LOOP-BubblyChems1.ogg",
+     "duree_s": 9.8,
+     "boucle": true
+    }
+   ]
+  },
+  "BUZZER": {
+   "nom": "Buzzer de jeu",
+   "dossier": "Bruitages/BUZZER - Buzzer de jeu",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/BUZZER - Buzzer de jeu/1 - Console incorrect data.ogg",
+     "duree_s": 2.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/BUZZER - Buzzer de jeu/2 - Console woops.ogg",
+     "duree_s": 2.7,
+     "boucle": false
+    }
+   ]
+  },
+  "CENDRES": {
+   "nom": "Pluie de pierres et de cendres",
+   "dossier": "Bruitages/CENDRES - Pluie de pierres et de cendres",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/CENDRES - Pluie de pierres et de cendres/1 - CK-Light_Gravel.ogg",
+     "duree_s": 30.8,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/CENDRES - Pluie de pierres et de cendres/2 - Gravel_Group_March_loop_01.ogg",
+     "duree_s": 40.7,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/CENDRES - Pluie de pierres et de cendres/3 - ENDFADELOOP Steps on gravel.ogg",
+     "duree_s": 104.2,
+     "boucle": true
+    }
+   ]
+  },
+  "COEUR": {
+   "nom": "Battement de cœur",
+   "dossier": "Bruitages/COEUR - Battement de cœur",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/COEUR - Battement de cœur/1 - Heartbeat SLOOP.ogg",
+     "duree_s": 9.5,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/COEUR - Battement de cœur/2 - QOS-LOOP-HeartBeat.ogg",
+     "duree_s": 5.5,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/COEUR - Battement de cœur/3 - Heartbeat slow SLOOP.ogg",
+     "duree_s": 88.4,
+     "boucle": true
+    }
+   ]
+  },
+  "COQUE": {
+   "nom": "Coque de navire qui gémit",
+   "dossier": "Bruitages/COQUE - Coque de navire qui gémit",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/COQUE - Coque de navire qui gémit/1 - Boat crushing 1.ogg",
+     "duree_s": 6.2,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/COQUE - Coque de navire qui gémit/2 - Boat crushing 2.ogg",
+     "duree_s": 7.2,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/COQUE - Coque de navire qui gémit/3 - Boat crushing 3.ogg",
+     "duree_s": 8.4,
+     "boucle": false
+    }
+   ]
+  },
+  "CORNE": {
+   "nom": "Corne de brume",
+   "dossier": "Bruitages/CORNE - Corne de brume",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/CORNE - Corne de brume/1 - Fog horn drone.ogg",
+     "duree_s": 125.6,
+     "boucle": false
+    }
+   ]
+  },
+  "COUPS_PORTE": {
+   "nom": "Coups contre une porte",
+   "dossier": "Bruitages/COUPS_PORTE - Coups contre une porte",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/COUPS_PORTE - Coups contre une porte/1 - Knocks three.ogg",
+     "duree_s": 0.5,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/COUPS_PORTE - Coups contre une porte/2 - Wood knocks four.ogg",
+     "duree_s": 0.8,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/COUPS_PORTE - Coups contre une porte/3 - Insistent Knocking 1.ogg",
+     "duree_s": 1.8,
+     "boucle": false
+    }
+   ]
+  },
+  "COUPURE": {
+   "nom": "Coupure de courant",
+   "dossier": "Bruitages/COUPURE - Coupure de courant",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/COUPURE - Coupure de courant/1 - SHB Force Field Power Down.ogg",
+     "duree_s": 12.6,
+     "boucle": false
+    }
+   ]
+  },
+  "CREATURE": {
+   "nom": "Grognement et souffle de créature",
+   "dossier": "Bruitages/CREATURE - Grognement et souffle de créature",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/CREATURE - Grognement et souffle de créature/1 - Low Growl.ogg",
+     "duree_s": 4.2,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/CREATURE - Grognement et souffle de créature/2 - Deep growl.ogg",
+     "duree_s": 2.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/CREATURE - Grognement et souffle de créature/3 - Lion Growl.ogg",
+     "duree_s": 2.9,
+     "boucle": false
+    }
+   ]
+  },
+  "CREATURE_CRI": {
+   "nom": "Cri d'attaque de créature",
+   "dossier": "Bruitages/CREATURE_CRI - Cri d'attaque de créature",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/CREATURE_CRI - Cri d'attaque de créature/1 - Shrieker_Shrooms_01.ogg",
+     "duree_s": 6.5,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/CREATURE_CRI - Cri d'attaque de créature/2 - Shrieker_Shrooms_02.ogg",
+     "duree_s": 6.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/CREATURE_CRI - Cri d'attaque de créature/3 - Shrieker_Shrooms_03.ogg",
+     "duree_s": 7.5,
+     "boucle": false
+    }
+   ]
+  },
+  "DETONATIONS_LOIN": {
+   "nom": "Détonations lointaines",
+   "dossier": "Bruitages/DETONATIONS_LOIN - Détonations lointaines",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/DETONATIONS_LOIN - Détonations lointaines/1 - Explosion 1.ogg",
+     "duree_s": 6.6,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DETONATIONS_LOIN - Détonations lointaines/2 - Big explosion.ogg",
+     "duree_s": 5.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DETONATIONS_LOIN - Détonations lointaines/3 - MB SFX Cannon 1.ogg",
+     "duree_s": 6.9,
+     "boucle": false
+    }
+   ]
+  },
+  "EAU_ENGOUFFRE": {
+   "nom": "Eau qui s'engouffre",
+   "dossier": "Bruitages/EAU_ENGOUFFRE - Eau qui s'engouffre",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/EAU_ENGOUFFRE - Eau qui s'engouffre/1 - Riverwater_01.ogg",
+     "duree_s": 30.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/EAU_ENGOUFFRE - Eau qui s'engouffre/2 - Riverwater_02.ogg",
+     "duree_s": 23.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/EAU_ENGOUFFRE - Eau qui s'engouffre/3 - Riverwater_03.ogg",
+     "duree_s": 27.1,
+     "boucle": false
+    }
+   ]
+  },
+  "EAU_GOUTTE": {
+   "nom": "Eau qui s'infiltre, gouttes",
+   "dossier": "Bruitages/EAU_GOUTTE - Eau qui s'infiltre, gouttes",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/EAU_GOUTTE - Eau qui s'infiltre, gouttes/1 - Drip22.ogg",
+     "duree_s": 0.3,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/EAU_GOUTTE - Eau qui s'infiltre, gouttes/2 - Drip22 2.ogg",
+     "duree_s": 0.3,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/EAU_GOUTTE - Eau qui s'infiltre, gouttes/3 - IH-CaveDrips.ogg",
+     "duree_s": 151.6,
+     "boucle": false
+    }
+   ]
+  },
+  "EFFONDREMENT": {
+   "nom": "Effondrement, gravats",
+   "dossier": "Bruitages/EFFONDREMENT - Effondrement, gravats",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/EFFONDREMENT - Effondrement, gravats/1 - ST-SFX-Debris1.ogg",
+     "duree_s": 16.6,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/EFFONDREMENT - Effondrement, gravats/2 - ST-SFX-Debris2.ogg",
+     "duree_s": 6.6,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/EFFONDREMENT - Effondrement, gravats/3 - ST-SFX-Debris3.ogg",
+     "duree_s": 6.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/EFFONDREMENT - Effondrement, gravats/4 - WD-LOOP-EarthquakeDebris.ogg",
+     "duree_s": 39.7,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/EFFONDREMENT - Effondrement, gravats/5 - WH-SFX-ExplosionStructural1.ogg",
+     "duree_s": 13.2,
+     "boucle": false
+    }
+   ]
+  },
+  "ESSAIM": {
+   "nom": "Bourdonnement d'essaim",
+   "dossier": "Bruitages/ESSAIM - Bourdonnement d'essaim",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/ESSAIM - Bourdonnement d'essaim/1 - Bee swarm - SLOOP.ogg",
+     "duree_s": 158.1,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/ESSAIM - Bourdonnement d'essaim/2 - Endfadeloop Insect thrum at night.ogg",
+     "duree_s": 54.1,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/ESSAIM - Bourdonnement d'essaim/3 - Flies.ogg",
+     "duree_s": 18.8,
+     "boucle": false
+    }
+   ]
+  },
+  "ETINCELLES": {
+   "nom": "Étincelles, court-circuit",
+   "dossier": "Bruitages/ETINCELLES - Étincelles, court-circuit",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/ETINCELLES - Étincelles, court-circuit/1 - Arcing electricity.ogg",
+     "duree_s": 17.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/ETINCELLES - Étincelles, court-circuit/2 - WH-SFX-Electrical1.ogg",
+     "duree_s": 3.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/ETINCELLES - Étincelles, court-circuit/3 - WH-SFX-Electrical2.ogg",
+     "duree_s": 5.5,
+     "boucle": false
+    }
+   ]
+  },
+  "EXPLOSION": {
+   "nom": "Explosion proche",
+   "dossier": "Bruitages/EXPLOSION - Explosion proche",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/EXPLOSION - Explosion proche/1 - Explosion 1.ogg",
+     "duree_s": 6.6,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/EXPLOSION - Explosion proche/2 - Big explosion.ogg",
+     "duree_s": 5.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/EXPLOSION - Explosion proche/3 - Bomb explosion.ogg",
+     "duree_s": 0.7,
+     "boucle": false
+    }
+   ]
+  },
+  "FEU_CREPITE": {
+   "nom": "Crépitement de feu",
+   "dossier": "Bruitages/FEU_CREPITE - Crépitement de feu",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/FEU_CREPITE - Crépitement de feu/1 - ENDFADELOOP Fireplace.ogg",
+     "duree_s": 139.6,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/FEU_CREPITE - Crépitement de feu/2 - EE-LOOP-MountainCampfireAmbience.ogg",
+     "duree_s": 154.0,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/FEU_CREPITE - Crépitement de feu/3 - Loud crackling fire__dynamicell__fire-forest-inferno.ogg",
+     "duree_s": 54.3,
+     "boucle": false
+    }
+   ]
+  },
+  "FOULE": {
+   "nom": "Foule, émeute",
+   "dossier": "Bruitages/FOULE - Foule, émeute",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/FOULE - Foule, émeute/1 - GSpR-LOOP-CityCrowdChaos.ogg",
+     "duree_s": 151.0,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/FOULE - Foule, émeute/2 - Large-crowd2.ogg",
+     "duree_s": 80.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/FOULE - Foule, émeute/3 - SCIFI Crowd 1.ogg",
+     "duree_s": 151.0,
+     "boucle": false
+    }
+   ]
+  },
+  "GAZ_SIFFLE": {
+   "nom": "Sifflement de gaz",
+   "dossier": "Bruitages/GAZ_SIFFLE - Sifflement de gaz",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/GAZ_SIFFLE - Sifflement de gaz/1 - steam-burst.ogg",
+     "duree_s": 1.3,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/GAZ_SIFFLE - Sifflement de gaz/2 - ASS SFX Steam Release.ogg",
+     "duree_s": 3.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/GAZ_SIFFLE - Sifflement de gaz/3 - ASS SFX Steam Release 2.ogg",
+     "duree_s": 2.1,
+     "boucle": false
+    }
+   ]
+  },
+  "GLACE": {
+   "nom": "Glace qui craque",
+   "dossier": "Bruitages/GLACE - Glace qui craque",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/GLACE - Glace qui craque/1 - Ice crackles 01.ogg",
+     "duree_s": 4.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/GLACE - Glace qui craque/2 - Ice crackles 02.ogg",
+     "duree_s": 4.9,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/GLACE - Glace qui craque/3 - Ice crackles 03.ogg",
+     "duree_s": 2.6,
+     "boucle": false
+    }
+   ]
+  },
+  "GRIFFES": {
+   "nom": "Griffes, frottements",
+   "dossier": "Bruitages/GRIFFES - Griffes, frottements",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/GRIFFES - Griffes, frottements/1 - Creak scratch.ogg",
+     "duree_s": 1.1,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/GRIFFES - Griffes, frottements/2 - Dire Rat Scratch 01.ogg",
+     "duree_s": 0.9,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/GRIFFES - Griffes, frottements/3 - Dire Rat Scratch 02.ogg",
+     "duree_s": 1.7,
+     "boucle": false
+    }
+   ]
+  },
+  "GRONDEMENT": {
+   "nom": "Grondement sourd du sol",
+   "dossier": "Bruitages/GRONDEMENT - Grondement sourd du sol",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/GRONDEMENT - Grondement sourd du sol/1 - Deep rumble.ogg",
+     "duree_s": 20.2,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/GRONDEMENT - Grondement sourd du sol/2 - A deep rumbling noise.ogg",
+     "duree_s": 8.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/GRONDEMENT - Grondement sourd du sol/3 - Crumbling stonewalls_01.ogg",
+     "duree_s": 4.8,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/GRONDEMENT - Grondement sourd du sol/4 - WD-LOOP-EarthquakeRumble.ogg",
+     "duree_s": 51.5,
+     "boucle": true
+    }
+   ]
+  },
+  "HELICO": {
+   "nom": "Hélicoptère",
+   "dossier": "Bruitages/HELICO - Hélicoptère",
+   "fichiers": []
+  },
+  "IA_GLITCH": {
+   "nom": "IA, bip et glitch",
+   "dossier": "Bruitages/IA_GLITCH - IA, bip et glitch",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/IA_GLITCH - IA, bip et glitch/1 - ASS ONE SHOT Garbled Transmission 1.ogg",
+     "duree_s": 5.1,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/IA_GLITCH - IA, bip et glitch/2 - Console woops.ogg",
+     "duree_s": 2.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/IA_GLITCH - IA, bip et glitch/3 - ASS SFX Comp Noise 1.ogg",
+     "duree_s": 12.8,
+     "boucle": false
+    }
+   ]
+  },
+  "IA_SURCHARGE": {
+   "nom": "IA, surcharge",
+   "dossier": "Bruitages/IA_SURCHARGE - IA, surcharge",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/IA_SURCHARGE - IA, surcharge/1 - ASS SFX Digital Cry 1.ogg",
+     "duree_s": 4.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/IA_SURCHARGE - IA, surcharge/2 - Computer Pollution.ogg",
+     "duree_s": 33.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/IA_SURCHARGE - IA, surcharge/3 - ASS SFX Power Sparks 1.ogg",
+     "duree_s": 1.0,
+     "boucle": false
+    }
+   ]
+  },
+  "IA_VERROU": {
+   "nom": "IA, verrouillage numérique",
+   "dossier": "Bruitages/IA_VERROU - IA, verrouillage numérique",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/IA_VERROU - IA, verrouillage numérique/1 - Console key entry 1.ogg",
+     "duree_s": 0.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/IA_VERROU - IA, verrouillage numérique/2 - ASS SFX Data GUI.ogg",
+     "duree_s": 1.7,
+     "boucle": false
+    }
+   ]
+  },
+  "INCENDIE": {
+   "nom": "Incendie qui rugit",
+   "dossier": "Bruitages/INCENDIE - Incendie qui rugit",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/INCENDIE - Incendie qui rugit/1 - Fire Bowls.ogg",
+     "duree_s": 28.6,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/INCENDIE - Incendie qui rugit/2 - Loud crackling fire__dynamicell__fire-forest-inferno.ogg",
+     "duree_s": 54.3,
+     "boucle": false
+    }
+   ]
+  },
+  "JEU_COMPTE": {
+   "nom": "Jeu mortel, compte à rebours",
+   "dossier": "Bruitages/JEU_COMPTE - Jeu mortel, compte à rebours",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/JEU_COMPTE - Jeu mortel, compte à rebours/1 - FC2525 - ONE SHOT - Bomb with Timer.ogg",
+     "duree_s": 7.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/JEU_COMPTE - Jeu mortel, compte à rebours/2 - CK-Pendulum_Clock_1m_Loop.ogg",
+     "duree_s": 61.1,
+     "boucle": true
+    }
+   ]
+  },
+  "JEU_JINGLE": {
+   "nom": "Jeu mortel, jingle",
+   "dossier": "Bruitages/JEU_JINGLE - Jeu mortel, jingle",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/JEU_JINGLE - Jeu mortel, jingle/1 - Wind up toy.ogg",
+     "duree_s": 1.2,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/JEU_JINGLE - Jeu mortel, jingle/2 - Wind chime ambiance - weirdness horror 1.ogg",
+     "duree_s": 464.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/JEU_JINGLE - Jeu mortel, jingle/3 - Chimes_01.ogg",
+     "duree_s": 39.7,
+     "boucle": false
+    }
+   ]
+  },
+  "MER_RETIRE": {
+   "nom": "Mer qui se retire, ressac",
+   "dossier": "Bruitages/MER_RETIRE - Mer qui se retire, ressac",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/MER_RETIRE - Mer qui se retire, ressac/1 - CTHULHU-CR-LOOP-OceanRough.ogg",
+     "duree_s": 63.3,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/MER_RETIRE - Mer qui se retire, ressac/2 - CTHULHU-CR-LOOP-OceanWaves.ogg",
+     "duree_s": 151.1,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/MER_RETIRE - Mer qui se retire, ressac/3 - ATLANTIS-LOOP-TheOceanHvySurf.ogg",
+     "duree_s": 151.9,
+     "boucle": true
+    }
+   ]
+  },
+  "METAL_TORDU": {
+   "nom": "Métal qui se tord, structure qui gémit",
+   "dossier": "Bruitages/METAL_TORDU - Métal qui se tord, structure qui gémit",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/METAL_TORDU - Métal qui se tord, structure qui gémit/1 - NSI-SFX-HullCreak1.ogg",
+     "duree_s": 21.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/METAL_TORDU - Métal qui se tord, structure qui gémit/2 - NSI-SFX-MetalBends1.ogg",
+     "duree_s": 15.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/METAL_TORDU - Métal qui se tord, structure qui gémit/3 - NSI-SFX-MetalBends2.ogg",
+     "duree_s": 9.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/METAL_TORDU - Métal qui se tord, structure qui gémit/4 - WH-SFX-MetalBending1.ogg",
+     "duree_s": 9.6,
+     "boucle": false
+    }
+   ]
+  },
+  "MEUTE": {
+   "nom": "Meute : grognements, hurlements",
+   "dossier": "Bruitages/MEUTE - Meute : grognements, hurlements",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/MEUTE - Meute : grognements, hurlements/1 - Dogs 4.ogg",
+     "duree_s": 21.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/MEUTE - Meute : grognements, hurlements/2 - Dogs 1.ogg",
+     "duree_s": 32.1,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/MEUTE - Meute : grognements, hurlements/3 - Dogs 2.ogg",
+     "duree_s": 7.7,
+     "boucle": false
+    }
+   ]
+  },
+  "MONITEUR": {
+   "nom": "Moniteur cardiaque",
+   "dossier": "Bruitages/MONITEUR - Moniteur cardiaque",
+   "fichiers": []
+  },
+  "MONSTRE_RUGIT": {
+   "nom": "Rugissement de créature géante",
+   "dossier": "Bruitages/MONSTRE_RUGIT - Rugissement de créature géante",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/MONSTRE_RUGIT - Rugissement de créature géante/1 - Tiger roar.ogg",
+     "duree_s": 1.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/MONSTRE_RUGIT - Rugissement de créature géante/2 - Dragonroar01.ogg",
+     "duree_s": 2.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/MONSTRE_RUGIT - Rugissement de créature géante/3 - Dragonroar02.ogg",
+     "duree_s": 2.7,
+     "boucle": false
+    }
+   ]
+  },
+  "NATURE_NUIT": {
+   "nom": "Nuit froide, chouette, vent dans les arbres",
+   "dossier": "Bruitages/NATURE_NUIT - Nuit froide, chouette, vent dans les arbres",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/NATURE_NUIT - Nuit froide, chouette, vent dans les arbres/1 - EE-LOOP-ForestAmbience.ogg",
+     "duree_s": 154.0,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/NATURE_NUIT - Nuit froide, chouette, vent dans les arbres/2 - Endfadeloop Insect thrum at night.ogg",
+     "duree_s": 54.1,
+     "boucle": true
+    }
+   ]
+  },
+  "NEON": {
+   "nom": "Néon qui grésille",
+   "dossier": "Bruitages/NEON - Néon qui grésille",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/NEON - Néon qui grésille/1 - Electrical buzzing - SLOOP.ogg",
+     "duree_s": 35.4,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/NEON - Néon qui grésille/2 - CK_neonlight_flicker.ogg",
+     "duree_s": 30.6,
+     "boucle": false
+    }
+   ]
+  },
+  "OBJET_TOMBE": {
+   "nom": "Objet qui tombe",
+   "dossier": "Bruitages/OBJET_TOMBE - Objet qui tombe",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/OBJET_TOMBE - Objet qui tombe/1 - Dropped stuff 1.ogg",
+     "duree_s": 1.5,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/OBJET_TOMBE - Objet qui tombe/2 - Dropped stuff 2.ogg",
+     "duree_s": 1.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/OBJET_TOMBE - Objet qui tombe/3 - Dropped stuff 3.ogg",
+     "duree_s": 1.0,
+     "boucle": false
+    }
+   ]
+  },
+  "PACTE_RITUEL": {
+   "nom": "Pacte ancien, rituel",
+   "dossier": "Bruitages/PACTE_RITUEL - Pacte ancien, rituel",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/PACTE_RITUEL - Pacte ancien, rituel/1 - Frantic chanting with extra men_mixdown.ogg",
+     "duree_s": 41.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PACTE_RITUEL - Pacte ancien, rituel/2 - Frantic Chanting_mixdown.ogg",
+     "duree_s": 40.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PACTE_RITUEL - Pacte ancien, rituel/3 - Gos Gongs.ogg",
+     "duree_s": 18.5,
+     "boucle": false
+    }
+   ]
+  },
+  "PACTE_SOUFFLE": {
+   "nom": "Pacte ancien, souffle et présence",
+   "dossier": "Bruitages/PACTE_SOUFFLE - Pacte ancien, souffle et présence",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/PACTE_SOUFFLE - Pacte ancien, souffle et présence/1 - QOS-LOOP-LowDrone.ogg",
+     "duree_s": 81.0,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/PACTE_SOUFFLE - Pacte ancien, souffle et présence/2 - Composition Chanting_whisper.ogg",
+     "duree_s": 48.8,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PACTE_SOUFFLE - Pacte ancien, souffle et présence/3 - Big bass drone - pulsating.ogg",
+     "duree_s": 149.7,
+     "boucle": false
+    }
+   ]
+  },
+  "PAS": {
+   "nom": "Pas dans le couloir",
+   "dossier": "Bruitages/PAS - Pas dans le couloir",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/PAS - Pas dans le couloir/1 - Foot_Steps_01.ogg",
+     "duree_s": 12.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PAS - Pas dans le couloir/2 - Foot_Steps_02.ogg",
+     "duree_s": 10.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PAS - Pas dans le couloir/3 - Foot_Steps_03.ogg",
+     "duree_s": 8.3,
+     "boucle": false
+    }
+   ]
+  },
+  "PAS_GEANTS": {
+   "nom": "Pas géants",
+   "dossier": "Bruitages/PAS_GEANTS - Pas géants",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/PAS_GEANTS - Pas géants/1 - Minotaur stomp 1.ogg",
+     "duree_s": 6.8,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PAS_GEANTS - Pas géants/2 - Minotaur stomp 2.ogg",
+     "duree_s": 9.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PAS_GEANTS - Pas géants/3 - Minotaur stomp 3.ogg",
+     "duree_s": 9.7,
+     "boucle": false
+    }
+   ]
+  },
+  "PIERRE_RACLE": {
+   "nom": "Mur de pierre qui racle, mécanisme lourd",
+   "dossier": "Bruitages/PIERRE_RACLE - Mur de pierre qui racle, mécanisme lourd",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/PIERRE_RACLE - Mur de pierre qui racle, mécanisme lourd/1 - Stone_movement_01.ogg",
+     "duree_s": 3.8,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PIERRE_RACLE - Mur de pierre qui racle, mécanisme lourd/2 - Drag Statue 1.ogg",
+     "duree_s": 6.3,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PIERRE_RACLE - Mur de pierre qui racle, mécanisme lourd/3 - Stone_movement_02.ogg",
+     "duree_s": 3.7,
+     "boucle": false
+    }
+   ]
+  },
+  "PNEUS": {
+   "nom": "Crissement de pneus dehors",
+   "dossier": "Bruitages/PNEUS - Crissement de pneus dehors",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/PNEUS - Crissement de pneus dehors/1 - CARS1920-SFX-Skid1.ogg",
+     "duree_s": 6.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PNEUS - Crissement de pneus dehors/2 - CARS1920-SFX-Skid2.ogg",
+     "duree_s": 7.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PNEUS - Crissement de pneus dehors/3 - CARS1920-SFX-Skid3.ogg",
+     "duree_s": 5.5,
+     "boucle": false
+    }
+   ]
+  },
+  "PORTE_CLAQUE": {
+   "nom": "Porte qui claque",
+   "dossier": "Bruitages/PORTE_CLAQUE - Porte qui claque",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/PORTE_CLAQUE - Porte qui claque/1 - Door slam 1.ogg",
+     "duree_s": 4.9,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PORTE_CLAQUE - Porte qui claque/2 - Door slam 2.ogg",
+     "duree_s": 3.8,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PORTE_CLAQUE - Porte qui claque/3 - Slamming Door 3_Volivieri__Storm-Door-Slam-01.ogg",
+     "duree_s": 4.9,
+     "boucle": false
+    }
+   ]
+  },
+  "PORTE_GRINCE": {
+   "nom": "Porte qui grince",
+   "dossier": "Bruitages/PORTE_GRINCE - Porte qui grince",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/PORTE_GRINCE - Porte qui grince/1 - Door creaking.ogg",
+     "duree_s": 7.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PORTE_GRINCE - Porte qui grince/2 - Creaking door 1.ogg",
+     "duree_s": 5.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PORTE_GRINCE - Porte qui grince/3 - Creaking door 2.ogg",
+     "duree_s": 2.9,
+     "boucle": false
+    }
+   ]
+  },
+  "PORTE_METAL": {
+   "nom": "Porte métallique qui se verrouille",
+   "dossier": "Bruitages/PORTE_METAL - Porte métallique qui se verrouille",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/PORTE_METAL - Porte métallique qui se verrouille/1 - AfA-ONESHOT-AirLockClose.ogg",
+     "duree_s": 1.9,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PORTE_METAL - Porte métallique qui se verrouille/2 - AfA-ONESHOT-AirLockOpen1.ogg",
+     "duree_s": 1.9,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/PORTE_METAL - Porte métallique qui se verrouille/3 - AfA-ONESHOT-AirLockOpen2.ogg",
+     "duree_s": 1.1,
+     "boucle": false
+    }
+   ]
+  },
+  "RESPIRATION": {
+   "nom": "Respiration difficile, halètements",
+   "dossier": "Bruitages/RESPIRATION - Respiration difficile, halètements",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/RESPIRATION - Respiration difficile, halètements/1 - CK_mask-breathing.ogg",
+     "duree_s": 14.2,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/RESPIRATION - Respiration difficile, halètements/2 - Men running in forest breathing hard.ogg",
+     "duree_s": 27.8,
+     "boucle": false
+    }
+   ]
+  },
+  "ROBOT_PAS": {
+   "nom": "Pas mécaniques",
+   "dossier": "Bruitages/ROBOT_PAS - Pas mécaniques",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/ROBOT_PAS - Pas mécaniques/1 - SCIFI Robot Walking 1.ogg",
+     "duree_s": 15.1,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/ROBOT_PAS - Pas mécaniques/2 - MB SFX Mech Footsteps 1.ogg",
+     "duree_s": 3.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/ROBOT_PAS - Pas mécaniques/3 - MB SFX Mech Footsteps 2.ogg",
+     "duree_s": 3.7,
+     "boucle": false
+    }
+   ]
+  },
+  "ROBOT_SERVO": {
+   "nom": "Servo de robot qui déraille",
+   "dossier": "Bruitages/ROBOT_SERVO - Servo de robot qui déraille",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/ROBOT_SERVO - Servo de robot qui déraille/1 - SHB-Servo.ogg",
+     "duree_s": 8.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/ROBOT_SERVO - Servo de robot qui déraille/2 - Droid bleeps.ogg",
+     "duree_s": 3.8,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/ROBOT_SERVO - Servo de robot qui déraille/3 - Droid bleeps 1.ogg",
+     "duree_s": 1.0,
+     "boucle": false
+    }
+   ]
+  },
+  "SECOUSSE": {
+   "nom": "Secousse, choc sourd",
+   "dossier": "Bruitages/SECOUSSE - Secousse, choc sourd",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/SECOUSSE - Secousse, choc sourd/1 - Deep rumble.ogg",
+     "duree_s": 20.2,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/SECOUSSE - Secousse, choc sourd/2 - NEB-Hull Impacts 1.ogg",
+     "duree_s": 8.2,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/SECOUSSE - Secousse, choc sourd/3 - NEB-Hull Impacts 2.ogg",
+     "duree_s": 5.4,
+     "boucle": false
+    }
+   ]
+  },
+  "SIRENES": {
+   "nom": "Sirènes",
+   "dossier": "Bruitages/SIRENES - Sirènes",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/SIRENES - Sirènes/1 - Security Siren 1.ogg",
+     "duree_s": 34.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/SIRENES - Sirènes/2 - Security Siren 2.ogg",
+     "duree_s": 15.3,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/SIRENES - Sirènes/3 - Security Siren 3.ogg",
+     "duree_s": 4.0,
+     "boucle": false
+    }
+   ]
+  },
+  "SIRENE_TORNADE": {
+   "nom": "Sirène d'alerte météo",
+   "dossier": "Bruitages/SIRENE_TORNADE - Sirène d'alerte météo",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/SIRENE_TORNADE - Sirène d'alerte météo/1 - Security Siren 1.ogg",
+     "duree_s": 34.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/SIRENE_TORNADE - Sirène d'alerte météo/2 - Security Siren 2.ogg",
+     "duree_s": 15.3,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/SIRENE_TORNADE - Sirène d'alerte météo/3 - Security Siren 3.ogg",
+     "duree_s": 4.0,
+     "boucle": false
+    }
+   ]
+  },
+  "SOLEIL_CHALEUR": {
+   "nom": "Soleil qui grossit, chaleur",
+   "dossier": "Bruitages/SOLEIL_CHALEUR - Soleil qui grossit, chaleur",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/SOLEIL_CHALEUR - Soleil qui grossit, chaleur/1 - NEB-Solar Flares.ogg",
+     "duree_s": 121.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/SOLEIL_CHALEUR - Soleil qui grossit, chaleur/2 - NEB-Solar Winds.ogg",
+     "duree_s": 131.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/SOLEIL_CHALEUR - Soleil qui grossit, chaleur/3 - Glass Furnace Deeper Rumbling.ogg",
+     "duree_s": 112.7,
+     "boucle": false
+    }
+   ]
+  },
+  "SOLEIL_FROID": {
+   "nom": "Soleil qui s'éteint, froid",
+   "dossier": "Bruitages/SOLEIL_FROID - Soleil qui s'éteint, froid",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/SOLEIL_FROID - Soleil qui s'éteint, froid/1 - FM Wind Cold.ogg",
+     "duree_s": 121.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/SOLEIL_FROID - Soleil qui s'éteint, froid/2 - Ice crackles 02.ogg",
+     "duree_s": 4.9,
+     "boucle": false
+    }
+   ]
+  },
+  "SOL_CRAQUE": {
+   "nom": "Sol qui craque, roches",
+   "dossier": "Bruitages/SOL_CRAQUE - Sol qui craque, roches",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/SOL_CRAQUE - Sol qui craque, roches/1 - Crumbling stonewalls_01.ogg",
+     "duree_s": 4.8,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/SOL_CRAQUE - Sol qui craque, roches/2 - Crumbling stonewalls_02.ogg",
+     "duree_s": 3.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/SOL_CRAQUE - Sol qui craque, roches/3 - Crumbling stonewalls_03.ogg",
+     "duree_s": 3.7,
+     "boucle": false
+    }
+   ]
+  },
+  "TALKIE": {
+   "nom": "Talkie-walkie, radio grésillante",
+   "dossier": "Bruitages/TALKIE - Talkie-walkie, radio grésillante",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/TALKIE - Talkie-walkie, radio grésillante/1 - ClassicalStatic.ogg",
+     "duree_s": 11.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/TALKIE - Talkie-walkie, radio grésillante/2 - NEB-Radio Interference.ogg",
+     "duree_s": 131.0,
+     "boucle": false
+    }
+   ]
+  },
+  "TEMPETE": {
+   "nom": "Tempête, volets qui claquent",
+   "dossier": "Bruitages/TEMPETE - Tempête, volets qui claquent",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/TEMPETE - Tempête, volets qui claquent/1 - KI-LOOP-Rain.ogg",
+     "duree_s": 21.4,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/TEMPETE - Tempête, volets qui claquent/2 - Endfadeloop - Ben's Rain.ogg",
+     "duree_s": 63.3,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/TEMPETE - Tempête, volets qui claquent/3 - Ben's rain - end-fade loop.ogg",
+     "duree_s": 63.3,
+     "boucle": true
+    }
+   ]
+  },
+  "TIRS": {
+   "nom": "Coups de feu",
+   "dossier": "Bruitages/TIRS - Coups de feu",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/TIRS - Coups de feu/1 - GSW SFX Rifle1.ogg",
+     "duree_s": 2.1,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/TIRS - Coups de feu/2 - MB SFX Rifle 1.ogg",
+     "duree_s": 2.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/TIRS - Coups de feu/3 - MB SFX Rifle 2.ogg",
+     "duree_s": 4.4,
+     "boucle": false
+    }
+   ]
+  },
+  "TOIT_CRAQUE": {
+   "nom": "Toit qui craque",
+   "dossier": "Bruitages/TOIT_CRAQUE - Toit qui craque",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/TOIT_CRAQUE - Toit qui craque/1 - Creak-Floorboard (1).ogg",
+     "duree_s": 1.3,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/TOIT_CRAQUE - Toit qui craque/2 - NSI-SFX-HullCreak1.ogg",
+     "duree_s": 21.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/TOIT_CRAQUE - Toit qui craque/3 - CTHULHU-CR-SFX-CreaksC1.ogg",
+     "duree_s": 6.9,
+     "boucle": false
+    }
+   ]
+  },
+  "TONNERRE": {
+   "nom": "Tonnerre",
+   "dossier": "Bruitages/TONNERRE - Tonnerre",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/TONNERRE - Tonnerre/1 - Thunder 1.ogg",
+     "duree_s": 30.3,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/TONNERRE - Tonnerre/2 - Thunder 2.ogg",
+     "duree_s": 16.3,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/TONNERRE - Tonnerre/3 - Thunder 3.ogg",
+     "duree_s": 15.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/TONNERRE - Tonnerre/4 - WD-SFX-Thunder1.ogg",
+     "duree_s": 33.0,
+     "boucle": false
+    }
+   ]
+  },
+  "TORNADE": {
+   "nom": "Rugissement de tornade, débris",
+   "dossier": "Bruitages/TORNADE - Rugissement de tornade, débris",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/TORNADE - Rugissement de tornade, débris/1 - WD-LOOP-WindHowling1.ogg",
+     "duree_s": 129.0,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/TORNADE - Rugissement de tornade, débris/2 - WD-LOOP-WindWhipping.ogg",
+     "duree_s": 63.5,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/TORNADE - Rugissement de tornade, débris/3 - WH-SFX-Storm1.ogg",
+     "duree_s": 6.3,
+     "boucle": false
+    }
+   ]
+  },
+  "TOUX": {
+   "nom": "Toux",
+   "dossier": "Bruitages/TOUX - Toux",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/TOUX - Toux/1 - Cough 1.ogg",
+     "duree_s": 1.2,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/TOUX - Toux/2 - Cough 2.ogg",
+     "duree_s": 0.8,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/TOUX - Toux/3 - Cough 3.ogg",
+     "duree_s": 1.0,
+     "boucle": false
+    }
+   ]
+  },
+  "VAGUE": {
+   "nom": "Vague géante qui frappe",
+   "dossier": "Bruitages/VAGUE - Vague géante qui frappe",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/VAGUE - Vague géante qui frappe/1 - Endfadeloop Pebbly Waves.ogg",
+     "duree_s": 109.4,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/VAGUE - Vague géante qui frappe/2 - CTHULHU-CR-LOOP-HeavySurf.ogg",
+     "duree_s": 96.7,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/VAGUE - Vague géante qui frappe/3 - CTHULHU-CR-LOOP-OceanWaves.ogg",
+     "duree_s": 151.1,
+     "boucle": true
+    }
+   ]
+  },
+  "VENT": {
+   "nom": "Vent qui forcit",
+   "dossier": "Bruitages/VENT - Vent qui forcit",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/VENT - Vent qui forcit/1 - GSW LOOP Hi Winds.ogg",
+     "duree_s": 131.1,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/VENT - Vent qui forcit/2 - WD-LOOP-WindStrong.ogg",
+     "duree_s": 63.4,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/VENT - Vent qui forcit/3 - CK-Windy_Wood_loop.ogg",
+     "duree_s": 45.7,
+     "boucle": true
+    },
+    {
+     "fichier": "Bruitages/VENT - Vent qui forcit/4 - WD-LOOP-WindHowling1.ogg",
+     "duree_s": 129.0,
+     "boucle": true
+    }
+   ]
+  },
+  "VENTIL_STOP": {
+   "nom": "Ventilation qui s'arrête",
+   "dossier": "Bruitages/VENTIL_STOP - Ventilation qui s'arrête",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/VENTIL_STOP - Ventilation qui s'arrête/1 - SHB Force Field Power Down.ogg",
+     "duree_s": 12.6,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/VENTIL_STOP - Ventilation qui s'arrête/2 - Ceiling fan.ogg",
+     "duree_s": 5.3,
+     "boucle": false
+    }
+   ]
+  },
+  "VERRE_BRISE": {
+   "nom": "Verre qui éclate",
+   "dossier": "Bruitages/VERRE_BRISE - Verre qui éclate",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/VERRE_BRISE - Verre qui éclate/1 - Glass Smash 1.ogg",
+     "duree_s": 2.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/VERRE_BRISE - Verre qui éclate/2 - Glass Smash 2.ogg",
+     "duree_s": 2.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/VERRE_BRISE - Verre qui éclate/3 - Glass Smash 3.ogg",
+     "duree_s": 2.6,
+     "boucle": false
+    }
+   ]
+  },
+  "VERRE_FISSURE": {
+   "nom": "Verre qui se fissure",
+   "dossier": "Bruitages/VERRE_FISSURE - Verre qui se fissure",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/VERRE_FISSURE - Verre qui se fissure/1 - Ice crackles 01.ogg",
+     "duree_s": 4.4,
+     "boucle": false
+    }
+   ]
+  },
+  "VERROUS": {
+   "nom": "Verrous en série",
+   "dossier": "Bruitages/VERROUS - Verrous en série",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/VERROUS - Verrous en série/1 - PickingLock_ST_REV02.ogg",
+     "duree_s": 7.5,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/VERROUS - Verrous en série/2 - AfA-ONESHOT-AirLockClose.ogg",
+     "duree_s": 1.9,
+     "boucle": false
+    }
+   ]
+  },
+  "VOLCAN": {
+   "nom": "Éruption volcanique",
+   "dossier": "Bruitages/VOLCAN - Éruption volcanique",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/VOLCAN - Éruption volcanique/1 - Volcano_Eruption.ogg",
+     "duree_s": 8.3,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/VOLCAN - Éruption volcanique/2 - Volcano Lava Fire.ogg",
+     "duree_s": 71.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/VOLCAN - Éruption volcanique/3 - Volcano Eruption 1.ogg",
+     "duree_s": 8.3,
+     "boucle": false
+    }
+   ]
+  },
+  "ZOMBIES": {
+   "nom": "Râles de zombies",
+   "dossier": "Bruitages/ZOMBIES - Râles de zombies",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/ZOMBIES - Râles de zombies/1 - Zombie Bumbs 1.ogg",
+     "duree_s": 1.5,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/ZOMBIES - Râles de zombies/2 - Zombie Bumps 2.ogg",
+     "duree_s": 0.9,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/ZOMBIES - Râles de zombies/3 - Zombie Bumps 3.ogg",
+     "duree_s": 0.7,
+     "boucle": false
+    }
+   ]
+  }
+ },
+ "sons_vides_et_remplacements": {
+  "HELICO": null,
+  "MONITEUR": "COEUR"
+ },
+ "reveal": {
+  "nom": "Stingers de révélation du danger",
+  "dossier": "Bruitages/REVEAL - Stingers de révélation du danger",
+  "fichiers": [
+   {
+    "fichier": "Bruitages/REVEAL - Stingers de révélation du danger/1 - MTNASMAD-ONESHOT-Stinger2.ogg",
+    "duree_s": 6.2,
+    "boucle": false
+   },
+   {
+    "fichier": "Bruitages/REVEAL - Stingers de révélation du danger/2 - SF - ONE SHOT - Villain Stinger.ogg",
+    "duree_s": 3.6,
+    "boucle": false
+   },
+   {
+    "fichier": "Bruitages/REVEAL - Stingers de révélation du danger/3 - ASS SFX Music Cue 1.ogg",
+    "duree_s": 28.0,
+    "boucle": false
+   },
+   {
+    "fichier": "Bruitages/REVEAL - Stingers de révélation du danger/4 - ASS SFX Music Cue 2.ogg",
+    "duree_s": 35.9,
+    "boucle": false
+   },
+   {
+    "fichier": "Bruitages/REVEAL - Stingers de révélation du danger/5 - ASS SFX Music Cue 4.ogg",
+    "duree_s": 23.7,
+    "boucle": false
+   },
+   {
+    "fichier": "Bruitages/REVEAL - Stingers de révélation du danger/6 - ASS SFX Music Cue 5.ogg",
+    "duree_s": 40.0,
+    "boucle": false
+   },
+   {
+    "fichier": "Bruitages/REVEAL - Stingers de révélation du danger/7 - ASS SFX Music Cue 7.ogg",
+    "duree_s": 45.9,
+    "boucle": false
+   },
+   {
+    "fichier": "Bruitages/REVEAL - Stingers de révélation du danger/8 - ASS SFX Music Cue 8.ogg",
+    "duree_s": 46.3,
+    "boucle": false
+   },
+   {
+    "fichier": "Bruitages/REVEAL - Stingers de révélation du danger/9 - Gos Gongs1.ogg",
+    "duree_s": 20.7,
+    "boucle": false
+   },
+   {
+    "fichier": "Bruitages/REVEAL - Stingers de révélation du danger/10 - Horror Tree Slam attacks hit the ground 01.ogg",
+    "duree_s": 5.3,
+    "boucle": false
+   }
+  ]
+ },
+ "dangers": {
+  "air_irrespirable": {
+   "nom": "L'air devient irrespirable",
+   "paliers": {
+    "1": [
+     "VENTIL_STOP"
+    ],
+    "2": [
+     "RESPIRATION"
+    ],
+    "3": [
+     "RESPIRATION",
+     "COEUR"
+    ],
+    "4": [
+     "COEUR"
+    ]
+   }
+  },
+  "siege_arme": {
+   "nom": "La guerre éclate",
+   "paliers": {
+    "1": [
+     "DETONATIONS_LOIN",
+     "SIRENES"
+    ],
+    "2": [
+     "EXPLOSION"
+    ],
+    "3": [
+     "TIRS",
+     "EXPLOSION"
+    ],
+    "4": [
+     "EXPLOSION",
+     "EFFONDREMENT"
+    ]
+   }
+  },
+  "robots_rebelle": {
+   "nom": "Des robots se rebellent",
+   "paliers": {
+    "1": [
+     "ROBOT_SERVO"
+    ],
+    "2": [
+     "PORTE_METAL"
+    ],
+    "3": [
+     "ROBOT_PAS"
+    ],
+    "4": [
+     "ALARME",
+     "ROBOT_PAS"
+    ]
+   }
+  },
+  "bombe_retardement": {
+   "nom": "Le lieu va s'autodétruire",
+   "paliers": {
+    "1": [
+     "ALARME",
+     "BIP_COMPTE"
+    ],
+    "2": [
+     "PORTE_METAL"
+    ],
+    "3": [
+     "ETINCELLES",
+     "SECOUSSE"
+    ],
+    "4": [
+     "BIP_COMPTE",
+     "EXPLOSION"
+    ]
+   }
+  },
+  "braquage": {
+   "nom": "Un braquage",
+   "paliers": {
+    "1": [
+     "PNEUS"
+    ],
+    "2": [
+     "ARME_CHARGEE",
+     "PORTE_METAL"
+    ],
+    "3": [
+     "COUPS_PORTE"
+    ],
+    "4": [
+     "SIRENES",
+     "TIRS"
+    ]
+   }
+  },
+  "brume_etrange": {
+   "nom": "Un brouillard qui rend fou",
+   "paliers": {
+    "1": [
+     "BROUILLARD"
+    ],
+    "2": [
+     "BROUILLARD"
+    ],
+    "3": [
+     "BROUILLARD"
+    ],
+    "4": [
+     "BROUILLARD",
+     "COEUR"
+    ]
+   }
+  },
+  "crash_exterieur": {
+   "nom": "Un crash",
+   "paliers": {
+    "1": [
+     "SECOUSSE",
+     "ALARME"
+    ],
+    "2": [
+     "METAL_TORDU"
+    ],
+    "3": [
+     "METAL_TORDU",
+     "INCENDIE"
+    ],
+    "4": [
+     "EFFONDREMENT"
+    ]
+   }
+  },
+  "essaim": {
+   "nom": "Un essaim",
+   "paliers": {
+    "1": [
+     "ESSAIM"
+    ],
+    "2": [
+     "ESSAIM"
+    ],
+    "3": [
+     "ESSAIM"
+    ],
+    "4": [
+     "ESSAIM"
+    ]
+   }
+  },
+  "nuage_toxique": {
+   "nom": "Un gaz toxique se répand",
+   "paliers": {
+    "1": [
+     "GAZ_SIFFLE"
+    ],
+    "2": [
+     "GAZ_SIFFLE",
+     "TOUX"
+    ],
+    "3": [
+     "TOUX"
+    ],
+    "4": [
+     "RESPIRATION"
+    ]
+   }
+  },
+  "gouffre": {
+   "nom": "Un gouffre s'ouvre sous nos pieds",
+   "paliers": {
+    "1": [
+     "SOL_CRAQUE"
+    ],
+    "2": [
+     "EFFONDREMENT"
+    ],
+    "3": [
+     "SOL_CRAQUE"
+    ],
+    "4": [
+     "EFFONDREMENT"
+    ]
+   }
+  },
+  "incendie": {
+   "nom": "Un incendie",
+   "paliers": {
+    "1": [
+     "FEU_CREPITE",
+     "ALARME_INCENDIE"
+    ],
+    "2": [
+     "INCENDIE"
+    ],
+    "3": [
+     "INCENDIE",
+     "VERRE_BRISE"
+    ],
+    "4": [
+     "INCENDIE",
+     "EFFONDREMENT"
+    ]
+   }
+  },
+  "jeu_mortel": {
+   "nom": "Un jeu mortel",
+   "paliers": {
+    "1": [
+     "JEU_JINGLE"
+    ],
+    "2": [
+     "VERROUS",
+     "BUZZER"
+    ],
+    "3": [
+     "BUZZER"
+    ],
+    "4": [
+     "JEU_COMPTE"
+    ]
+   }
+  },
+  "monstre_geant": {
+   "nom": "Un monstre géant",
+   "paliers": {
+    "1": [
+     "GRONDEMENT"
+    ],
+    "2": [
+     "MONSTRE_RUGIT"
+    ],
+    "3": [
+     "PAS_GEANTS",
+     "EFFONDREMENT"
+    ],
+    "4": [
+     "MONSTRE_RUGIT"
+    ]
+   }
+  },
+  "naufrage": {
+   "nom": "Un naufrage",
+   "paliers": {
+    "1": [
+     "SECOUSSE",
+     "COQUE"
+    ],
+    "2": [
+     "EAU_ENGOUFFRE"
+    ],
+    "3": [
+     "COQUE",
+     "EAU_ENGOUFFRE"
+    ],
+    "4": [
+     "CORNE",
+     "BULLES"
+    ]
+   }
+  },
+  "pacte_ancien": {
+   "nom": "Un pacte ancien réactivé",
+   "paliers": {
+    "1": [
+     "PACTE_SOUFFLE"
+    ],
+    "2": [
+     "PORTE_CLAQUE",
+     "PACTE_SOUFFLE"
+    ],
+    "3": [
+     "PACTE_RITUEL"
+    ],
+    "4": [
+     "PACTE_RITUEL"
+    ]
+   }
+  },
+  "raz_de_maree": {
+   "nom": "Un raz-de-marée",
+   "paliers": {
+    "1": [
+     "MER_RETIRE"
+    ],
+    "2": [
+     "VAGUE"
+    ],
+    "3": [
+     "EAU_ENGOUFFRE"
+    ],
+    "4": [
+     "VAGUE"
+    ]
+   }
+  },
+  "tremblement_terre": {
+   "nom": "Un tremblement de terre",
+   "paliers": {
+    "1": [
+     "GRONDEMENT",
+     "OBJET_TOMBE"
+    ],
+    "2": [
+     "SECOUSSE",
+     "EFFONDREMENT"
+    ],
+    "3": [
+     "EFFONDREMENT"
+    ],
+    "4": [
+     "EFFONDREMENT"
+    ]
+   }
+  },
+  "tueur_en_serie": {
+   "nom": "Un tueur en série",
+   "paliers": {
+    "1": [
+     "PORTE_GRINCE"
+    ],
+    "2": [
+     "VERROUS"
+    ],
+    "3": [
+     "PAS"
+    ],
+    "4": [
+     "PAS",
+     "NEON"
+    ]
+   }
+  },
+  "volcan": {
+   "nom": "Un volcan en éruption",
+   "paliers": {
+    "1": [
+     "GRONDEMENT"
+    ],
+    "2": [
+     "VOLCAN"
+    ],
+    "3": [
+     "CENDRES"
+    ],
+    "4": [
+     "VOLCAN"
+    ]
+   }
+  },
+  "invasion_creature": {
+   "nom": "Une créature nous traque",
+   "paliers": {
+    "1": [
+     "GRIFFES"
+    ],
+    "2": [
+     "CREATURE"
+    ],
+    "3": [
+     "CREATURE"
+    ],
+    "4": [
+     "CREATURE_CRI"
+    ]
+   }
+  },
+  "reaction_chimique": {
+   "nom": "Une fuite de gaz, ça va exploser",
+   "paliers": {
+    "1": [
+     "GAZ_SIFFLE"
+    ],
+    "2": [
+     "GAZ_SIFFLE"
+    ],
+    "3": [
+     "GAZ_SIFFLE",
+     "ETINCELLES"
+    ],
+    "4": [
+     "EXPLOSION"
+    ]
+   }
+  },
+  "ia_controle": {
+   "nom": "Une IA prend le contrôle",
+   "paliers": {
+    "1": [
+     "IA_GLITCH"
+    ],
+    "2": [
+     "IA_VERROU"
+    ],
+    "3": [
+     "IA_SURCHARGE"
+    ],
+    "4": [
+     "IA_SURCHARGE",
+     "ALARME"
+    ]
+   }
+  },
+  "inondation": {
+   "nom": "Une inondation",
+   "paliers": {
+    "1": [
+     "EAU_GOUTTE"
+    ],
+    "2": [
+     "EAU_ENGOUFFRE"
+    ],
+    "3": [
+     "EAU_ENGOUFFRE"
+    ],
+    "4": [
+     "BULLES"
+    ]
+   }
+  },
+  "zombies": {
+   "nom": "Une invasion de zombies",
+   "paliers": {
+    "1": [
+     "ZOMBIES"
+    ],
+    "2": [
+     "ZOMBIES"
+    ],
+    "3": [
+     "COUPS_PORTE",
+     "ZOMBIES"
+    ],
+    "4": [
+     "ZOMBIES"
+    ]
+   }
+  },
+  "invasion_alien": {
+   "nom": "Une invasion extraterrestre",
+   "paliers": {
+    "1": [
+     "ALIEN_SIGNAL"
+    ],
+    "2": [
+     "ALIEN_SCELLE"
+    ],
+    "3": [
+     "ALIEN_SONDE"
+    ],
+    "4": [
+     "ALIEN_SONDE"
+    ]
+   }
+  },
+  "meute": {
+   "nom": "Une meute lâchée",
+   "paliers": {
+    "1": [
+     "MEUTE"
+    ],
+    "2": [
+     "MEUTE"
+    ],
+    "3": [
+     "MEUTE",
+     "COUPS_PORTE"
+    ],
+    "4": [
+     "MEUTE"
+    ]
+   }
+  },
+  "prise_otage": {
+   "nom": "Une prise d'otage",
+   "paliers": {
+    "1": [
+     "TALKIE"
+    ],
+    "2": [
+     "ARME_CHARGEE"
+    ],
+    "3": [
+     "TIRS"
+    ],
+    "4": [
+     "SIRENES"
+    ]
+   }
+  },
+  "tempete": {
+   "nom": "Une tempête",
+   "paliers": {
+    "1": [
+     "VENT"
+    ],
+    "2": [
+     "TEMPETE"
+    ],
+    "3": [
+     "TOIT_CRAQUE",
+     "TONNERRE"
+    ],
+    "4": [
+     "EFFONDREMENT",
+     "TEMPETE"
+    ]
+   }
+  },
+  "tornade": {
+   "nom": "Une tornade",
+   "paliers": {
+    "1": [
+     "VENT",
+     "SIRENE_TORNADE"
+    ],
+    "2": [
+     "TORNADE"
+    ],
+    "3": [
+     "TORNADE"
+    ],
+    "4": [
+     "TORNADE"
+    ]
+   }
+  },
+  "emeute_hostile": {
+   "nom": "Une émeute",
+   "paliers": {
+    "1": [
+     "FOULE"
+    ],
+    "2": [
+     "FOULE"
+    ],
+    "3": [
+     "VERRE_BRISE",
+     "COUPS_PORTE"
+    ],
+    "4": [
+     "FOULE"
+    ]
+   }
+  },
+  "maladie_contagieuse": {
+   "nom": "Une épidémie se propage",
+   "paliers": {
+    "1": [
+     "TOUX"
+    ],
+    "2": [
+     "PORTE_METAL",
+     "ALARME"
+    ],
+    "3": [
+     "TOUX",
+     "RESPIRATION"
+    ],
+    "4": [
+     "MONITEUR"
+    ]
+   }
+  },
+  "noir_total": {
+   "nom": "Le noir total",
+   "paliers": {
+    "1": [
+     "NEON"
+    ],
+    "2": [
+     "COUPURE"
+    ],
+    "3": [
+     "PAS"
+    ],
+    "4": [
+     "RESPIRATION"
+    ]
+   }
+  },
+  "perdus_nature": {
+   "nom": "On est perdus",
+   "paliers": {
+    "1": [
+     "NATURE_NUIT"
+    ],
+    "2": [
+     "VENT"
+    ],
+    "3": [
+     "NATURE_NUIT"
+    ],
+    "4": [
+     "VENT"
+    ]
+   }
+  },
+  "traques": {
+   "nom": "On est traqués",
+   "paliers": {
+    "1": [
+     "PAS"
+    ],
+    "2": [
+     "HELICO",
+     "TALKIE"
+    ],
+    "3": [
+     "PAS"
+    ],
+    "4": [
+     "COUPS_PORTE"
+    ]
+   }
+  },
+  "murs_referment": {
+   "nom": "Les murs se referment",
+   "paliers": {
+    "1": [
+     "PIERRE_RACLE"
+    ],
+    "2": [
+     "PIERRE_RACLE"
+    ],
+    "3": [
+     "PIERRE_RACLE",
+     "EFFONDREMENT"
+    ],
+    "4": [
+     "PIERRE_RACLE"
+    ]
+   }
+  },
+  "soleil_grossit": {
+   "nom": "Le soleil grossit, tout brûle",
+   "paliers": {
+    "1": [
+     "SOLEIL_CHALEUR"
+    ],
+    "2": [
+     "SOLEIL_CHALEUR"
+    ],
+    "3": [
+     "VERRE_FISSURE",
+     "SOL_CRAQUE"
+    ],
+    "4": [
+     "INCENDIE"
+    ]
+   }
+  },
+  "soleil_eteint": {
+   "nom": "Le soleil s'éteint, le froid gagne",
+   "paliers": {
+    "1": [
+     "SOLEIL_FROID"
+    ],
+    "2": [
+     "GLACE"
+    ],
+    "3": [
+     "GLACE",
+     "VENT"
+    ],
+    "4": [
+     "SOLEIL_FROID"
+    ]
+   }
+  },
+  "verrouillage": {
+   "nom": "Tout se verrouille, on est piégés",
+   "paliers": {
+    "1": [
+     "PORTE_CLAQUE"
+    ],
+    "2": [
+     "VERROUS"
+    ],
+    "3": [
+     "VENTIL_STOP"
+    ],
+    "4": [
+     "PORTE_METAL"
+    ]
+   }
+  }
+ }
+}

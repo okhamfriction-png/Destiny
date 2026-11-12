@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../application/son/regie_son.dart';
 import '../../application/services/audio_service.dart';
 import '../../application/state/ai_settings.dart';
 import '../../application/state/location_details.dart';
@@ -39,10 +40,14 @@ class SettingsScreen extends StatelessWidget {
     required this.locationDetails,
     required this.audioService,
     required this.musicController,
+    this.regieSon,
     super.key,
   });
 
   final ReglagesDestiny reglages;
+
+  /// La régie son du spectacle (facultative : absente dans les tests).
+  final RegieSon? regieSon;
   final VisualSettings visualSettings;
   final CatalogStore catalogStore;
   final AiSettings aiSettings;
@@ -73,7 +78,8 @@ class SettingsScreen extends StatelessWidget {
         enfants: [
           entree(Icons.flash_on_rounded, c.bleuDestiny, k('destiny'), k('destiny_aide'), () => _ouvrir(
                 context,
-                ReglagesDestinyScreen(reglages: reglages, audio: audioService, musique: musicController),
+                ReglagesDestinyScreen(
+                    reglages: reglages, audio: audioService, musique: musicController, regieSon: regieSon),
               )),
           entree(
             Icons.smart_toy_outlined,

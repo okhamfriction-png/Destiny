@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 
 /// Lecture des effets sonores de l'app. Un lecteur dédié par canal pour que
 /// les sons courts (pièce, éclat) puissent se chevaucher sans se couper.
@@ -45,9 +46,14 @@ class AudioService {
   bool _muted = false; // son activé par défaut
   bool get muted => _muted;
 
+  /// Prévient quand on coupe ou remet le son (la régie son du spectacle
+  /// s'arrête net avec le reste).
+  final ValueNotifier<bool> muetNotifier = ValueNotifier<bool>(false);
+
   /// Active/désactive le son. En coupant, on stoppe ce qui joue.
   void setMuted(bool value) {
     _muted = value;
+    muetNotifier.value = value;
     if (value) {
       for (final p in [
         _storm,
@@ -105,6 +111,18 @@ class AudioService {
     'story': 'Épique',
     'reveal': 'Révélation',
     'aucun': 'Aucun',
+  };
+
+  /// Le fichier (relatif à `assets/`) de chaque effet de [effets].
+  static const Map<String, String> assetsEffets = {
+    'storm': stormAsset,
+    'thunder': thunderAsset,
+    'dice': diceAsset,
+    'coin': coinAsset,
+    'crack': crackAsset,
+    'shine': shineAsset,
+    'story': storyAsset,
+    'reveal': revealAsset,
   };
 
   /// Joue l'effet identifié par sa clé (voir [effets]). 'aucun' ne joue rien.
