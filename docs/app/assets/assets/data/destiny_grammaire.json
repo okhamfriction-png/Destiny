@@ -1,5 +1,5 @@
 {
-  "version": "2.1",
+  "version": "2.3",
   "nom": "Destiny",
   "promesse": "Rien n'est écrit",
   "familles": [
@@ -17,7 +17,7 @@
       "couleur": "#3F74B5",
       "couleur_claire": "#e8eff8",
       "idee": "Ils imposent aux autres leur lecture de ce qui arrive.",
-      "pourquoi": "Ils font exister le danger ; l'alarmiste a besoin de quelqu'un qui lui réponde."
+      "pourquoi": "Ils donnent un sens au danger que la régie fait entendre : le lire, le nier, l'annoncer."
     },
     {
       "id": "fissure",
@@ -35,10 +35,10 @@
       "famille": "tient",
       "ce_qu_il_fait": "Décide pour le groupe et tranche les disputes.",
       "montee": {
-        "signale": "Organise la journée",
-        "enferme": "Prend la main",
-        "envahit": "Impose ses choix",
-        "supprime": "Décide qui passe"
+        "signale": "Organiser la journée",
+        "enferme": "Prendre la main",
+        "envahit": "Imposer ses choix",
+        "supprime": "Décider qui passe"
       },
       "animaux": [
         {
@@ -75,10 +75,10 @@
       "famille": "tient",
       "ce_qu_il_fait": "Choisit quelqu'un à protéger et se met entre lui et le danger.",
       "montee": {
-        "signale": "Veille sur un proche",
-        "enferme": "Se place devant lui",
-        "envahit": "Se bat contre tous pour lui",
-        "supprime": "Se sacrifie pour lui"
+        "signale": "Veiller sur un proche",
+        "enferme": "Se placer devant lui",
+        "envahit": "Se battre contre tous pour lui",
+        "supprime": "Se sacrifier pour lui"
       },
       "animaux": [
         {
@@ -115,10 +115,10 @@
       "famille": "tient",
       "ce_qu_il_fait": "Soigne, rassure, réconcilie ceux qui se déchirent.",
       "montee": {
-        "signale": "Prend soin de chacun",
-        "enferme": "Calme les premiers éclats",
-        "envahit": "S'épuise à tout recoller",
-        "supprime": "Tient la main du dernier, ou craque"
+        "signale": "Prendre soin de chacun",
+        "enferme": "Calmer les premiers éclats",
+        "envahit": "Tout recoller, quitte à s'épuiser",
+        "supprime": "Tenir la main du dernier, ou craquer"
       },
       "animaux": [
         {
@@ -155,10 +155,10 @@
       "famille": "tient",
       "ce_qu_il_fait": "Bricole avec ce qu'il y a dans le lieu et propose des plans.",
       "montee": {
-        "signale": "Bidouille un objet",
-        "enferme": "Cherche une issue",
-        "envahit": "Tente le plan risqué",
-        "supprime": "Dernier plan, le tout pour le tout"
+        "signale": "Bricoler avec ce qu'il trouve",
+        "enferme": "Chercher une issue",
+        "envahit": "Tenter le plan risqué",
+        "supprime": "Un dernier plan, avec ce qui reste"
       },
       "animaux": [
         {
@@ -193,12 +193,12 @@
       "id": "alarmiste",
       "nom": "Alarmiste",
       "famille": "interprete",
-      "ce_qu_il_fait": "Apporte les nouvelles du danger, panique et contamine.",
+      "ce_qu_il_fait": "Entend le signal avant les autres, panique et contamine.",
       "montee": {
-        "signale": "Entre avec le signal",
-        "enferme": "Annonce l'enfermement",
-        "envahit": "Panique, contamine",
-        "supprime": "Crie la fin, ou se tait"
+        "signale": "Faire entendre le signal",
+        "enferme": "Annoncer qu'on est enfermés",
+        "envahit": "Paniquer, contaminer les autres",
+        "supprime": "Crier la fin, ou se taire"
       },
       "animaux": [
         {
@@ -233,12 +233,12 @@
       "id": "denegateur",
       "nom": "Dénégateur",
       "famille": "interprete",
-      "ce_qu_il_fait": "Minimise, contredit l'alarmiste, refuse de bouger.",
+      "ce_qu_il_fait": "Minimise, contredit l'alarmiste, refuse de bouger. Il se fiche du danger.",
       "montee": {
-        "signale": "Se moque de l'alerte",
-        "enferme": "« Ça va se régler »",
-        "envahit": "Nie l'évidence",
-        "supprime": "Refuse la dernière sortie"
+        "signale": "Se moquer de l'alerte",
+        "enferme": "Répéter « ça va se régler »",
+        "envahit": "Nier l'évidence",
+        "supprime": "Refuser la dernière sortie"
       },
       "animaux": [
         {
@@ -275,10 +275,10 @@
       "famille": "interprete",
       "ce_qu_il_fait": "Lit des signes, annonce la suite, rallie des fidèles.",
       "montee": {
-        "signale": "Voit des signes",
-        "enferme": "« Ça devait arriver »",
-        "envahit": "Rallie, désigne la faute",
-        "supprime": "Exige un sacrifice"
+        "signale": "Voir des signes",
+        "enferme": "Dire « ça devait arriver »",
+        "envahit": "Rallier, désigner la faute",
+        "supprime": "Exiger un sacrifice"
       },
       "animaux": [
         {
@@ -313,12 +313,12 @@
       "id": "cynique",
       "nom": "Cynique",
       "famille": "interprete",
-      "ce_qu_il_fait": "Tourne tout en dérision et dit en riant ce que personne n'ose dire.",
+      "ce_qu_il_fait": "Tourne tout en dérision et dit en riant ce que personne n'ose dire. Il s'en moque à voix haute, sans paniquer.",
       "montee": {
-        "signale": "Fait rire",
-        "enferme": "Blague sur le danger",
-        "envahit": "L'humour devient cruel",
-        "supprime": "Dernier trait, ou le rire casse"
+        "signale": "Faire rire",
+        "enferme": "Blaguer sur le danger",
+        "envahit": "Rendre l'humour cruel",
+        "supprime": "Rire jusqu'à ce que ça casse"
       },
       "animaux": [
         {
@@ -355,10 +355,10 @@
       "famille": "fissure",
       "ce_qu_il_fait": "Monnaie ses services, prend les ressources ou le pouvoir.",
       "montee": {
-        "signale": "Repère ce qui a de la valeur",
-        "enferme": "Monnaie un service",
-        "envahit": "Prend, quitte à écraser",
-        "supprime": "Pactise, ou vend sa place"
+        "signale": "Repérer ce qui a de la valeur",
+        "enferme": "Monnayer un service",
+        "envahit": "Prendre, quitte à écraser",
+        "supprime": "Pactiser, ou vendre sa place"
       },
       "animaux": [
         {
@@ -395,10 +395,10 @@
       "famille": "fissure",
       "ce_qu_il_fait": "Fixe des règles, rationne, punit ceux qui désobéissent.",
       "montee": {
-        "signale": "Range, cadre",
-        "enferme": "Fixe les règles",
-        "envahit": "Enferme, punit",
-        "supprime": "Sacrifie au nom de la règle"
+        "signale": "Ranger, cadrer",
+        "enferme": "Fixer les règles",
+        "envahit": "Punir qui désobéit",
+        "supprime": "Sacrifier quelqu'un au nom de la règle"
       },
       "animaux": [
         {
@@ -435,10 +435,10 @@
       "famille": "fissure",
       "ce_qu_il_fait": "Refuse le plan du groupe et prépare sa propre sortie, sans quitter le lieu.",
       "montee": {
-        "signale": "Se tient à l'écart",
-        "enferme": "Refuse le plan",
-        "envahit": "Prépare sa sortie",
-        "supprime": "Part seul, ou revient"
+        "signale": "Se tenir à l'écart",
+        "enferme": "Refuser le plan",
+        "envahit": "Préparer sa sortie",
+        "supprime": "Partir seul, ou revenir"
       },
       "animaux": [
         {
@@ -475,10 +475,10 @@
       "famille": "fissure",
       "ce_qu_il_fait": "Remarque, interroge, accuse, monte le groupe contre un suspect.",
       "montee": {
-        "signale": "Remarque un détail",
-        "enferme": "Pose des questions",
-        "envahit": "Accuse un suspect",
-        "supprime": "Fait condamner quelqu'un"
+        "signale": "Remarquer un détail",
+        "enferme": "Poser des questions",
+        "envahit": "Accuser un suspect",
+        "supprime": "Faire condamner quelqu'un"
       },
       "animaux": [
         {
@@ -517,14 +517,14 @@
       "nom": "Il se signale",
       "acte": 1,
       "ambiance": "Tout va bien",
-      "archetype": "dort"
+      "archetype": "joué léger"
     },
     {
       "n": 2,
       "id": "enferme",
       "nom": "Il enferme",
       "acte": 2,
-      "ambiance": "« Ça va se régler »",
+      "ambiance": "« C'est bizarre, mais ça va »",
       "archetype": "premier réflexe"
     },
     {
@@ -550,19 +550,21 @@
       "palier": "Il se signale",
       "ambiance": "Tout va bien",
       "consignes": [
-        "On est dans le quotidien et le déni.",
-        "Deux par deux : relations, vouloir et besoin.",
-        "L'alarmiste entre avec le signal ; personne n'y croit."
+        "Une minute muette en musique : chacun entre dans son corps, son archétype et son vêtement. On pose le lieu et des objets : l'un pose, l'autre essaie de comprendre.",
+        "Le ton est léger et drôle (de l'impro, pas des gags). On joue son archétype dès le début, sans mettre la pression sur le danger. Seul l'alarmiste, s'il est là, crie au loup pour des broutilles, et les autres se moquent de lui.",
+        "Scène 1 en duo. À la fin, on connaît pour chacun son nom, son rôle dans le lieu, le lien dit avec le mot (frère, collègue, ex…) et son vouloir.",
+        "Règle du 50-50 : chacun ne donne qu'une partie de qui il est, l'autre complète, toujours dans des répliques naturelles.",
+        "Celui qui entre rebondit sur un ou plusieurs éléments déjà posés. Il dit tout de suite son lien avec quelqu'un sur scène, avec le mot, et se définit par rapport au duo : il prend parti pour l'un des deux, ou il porte un secret qui touche leur relation."
       ]
     },
     {
       "acte": 2,
       "palier": "Il enferme",
-      "ambiance": "« Ça va se régler »",
+      "ambiance": "« C'est bizarre, mais ça va »",
       "consignes": [
-        "On est bloqués, pas encore de panique.",
-        "On appuie là où ça fait mal.",
-        "Premiers réflexes des archétypes."
+        "On est bloqués comme dans un ascenseur : c'est pénible, mais ce n'est pas encore la peur. On se fixe de petits buts concrets.",
+        "On reprend le vouloir et les objets de l'acte 1. Le danger bloque un vouloir, et on joue ce blocage.",
+        "Le lien bouge, il n'explose pas encore. Ce sont les premiers réflexes des archétypes."
       ]
     },
     {
@@ -571,8 +573,8 @@
       "ambiance": "La bascule",
       "consignes": [
         "Tout le monde est sur scène au début.",
-        "Les archétypes éclatent, les vérités sortent.",
-        "On tient la sidération avant de réagir."
+        "Le vrai danger arrive. Trois secondes de sidération, puis on réagit fort avec son archétype, même par une vanne.",
+        "Les liens de l'acte 2 explosent et les vérités sortent. Le besoin sort, souvent par la bouche d'un autre."
       ]
     },
     {
@@ -581,42 +583,61 @@
       "ambiance": "Le prix à payer",
       "consignes": [
         "Tout le monde sur scène, personne ne sort.",
-        "Chacun face à son besoin."
+        "Le danger frappe d'abord, puis les liens répondent : chacun paie le prix de l'acte 3, en choisissant entre son vouloir et son besoin.",
+        "Ce qui a été planté revient. On finit sur qui survit. L'acte est plus court."
       ]
     }
   ],
   "regles_d_or": [
     {
+      "id": "se_connaitre",
       "titre": "Tout le monde se connaît",
-      "texte": "Le groupe est donné en même temps que le lieu : une équipe, une famille, des associés. Personne n'est un inconnu."
+      "texte": "Le groupe est donné en même temps que le lieu : une équipe, une famille, des associés. Personne n'est un inconnu. Chaque duo dit ce qu'il est pour l'autre, avec le mot (frère, collègue, ex…), dès la première scène."
     },
     {
+      "id": "un_lieu",
       "titre": "Un seul lieu",
       "texte": "On n'en change que si ça sert vraiment l'histoire. Hors du lieu, le danger reste derrière la porte."
     },
     {
-      "titre": "4 ou 5 joueurs",
-      "texte": "Deux commencent ; le troisième entre et touche l'un des deux, qui trouve une raison de sortir."
+      "id": "comediens",
+      "titre": "Quatre comédiens et un figurant",
+      "texte": "Deux commencent ; celui qui entre rebondit sur ce qui est posé, dit son lien avec quelqu'un sur scène et touche l'un des deux, qui trouve une raison de sortir. Le figurant n'a de lien avec personne : il nourrit les relations des autres."
     },
     {
-      "titre": "L'alarmiste porte le danger",
-      "texte": "Sa première entrée porte le signal. Après chaque Destiny, il apporte la nouvelle du palier."
+      "id": "danger_regie",
+      "titre": "Le danger vient de la régie",
+      "texte": "Musiques et bruitages, lancés au signal du metteur en scène. Les comédiens n'amènent pas le danger, ils y réagissent."
     },
     {
+      "id": "destiny_exterieur",
       "titre": "Destiny se lance de l'extérieur",
-      "texte": "La régie ou le metteur en scène décide du moment, pas l'alarmiste."
+      "texte": "La régie ou le metteur en scène décide du moment, pas les comédiens."
     },
     {
+      "id": "fige",
       "titre": "Quand la menace frappe, on se fige",
       "texte": "La sidération dure quelques secondes, puis une phrase chacun : on se tourne vers l'autre."
     },
     {
+      "id": "dernier_acte",
       "titre": "Le dernier acte fait payer",
       "texte": "Il ne remonte pas la tension : il fait payer le prix de tout ce qui s'est passé."
     },
     {
+      "id": "coupable",
       "titre": "Pas besoin de coupable",
       "texte": "Le soupçon nourrit les relations. On n'est pas obligé de savoir qui a fait quoi."
+    },
+    {
+      "id": "progression",
+      "titre": "Chaque acte reprend le précédent",
+      "texte": "Chaque acte reprend ce que le précédent a posé, et le danger frappe un élément posé avant : l'acte 2 reprend le vouloir et les objets de l'acte 1, l'acte 3 fait exploser les liens de l'acte 2, l'acte 4 fait payer le prix de l'acte 3. Planter pour payer : un prénom ou un objet posé à l'acte 1 devient une bombe à l'acte 4."
+    },
+    {
+      "id": "directions",
+      "titre": "Des directions, pas des prisons",
+      "texte": "Les cartes donnent des directions, pas des prisons. La fiction passe avant la carte. Le statut de départ est celui de l'animal (son vêtement) ; ensuite, la scène décide si ça bouge."
     }
   ],
   "rituel_destiny": {
@@ -629,11 +650,16 @@
       "les comédiens se figent",
       "ellipse : le temps passe"
     ],
-    "reprise": "Des heures ont passé, le danger a monté d'un palier ; on reprend directement dans la situation pire. L'alarmiste apporte la nouvelle.",
+    "reprise": "Des heures ont passé, le danger a monté d'un palier ; on reprend directement dans la situation pire, en réagissant au son du nouveau palier.",
+    "suite": [
+      "le bruitage du nouveau palier",
+      "la musique de l'acte, en fondu",
+      "les comédiens reprennent en réagissant au son du danger"
+    ],
     "premier_fige": "Chaque comédien choisit en silence sa phrase : « il veut… mais il a besoin de… »."
   },
   "distribution": {
-    "regle": "L'alarmiste est toujours là. Les autres se choisissent ou se tirent pour que chaque famille soit représentée. Le leader est facultatif. Le leader et le gardien de l'ordre peuvent jouer ensemble.",
+    "regle": "Au spectacle, on joue à quatre comédiens et un figurant. Les archétypes sont attribués à l'avance, pour que chacun les travaille avant la répète ou le spectacle. Chaque famille reste représentée, et on choisit des archétypes qui s'opposent dans leur réflexe : l'Aidant qui tend la main face au Paranoïaque qui repousse. Le danger vient de la régie : l'alarmiste est un archétype comme les autres, facultatif au spectacle. En jeu de rôle, le maître du jeu le tient s'il manque. Le leader est facultatif. Le leader et le gardien de l'ordre peuvent jouer ensemble.",
     "par_nombre": [
       {
         "joueurs": 3,
@@ -723,6 +749,14 @@
     ],
     "phrase_cle": "Ce que tu veux, c'est… mais ce dont tu as besoin pour aller mieux, c'est…",
     "piege": "« J'ai besoin d'argent » est un vouloir. Un besoin n'est jamais un objet : c'est un changement à l'intérieur (oser dire, faire confiance, lâcher prise, se laisser aider, être vu).",
+    "vouloir_tests": [
+      "Il se passe ici, ce soir.",
+      "Il dépend de l'autre personnage.",
+      "Le danger peut l'empêcher."
+    ],
+    "vouloir_methode": "On part de son grand objectif et on se demande ce qu'il faut obtenir de l'autre, maintenant, pour s'en rapprocher. Le public doit connaître le vouloir, même si le personnage le cache à l'autre. À l'acte 1, on se concentre sur le vouloir : le besoin vient plus tard.",
+    "planter_pour_payer": "Un prénom ou un objet posé à l'acte 1 (« Marie arrive dans trente minutes ») devient une bombe à l'acte 4 : le cri « Marie ! » suffit pour que le public comprenne tout. Peu d'objets, mais chacun reprend du sens en revenant.",
+    "vouloir_avoue": "Le vouloir peut aussi être avoué. Le conflit n'oppose pas toujours le vouloir et le besoin : il peut opposer le vouloir et le masque que le personnage porte devant l'autre. Le prix, c'est ce qu'on refuse de lâcher : c'est lui qui montre lequel gagne. (Succession, saison 4, la dispute de Tom et Shiv.)",
     "chaine": [
       "blessure (le pourquoi)",
       "mensonge qu'il se raconte",
@@ -735,8 +769,8 @@
       {
         "titre": "Le vouloir",
         "sous_titre": "Il le sait, il le dit.",
-        "texte": "Un objectif concret, dans ce lieu, ce soir. C'est ce qui le fait agir.",
-        "exemple": "Obtenir ce prêt pour quitter son boulot et changer d'appart."
+        "texte": "Un objectif concret, ici, ce soir, qui dépend de l'autre et que le danger peut empêcher. C'est ce qui le fait agir. Le public le connaît, même s'il le cache à l'autre.",
+        "exemple": "Elle arrive dans trente minutes, et si ce carré n'est pas nickel, je peux dire adieu à ma place de gérant. Alors dégage."
       },
       {
         "titre": "Le besoin",
@@ -755,7 +789,7 @@
       {
         "moment": "Acte 1",
         "verbe": "Dire",
-        "consigne": "On dit son vouloir dans les deux premières minutes. On laisse échapper une phrase de blessure."
+        "consigne": "Dans la scène 1 : nom, rôle, lien dit avec le mot, vouloir. La blessure n'est pas exigée : si elle vient, c'est une phrase, sans explication."
       },
       {
         "moment": "Destiny 1",
@@ -847,7 +881,7 @@
         "Qu'est-ce que je dis quand ça tourne mal ?",
         "Jusqu'où j'irais, à la fin ?"
       ],
-      "limite": "On prépare l'archétype et le corps, pas l'histoire : le vouloir dépend du lieu et du groupe, le besoin reste ouvert jusqu'au premier Destiny, et l'archétype dort à l'acte 1."
+      "limite": "On prépare l'archétype et le corps, pas l'histoire : le vouloir dépend du lieu et du groupe, le besoin reste ouvert jusqu'au premier Destiny, et l'archétype se joue dès l'acte 1, avec légèreté."
     }
   },
   "dangers": [
@@ -5731,7 +5765,8 @@
   "figurants": {
     "modes": {
       "figurant": "Neutre, ou du côté des protagonistes. Il a sa propre affaire en cours dans le lieu : un archétype, un animal, ce qu'il veut, d'où il vient, et ce qu'il sait ou apporte.",
-      "sbire": "Au service du méchant. Il agit à sa place tant que le méchant reste dans l'ombre : un archétype, un animal, ce qu'il veut, d'où il vient, et ce qu'il fait pour son maître. Deux sbires par méchant, sur sa carte."
+      "sbire": "Au service du méchant. Il agit à sa place tant que le méchant reste dans l'ombre : un archétype, un animal, ce qu'il veut, d'où il vient, et ce qu'il fait pour son maître. Deux sbires par méchant, sur sa carte.",
+      "spectacle": "Le figurant du spectacle : un personnage du décor (serveur, client…). Il a peu de répliques et aucun lien affectif avec personne. Il nourrit les relations des autres, et ramène des objets et le danger."
     },
     "types": [
       {
@@ -6112,7 +6147,7 @@
         "Mark : « c'est plus fluide, plus naturel, plus agréable à regarder », et l'acte 1 tient en dix minutes."
       ],
       "debrief": "Qu'est-ce que chaque entrée a apporté ? Les mains étaient-elles occupées ? Quelle façade cache la vulnérabilité de chacun ?",
-      "variante": "Les quatre comédiens arrivent avec leur archétype déjà choisi, mais ne le jouent pas : à l'acte 1, l'archétype dort.",
+      "variante": "Les quatre comédiens arrivent avec leur archétype déjà choisi, et le jouent dès l'acte 1, avec légèreté.",
       "theme": "lieu"
     },
     {
@@ -6219,7 +6254,7 @@
         "Mark : la menace provoque la réaction, puis la réaction révèle le vrai problème du personnage."
       ],
       "debrief": "La réaction s'est-elle ajoutée au personnage, sans le remplacer ? Le moment du figé a-t-il duré assez longtemps ?",
-      "variante": "Avec le danger en quatre paliers : l'archétype dort, a un premier réflexe, éclate, puis va jusqu'au bout.",
+      "variante": "Avec le danger en quatre paliers : l'archétype est joué léger, a un premier réflexe, éclate, puis va jusqu'au bout.",
       "theme": "destiny"
     },
     {
@@ -6365,6 +6400,50 @@
       "debrief": "Qui a dit son vouloir, où était la blessure, qui a nommé le besoin ? Chacun porte 20 % de l'histoire, pas 100 % : si tu n'as pas trouvé ton besoin, pars de ce que les autres ont joué.",
       "variante": "Ajouter les actes 3 et 4 pour jouer un spectacle complet, avec le rituel Destiny.",
       "theme": "destiny"
+    },
+    {
+      "id": "scene_1_en_duo",
+      "titre": "La scène 1 en duo",
+      "source": "Séances de novembre 2026",
+      "duree": "15 à 20 min",
+      "joueurs": "tout le groupe, par deux",
+      "notion": "nom, rôle, lien, vouloir",
+      "but": "Savoir répondre aux quatre questions (nom, rôle, lien, vouloir) avant de passer au long form.",
+      "consignes": [
+        "Tout le groupe joue en même temps, par deux. On change de partenaire à chaque tour.",
+        "L'animateur donne un lieu et lance la musique.",
+        "Le duo pose le lieu et des objets, se donne un prénom et un rôle, dit sa relation avec le mot (en 50-50), et finit par un « je veux » envers l'autre, pour ce soir."
+      ],
+      "exemples": [
+        "Une laverie, tard le soir.",
+        "La cuisine d'un restaurant avant le service.",
+        "Le vestiaire d'un club de foot."
+      ],
+      "debrief": "Pour chaque duo : son nom, son rôle, son lien, son vouloir. Qu'est-ce qui manquait ?",
+      "variante": "Ajouter un troisième qui entre, rebondit sur un élément posé et dit son lien avec l'un des deux.",
+      "theme": "crow"
+    },
+    {
+      "id": "test_du_mobil_home",
+      "titre": "Le test du mobil-home",
+      "source": "Succession, saison 4",
+      "duree": "10 à 15 min",
+      "joueurs": "deux joueurs, le groupe regarde",
+      "notion": "le vouloir, le besoin, le prix",
+      "but": "Faire apparaître le besoin du personnage par un choix sincère.",
+      "consignes": [
+        "Un duo pose nom, rôle, lien et vouloir.",
+        "Puis l'un propose un marché à l'autre : « Je te donne ce dont tu as vraiment besoin, mais tu renonces à ce que tu veux. »",
+        "L'autre répond sincèrement, dans le personnage.",
+        "À la fin, le groupe dit quel était, selon lui, le besoin du personnage."
+      ],
+      "exemples": [
+        "« Je reste avec toi, mais tu lâches cette promotion. »",
+        "« Je te pardonne, mais tu ne revois plus jamais ta sœur. »"
+      ],
+      "debrief": "Quel était le besoin du personnage ? Qu'a-t-il refusé de lâcher ?",
+      "variante": "Rejouer en inversant les rôles : c'est l'autre qui propose le marché.",
+      "theme": "destiny"
     }
   ],
   "themes_exercices": [
@@ -6396,7 +6475,10 @@
     "les animaux annoncés au public",
     "les changements de lieu systématiques",
     "le traître dans l'épisode seul (il revient en mode saison, recruté par le méchant)",
-    "le sidéré"
+    "le sidéré",
+    "l'archétype dort à l'acte 1",
+    "l'alarmiste porte le danger",
+    "commencer in medias res"
   ],
   "direction_artistique": {
     "nuit": "#100d08",

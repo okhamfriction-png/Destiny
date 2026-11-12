@@ -5,7 +5,8 @@
     "titre": "Destiny",
     "texte_ellipse": "Quelques heures plus tard…",
     "rappel_premier_fige": "Premier figé : chacun choisit en silence sa phrase, « il veut… mais il a besoin de… ».",
-    "nouvelle_alarmiste": "La nouvelle à souffler à l'alarmiste :",
+    "nouvelle_palier": "La nouvelle du palier",
+    "nouvelle_aide": "À faire entendre par la régie son, ou à souffler au figurant.",
     "etapes_courtes": [
       "Tonnerre",
       "Rire",
@@ -16,10 +17,10 @@
     "reprendre": "Reprendre"
   },
   "distribution": {
-    "ok": "Distribution équilibrée : chaque famille est là, et l'alarmiste porte le danger.",
+    "ok": "Distribution équilibrée : chaque famille est là.",
     "nombre": "Destiny se joue de 3 à 6 joueurs.",
-    "sans_alarmiste": "Il manque l'alarmiste : c'est lui qui porte le danger.",
-    "deux_alarmistes": "Un seul alarmiste suffit : c'est lui qui apporte chaque nouvelle.",
+    "sans_alarmiste": "Il manque l'alarmiste : en jeu de rôle, il est toujours là (le maître du jeu le tient s'il manque).",
+    "deux_alarmistes": "Un seul alarmiste suffit.",
     "famille_manquante": "Il manque quelqu'un qui {famille}. {pourquoi}",
     "famille_insuffisante": "À {joueurs} joueurs, il faut {minimum} archétypes qui {famille}.",
     "doublon": "{archetype} est choisi deux fois : chaque joueur a son propre archétype.",
@@ -138,7 +139,13 @@
       "Destiny (le rituel), le figé, l'ellipse",
       "vouloir, besoin, blessure, prix à payer",
       "tient le groupe, interprète le danger, fissure le groupe",
-      "le lieu, ses espaces, le groupe"
+      "le lieu, ses espaces, le groupe",
+      "le vêtement (l'animal)",
+      "le lien, dit avec le mot",
+      "rebondir",
+      "tenté de",
+      "la minute muette",
+      "planter pour payer"
     ],
     "ne_plus_utiliser": [
       "moteur (au sens ancien), rôle tiré au hasard",
@@ -146,7 +153,10 @@
       "lancer un dé",
       "objectif vague, motivation",
       "traître, sidéré",
-      "changer de lieu"
+      "changer de lieu",
+      "l'archétype dort",
+      "l'alarmiste porte le danger",
+      "commencer in medias res"
     ]
   },
   "outils_de_jeu": {
@@ -168,6 +178,17 @@
       {
         "titre": "La règle des 20 %",
         "texte": "Chacun porte une part de l'histoire, pas toute l'histoire. On propose, on laisse les autres compléter."
+      }
+    ],
+    "source_novembre": "D'après les séances de novembre 2026",
+    "outils_novembre": [
+      {
+        "titre": "Accepter les perches",
+        "texte": "On ne refuse pas une offre qui fait bouger la relation. Un Aidant peut dire oui, puis se blesser avec ce oui."
+      },
+      {
+        "titre": "Planter pour payer",
+        "texte": "Un prénom ou un objet posé à l'acte 1 (« Marie arrive dans trente minutes ») devient une bombe à l'acte 4 : le cri « Marie ! » suffit pour que le public comprenne tout. Peu d'objets, mais chacun reprend du sens en revenant."
       }
     ],
     "instinct": "Ces outils se pratiquent jusqu'à devenir un instinct. On ne les récite pas en jouant."
@@ -254,7 +275,7 @@
     "bas": "statut bas"
   },
   "cartes": {
-    "montee": "La montée",
+    "montee": "Acte par acte, il est tenté de…",
     "port": "port",
     "posture": "Posture",
     "corps": "Le corps à ce palier",
@@ -276,7 +297,7 @@
       },
       "archetypes": {
         "titre": "Archétypes",
-        "texte": "Les 12 convictions face au danger, en trois familles."
+        "texte": "Les 12 convictions face au danger, en trois familles : des directions, pas des prisons."
       },
       "animaux": {
         "titre": "Animaux",
@@ -284,7 +305,7 @@
       },
       "vouloir_besoin": {
         "titre": "Vouloir et besoin",
-        "texte": "Le cœur du personnage : blessure, vouloir, besoin, prix à payer."
+        "texte": "Le cœur du personnage : vouloir, besoin, prix à payer, et planter pour payer."
       },
       "dangers": {
         "titre": "Dangers",
@@ -304,7 +325,7 @@
       },
       "figurants": {
         "titre": "Figurants",
-        "texte": "Deux modes, huit types, et comment les jouer."
+        "texte": "Le figurant du spectacle, les deux modes du jeu de rôle, huit types, et comment les jouer."
       },
       "kids": {
         "titre": "Mode kids",
@@ -312,7 +333,7 @@
       },
       "outils": {
         "titre": "Outils de jeu",
-        "texte": "Les outils de Mark Jane."
+        "texte": "Les outils de Mark Jane, et ceux des séances de novembre."
       },
       "lexique": {
         "titre": "Les mots de Destiny",
@@ -326,7 +347,7 @@
     "aucun_resultat": "Rien ne correspond.",
     "fiche": {
       "ce_qu_il_fait": "Ce qu'il fait",
-      "montee": "La montée",
+      "montee": "Acte par acte, il est tenté de…",
       "animaux": "Ses deux animaux",
       "exemple": "Un exemple",
       "modeles": "Ses modèles dans les œuvres",
@@ -401,7 +422,7 @@
       "echauffement": "L'échauffement",
       "questions": "Les trois questions",
       "joueurs": "{n} joueurs",
-      "alarmiste": "l'alarmiste",
+      "alarmiste": "l'alarmiste ou un autre au choix",
       "au_choix": "{n} au choix",
       "l_archetype": "L'archétype",
       "reprise": "La reprise"
@@ -413,10 +434,13 @@
       "detecter": "Détecter, pas jouer",
       "phrase_cle": "La phrase des débriefs",
       "acte_par_acte": "Acte par acte",
-      "six_directions": "Six directions"
+      "six_directions": "Six directions",
+      "tests": "Un bon vouloir : trois tests",
+      "planter": "Planter pour payer",
+      "avoue": "Une nouvelle piste : le vouloir avoué"
     },
     "figurants": {
-      "modes": "Les deux modes",
+      "modes": "Les modes",
       "types": "Les huit types",
       "regles": "Les règles",
       "par_lieu": "Trois figurants par lieu"
@@ -446,11 +470,13 @@
       "par_animal_aide": "24 cartes : la posture, la réplique, le corps à chaque palier.",
       "en_cours": "Les cartes se préparent…",
       "echec": "Le PDF n'a pas pu être créé. Réessaie dans un instant."
-    }
+    },
+    "archetypes_principe": "Les cartes donnent des directions, pas des prisons. La fiction passe avant la carte."
   },
   "modes_pnj": {
     "figurant": "Figurant",
-    "sbire": "Sbire"
+    "sbire": "Sbire",
+    "spectacle": "Figurant du spectacle"
   },
   "navigation": {
     "jouer": "Jouer",
@@ -548,7 +574,7 @@
   },
   "mise_en_place": {
     "titre": "La mise en place",
-    "intro": "Le lieu et le danger sont déjà tirés : le public peut les changer. Puis le chrono et ses trois Destiny.",
+    "intro": "Le lieu et le danger sont déjà tirés : le public peut les changer. Il peut aussi proposer des objets ou des éléments du lieu, que la troupe devra réutiliser. Puis le chrono et ses trois Destiny.",
     "lieu": "Le lieu",
     "groupe": "Le groupe",
     "danger": "Le danger",
@@ -587,7 +613,7 @@
     "dernier_acte": "Dernier acte : il fait payer le prix.",
     "temps_ecoule": "Le temps est écoulé.",
     "rappel": "Pour la régie",
-    "montee": "Ce qu'on peut voir à ce palier",
+    "montee": "À ce palier, il est tenté de…",
     "mystere": "Le mystère",
     "dilemme": "Un dilemme pour l'acte 4",
     "dilemme_aide": "À proposer comme choix final, si ça sert l'histoire.",
@@ -1851,8 +1877,9 @@
       "Les cartes d'archétypes, à imprimer depuis la Bibliothèque."
     ],
     "roles": [
-      "Les joueurs : chacun joue un personnage.",
-      "La régie, le maître du destin : une personne, ou l'appli. C'est elle qui lance Destiny, de l'extérieur."
+      "Les comédiens : quatre, chacun joue un personnage, avec un archétype attribué à l'avance.",
+      "Le figurant : un personnage du décor, sans lien avec personne. Il nourrit les relations des autres.",
+      "La régie, le maître du destin : une personne, ou l'appli. Elle lance Destiny, les musiques et les bruitages du danger, au signal du metteur en scène."
     ],
     "sous": {
       "lieu_groupe": "Le lieu et le groupe",
@@ -1865,8 +1892,8 @@
       "echauffement": "L'échauffement et les trois questions",
       "actes": "Les quatre actes",
       "rituel": "Le rituel Destiny",
-      "alarmiste": "La nouvelle de l'alarmiste",
-      "montee": "La montée des archétypes",
+      "alarmiste": "Le danger vient de la régie",
+      "montee": "L'archétype, acte par acte",
       "gestes": "Les cinq gestes",
       "acte_4": "Le choix de l'acte 4",
       "prix": "Le prix payé",
@@ -1878,9 +1905,12 @@
       "figurants": "Les figurants",
       "registre": "Le registre",
       "traitre": "Le module traître",
-      "kids": "Le mode kids"
+      "kids": "Le mode kids",
+      "progression": "Chaque acte reprend le précédent",
+      "public": "Ce que donne le public",
+      "directions": "Des directions, pas des prisons"
     },
-    "liens": "Le groupe se connaît déjà : chaque personnage a un lien avec les autres. La mise en place en tire deux dans l'antisèche des relations, pour commencer.",
+    "liens": "Le groupe se connaît déjà : chaque personnage a un lien avec les autres, dit avec le mot (frère, collègue, ex…) dès la première scène. La mise en place en tire deux dans l'antisèche des relations, pour commencer.",
     "danger": "Le danger se choisit avec le lieu. Il monte en quatre paliers, un par acte :",
     "animaux": "Chaque joueur choisit son animal parmi les deux de son archétype : c'est son vêtement et sa posture.",
     "debrief": "On fait le tour des personnages, avec une seule phrase pour chacun :",
@@ -1890,11 +1920,13 @@
       "besoin": "le besoin",
       "vouloir": "le vouloir",
       "prix_a_payer": "le prix à payer"
-    }
+    },
+    "public": "Le public donne le lieu et le danger. Il peut aussi proposer des objets ou des éléments du lieu, que la troupe devra réutiliser.",
+    "rituel_suite": "Puis la régie son enchaîne :"
   },
   "decouvrir": {
     "titre": "Découvrir Destiny",
-    "aide": "Destiny en deux minutes, à revoir quand tu veux.",
+    "aide": "Le spectacle de la Troupe en deux minutes, à revoir quand tu veux.",
     "passer": "Passer",
     "suivant": "Suivant",
     "commencer": "C'est parti",
@@ -1902,18 +1934,67 @@
     "ecrans": {
       "promesse": {
         "titre": "Une histoire, ensemble",
-        "texte": "Destiny se joue sans gagnant ni perdant : on crée ensemble une belle histoire, qui monte jusqu'au bout."
+        "texte": "Destiny est un spectacle d'impro : quatre comédiens et un figurant, un seul lieu, et un danger qui monte en quatre actes. Sans gagnant ni perdant : on crée ensemble une histoire qui va jusqu'au bout."
       },
-      "lieu": {
-        "titre": "Un lieu, un groupe"
+      "preparer": {
+        "titre": "1. Préparer",
+        "etapes": [
+          {
+            "icone": "lieu",
+            "titre": "Le lieu et le danger",
+            "texte": "Le public les donne, ou l'appli les tire. Il peut aussi proposer des objets, que la troupe devra réutiliser."
+          },
+          {
+            "icone": "archetypes",
+            "titre": "Les archétypes",
+            "texte": "Un par comédien, attribué à l'avance, pour que chaque famille soit là. Chacun choisit son animal : son vêtement."
+          },
+          {
+            "icone": "chrono",
+            "titre": "Le chrono",
+            "texte": "Trente minutes, avec trois Destiny prévus. On les fait glisser sur la frise."
+          }
+        ]
       },
-      "danger": {
-        "titre": "Un danger, quatre paliers",
+      "jeu": {
+        "titre": "2. Le jeu",
+        "etapes": [
+          {
+            "icone": "echauffement",
+            "titre": "L'échauffement",
+            "texte": "Le minuteur lance la musique de l'acte 1 : une minute muette, chacun entre dans son corps et son archétype."
+          },
+          {
+            "icone": "spectacle",
+            "titre": "Le spectacle",
+            "texte": "Le chrono et DESTINY restent en haut de l'écran. Quatre actes, un palier du danger chacun :"
+          }
+        ],
         "rituel": "Entre deux actes, Destiny"
+      },
+      "regie": {
+        "titre": "3. La régie",
+        "etapes": [
+          {
+            "icone": "regie",
+            "titre": "La table de régie",
+            "texte": "Le bouton Régie l'ouvre par-dessus le jeu : la musique de chaque acte, le bruitage du danger, les émotions, le mixeur. La croix ramène au jeu ; le spectacle continue."
+          },
+          {
+            "icone": "destiny",
+            "titre": "DESTINY",
+            "texte": "Le régisseur le lance au signal du metteur en scène, ou le chrono aux minutes prévues."
+          },
+          {
+            "icone": "terminer",
+            "titre": "Terminer",
+            "texte": "En bas du jeu : le spectacle est rangé dans l'historique, et l'on revient à l'accueil."
+          }
+        ]
       },
       "personnages": {
         "titre": "Des personnages",
-        "texte": "Chacun a un archétype, sa conviction face au danger, et un animal, son corps. Il y a douze archétypes, en trois familles :"
+        "texte": "Chacun a un archétype, sa conviction face au danger : acte par acte, il est tenté de… Et un animal, son vêtement. Douze archétypes, en trois familles :"
       }
     }
   },
@@ -2184,6 +2265,78 @@
       "score": "Score (ancienne version)",
       "toi": "Toi",
       "toi_personnage": "Toi — {personnage}"
+    }
+  },
+  "tuto_jdr": {
+    "titre": "Le jeu de rôle",
+    "revoir": "Revoir le tuto",
+    "ecrans": {
+      "episode": {
+        "titre": "Un épisode, comme un spectacle",
+        "etapes": [
+          {
+            "icone": "preparer",
+            "titre": "Préparer",
+            "texte": "Le lieu, le danger et ses quatre paliers, le grand méchant, ses sbires et les figurants du lieu."
+          },
+          {
+            "icone": "jeu",
+            "titre": "Le jeu",
+            "texte": "Le chrono et DESTINY, la même table de régie qu'au théâtre. Les joueurs disent ce que font leurs personnages ; le Maître du destin fait vivre le reste."
+          },
+          {
+            "icone": "terminer",
+            "titre": "Fin de l'épisode",
+            "texte": "Le bilan : ce que chacun est devenu, et le compte rendu de l'IA."
+          }
+        ]
+      },
+      "sante": {
+        "titre": "Le cœur et le cerveau",
+        "texte": "Chaque personnage a deux pistes. Le Maître du destin les fait bouger quand l'histoire frappe le corps ou l'esprit. Elles se gardent d'un épisode à l'autre ; un mort quitte la série.",
+        "essayer": "Touche les pistes pour essayer.",
+        "kids": "Avec des enfants, personne ne meurt : on quitte l'histoire. Touche les pistes pour essayer."
+      },
+      "mechant": {
+        "titre": "Le grand méchant",
+        "etapes": [
+          {
+            "icone": "ombre",
+            "titre": "Dans l'ombre",
+            "texte": "Une saison, c'est quatre épisodes. Le méchant agit dans l'ombre : on voit d'abord ses deux sbires et ses présages."
+          },
+          {
+            "icone": "personne",
+            "titre": "En personne",
+            "texte": "Il apparaît à l'épisode 4. On le vainc par sa faille, plutôt que par la force."
+          },
+          {
+            "icone": "figurants",
+            "titre": "Les figurants",
+            "texte": "Ils viennent du lieu. Un figurant peut passer au service du méchant ; un sbire ou un figurant hors jeu ne revient pas."
+          }
+        ]
+      },
+      "compte_rendu": {
+        "titre": "Le compte rendu de l'IA",
+        "etapes": [
+          {
+            "icone": "micro",
+            "titre": "Le micro, si on veut",
+            "texte": "Il écrit l'épisode pendant le jeu ; l'appli ne garde aucun son."
+          },
+          {
+            "icone": "ia",
+            "titre": "Le compte rendu",
+            "texte": "À la fin, l'IA raconte l'épisode et dit où l'on reprendra : depuis la transcription, ou depuis la trame de l'épisode et vos notes. Jamais de prénom de joueur."
+          },
+          {
+            "icone": "suite",
+            "titre": "Faire la suite",
+            "texte": "Un épisode devient le premier d'une saison, une saison le début d'une série."
+          }
+        ]
+      }
     }
   }
 }
