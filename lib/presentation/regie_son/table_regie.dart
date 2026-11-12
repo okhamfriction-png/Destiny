@@ -722,29 +722,48 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
       final g = context.grammaire;
       final d = m.dangers[s.dangerId]!;
       final courant = c?.acte ?? s.palierAtteint;
-      return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        for (var palier = 1; palier <= 4; palier++) ...[
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8, top: 4),
-            child: Row(children: [
-              _Led(allumee: palier == courant, couleur: const Color(0xFFFF7043)),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  '${rs('palier', {'n': '$palier'})} · ${g.palier(PalierId.deNumero(palier)).nom}',
-                  style: TextStyle(
-                    fontFamily: kPoliceTexte,
-                    fontWeight: FontWeight.w700,
-                    color: palier == courant ? Console.texte : Console.doux,
-                  ),
-                ),
+      // Les quatre paliers côte à côte (deux par ligne sur un téléphone) :
+      // chacun sa colonne, son titre et ses pads ; le palier en cours encadré.
+      return LayoutBuilder(builder: (context, contraintes) {
+        const ecart = 10.0;
+        final colonnes = contraintes.maxWidth >= 560 ? 4 : 2;
+        final largeur = (contraintes.maxWidth - ecart * (colonnes - 1)) / colonnes;
+        const orange = Color(0xFFFF7043);
+        return Wrap(spacing: ecart, runSpacing: ecart, children: [
+          for (var palier = 1; palier <= 4; palier++)
+            Container(
+              key: ValueKey('palier_banque_$palier'),
+              width: largeur,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: palier == courant ? orange.withValues(alpha: 0.07) : Console.panneau,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: palier == courant ? orange.withValues(alpha: 0.7) : Console.trait),
               ),
-            ]),
-          ),
-          _Grille(pads: [for (final code in d.codes(palier)) padCode(code)], largeurMin: 108),
-          const SizedBox(height: 8),
-        ],
-      ]);
+              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                Row(children: [
+                  _Led(allumee: palier == courant, couleur: orange),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      '$palier · ${g.palier(PalierId.deNumero(palier)).nom}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: kPoliceTexte,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12.5,
+                        color: palier == courant ? Console.texte : Console.doux,
+                      ),
+                    ),
+                  ),
+                ]),
+                const SizedBox(height: 8),
+                _Grille(pads: [for (final code in d.codes(palier)) padCode(code)], largeurMin: 96, colonnesMin: 1),
+              ]),
+            ),
+        ]);
+      });
     }
     return _Grille(
         pads: [for (final p in _musique.tracksOf('Émotions')) padPiste(p, styleEmotion(p.title))], largeurMin: 108);
@@ -886,15 +905,18 @@ class _Led extends StatelessWidget {
 
 /// Une grille de pads qui remplit la largeur.
 class _Grille extends StatelessWidget {
-  const _Grille({required this.pads, required this.largeurMin});
+  const _Grille({required this.pads, required this.largeurMin, this.colonnesMin = 3});
 
   final List<Widget> pads;
   final double largeurMin;
 
+  /// Au moins tant de pads par ligne (1 dans une colonne de palier).
+  final int colonnesMin;
+
   @override
   Widget build(BuildContext context) => LayoutBuilder(builder: (context, c) {
         const ecart = 10.0;
-        final colonnes = max(3, ((c.maxWidth + ecart) / (largeurMin + ecart)).floor());
+        final colonnes = max(colonnesMin, ((c.maxWidth + ecart) / (largeurMin + ecart)).floor());
         final largeur = (c.maxWidth - ecart * (colonnes - 1)) / colonnes;
         return Wrap(spacing: ecart, runSpacing: ecart, children: [
           for (final p in pads) SizedBox(width: largeur, height: largeur.clamp(92, 118), child: p),
