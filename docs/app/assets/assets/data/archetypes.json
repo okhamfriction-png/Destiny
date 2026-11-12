@@ -63,17 +63,27 @@
     {
       "id": "coq",
       "name": "Coq",
-      "temperament": "Vaniteux, matamore",
+      "temperament": "Fier, sonore",
       "port": "_bombé_",
       "moteur": "**La conquête**",
       "statut": "haut",
-      "intention": "séduire et conquérir, gagner les gens à soi",
+      "intention": "donner l'alerte et être entendu",
       "niveaux": [
-        "charmeur, avenant, sociable, drague un peu.",
-        "veut plaire à tout prix, transforme chaque échange en conquête.",
-        "manipule par la séduction, collectionne, se lasse vite, provoque.",
-        "débauché sans limite, use et jette, ne connaît plus que la transgression."
-      ]
+        "poitrine en avant, il annonce la nouvelle haut et fort, fier d'être le premier.",
+        "réveille tout le monde, répète l'alerte, exige qu'on l'écoute.",
+        "crie plus fort que tous, sa voix emplit le lieu, il affole et s'affole.",
+        "soit un dernier cri qui fige tout le monde, soit sa voix casse et il se tait."
+      ],
+      "anciens": {
+        "temperament": "Vaniteux, matamore",
+        "intention": "séduire et conquérir, gagner les gens à soi",
+        "niveaux": [
+          "charmeur, avenant, sociable, drague un peu.",
+          "veut plaire à tout prix, transforme chaque échange en conquête.",
+          "manipule par la séduction, collectionne, se lasse vite, provoque.",
+          "débauché sans limite, use et jette, ne connaît plus que la transgression."
+        ]
+      }
     },
     {
       "id": "corbeau",
@@ -108,17 +118,27 @@
     {
       "id": "hibou",
       "name": "Hibou",
-      "temperament": "Savant, exigeant",
+      "temperament": "Observateur, avisé",
       "port": "_posé_",
       "moteur": "**Avoir raison**",
       "statut": "haut",
-      "intention": "étaler son savoir pour convaincre, avoir raison",
+      "intention": "trouver l'issue en observant",
       "niveaux": [
-        "posé, cultivé, aime expliquer, un peu supérieur.",
-        "corrige les autres, impose son analyse, supporte mal la contradiction.",
-        "doit avoir raison sur tout, écrase par le savoir, méprise les ignorants.",
-        "fanatique de sa vérité, transforme tout contradicteur en ennemi."
-      ]
+        "immobile, il observe le lieu et repère un objet dont on pourrait se servir.",
+        "parle peu et juste, propose une issue que personne n'avait vue.",
+        "ose le plan risqué, guide les autres d'un geste, calme mais tendu.",
+        "dernier plan : il tente le tout pour le tout."
+      ],
+      "anciens": {
+        "temperament": "Savant, exigeant",
+        "intention": "étaler son savoir pour convaincre, avoir raison",
+        "niveaux": [
+          "posé, cultivé, aime expliquer, un peu supérieur.",
+          "corrige les autres, impose son analyse, supporte mal la contradiction.",
+          "doit avoir raison sur tout, écrase par le savoir, méprise les ignorants.",
+          "fanatique de sa vérité, transforme tout contradicteur en ennemi."
+        ]
+      }
     },
     {
       "id": "hyene",
@@ -138,17 +158,27 @@
     {
       "id": "lapin",
       "name": "Lapin",
-      "temperament": "Avenant, tendre",
+      "temperament": "Inquiet, attentif",
       "port": "_fuyant_",
       "moteur": "**Plaire à tous**",
       "statut": "bas",
-      "intention": "se faire aimer, éviter tout conflit",
+      "intention": "démasquer ce qui se cache",
       "niveaux": [
-        "avenant, tendre, cherche à plaire, conciliant.",
-        "fuit les tensions, dit oui à tout, quête l'approbation.",
-        "panique dès qu'on ne l'aime pas, se renie pour être accepté.",
-        "se dévalorise entièrement, prêt à toutes les bassesses pour ne pas être rejeté."
-      ]
+        "aux aguets, il sursaute au moindre bruit et remarque un détail qui cloche.",
+        "les oreilles dressées, il pose des questions et se méfie de chaque réponse.",
+        "désigne un suspect, s'en écarte d'un bond et monte les autres contre lui.",
+        "acculé, il fait condamner quelqu'un, ou se terre dans un coin sans plus croire personne."
+      ],
+      "anciens": {
+        "temperament": "Avenant, tendre",
+        "intention": "se faire aimer, éviter tout conflit",
+        "niveaux": [
+          "avenant, tendre, cherche à plaire, conciliant.",
+          "fuit les tensions, dit oui à tout, quête l'approbation.",
+          "panique dès qu'on ne l'aime pas, se renie pour être accepté.",
+          "se dévalorise entièrement, prêt à toutes les bassesses pour ne pas être rejeté."
+        ]
+      }
     },
     {
       "id": "lion",
@@ -183,17 +213,27 @@
     {
       "id": "mouton",
       "name": "Mouton",
-      "temperament": "Prudent, suiveur",
+      "temperament": "Doux, solidaire",
       "port": "_grégaire_",
       "moteur": "**L'abri du plus fort**",
       "statut": "bas",
-      "intention": "se ranger derrière le plus puissant",
+      "intention": "garder le groupe uni",
       "niveaux": [
-        "prudent, suiveur, se fond dans le groupe.",
-        "cherche activement la protection du plus fort, se cache dans le nombre.",
-        "se soumet à qui domine, incapable de décider seul.",
-        "esclave volontaire, obéit à tout, trahit les faibles pour rester du côté du fort."
-      ]
+        "collé au groupe, il veille à ce que personne ne reste seul.",
+        "ramène chacun dans le troupeau, apaise les premières disputes.",
+        "s'épuise à recoller le groupe qui se disperse, supplie qu'on reste ensemble.",
+        "soit il tient la main du dernier qui reste, soit il craque et suit le troupeau."
+      ],
+      "anciens": {
+        "temperament": "Prudent, suiveur",
+        "intention": "se ranger derrière le plus puissant",
+        "niveaux": [
+          "prudent, suiveur, se fond dans le groupe.",
+          "cherche activement la protection du plus fort, se cache dans le nombre.",
+          "se soumet à qui domine, incapable de décider seul.",
+          "esclave volontaire, obéit à tout, trahit les faibles pour rester du côté du fort."
+        ]
+      }
     },
     {
       "id": "ours",
@@ -243,17 +283,27 @@
     {
       "id": "rat",
       "name": "Rat",
-      "temperament": "Avare, retors",
+      "temperament": "Nerveux, aux aguets",
       "port": "_fuyant_",
       "moteur": "**Le profit**",
       "statut": "bas",
-      "intention": "gratter, réclamer son dû, soutirer",
+      "intention": "sentir le danger avant tout le monde et prévenir",
       "niveaux": [
-        "économe, prudent, un peu radin, discret.",
-        "réclame, marchande, ne lâche rien de ce qui lui revient.",
-        "soutire par tous les moyens, tout devient calcul d'intérêt.",
-        "obsédé par son profit, prêt à trahir et voler, l'avidité avant tout."
-      ]
+        "nerveux, le nez au vent, il flaire quelque chose avant les autres.",
+        "court d'un espace à l'autre, chuchote la nouvelle à chacun, guette les issues.",
+        "affolé, il fait le tour de tous, sa panique gagne le groupe.",
+        "soit il crie la fin en cherchant le trou par où filer, soit il se terre et se tait."
+      ],
+      "anciens": {
+        "temperament": "Avare, retors",
+        "intention": "gratter, réclamer son dû, soutirer",
+        "niveaux": [
+          "économe, prudent, un peu radin, discret.",
+          "réclame, marchande, ne lâche rien de ce qui lui revient.",
+          "soutire par tous les moyens, tout devient calcul d'intérêt.",
+          "obsédé par son profit, prêt à trahir et voler, l'avidité avant tout."
+        ]
+      }
     },
     {
       "id": "renard",

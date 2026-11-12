@@ -27,7 +27,42 @@
      "detail": "Sans caméra, avec une porte qui se verrouille de l'extérieur."
     }
    ],
-   "roles": "l'employé qui fait des heures sup, la femme de ménage, le vigile de nuit, le stagiaire ambitieux, la responsable RH, le consultant externe, l'informaticien d'astreinte, le livreur en retard"
+   "roles": "l'employé qui fait des heures sup, la femme de ménage, le vigile de nuit, le stagiaire ambitieux, la responsable RH, le consultant externe, l'informaticien d'astreinte, le livreur en retard",
+   "figurants": [
+    {
+     "id": "openspace_karim_vigile",
+     "nom": "Karim, le vigile de nuit",
+     "type": "aide",
+     "archetype": "protecteur",
+     "animal": "Ours",
+     "veut": "Que chacun quitte le plateau sain et sauf avant l'aube.",
+     "vient_de": "Il fait la ronde de nuit depuis six ans, toujours le même parcours.",
+     "sait": "La porte de l'escalier de secours se verrouille de l'extérieur, et il en a la clé.",
+     "mode": "figurant"
+    },
+    {
+     "id": "openspace_fatou_menage",
+     "nom": "Fatou, la femme de ménage",
+     "type": "temoin",
+     "archetype": "debrouillard",
+     "animal": "Hibou",
+     "veut": "Qu'on la croie, sans qu'elle risque son contrat.",
+     "vient_de": "Elle nettoie l'étage chaque nuit, de vingt-deux heures à deux heures.",
+     "sait": "Elle a vu la directrice financière sortir des cartons des archives, à minuit passé.",
+     "mode": "figurant"
+    },
+    {
+     "id": "openspace_lucas_comptable",
+     "nom": "Lucas, le comptable",
+     "type": "victime",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Fourmi",
+     "veut": "Boucler ses tableaux ce soir, et prouver qu'il est indispensable.",
+     "vient_de": "Comptable junior, il reste tard chaque soir depuis l'annonce de l'audit.",
+     "sait": "Il a repéré des virements ronds qui ne collent avec aucune facture.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "contemporain_immeuble",
@@ -56,7 +91,42 @@
      "detail": "Un double de toutes les clés accroché derrière la porte."
     }
    ],
-   "roles": "le gardien d'immeuble, la présidente du conseil syndical, le nouveau locataire, la retraitée du premier, l'adolescent turbulent, le propriétaire absent, la médiatrice de quartier, l'agent immobilier"
+   "roles": "le gardien d'immeuble, la présidente du conseil syndical, le nouveau locataire, la retraitée du premier, l'adolescent turbulent, le propriétaire absent, la médiatrice de quartier, l'agent immobilier",
+   "figurants": [
+    {
+     "id": "immeuble_mehdi_gardien",
+     "nom": "Mehdi, le gardien d'immeuble",
+     "type": "aide",
+     "archetype": "aidant",
+     "animal": "Chien",
+     "veut": "Que la résidence redevienne calme, comme avant.",
+     "vient_de": "Il vit dans la loge depuis quinze ans et connaît chaque locataire.",
+     "sait": "Il garde un double de toutes les clés, accroché derrière sa porte.",
+     "mode": "figurant"
+    },
+    {
+     "id": "immeuble_odette_retraitee",
+     "nom": "Odette, la retraitée du premier",
+     "type": "commere",
+     "archetype": "alarmiste",
+     "animal": "Coq",
+     "veut": "Savoir qui filme qui, et le répéter à tout l'immeuble avant midi.",
+     "vient_de": "Elle habite le premier étage depuis quarante ans, l'œil collé au judas.",
+     "sait": "Elle a vu un voisin poser un petit boîtier à diode rouge dans le hall.",
+     "mode": "figurant"
+    },
+    {
+     "id": "immeuble_yanis_adolescent",
+     "nom": "Yanis, l'adolescent",
+     "type": "victime",
+     "archetype": "cynique",
+     "animal": "Singe",
+     "veut": "Qu'on arrête de le soupçonner dès qu'un truc casse dans l'immeuble.",
+     "vient_de": "Il vit au quatrième avec sa mère, et traîne dans la cour le soir.",
+     "sait": "Il sait bloquer l'ascenseur entre deux étages, et tout le monde le sait.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "policier_commissariat",
@@ -85,7 +155,42 @@
      "detail": "Un banc froid, une caméra dans l'angle, une porte qui claque fort."
     }
    ],
-   "roles": "le lieutenant fatigué, la nouvelle recrue, l'indic récurrent, le commissaire sous pression, la légiste de passage, l'avocat commis d'office, le témoin nerveux, le gardé à vue"
+   "roles": "le lieutenant fatigué, la nouvelle recrue, l'indic récurrent, le commissaire sous pression, la légiste de passage, l'avocat commis d'office, le témoin nerveux, le gardé à vue",
+   "figurants": [
+    {
+     "id": "commissariat_sabine_lieutenante",
+     "nom": "Sabine, la lieutenante",
+     "type": "aide",
+     "archetype": "leader",
+     "animal": "Aigle",
+     "veut": "Boucler une dernière affaire propre avant sa retraite.",
+     "vient_de": "Vingt-cinq ans de maison, elle a formé la moitié du service.",
+     "sait": "Le registre de l'accueil est tenu à la main : on y lit qui vient la nuit.",
+     "mode": "figurant"
+    },
+    {
+     "id": "commissariat_momo_indic",
+     "nom": "Momo, l'indic",
+     "type": "temoin",
+     "archetype": "paranoiaque",
+     "animal": "Lapin",
+     "veut": "Qu'on le croie, et qu'on le couvre en échange.",
+     "vient_de": "Un habitué du quartier, arrêté et relâché plus souvent qu'à son tour.",
+     "sait": "Il a vu le commandant boire un café avec un trafiquant du port.",
+     "mode": "figurant"
+    },
+    {
+     "id": "commissariat_julien_avocat",
+     "nom": "Julien, l'avocat commis d'office",
+     "type": "sceptique",
+     "archetype": "denegateur",
+     "animal": "Âne",
+     "veut": "Une explication réglementaire à tout, et rentrer dîner avant vingt heures.",
+     "vient_de": "Jeune avocat, il enchaîne les permanences au commissariat depuis l'hiver.",
+     "sait": "Il a vu un procès-verbal signé avant même l'audition de son client.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "policier_docks",
@@ -114,7 +219,42 @@
      "detail": "Une cargaison déclarée pour des pièces détachées, calée par des couvertures."
     }
    ],
-   "roles": "le docker syndiqué, l'agent des douanes, la capitaine de port, le chauffeur routier, l'inspecteur infiltré, le gardien de nuit, la comptable de la société d'import, le marin de passage"
+   "roles": "le docker syndiqué, l'agent des douanes, la capitaine de port, le chauffeur routier, l'inspecteur infiltré, le gardien de nuit, la comptable de la société d'import, le marin de passage",
+   "figurants": [
+    {
+     "id": "docks_joel_docker",
+     "nom": "Joël, le docker syndiqué",
+     "type": "aide",
+     "archetype": "protecteur",
+     "animal": "Loup",
+     "veut": "Que ses gars travaillent sans risque, et que le port reste propre.",
+     "vient_de": "Fils et petit-fils de dockers, délégué du personnel depuis dix ans.",
+     "sait": "Il connaît chaque angle mort du quai, et sait qui a changé les rotations.",
+     "mode": "figurant"
+    },
+    {
+     "id": "docks_claire_douaniere",
+     "nom": "Claire, l'agente des douanes",
+     "type": "officiel",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Fourmi",
+     "veut": "Que chaque conteneur passe sous ses tampons, sans exception.",
+     "vient_de": "Mutée au port il y a un an, elle refuse encore les cafés offerts.",
+     "sait": "Un même numéro de conteneur figure deux fois sur le bordereau du jour.",
+     "mode": "figurant"
+    },
+    {
+     "id": "docks_elodie_comptable",
+     "nom": "Élodie, la comptable",
+     "type": "victime",
+     "archetype": "aidant",
+     "animal": "Mouton",
+     "veut": "Que ses comptes tombent juste, et garder un poste qui paie bien.",
+     "vient_de": "Embauchée par la société d'import il y a deux ans, elle ne voit que les factures.",
+     "sait": "Des pièces détachées sont facturées pour trois fois leur poids réel.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "high_fantasy_citadelle",
@@ -143,7 +283,42 @@
      "detail": "Un puits central, un râtelier d'épées émoussées, une cloche d'alarme."
     }
    ],
-   "roles": "le capitaine de la garde, l'archiviste aveugle, l'héritière contestée, le forgeron d'armes, la prêtresse des serments, l'écuyer novice, l'émissaire étranger, le maître des clés"
+   "roles": "le capitaine de la garde, l'archiviste aveugle, l'héritière contestée, le forgeron d'armes, la prêtresse des serments, l'écuyer novice, l'émissaire étranger, le maître des clés",
+   "figurants": [
+    {
+     "id": "citadelle_arvhel_perrin_ecuyer",
+     "nom": "Perrin, l'écuyer",
+     "type": "aide",
+     "archetype": "debrouillard",
+     "animal": "Souris",
+     "veut": "Rejoindre le groupe, et prouver qu'il vaut un chevalier.",
+     "vient_de": "Fils de palefrenier, il monte la garde sur les remparts depuis le printemps.",
+     "sait": "Un escalier dérobé relie la cour d'armes à la crypte des fondateurs.",
+     "mode": "figurant"
+    },
+    {
+     "id": "citadelle_arvhel_maelle_pretresse",
+     "nom": "Maëlle, la prêtresse des serments",
+     "type": "temoin",
+     "archetype": "prophete",
+     "animal": "Paon",
+     "veut": "Qu'on la croie : un serment sacré a été réécrit.",
+     "vient_de": "Elle a prononcé le serment du couronnement pour le feu roi.",
+     "sait": "Elle connaît le vrai serment mot pour mot, et celui du registre a changé.",
+     "mode": "figurant"
+    },
+    {
+     "id": "citadelle_arvhel_odon_emissaire",
+     "nom": "Odon, l'émissaire étranger",
+     "type": "sceptique",
+     "archetype": "cynique",
+     "animal": "Renard",
+     "veut": "Une explication raisonnable, et son traité signé avant la fin de la semaine.",
+     "vient_de": "Envoyé d'un royaume voisin, il attend une audience depuis dix jours.",
+     "sait": "Le régent lui a déjà promis des terres qui reviennent à l'héritière.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "high_fantasy_foret",
@@ -172,7 +347,42 @@
      "detail": "Des paniers déposés sur des souches, certains pleins, d'autres renversés."
     }
    ],
-   "roles": "le garde-frontière, la druidesse de la source, le braconnier repenti, la marchande ambulante, le jeune éclaireur, l'ermite du bois, la doyenne du village, le chevalier de passage"
+   "roles": "le garde-frontière, la druidesse de la source, le braconnier repenti, la marchande ambulante, le jeune éclaireur, l'ermite du bois, la doyenne du village, le chevalier de passage",
+   "figurants": [
+    {
+     "id": "sylveraie_gaspard_repenti",
+     "nom": "Gaspard, le braconnier repenti",
+     "type": "aide",
+     "archetype": "debrouillard",
+     "animal": "Hibou",
+     "veut": "Réparer ses torts, et guider ceux que la forêt égare.",
+     "vient_de": "Il a posé ses collets dix ans durant, avant de tout abandonner.",
+     "sait": "Les balises du sentier ont été déplacées : il connaît encore le vrai chemin.",
+     "mode": "figurant"
+    },
+    {
+     "id": "sylveraie_ylva_druidesse",
+     "nom": "Ylva, la druidesse de la source",
+     "type": "temoin",
+     "archetype": "prophete",
+     "animal": "Corbeau",
+     "veut": "Qu'on la croie : la source se trouble, et ce n'est pas un hasard.",
+     "vient_de": "Elle veille sur la source sacrée depuis que sa mère la lui a confiée.",
+     "sait": "Les totems se retournent chaque nuit où quelqu'un renverse les offrandes.",
+     "mode": "figurant"
+    },
+    {
+     "id": "sylveraie_tobie_eclaireur",
+     "nom": "Tobie, le jeune éclaireur",
+     "type": "victime",
+     "archetype": "solitaire",
+     "animal": "Cerf",
+     "veut": "Explorer seul la clairière aux pierres, pour prouver son courage.",
+     "vient_de": "Le plus jeune guetteur du village, fier de sa première corne d'alarme.",
+     "sait": "Depuis la cabane du guetteur, il a vu des yeux briller autour de la clairière.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "shonen_arene",
@@ -201,7 +411,42 @@
      "detail": "Énorme cloche de bronze dont le son annonce le début de chaque duel."
     }
    ],
-   "roles": "Champion en titre,Challenger ambitieux,Arbitre masqué,Entraîneur bourru,Commentateur surexcité,Parieur véreux,Soigneur épuisé,Jeune espoir tremblant"
+   "roles": "Champion en titre,Challenger ambitieux,Arbitre masqué,Entraîneur bourru,Commentateur surexcité,Parieur véreux,Soigneur épuisé,Jeune espoir tremblant",
+   "figurants": [
+    {
+     "id": "arene_hana_soigneuse",
+     "nom": "Hana, la soigneuse",
+     "type": "aide",
+     "archetype": "aidant",
+     "animal": "Chien",
+     "veut": "Que plus aucun combattant ne s'effondre sur le sable.",
+     "vient_de": "Elle soigne les blessés de l'Arène depuis douze tournois, sans dormir.",
+     "sait": "Le combattant tombé hier n'était pas blessé : on l'avait drogué.",
+     "mode": "figurant"
+    },
+    {
+     "id": "arene_kenta_commentateur",
+     "nom": "Kenta, le commentateur",
+     "type": "commere",
+     "archetype": "cynique",
+     "animal": "Singe",
+     "veut": "Annoncer au micro le scandale du tournoi avant tout le monde.",
+     "vient_de": "La voix de l'Arène depuis dix saisons, adoré des gradins.",
+     "sait": "Un arbitre masqué range une bourse pleine sous sa robe avant chaque duel de Kaido.",
+     "mode": "figurant"
+    },
+    {
+     "id": "arene_sora_jeune_espoir",
+     "nom": "Sora, le jeune espoir",
+     "type": "victime",
+     "archetype": "debrouillard",
+     "animal": "Souris",
+     "veut": "Gagner un seul duel, pour que son village soit fier de lui.",
+     "vient_de": "Un gamin des rizières, monté seul à la capitale pour le tournoi.",
+     "sait": "Une inconnue lui a offert une gourde ce matin, juste avant son tour.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "shonen_dojo",
@@ -226,7 +471,42 @@
      "detail": "Cour de graviers ratissés où le silence est une discipline obligatoire."
     }
    ],
-   "roles": "Vieux maître,Disciple premier de classe,Élève rebelle,Servante du dojo,Ancien élève déchu,Recrue étrangère,Gardien de la porte,Cuisinier confident"
+   "roles": "Vieux maître,Disciple premier de classe,Élève rebelle,Servante du dojo,Ancien élève déchu,Recrue étrangère,Gardien de la porte,Cuisinier confident",
+   "figurants": [
+    {
+     "id": "dojo_goro_cuisinier",
+     "nom": "Goro, le cuisinier",
+     "type": "aide",
+     "archetype": "aidant",
+     "animal": "Mouton",
+     "veut": "Que tout le dojo mange à la même table, rebelles compris.",
+     "vient_de": "Il nourrit le dojo depuis trente ans et connaît les secrets de chaque élève.",
+     "sait": "Il a connu Zenkai élève, et sait pourquoi on l'a chassé.",
+     "mode": "figurant"
+    },
+    {
+     "id": "dojo_shiro_portier",
+     "nom": "Shiro, le portier",
+     "type": "officiel",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Fourmi",
+     "veut": "Que nul ne franchisse le pont suspendu sans y être invité.",
+     "vient_de": "Ancien disciple, il a choisi de garder l'entrée plutôt que de combattre.",
+     "sait": "Il a laissé passer Taro la nuit dernière, croyant reconnaître un élève.",
+     "mode": "figurant"
+    },
+    {
+     "id": "dojo_ryu_eleve_rebelle",
+     "nom": "Ryu, l'élève rebelle",
+     "type": "victime",
+     "archetype": "leader",
+     "animal": "Lion",
+     "veut": "Devenir plus fort que tous, et vite, quitte à suivre un autre maître.",
+     "vient_de": "Orphelin recueilli par le vieux maître, il étouffe sous les règles du dojo.",
+     "sait": "Zenkai lui a donné rendez-vous à minuit, près de la cascade d'épreuve.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "science_fiction_station",
@@ -255,7 +535,42 @@
      "detail": "Anciens dortoirs désaffectés devenus refuge des clandestins."
     }
    ],
-   "roles": "Commandante de bord,Ingénieur système,Contrebandier charmeur,Médecin de garde,Réfugié planétaire,Agent de sécurité zélé,Marchand borgne,Enfant né dans l'espace"
+   "roles": "Commandante de bord,Ingénieur système,Contrebandier charmeur,Médecin de garde,Réfugié planétaire,Agent de sécurité zélé,Marchand borgne,Enfant né dans l'espace",
+   "figurants": [
+    {
+     "id": "meridien_ilan_ingenieur",
+     "nom": "Ilan, l'ingénieur système",
+     "type": "aide",
+     "archetype": "debrouillard",
+     "animal": "Hibou",
+     "veut": "Qu'on l'écoute enfin sur ces pannes qui n'en sont pas.",
+     "vient_de": "Il entretient les circuits de la station depuis sa sortie d'école.",
+     "sait": "Il sait ouvrir un sas à la main, sans passer par ORACLE.",
+     "mode": "figurant"
+    },
+    {
+     "id": "meridien_asha_medecin",
+     "nom": "Asha, la médecin de garde",
+     "type": "temoin",
+     "archetype": "alarmiste",
+     "animal": "Coq",
+     "veut": "Qu'on la croie : ses patients des quartiers oubliés manquent d'air.",
+     "vient_de": "Seule médecin de nuit pour trois secteurs, elle ne dort presque plus.",
+     "sait": "Trois malades des quartiers oubliés montrent les mêmes signes de manque d'oxygène.",
+     "mode": "figurant"
+    },
+    {
+     "id": "meridien_nova_enfant",
+     "nom": "Nova, l'enfant née dans l'espace",
+     "type": "innocent",
+     "archetype": "aidant",
+     "animal": "Mouton",
+     "veut": "Que personne ne soit laissé dans les quartiers oubliés.",
+     "vient_de": "Née à bord il y a douze ans, elle n'a jamais vu de vrai ciel.",
+     "sait": "Elle connaît les conduits d'aération par cœur : elle y joue à cache-cache.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "science_fiction_colonie",
@@ -280,7 +595,42 @@
      "detail": "Horizon rouge d'où surgissent des vents qui ensevelissent les imprudents."
     }
    ],
-   "roles": "Gouverneure de colonie,Foreur vétéran,Botaniste idéaliste,Milicien affamé,Négociante d'eau,Éclaireur des dunes,Mécanicien bricoleur,Colon nouvellement arrivé"
+   "roles": "Gouverneure de colonie,Foreur vétéran,Botaniste idéaliste,Milicien affamé,Négociante d'eau,Éclaireur des dunes,Mécanicien bricoleur,Colon nouvellement arrivé",
+   "figurants": [
+    {
+     "id": "sable_rouge_tomas_mecanicien",
+     "nom": "Tomas, le mécanicien",
+     "type": "aide",
+     "archetype": "debrouillard",
+     "animal": "Souris",
+     "veut": "Rejoindre ceux qui veulent rendre l'eau à tout le monde.",
+     "vient_de": "Il retape les véhicules de la colonie avec des pièces de récupération.",
+     "sait": "La panne de la foreuse vient d'une vis desserrée à la main, pas de l'usure.",
+     "mode": "figurant"
+    },
+    {
+     "id": "sable_rouge_sami_eclaireur",
+     "nom": "Sami, l'éclaireur des dunes",
+     "type": "temoin",
+     "archetype": "solitaire",
+     "animal": "Cerf",
+     "veut": "Qu'on le croie : il a vu de l'eau cachée loin dans les dunes.",
+     "vient_de": "Il guide les convois à travers les tempêtes depuis l'enfance.",
+     "sait": "Il a vu des engins de la Baronne enterrer des citernes pleines dans le sable.",
+     "mode": "figurant"
+    },
+    {
+     "id": "sable_rouge_lena_botaniste",
+     "nom": "Lena, la botaniste",
+     "type": "victime",
+     "archetype": "prophete",
+     "animal": "Paon",
+     "veut": "Que l'eau du dôme nourrisse tout le monde, pas seulement ceux qui paient.",
+     "vient_de": "Venue de la Terre avec des graines rares et de grands espoirs.",
+     "sait": "Le dôme agricole recycle assez d'eau pour tenir un mois sans le comptoir.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "dark_fantasy_citadelle",
@@ -309,7 +659,42 @@
      "detail": "Caveau muré dont nul ne se souvient d'avoir posé la dernière pierre."
     }
    ],
-   "roles": "Seigneur endeuillé,Capitaine des veilleurs,Prêtresse déchue,Geôlier taciturne,Ménestrel espion,Serve courageuse,Corbeau messager humain,Vieux forgeron borgne"
+   "roles": "Seigneur endeuillé,Capitaine des veilleurs,Prêtresse déchue,Geôlier taciturne,Ménestrel espion,Serve courageuse,Corbeau messager humain,Vieux forgeron borgne",
+   "figurants": [
+    {
+     "id": "citadelle_noire_garance_serve",
+     "nom": "Garance, la serve",
+     "type": "aide",
+     "archetype": "protecteur",
+     "animal": "Ours",
+     "veut": "Que l'héritier revienne, et que les cachots se vident.",
+     "vient_de": "Fille de cuisine, elle porte l'eau jusqu'aux geôles chaque matin.",
+     "sait": "Un passage des cuisines descend droit jusqu'aux geôles inondées.",
+     "mode": "figurant"
+    },
+    {
+     "id": "citadelle_noire_lothaire_menestrel",
+     "nom": "Lothaire, le ménestrel",
+     "type": "commere",
+     "archetype": "cynique",
+     "animal": "Singe",
+     "veut": "Savoir avant tout le monde, et le chanter dans la grande salle.",
+     "vient_de": "Il passe de château en château, et vend ses chansons comme ses secrets.",
+     "sait": "Il chante tout bas que l'héritier vit encore, caché dans le marais.",
+     "mode": "figurant"
+    },
+    {
+     "id": "citadelle_noire_ancel_capitaine",
+     "nom": "Ancel, le capitaine des veilleurs",
+     "type": "victime",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Fourmi",
+     "veut": "Garder son poste au rempart, et rester fidèle au seigneur défunt.",
+     "vient_de": "Il a juré fidélité au seigneur, et à son fils, le jour de sa naissance.",
+     "sait": "Il a vu la régente descendre seule à la crypte, la nuit des funérailles.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "dark_fantasy_village",
@@ -334,7 +719,42 @@
      "detail": "Frontière d'arbres tordus au-delà de laquelle nul ne s'aventure de nuit."
     }
    ],
-   "roles": "Doyen du village,Aubergiste méfiant,Guérisseuse aux herbes,Chasseur solitaire,Fossoyeur bavard,Marchand de passage,Fille du meunier,Garde champêtre effrayé"
+   "roles": "Doyen du village,Aubergiste méfiant,Guérisseuse aux herbes,Chasseur solitaire,Fossoyeur bavard,Marchand de passage,Fille du meunier,Garde champêtre effrayé",
+   "figurants": [
+    {
+     "id": "brume_aubin_chasseur",
+     "nom": "Aubin, le chasseur",
+     "type": "aide",
+     "archetype": "solitaire",
+     "animal": "Chat",
+     "veut": "Prouver que la forêt n'est pas coupable, puis retourner dans les bois.",
+     "vient_de": "Il chasse seul dans la vallée depuis vingt hivers.",
+     "sait": "Les griffures autour des étables sont trop régulières : une main d'homme les a tracées.",
+     "mode": "figurant"
+    },
+    {
+     "id": "brume_firmin_fossoyeur",
+     "nom": "Firmin, le fossoyeur",
+     "type": "commere",
+     "archetype": "alarmiste",
+     "animal": "Rat",
+     "veut": "Annoncer avant tout le monde qui cédera ses terres le prochain.",
+     "vient_de": "Il creuse les tombes du cimetière penché, comme son père avant lui.",
+     "sait": "Chaque famille qui a signé avec le Collecteur avait perdu une bête juste avant.",
+     "mode": "figurant"
+    },
+    {
+     "id": "brume_melisende_guerisseuse",
+     "nom": "Mélisende, la guérisseuse",
+     "type": "victime",
+     "archetype": "aidant",
+     "animal": "Chien",
+     "veut": "Soigner les siens comme toujours, sans écouter les rumeurs.",
+     "vient_de": "Elle cueille ses herbes à la lisière, là où personne n'ose aller.",
+     "sait": "Elle a soigné Griff le braconnier, et sa blessure ne venait d'aucune bête.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "cyberpunk_tour_arasaka",
@@ -363,7 +783,42 @@
      "detail": "Cage grillagée qui relie les étages propres aux sous-sols oubliés ; parfait pour disparaître."
     }
    ],
-   "roles": "cadre ambitieux,netrunner sous contrat,vigile augmenté,coursier des bas-fonds,secrétaire qui sait tout,ripperdoc clandestin,journaliste infiltré,cadre déchu"
+   "roles": "cadre ambitieux,netrunner sous contrat,vigile augmenté,coursier des bas-fonds,secrétaire qui sait tout,ripperdoc clandestin,journaliste infiltré,cadre déchu",
+   "figurants": [
+    {
+     "id": "tour_kaisho_mira_netrunneuse",
+     "nom": "Mira, la netrunneuse",
+     "type": "aide",
+     "archetype": "debrouillard",
+     "animal": "Hibou",
+     "veut": "Rejoindre le groupe, puis effacer son nom des serveurs de la tour.",
+     "vient_de": "Sous contrat avec Kaishō, elle n'a jamais obtenu de clause de sortie.",
+     "sait": "Le monte-charge technique n'a aucune caméra entre le trentième étage et le sous-sol.",
+     "mode": "figurant"
+    },
+    {
+     "id": "tour_kaisho_paolo_journaliste",
+     "nom": "Paolo, le journaliste",
+     "type": "curieux",
+     "archetype": "cynique",
+     "animal": "Singe",
+     "veut": "Être dans le coup, et sortir le scoop avant tout le monde.",
+     "vient_de": "Infiltré comme stagiaire au service communication, avec un faux badge.",
+     "sait": "Il a filmé Silk fouiller le bureau d'un cadre pendant la pause.",
+     "mode": "figurant"
+    },
+    {
+     "id": "tour_kaisho_hideo_cadre",
+     "nom": "Hideo, le cadre déchu",
+     "type": "victime",
+     "archetype": "denegateur",
+     "animal": "Porc",
+     "veut": "Garder son badge, et cacher ses dettes de jeu encore un mois.",
+     "vient_de": "Ancien directeur de projet, rétrogradé après l'échec d'un prototype.",
+     "sait": "Il connaît le voleur du prototype : c'était son meilleur ingénieur.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "cyberpunk_marche_noir",
@@ -392,7 +847,42 @@
      "detail": "Un tunnel humide qui permet de fuir quand une descente corporatiste tourne mal."
     }
    ],
-   "roles": "fixeur charismatique,trafiquant d'implants,fausse identité vivante,mercenaire au chômage,indic à double jeu,gamine pickpocket,videur cybernétique,acheteur corporatiste"
+   "roles": "fixeur charismatique,trafiquant d'implants,fausse identité vivante,mercenaire au chômage,indic à double jeu,gamine pickpocket,videur cybernétique,acheteur corporatiste",
+   "figurants": [
+    {
+     "id": "fracture_zora_mercenaire",
+     "nom": "Zora, la mercenaire",
+     "type": "aide",
+     "archetype": "protecteur",
+     "animal": "Loup",
+     "veut": "Un vrai contrat, avec des gens qui ne la vendront pas.",
+     "vient_de": "Ancienne garde du corps d'un cadre, licenciée avec ses implants encore à crédit.",
+     "sait": "La sortie des égouts débouche sous un parking : elle y a caché une moto.",
+     "mode": "figurant"
+    },
+    {
+     "id": "fracture_igor_videur",
+     "nom": "Igor, le videur",
+     "type": "officiel",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Taureau",
+     "veut": "Que les règles du bar à data soient respectées, armes au vestiaire.",
+     "vient_de": "Un ancien boxeur bardé de métal, qui tient la porte depuis dix ans.",
+     "sait": "Il a vu l'homme au manteau gris entrer trois fois dans la cache arrière.",
+     "mode": "figurant"
+    },
+    {
+     "id": "fracture_nell_pickpocket",
+     "nom": "Nell, la pickpocket",
+     "type": "victime",
+     "archetype": "debrouillard",
+     "animal": "Souris",
+     "veut": "Faire les poches d'un passant de plus, sans jamais se faire remarquer.",
+     "vient_de": "Elle a grandi entre les étals, sans papiers ni famille.",
+     "sait": "Elle a fait les poches de Twitch et trouvé un mouchard tout neuf.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "horreur_manoir",
@@ -421,7 +911,42 @@
      "detail": "Une serre envahie de plantes mortes où le brouillard entre par une vitre brisée."
     }
    ],
-   "roles": "héritier inquiet,gouvernante énigmatique,médium sceptique,notaire pressé,cuisinière superstitieuse,enfant trop calme,invité qui ment,jardinier disparu"
+   "roles": "héritier inquiet,gouvernante énigmatique,médium sceptique,notaire pressé,cuisinière superstitieuse,enfant trop calme,invité qui ment,jardinier disparu",
+   "figurants": [
+    {
+     "id": "manoir_agathe_cuisiniere",
+     "nom": "Agathe, la cuisinière",
+     "type": "aide",
+     "archetype": "prophete",
+     "animal": "Corbeau",
+     "veut": "Faire sortir les invités avant que la maison ne les garde.",
+     "vient_de": "Elle cuisinait déjà ici enfant, aux côtés de sa grand-mère, au service des Valcroix.",
+     "sait": "Elle garde la clé de la porte scellée de la cave, cousue dans son tablier.",
+     "mode": "figurant"
+    },
+    {
+     "id": "manoir_octave_notaire",
+     "nom": "Octave, le notaire",
+     "type": "officiel",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Fourmi",
+     "veut": "Lire le testament, faire signer chacun, et reprendre le dernier train.",
+     "vient_de": "Il gère les papiers de la famille depuis trente ans, sans jamais avoir dormi ici.",
+     "sait": "Le testament exige que tous les héritiers passent la nuit au manoir.",
+     "mode": "figurant"
+    },
+    {
+     "id": "manoir_clemence_medium",
+     "nom": "Clémence, la médium",
+     "type": "sceptique",
+     "archetype": "cynique",
+     "animal": "Renard",
+     "veut": "Prouver que les esprits n'existent pas, et toucher son cachet.",
+     "vient_de": "Elle anime des séances pour les familles riches, sans jamais y croire.",
+     "sait": "Elle a vu les portraits du hall bouger, et l'explique par les courants d'air.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "horreur_hopital",
@@ -450,7 +975,42 @@
      "detail": "Un labyrinthe de tuyaux brûlants et le seul interrupteur général de tout le bâtiment."
     }
    ],
-   "roles": "infirmière de nuit,médecin qui cache une faute,brancardier bavard,patient qu'on croyait parti,aumônier troublé,vigile terrifié,archiviste obstinée,parent en quête de réponses"
+   "roles": "infirmière de nuit,médecin qui cache une faute,brancardier bavard,patient qu'on croyait parti,aumônier troublé,vigile terrifié,archiviste obstinée,parent en quête de réponses",
+   "figurants": [
+    {
+     "id": "hopital_solene_archiviste",
+     "nom": "Solène, l'archiviste",
+     "type": "aide",
+     "archetype": "debrouillard",
+     "animal": "Hibou",
+     "veut": "Retrouver le dossier manquant qui explique la fermeture de l'aile.",
+     "vient_de": "Elle range les archives du sous-sol depuis vingt ans, seule avec sa lampe.",
+     "sait": "Le seul interrupteur général de l'hôpital se trouve dans la chaufferie.",
+     "mode": "figurant"
+    },
+    {
+     "id": "hopital_didier_brancardier",
+     "nom": "Didier, le brancardier",
+     "type": "commere",
+     "archetype": "cynique",
+     "animal": "Singe",
+     "veut": "Raconter à tout le monde ce qu'on dit de l'aile fermée.",
+     "vient_de": "Il pousse les brancards de Saint-Elme depuis quinze ans, de jour comme de nuit.",
+     "sait": "Il jure qu'un casier de la morgue s'ouvre seul chaque nuit, à la même heure.",
+     "mode": "figurant"
+    },
+    {
+     "id": "hopital_helene_mere",
+     "nom": "Hélène, la mère",
+     "type": "victime",
+     "archetype": "protecteur",
+     "animal": "Loup",
+     "veut": "Savoir pourquoi le nom de son fils figure dans le vieux registre.",
+     "vient_de": "Elle a reçu une lettre anonyme portant le tampon de l'aile fermée.",
+     "sait": "La lettre indique une chambre, au bout du couloir où la lampe clignote.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "post_apo_bunker",
@@ -479,7 +1039,42 @@
      "detail": "Dessins sur les murs, jouets de récupération et une trappe de ventilation par où filtrent des bruits."
     }
    ],
-   "roles": "chef de l'abri contesté,mécanicien indispensable,rationnaire soupçonneux,éclaireuse du dehors,médecin à court de tout,ancien qui se souvient d'avant,adolescent qui veut sortir,nouveau venu sans passé"
+   "roles": "chef de l'abri contesté,mécanicien indispensable,rationnaire soupçonneux,éclaireuse du dehors,médecin à court de tout,ancien qui se souvient d'avant,adolescent qui veut sortir,nouveau venu sans passé",
+   "figurants": [
+    {
+     "id": "bunker_joss_mecanicienne",
+     "nom": "Joss, la mécanicienne",
+     "type": "aide",
+     "archetype": "debrouillard",
+     "animal": "Souris",
+     "veut": "Garder le filtreur d'air en vie, une semaine de plus.",
+     "vient_de": "Elle réparait des tracteurs avant la catastrophe, et n'a jamais lâché ses outils.",
+     "sait": "Le compteur du sas a été débranché, puis recâblé pour afficher des chiffres faux.",
+     "mode": "figurant"
+    },
+    {
+     "id": "bunker_ezra_ancien",
+     "nom": "Ezra, l'ancien",
+     "type": "temoin",
+     "archetype": "solitaire",
+     "animal": "Cerf",
+     "veut": "Revoir le ciel une dernière fois.",
+     "vient_de": "Il est l'un des derniers à se souvenir du monde d'avant l'abri.",
+     "sait": "Il a entendu l'éclaireuse frapper au sas cette nuit, et personne n'a ouvert.",
+     "mode": "figurant"
+    },
+    {
+     "id": "bunker_tilio_adolescent",
+     "nom": "Tilio, l'adolescent",
+     "type": "victime",
+     "archetype": "cynique",
+     "animal": "Renard",
+     "veut": "Ouvrir le sas et voir le dehors de ses propres yeux.",
+     "vient_de": "Né dans l'abri, il n'a jamais connu que les néons et les dessins du dortoir.",
+     "sait": "Il a trouvé une trappe de ventilation qui remonte presque jusqu'à la surface.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "post_apo_convoi",
@@ -508,7 +1103,42 @@
      "detail": "Les véhicules les plus lents, exposés aux pillards, où l'on relègue ceux dont on se méfie."
     }
    ],
-   "roles": "chef de convoi autoritaire,mécanicienne débrouillarde,guetteur paranoïaque,marchand ambulant rusé,réfugié embarqué en route,vétéran des routes,guérisseuse itinérante,pillard repenti"
+   "roles": "chef de convoi autoritaire,mécanicienne débrouillarde,guetteur paranoïaque,marchand ambulant rusé,réfugié embarqué en route,vétéran des routes,guérisseuse itinérante,pillard repenti",
+   "figurants": [
+    {
+     "id": "convoi_dario_pillard_repenti",
+     "nom": "Dario, le pillard repenti",
+     "type": "aide",
+     "archetype": "protecteur",
+     "animal": "Ours",
+     "veut": "Racheter ses fautes en défendant un convoi qu'il aurait jadis attaqué.",
+     "vient_de": "Il a roulé trois ans avec la meute de Sarn avant de s'enfuir une nuit.",
+     "sait": "La meute frappe toujours l'arrière-garde d'abord, pour tester les défenses.",
+     "mode": "figurant"
+    },
+    {
+     "id": "convoi_ilya_guetteur",
+     "nom": "Ilya, le guetteur",
+     "type": "temoin",
+     "archetype": "paranoiaque",
+     "animal": "Lapin",
+     "veut": "Qu'on prenne enfin ses alertes au sérieux, au lieu d'en rire.",
+     "vient_de": "Il a perdu son premier convoi pour s'être tu une seule fois.",
+     "sait": "Il a vu un reflet de jumelles sur la crête, deux soirs de suite.",
+     "mode": "figurant"
+    },
+    {
+     "id": "convoi_selma_guerisseuse",
+     "nom": "Selma, la guérisseuse",
+     "type": "innocent",
+     "archetype": "aidant",
+     "animal": "Mouton",
+     "veut": "Que personne ne soit laissé à l'arrière-garde, même ceux dont on se méfie.",
+     "vient_de": "Elle va de convoi en convoi, payée en eau pour ses soins.",
+     "sait": "Elle connaît un puits caché à une journée de route, loin des pistes de la meute.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "steampunk_gare",
@@ -537,7 +1167,42 @@
      "detail": "Une cabine perchée d'où l'on tire les leviers d'aiguillage et où l'on garde les registres secrets."
     }
    ],
-   "roles": "chef de quai, mécanicien harponneur, contrôleuse de billets, soutier couvert de suie, voyageuse pressée, télégraphiste, pickpocket des tubes, inspecteur des horloges"
+   "roles": "chef de quai, mécanicien harponneur, contrôleuse de billets, soutier couvert de suie, voyageuse pressée, télégraphiste, pickpocket des tubes, inspecteur des horloges",
+   "figurants": [
+    {
+     "id": "gare_anatole_inspecteur",
+     "nom": "Anatole, l'inspecteur des horloges",
+     "type": "aide",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Fourmi",
+     "veut": "Que chaque horloge de la gare batte à la même seconde.",
+     "vient_de": "Il remonte les horloges du hall chaque matin depuis l'inauguration de la gare.",
+     "sait": "Le grand balancier peut se bloquer à la main, depuis une trappe derrière le cadran.",
+     "mode": "figurant"
+    },
+    {
+     "id": "gare_nino_pickpocket",
+     "nom": "Nino, le pickpocket des tubes",
+     "type": "curieux",
+     "archetype": "opportuniste",
+     "animal": "Vautour",
+     "veut": "Savoir qui lui vole son terrain dans les tubes de la consigne.",
+     "vient_de": "Un gamin des toits, qui reconnaît chaque tube pneumatique à son bruit.",
+     "sait": "Un petit automate rapide file dans les tubes, et ce n'est pas lui qui le guide.",
+     "mode": "figurant"
+    },
+    {
+     "id": "gare_victorine_voyageuse",
+     "nom": "Victorine, la voyageuse pressée",
+     "type": "victime",
+     "archetype": "denegateur",
+     "animal": "Âne",
+     "veut": "Monter dans le train de sept heures douze, quoi qu'il arrive aux horloges.",
+     "vient_de": "Une rentière de la ville basse, qui n'a jamais manqué un train de sa vie.",
+     "sait": "Son billet porte un horaire qui ne figure sur aucun tableau de la gare.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "steampunk_manufacture",
@@ -566,7 +1231,42 @@
      "detail": "Une arène capitonnée où l'on met en marche les automates neufs pour vérifier qu'ils obéissent."
     }
    ],
-   "roles": "contremaître intraitable, ouvrière monteuse, ingénieur en chef, apprenti maladroit, régleuse d'automates, syndicaliste clandestin, livreur de rouages, inspectrice de sécurité"
+   "roles": "contremaître intraitable, ouvrière monteuse, ingénieur en chef, apprenti maladroit, régleuse d'automates, syndicaliste clandestin, livreur de rouages, inspectrice de sécurité",
+   "figurants": [
+    {
+     "id": "manufacture_augustin_syndicaliste",
+     "nom": "Augustin, le syndicaliste",
+     "type": "aide",
+     "archetype": "leader",
+     "animal": "Lion",
+     "veut": "Que les ouvriers gardent leur place face aux automates du Baron.",
+     "vient_de": "Monteur le jour, il réunit les ouvriers la nuit dans le magasin de rouages.",
+     "sait": "Il a la liste des contremaîtres que le Baron a achetés.",
+     "mode": "figurant"
+    },
+    {
+     "id": "manufacture_irene_inspectrice",
+     "nom": "Irène, l'inspectrice de sécurité",
+     "type": "officiel",
+     "archetype": "paranoiaque",
+     "animal": "Serpent",
+     "veut": "Que chaque chaudière passe son contrôle avant la fin de la semaine.",
+     "vient_de": "Envoyée par la préfecture après trois incendies de chaufferie dans le quartier.",
+     "sait": "Les vannes de la chaufferie ont été sabotées de l'intérieur, par quelqu'un qui connaît l'usine.",
+     "mode": "figurant"
+    },
+    {
+     "id": "manufacture_felix_apprenti",
+     "nom": "Félix, l'apprenti",
+     "type": "victime",
+     "archetype": "alarmiste",
+     "animal": "Rat",
+     "veut": "Prouver au contremaître qu'il mérite sa place à la chaîne.",
+     "vient_de": "Orphelin de la ville basse, embauché la semaine dernière pour balayer les copeaux.",
+     "sait": "Il a vu un automate neuf de la salle d'essai se remettre en marche tout seul.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "historique_port",
@@ -595,7 +1295,42 @@
      "detail": "Un marché matinal bruyant où les pêcheuses vantent leurs paniers à pleins poumons."
     }
    ],
-   "roles": "capitaine au long cours, douanier zélé, marchande d'épices, matelot déserteur, tavernière, écrivain public, mousse orphelin, dame de la haute bourgeoisie"
+   "roles": "capitaine au long cours, douanier zélé, marchande d'épices, matelot déserteur, tavernière, écrivain public, mousse orphelin, dame de la haute bourgeoisie",
+   "figurants": [
+    {
+     "id": "port_anselme_ecrivain",
+     "nom": "Anselme, l'écrivain public",
+     "type": "aide",
+     "archetype": "debrouillard",
+     "animal": "Hibou",
+     "veut": "Démasquer les faux papiers qui circulent sur le port.",
+     "vient_de": "Il écrit les lettres des marins sous l'arcade du quai depuis vingt ans.",
+     "sait": "Il reconnaît l'écriture du faux rapport : c'est celle d'un commis de la douane.",
+     "mode": "figurant"
+    },
+    {
+     "id": "port_toinette_taverniere",
+     "nom": "Toinette, la tavernière",
+     "type": "commere",
+     "archetype": "cynique",
+     "animal": "Renard",
+     "veut": "Tout savoir avant les autres, et le raconter derrière son comptoir.",
+     "vient_de": "Elle tient la taverne du Fanal depuis que son mari s'est perdu en mer.",
+     "sait": "Un douanier soudain riche paie des tournées chez elle depuis trois jours.",
+     "mode": "figurant"
+    },
+    {
+     "id": "port_baptistin_mousse",
+     "nom": "Baptistin, le mousse",
+     "type": "innocent",
+     "archetype": "aidant",
+     "animal": "Chien",
+     "veut": "Qu'on ne condamne pas son capitaine pour une faute qu'il n'a pas commise.",
+     "vient_de": "Recueilli à bord du trois-mâts à huit ans, il n'a pas d'autre famille.",
+     "sait": "Il a vu deux hommes descendre dans la cale la nuit, avec un coffret scellé.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "historique_cour",
@@ -624,7 +1359,42 @@
      "detail": "Un bureau feutré où secrétaires et espions rédigent, cachettent et interceptent le courrier."
     }
    ],
-   "roles": "courtisan ambitieux, dame d'honneur, valet de pied, secrétaire du Roi, marquise intrigante, garde suisse, marmiton bavard, ambassadeur étranger"
+   "roles": "courtisan ambitieux, dame d'honneur, valet de pied, secrétaire du Roi, marquise intrigante, garde suisse, marmiton bavard, ambassadeur étranger",
+   "figurants": [
+    {
+     "id": "cour_eustache_secretaire",
+     "nom": "Eustache, le secrétaire du Roi",
+     "type": "aide",
+     "archetype": "solitaire",
+     "animal": "Cerf",
+     "veut": "Que le courrier du Roi arrive intact, sans passer par d'autres mains.",
+     "vient_de": "Fils d'un greffier de province, il doit sa charge à son écriture impeccable.",
+     "sait": "Il reconnaît un cachet refait : celui du billet compromettant est faux.",
+     "mode": "figurant"
+    },
+    {
+     "id": "cour_colin_marmiton",
+     "nom": "Colin, le marmiton",
+     "type": "commere",
+     "archetype": "alarmiste",
+     "animal": "Coq",
+     "veut": "Répéter dans tout le palais ce qu'il entend aux cuisines.",
+     "vient_de": "Neveu d'un rôtisseur royal, il tourne les broches depuis l'âge de dix ans.",
+     "sait": "Il a entendu une camériste se vanter d'avoir fouillé une chambre de l'aile du Nord.",
+     "mode": "figurant"
+    },
+    {
+     "id": "cour_blanche_dame_d_atours",
+     "nom": "Blanche, la dame d'atours",
+     "type": "victime",
+     "archetype": "prophete",
+     "animal": "Paon",
+     "veut": "Briller au prochain bal, sans voir les murmures qui la suivent.",
+     "vient_de": "Arrivée de province l'an dernier, elle a déjà attiré le regard du Roi.",
+     "sait": "Elle a reçu une invitation royale, puis un billet anonyme lui disant de ne pas venir.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "conte_fees_chateau",
@@ -653,7 +1423,42 @@
      "detail": "Une salle remplie de coussins et de livres d'images qui racontent de jolies histoires."
     }
    ],
-   "roles": "princesse rieuse, roi bienveillant, cuisinier pâtissier, petite souris amie, jardinier des bonbons, fée gardienne, page espiègle, oiseau messager"
+   "roles": "princesse rieuse, roi bienveillant, cuisinier pâtissier, petite souris amie, jardinier des bonbons, fée gardienne, page espiègle, oiseau messager",
+   "figurants": [
+    {
+     "id": "chateau_basile_patissier",
+     "nom": "Basile, le pâtissier",
+     "type": "aide",
+     "archetype": "debrouillard",
+     "animal": "Souris",
+     "veut": "Finir le grand gâteau de la fête, même sans ses cuillères.",
+     "vient_de": "Il fait les tartes du château depuis qu'il est tout petit.",
+     "sait": "Il a trouvé un bout de chapeau vert accroché au placard des cuillères.",
+     "mode": "figurant"
+    },
+    {
+     "id": "chateau_anis_page",
+     "nom": "Anis, le page",
+     "type": "curieux",
+     "archetype": "alarmiste",
+     "animal": "Coq",
+     "veut": "Être au courant de tout ce qui se passe au château.",
+     "vient_de": "Il porte les messages du roi en courant dans tous les couloirs.",
+     "sait": "Il a entendu un petit rire moqueur derrière la bibliothèque câline.",
+     "mode": "figurant"
+    },
+    {
+     "id": "chateau_capucine_princesse",
+     "nom": "Capucine, la princesse",
+     "type": "innocent",
+     "archetype": "leader",
+     "animal": "Lion",
+     "veut": "Que tout le monde soit invité à la fête, même celui qui boude.",
+     "vient_de": "La fille du roi, qui connaît chaque coin du château par cœur.",
+     "sait": "Elle sait que personne n'a jamais invité le petit lutin du jardin à jouer.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "conte_fees_foret",
@@ -682,7 +1487,42 @@
      "detail": "Une petite grotte scintillante où les lucioles éclairent des dessins sur les murs."
     }
    ],
-   "roles": "renarde maligne, ourson gourmand, lapin timide, hibou conteur, écureuil farceur, fée des fleurs, hérisson jardinier, biche douce"
+   "roles": "renarde maligne, ourson gourmand, lapin timide, hibou conteur, écureuil farceur, fée des fleurs, hérisson jardinier, biche douce",
+   "figurants": [
+    {
+     "id": "calins_eglantine_fee",
+     "nom": "Églantine, la fée des fleurs",
+     "type": "aide",
+     "archetype": "aidant",
+     "animal": "Mouton",
+     "veut": "Que chaque fleur du pré retrouve sa vraie couleur.",
+     "vient_de": "Elle est née dans une clochette du pré aux papillons.",
+     "sait": "Elle connaît une formule qui rend aux choses leur couleur, mais il faut la dire à deux.",
+     "mode": "figurant"
+    },
+    {
+     "id": "calins_noisette_ecureuil",
+     "nom": "Noisette, l'écureuil farceur",
+     "type": "commere",
+     "archetype": "cynique",
+     "animal": "Singe",
+     "veut": "Raconter à toute la forêt ce qu'il a vu, en l'arrangeant un peu.",
+     "vient_de": "Il habite tout en haut de l'arbre à cabanes, et il voit tout.",
+     "sait": "Il a vu un petit nuage qui sent la fraise passer au-dessus du ruisseau.",
+     "mode": "figurant"
+    },
+    {
+     "id": "calins_lilou_cueilleuse",
+     "nom": "Lilou, la cueilleuse de fraises",
+     "type": "sceptique",
+     "archetype": "denegateur",
+     "animal": "Âne",
+     "veut": "Finir son panier de fraises, même si tout devient rose à pois.",
+     "vient_de": "Elle vient du village au bord de la forêt, chaque mercredi avec son panier.",
+     "sait": "Elle a trouvé une baguette tordue dans l'herbe, et croit que c'est un simple bâton.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "dessin_anime_ville",
@@ -711,7 +1551,42 @@
      "detail": "Des étals remplis de fruits qui changent de couleur quand on les regarde."
     }
    ],
-   "roles": "le maire farceur,la marchande de limonade,le facteur à rollers,l'enfant curieux,le chef d'orchestre,la boulangère à bulles,le clown jardinier,le gardien du kiosque"
+   "roles": "le maire farceur,la marchande de limonade,le facteur à rollers,l'enfant curieux,le chef d'orchestre,la boulangère à bulles,le clown jardinier,le gardien du kiosque",
+   "figurants": [
+    {
+     "id": "ville_gaby_facteur",
+     "nom": "Gaby, le facteur à rollers",
+     "type": "aide",
+     "archetype": "debrouillard",
+     "animal": "Souris",
+     "veut": "Livrer toutes les lettres à temps, même dans une ville toute grise.",
+     "vient_de": "Il fait le tour de la Ville Rebondissante dix fois par jour sur ses rollers.",
+     "sait": "Il connaît l'adresse de la grande maison grise où s'envolent tous les ballons.",
+     "mode": "figurant"
+    },
+    {
+     "id": "ville_lulu_enfant",
+     "nom": "Lulu, l'enfant curieuse",
+     "type": "curieux",
+     "archetype": "paranoiaque",
+     "animal": "Lapin",
+     "veut": "Savoir où partent toutes les couleurs, et le dire à tout le monde.",
+     "vient_de": "Elle habite au-dessus de la boulangerie à bulles, une loupe toujours en poche.",
+     "sait": "Elle a vu un grand aspirateur rigolo sortir par la fenêtre d'une maison grise.",
+     "mode": "figurant"
+    },
+    {
+     "id": "ville_bruno_clown",
+     "nom": "Bruno, le clown jardinier",
+     "type": "victime",
+     "archetype": "cynique",
+     "animal": "Singe",
+     "veut": "Planter les fleurs les plus colorées de la ville, juste devant la maison grise.",
+     "vient_de": "Il faisait rire au cirque avant de tomber amoureux des fleurs.",
+     "sait": "Ses fleurs perdent leurs couleurs chaque nuit, et il trouve de petites traces de roues.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "dessin_anime_foret",
@@ -740,7 +1615,42 @@
      "detail": "Une cabane en bois tout en haut avec une longue-vue pour voir toute la forêt."
     }
    ],
-   "roles": "l'écureuil bavard,la fée jardinière,le garde-forestier maladroit,l'enfant explorateur,le hibou chef d'orchestre,la marchande de noisettes,le lutin farceur,le crapaud musicien"
+   "roles": "l'écureuil bavard,la fée jardinière,le garde-forestier maladroit,l'enfant explorateur,le hibou chef d'orchestre,la marchande de noisettes,le lutin farceur,le crapaud musicien",
+   "figurants": [
+    {
+     "id": "chatouilleuse_jeannot_garde_forestier",
+     "nom": "Jeannot, le garde-forestier",
+     "type": "aide",
+     "archetype": "protecteur",
+     "animal": "Ours",
+     "veut": "Rendre à la forêt tous ses rires, sans rien casser cette fois.",
+     "vient_de": "Il veille sur la forêt depuis toujours, et se cogne à chaque branche basse.",
+     "sait": "Il a les clés de la cabane perchée, d'où l'on voit toute la forêt.",
+     "mode": "figurant"
+    },
+    {
+     "id": "chatouilleuse_ludo_ecureuil",
+     "nom": "Ludo, l'écureuil bavard",
+     "type": "commere",
+     "archetype": "alarmiste",
+     "animal": "Rat",
+     "veut": "Annoncer chaque nouvelle à toute la forêt avant les oiseaux.",
+     "vient_de": "Il court d'arbre en arbre depuis le lever du soleil, sans jamais s'arrêter.",
+     "sait": "Il a vu une dame sur la pointe des pieds, les bras chargés de couvertures grises.",
+     "mode": "figurant"
+    },
+    {
+     "id": "chatouilleuse_malo_explorateur",
+     "nom": "Malo, l'enfant explorateur",
+     "type": "innocent",
+     "archetype": "leader",
+     "animal": "Aigle",
+     "veut": "Que tous les animaux retrouvent leur voix, même le plus petit.",
+     "vient_de": "Il campe au bord de la forêt avec sa longue-vue et son carnet de croquis.",
+     "sait": "Il a remarqué que Madame Chut sourit toute seule quand le ruisseau chante.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "manga_rigolo_ecole",
@@ -769,7 +1679,42 @@
      "detail": "Le toit de l'école d'où on voit toute la ville et où on lance des avions en papier."
     }
    ],
-   "roles": "la prof d'énergie,le délégué super-rapide,l'élève au pouvoir de rire,le cuistot ninja,la bibliothécaire volante,le concierge inventeur,l'élève timide qui grandit,la championne de grimaces"
+   "roles": "la prof d'énergie,le délégué super-rapide,l'élève au pouvoir de rire,le cuistot ninja,la bibliothécaire volante,le concierge inventeur,l'élève timide qui grandit,la championne de grimaces",
+   "figurants": [
+    {
+     "id": "ecole_kenji_concierge",
+     "nom": "Kenji, le concierge inventeur",
+     "type": "aide",
+     "archetype": "debrouillard",
+     "animal": "Hibou",
+     "veut": "Que ses inventions servent enfin à quelque chose de vraiment utile.",
+     "vient_de": "Il répare tout dans l'école depuis toujours, un tournevis dans chaque poche.",
+     "sait": "Il a vu une petite machine sur roulettes filer toute seule vers le dojo.",
+     "mode": "figurant"
+    },
+    {
+     "id": "ecole_sora_prof",
+     "nom": "Sora, la prof d'énergie",
+     "type": "officiel",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Taureau",
+     "veut": "Que le grand concours de l'école se passe sans tricherie.",
+     "vient_de": "Ancienne championne de l'école, elle donne ses cours en faisant des pompes.",
+     "sait": "Elle a remarqué que deux élèves ont fait le même tour, exactement au même moment.",
+     "mode": "figurant"
+    },
+    {
+     "id": "ecole_momo_eleve",
+     "nom": "Momo, l'élève timide",
+     "type": "victime",
+     "archetype": "solitaire",
+     "animal": "Chat",
+     "veut": "Montrer son pouvoir au concours, sans que personne ne se moque.",
+     "vient_de": "Nouvelle à l'école, elle s'entraîne seule sur le toit avec ses avions en papier.",
+     "sait": "Son pouvoir est si rare que personne ne l'a encore vu, même pas le Grand Copieur.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "manga_rigolo_festival",
@@ -798,7 +1743,42 @@
      "detail": "Une grande roue faite en papier plié qui tourne tout doucement au-dessus du festival."
     }
    ],
-   "roles": "le maître du festival,la chanteuse de karaoké,le marchand de nouilles,l'enfant au masque de renard,la lanternière magique,le champion de pêche aux canards,le musicien de tambour,la vendeuse de sucreries"
+   "roles": "le maître du festival,la chanteuse de karaoké,le marchand de nouilles,l'enfant au masque de renard,la lanternière magique,le champion de pêche aux canards,le musicien de tambour,la vendeuse de sucreries",
+   "figurants": [
+    {
+     "id": "festival_hoshi_lanterniere",
+     "nom": "Hoshi, la lanternière",
+     "type": "aide",
+     "archetype": "aidant",
+     "animal": "Mouton",
+     "veut": "Rallumer chaque lanterne avant que la grande roue ne s'arrête.",
+     "vient_de": "Elle fabrique les lanternes du festival depuis qu'elle sait plier le papier.",
+     "sait": "Les lanternes du pont se rallument toutes seules quand on rit très fort dessous.",
+     "mode": "figurant"
+    },
+    {
+     "id": "festival_taro_marchand",
+     "nom": "Taro, le marchand de nouilles",
+     "type": "temoin",
+     "archetype": "opportuniste",
+     "animal": "Vautour",
+     "veut": "Qu'on le croie, même s'il raconte toujours des histoires pour vendre ses nouilles.",
+     "vient_de": "Il tient le stand de nouilles qui font des nœuds depuis le tout premier festival.",
+     "sait": "Il a vu un monsieur en cape sombre bâiller en éteignant les lampes de l'allée.",
+     "mode": "figurant"
+    },
+    {
+     "id": "festival_yuki_chanteuse",
+     "nom": "Yuki, la chanteuse de karaoké",
+     "type": "victime",
+     "archetype": "prophete",
+     "animal": "Paon",
+     "veut": "Chanter sous la plus grande lumière du festival, devant tout le monde.",
+     "vient_de": "Elle s'entraîne chaque soir dans sa chambre, une brosse en guise de micro.",
+     "sait": "Sa chanson préférée est une berceuse, et elle la garde toujours pour la fin.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "animaux_parlent_ferme",
@@ -827,7 +1807,42 @@
      "detail": "Une colline douce où les moutons roulent en boule comme des nuages tout ronds."
     }
    ],
-   "roles": "la vache présentatrice,le coq réveil,le cochon gourmand,la poule comédienne,le mouton frisé,le canard nageur,le lapin jardinier,le chien berger rigolo"
+   "roles": "la vache présentatrice,le coq réveil,le cochon gourmand,la poule comédienne,le mouton frisé,le canard nageur,le lapin jardinier,le chien berger rigolo",
+   "figurants": [
+    {
+     "id": "ferme_marguerite_presentatrice",
+     "nom": "Marguerite, la vache présentatrice",
+     "type": "aide",
+     "archetype": "leader",
+     "animal": "Lion",
+     "veut": "Que le grand concours de légumes ait lieu, comme chaque année.",
+     "vient_de": "Elle anime toutes les fêtes de la ferme, une carotte en guise de micro.",
+     "sait": "Elle connaît le compte exact des légumes du potager : il en manque déjà.",
+     "mode": "figurant"
+    },
+    {
+     "id": "ferme_gaston_nageur",
+     "nom": "Gaston, le canard nageur",
+     "type": "temoin",
+     "archetype": "alarmiste",
+     "animal": "Rat",
+     "veut": "Qu'on le croie : la terre a bougé toute seule au bord de la mare.",
+     "vient_de": "Il fait ses longueurs dans la mare aux canards chaque matin, en chantant.",
+     "sait": "Une petite piste de terre part du potager et file tout droit vers le bois.",
+     "mode": "figurant"
+    },
+    {
+     "id": "ferme_lucien_gourmand",
+     "nom": "Lucien, le cochon gourmand",
+     "type": "sceptique",
+     "archetype": "denegateur",
+     "animal": "Âne",
+     "veut": "Finir sa sieste dans le foin, puis goûter les plus gros légumes.",
+     "vient_de": "Il dort dans la grange à foin, juste au-dessus de drôles de tunnels.",
+     "sait": "Il entend gratter sous la grange chaque nuit, mais il jure que c'est son ventre.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "animaux_parlent_jungle",
@@ -856,7 +1871,42 @@
      "detail": "Un coin plein de tambours en noix de coco où les singes font le plus beau vacarme."
     }
    ],
-   "roles": "le perroquet blagueur,la maman éléphante douce,le singe acrobate,le paresseux tranquille,la grenouille chanteuse,le toucan chef d'orchestre,le petit tigre joueur,la tortue conteuse"
+   "roles": "le perroquet blagueur,la maman éléphante douce,le singe acrobate,le paresseux tranquille,la grenouille chanteuse,le toucan chef d'orchestre,le petit tigre joueur,la tortue conteuse",
+   "figurants": [
+    {
+     "id": "jungle_babette_elephante",
+     "nom": "Babette, la maman éléphante",
+     "type": "aide",
+     "archetype": "aidant",
+     "animal": "Mouton",
+     "veut": "Que toute la jungle fasse la fête ensemble, même le grand bougon.",
+     "vient_de": "Elle berce les petits de la jungle sous la cascade fraîche, depuis toujours.",
+     "sait": "D'un souffle de trompe, elle peut déboucher l'entrée du grand arbre creux.",
+     "mode": "figurant"
+    },
+    {
+     "id": "jungle_pipo_blagueur",
+     "nom": "Pipo, le perroquet blagueur",
+     "type": "commere",
+     "archetype": "cynique",
+     "animal": "Renard",
+     "veut": "Raconter le premier toutes les nouvelles de la jungle, en les rendant drôles.",
+     "vient_de": "Il vit tout en haut des lianes toboggans, d'où il voit tout.",
+     "sait": "Il a vu le grand bougon taper du pied en rythme, en cachette, pendant la fête.",
+     "mode": "figurant"
+    },
+    {
+     "id": "jungle_zephyr_tigre",
+     "nom": "Zéphyr, le petit tigre joueur",
+     "type": "victime",
+     "archetype": "debrouillard",
+     "animal": "Souris",
+     "veut": "Jouer sur les lianes toboggans, même quand elles sont toutes emmêlées.",
+     "vient_de": "Il est né près de la clairière aux fruits et n'arrête jamais de bondir.",
+     "sait": "Il connaît un passage secret derrière la cascade, qui mène au grand arbre creux.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "super_heros_ville",
@@ -885,7 +1935,42 @@
      "detail": "Un parc avec des trampolines et des toboggans géants pour s'entraîner."
     }
    ],
-   "roles": "Super-héros débutant, Super-héros expérimenté, Habitant reconnaissant, Vendeur de capes, Chef des pompiers rigolo, Facteur volant, Journaliste curieuse, Enfant fan de héros, Boulanger qui offre des gâteaux"
+   "roles": "Super-héros débutant, Super-héros expérimenté, Habitant reconnaissant, Vendeur de capes, Chef des pompiers rigolo, Facteur volant, Journaliste curieuse, Enfant fan de héros, Boulanger qui offre des gâteaux",
+   "figurants": [
+    {
+     "id": "ville_firmin_facteur",
+     "nom": "Firmin, le facteur volant",
+     "type": "aide",
+     "archetype": "debrouillard",
+     "animal": "Hibou",
+     "veut": "Livrer chaque lettre à la bonne porte, même quand les panneaux sont à l'envers.",
+     "vient_de": "Il survole la Grande Ville chaque matin, sa sacoche pleine de lettres.",
+     "sait": "Du ciel, il a vu d'où part la poudre qui fait glisser la place.",
+     "mode": "figurant"
+    },
+    {
+     "id": "ville_jade_journaliste",
+     "nom": "Jade, la journaliste curieuse",
+     "type": "curieux",
+     "archetype": "paranoiaque",
+     "animal": "Lapin",
+     "veut": "Écrire le scoop du siècle, et voir les héros en pleine action.",
+     "vient_de": "Elle écrit le petit journal de la ville, dans un camion tout bariolé.",
+     "sait": "Elle a photographié un savant aux lunettes de travers près de la fontaine.",
+     "mode": "figurant"
+    },
+    {
+     "id": "ville_honore_boulanger",
+     "nom": "Honoré, le boulanger",
+     "type": "innocent",
+     "archetype": "aidant",
+     "animal": "Mouton",
+     "veut": "Que tout le monde ait son gâteau, même le savant grognon.",
+     "vient_de": "Sa boulangerie fait le coin de la place centrale, depuis son grand-père.",
+     "sait": "Le Docteur regarde ses gâteaux chaque matin par la vitrine, sans jamais oser entrer.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "super_heros_quartier_general",
@@ -914,7 +1999,42 @@
      "detail": "Des tapis moelleux et des cibles en mousse pour s'exercer."
     }
    ],
-   "roles": "Chef de la base, Inventeur farfelu, Super-héros en mission, Robot assistant gentil, Cuisinier des goûters, Gardien de la porte secrète, Standardiste des appels d'urgence, Stagiaire super-héros, Docteur des bobos rigolos"
+   "roles": "Chef de la base, Inventeur farfelu, Super-héros en mission, Robot assistant gentil, Cuisinier des goûters, Gardien de la porte secrète, Standardiste des appels d'urgence, Stagiaire super-héros, Docteur des bobos rigolos",
+   "figurants": [
+    {
+     "id": "qg_gaspard_inventeur",
+     "nom": "Gaspard, l'inventeur farfelu",
+     "type": "aide",
+     "archetype": "debrouillard",
+     "animal": "Souris",
+     "veut": "Démêler le grand nœud de câbles, et prouver que ses inventions marchent.",
+     "vient_de": "Il bricole au fond du garage des véhicules, entre deux voitures-fusées.",
+     "sait": "Il a un aimant géant qui attire tous les ressorts et tous les bouts de métal.",
+     "mode": "figurant"
+    },
+    {
+     "id": "qg_nina_standardiste",
+     "nom": "Nina, la standardiste",
+     "type": "temoin",
+     "archetype": "alarmiste",
+     "animal": "Coq",
+     "veut": "Qu'on la croie : le robot assistant raconte des blagues depuis ce matin.",
+     "vient_de": "Elle répond aux appels d'urgence de toute la ville, casque sur les oreilles.",
+     "sait": "Cette nuit, elle a entendu de petits rebonds métalliques dans les tuyaux de la base.",
+     "mode": "figurant"
+    },
+    {
+     "id": "qg_hugo_stagiaire",
+     "nom": "Hugo, le stagiaire super-héros",
+     "type": "victime",
+     "archetype": "prophete",
+     "animal": "Paon",
+     "veut": "Partir en vraie mission, et que toute la base le remarque.",
+     "vient_de": "Il vient d'arriver au QG, avec une cape encore trop grande pour lui.",
+     "sait": "Il connaît tous les boutons du tube de téléportation, même ceux qu'il ne faut pas toucher.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "pirates_ile_tresor",
@@ -943,7 +2063,42 @@
      "detail": "Un pont amusant qui se balance au-dessus d'un ruisseau."
     }
    ],
-   "roles": "Capitaine pirate gentil, Moussaillon courageux, Perroquet bavard, Cuisinier du bateau, Chercheuse de trésor, Vieux marin conteur, Cartographe de l'équipage, Vigie dans le nid de pie, Habitant de l'île accueillant"
+   "roles": "Capitaine pirate gentil, Moussaillon courageux, Perroquet bavard, Cuisinier du bateau, Chercheuse de trésor, Vieux marin conteur, Cartographe de l'équipage, Vigie dans le nid de pie, Habitant de l'île accueillant",
+   "figurants": [
+    {
+     "id": "ile_mira_cartographe",
+     "nom": "Mira, la cartographe",
+     "type": "aide",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Fourmi",
+     "veut": "Que la vraie carte soit rendue à tout l'équipage.",
+     "vient_de": "Elle dessine les cartes de l'île depuis son tout premier voyage.",
+     "sait": "Elle sait lire la carte gravée sur le grand palmier : celle-là, personne ne peut la déplacer.",
+     "mode": "figurant"
+    },
+    {
+     "id": "ile_anatole_conteur",
+     "nom": "Anatole, le vieux marin conteur",
+     "type": "commere",
+     "archetype": "prophete",
+     "animal": "Corbeau",
+     "veut": "Raconter ses histoires de trésor à qui veut bien s'asseoir près de lui.",
+     "vient_de": "Il a vogué sur toutes les mers avant de poser son sac sur la plage aux coquillages.",
+     "sait": "Il raconte qu'un capitaine ronchon dort chaque nuit sur un tas de coquillages.",
+     "mode": "figurant"
+    },
+    {
+     "id": "ile_kalani_habitante",
+     "nom": "Kalani, l'habitante de l'île",
+     "type": "innocent",
+     "archetype": "protecteur",
+     "animal": "Ours",
+     "veut": "Que le trésor de l'île serve à tout le monde, même au capitaine ronchon.",
+     "vient_de": "Elle est née sur l'île et veille sur la cascade d'eau douce.",
+     "sait": "Elle connaît le chemin de la grotte scintillante, derrière la cascade.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "pirates_bateau",
@@ -972,7 +2127,42 @@
      "detail": "Une grande roue en bois pour diriger le bateau où l'on veut."
     }
    ],
-   "roles": "Capitaine du navire, Timonier au gouvernail, Mousse plein d'énergie, Cuisinier joyeux, Perroquet farceur, Musicien de l'équipage, Matelot grimpeur, Chercheuse d'îles, Vieux loup de mer sympathique"
+   "roles": "Capitaine du navire, Timonier au gouvernail, Mousse plein d'énergie, Cuisinier joyeux, Perroquet farceur, Musicien de l'équipage, Matelot grimpeur, Chercheuse d'îles, Vieux loup de mer sympathique",
+   "figurants": [
+    {
+     "id": "bateau_bertille_cuisiniere",
+     "nom": "Bertille, la cuisinière",
+     "type": "aide",
+     "archetype": "aidant",
+     "animal": "Chien",
+     "veut": "Que l'équipage mange ses biscuits, et que tout le monde chante à table.",
+     "vient_de": "Elle tient la cale aux provisions depuis le premier jour du voyage.",
+     "sait": "Il manque des biscuits dans la cale, et des miettes montent tout en haut du mât.",
+     "mode": "figurant"
+    },
+    {
+     "id": "bateau_marius_timonier",
+     "nom": "Marius, le timonier",
+     "type": "temoin",
+     "archetype": "solitaire",
+     "animal": "Cerf",
+     "veut": "Qu'on le croie : la barre a tourné toute seule pendant qu'il éternuait.",
+     "vient_de": "Il tient le gouvernail depuis vingt ans et connaît chaque vague par son prénom.",
+     "sait": "Une voix lui a crié de tourner à gauche, mais ce n'était pas celle du capitaine.",
+     "mode": "figurant"
+    },
+    {
+     "id": "bateau_lili_grimpeuse",
+     "nom": "Lili, la matelote grimpeuse",
+     "type": "victime",
+     "archetype": "leader",
+     "animal": "Aigle",
+     "veut": "Grimper tout en haut du mât, le plus vite possible, sans attendre personne.",
+     "vient_de": "Elle a appris à grimper aux cordages avant de savoir marcher.",
+     "sait": "Tout là-haut, elle voit le pont entier, et les cachettes du farceur.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "espace_rigolo_station",
@@ -1001,7 +2191,42 @@
      "detail": "Des petites fusées colorées prêtes à partir en balade."
     }
    ],
-   "roles": "Astronaute en chef, Astronaute débutant, Robot rigolo, Scientifique des étoiles, Cuisinier de l'espace, Pilote de fusée, Gardien de la station, Extraterrestre visiteur amical, Enfant explorateur"
+   "roles": "Astronaute en chef, Astronaute débutant, Robot rigolo, Scientifique des étoiles, Cuisinier de l'espace, Pilote de fusée, Gardien de la station, Extraterrestre visiteur amical, Enfant explorateur",
+   "figurants": [
+    {
+     "id": "station_stella_scientifique",
+     "nom": "Stella, la scientifique des étoiles",
+     "type": "aide",
+     "archetype": "debrouillard",
+     "animal": "Hibou",
+     "veut": "Rendre à chaque étoile sa vraie couleur avant le passage des comètes.",
+     "vient_de": "Elle observe le ciel par le hublot géant depuis l'ouverture de la station.",
+     "sait": "Elle a calculé que la peinture rose vient d'une machine cachée au laboratoire des bulles.",
+     "mode": "figurant"
+    },
+    {
+     "id": "station_gustave_astronaute",
+     "nom": "Gustave, l'astronaute en chef",
+     "type": "officiel",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Fourmi",
+     "veut": "Que chacun suive le règlement de bord, même la tête en bas.",
+     "vient_de": "Il commande la station depuis trois tours de lune, une liste à la main.",
+     "sait": "Lui seul a la clé du garage des fusées et de la salle sans gravité.",
+     "mode": "figurant"
+    },
+    {
+     "id": "station_plop_visiteur",
+     "nom": "Plop, l'extraterrestre visiteur",
+     "type": "innocent",
+     "archetype": "aidant",
+     "animal": "Mouton",
+     "veut": "Que tout le monde se fasse des amis, même le savant aux trois antennes.",
+     "vient_de": "Il arrive d'une petite planète voisine, pour sa toute première visite.",
+     "sait": "Il sait que le Professeur cache, sous sa peinture, une jolie couleur bien à lui.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "espace_rigolo_planete_bonbon",
@@ -1030,7 +2255,42 @@
      "detail": "De petites maisons en pain d'épices habitées par des lutins."
     }
    ],
-   "roles": "Explorateur de l'espace, Extraterrestre gourmand gentil, Lutin en pain d'épices, Scientifique du goût, Astronaute cuisinier, Guide de la planète, Fabricant de bonbons, Robot goûteur, Enfant curieux"
+   "roles": "Explorateur de l'espace, Extraterrestre gourmand gentil, Lutin en pain d'épices, Scientifique du goût, Astronaute cuisinier, Guide de la planète, Fabricant de bonbons, Robot goûteur, Enfant curieux",
+   "figurants": [
+    {
+     "id": "planete_anis_guide",
+     "nom": "Anis, la guide de la planète",
+     "type": "aide",
+     "archetype": "leader",
+     "animal": "Aigle",
+     "veut": "Montrer aux visiteurs les plus beaux coins de sa planète.",
+     "vient_de": "Elle connaît chaque colline de guimauve depuis qu'elle sait rebondir.",
+     "sait": "Un passage sous le pont en biscuit mène tout droit au château collant.",
+     "mode": "figurant"
+    },
+    {
+     "id": "planete_gingembre_lutin",
+     "nom": "Gingembre, le lutin en pain d'épices",
+     "type": "commere",
+     "archetype": "cynique",
+     "animal": "Singe",
+     "veut": "Chuchoter les nouvelles du village avant tout le monde.",
+     "vient_de": "Il habite la plus petite maison du village en pain d'épices.",
+     "sait": "On dit que la Reine pleure en secret, parce que personne ne vient goûter chez elle.",
+     "mode": "figurant"
+    },
+    {
+     "id": "planete_praline_scientifique",
+     "nom": "Praline, la scientifique du goût",
+     "type": "sceptique",
+     "archetype": "denegateur",
+     "animal": "Âne",
+     "veut": "Une explication scientifique pour chaque bonbon qui disparaît.",
+     "vient_de": "Elle goûte et note tous les bonbons de la galaxie dans un gros carnet.",
+     "sait": "Son carnet le prouve : le geyser de limonade ne s'est jamais bouché tout seul.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "monde_magique_foret",
@@ -1059,7 +2319,42 @@
      "detail": "Un champignon rose assez grand pour s'abriter dessous quand il pleut des paillettes."
     }
    ],
-   "roles": "petite fée espiègle, hibou conteur, lutin jardinier, écureuil facteur, sorcière apprentie, arbre grand-père, luciole guide, hérisson musicien"
+   "roles": "petite fée espiègle, hibou conteur, lutin jardinier, écureuil facteur, sorcière apprentie, arbre grand-père, luciole guide, hérisson musicien",
+   "figurants": [
+    {
+     "id": "foret_lumi_luciole",
+     "nom": "Lumi, la luciole guide",
+     "type": "aide",
+     "archetype": "leader",
+     "animal": "Lion",
+     "veut": "Ramener chaque promeneur perdu jusqu'à la clairière.",
+     "vient_de": "Elle danse depuis toujours avec ses sœurs dans la clairière des lucioles.",
+     "sait": "Sa lumière perce le brouillard, mais seulement quand on chante avec elle.",
+     "mode": "figurant"
+    },
+    {
+     "id": "foret_fanfreluche_fee",
+     "nom": "Fanfreluche, la petite fée espiègle",
+     "type": "commere",
+     "archetype": "alarmiste",
+     "animal": "Coq",
+     "veut": "Connaître tous les secrets de la forêt, et les chuchoter aux arbres bavards.",
+     "vient_de": "Elle vole de champignon en champignon, et ne tient jamais en place.",
+     "sait": "Elle a vu un nuage gris bouder tout seul derrière le champignon géant.",
+     "mode": "figurant"
+    },
+    {
+     "id": "foret_mirabelle_sorciere",
+     "nom": "Mirabelle, la sorcière apprentie",
+     "type": "victime",
+     "archetype": "debrouillard",
+     "animal": "Souris",
+     "veut": "Réussir son premier sort toute seule, sans demander d'aide.",
+     "vient_de": "Elle apprend la magie dans la cabane douillette derrière l'arbre-porte.",
+     "sait": "Elle connaît une formule qui rend les couleurs, mais la prononce toujours de travers.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "monde_magique_chateau",
@@ -1088,7 +2383,42 @@
      "detail": "Une grande pièce remplie de coussins nuages pour sauter partout."
     }
    ],
-   "roles": "prince rêveur, cuisinière d'étoiles, gardien des cloches, fée du beau temps, chat volant, jardinier des nuages, apprenti magicien, princesse inventrice"
+   "roles": "prince rêveur, cuisinière d'étoiles, gardien des cloches, fée du beau temps, chat volant, jardinier des nuages, apprenti magicien, princesse inventrice",
+   "figurants": [
+    {
+     "id": "nuages_celeste_cuisiniere",
+     "nom": "Céleste, la cuisinière d'étoiles",
+     "type": "aide",
+     "archetype": "aidant",
+     "animal": "Chien",
+     "veut": "Que chaque dormeur du château ait son joli rêve, ce soir.",
+     "vient_de": "Elle mélange étoiles et sucre dans la cuisine à rêves depuis toujours.",
+     "sait": "Elle connaît la recette d'un rêve tout neuf, pour quelqu'un qui n'en fait plus.",
+     "mode": "figurant"
+    },
+    {
+     "id": "nuages_carillon_sonneur",
+     "nom": "Carillon, le sonneur de cloches",
+     "type": "temoin",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Fourmi",
+     "veut": "Qu'on le croie : un filet fait ploc-ploc dans les couloirs chaque nuit.",
+     "vient_de": "Il sonne les cloches de la tour à chaque coup de vent, depuis des années.",
+     "sait": "Du haut de la tour, il a vu un magicien remplir des bocaux de lumière.",
+     "mode": "figurant"
+    },
+    {
+     "id": "nuages_anselme_prince",
+     "nom": "Anselme, le prince rêveur",
+     "type": "victime",
+     "archetype": "solitaire",
+     "animal": "Cerf",
+     "veut": "Dormir et rêver tranquille, même si on lui dit de se cacher.",
+     "vient_de": "Il fait les plus beaux rêves du château, dans la salle des coussins.",
+     "sait": "Depuis quelques nuits, ses rêves s'arrêtent au milieu, comme si on les lui prenait.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "sous_la_mer_recif",
@@ -1117,7 +2447,42 @@
      "detail": "Un coin tout doux où les tortues font la sieste au soleil filtré."
     }
    ],
-   "roles": "petit poisson curieux, tortue sage, hippocampe messager, pieuvre bricoleuse, crabe rigolo, étoile de mer danseuse, dauphin acrobate, méduse lumineuse"
+   "roles": "petit poisson curieux, tortue sage, hippocampe messager, pieuvre bricoleuse, crabe rigolo, étoile de mer danseuse, dauphin acrobate, méduse lumineuse",
+   "figurants": [
+    {
+     "id": "recif_lila_hippocampe",
+     "nom": "Lila, l'hippocampe messagère",
+     "type": "aide",
+     "archetype": "aidant",
+     "animal": "Chien",
+     "veut": "Porter les messages du récif plus vite que l'encre ne s'étale.",
+     "vient_de": "Elle file entre les coraux depuis toute petite, une sacoche d'algue au cou.",
+     "sait": "Dans le jardin d'algues, l'eau reste claire, même quand l'encre envahit tout.",
+     "mode": "figurant"
+    },
+    {
+     "id": "recif_gabin_poisson",
+     "nom": "Gabin, le petit poisson curieux",
+     "type": "curieux",
+     "archetype": "paranoiaque",
+     "animal": "Lapin",
+     "veut": "Tout voir, tout savoir, et suivre les grands dans leur aventure.",
+     "vient_de": "Il est né dans la grotte à bulles et fourre son nez partout.",
+     "sait": "Il a suivi une traînée violette jusqu'à une grotte pleine de pots de peinture.",
+     "mode": "figurant"
+    },
+    {
+     "id": "recif_albertine_tortue",
+     "nom": "Albertine, la tortue sage",
+     "type": "victime",
+     "archetype": "denegateur",
+     "animal": "Porc",
+     "veut": "Finir sa sieste au soleil, sans qu'on la dérange pour une goutte de couleur.",
+     "vient_de": "Elle fait la sieste sur le banc de sable doré depuis cent printemps.",
+     "sait": "Elle se souvient du temps où Splotch peignait avec tous les poissons du récif.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "sous_la_mer_epave",
@@ -1146,7 +2511,42 @@
      "detail": "Le dessus du bateau couvert de coquillages qui brillent la nuit."
     }
    ],
-   "roles": "capitaine poisson-lune, moussaillon crevette, cartographe seiche, plongeur bernard-l'ermite, anguille farceuse, homard gardien, raie planeuse, poisson-clown guide"
+   "roles": "capitaine poisson-lune, moussaillon crevette, cartographe seiche, plongeur bernard-l'ermite, anguille farceuse, homard gardien, raie planeuse, poisson-clown guide",
+   "figurants": [
+    {
+     "id": "epave_clovis_guide",
+     "nom": "Clovis, le poisson-clown guide",
+     "type": "aide",
+     "archetype": "leader",
+     "animal": "Lion",
+     "veut": "Faire visiter l'épave, et que chacun retrouve sa cabine.",
+     "vient_de": "Il a grandi dans la cabine trésor, entre deux perles brillantes.",
+     "sait": "Il connaît un coin de la soute aux échos où le courant ne passe jamais.",
+     "mode": "figurant"
+    },
+    {
+     "id": "epave_hector_portier",
+     "nom": "Hector, le homard portier",
+     "type": "officiel",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Taureau",
+     "veut": "Que chaque coquillage reste à sa place, bien trié, bien rangé.",
+     "vient_de": "Il surveille le pont aux coquillages depuis que l'épave s'est posée au fond.",
+     "sait": "Il a compté : chaque matin, les coquillages triés ont fait un tour complet.",
+     "mode": "figurant"
+    },
+    {
+     "id": "epave_pepin_bernard",
+     "nom": "Pépin, le bernard-l'ermite",
+     "type": "victime",
+     "archetype": "alarmiste",
+     "animal": "Rat",
+     "veut": "Trouver une nouvelle coquille-maison, et s'y installer avant la nuit.",
+     "vient_de": "Il change de coquille chaque saison et vient d'arriver dans l'épave.",
+     "sait": "Sa coquille a déjà été emportée deux fois par un petit remous qui rigole.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "chevaliers_dragons_chateau",
@@ -1175,7 +2575,42 @@
      "detail": "Une salle avec un trône si moelleux qu'il rebondit quand on s'assoit."
     }
    ],
-   "roles": "jeune chevalier maladroit, reine souriante, écuyer courageux, cuisinier farceur, ménestrel chanteur, garde rigolo, dame jardinière, page curieux"
+   "roles": "jeune chevalier maladroit, reine souriante, écuyer courageux, cuisinier farceur, ménestrel chanteur, garde rigolo, dame jardinière, page curieux",
+   "figurants": [
+    {
+     "id": "tournois_tristan_ecuyer",
+     "nom": "Tristan, l'écuyer courageux",
+     "type": "aide",
+     "archetype": "protecteur",
+     "animal": "Ours",
+     "veut": "Rejoindre l'équipe des héros, et porter leur bannière au tournoi.",
+     "vient_de": "Il soigne les poneys de l'écurie, et rêve de devenir chevalier.",
+     "sait": "Il a trouvé une plume rigolote dans la paille, juste à côté des trophées.",
+     "mode": "figurant"
+    },
+    {
+     "id": "tournois_felicien_menestrel",
+     "nom": "Félicien, le ménestrel",
+     "type": "commere",
+     "archetype": "prophete",
+     "animal": "Paon",
+     "veut": "Chanter la grande chanson du tournoi, avec tous les potins du château.",
+     "vient_de": "Il va de fête en fête avec son luth, et connaît toutes les chansons.",
+     "sait": "Il chante que Sire Chatouille n'a jamais perdu un jeu, et qu'il en a très peur.",
+     "mode": "figurant"
+    },
+    {
+     "id": "tournois_basile_chevalier",
+     "nom": "Basile, le jeune chevalier maladroit",
+     "type": "sceptique",
+     "archetype": "denegateur",
+     "animal": "Âne",
+     "veut": "Prouver qu'il tombe tout seul, et qu'il n'y a aucun farceur au château.",
+     "vient_de": "Il vient d'être nommé chevalier, avec une armure trop grande qui grince.",
+     "sait": "Il connaît chaque bosse de la cour des défis : il est tombé sur toutes.",
+     "mode": "figurant"
+    }
+   ]
   },
   {
    "id": "chevaliers_dragons_grotte",
@@ -1204,7 +2639,42 @@
      "detail": "Un dragon souffle une flammèche douce pour griller des guimauves."
     }
    ],
-   "roles": "dragon farceur, dragonne conteuse, bébé dragon curieux, chevalier ami des dragons, gardienne des cristaux, poney explorateur, écuyer cuisinier, oiseau messager"
+   "roles": "dragon farceur, dragonne conteuse, bébé dragon curieux, chevalier ami des dragons, gardienne des cristaux, poney explorateur, écuyer cuisinier, oiseau messager",
+   "figurants": [
+    {
+     "id": "grotte_armand_chevalier",
+     "nom": "Armand, le chevalier ami des dragons",
+     "type": "aide",
+     "archetype": "leader",
+     "animal": "Aigle",
+     "veut": "Soigner le rhume d'Éternue avant son grand atchoum.",
+     "vient_de": "Il a quitté le château des tournois pour vivre près des dragons qu'il aime.",
+     "sait": "La source tiède calme les nez qui piquent, si on y trempe un mouchoir.",
+     "mode": "figurant"
+    },
+    {
+     "id": "grotte_opale_veilleuse",
+     "nom": "Opale, la veilleuse des cristaux",
+     "type": "officiel",
+     "archetype": "gardien_de_l_ordre",
+     "animal": "Fourmi",
+     "veut": "Que personne ne touche aux cristaux, rhume ou pas rhume.",
+     "vient_de": "Elle astique le mur de cristaux chaque matin, depuis des années.",
+     "sait": "Elle a trouvé des cristaux renversés et des bulles de savon au pied du mur.",
+     "mode": "figurant"
+    },
+    {
+     "id": "grotte_pistache_bebe",
+     "nom": "Pistache, le bébé dragon curieux",
+     "type": "victime",
+     "archetype": "debrouillard",
+     "animal": "Souris",
+     "veut": "Jouer dans les bulles de savon, tout près du nez qui chatouille.",
+     "vient_de": "Il est sorti de son œuf la semaine dernière, dans le nid de coussins.",
+     "sait": "Il sait où Éternue cache son doudou, tout au fond du nid.",
+     "mode": "figurant"
+    }
+   ]
   }
  ]
 }

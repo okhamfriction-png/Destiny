@@ -1,0 +1,1476 @@
+{
+ "version": 1,
+ "note": "Les univers du jeu de rôle (Jouer entre humains). Les lieux et les méchants de chaque univers sont dans campagne_lieux.json et campagne_mechants.json.",
+ "univers": [
+  {
+   "id": "contemporain",
+   "nom": "Contemporain",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Breaking Bad",
+    "Peaky Blinders",
+    "The Wire",
+    "Les Soprano",
+    "Better Call Saul",
+    "Narcos",
+    "Gomorra",
+    "Succession",
+    "Le Parrain",
+    "Scarface"
+   ],
+   "peuples": [
+    "Civils",
+    "Policiers",
+    "Truands",
+    "Notables",
+    "Marginaux",
+    "Journalistes"
+   ],
+   "dangers": [
+    {
+     "id": "contemporain_une_video_de_nous_circule",
+     "nom": "Une vidéo de nous circule",
+     "paliers": {
+      "signale": "Un téléphone vibre, puis tous : une vidéo de nous tourne en ligne.",
+      "enferme": "Des curieux et des caméras bloquent l'entrée, sortir, c'est être filmé.",
+      "envahit": "Les commentaires déterrent nos secrets, on cherche qui a filmé, qui a parlé.",
+      "supprime": "Il faut un coupable : se dénoncer maintenant, ou voir tout le groupe exposé."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "contemporain_un_sac_d_argent_sale_traine",
+     "nom": "Un sac d'argent sale traîne",
+     "paliers": {
+      "signale": "Un sac lourd traîne dans un coin, personne ne sait à qui il est.",
+      "enferme": "Dedans, des liasses ; dehors, des hommes surveillent chaque sortie et attendent.",
+      "envahit": "Ils entrent, fouillent pièce par pièce, et la police n'est plus très loin.",
+      "supprime": "Rendre l'argent maintenant, ou laisser l'un de nous porter le chapeau pour tous."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "contemporain_l_immeuble_menace_de_s_effondrer",
+     "nom": "L'immeuble menace de s'effondrer",
+     "paliers": {
+      "signale": "Une fissure court au plafond, le syndic jure que ce n'est rien.",
+      "enferme": "Les portes coincent dans leurs cadres, l'escalier se fend, l'ascenseur se bloque.",
+      "envahit": "Le plâtre pleut, les murs gémissent, un étage s'affaisse sur l'autre.",
+      "supprime": "Ça s'écroule : sauter par la fenêtre maintenant, ou rester dégager un voisin coincé."
+     },
+     "kids": true,
+     "supprime_kids": "Ça penche : aider le voisin coincé, ou sortir vite en laissant tout derrière."
+    }
+   ]
+  },
+  {
+   "id": "policier",
+   "nom": "Policier",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Sherlock Holmes",
+    "True Detective",
+    "Columbo",
+    "Les Experts",
+    "Engrenages",
+    "Fargo",
+    "Seven",
+    "Mindhunter",
+    "Agatha Christie",
+    "Blake et Mortimer"
+   ],
+   "peuples": [
+    "Enquêteurs",
+    "Témoins",
+    "Suspects",
+    "Notables",
+    "Petites frappes",
+    "Légistes"
+   ],
+   "dangers": [
+    {
+     "id": "policier_une_piece_a_conviction_disparait",
+     "nom": "Une pièce à conviction disparaît",
+     "paliers": {
+      "signale": "Un scellé manque à l'inventaire, on parle d'une erreur de saisie.",
+      "enferme": "L'inspection boucle les lieux : personne ne sort avant d'avoir été entendu.",
+      "envahit": "Les auditions s'enchaînent, les versions se contredisent, chacun soupçonne son binôme.",
+      "supprime": "Il faut un coupable : désigner quelqu'un maintenant, ou couler tous pour complicité."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "policier_on_veut_faire_taire_le_temoin",
+     "nom": "On veut faire taire le témoin",
+     "paliers": {
+      "signale": "Un appel muet, une voiture qui passe deux fois au ralenti.",
+      "enferme": "Les lignes sont coupées, des hommes armés attendent dehors, on garde le témoin.",
+      "envahit": "Ils testent les entrées, une vitre éclate, le témoin veut fuir seul.",
+      "supprime": "Ils le réclament : le livrer maintenant, ou le garder au prix d'un des nôtres."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "policier_un_colis_piege_dans_les_murs",
+     "nom": "Un colis piégé dans les murs",
+     "paliers": {
+      "signale": "Un colis sans expéditeur attend sur un comptoir, on le pousse du pied.",
+      "enferme": "Un tic-tac, un fil qui dépasse : le moindre choc peut tout faire sauter.",
+      "envahit": "Un second engin est fixé sous une chaise, quelqu'un est assis dessus.",
+      "supprime": "Couper un fil au hasard maintenant, ou fuir en laissant celui qui est assis."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    }
+   ]
+  },
+  {
+   "id": "high_fantasy",
+   "nom": "High Fantasy",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Le Seigneur des Anneaux",
+    "Game of Thrones",
+    "The Witcher",
+    "Donjons & Dragons",
+    "Warhammer",
+    "Le Monde de Narnia",
+    "Elden Ring",
+    "Dragon Age",
+    "Kaamelott",
+    "Harry Potter"
+   ],
+   "peuples": [
+    "Humains",
+    "Elfes",
+    "Nains",
+    "Halfelins",
+    "Orcs",
+    "Gobelins",
+    "Fées"
+   ],
+   "dangers": [
+    {
+     "id": "high_fantasy_une_armee_nous_assiege",
+     "nom": "Une armée nous assiège",
+     "paliers": {
+      "signale": "Des feux s'allument dans la vallée, le guet parle de simples bergers.",
+      "enferme": "Une armée tient le seul passage, plus personne ne monte ni ne descend.",
+      "envahit": "Les vivres fondent, les échelles touchent les murs, les soldats doutent de leurs chefs.",
+      "supprime": "Ouvrir les portes maintenant et plier le genou, ou tenir en perdant les plus faibles."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "high_fantasy_un_sommeil_enchante_gagne_tout_le_monde",
+     "nom": "Un sommeil enchanté gagne tout le monde",
+     "paliers": {
+      "signale": "Une sentinelle bâille à son poste, une servante s'endort debout.",
+      "enferme": "Des ronces couvrent les portes, quiconque franchit le seuil s'endort aussitôt.",
+      "envahit": "Les dormeurs tombent un à un, on se pince pour garder les yeux ouverts.",
+      "supprime": "Briser le sort en offrant sa mémoire maintenant, ou dormir cent ans tous ensemble."
+     },
+     "kids": true,
+     "supprime_kids": "Le sommeil gagne : offrir son plus beau souvenir pour tous les réveiller, ou dormir ensemble."
+    },
+    {
+     "id": "high_fantasy_un_dragon_exige_son_tribut",
+     "nom": "Un dragon exige son tribut",
+     "paliers": {
+      "signale": "Une ombre immense passe au-dessus de nous, les bêtes se terrent.",
+      "enferme": "Le dragon se pose sur le seul passage, nul ne sort sans payer.",
+      "envahit": "Il embrase les alentours pour se faire entendre, l'or offert ne suffit plus.",
+      "supprime": "Il veut une vie, pas de l'or : la lui céder maintenant, ou affronter son feu."
+     },
+     "kids": true,
+     "supprime_kids": "Il veut un trésor : donner ce qu'on aime le plus, ou aller lui parler."
+    }
+   ]
+  },
+  {
+   "id": "shonen",
+   "nom": "Shonen",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Dragon Ball",
+    "Naruto",
+    "One Piece",
+    "Bleach",
+    "My Hero Academia",
+    "Demon Slayer",
+    "L'Attaque des Titans",
+    "Hunter x Hunter",
+    "Jujutsu Kaisen",
+    "Fairy Tail"
+   ],
+   "peuples": [
+    "Humains",
+    "Guerriers",
+    "Ninjas",
+    "Mages",
+    "Esprits",
+    "Démons",
+    "Créatures"
+   ],
+   "dangers": [
+    {
+     "id": "shonen_un_demon_scelle_se_libere",
+     "nom": "Un démon scellé se libère",
+     "paliers": {
+      "signale": "Les sceaux anciens noircissent, une voix rit sous le plancher.",
+      "enferme": "Une barrière d'énergie se referme sur le lieu, nul ne la traverse.",
+      "envahit": "Le démon saute de corps en corps, on frappe ses propres amis.",
+      "supprime": "Le sceller en soi maintenant et le porter à vie, ou le lâcher sur le monde."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "shonen_un_pouvoir_devient_incontrolable",
+     "nom": "Un pouvoir devient incontrôlable",
+     "paliers": {
+      "signale": "Un combattant a les yeux qui brillent, il jure que ça va.",
+      "enferme": "Son aura écrase la salle, les portes plient, plus personne ne bouge.",
+      "envahit": "Il ne reconnaît plus personne, chaque coup fait trembler les murs.",
+      "supprime": "L'assommer maintenant de toutes nos forces, ou lui parler au risque d'y rester."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "shonen_un_adversaire_invincible_nous_defie",
+     "nom": "Un adversaire invincible nous défie",
+     "paliers": {
+      "signale": "Un inconnu encapuchonné s'installe dans un coin, l'air vibre autour de lui.",
+      "enferme": "Il se poste devant la seule sortie et défie quiconque veut passer.",
+      "envahit": "Il bat nos meilleurs un par un, sans même transpirer.",
+      "supprime": "S'incliner maintenant devant lui, ou l'affronter ensemble et y laisser nos pouvoirs."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    }
+   ]
+  },
+  {
+   "id": "science_fiction",
+   "nom": "Science-Fiction",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Star Wars",
+    "Star Trek",
+    "Dune",
+    "Blade Runner",
+    "The Expanse",
+    "Fondation",
+    "Alien",
+    "Mass Effect",
+    "Interstellar",
+    "Matrix"
+   ],
+   "peuples": [
+    "Humains",
+    "Androïdes",
+    "Extraterrestres",
+    "Cyborgs",
+    "Clones",
+    "Mutants"
+   ],
+   "dangers": [
+    {
+     "id": "science_fiction_la_station_tombe_vers_la_planete",
+     "nom": "La station tombe vers la planète",
+     "paliers": {
+      "signale": "Par la baie, la planète semble un peu plus grande qu'hier.",
+      "enferme": "Les propulseurs ne répondent plus, les navettes refusent de se détacher.",
+      "envahit": "La coque chauffe en frôlant l'atmosphère, les coursives se tordent et sifflent.",
+      "supprime": "Larguer un module habité maintenant, ou tout perdre dans la chute."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "science_fiction_l_eau_vient_a_manquer",
+     "nom": "L'eau vient à manquer",
+     "paliers": {
+      "signale": "Le robinet crachote, le compteur affiche des litres qui n'existent pas.",
+      "enferme": "Les réservoirs se verrouillent, et dehors il n'y a que le vide.",
+      "envahit": "La soif fait trembler les mains, on cache ses gourdes, on se surveille.",
+      "supprime": "Il reste une ration : la boire maintenant, ou la donner au plus faible."
+     },
+     "kids": true,
+     "supprime_kids": "Il reste une gourde : la partager en petites gorgées, ou la garder pour soi."
+    },
+    {
+     "id": "science_fiction_l_un_de_nous_est_une_copie",
+     "nom": "L'un de nous est une copie",
+     "paliers": {
+      "signale": "Un ami oublie un souvenir qu'on partageait, il en rit, ça passe.",
+      "enferme": "Les sas se scellent : le système détecte à bord un intrus non humain.",
+      "envahit": "Chaque geste devient suspect, on se teste, on s'accuse, on s'isole.",
+      "supprime": "Éjecter le suspect par le sas maintenant, ou garder le doute et tout risquer."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    }
+   ]
+  },
+  {
+   "id": "dark_fantasy",
+   "nom": "Dark Fantasy",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "The Witcher",
+    "Berserk",
+    "Dark Souls",
+    "Bloodborne",
+    "Elden Ring",
+    "Warhammer",
+    "Game of Thrones",
+    "Castlevania",
+    "Diablo",
+    "Hellboy"
+   ],
+   "peuples": [
+    "Humains",
+    "Sorciers",
+    "Morts-vivants",
+    "Démons",
+    "Chasseurs",
+    "Maudits",
+    "Bêtes"
+   ],
+   "dangers": [
+    {
+     "id": "dark_fantasy_un_inquisiteur_cherche_un_coupable",
+     "nom": "Un inquisiteur cherche un coupable",
+     "paliers": {
+      "signale": "Un cavalier en noir demande qui a manqué la dernière messe.",
+      "enferme": "Il fait clouer les portes : personne ne part avant les aveux.",
+      "envahit": "Les dénonciations pleuvent, les proches se trahissent pour sauver leur peau.",
+      "supprime": "Il exige un aveu : en offrir un maintenant, ou être tous jugés pour hérésie."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "dark_fantasy_un_mort_revient_reclamer_justice",
+     "nom": "Un mort revient réclamer justice",
+     "paliers": {
+      "signale": "Des pas résonnent dans la salle vide, une chaise a changé de place.",
+      "enferme": "Une tombe s'ouvre, puis chaque porte se mure d'elle-même derrière nous.",
+      "envahit": "Il hante chaque recoin, glace les souffles, il veut le nom de son assassin.",
+      "supprime": "Lui livrer le coupable maintenant, ou qu'il emporte l'un de nous à sa place."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "dark_fantasy_une_lune_de_sang_se_leve",
+     "nom": "Une lune de sang se lève",
+     "paliers": {
+      "signale": "La lune rougit, les cloches sonnent seules, on rit un peu trop fort.",
+      "enferme": "Les verrous tombent, les volets se bloquent : nul ne sort sous cette lune.",
+      "envahit": "L'un des nôtres brûle de fièvre, ses ongles noircissent, la bête monte en lui.",
+      "supprime": "L'enchaîner maintenant malgré ses suppliques, ou risquer qu'il nous attaque avant l'aube."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    }
+   ]
+  },
+  {
+   "id": "cyberpunk",
+   "nom": "Cyberpunk",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Cyberpunk 2077",
+    "Blade Runner",
+    "Ghost in the Shell",
+    "Deus Ex",
+    "Akira",
+    "Neuromancer",
+    "Matrix",
+    "Altered Carbon",
+    "Shadowrun",
+    "Watch Dogs"
+   ],
+   "peuples": [
+    "Humains",
+    "Cyborgs",
+    "Hackers",
+    "Corpos",
+    "Androïdes",
+    "Gangs des rues"
+   ],
+   "dangers": [
+    {
+     "id": "cyberpunk_un_virus_pirate_nos_implants",
+     "nom": "Un virus pirate nos implants",
+     "paliers": {
+      "signale": "Un œil artificiel affiche une pub jamais demandée, puis l'image saute.",
+      "enferme": "Le virus fige nos jambes greffées dès qu'on approche d'une sortie.",
+      "envahit": "Les bras greffés frappent seuls, de fausses voix parlent dans nos têtes.",
+      "supprime": "Couper l'implant maintenant et perdre ce qu'il nous rendait, ou rester une marionnette."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "cyberpunk_une_equipe_de_nettoyage_monte",
+     "nom": "Une équipe de nettoyage monte",
+     "paliers": {
+      "signale": "Les badges sont refusés un à un, le réseau saute, on râle.",
+      "enferme": "Une voix douce annonce un confinement, tous les accès se verrouillent.",
+      "envahit": "Des agents en armure ratissent chaque pièce, scanners braqués sur les visages.",
+      "supprime": "Livrer le voleur maintenant, ou être tous effacés avec lui."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "cyberpunk_nos_identites_sont_effacees_du_reseau",
+     "nom": "Nos identités sont effacées du réseau",
+     "paliers": {
+      "signale": "Un paiement est refusé, l'écran affiche « utilisateur inconnu », on relance.",
+      "enferme": "Sans identité, aucune porte ne s'ouvre, ni pour sortir ni pour appeler.",
+      "envahit": "Nos visages ressortent sous d'autres noms, recherchés pour des crimes jamais commis.",
+      "supprime": "Payer une identité neuve de ses souvenirs maintenant, ou rester un fantôme traqué."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    }
+   ]
+  },
+  {
+   "id": "horreur",
+   "nom": "Horreur",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Lovecraft",
+    "Stranger Things",
+    "The Thing",
+    "Alien",
+    "Silent Hill",
+    "Resident Evil",
+    "Ça (It)",
+    "Scream",
+    "The Walking Dead",
+    "Conjuring"
+   ],
+   "peuples": [
+    "Survivants",
+    "Villageois",
+    "Possédés",
+    "Monstres",
+    "Cultistes",
+    "Fantômes"
+   ],
+   "dangers": [
+    {
+     "id": "horreur_nos_noms_s_ecrivent_dans_le_registre",
+     "nom": "Nos noms s'écrivent dans le registre",
+     "paliers": {
+      "signale": "Un vieux registre traîne ouvert, l'un de nos noms y figure, sûrement une farce.",
+      "enferme": "L'inscrit ne passe plus les portes, on refuse de le laisser seul.",
+      "envahit": "D'autres noms s'ajoutent, chaque inscrit pâlit et s'efface, on se soupçonne d'écrire.",
+      "supprime": "Une ligne reste vide : y écrire l'un de nous, ou que tous y passent."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "horreur_les_disparus_nous_appellent",
+     "nom": "Les disparus nous appellent",
+     "paliers": {
+      "signale": "Une voix aimée et disparue appelle à l'étage, on accuse le vent.",
+      "enferme": "Chaque porte mène vers la voix, plus aucune vers la sortie.",
+      "envahit": "Chacun entend un proche différent, l'un de nous le suit et ne revient pas.",
+      "supprime": "La silhouette tend la main : la suivre pour ramener l'absent, ou le perdre à jamais."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "horreur_l_un_de_nous_n_est_plus_lui_meme",
+     "nom": "L'un de nous n'est plus lui-même",
+     "paliers": {
+      "signale": "L'un de nous a un regard vide, une voix changée, on accuse la fatigue.",
+      "enferme": "Il cache les clés, ferme derrière nous, et jure qu'il n'a rien fait.",
+      "envahit": "Il sait des secrets qu'il ne peut savoir, puis un deuxième d'entre nous change.",
+      "supprime": "La chose doit changer d'hôte : prendre sa place, ou perdre l'ami pour toujours."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    }
+   ]
+  },
+  {
+   "id": "post_apo",
+   "nom": "Post-apocalyptique",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Mad Max",
+    "Fallout",
+    "The Last of Us",
+    "The Walking Dead",
+    "Metro",
+    "La Route",
+    "Snowpiercer",
+    "Le Livre d'Eli",
+    "Je suis une légende",
+    "Waterworld"
+   ],
+   "peuples": [
+    "Survivants",
+    "Pillards",
+    "Mutants",
+    "Charognards",
+    "Colons",
+    "Nomades"
+   ],
+   "dangers": [
+    {
+     "id": "post_apo_l_eau_potable_se_tarit",
+     "nom": "L'eau potable se tarit",
+     "paliers": {
+      "signale": "La réserve d'eau baisse plus vite que prévu, on accuse une erreur de compte.",
+      "enferme": "Partir sans eau, c'est mourir dehors : on reste, on compte les gorgées.",
+      "envahit": "Les lèvres se fendent, on se surveille, quelqu'un boit en cachette.",
+      "supprime": "Un dernier bidon : l'emporter pour chercher une source, ou le laisser aux plus faibles."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "post_apo_les_pillards_exigent_leur_tribut",
+     "nom": "Les pillards exigent leur tribut",
+     "paliers": {
+      "signale": "Un message tagué sur la porte réclame un tribut, on hausse les épaules.",
+      "enferme": "Des guetteurs tiennent toutes les issues, personne ne sort sans payer.",
+      "envahit": "Le prix double à chaque heure, ils prennent les vivres, puis réclament quelqu'un.",
+      "supprime": "Ils veulent l'un de nous : le livrer maintenant, ou perdre tout ce qu'on a."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "post_apo_le_generateur_rend_l_ame",
+     "nom": "Le générateur rend l'âme",
+     "paliers": {
+      "signale": "Le générateur tousse, la lumière clignote, un coup de clé et ça repart.",
+      "enferme": "Il cale pour de bon, sans lui on ne bouge plus d'ici.",
+      "envahit": "Le froid et le noir gagnent, une pièce manque, et quelqu'un l'a retirée.",
+      "supprime": "Une pièce de rechange : démonter le filtre à air, ou rester dans le froid."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    }
+   ]
+  },
+  {
+   "id": "steampunk",
+   "nom": "Steampunk",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Arcane",
+    "Bioshock",
+    "Dishonored",
+    "Le Château ambulant",
+    "Les Mystérieuses Cités d'or",
+    "20000 lieues sous les mers",
+    "Wild Wild West",
+    "Sherlock Holmes (Guy Ritchie)",
+    "Fullmetal Alchemist",
+    "Girl Genius"
+   ],
+   "peuples": [
+    "Humains",
+    "Ingénieurs",
+    "Aristocrates",
+    "Automates",
+    "Aviateurs",
+    "Bas-fonds"
+   ],
+   "dangers": [
+    {
+     "id": "steampunk_les_horloges_sonnent_la_meme_heure",
+     "nom": "Les horloges sonnent la même heure",
+     "paliers": {
+      "signale": "Toutes les horloges sonnent midi deux fois, on rit d'un ressort fatigué.",
+      "enferme": "Qui franchit la porte revient au même instant, au premier coup de midi.",
+      "envahit": "Midi revient de plus en plus vite, les rouages grincent, nos souvenirs se mélangent.",
+      "supprime": "Quelqu'un doit bloquer le balancier et rester en arrière, ou tout recommence sans fin."
+     },
+     "kids": true,
+     "supprime_kids": "Bloquer le balancier avec son trésor, ou revivre encore la même heure."
+    },
+    {
+     "id": "steampunk_les_conduites_de_vapeur_eclatent",
+     "nom": "Les conduites de vapeur éclatent",
+     "paliers": {
+      "signale": "Un tuyau siffle, une goutte brûlante tombe, on resserre un boulon et on oublie.",
+      "enferme": "Une conduite cède devant la sortie, un mur de vapeur barre le passage.",
+      "envahit": "Les tuyaux éclatent en chaîne, la vapeur brûle la peau, on rampe sous le nuage.",
+      "supprime": "Fermer la vanne dans le nuage au prix de ses mains, ou perdre tout l'étage."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "steampunk_les_tubes_livrent_nos_secrets",
+     "nom": "Les tubes livrent nos secrets",
+     "paliers": {
+      "signale": "Une capsule pneumatique arrive avec un petit secret de l'un de nous, on en rit.",
+      "enferme": "Nouvelle capsule : qui sort voit son secret affiché dans toute la ville.",
+      "envahit": "Les capsules pleuvent, chaque secret plus lourd, les amitiés craquent comme du verre.",
+      "supprime": "Dernière capsule : trahir le secret d'un ami, ou voir tous les nôtres publiés."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    }
+   ]
+  },
+  {
+   "id": "super_heros",
+   "nom": "Super-héros",
+   "adulte": true,
+   "kids": true,
+   "lores": [
+    "Marvel (Avengers)",
+    "DC (Justice League)",
+    "Spider-Man",
+    "Batman",
+    "X-Men",
+    "The Boys",
+    "Invincible",
+    "Watchmen",
+    "Hellboy",
+    "My Hero Academia"
+   ],
+   "peuples": [
+    "Humains",
+    "Super-héros",
+    "Super-vilains",
+    "Mutants",
+    "Extraterrestres",
+    "Androïdes"
+   ],
+   "dangers": [
+    {
+     "id": "super_heros_les_pouvoirs_changent_de_heros",
+     "nom": "Les super-pouvoirs changent de héros",
+     "paliers": {
+      "signale": "Un héros veut voler et fait pousser des fleurs, on croit à une blague.",
+      "enferme": "Celui qui ouvrait les portes a perdu son pouvoir, tout reste fermé.",
+      "envahit": "Les pouvoirs sautent d'un héros à l'autre à chaque éternuement, c'est le grand bazar.",
+      "supprime": "Pour remettre chaque pouvoir à sa place : renoncer au sien maintenant, ou garder le bazar."
+     },
+     "kids": true,
+     "supprime_kids": "Un héros peut tout remettre en place : prêter son pouvoir un épisode, ou garder le mélange."
+    },
+    {
+     "id": "super_heros_un_rayon_fait_tout_retrecir",
+     "nom": "Un rayon fait tout rétrécir",
+     "paliers": {
+      "signale": "Une tasse a rapetissé sur la table, on croit à une farce.",
+      "enferme": "On rétrécit à notre tour, la poignée de la porte est tout là-haut.",
+      "envahit": "On est minuscules, une miette est un rocher, une goutte devient un lac.",
+      "supprime": "Pour inverser le rayon : y verser son pouvoir maintenant, ou rester minuscules."
+     },
+     "kids": true,
+     "supprime_kids": "Le rayon n'en fait grandir qu'un : qui ouvre aux autres, qui reste petit un moment."
+    },
+    {
+     "id": "super_heros_les_heros_oublient_qui_ils_sont",
+     "nom": "Les héros oublient qui ils sont",
+     "paliers": {
+      "signale": "Un héros oublie son nom de code, on se moque gentiment de lui.",
+      "enferme": "Plus personne ne se souvient du code de la porte, on reste dedans.",
+      "envahit": "On oublie ses pouvoirs, ses amis, on se demande qui est qui.",
+      "supprime": "Pour retrouver la mémoire : effacer son plus beau souvenir maintenant, ou oublier tout le reste."
+     },
+     "kids": true,
+     "supprime_kids": "Pour se souvenir : oublier son plus beau souvenir de héros, ou rester tout embrouillés un moment."
+    }
+   ]
+  },
+  {
+   "id": "historique",
+   "nom": "Historique",
+   "adulte": true,
+   "kids": false,
+   "lores": [
+    "Rome",
+    "Vikings",
+    "Gladiator",
+    "Kingdom",
+    "Braveheart",
+    "Assassin's Creed",
+    "Napoléon",
+    "Les Trois Mousquetaires",
+    "Peaky Blinders",
+    "Versailles"
+   ],
+   "peuples": [
+    "Roturiers",
+    "Nobles",
+    "Soldats",
+    "Marchands",
+    "Clergé",
+    "Artisans",
+    "Hors-la-loi"
+   ],
+   "dangers": [
+    {
+     "id": "historique_le_poison_est_servi",
+     "nom": "Le poison est servi",
+     "paliers": {
+      "signale": "Un convive pâlit après un verre, on accuse le vin trop fort.",
+      "enferme": "On verrouille les portes, personne ne quitte la salle avant qu'on trouve le coupable.",
+      "envahit": "Un deuxième convive s'effondre, on ne touche plus à rien, chacun soupçonne son voisin.",
+      "supprime": "L'empoisonneur offre l'antidote contre sa fuite : le laisser filer, ou perdre les malades."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "historique_une_lettre_de_cachet_nous_vise",
+     "nom": "Une lettre de cachet nous vise",
+     "paliers": {
+      "signale": "Un exempt du Roi rôde, une lettre scellée à la main, on détourne les yeux.",
+      "enferme": "Ses gardes tiennent les portes : nul ne sort avant qu'il ait trouvé son homme.",
+      "envahit": "Le nom reste caché, chacun se croit visé, les dénonciations commencent.",
+      "supprime": "Le nom tombe : le livrer à l'exempt maintenant, ou partir tous au cachot."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    },
+    {
+     "id": "historique_de_la_poudre_sous_nos_pieds",
+     "nom": "De la poudre sous nos pieds",
+     "paliers": {
+      "signale": "Des grains noirs crissent sous les semelles, on pense à du charbon.",
+      "enferme": "Des barils sont empilés contre la sortie, la porte est clouée du dehors.",
+      "envahit": "Une mèche grésille quelque part, la fumée brouille tout, on fouille à tâtons.",
+      "supprime": "Quelques pouces de mèche : l'arracher au péril de sa vie, ou tout perdre."
+     },
+     "kids": false,
+     "supprime_kids": ""
+    }
+   ]
+  },
+  {
+   "id": "conte_fees",
+   "nom": "Conte de fées",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "La Belle au bois dormant",
+    "Cendrillon",
+    "Blanche-Neige",
+    "Raiponce",
+    "La Reine des Neiges",
+    "Shrek",
+    "Les frères Grimm",
+    "Andersen",
+    "La Belle et la Bête",
+    "Peter Pan"
+   ],
+   "peuples": [
+    "Humains",
+    "Fées",
+    "Princes et princesses",
+    "Lutins",
+    "Ogres",
+    "Sorcières",
+    "Animaux enchantés"
+   ],
+   "dangers": [
+    {
+     "id": "conte_fees_un_sommeil_enchante_gagne_tout_le_monde",
+     "nom": "Un sommeil enchanté gagne tout le monde",
+     "paliers": {
+      "signale": "On bâille l'un après l'autre, sûrement l'heure de la sieste.",
+      "enferme": "Des ronces en fleurs ferment les portes et le chemin, on ne sort plus.",
+      "envahit": "Les amis s'endorment un à un, il faut chanter fort pour garder les yeux ouverts.",
+      "supprime": "Le sort réclame un cadeau : son plus beau rêve maintenant, ou dormir jusqu'au printemps."
+     },
+     "kids": true,
+     "supprime_kids": "Pour réveiller les amis : avouer son secret tout bas, ou veiller seul jusqu'au matin."
+    },
+    {
+     "id": "conte_fees_un_sort_change_tout_en_guimauve",
+     "nom": "Un sort change tout en guimauve",
+     "paliers": {
+      "signale": "Une cuillère devient guimauve dans une main, on rit d'un tour de magie.",
+      "enferme": "Portes et sentiers deviennent guimauve collante, les pieds s'y enfoncent, on reste là.",
+      "envahit": "Tout se change en sucre, même les chaussures, on rebondit, on glisse, on colle.",
+      "supprime": "Pour finir le sort, changer son jouet préféré en sucre, ou rester collés ici."
+     },
+     "kids": true,
+     "supprime_kids": "Défaire le sort : renoncer à son goûter préféré, ou rester collés jusqu'au soir."
+    },
+    {
+     "id": "conte_fees_la_magie_s_eteint_avant_minuit",
+     "nom": "La magie s'éteint avant minuit",
+     "paliers": {
+      "signale": "Une fleur cesse de chanter, une étincelle pâlit, on croit qu'elle se repose.",
+      "enferme": "Les portes magiques oublient leur mot de passe, le chemin du retour s'efface.",
+      "envahit": "Les objets enchantés redeviennent ordinaires, les robes des chiffons, l'horloge file vers minuit.",
+      "supprime": "Minuit sonne : prêter son pouvoir à la magie, ou la voir partir pour toujours."
+     },
+     "kids": true,
+     "supprime_kids": "Minuit sonne : donner son pouvoir jusqu'à demain, ou dire adieu à la magie."
+    }
+   ]
+  },
+  {
+   "id": "dessin_anime",
+   "nom": "Dessin animé",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "Tom et Jerry",
+    "Les Simpson",
+    "Bob l'éponge",
+    "Scooby-Doo",
+    "Les Razmoket",
+    "Astérix",
+    "Kirikou",
+    "Pat' Patrouille",
+    "Miraculous",
+    "Oggy et les cafards"
+   ],
+   "peuples": [
+    "Enfants",
+    "Animaux rigolos",
+    "Voisins",
+    "Héros du quartier",
+    "Farceurs",
+    "Robots"
+   ],
+   "dangers": [
+    {
+     "id": "dessin_anime_des_bulles_geantes_nous_emportent",
+     "nom": "Des bulles géantes nous emportent",
+     "paliers": {
+      "signale": "Une grosse bulle emporte un chapeau vers le ciel, tout le monde rigole.",
+      "enferme": "Les bulles se collent aux portes et aux chemins, on rebondit dessus sans passer.",
+      "envahit": "Les bulles gobent les copains un par un, on court dessous pour les suivre.",
+      "supprime": "La bulle s'envole : perdre son jouet pour la crever, ou laisser filer le copain."
+     },
+     "kids": true,
+     "supprime_kids": "Pour ramener le copain : crever la bulle avec son jouet, ou se quitter un moment."
+    },
+    {
+     "id": "dessin_anime_les_sons_disparaissent_un_a_un",
+     "nom": "Les sons disparaissent un à un",
+     "paliers": {
+      "signale": "Un rire s'arrête net, une cloche ne sonne plus, on n'y prête pas attention.",
+      "enferme": "La sortie ne s'ouvre qu'en chantant, et nos voix se sont envolées.",
+      "envahit": "Plus aucun bruit, on se parle en grimaces et tout se comprend de travers.",
+      "supprime": "Le silence rend une voix contre un rire : donner le sien, ou rester muets."
+     },
+     "kids": true,
+     "supprime_kids": "Pour sortir : prêter sa voix à un copain jusqu'à demain, ou rester ici."
+    },
+    {
+     "id": "dessin_anime_une_gomme_geante_efface_le_decor",
+     "nom": "Une gomme géante efface le décor",
+     "paliers": {
+      "signale": "Un coin de décor manque, juste du blanc, on l'enjambe en riant.",
+      "enferme": "La gomme efface la porte et le chemin, il ne reste qu'un mur blanc.",
+      "envahit": "Elle gomme les arbres, les murs, nos chapeaux, même le bout de nos chaussures.",
+      "supprime": "Il reste un bout de crayon : redessiner la sortie, ou son trésor effacé."
+     },
+     "kids": true,
+     "supprime_kids": "Un dernier trait de crayon : la porte pour tous, ou son jouet préféré effacé."
+    }
+   ]
+  },
+  {
+   "id": "manga_rigolo",
+   "nom": "Manga rigolo",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "Doraemon",
+    "Pokémon",
+    "Dr. Slump",
+    "Crayon Shin-chan",
+    "Beyblade",
+    "Digimon",
+    "Yo-kai Watch",
+    "Bakugan",
+    "Chi une vie de chat",
+    "Hamtaro"
+   ],
+   "peuples": [
+    "Enfants",
+    "Créatures de poche",
+    "Écoliers",
+    "Robots",
+    "Petits monstres",
+    "Mascottes"
+   ],
+   "dangers": [
+    {
+     "id": "manga_rigolo_tout_le_monde_change_de_corps",
+     "nom": "Tout le monde change de corps",
+     "paliers": {
+      "signale": "Un copain parle soudain comme un autre, avec ses tics, on rigole.",
+      "enferme": "La porte ne s'ouvre qu'à chacun dans son corps, et deux copains sont échangés.",
+      "envahit": "Les échanges s'enchaînent à chaque éternuement, plus personne ne sait qui est qui.",
+      "supprime": "Tout remettre coûte un échange : l'un garde un corps d'emprunt, ou tout reste mélangé."
+     },
+     "kids": true,
+     "supprime_kids": "Pour retrouver son corps : avouer un secret, ou rester mélangés jusqu'au soir."
+    },
+    {
+     "id": "manga_rigolo_une_mascotte_se_copie_partout",
+     "nom": "Une mascotte se copie partout",
+     "paliers": {
+      "signale": "Une petite mascotte apparaît en double sur une étagère, on trouve ça mignon.",
+      "enferme": "Chaque fois qu'on rit, elles se copient, et leur tas bloque la porte.",
+      "envahit": "Elles remplissent tout jusqu'aux genoux, et chaque fou rire en fait naître dix.",
+      "supprime": "Tout vient d'un doudou : s'en séparer maintenant, ou perdre la sortie sous les copies."
+     },
+     "kids": true,
+     "supprime_kids": "Pour arrêter les copies : rester sérieux une minute entière, ou donner son doudou."
+    },
+    {
+     "id": "manga_rigolo_nos_ombres_n_en_font_qu_a_leur_tete",
+     "nom": "Nos ombres n'en font qu'à leur tête",
+     "paliers": {
+      "signale": "Une ombre lève la main alors que personne ne bouge, on se frotte les yeux.",
+      "enferme": "Les ombres se donnent la main devant la sortie, impossible de passer.",
+      "envahit": "Elles chipent les goûters, imitent nos grimaces, et s'étirent à chaque lumière qui baisse.",
+      "supprime": "La dernière lumière faiblit : y mettre son pouvoir, ou perdre son ombre jusqu'au matin."
+     },
+     "kids": true,
+     "supprime_kids": "Retrouver son ombre : lui offrir son goûter, ou la laisser filer jusqu'au matin."
+    }
+   ]
+  },
+  {
+   "id": "animaux_parlent",
+   "nom": "Animaux qui parlent",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "Le Roi Lion",
+    "Zootopie",
+    "Madagascar",
+    "Le Livre de la jungle",
+    "La Ferme se rebelle",
+    "Kung Fu Panda",
+    "Robin des Bois (Disney)",
+    "Ratatouille",
+    "Rox et Rouky",
+    "Bambi"
+   ],
+   "peuples": [
+    "Animaux de la savane",
+    "Animaux de la ferme",
+    "Animaux de la jungle",
+    "Animaux de la forêt",
+    "Animaux de la ville"
+   ],
+   "dangers": [
+    {
+     "id": "animaux_parlent_les_animaux_perdent_la_parole",
+     "nom": "Les animaux perdent la parole",
+     "paliers": {
+      "signale": "Un ami veut parler, seul un drôle de couac sort, tout le monde rit.",
+      "enferme": "La sortie ne s'ouvre qu'au mot de passe, et plus personne ne peut le dire.",
+      "envahit": "Les voix s'éteignent l'une après l'autre, on se parle par gestes, tout s'embrouille.",
+      "supprime": "Une seule voix revient : la donner à un ami maintenant, ou perdre la sortie pour tous."
+     },
+     "kids": true,
+     "supprime_kids": "Une voix revient : la prêter à un ami et se taire un moment, ou rester enfermés."
+    },
+    {
+     "id": "animaux_parlent_les_provisions_disparaissent",
+     "nom": "Les provisions disparaissent la nuit",
+     "paliers": {
+      "signale": "Au réveil, il manque un fruit dans le panier, on accuse le vent.",
+      "enferme": "On bloque la sortie pour piéger le voleur, plus personne ne quitte le lieu.",
+      "envahit": "Les réserves se vident à vue d'œil, les ventres gargouillent, on se soupçonne.",
+      "supprime": "Il reste un dernier panier : le partager maintenant, ou se fâcher pour de bon."
+     },
+     "kids": true,
+     "supprime_kids": "Un dernier panier : le partager avec tous, même le voleur, ou manger seul dans son coin."
+    },
+    {
+     "id": "animaux_parlent_une_musique_fait_danser_sans_fin",
+     "nom": "Une musique fait danser sans fin",
+     "paliers": {
+      "signale": "Un petit air se joue tout seul, les pattes battent la mesure en riant.",
+      "enferme": "Impossible de quitter la piste, les pattes dansent toutes seules vers le centre.",
+      "envahit": "Tout le monde danse sans pouvoir s'arrêter, on bâille, on a faim, on tourne encore.",
+      "supprime": "Pour faire taire la musique : donner son plus beau trésor maintenant, ou danser jusqu'à l'aube."
+     },
+     "kids": true,
+     "supprime_kids": "Pour arrêter la musique : déposer son jouet préféré dans le tambour, ou danser jusqu'au soir."
+    }
+   ]
+  },
+  {
+   "id": "pirates",
+   "nom": "Pirates",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "One Piece",
+    "Pirates des Caraïbes",
+    "Peter Pan",
+    "L'Île au trésor",
+    "Tintin",
+    "Astérix",
+    "Jake et les Pirates",
+    "Sinbad",
+    "Vaiana",
+    "Barbe Rouge"
+   ],
+   "peuples": [
+    "Pirates",
+    "Marins",
+    "Habitants des îles",
+    "Corsaires",
+    "Sirènes",
+    "Chasseurs de trésor"
+   ],
+   "dangers": [
+    {
+     "id": "pirates_le_tresor_maudit_fige_l_equipage",
+     "nom": "Le trésor maudit fige l'équipage",
+     "paliers": {
+      "signale": "Un matelot touche une pièce d'or, ses doigts brillent, on trouve ça joli.",
+      "enferme": "Des pièces d'or couvrent la sortie, y poser le pied, c'est se figer.",
+      "envahit": "L'or roule partout, un ami puis deux deviennent des statues brillantes et immobiles.",
+      "supprime": "Pour lever le sort : rendre tout le trésor maintenant, ou garder l'or et les statues."
+     },
+     "kids": true,
+     "supprime_kids": "Pour réveiller les amis dorés : rendre tout le trésor, ou garder sa pièce préférée."
+    },
+    {
+     "id": "pirates_un_chant_endort_l_equipage",
+     "nom": "Un chant endort tout l'équipage",
+     "paliers": {
+      "signale": "Un chant très doux monte de l'eau, quelqu'un bâille, on fredonne avec.",
+      "enferme": "Les premiers dormeurs ronflent, trop lourds à porter, on ne part pas sans eux.",
+      "envahit": "Le chant entre partout, les paupières tombent, on se pince pour rester éveillé.",
+      "supprime": "Se boucher les oreilles et ne plus entendre ses amis, ou s'endormir avec eux."
+     },
+     "kids": true,
+     "supprime_kids": "Pour couvrir la berceuse : chanter tout haut sa chanson secrète, ou dormir jusqu'au matin."
+    },
+    {
+     "id": "pirates_une_armee_de_crabes_chipeurs",
+     "nom": "Une armée de crabes chipeurs",
+     "paliers": {
+      "signale": "Une cuillère disparaît, de petites traces de pinces filent dans un coin.",
+      "enferme": "Les crabes ont chipé les cordes et la clé, plus moyen de partir.",
+      "envahit": "Ils sont des centaines, pincent les orteils et emportent tout ce qui brille.",
+      "supprime": "Ils encerclent tout : leur abandonner les provisions maintenant, ou rester coincés jusqu'au soir."
+     },
+     "kids": true,
+     "supprime_kids": "Les crabes gardent la sortie : que l'un les attire avec les biscuits, ou attendre ensemble."
+    }
+   ]
+  },
+  {
+   "id": "espace_rigolo",
+   "nom": "Espace rigolo",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "Toy Story (Buzz)",
+    "Wall-E",
+    "Buzz l'Éclair",
+    "Planète 51",
+    "Les Gardiens de la Galaxie",
+    "E.T.",
+    "Star Wars",
+    "Lightyear",
+    "Astro Boy",
+    "Les Minions"
+   ],
+   "peuples": [
+    "Astronautes",
+    "Petits aliens",
+    "Robots",
+    "Explorateurs",
+    "Cosmonautes"
+   ],
+   "dangers": [
+    {
+     "id": "espace_rigolo_la_gravite_se_met_a_l_envers",
+     "nom": "La gravité se met à l'envers",
+     "paliers": {
+      "signale": "Une cuillère s'envole de la table, on rit, on la rattrape.",
+      "enferme": "Tout flotte vers le haut, la sortie reste en bas, hors de portée.",
+      "envahit": "Tout tourne sens dessus dessous, on rebondit, plus personne ne sait où est le bas.",
+      "supprime": "Pour redescendre : lâcher tout ce qu'on tient maintenant, ou flotter loin des autres."
+     },
+     "kids": true,
+     "supprime_kids": "Pour retomber : laisser son jouet préféré s'envoler dans les étoiles, ou rester au plafond."
+    },
+    {
+     "id": "espace_rigolo_tout_devient_collant",
+     "nom": "Tout devient collant comme du sirop",
+     "paliers": {
+      "signale": "Une goutte rose colle au doigt, on la lèche en riant.",
+      "enferme": "Le sirop durcit sur les portes, elles restent collées, on ne sort plus.",
+      "envahit": "Les pieds collent au sol, les mains aux murs, on avance à tout petits pas.",
+      "supprime": "Pour se décoller : jeter tous ses bonbons maintenant, ou rester collés jusqu'au soir."
+     },
+     "kids": true,
+     "supprime_kids": "Pour se décoller : renoncer à tous ses bonbons, ou rester collé loin des copains un moment."
+    },
+    {
+     "id": "espace_rigolo_des_bulles_geantes_emprisonnent_tout",
+     "nom": "Des bulles géantes emprisonnent tout",
+     "paliers": {
+      "signale": "Une grosse bulle sort de nulle part et rebondit partout, on rit.",
+      "enferme": "Des bulles géantes bouchent les passages, elles rebondissent, on ne passe plus.",
+      "envahit": "Chacun se retrouve dans sa bulle, on flotte séparés, on se fait des signes.",
+      "supprime": "Pour tout éclater : arrêter pour toujours la fontaine à bulles, ou rester séparés."
+     },
+     "kids": true,
+     "supprime_kids": "Pour sortir des bulles : renoncer aux jeux de bulles, ou flotter seul un moment."
+    }
+   ]
+  },
+  {
+   "id": "monde_magique",
+   "nom": "Monde magique",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "Harry Potter",
+    "Le Monde de Narnia",
+    "Merlin",
+    "Kirikou",
+    "Fantasia",
+    "Raiponce",
+    "La Reine des Neiges",
+    "Aladdin",
+    "Winx",
+    "Le Petit Sorcier"
+   ],
+   "peuples": [
+    "Apprentis sorciers",
+    "Fées",
+    "Créatures magiques",
+    "Magiciens",
+    "Lutins",
+    "Elfes"
+   ],
+   "dangers": [
+    {
+     "id": "monde_magique_les_couleurs_s_effacent",
+     "nom": "Les couleurs s'effacent une à une",
+     "paliers": {
+      "signale": "Une fleur devient grise, on croit qu'elle fane, rien de plus.",
+      "enferme": "Les chemins colorés s'effacent, sans couleurs on ne retrouve plus la sortie.",
+      "envahit": "Tout devient gris, même les rires, plus personne n'a envie de jouer.",
+      "supprime": "Pour rendre les couleurs : offrir sa plus belle couleur maintenant, ou rester gris pour de bon."
+     },
+     "kids": true,
+     "supprime_kids": "Pour rallumer les couleurs : donner sa couleur préférée un épisode, ou tout garder en gris."
+    },
+    {
+     "id": "monde_magique_un_sort_rate_transforme_tout",
+     "nom": "Un sort raté transforme tout",
+     "paliers": {
+      "signale": "Une cuillère se change en grenouille, on éclate de rire.",
+      "enferme": "La porte se change en mur de gelée, impossible de l'ouvrir.",
+      "envahit": "Les objets, les amis changent de forme sans arrêt, on ne reconnaît plus rien.",
+      "supprime": "Pour annuler le sort : briser sa baguette maintenant, ou rester transformés."
+     },
+     "kids": true,
+     "supprime_kids": "Pour tout annuler : renoncer à sa magie un épisode, ou rester changé en théière."
+    },
+    {
+     "id": "monde_magique_les_ombres_se_mettent_a_vivre",
+     "nom": "Les ombres se mettent à vivre",
+     "paliers": {
+      "signale": "Une ombre fait un geste qu'on n'a pas fait, on se frotte les yeux.",
+      "enferme": "Les ombres tiennent les portes fermées et rient tout bas.",
+      "envahit": "Elles font des farces partout, soufflent les lumières, cachent les objets, chuchotent.",
+      "supprime": "Pour qu'elles s'en aillent : leur laisser son ombre maintenant, ou garder la nuit sur nous."
+     },
+     "kids": true,
+     "supprime_kids": "Les ombres veulent jouer : leur prêter son ombre un moment, ou rester tous dans le noir."
+    }
+   ]
+  },
+  {
+   "id": "sous_la_mer",
+   "nom": "Sous la mer",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "Le Monde de Nemo",
+    "La Petite Sirène",
+    "Vaiana",
+    "Bob l'éponge",
+    "Atlantide",
+    "Bubulle Guppies",
+    "Aquaman",
+    "Océane",
+    "Splash",
+    "20000 lieues sous les mers"
+   ],
+   "peuples": [
+    "Poissons",
+    "Sirènes",
+    "Créatures des récifs",
+    "Crustacés",
+    "Dauphins",
+    "Peuples des abysses"
+   ],
+   "dangers": [
+    {
+     "id": "sous_la_mer_une_encre_violette_brouille_tout",
+     "nom": "Une encre violette brouille tout",
+     "paliers": {
+      "signale": "Une petite tache violette danse dans l'eau, on la trouve jolie.",
+      "enferme": "Un nuage d'encre bouche l'entrée, on ne voit plus la sortie.",
+      "envahit": "Tout est violet, on ne se reconnaît plus, on suit la mauvaise nageoire.",
+      "supprime": "Pour souffler l'encre : briser la grande conque chantante, ou rester dans le violet."
+     },
+     "kids": true,
+     "supprime_kids": "Pour sortir : nager en file derrière une seule voix, ou attendre seul que l'eau s'éclaircisse."
+    },
+    {
+     "id": "sous_la_mer_les_algues_emmelent_tout",
+     "nom": "Les algues poussent et emmêlent tout",
+     "paliers": {
+      "signale": "Une algue chatouille une nageoire et ne veut plus la lâcher, on rit.",
+      "enferme": "Les algues poussent sur l'entrée comme un rideau épais, on ne passe plus.",
+      "envahit": "Elles s'enroulent aux nageoires et aux queues, chaque mouvement nous emmêle un peu plus.",
+      "supprime": "Pour se libérer : couper le plus beau jardin d'algues maintenant, ou rester emmêlés."
+     },
+     "kids": true,
+     "supprime_kids": "Pour se dégager : renoncer au jardin d'algues qu'on aime, ou rester emmêlés tous ensemble."
+    },
+    {
+     "id": "sous_la_mer_un_grand_filet_tombe_sur_nous",
+     "nom": "Un grand filet tombe sur nous",
+     "paliers": {
+      "signale": "Une longue corde traîne sur le sable, un petit poisson joue avec.",
+      "enferme": "Un immense filet se pose sur le lieu et couvre toutes les sorties.",
+      "envahit": "Le filet se resserre et remonte doucement, on se serre tout au fond.",
+      "supprime": "Une maille cède : passer un par un sans le trésor, ou remonter tous avec lui."
+     },
+     "kids": true,
+     "supprime_kids": "Un petit trou s'ouvre : y passer sans le trésor, ou rester dans le filet avec lui."
+    }
+   ]
+  },
+  {
+   "id": "chevaliers_dragons",
+   "nom": "Chevaliers & dragons",
+   "adulte": false,
+   "kids": true,
+   "lores": [
+    "Dragons (Krokmou)",
+    "Shrek",
+    "Merlin",
+    "Le Seigneur des Anneaux",
+    "Kaamelott",
+    "Zelda",
+    "Excalibur",
+    "Les Chevaliers du Zodiaque",
+    "Mulan",
+    "Rebelle"
+   ],
+   "peuples": [
+    "Chevaliers",
+    "Dragons",
+    "Villageois",
+    "Magiciens",
+    "Écuyers",
+    "Princesses"
+   ],
+   "dangers": [
+    {
+     "id": "chevaliers_dragons_les_oeufs_de_dragon_eclosent",
+     "nom": "Les œufs de dragon éclosent",
+     "paliers": {
+      "signale": "Un œuf craque dans un coin, une flammèche en sort, on sourit.",
+      "enferme": "Des bébés dragons dorment devant la porte, impossible de passer sans les réveiller.",
+      "envahit": "Ils éclosent partout, crachent des flammèches, mangent les gâteaux, réclament des câlins.",
+      "supprime": "Leur maman réclame ses petits : rendre celui qu'on a adopté maintenant, ou rester enfermés."
+     },
+     "kids": true,
+     "supprime_kids": "La maman dragon arrive : lui rendre le petit qu'on aime, ou le cacher et rester coincés."
+    },
+    {
+     "id": "chevaliers_dragons_un_fou_rire_ne_s_arrete_plus",
+     "nom": "Un fou rire ne s'arrête plus",
+     "paliers": {
+      "signale": "Quelqu'un pouffe sans raison, puis un autre, on trouve ça drôle.",
+      "enferme": "On rit si fort qu'on ne tient plus debout pour gagner la sortie.",
+      "envahit": "Tout le monde se tord de rire, les larmes coulent, plus personne ne peut parler.",
+      "supprime": "Pour arrêter le fou rire : raconter son plus gros chagrin, ou rire jusqu'à demain."
+     },
+     "kids": true,
+     "supprime_kids": "Pour retrouver son calme : raconter un petit chagrin aux autres, ou rire toute la nuit."
+    },
+    {
+     "id": "chevaliers_dragons_un_dragon_reclame_son_joyau",
+     "nom": "Un dragon réclame son joyau volé",
+     "paliers": {
+      "signale": "Un joyau brillant a disparu, on se dit qu'il a roulé quelque part.",
+      "enferme": "Un grand dragon se couche devant la sortie, il attend son joyau.",
+      "envahit": "Il renifle chaque recoin en soufflant de la fumée, on se cache, le cœur battant.",
+      "supprime": "Il attend : dire qui a pris le joyau maintenant, ou perdre l'amitié du dragon."
+     },
+     "kids": true,
+     "supprime_kids": "Le dragon attend : dire qui a pris le joyau, même un ami, ou perdre son amitié."
+    }
+   ]
+  }
+ ],
+ "peuples_par_lore": {
+  "Le Roi Lion": [
+   "Lions",
+   "Hyènes",
+   "Suricates",
+   "Éléphants",
+   "Zèbres",
+   "Oiseaux"
+  ],
+  "Le Livre de la jungle": [
+   "Loups",
+   "Panthères",
+   "Ours",
+   "Singes",
+   "Serpents",
+   "Éléphants"
+  ],
+  "La Ferme se rebelle": [
+   "Vaches",
+   "Cochons",
+   "Poules",
+   "Chevaux",
+   "Moutons",
+   "Chiens"
+  ],
+  "Zootopie": [
+   "Prédateurs",
+   "Proies",
+   "Animaux de la ville",
+   "Renards",
+   "Lapins",
+   "Fauves"
+  ],
+  "Madagascar": [
+   "Lions",
+   "Zèbres",
+   "Girafes",
+   "Hippopotames",
+   "Lémuriens",
+   "Pingouins"
+  ],
+  "Ratatouille": [
+   "Rats",
+   "Humains",
+   "Cuisiniers"
+  ],
+  "One Piece": [
+   "Pirates",
+   "Marines",
+   "Humains",
+   "Hommes-poissons",
+   "Géants"
+  ],
+  "Naruto": [
+   "Ninjas",
+   "Villageois",
+   "Clans",
+   "Bêtes à queues",
+   "Sages"
+  ],
+  "Peter Pan": [
+   "Enfants perdus",
+   "Pirates",
+   "Fées",
+   "Sirènes",
+   "Indiens"
+  ],
+  "Le Monde de Nemo": [
+   "Poissons",
+   "Requins",
+   "Tortues",
+   "Crustacés",
+   "Méduses"
+  ]
+ },
+ "peuples_par_defaut": [
+  "Habitants",
+  "Voyageurs",
+  "Notables",
+  "Marginaux"
+ ],
+ "tons": [
+  {
+   "id": "drole",
+   "nom": "Drôle"
+  },
+  {
+   "id": "aventureux",
+   "nom": "Aventureux"
+  },
+  {
+   "id": "enquete",
+   "nom": "Enquête"
+  },
+  {
+   "id": "epique",
+   "nom": "Épique"
+  },
+  {
+   "id": "tendre",
+   "nom": "Tendre"
+  },
+  {
+   "id": "tranquille",
+   "nom": "Tranquille"
+  },
+  {
+   "id": "sombre",
+   "nom": "Sombre"
+  },
+  {
+   "id": "dramatique",
+   "nom": "Dramatique"
+  },
+  {
+   "id": "burlesque",
+   "nom": "Burlesque"
+  },
+  {
+   "id": "mysterieux",
+   "nom": "Mystérieux"
+  }
+ ]
+}
