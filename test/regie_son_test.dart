@@ -108,7 +108,7 @@ Future<void> laisserTourner() async {
     pack: PackAudio.pourTests(m, IndexPack(fichiers ?? fichiersDuManifeste(m))),
     // L'atténuation progressive coupe la musique tout de suite quand les
     // attentes sont immédiates : elle a son propre test.
-    reglages: ReglagesRegieSon(valeurs ?? (ValeursRegieSon()..decrescendo = false)),
+    reglages: ReglagesRegieSon(valeurs ?? (ValeursRegieSon()..sansCourbes())),
     muet: muet,
     fabrique: (b) => lecteurs[b] = LecteurFactice(b, journal),
     // vraiTemps : les vrais délais (Future.delayed), menés par l'horloge d'un
@@ -276,7 +276,9 @@ void main() {
       final v = ValeursRegieSon();
       expect(v.bruitageAuto, [false, true, true, true]);
       expect(v.revealActe, [false, false, true, false]);
-      expect(v.silenceAvant, [0, 0, 0, 2]);
+      expect(v.courbes.map((c) => [for (final p in c) (p.secondes, p.volume)]), everyElement([(30.0, 0.5)]));
+      expect(v.finAZero, [true, true, true, true]);
+      v.courbes[1] = [PointVolume(20, 0.6), PointVolume(90, 0.3)];
       v
         ..volumeActe = [0.5, 0.6, 0.7, 0.8]
         ..choixCandidat = {'ALARME': 2, 'TIRS': kCandidatAleatoire}
@@ -286,6 +288,7 @@ void main() {
       expect(w.choixCandidat, {'ALARME': 2, 'TIRS': -1});
       expect(w.volumeDe('TIRS'), 0.4);
       expect(w.volumeDe('ALARME'), 1);
+      expect([for (final p in w.courbes[1]) (p.secondes, p.volume)], [(20.0, 0.6), (90.0, 0.3)]);
     });
   });
 
@@ -324,7 +327,7 @@ void main() {
 
     test('un son d\'ouverture choisi passe avant la musique de l\'acte 1', () async {
       final t = conduiteDeTest(valeurs: ValeursRegieSon()
-        ..decrescendo = false
+        ..sansCourbes()
         ..sonOuverture = 'storm');
       t.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
       final fini = t.conduite.ouverture();
@@ -420,36 +423,41 @@ void main() {
       expect(sansPack.conduite.active, isFalse);
     });
 
-    testWidgets('atténuation progressive : à 30 s la musique glisse à 50 %, puis descend au silence et s\'arrête',
+    testWidgets('courbe de volume : 70 % au départ, 50 % à 30 s, puis 0 % à la fin du morceau, où elle s\'arrête',
         (tester) async {
       expect(ValeursRegieSon().boucle, isFalse, reason: 'les musiques s\'arrêtent à la fin');
       final t = conduiteDeTest(valeurs: ValeursRegieSon(), vraiTemps: true);
       t.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
       final musique = t.lecteurs[BusSon.musique]!;
+      // La musique de l'acte 1 de l'église dure 115,2 s (manifeste).
       unawaited(t.conduite.musiqueActe(1));
-      // Le fondu d'entrée (2 s) : la musique est à son volume, 70 %.
-      await tester.pump(const Duration(seconds: 3));
-      expect(musique.volume, closeTo(0.7, 1e-9));
-      // Avant 30 s, rien ne bouge.
-      await tester.pump(const Duration(seconds: 25));
-      expect(musique.volume, closeTo(0.7, 1e-9));
-      // Après 30 s : la glissade vers 50 % (3 s).
-      for (var i = 0; i < 6 * 4; i++) {
-        await tester.pump(const Duration(milliseconds: 250));
+      Future<void> aller(double secondes) async {
+        for (var i = 0; i < secondes * 4; i++) {
+          await tester.pump(const Duration(milliseconds: 250));
+        }
       }
-      expect(musique.volume, lessThan(0.5 + 1e-6));
-      expect(musique.volume, greaterThan(0.45));
-      // Puis la descente jusqu'à la fin du morceau (115 s pour l'Église).
-      for (var i = 0; i < 90 * 4 && musique.actif; i++) {
-        await tester.pump(const Duration(milliseconds: 250));
-      }
+
+      // Fondu d'entrée fini (2 s) : sur la droite de 70 % (0 s) à 50 % (30 s).
+      await aller(3);
+      expect(musique.volume, closeTo(0.7 - 0.2 * 3 / 30, 0.01));
+      await aller(27);
+      expect(musique.volume, closeTo(0.5, 0.01));
+      // À mi-chemin entre 30 s et la fin : 25 %.
+      await aller((115.2 - 30) / 2);
+      expect(musique.volume, closeTo(0.25, 0.02));
+      await aller(50);
       expect(musique.actif, isFalse);
       expect(t.journal.last, 'musique:arreter');
       expect(musique.volumes.last, lessThan(0.01));
-      final apres = musique.volumes.sublist(musique.volumes.lastIndexWhere((v) => (v - 0.7).abs() < 1e-9));
-      for (var i = 1; i < apres.length; i++) {
-        expect(apres[i], lessThanOrEqualTo(apres[i - 1] + 1e-9));
-      }
+    });
+
+    test('sans courbe, la musique reste à son volume', () async {
+      final t = conduiteDeTest();
+      t.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
+      await t.conduite.musiqueActe(1);
+      await laisserTourner();
+      expect(t.lecteurs[BusSon.musique]!.actif, isTrue);
+      expect(t.lecteurs[BusSon.musique]!.volume, closeTo(0.7, 1e-9));
     });
 
     test('« Fondu de fin » éteint tout puis arrête', () async {

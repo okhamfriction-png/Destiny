@@ -128,8 +128,12 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
   void _basculer() {
     if (_enMarche) {
       _minuteur?.cancel();
-      // En pause, la musique de l'échauffement sort en fondu.
-      unawaited(widget.contexte.regieSon?.conduite.couperMusique());
+      // En pause, la musique d'échauffement sort en fondu (pas celle de
+      // l'histoire : elle continue).
+      if (_musiqueEchauffement) {
+        _musiqueEchauffement = false;
+        unawaited(widget.contexte.regieSon?.conduite.couperMusique());
+      }
       setState(() {});
       return;
     }
@@ -140,15 +144,22 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
       if (_reste == 0) {
         t.cancel();
         widget.contexte.audio.playShine();
-        unawaited(widget.contexte.regieSon?.conduite.couperMusique(fondu: 3));
+        if (_musiqueEchauffement) {
+          _musiqueEchauffement = false;
+          unawaited(widget.contexte.regieSon?.conduite.couperMusique(fondu: 3));
+        }
       }
     });
     setState(() {});
   }
 
-  /// La musique de l'échauffement (réglage de la régie son), lancée avec le
-  /// minuteur : l'ambiance du lieu par défaut. Elle continue jusqu'à la
-  /// régie, où l'ouverture du spectacle la fait sortir en fondu.
+  /// Une musique d'échauffement joue (pas celle de l'histoire).
+  bool _musiqueEchauffement = false;
+
+  /// Le minuteur lance l'histoire : avec le pack, l'ouverture du spectacle
+  /// (la musique de l'acte 1, puis le bruitage du palier 1, puis l'ambiance
+  /// du lieu), une seule fois. Sans pack, la musique d'échauffement des
+  /// réglages, s'il y en a une.
   void _musique() {
     final regie = widget.contexte.regieSon;
     if (regie == null || widget.contexte.audio.muted) return;
@@ -156,6 +167,10 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
     final s = widget.session;
     final v = regie.reglages.v;
     c.preparer(lieuId: s.lieuId, dangerId: s.dangerId, acte: s.palierAtteint);
+    if (c.active) {
+      if (!c.ouverte && s.destinys.isEmpty) unawaited(c.ouverture());
+      return;
+    }
     SourceSon? source;
     switch (v.musiqueEchauffement) {
       case 'aucune':
@@ -176,6 +191,7 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
     // Déjà en train de jouer (reprise après une pause) : on ne relance pas.
     final enCours = c.lecteurs[BusSon.musique]!.enCours;
     if (source == null || enCours?.cle == source.cle) return;
+    _musiqueEchauffement = true;
     c.jouerMusique(source, volume: v.volumeEchauffement, fondu: 3);
   }
 

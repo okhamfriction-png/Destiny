@@ -6,8 +6,8 @@ Les nouveautés de chaque version, racontées pour les comédiens, les troupes e
 
 - **Une vraie table de régie.** Le bouton « Son » de la régie ouvre une table en pop-up, sombre comme une console, avec **le chrono et DESTINY en haut** : on ne lâche jamais le spectacle. Un appui à côté ou la croix la ferme. Elle contient :
   - **la conduite du spectacle** : les musiques des quatre actes, l'ambiance du lieu, le son Destiny, **Danger**, **Autre son**, **Révélation**, **Fondu de fin** et Stop ;
-  - **les tranches** : une par voie (musique, Destiny, deux bruitages, effets), avec sa LED, son vumètre, son fader et son stop ;
-  - **les banques de sons**, rangées par catégorie, chaque son avec son icône et sa couleur : *Ce danger* (ses sons palier par palier), Alertes, Feu & armes, Eau, Météo, Ça s'effondre, Portes & couloirs, Créatures, Machines & IA, Surnaturel, Le corps, puis les Émotions, les Ambiances, les Lieux (avec leur photo), les Univers, les Thèmes et les effets.
+  - **le mixeur** : une tranche par voie (musique, Destiny, deux bruitages, effets), avec sa LED, son vumètre, son fader et son stop ;
+  - **les banques de sons**, chaque son avec son icône et sa couleur : *Ce danger* (ses sons palier par palier) et les *Émotions*.
   Un appui fait jouer le pad, sa LED s'allume. Un appui long sur un bruitage passe à un autre son.
 - **La conduite son automatique**, avec le pack audio du spectacle (musiques par lieu et par acte, bruitages du danger) :
   - au lancement du chrono, la musique de l'acte 1 du lieu, puis le bruitage du danger à sa fin ;
@@ -16,18 +16,19 @@ Les nouveautés de chaque version, racontées pour les comédiens, les troupes e
   - pas de coupure à la fin du chrono : l'impro peut déborder. « Fondu de fin » quand c'est fini.
   Sans pack, la régie fait comme avant.
 - **Importer le pack** (Réglages, Destiny, « Pack audio du spectacle ») : un .zip ou un dossier qui contient « Musiques Destiny » et « Bruitages ». Réimporter n'ajoute que les nouveaux fichiers. Le bilan dit quels lieux ont leur musique, lesquels prennent celle de leur famille, et quels sons manquent. Une musique propre ajoutée plus tard sous le bon nom est prise toute seule.
-- **Régler la régie son** (Réglages, Destiny, « Régie son du spectacle ») : volumes, fondus et silences par acte, le son Destiny, les bruitages automatiques, l'atténuation de la musique, la révélation, la fin. **La banque de sons** fait écouter les candidats de chaque son, pour choisir celui qui joue et son volume. **Tester la conduite** rejoue l'ouverture et les trois Destiny sans chrono, pour répéter.
+- **Régler la régie son** (Réglages, Destiny, « Régie son du spectacle ») : volume, fondu et courbe de chaque acte, le son Destiny, les bruitages automatiques, l'atténuation de la musique, la révélation, la fin. **La banque de sons** fait écouter les candidats de chaque son, pour choisir celui qui joue et son volume. **Tester la conduite** rejoue l'ouverture et les trois Destiny sans chrono, pour répéter.
 - **Le spectacle en trois étapes : Préparer, le Jeu, la Régie.** La mise en place disparaît ; l'échauffement devient **le Jeu**, l'écran qui porte le spectacle : le chrono et DESTINY en haut, le minuteur d'échauffement, le lieu et le danger, **les paliers du danger**, les archétypes et les Destiny prévus. Pas de flèche de retour : le bouton retour du téléphone demande avant de quitter le spectacle.
 - **« Régie » ouvre directement la table de régie**, en pop-up par-dessus le jeu, avec le chrono et DESTINY en haut ; sa croix ramène au jeu. Le chrono, les Destiny et le son continuent pendant ce temps.
 - **Plus de débrief** : « Terminer », en bas du jeu, range le spectacle dans l'historique et revient à l'accueil.
-- **Le spectacle démarre par la musique de l'acte 1** ; à sa fin, le bruitage du danger (palier 1), puis **l'ambiance du lieu en fond, à 15 %**, jusqu'au Destiny suivant (réglable). Le minuteur d'échauffement ne lance plus de musique par défaut.
-- **La table, dans l'ordre** : la conduite, les banques de sons (tous les onglets visibles d'un coup, *Ce danger* puis *Émotions* en premier), puis le **mixeur**.
+- **Le spectacle démarre par la musique de l'acte 1** ; à sa fin, le bruitage du danger (palier 1), puis **l'ambiance du lieu en fond, à 15 %**, jusqu'au Destiny suivant (réglable). **Lancer le minuteur du jeu lance l'histoire** : la musique de l'acte 1 part avec lui (et le chrono du spectacle ne la relance pas).
+- **La table, dans l'ordre** : la conduite, deux banques de sons (**Ce danger** et **Émotions**), puis le **mixeur**.
+- **Une courbe de volume par acte** (Réglages, « Régie son du spectacle ») : le volume au départ (70 %), le fondu d'entrée, puis des repères « au bout de tant de secondes, tant de pour cent » ; le volume descend tout seul de l'un à l'autre, et arrive à 0 % à la fin du morceau, quelle que soit sa durée. Un petit graphique montre la courbe. Le « silence avant la musique » disparaît.
 - **Le spectacle à 3 joueurs** : l'alarmiste, un qui tient, un qui se fissure.
 - **Plus de groupe ni de mystère au spectacle**, à la mise en place comme à la régie.
 - **Une régie plus claire** : trois cadres, le lieu et le danger, les paliers du danger, les archétypes à ce palier. « Pour la régie » et les moments forts disparaissent.
 - **La carte de l'acte se ferme seule** après 10 secondes sans action.
 - **La musique de l'échauffement** part avec son minuteur (l'ambiance du lieu, par défaut) et sort en fondu à la pause ; l'ouverture du spectacle la fait sortir.
-- **Les musiques s'arrêtent à la fin du morceau**, et une **atténuation progressive** (réglable) les fait descendre : à partir de 30 s, de 50 % jusqu'au silence à la fin.
+- **Les musiques s'arrêtent à la fin du morceau**, au lieu de tourner en boucle.
 
 ## 2.1.0 — Le jeu de rôle en mode enfant ou adulte, une musique par acte (novembre 2026)
 

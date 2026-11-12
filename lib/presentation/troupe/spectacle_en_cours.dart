@@ -71,7 +71,8 @@ class SpectacleEnCours extends ChangeNotifier {
         // Conduite du spectacle : le son Destiny puis la musique de l'acte 1 ;
         // un spectacle repris en cours repart sur son acte.
         if (s.destinys.isEmpty) {
-          unawaited(conduite!.ouverture());
+          // Déjà ouverte par le minuteur du jeu : la musique continue.
+          if (!conduite!.ouverte) unawaited(conduite!.ouverture());
         } else {
           unawaited(conduite!.musiqueActe(s.palierAtteint));
         }

@@ -9,7 +9,6 @@ import '../../application/son/regie_son.dart';
 import '../../application/state/music_controller.dart';
 import '../../application/state/reglages_destiny.dart';
 import '../../domain/grammaire/modeles.dart';
-import '../../domain/son/categories_son.dart';
 import '../../domain/son/resolution_son.dart';
 import '../../domain/troupe/session.dart';
 import '../destiny/donnees.dart';
@@ -637,6 +636,8 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
     );
   }
 
+  /// Deux banques seulement : les sons du danger du soir (palier par
+  /// palier) et les émotions.
   List<_Banque> _listeBanques(String Function(String, [Map<String, String>]) rs) {
     final rsOk = _rs;
     final m = rsOk?.pack.manifeste;
@@ -644,16 +645,7 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
     return [
       if (avecPack && m.dangers.containsKey(s.dangerId))
         (id: 'danger', libelle: rs('onglets.danger'), style: const StyleSon(Icons.warning_rounded, Color(0xFFFF7043))),
-      // Les émotions juste après le danger : ce qu'on cherche le plus souvent.
       (id: 'emotions', libelle: rs('onglets.emotions'), style: const StyleSon(Icons.mood_rounded, Color(0xFFFFD54F))),
-      if (avecPack)
-        for (final cat in CategorieBruitage.values)
-          if (m.sons.keys.any((code) => CategorieBruitage.de(code) == cat))
-            (id: 'cat:${cat.name}', libelle: rs('categories.${cat.name}'), style: kStylesCategories[cat]!),
-      (id: 'ambiances', libelle: rs('onglets.ambiances'), style: const StyleSon(Icons.landscape_rounded, Color(0xFF4FC3F7))),
-      (id: 'lieux', libelle: rs('onglets.lieux'), style: const StyleSon(Icons.place_rounded, Color(0xFF81C784))),
-      (id: 'univers', libelle: rs('onglets.univers'), style: const StyleSon(Icons.public_rounded, Color(0xFF90CAF9))),
-      (id: 'themes', libelle: rs('onglets.themes'), style: const StyleSon(Icons.auto_awesome_rounded, Console.or)),
     ];
   }
 
@@ -754,48 +746,8 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
         ],
       ]);
     }
-    if (b.id.startsWith('cat:') && m != null) {
-      final cat = CategorieBruitage.values.byName(b.id.substring(4));
-      final codes = [for (final code in m.sons.keys) if (CategorieBruitage.de(code) == cat) code];
-      return _Grille(pads: [for (final code in codes) padCode(code)], largeurMin: 108);
-    }
-    switch (b.id) {
-      case 'emotions':
-        return _Grille(
-            pads: [for (final p in _musique.tracksOf('Émotions')) padPiste(p, styleEmotion(p.title))], largeurMin: 108);
-      case 'ambiances':
-        return _Grille(
-            pads: [for (final p in _musique.tracksOf('Ambiances')) padPiste(p, styleAmbiance(p.title))], largeurMin: 108);
-      case 'lieux':
-        final pistes = [..._musique.tracksOf('Lieux')]
-          ..sort((a, b) => (b.title == s.lieuNom ? 1 : 0) - (a.title == s.lieuNom ? 1 : 0));
-        return _Grille(pads: [
-          for (final p in pistes)
-            padPiste(p, const StyleSon(Icons.place_rounded, Color(0xFF81C784)),
-                image: 'assets/images/locations/${p.file.split('/').last.split('.').first}.jpg'),
-        ], largeurMin: 120);
-      case 'univers':
-        return _Grille(pads: [
-          for (final p in _musique.tracksOf('Univers'))
-            padPiste(p, const StyleSon(Icons.public_rounded, Color(0xFF90CAF9))),
-        ], largeurMin: 108);
-      default:
-        return _Grille(pads: [
-          for (final p in _musique.tracksOf('Thèmes')) padPiste(p, styleTheme(p.title)),
-          for (final e in AudioService.effets.entries)
-            if (e.key != 'aucun')
-              _Pad(
-                icone: styleEffet(e.key).icone,
-                couleur: styleEffet(e.key).couleur,
-                libelle: e.value,
-                onTap: muet
-                    ? null
-                    : () => c != null
-                        ? c.jouerEffet(SourceAsset(AudioService.assetsEffets[e.key]!, titre: e.value))
-                        : _audio.playEffet(e.key),
-              ),
-        ], largeurMin: 108);
-    }
+    return _Grille(
+        pads: [for (final p in _musique.tracksOf('Émotions')) padPiste(p, styleEmotion(p.title))], largeurMin: 108);
   }
 }
 

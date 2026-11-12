@@ -83,8 +83,15 @@ class ConduiteSon extends ChangeNotifier {
   int get acte => _acte;
   EtapeConduite get etape => _etape;
 
+  bool _ouverte = false;
+
+  /// L'ouverture a déjà été jouée pour ce lieu et ce danger (le minuteur du
+  /// jeu ou le chrono) : on ne la rejoue pas une seconde fois.
+  bool get ouverte => _ouverte;
+
   /// Prépare le spectacle : le lieu, le danger et l'acte où l'on en est.
   void preparer({required String lieuId, required String dangerId, int acte = 1}) {
+    if (lieuId != _lieuId || dangerId != _dangerId) _ouverte = false;
     _lieuId = lieuId;
     _dangerId = dangerId;
     _acte = acte.clamp(1, 4);
@@ -163,17 +170,19 @@ class ConduiteSon extends ChangeNotifier {
 
   int _jetonDecrescendo = 0;
 
-  /// L'atténuation progressive de la musique qui vient de partir : à partir
-  /// de `decrescendoApres` secondes, elle glisse (3 s) vers `decrescendoDepart`
-  /// puis descend jusqu'à 0 à la fin du morceau, et s'arrête. [dureeS] : la
-  /// durée si on la connaît (manifeste) ; sinon le lecteur la donne.
-  Future<void> _decrescendo(SourceSon source, double? dureeS) async {
-    if (!_v.decrescendo) return;
+  /// La courbe de volume de la musique qui vient de partir : depuis [base]
+  /// (le volume de l'acte), elle passe par chaque repère de [points], en ligne
+  /// droite de l'un à l'autre ; avec [finAZero], elle arrive à 0 à la fin du
+  /// morceau, où elle s'arrête. [dureeS] : la durée si on la connaît
+  /// (manifeste) ; sinon le lecteur la donne.
+  Future<void> _courbe(SourceSon source, double? dureeS, List<PointVolume> points, bool finAZero, double base) async {
+    final zero = finAZero && !_v.boucle;
+    if (points.isEmpty && !zero) return;
     final jeton = _jetonDecrescendo;
     final l = lecteurs[BusSon.musique]!;
     bool toujours() => jeton == _jetonDecrescendo && l.enCours == source;
     var duree = dureeS;
-    for (var i = 0; duree == null && i < 20; i++) {
+    for (var i = 0; zero && duree == null && i < 20; i++) {
       final d = await l.duree();
       if (d != null && d > Duration.zero) {
         duree = d.inMilliseconds / 1000;
@@ -182,24 +191,33 @@ class ConduiteSon extends ChangeNotifier {
       }
       if (!toujours()) return;
     }
-    final apres = _v.decrescendoApres;
-    final reste = (duree ?? apres + 60) - apres;
-    if (reste <= 0) return;
-    await _attendre(_s(apres));
-    if (!toujours()) return;
-    final f0 = min(1.0, _v.decrescendoDepart / max(_volumeMusique, 0.01));
-    final glisse = min(3.0, reste / 4);
-    const pas = 0.25;
-    final n = max(1, (reste / pas).round());
-    for (var i = 0; i <= n; i++) {
-      if (!toujours()) return;
-      final t = i * pas;
-      _facteur = t < glisse ? 1 + (f0 - 1) * (t / glisse) : f0 * (1 - (t - glisse) / (reste - glisse));
-      _facteur = _facteur.clamp(0.0, 1.0);
-      await _appliquer(BusSon.musique);
-      if (i < n) await _attendre(_s(pas));
+    final repere = <(double, double)>[
+      (0, base),
+      for (final p in [...points]..sort((a, b) => a.secondes.compareTo(b.secondes)))
+        if (p.secondes > 0 && (duree == null || p.secondes < duree)) (p.secondes, p.volume),
+      if (zero && duree != null) (duree, 0),
+    ];
+    if (repere.length < 2) return;
+    double volumeA(double t) {
+      for (var i = 1; i < repere.length; i++) {
+        final (t0, v0) = repere[i - 1];
+        final (t1, v1) = repere[i];
+        if (t <= t1) return t1 <= t0 ? v1 : v0 + (v1 - v0) * (t - t0) / (t1 - t0);
+      }
+      return repere.last.$2;
     }
-    if (toujours()) await l.arreter();
+
+    const pas = 0.25;
+    final fin = repere.last.$1;
+    for (var t = 0.0;; t += pas) {
+      if (!toujours()) return;
+      final ici = min(t, fin);
+      _facteur = (volumeA(ici) / max(base, 0.01)).clamp(0.0, 1.0);
+      await _appliquer(BusSon.musique);
+      if (ici >= fin) break;
+      await _attendre(_s(pas));
+    }
+    if (zero && duree != null && toujours()) await l.arreter();
   }
 
   /// La musique en cours sort en fondu, puis s'arrête (échauffement en pause).
@@ -234,6 +252,7 @@ class ConduiteSon extends ChangeNotifier {
   /// se joue à la main (« Danger »).
   Future<void> ouverture() async {
     if (!_peutJouer) return;
+    _ouverte = true;
     final seq = ++_seq;
     _jetonMusique++;
     _acte = 1;
@@ -290,12 +309,6 @@ class ConduiteSon extends ChangeNotifier {
       _etapeVers(EtapeConduite.bruitage);
       // Pas attendu : la musique entre pendant le bruitage, atténuée.
       unawaited(_jouerBruitages(bruitagesDuPalier(acte), seq));
-    }
-    final silence = _v.silenceAvant[acte - 1];
-    if (silence > 0) {
-      _etapeVers(EtapeConduite.silence);
-      await _attendre(_s(silence));
-      if (seq != _seq) return;
     }
     _etapeVers(EtapeConduite.musique);
     await _lancerMusique(acte, seq);
@@ -493,7 +506,7 @@ class ConduiteSon extends ChangeNotifier {
       await lecteurs[BusSon.musique]!.arreter();
       return;
     }
-    unawaited(_decrescendo(source, _dureeMusique(acte, chemin)));
+    unawaited(_courbe(source, _dureeMusique(acte, chemin), _v.courbes[acte - 1], _v.finAZero[acte - 1], _volumeMusique));
     unawaited(_apresMusique(acte, source));
     await _fondre(BusSon.musique, _attenue ? _volumeMusique * _v.attenuation : _volumeMusique, _v.fonduEntree[acte - 1]);
   }
@@ -532,7 +545,6 @@ class ConduiteSon extends ChangeNotifier {
       volume: _v.volumeAmbiance,
       boucle: true,
       fondu: 3,
-      decrescendo: false,
     );
   }
 
@@ -559,7 +571,7 @@ class ConduiteSon extends ChangeNotifier {
   /// Un pad de musique : enchaîne en fondu sur la voie musique (une seule
   /// musique à la fois).
   Future<void> jouerMusique(SourceSon source,
-      {double volume = 0.7, bool? boucle, double fondu = 1.5, double? dureeS, bool decrescendo = true}) async {
+      {double volume = 0.7, bool? boucle, double fondu = 1.5, double? dureeS, int? courbeActe}) async {
     if (_muet()) return;
     final seq = ++_seq;
     _jetonMusique++;
@@ -572,7 +584,11 @@ class ConduiteSon extends ChangeNotifier {
     _attenue = false;
     await _jouerSur(BusSon.musique, source, niveau: 0, boucle: boucle ?? _v.boucle);
     if (seq != _seq) return;
-    if (decrescendo) unawaited(_decrescendo(source, dureeS));
+    // La courbe de l'acte, pour la musique d'un acte (pas pour les pads ni
+    // l'ambiance).
+    if (courbeActe != null) {
+      unawaited(_courbe(source, dureeS, _v.courbes[courbeActe - 1], _v.finAZero[courbeActe - 1], volume));
+    }
     await _fondre(BusSon.musique, volume, fondu);
   }
 
@@ -582,7 +598,7 @@ class ConduiteSon extends ChangeNotifier {
     final chemin = r.chemin;
     if (chemin == null) return;
     await jouerMusique(SourcePack(chemin, titre: titreMusique(acte)),
-        volume: _v.volumeActe[acte - 1], fondu: 2, dureeS: _dureeMusique(acte, chemin));
+        volume: _v.volumeActe[acte - 1], fondu: 2, dureeS: _dureeMusique(acte, chemin), courbeActe: acte);
   }
 
   /// Un pad d'effet ponctuel (stinger, Destiny, son embarqué) sur sa voie.

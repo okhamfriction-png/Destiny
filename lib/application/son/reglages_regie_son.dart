@@ -3,6 +3,25 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Un repère de la courbe de volume d'un acte : à [secondes] du début de la
+/// musique, elle est à [volume] (0 à 1). Entre deux repères, le volume
+/// change en ligne droite.
+class PointVolume {
+  PointVolume(this.secondes, this.volume);
+
+  double secondes;
+  double volume;
+
+  Map<String, dynamic> versJson() => {'s': secondes, 'v': volume};
+
+  static PointVolume? depuisJson(Object? j) {
+    if (j is! Map) return null;
+    final s = (j['s'] as num?)?.toDouble();
+    final v = (j['v'] as num?)?.toDouble();
+    return s == null || v == null ? null : PointVolume(s, v.clamp(0.0, 1.0));
+  }
+}
+
 /// Les valeurs de la régie son du spectacle. Les listes de 4 vont de l'acte 1
 /// à l'acte 4 ; les durées sont en secondes, les volumes de 0 à 1.
 class ValeursRegieSon {
@@ -16,18 +35,25 @@ class ValeursRegieSon {
   List<double> volumeActe = [0.7, 0.7, 0.7, 0.7];
   List<double> fonduEntree = [3, 5, 5, 5];
   double fonduSortie = 2;
-  List<double> silenceAvant = [0, 0, 0, 2];
+
+  /// La courbe de volume de chaque acte : partie du volume de l'acte, la
+  /// musique passe par ces repères…
+  List<List<PointVolume>> courbes = [
+    for (var i = 0; i < 4; i++) [PointVolume(30, 0.5)],
+  ];
+
+  /// …et arrive à 0 % à la fin du morceau, où elle s'arrête.
+  List<bool> finAZero = [true, true, true, true];
   bool repliFamille = true;
 
   /// La musique tourne en boucle (sinon elle s'arrête à la fin du morceau).
   bool boucle = false;
 
-  /// Atténuation progressive : à partir de [decrescendoApres] secondes, la
-  /// musique glisse vers [decrescendoDepart] puis descend jusqu'à 0 à la fin
-  /// du morceau, où elle s'arrête.
-  bool decrescendo = true;
-  double decrescendoApres = 30;
-  double decrescendoDepart = 0.5;
+  /// Plus de courbe : la musique reste à son volume (tests, ou au choix).
+  void sansCourbes() {
+    courbes = [for (var i = 0; i < 4; i++) <PointVolume>[]];
+    finAZero = [false, false, false, false];
+  }
 
   /// La musique de l'échauffement, lancée avec son minuteur : « aucune »,
   /// « lieu » (l'ambiance du lieu), « acte1 » (la musique de l'acte 1 du
@@ -89,13 +115,13 @@ class ValeursRegieSon {
         'volume_acte': volumeActe,
         'fondu_entree': fonduEntree,
         'fondu_sortie': fonduSortie,
-        'silence_avant': silenceAvant,
+        'courbes': [
+          for (final c in courbes) [for (final p in c) p.versJson()],
+        ],
+        'fin_a_zero': finAZero,
         'repli_famille': repliFamille,
         // « boucle_v2 » : avant la 2.2.0, la boucle était active par défaut.
         'boucle_v2': boucle,
-        'decrescendo': decrescendo,
-        'decrescendo_apres': decrescendoApres,
-        'decrescendo_depart': decrescendoDepart,
         // « _v2 » : avant, l'ambiance du lieu partait avec l'échauffement.
         'musique_echauffement_v2': musiqueEchauffement,
         'ambiance_apres_musique': ambianceApresMusique,
@@ -144,12 +170,11 @@ class ValeursRegieSon {
       ..volumeActe = _quatre(j['volume_acte'], v.volumeActe, nombre)
       ..fonduEntree = _quatre(j['fondu_entree'], v.fonduEntree, nombre)
       ..fonduSortie = d('fondu_sortie', v.fonduSortie)
-      ..silenceAvant = _quatre(j['silence_avant'], v.silenceAvant, nombre)
+      ..courbes = _quatre(j['courbes'], v.courbes,
+          (x) => [for (final p in x as List) if (PointVolume.depuisJson(p) case final q?) q])
+      ..finAZero = _quatre(j['fin_a_zero'], v.finAZero, booleen)
       ..repliFamille = b('repli_famille', v.repliFamille)
       ..boucle = b('boucle_v2', v.boucle)
-      ..decrescendo = b('decrescendo', v.decrescendo)
-      ..decrescendoApres = d('decrescendo_apres', v.decrescendoApres)
-      ..decrescendoDepart = d('decrescendo_depart', v.decrescendoDepart)
       ..musiqueEchauffement = j['musique_echauffement_v2'] as String? ?? v.musiqueEchauffement
       ..ambianceApresMusique = b('ambiance_apres_musique', v.ambianceApresMusique)
       ..volumeAmbiance = d('volume_ambiance', v.volumeAmbiance)

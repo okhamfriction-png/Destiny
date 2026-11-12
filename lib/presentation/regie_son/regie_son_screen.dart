@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -78,18 +79,6 @@ class RegieSonScreen extends StatelessWidget {
                 _Curseur(k('volume_ambiance'), v.volumeAmbiance, 0, 1, 20, (x) => change((v) => v.volumeAmbiance = x),
                     pourcent: true),
               _Bascule(k('boucle'), v.boucle, (x) => change((v) => v.boucle = x), aide: k('boucle_aide')),
-              _Bascule(k('decrescendo'), v.decrescendo, (x) => change((v) => v.decrescendo = x),
-                  aide: k('decrescendo_aide', {
-                    'apres': v.decrescendoApres.round().toString(),
-                    'depart': (v.decrescendoDepart * 100).round().toString(),
-                  })),
-              if (v.decrescendo) ...[
-                _Curseur(k('decrescendo_apres'), v.decrescendoApres, 5, 180, 35, (x) => change((v) => v.decrescendoApres = x),
-                    suffixe: 's'),
-                _Curseur(k('decrescendo_depart'), v.decrescendoDepart, 0, 1, 20,
-                    (x) => change((v) => v.decrescendoDepart = x),
-                    pourcent: true),
-              ],
             ]),
             SectionDestiny(titre: k('echauffement'), enfants: [
               Paragraphe(k('echauffement_aide'), italique: true),
@@ -270,15 +259,148 @@ class _CarteActe extends StatelessWidget {
           Switch(value: v.musiqueActe[i], onChanged: (x) => change((v) => v.musiqueActe[i] = x)),
         ]),
         if (v.musiqueActe[i]) ...[
-          _Curseur(k('volume'), v.volumeActe[i], 0, 1, 20, (x) => change((v) => v.volumeActe[i] = x), pourcent: true),
+          _Curseur(k('volume_depart'), v.volumeActe[i], 0, 1, 20, (x) => change((v) => v.volumeActe[i] = x),
+              pourcent: true),
           _Curseur(k('fondu_entree'), v.fonduEntree[i], 0, 10, 20, (x) => change((v) => v.fonduEntree[i] = x),
               suffixe: 's'),
-          _Curseur(k('silence_avant'), v.silenceAvant[i], 0, 6, 12, (x) => change((v) => v.silenceAvant[i] = x),
-              suffixe: 's'),
+          _EditeurCourbe(acte: acte, v: v, k: k, change: change),
         ],
       ]),
     );
   }
+}
+
+/// La courbe de volume d'un acte : le volume de départ, puis des repères
+/// « à tant de secondes, tant de pour cent », et 0 % à la fin du morceau.
+/// Entre deux repères, le volume change tout seul, en ligne droite.
+class _EditeurCourbe extends StatelessWidget {
+  const _EditeurCourbe({required this.acte, required this.v, required this.k, required this.change});
+
+  final int acte;
+  final ValeursRegieSon v;
+  final _Texte k;
+  final void Function(void Function(ValeursRegieSon v) f) change;
+
+  int get _i => acte - 1;
+
+  void _ajouter() => change((v) {
+        final c = v.courbes[_i];
+        final dernier = c.isEmpty ? PointVolume(0, v.volumeActe[_i]) : c.last;
+        c.add(PointVolume((dernier.secondes + 30).clamp(5, 600), (dernier.volume - 0.1).clamp(0.0, 1.0)));
+      });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final points = v.courbes[_i];
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      const SizedBox(height: 6),
+      Text(k('courbe'), style: theme.textTheme.titleSmall),
+      Text(k('courbe_aide'), style: theme.textTheme.bodySmall),
+      const SizedBox(height: 8),
+      SizedBox(
+        height: 70,
+        child: CustomPaint(
+          painter: _PeintreCourbe(
+            depart: v.volumeActe[_i],
+            points: [for (final p in points) (p.secondes, p.volume)],
+            finAZero: v.finAZero[_i],
+            couleur: theme.colorScheme.primary,
+            trait: theme.dividerColor,
+          ),
+        ),
+      ),
+      for (var j = 0; j < points.length; j++)
+        Container(
+          key: ValueKey('repere_${acte}_$j'),
+          margin: const EdgeInsets.only(top: 8),
+          padding: const EdgeInsets.fromLTRB(10, 4, 0, 4),
+          decoration: BoxDecoration(
+            border: Border.all(color: theme.dividerColor),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(children: [
+            Expanded(
+              child: Column(children: [
+                _Curseur(k('repere_temps'), points[j].secondes, 5, 600, 119,
+                    (x) => change((v) => v.courbes[_i][j].secondes = x.roundToDouble()),
+                    suffixe: 's'),
+                _Curseur(k('repere_volume'), points[j].volume, 0, 1, 20,
+                    (x) => change((v) => v.courbes[_i][j].volume = x),
+                    pourcent: true),
+              ]),
+            ),
+            IconButton(
+              tooltip: k('repere_retirer'),
+              icon: const Icon(Icons.close_rounded),
+              onPressed: () => change((v) => v.courbes[_i].removeAt(j)),
+            ),
+          ]),
+        ),
+      Align(
+        alignment: Alignment.centerLeft,
+        child: TextButton.icon(
+          key: ValueKey('ajouter_repere_$acte'),
+          onPressed: points.length >= 8 ? null : _ajouter,
+          icon: const Icon(Icons.add_rounded),
+          label: Text(k('repere_ajouter')),
+        ),
+      ),
+      _Bascule(k('fin_zero'), v.finAZero[_i], (x) => change((v) => v.finAZero[_i] = x), aide: k('fin_zero_aide')),
+    ]);
+  }
+}
+
+/// Le dessin de la courbe : le volume (en hauteur) au fil de la musique.
+class _PeintreCourbe extends CustomPainter {
+  _PeintreCourbe({
+    required this.depart,
+    required this.points,
+    required this.finAZero,
+    required this.couleur,
+    required this.trait,
+  });
+
+  final double depart;
+  final List<(double, double)> points;
+  final bool finAZero;
+  final Color couleur;
+  final Color trait;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final tries = [...points]..sort((a, b) => a.$1.compareTo(b.$1));
+    final dernier = tries.isEmpty ? 0.0 : tries.last.$1;
+    // La fin du morceau, dessinée un peu après le dernier repère.
+    final fin = max(dernier * 1.25, 60.0);
+    final cles = [(0.0, depart), ...tries, if (finAZero) (fin, 0.0) else (fin, tries.isEmpty ? depart : tries.last.$2)];
+    Offset pt((double, double) c) => Offset(c.$1 / fin * size.width, size.height - c.$2 * size.height);
+    final fond = Paint()
+      ..color = trait
+      ..strokeWidth = 1;
+    canvas.drawLine(Offset(0, size.height), Offset(size.width, size.height), fond);
+    final chemin = Path()..moveTo(pt(cles.first).dx, pt(cles.first).dy);
+    for (final c in cles.skip(1)) {
+      chemin.lineTo(pt(c).dx, pt(c).dy);
+    }
+    final aire = Path.from(chemin)
+      ..lineTo(size.width, size.height)
+      ..lineTo(0, size.height)
+      ..close();
+    canvas.drawPath(aire, Paint()..color = couleur.withValues(alpha: 0.15));
+    canvas.drawPath(
+        chemin,
+        Paint()
+          ..color = couleur
+          ..strokeWidth = 2.5
+          ..style = PaintingStyle.stroke);
+    for (final c in cles) {
+      canvas.drawCircle(pt(c), 4, Paint()..color = couleur);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_PeintreCourbe old) => true;
 }
 
 class _ChoixEffet extends StatelessWidget {

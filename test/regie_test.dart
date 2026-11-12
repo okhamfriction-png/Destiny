@@ -787,14 +787,61 @@ void main() {
     expect(textesManquants(['lib/presentation/regie_son']), isEmpty);
   });
 
+  testWidgets('avec le pack : le minuteur du jeu lance la musique de l\'acte 1, une seule fois', (tester) async {
+    final b = await _banc(tester);
+    b.session.etape = EtapeSession.echauffement;
+    final m = ManifesteAudio.depuisJson(
+        jsonDecode(File('assets/data/destiny_audio.json').readAsStringSync()) as Map<String, dynamic>);
+    final journal = <String>[];
+    final pack = PackAudio.pourTests(m, IndexPack(fichiersDuManifeste(m)));
+    final reglages = ReglagesRegieSon(ValeursRegieSon()..sansCourbes());
+    final regieSon = RegieSon(
+      pack: pack,
+      reglages: reglages,
+      conduite: ConduiteSon(
+        pack: pack,
+        reglages: reglages,
+        muet: () => b.audio.muted,
+        fabrique: (bus) => LecteurFactice(bus, journal),
+        attendre: (d) => d >= const Duration(seconds: 60) ? Completer<void>().future : Future<void>.value(),
+      ),
+    );
+    final c = b.contexte;
+    final contexte = ContexteTroupe(
+      store: c.store,
+      reglages: c.reglages,
+      catalogue: c.catalogue,
+      audio: c.audio,
+      musique: c.musique,
+      visuels: c.visuels,
+      regieSon: regieSon,
+    );
+    await _ouvrir(tester, EchauffementScreen(contexte: contexte, session: b.session));
+    final acte1 = regieSon.conduite.musiqueDe(1).chemin!;
+    // « Lancer le minuteur » : l'histoire commence, la musique de l'acte 1 part.
+    await tester.tap(find.text(t.t('echauffement.demarrer')));
+    await tester.pump();
+    expect(journal, ['musique:jouer:$acte1']);
+    // Le chrono du spectacle ne la relance pas.
+    await tester.tap(find.byKey(const ValueKey('pilote_basculer')));
+    await tester.pump(const Duration(seconds: 2));
+    expect(journal.where((e) => e.startsWith('musique:jouer')), hasLength(1));
+    // La pause du minuteur ne coupe pas la musique de l'histoire.
+    await tester.tap(find.text(t.t('echauffement.pause')));
+    await tester.pump();
+    expect(journal, isNot(contains('musique:arreter')));
+    await tester.tap(find.byKey(const ValueKey('pilote_basculer')));
+    await tester.pump();
+  });
+
   testWidgets('avec le pack : la conduite part au chrono, la table montre la conduite et les banques', (tester) async {
     final b = await _banc(tester);
     final m = ManifesteAudio.depuisJson(
         jsonDecode(File('assets/data/destiny_audio.json').readAsStringSync()) as Map<String, dynamic>);
     final journal = <String>[];
     final pack = PackAudio.pourTests(m, IndexPack(fichiersDuManifeste(m)));
-    // Sans l'atténuation progressive : les attentes du test sont immédiates.
-    final reglages = ReglagesRegieSon(ValeursRegieSon()..decrescendo = false);
+    // Sans courbe de volume : les attentes du test sont immédiates.
+    final reglages = ReglagesRegieSon(ValeursRegieSon()..sansCourbes());
     final regieSon = RegieSon(
       pack: pack,
       reglages: reglages,
@@ -838,12 +885,19 @@ void main() {
     expect(find.byType(TableRegie), findsOneWidget);
     expect(find.text(t.t('regie_son.danger')), findsWidgets);
     expect(find.text(t.t('regie_son.bus.musique').toUpperCase()), findsOneWidget);
-    await tester.tap(find.byKey(const ValueKey('banque_cat:alertes')));
-    await tester.pump();
+    // Deux banques seulement : les sons du danger et les émotions.
+    expect(find.byKey(const ValueKey('banque_danger')), findsOneWidget);
+    expect(find.byKey(const ValueKey('banque_emotions')), findsOneWidget);
+    for (final inutile in ['cat:alertes', 'cat:creatures', 'ambiances', 'lieux', 'univers', 'themes']) {
+      expect(find.byKey(ValueKey('banque_$inutile')), findsNothing, reason: inutile);
+    }
     journal.clear();
-    await tester.tap(find.text(m.sons['ALARME']!.nom));
+    final pad = find.text(m.sons[codes.first]!.nom).first;
+    await tester.ensureVisible(pad);
     await tester.pump();
-    expect(journal, contains(startsWith('bruitageA:jouer:Bruitages/ALARME')));
+    await tester.tap(pad);
+    await tester.pump();
+    expect(journal, contains(startsWith('bruitageA:jouer:Bruitages/${codes.first}')));
     await tester.tap(find.byKey(const ValueKey('fermer_regie_son')));
     await tester.pump(const Duration(milliseconds: 400));
     await tester.tap(find.byTooltip(_rg('pause')));

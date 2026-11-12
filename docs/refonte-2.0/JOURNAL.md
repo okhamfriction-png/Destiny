@@ -1007,6 +1007,12 @@ Une conduite son automatique quand le pack audio du spectacle est là (`/Volumes
 - La musique de l'échauffement passe à « aucune » par défaut (clé `musique_echauffement_v2`) : le début de l'histoire, c'est la musique de l'acte 1.
 - La table : conduite, banques (onglets sur plusieurs lignes, Émotions juste après Ce danger), puis le mixeur (ex-« Tranches »).
 
+### Le minuteur lance l'histoire ; deux banques ; une courbe par acte
+
+- **Le minuteur du jeu** lance l'ouverture (musique de l'acte 1, puis bruitage, puis ambiance) ; la conduite retient qu'elle est ouverte (`ConduiteSon.ouverte`), le chrono du spectacle ne la rejoue pas, et la pause du minuteur ne coupe pas la musique de l'histoire.
+- **Deux banques** seulement : *Ce danger* et *Émotions* (les autres étaient de trop). Les catégories restent pour la couleur et l'icône des sons du danger.
+- **La courbe de volume par acte** remplace l'atténuation progressive globale : `courbes` (repères temps → volume) et `finAZero` (0 % à la fin du morceau, durée du manifeste ou du lecteur) ; le volume suit les repères en ligne droite, par pas de 250 ms. Le silence avant la musique est retiré de la séquence Destiny.
+
 ### Tests
 
-**340 tests passent.** Les nouveaux portent sur la résolution (propre, famille, NFD, absent), les bruitages (vide, remplacement, « Autre »), l'import, le bilan du vrai pack, les séquences avec un faux lecteur (ordre, annulation, son coupé) et la table dans la régie. Les 7 tests de rendu des cartes échouaient déjà avant (images de référence d'une autre machine).
+**342 tests passent.** Les nouveaux portent sur la résolution (propre, famille, NFD, absent), les bruitages (vide, remplacement, « Autre »), l'import, le bilan du vrai pack, les séquences avec un faux lecteur (ordre, annulation, son coupé) et la table dans la régie. Les 7 tests de rendu des cartes échouaient déjà avant (images de référence d'une autre machine).

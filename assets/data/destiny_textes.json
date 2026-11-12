@@ -721,7 +721,7 @@
       "pack_actif": "Conduite son automatique",
       "pack_actif_aide": "Avec le pack importé : une musique par lieu et par acte, et le bruitage du danger à chaque Destiny. Coupée, la régie garde ses musiques d'avant.",
       "musique": "La musique",
-      "musique_aide": "La musique de l'acte 1 ouvre le spectacle avec le chrono, puis celle de chaque acte après son Destiny. À la fin d'une musique : le bruitage du danger (si on le veut), puis l'ambiance du lieu en fond.",
+      "musique_aide": "La musique de l'acte 1 ouvre le spectacle, puis celle de chaque acte après son Destiny. Pour chaque acte : le volume au départ, le fondu d'entrée, et la courbe du volume (des repères, puis 0 % à la fin). À la fin d'une musique : le bruitage du danger (si on le veut), puis l'ambiance du lieu en fond.",
       "acte": "Acte {n}",
       "volume": "Volume",
       "fondu_entree": "Fondu d'entrée",
@@ -783,7 +783,16 @@
       "bruitage_fin": "Joué à la fin de la musique de l'acte",
       "ambiance_apres": "L'ambiance du lieu après la musique",
       "ambiance_apres_aide": "Quand la musique d'un acte se termine (et son bruitage), l'ambiance du lieu tourne en fond jusqu'au Destiny suivant.",
-      "volume_ambiance": "Volume de l'ambiance"
+      "volume_ambiance": "Volume de l'ambiance",
+      "volume_depart": "Volume au départ",
+      "courbe": "La courbe du volume",
+      "courbe_aide": "Après le fondu d'entrée, la musique passe par chaque repère, en ligne droite de l'un à l'autre.",
+      "repere_temps": "Au bout de",
+      "repere_volume": "Le volume est à",
+      "repere_ajouter": "Ajouter un repère",
+      "repere_retirer": "Retirer ce repère",
+      "fin_zero": "0 % à la fin du morceau",
+      "fin_zero_aide": "Quelle que soit sa durée, la musique finit au silence, puis s'arrête."
     },
     "arreter_voie": "Arrêter cette voie"
   },
