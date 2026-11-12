@@ -381,7 +381,8 @@ class ChatController extends ChangeNotifier {
     if (thisAction > 1 && ch > chAvant) {
       // Le passage d'un chapitre à l'autre : Destiny, lancé de l'extérieur.
       final nouvelle = ch - 1 < s.paliers.length ? s.paliers[ch - 1] : '';
-      b.write('\n[DESTINY : écris le rituel, l\'ellipse, puis la nouvelle de l\'alarmiste : $nouvelle]');
+      b.write('\n[DESTINY : écris le rituel, l\'ellipse, puis la nouvelle du palier (ce qu\'on entend du danger, et la '
+          'réaction d\'un personnage) : $nouvelle]');
       if (ch == 2) b.write('\n[Premier figé : chacun sait en silence ce qu\'il veut, et ce dont il a besoin.]');
       dangerPulse++;
       if (s.malus) _malusPending = true;

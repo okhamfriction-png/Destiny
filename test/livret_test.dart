@@ -141,6 +141,48 @@ void main() {
     });
   });
 
+  group('les règles de novembre 2026 (2.3.0)', () {
+    test('le livret : quatre comédiens et un figurant, le danger de la régie, la progression, des directions', () {
+      final livret = construireLivret(g, t);
+      final texte = [for (final s in livret.sections) for (final b in s.blocs) b.texte].join('\n');
+      for (final id in ['comediens', 'danger_regie', 'progression', 'directions', 'dernier_acte']) {
+        expect(texte, contains(g.regle(id)!.texte), reason: id);
+      }
+      expect(texte, contains(t.t('livret.public')));
+      expect(texte, contains(g.personnage.planterPourPayer));
+      expect(texte, contains(g.figurants.spectacle));
+      for (final x in [...g.rituel.suite, ...g.personnage.vouloirTests]) {
+        expect(texte.toLowerCase(), contains(x.toLowerCase()), reason: x);
+      }
+      for (final ancien in ['porte le danger', 'apporte la nouvelle', "l'archétype dort", 'in medias res']) {
+        expect(texte, isNot(contains(ancien)), reason: ancien);
+      }
+    });
+
+    test('les archétypes : tentés de, à l\'infinitif ; le gardien punit qui désobéit', () {
+      expect(t.t('cartes.montee'), 'Acte par acte, il est tenté de…');
+      expect(g.archetype('leader')!.monteeA(PalierId.signale), 'Organiser la journée');
+      expect(g.archetype('gardien_de_l_ordre')!.monteeA(PalierId.envahit), 'Punir qui désobéit');
+      expect(g.archetype('denegateur')!.ceQuIlFait, contains('se fiche du danger'));
+      expect(g.archetype('cynique')!.ceQuIlFait, contains('sans paniquer'));
+      expect(g.palier(PalierId.signale).etatArchetype, 'joué léger');
+      expect(g.personnage.echauffement.limite, isNot(contains('dort')));
+      expect(g.personnage.troisCartes.first.exemple, contains('Alors dégage'));
+    });
+
+    test('le rituel, les mots, les outils et les exercices', () {
+      expect(g.rituel.reprise, isNot(contains('alarmiste')));
+      expect(g.rituel.suite, hasLength(3));
+      expect(t.t('rituel.nouvelle_palier'), 'La nouvelle du palier');
+      expect(t.liste('lexique.utiliser'), containsAll(['rebondir', 'tenté de', 'la minute muette', 'planter pour payer']));
+      expect(t.liste('lexique.ne_plus_utiliser'), containsAll(["l'archétype dort", "l'alarmiste porte le danger"]));
+      expect(g.obsolete, contains('commencer in medias res'));
+      expect([for (final o in t.tables('outils_de_jeu.outils_novembre')) o['titre']], ['Accepter les perches', 'Planter pour payer']);
+      expect(g.exercices.map((e) => e.id), containsAll(['scene_1_en_duo', 'test_du_mobil_home']));
+      expect(g.actes.first.consignes.join(' '), contains('50-50'));
+    });
+  });
+
   group('les cartes à imprimer', () {
     test('un recto par archétype : 12 cartes, 2 pages de rectos et leurs 2 pages de versos', () async {
       final pdf = await cartesArchetypesPdf(g: g, t: t, polices: await _polices());

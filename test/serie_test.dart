@@ -6,6 +6,7 @@ import 'package:destiny/application/services/llm_service.dart';
 import 'package:destiny/application/state/ai_settings.dart';
 import 'package:destiny/application/state/serie_store.dart';
 import 'package:destiny/domain/entities/chat_message.dart';
+import 'package:destiny/domain/grammaire/distribution.dart';
 import 'package:destiny/domain/grammaire/modeles.dart';
 import 'package:destiny/domain/serie/migration_campagnes.dart';
 import 'package:destiny/domain/serie/regles_serie.dart';
@@ -434,13 +435,29 @@ void main() {
       }
     });
 
-    test('de quatre à six, la règle du spectacle (l\'alarmiste joue)', () {
+    test('de quatre à six, l\'alarmiste joue (en jeu de rôle, il est toujours là)', () {
       for (final n in [4, 5, 6]) {
-        final d = tirerDistributionJeu(g, n, hasard: Random(n));
-        expect(d.joueurs, hasLength(n));
-        expect(d.joueurs, contains(Grammaire.alarmisteId));
-        expect(d.alarmistePnj, isFalse);
+        for (var graine = 0; graine < 30; graine++) {
+          final d = tirerDistributionJeu(g, n, hasard: Random(graine));
+          expect(d.joueurs, hasLength(n));
+          expect(d.joueurs, contains(Grammaire.alarmisteId));
+          expect(d.alarmistePnj, isFalse);
+          expect(validerDistribution(g, d.joueurs, mode: ModeDistribution.serie).valide, isTrue);
+        }
       }
+    });
+
+    test('en Série, le maître du jeu tient toujours l\'alarmiste quand aucun joueur ne l\'a', () {
+      for (var n = 1; n <= 6; n++) {
+        for (var graine = 0; graine < 20; graine++) {
+          final d = tirerDistributionJeu(g, n, hasard: Random(graine));
+          expect(d.alarmistePnj || d.joueurs.contains(Grammaire.alarmisteId), isTrue, reason: '$n : ${d.joueurs}');
+        }
+      }
+      // Une distribution sans alarmiste, valide au spectacle, ne l'est pas en Série.
+      const sans = ['leader', 'prophete', 'denegateur', 'opportuniste'];
+      expect(validerDistribution(g, sans).valide, isTrue);
+      expect(validerDistribution(g, sans, mode: ModeDistribution.serie).valide, isFalse);
     });
 
     test('au-delà de six, chacun a un archétype', () {

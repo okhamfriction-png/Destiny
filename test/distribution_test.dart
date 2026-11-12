@@ -26,14 +26,24 @@ void main() {
       }
     });
 
-    test('refuse un groupe sans alarmiste, et explique pourquoi', () {
-      final v = validerDistribution(g, ['leader', 'prophete', 'denegateur', 'opportuniste']);
+    test('au spectacle, un groupe sans alarmiste est valide : le danger vient de la régie', () {
+      final ids = ['leader', 'prophete', 'denegateur', 'opportuniste'];
+      final v = validerDistribution(g, ids);
+      expect(v.valide, isTrue, reason: v.raison(g, t));
+      expect(v.raison(g, t), isNot(contains('alarmiste')));
+      expect(validerDistribution(g, ids, mode: ModeDistribution.spectacle).valide, isTrue);
+      // À 3 aussi : celui qui tient, celui qui interprète, celui qui se fissure.
+      expect(validerDistribution(g, ['aidant', 'paranoiaque', 'prophete']).valide, isTrue);
+    });
+
+    test('en jeu de rôle, l\'alarmiste est toujours là : sinon on le dit, et on le propose', () {
+      final ids = ['leader', 'prophete', 'denegateur', 'opportuniste'];
+      final v = validerDistribution(g, ids, mode: ModeDistribution.serie);
       expect(v.valide, isFalse);
       expect(v.problemes.first.type, TypeProbleme.sansAlarmiste);
       expect(v.raison(g, t), contains('alarmiste'));
-      // La correction fait entrer l'alarmiste sans casser les familles.
-      final corrige = v.correction!.appliquer(['leader', 'prophete', 'denegateur', 'opportuniste']);
-      expect(validerDistribution(g, corrige).valide, isTrue);
+      final corrige = v.correction!.appliquer(ids);
+      expect(validerDistribution(g, corrige, mode: ModeDistribution.serie).valide, isTrue);
       expect(v.phraseCorrection(g, t), contains('Alarmiste'));
     });
 
@@ -112,6 +122,9 @@ void main() {
           final ids = tirerDistribution(g, n, hasard: rng);
           expect(ids, hasLength(n));
           expect(validerDistribution(g, ids).valide, isTrue, reason: '$ids');
+          final jeu = tirerDistribution(g, n, hasard: rng, mode: ModeDistribution.serie);
+          expect(jeu, contains('alarmiste'));
+          expect(validerDistribution(g, jeu, mode: ModeDistribution.serie).valide, isTrue, reason: '$jeu');
         }
       }
     });
@@ -121,9 +134,18 @@ void main() {
       for (var i = 0; i < 100; i++) {
         final ids = tirerDistribution(g, 5,
             hasard: rng, imposes: ['paranoiaque'], leaderObligatoire: true);
-        expect(ids, containsAll(['alarmiste', 'paranoiaque', 'leader']));
+        expect(ids, containsAll(['paranoiaque', 'leader']));
         expect(validerDistribution(g, ids, leaderObligatoire: true).valide, isTrue);
       }
+    });
+
+    test('au spectacle, l\'alarmiste n\'a plus de place réservée', () {
+      final rng = Random(3);
+      var sans = 0;
+      for (var i = 0; i < 200; i++) {
+        if (!tirerDistribution(g, 4, hasard: rng).contains('alarmiste')) sans++;
+      }
+      expect(sans, greaterThan(100), reason: 'la plupart des tirages se passent de lui');
     });
 
     test('n\'existe ni à 2 ni à 7 joueurs', () {

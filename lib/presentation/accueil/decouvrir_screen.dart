@@ -207,7 +207,8 @@ class _EcranLieu extends StatelessWidget {
     final g = context.grammaire;
     final t = context.textes;
     return _Ecran(titre: t.t('decouvrir.ecrans.lieu.titre'), enfants: [
-      for (final r in g.reglesDOr.take(2)) _Regle(r),
+      for (final id in ['se_connaitre', 'un_lieu', 'comediens'])
+        if (g.regle(id) case final r?) _Regle(r),
     ]);
   }
 }
@@ -220,7 +221,9 @@ class _EcranDanger extends StatelessWidget {
     final g = context.grammaire;
     final t = context.textes;
     final c = context.destiny;
-    final alarmiste = g.reglesDOr.length > 3 ? g.reglesDOr[3] : null;
+    // Le danger vient de la régie : musiques et bruitages, au signal du
+    // metteur en scène.
+    final regie = g.regle('danger_regie');
     return _Ecran(titre: t.t('decouvrir.ecrans.danger.titre'), enfants: [
       FrisePaliers(textes: [for (final p in g.paliers) p.ambiance], compacte: true),
       const SizedBox(height: 14),
@@ -235,8 +238,19 @@ class _EcranDanger extends StatelessWidget {
             side: BorderSide(color: c.bleuDestiny.withValues(alpha: 0.6)),
           ),
       ]),
+      if (g.rituel.suite.isNotEmpty) ...[
+        const SizedBox(height: 6),
+        Wrap(spacing: 6, runSpacing: 6, children: [
+          for (final s in g.rituel.suite)
+            Chip(
+              label: Text(s),
+              visualDensity: VisualDensity.compact,
+              side: BorderSide(color: c.or.withValues(alpha: 0.6)),
+            ),
+        ]),
+      ],
       const SizedBox(height: 10),
-      if (alarmiste != null) _Regle(alarmiste, couleur: c.bleuDestiny),
+      if (regie != null) _Regle(regie, couleur: c.bleuDestiny),
     ]);
   }
 }

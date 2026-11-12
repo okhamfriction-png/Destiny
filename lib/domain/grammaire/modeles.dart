@@ -210,7 +210,11 @@ class Acte {
 
 /// Une règle d'or.
 class RegleDOr {
-  const RegleDOr({required this.titre, required this.texte});
+  const RegleDOr({required this.titre, required this.texte, this.id = ''});
+
+  /// L'identifiant stable de la règle (« danger_regie »), pour la retrouver
+  /// sans dépendre de son rang.
+  final String id;
   final String titre;
   final String texte;
 }
@@ -223,6 +227,7 @@ class RituelDestiny {
     required this.sequence,
     required this.reprise,
     required this.premierFige,
+    this.suite = const [],
   });
 
   final String quand;
@@ -230,6 +235,10 @@ class RituelDestiny {
   final List<String> sequence;
   final String reprise;
   final String premierFige;
+
+  /// Ce que la régie son enchaîne après l'ellipse : le bruitage du nouveau
+  /// palier, la musique de l'acte, la reprise des comédiens.
+  final List<String> suite;
 }
 
 /// Combien d'archétypes de chaque famille pour un nombre de joueurs.
@@ -379,7 +388,24 @@ class PedagogiePersonnage {
     required this.acteParActe,
     required this.sixDirections,
     required this.echauffement,
+    this.vouloirTests = const [],
+    this.vouloirMethode = '',
+    this.planterPourPayer = '',
+    this.vouloirAvoue = '',
   });
+
+  /// Les trois tests d'un bon vouloir.
+  final List<String> vouloirTests;
+
+  /// Comment trouver son vouloir (du grand objectif à ce qu'on veut de
+  /// l'autre, maintenant).
+  final String vouloirMethode;
+
+  /// Planter pour payer : ce qui est posé à l'acte 1 revient à l'acte 4.
+  final String planterPourPayer;
+
+  /// La nuance du vouloir avoué : le vouloir contre le masque.
+  final String vouloirAvoue;
 
   final List<String> couches;
   final String phraseCle;
@@ -512,6 +538,7 @@ class TypeFigurant {
 class ReglesFigurants {
   const ReglesFigurants({
     required this.modes,
+    this.spectacle = '',
     required this.types,
     required this.regles,
     required this.parLieu,
@@ -520,6 +547,10 @@ class ReglesFigurants {
 
   /// Texte de chaque mode.
   final Map<ModePnj, String> modes;
+
+  /// Le figurant du spectacle (un personnage du décor, sans lien), à côté
+  /// des deux modes du jeu de rôle.
+  final String spectacle;
   final List<TypeFigurant> types;
   final List<RegleDOr> regles;
   final String parLieu;
@@ -863,6 +894,14 @@ class Grammaire {
   final List<Palier> paliers;
   final List<Acte> actes;
   final List<RegleDOr> reglesDOr;
+
+  /// La règle d'or [id] (« danger_regie »), s'il y en a une.
+  RegleDOr? regle(String id) {
+    for (final r in reglesDOr) {
+      if (r.id == id) return r;
+    }
+    return null;
+  }
   final RituelDestiny rituel;
   final RegleDistribution distribution;
   final PedagogiePersonnage personnage;

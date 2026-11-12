@@ -49,6 +49,9 @@ class _ArchetypesScreenState extends State<ArchetypesScreen> {
         couleur: (f) => f == null ? null : c.famille(f),
       ),
       enfants: [
+        // Le principe des cartes, en tête de page.
+        EncartReplique(t.t('bibliotheque.archetypes_principe'), couleur: c.or),
+        const SizedBox(height: 8),
         for (final f in familles) ...[
           SectionDestiny(titre: g.famille(f).nom, enfants: [
             Paragraphe(g.famille(f).idee, italique: true),

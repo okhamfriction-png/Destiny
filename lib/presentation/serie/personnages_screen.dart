@@ -160,7 +160,7 @@ class _PersonnagesScreenState extends State<PersonnagesScreen> {
     String k(String x) => t.t('serie.personnages.$x');
     final joueurs = _joueurs;
     final ids = [for (final p in joueurs) p.archetypeId];
-    final verdict = joueurs.length >= 4 && joueurs.length <= 6 ? validerDistribution(g, ids) : null;
+    final verdict = joueurs.length >= 4 && joueurs.length <= 6 ? validerDistribution(g, ids, mode: ModeDistribution.serie) : null;
     final complet = s.personnages.every((p) => p.archetypeId.isNotEmpty && p.animalId.isNotEmpty);
 
     return PageDestiny(

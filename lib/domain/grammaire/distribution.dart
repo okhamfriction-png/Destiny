@@ -3,6 +3,12 @@ import 'dart:math';
 import 'modeles.dart';
 import 'textes.dart';
 
+/// Pour quel jeu on distribue : au spectacle, l'alarmiste est un archétype
+/// comme les autres, facultatif (le danger vient de la régie) ; en jeu de
+/// rôle (la Série), il est toujours là, tenu par le maître du jeu s'il
+/// manque parmi les joueurs.
+enum ModeDistribution { spectacle, serie }
+
 /// Un problème dans une distribution d'archétypes.
 enum TypeProbleme {
   nombre,
@@ -113,7 +119,9 @@ VerdictDistribution validerDistribution(
   Grammaire g,
   List<String> ids, {
   bool leaderObligatoire = false,
+  ModeDistribution mode = ModeDistribution.spectacle,
 }) {
+  final alarmisteObligatoire = mode == ModeDistribution.serie;
   final problemes = <ProblemeDistribution>[];
   final compo = g.distribution.pour(ids.length);
   if (compo == null) {
@@ -128,7 +136,7 @@ VerdictDistribution validerDistribution(
       problemes.add(ProblemeDistribution(TypeProbleme.doublon, archetypeId: id));
     }
   }
-  if (!ids.contains(Grammaire.alarmisteId)) {
+  if (alarmisteObligatoire && !ids.contains(Grammaire.alarmisteId)) {
     problemes.add(const ProblemeDistribution(TypeProbleme.sansAlarmiste));
   }
   for (final f in FamilleId.values) {
@@ -146,7 +154,7 @@ VerdictDistribution validerDistribution(
   }
   if (problemes.isEmpty) return const VerdictDistribution([], null);
   return VerdictDistribution(
-      problemes, _proposerCorrection(g, ids, compo, problemes.first, leaderObligatoire));
+      problemes, _proposerCorrection(g, ids, compo, problemes.first, leaderObligatoire, alarmisteObligatoire));
 }
 
 /// Cherche un seul remplacement qui règle le premier problème.
@@ -156,6 +164,7 @@ CorrectionDistribution? _proposerCorrection(
   CompositionDistribution compo,
   ProblemeDistribution p,
   bool leaderObligatoire,
+  bool alarmisteObligatoire,
 ) {
   // L'archétype à faire entrer.
   String? entrant;
@@ -182,7 +191,7 @@ CorrectionDistribution? _proposerCorrection(
       final manque = FamilleId.values.where(
           (f) => compterFamille(g, reste, f) < compo.minimumPour(f));
       final candidats = [
-        if (!reste.contains(Grammaire.alarmisteId)) Grammaire.alarmisteId,
+        if (alarmisteObligatoire && !reste.contains(Grammaire.alarmisteId)) Grammaire.alarmisteId,
         for (final f in manque) ...g.archetypesDe(f).map((a) => a.id),
         ...g.archetypes.map((a) => a.id),
       ].where((id) => !reste.contains(id));
@@ -197,11 +206,11 @@ CorrectionDistribution? _proposerCorrection(
   // Le joueur à changer : celui dont le départ ne crée pas de nouveau manque.
   for (var i = ids.length - 1; i >= 0; i--) {
     final ancien = ids[i];
-    if (ancien == Grammaire.alarmisteId) continue;
+    if (alarmisteObligatoire && ancien == Grammaire.alarmisteId) continue;
     if (leaderObligatoire && ancien == Grammaire.leaderId) continue;
     final essai = [...ids]..[i] = entrant;
-    final avant = _compterProblemes(g, ids, leaderObligatoire);
-    final apres = _compterProblemes(g, essai, leaderObligatoire);
+    final avant = _compterProblemes(g, ids, leaderObligatoire, alarmisteObligatoire);
+    final apres = _compterProblemes(g, essai, leaderObligatoire, alarmisteObligatoire);
     if (apres < avant) {
       return CorrectionDistribution(index: i, ancienId: ancien, nouveauId: entrant);
     }
@@ -209,7 +218,7 @@ CorrectionDistribution? _proposerCorrection(
   return null;
 }
 
-int _compterProblemes(Grammaire g, List<String> ids, bool leaderObligatoire) {
+int _compterProblemes(Grammaire g, List<String> ids, bool leaderObligatoire, bool alarmisteObligatoire) {
   final compo = g.distribution.pour(ids.length);
   if (compo == null) return 1;
   var n = 0;
@@ -217,7 +226,7 @@ int _compterProblemes(Grammaire g, List<String> ids, bool leaderObligatoire) {
   for (final id in ids) {
     if (g.archetype(id) == null || !vus.add(id)) n++;
   }
-  if (!ids.contains(Grammaire.alarmisteId)) n++;
+  if (alarmisteObligatoire && !ids.contains(Grammaire.alarmisteId)) n++;
   for (final f in FamilleId.values) {
     if (compterFamille(g, ids, f) < compo.minimumPour(f)) n++;
   }
@@ -227,14 +236,16 @@ int _compterProblemes(Grammaire g, List<String> ids, bool leaderObligatoire) {
 
 /// Tire une distribution équilibrée pour [joueurs] joueurs. Les archétypes
 /// [imposes] sont gardés ; le reste est tiré pour que chaque famille soit
-/// représentée. L'ordre final est mélangé (l'alarmiste n'est pas toujours le
-/// joueur 1).
+/// représentée. En jeu de rôle, l'alarmiste est toujours tiré ; au
+/// spectacle, il n'a pas de place réservée (il peut venir en plus). L'ordre
+/// final est mélangé.
 List<String> tirerDistribution(
   Grammaire g,
   int joueurs, {
   Random? hasard,
   List<String> imposes = const [],
   bool leaderObligatoire = false,
+  ModeDistribution mode = ModeDistribution.spectacle,
 }) {
   final rng = hasard ?? Random();
   final compo = g.distribution.pour(joueurs);
@@ -248,7 +259,7 @@ List<String> tirerDistribution(
     }
   }
 
-  ajouter(Grammaire.alarmisteId);
+  if (mode == ModeDistribution.serie) ajouter(Grammaire.alarmisteId);
   for (final id in imposes) {
     ajouter(id);
   }

@@ -459,7 +459,8 @@ class SpectacleController extends ChangeNotifier {
   Future<void> lancerDestiny() async {
     if (!peutLancerDestiny) return;
     _awaitingCharacter = false;
-    await _send('[DESTINY] La régie lance Destiny. Écris le rituel et la nouvelle de l\'alarmiste, en JSON.');
+    await _send('[DESTINY] La régie lance Destiny. Écris le rituel, le son du nouveau palier et la première réaction '
+        'd\'un partenaire, en JSON.');
   }
 
   /// Mode classique : le joueur choisit une proposition.

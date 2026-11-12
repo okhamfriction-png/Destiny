@@ -612,7 +612,31 @@ void main() {
     testWidgets('si la distribution n\'est plus équilibrée, on le dit sans bloquer', (tester) async {
       final b = await echauffement(tester);
       final s = b.session;
-      final libre = g.archetypes.firstWhere((a) => a.id != 'alarmiste' && s.personnages.every((p) => p.archetypeId != a.id));
+      // Celui qui est seul de sa famille est remplacé par un archétype d'une
+      // autre famille : sa famille manque.
+      final seul = s.personnages.firstWhere((p) =>
+          p.archetypeId != 'alarmiste' &&
+          s.personnages.where((q) => q.archetypeId != 'alarmiste' && g.archetype(q.archetypeId)!.famille == g.archetype(p.archetypeId)!.famille).length == 1);
+      final famille = g.archetype(seul.archetypeId)!.famille;
+      final libre = g.archetypes.firstWhere((a) =>
+          a.id != 'alarmiste' && a.famille != famille && s.personnages.every((p) => p.archetypeId != a.id));
+      await tester.tap(find.byKey(ValueKey('changer_${seul.archetypeId}')));
+      await tester.pumpAndSettle();
+      final choix = find.descendant(of: find.byType(BottomSheet), matching: find.text(libre.nom));
+      await tester.ensureVisible(choix);
+      await tester.pumpAndSettle();
+      await tester.tap(choix);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(s.personnages.any((p) => p.archetypeId == libre.id), isTrue);
+      expect(find.byType(SnackBar), findsOneWidget);
+    });
+
+    testWidgets('sans alarmiste, le spectacle reste équilibré : le danger vient de la régie', (tester) async {
+      final b = await echauffement(tester);
+      final s = b.session;
+      final libre = g.archetypes.firstWhere((a) =>
+          a.id != 'alarmiste' && a.famille == FamilleId.interprete && s.personnages.every((p) => p.archetypeId != a.id));
       await tester.tap(find.byKey(const ValueKey('changer_alarmiste')));
       await tester.pumpAndSettle();
       final choix = find.descendant(of: find.byType(BottomSheet), matching: find.text(libre.nom));
@@ -622,7 +646,7 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));
       expect(s.personnages.any((p) => p.archetypeId == 'alarmiste'), isFalse);
-      expect(find.byType(SnackBar), findsOneWidget);
+      expect(find.byType(SnackBar), findsNothing);
     });
 
     testWidgets('chaque archétype montre ses quatre réactions au danger, une par palier', (tester) async {

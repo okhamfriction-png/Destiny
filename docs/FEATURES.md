@@ -3,7 +3,7 @@
 > Application Flutter (Android, iOS, web) pour l'**improvisation dramatique**, avec la grammaire de Destiny.
 > Tout fonctionne **hors ligne**, à partir des fichiers de l'appli et d'une base locale. Seuls les modes « avec l'IA » demandent une clé d'API.
 >
-> Version documentée : **2.0.0** — voir le [CHANGELOG](../CHANGELOG.md).
+> Version documentée : **2.3.0** — voir le [CHANGELOG](../CHANGELOG.md).
 
 ## Aperçu
 
@@ -19,7 +19,7 @@
 
 ## 1. Vue d'ensemble
 
-**La promesse : rien n'est écrit.** Un lieu, un groupe qui se connaît, un danger qui monte en quatre paliers, et Destiny entre les actes. Chaque personnage a un **archétype** (sa conviction face au danger), un **animal** (son corps), une **blessure**, un **vouloir** et un **besoin**. À l'acte 4, il paie le prix : il choisit entre son vouloir et son besoin.
+**La promesse : rien n'est écrit.** Un lieu, un groupe qui se connaît, un danger qui monte en quatre paliers (porté par la régie : musiques et bruitages), et Destiny entre les actes. Au spectacle, **quatre comédiens et un figurant**. Chaque personnage a un **archétype** (sa conviction face au danger : acte par acte, il est **tenté de**…), un **animal** (son vêtement et son statut de départ), un **vouloir** (ici, ce soir, qui dépend de l'autre) et un **besoin**. À l'acte 4, il paie le prix : il choisit entre son vouloir et son besoin. Les cartes donnent des directions, pas des prisons.
 
 Trois onglets en bas de l'écran :
 
@@ -39,8 +39,8 @@ En haut à droite : la **Bibliothèque**, la **Musique**, les **Réglages** et l
 
 Au premier lancement, quatre écrans pour comprendre le format en deux minutes, tous tirés de la grammaire :
 1. la promesse ;
-2. le lieu et le groupe ;
-3. le danger en quatre paliers, et le rituel Destiny ;
+2. le lieu et le groupe, quatre comédiens et un figurant ;
+3. le danger en quatre paliers, qui vient de la régie, et le rituel Destiny (puis le bruitage du palier, la musique de l'acte, la reprise) ;
 4. les personnages : les trois familles, le vouloir et le besoin.
 
 On peut les passer, et les revoir depuis la Bibliothèque ou les Réglages.
@@ -53,14 +53,14 @@ L'accueil montre la promesse et, un jour sur deux, la règle d'or ou la répliqu
 
 1. **Préparer** : spectacle ou répétition, 3, 4, 5 ou 6 joueurs.
    - La distribution se fait par choix concerté, tirage équilibré ou exemple tout prêt.
-   - L'alarmiste est toujours là, et chaque famille est représentée. Une distribution déséquilibrée est refusée, avec une phrase qui dit pourquoi et une correction en un geste.
+   - Chaque famille est représentée ; on choisit des archétypes qui s'opposent dans leur réflexe. L'alarmiste est facultatif au spectacle (le danger vient de la régie). Une distribution déséquilibrée est signalée, avec une phrase qui dit pourquoi et une correction en un geste.
    - Chaque joueur choisit son animal parmi les deux de son archétype.
 2. **Le jeu** (l'écran qui porte le spectacle, sans flèche de retour) : le chrono et DESTINY, les paliers du danger, la carte de chaque joueur, les trois questions (« Comment je me tiens ? »…), la limite (« le corps, pas l'histoire ») et un minuteur, qui lance la musique de l'échauffement.
 3. **Avant d'entrer en scène** : les règles d'or, les quatre paliers et la phrase des débriefs. Aucune critique.
 4. **La régie** : la table de régie, en pop-up par-dessus le jeu (sa croix ramène au jeu, le spectacle continue). Le jeu montre aussi :
    - un gros chrono et l'acte en cours, puis trois cadres : le lieu et le danger, les paliers du danger, les archétypes à ce palier ;
    - le **bouton Destiny**, réservé à la régie. Il se déclenche aussi tout seul aux minutes prévues, selon le réglage ;
-   - le rituel en plein écran : le tonnerre, le rire du destin, la lumière bleue, le figé, l'ellipse ; puis la nouvelle de l'alarmiste, qui se ferme seule après 10 secondes sans action ;
+   - le rituel en plein écran : le tonnerre, le rire du destin, la lumière bleue, le figé, l'ellipse ; puis la nouvelle du palier (à faire entendre par la régie son, ou à souffler au figurant), qui se ferme seule après 10 secondes sans action ;
    - au premier figé, le rappel de fixer le besoin ;
    - pour chaque joueur, ce que fait son archétype et le corps de son animal à ce palier ;
    - à l'acte 4, le dilemme du danger ;
@@ -78,8 +78,8 @@ L'accueil montre la promesse et, un jour sur deux, la règle d'or ou la répliqu
 - **21 univers** (12 pour adultes, 10 pour enfants, Super-héros est des deux) avec leurs lores, leurs peuples, leurs lieux, leurs **figurants** (trois par lieu), leurs **dangers** (trois par univers) et leurs **méchants**.
 - **Les figurants et les sbires** : deux modes distincts. Un figurant peut basculer en sbire, et c'est noté au registre.
 - **Le registre** garde les figurants, les sbires, les lieux, les secrets, les promesses, les morts (adultes seulement), le traître et ce que le méchant a laissé. Au début d'un épisode, l'IA peut proposer deux ou trois éléments à ressortir. Il ne contient **jamais les prénoms des joueurs**, seulement les personnages. Il s'exporte en PDF.
-- **Le traître** : une option, désactivée par défaut. En saison, c'est le méchant qui le recrute, en secret.
-- **Le combat** et **la pièce du destin** restent, en option.
+- **Aussi simple que le théâtre** (depuis la 2.2.0) : Préparer, le Jeu, la Régie, la même table de régie et la même conduite son. Chaque personnage a deux pistes : le **cœur** (en forme, blessé, mort) et le **cerveau** (lucide, ébranlé, au bord de la folie, fou). Plus de traître, de pièce du destin ni de cases de blessure.
+- **Le compte rendu de l'IA** à la fin de chaque épisode, depuis la transcription ou la trame de l'épisode et les notes du maître du jeu.
 - **La transcription** (facultative) : la reconnaissance vocale du téléphone écrit la scène pour aider au résumé ; l'appli ne garde aucun son, et l'on voit ce qui part avant tout envoi à l'IA.
 
 ### Le mode kids
@@ -98,7 +98,7 @@ Le jeu de rôle commence par le choix du mode, **adulte** ou **enfant** : tout l
 Facultatif : il faut une clé d'API (Anthropic, OpenAI ou Google), à régler dans **Réglages › IA**. Les prompts sont réunis dans `lib/application/prompts/`, versionnés et testés ; chacun contient la grammaire en version courte, générée depuis le fichier.
 
 - **L'histoire avec l'IA** : on choisit son archétype, son animal, et si on veut une blessure et un vouloir. L'IA joue les autres, avec une distribution équilibrée. Quatre chapitres, un par palier ; **Destiny tombe entre deux chapitres**. La **pièce du destin** tranche chaque action. Au dernier chapitre, on choisit : le vouloir ou le besoin. Le résumé suit le coach de débrief.
-- **Le spectacle avec l'IA** : quatre personnages tirés en distribution équilibrée, quatre actes, Destiny avec un bouton, et un **débrief positif** : l'histoire, ton personnage, la phrase clé, ce qui a marché, une piste pour la prochaine fois.
+- **Le spectacle avec l'IA** : quatre personnages tirés en distribution équilibrée, quatre actes, Destiny avec un bouton, et un **débrief positif** : l'histoire, ton personnage, la phrase clé, ce qui a marché, une piste pour la prochaine fois. Les règles du sparring : l'IA ne coupe jamais l'acte, relève aussi les fautes d'impro avec un conseil concret, accepte les perches, ne narre pas le danger ; l'acte 1 reste léger, la sidération de l'acte 3 est un temps.
 - Les univers viennent de `univers.json`. Chaque mode a sa version **enfant** : des frissons doux, jamais d'effroi.
 - Modèles Claude proposés : Opus 5.5 (par défaut), Sonnet 5.5, Haiku 5.5, Fable 5.1, et les précédents.
 
@@ -107,7 +107,7 @@ Facultatif : il faut une clé d'API (Anthropic, OpenAI ou Google), à régler da
 ## 6. Exercices
 
 - **Les thèmes du carnet** : Échauffement, Statut, Spontanéité, Écoute, Dialogue, Imagination, avec **le principe du jour**.
-- **Les 20 exercices de la grammaire**, en trois thèmes, chacun ouvert par son principe :
+- **Les 21 exercices de la grammaire** (dont « La scène 1 en duo » et « Le test du mobil-home »), en trois thèmes, chacun ouvert par son principe :
   - **CROW** (qui, avec qui, pour quoi, où) ;
   - **Lieu** (un seul lieu, bien installé) ;
   - **Destiny** (le danger, les archétypes, le prix à payer).
@@ -121,14 +121,14 @@ Facultatif : il faut une clé d'API (Anthropic, OpenAI ou Google), à régler da
 ## 7. La Bibliothèque
 
 - **Découvrir Destiny** (les quatre écrans du début).
-- **Le livret de règles** : le but, le matériel, les rôles, la mise en place, le déroulé, la fin, les variantes (4 à 6 joueurs, Série, méchants, sbires, figurants, registre, traître, mode kids) et les règles d'or. Chaque règle vient de la grammaire. **Export PDF.**
-- **Les archétypes** : les 12, rangés en trois familles, avec leur montée palier par palier, leurs deux animaux, leurs modèles dans les œuvres et leurs méchants reflets. **Cartes à imprimer en PDF** : un recto par archétype (12 cartes) ou par animal (24 cartes), un verso Destiny, neuf cartes de 63 × 88 mm par page.
+- **Le livret de règles** : le but, le matériel, les rôles (quatre comédiens, le figurant, la régie), la mise en place (ce que donne le public), le déroulé (les actes, le rituel et la suite de la régie son, chaque acte reprend le précédent, planter pour payer), la fin, les variantes (Série, méchants, sbires, figurants, registre, mode kids) et les dix règles d'or. Chaque règle vient de la grammaire. **Export PDF.**
+- **Les archétypes** : « des directions, pas des prisons ». Les 12, rangés en trois familles, avec ce qu'ils sont tentés de faire acte par acte, leurs deux animaux, leurs modèles dans les œuvres et leurs méchants reflets. **Cartes à imprimer en PDF** : un recto par archétype (12 cartes) ou par animal (24 cartes), un verso Destiny, neuf cartes de 63 × 88 mm par page.
 - **Les animaux** : les 24, avec leur port, leur posture, leur statut de départ, leur réplique (et sa version kids) et leur corps à chaque palier.
-- **Vouloir et besoin** : les six couches du personnage, la phrase clé, le piège (« un besoin n'est jamais un objet »).
+- **Vouloir et besoin** : les trois tests d'un bon vouloir (ici, ce soir ; il dépend de l'autre ; le danger peut l'empêcher), le piège (« un besoin n'est jamais un objet »), planter pour payer, le vouloir avoué (Succession), les six couches du personnage et la phrase clé.
 - **Les dangers** et **les lieux**, avec leurs paliers, leurs espaces, leurs rôles et leurs figurants.
 - **Les œuvres** : des séries, des pièces et des films lus avec la grammaire.
 - **Les méchants** : les 24 grands méchants et ceux des 21 univers, avec leurs sbires et leurs présages.
-- **Les figurants**, **le mode kids**, **les outils de jeu** (les mains occupées, le sous-texte, les silences…) et **le lexique** (ce qu'on dit, et ce qu'on ne dit plus).
+- **Les figurants** (dont le figurant du spectacle), **le mode kids**, **les outils de jeu** (ceux de Mark Jane, puis ceux des séances de novembre : accepter les perches, planter pour payer) et **les mots de Destiny** (ce qu'on dit, et ce qu'on ne dit plus).
 
 ---
 

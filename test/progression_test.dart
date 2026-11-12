@@ -38,7 +38,7 @@ void main() {
     test('la montée de l\'archétype et le corps de l\'animal à chaque palier', () async {
       final g = (await chargerGrammaire()).grammaire;
       final m = monteeAttendue(g, archetypeId: 'leader', animalId: 'lion', palier: PalierId.envahit)!;
-      expect(m.ceQuIlFait, 'Impose ses choix');
+      expect(m.ceQuIlFait, 'Imposer ses choix');
       expect(m.corps, isNotEmpty);
       expect(monteeAttendue(g, archetypeId: 'inconnu', palier: PalierId.signale), isNull);
     });

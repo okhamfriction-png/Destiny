@@ -42,6 +42,11 @@ class VouloirBesoinScreen extends StatelessWidget {
               EncartReplique(carte.exemple, couleur: c.or),
             ]),
           ),
+        if (p.vouloirTests.isNotEmpty)
+          SectionDestiny(titre: v('tests'), enfants: [
+            for (final (i, test) in p.vouloirTests.indexed) Puce(test, numero: i + 1),
+            if (p.vouloirMethode.isNotEmpty) Paragraphe(p.vouloirMethode),
+          ]),
         SectionDestiny(titre: v('piege'), enfants: [Paragraphe(p.piege, gras: true)]),
         SectionDestiny(titre: v('detecter'), enfants: [Paragraphe(p.detecterPasJouer)]),
         SectionDestiny(titre: v('phrase_cle'), enfants: [EncartReplique(p.phraseCle, couleur: c.bleuDestiny, taille: 15)]),
@@ -55,6 +60,10 @@ class VouloirBesoinScreen extends StatelessWidget {
           for (final geste in p.acteParActe)
             LigneInfo('${geste.moment} · ${geste.verbe}', geste.consigne),
         ]),
+        if (p.planterPourPayer.isNotEmpty)
+          SectionDestiny(titre: v('planter'), enfants: [Paragraphe(p.planterPourPayer)]),
+        if (p.vouloirAvoue.isNotEmpty)
+          SectionDestiny(titre: v('avoue'), enfants: [Paragraphe(p.vouloirAvoue)]),
         SectionDestiny(titre: v('six_directions'), enfants: [
           for (final d in p.sixDirections) CarteDirection(d),
         ]),
@@ -63,7 +72,7 @@ class VouloirBesoinScreen extends StatelessWidget {
   }
 }
 
-/// Les outils de jeu de Mark Jane.
+/// Les outils de jeu : ceux de Mark Jane, puis ceux des séances de novembre.
 class OutilsScreen extends StatelessWidget {
   const OutilsScreen({super.key});
 
@@ -75,6 +84,11 @@ class OutilsScreen extends StatelessWidget {
       enfants: [
         Paragraphe(t.t('outils_de_jeu.source'), italique: true),
         for (final o in t.tables('outils_de_jeu.outils'))
+          SectionDestiny(titre: '${o['titre']}', enfants: [Paragraphe('${o['texte']}')]),
+        // Les outils des séances de novembre, à part de ceux de Mark Jane.
+        const SizedBox(height: 18),
+        Paragraphe(t.t('outils_de_jeu.source_novembre'), italique: true),
+        for (final o in t.tables('outils_de_jeu.outils_novembre'))
           SectionDestiny(titre: '${o['titre']}', enfants: [Paragraphe('${o['texte']}')]),
         const SizedBox(height: 14),
         Paragraphe(t.t('outils_de_jeu.instinct'), gras: true),
@@ -169,6 +183,7 @@ class FigurantsScreen extends StatelessWidget {
       enfants: [
         Paragraphe(f.inspiration, italique: true),
         SectionDestiny(titre: l('modes'), enfants: [
+          if (f.spectacle.isNotEmpty) LigneInfo(t.t('modes_pnj.spectacle'), f.spectacle),
           for (final m in ModePnj.values) LigneInfo(t.t('modes_pnj.${m.name}'), f.modes[m] ?? ''),
         ]),
         SectionDestiny(titre: l('types'), enfants: [

@@ -88,8 +88,9 @@ void main() {
       expect(p, contains('Ne nomme jamais un archétype'));
       expect(p, contains('Pas de traître'));
       expect(p, contains('Chapitre 4'));
-      // Sans alarmiste parmi les héros, l'IA en joue un.
-      expect(p, contains('L\'alarmiste du groupe'));
+      // Le danger ne passe plus par l'alarmiste.
+      expect(p, isNot(contains('L\'alarmiste du groupe')));
+      expect(p, isNot(contains('dans la bouche de l\'alarmiste')));
       sansAncienneGrammaire(p);
     });
 
@@ -166,7 +167,15 @@ void main() {
       expect(p, contains('"debrief"'));
       expect(p, contains('Pas de score'));
       expect(p, isNot(contains('scoreGlobal')));
-      expect(p, contains('L\'alarmiste est J1'));
+      expect(p, contains('L\'alarmiste (J1) est un personnage comme les autres'));
+      expect(p, contains('Le danger vient de la régie'));
+      expect(p, isNot(contains('dans la bouche de l\'alarmiste')));
+      // Les règles du sparring.
+      for (final x in ['Tu ne coupes jamais un acte', '15 à 20 échanges', 'Accepte les perches',
+          'Ne narre pas le danger', 'trois secondes figé', 'fautes d\'impro', 'Les actions passent par le dialogue']) {
+        expect(p, contains(x), reason: x);
+      }
+      expect(p, contains('TENTÉS DE'));
       expect(p, contains('4 répliques'));
       expect(p, contains('Format Destiny © 2026 Marouane.'));
       sansAncienneGrammaire(p);

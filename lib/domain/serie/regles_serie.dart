@@ -223,15 +223,15 @@ class DistributionJeu {
   final bool alarmistePnj;
 }
 
-/// Tire une distribution équilibrée. De 4 à 6 joueurs, la règle du
-/// spectacle (l'alarmiste est toujours là). En dessous, une famille par
+/// Tire une distribution équilibrée. De 4 à 6 joueurs, chaque famille et
+/// l'alarmiste, toujours là en jeu de rôle. En dessous, une famille par
 /// joueur, et l'alarmiste est tenu par le maître du jeu. Au-delà de 6, on
 /// complète avec des archétypes encore libres.
 DistributionJeu tirerDistributionJeu(Grammaire g, int joueurs, {Random? hasard, List<String> imposes = const []}) {
   final rng = hasard ?? Random();
   if (joueurs <= 0) return const DistributionJeu(joueurs: [], alarmistePnj: true);
   if (joueurs >= 4) {
-    final base = tirerDistribution(g, joueurs.clamp(4, 6), hasard: rng, imposes: imposes);
+    final base = tirerDistribution(g, joueurs.clamp(4, 6), hasard: rng, imposes: imposes, mode: ModeDistribution.serie);
     final libres = [for (final a in g.archetypes) if (!base.contains(a.id)) a.id]..shuffle(rng);
     final ids = [...base];
     for (final id in libres) {

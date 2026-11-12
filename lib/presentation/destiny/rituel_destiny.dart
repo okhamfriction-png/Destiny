@@ -366,8 +366,13 @@ class _CartePalier extends StatelessWidget {
         if (nouvelle != null && nouvelle!.isNotEmpty) ...[
           const SizedBox(height: 16),
           Text(
-            t.t('rituel.nouvelle_alarmiste'),
+            t.t('rituel.nouvelle_palier'),
             style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12, color: c.orClair),
+          ),
+          Text(
+            t.t('rituel.nouvelle_aide'),
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontFamily: kPoliceTexte, fontSize: 11.5, fontStyle: FontStyle.italic, color: Colors.white60),
           ),
           const SizedBox(height: 4),
           Text(

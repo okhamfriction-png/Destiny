@@ -360,7 +360,7 @@ Grammaire lireGrammaire(
     actes: actes,
     reglesDOr: [
       for (final r in maps(j['regles_d_or']))
-        RegleDOr(titre: s(r['titre']), texte: s(r['texte'])),
+        RegleDOr(id: s(r['id']), titre: s(r['titre']), texte: s(r['texte'])),
     ],
     rituel: RituelDestiny(
       quand: s(rd['quand']),
@@ -368,6 +368,7 @@ Grammaire lireGrammaire(
       sequence: ls(rd['sequence']),
       reprise: s(rd['reprise']),
       premierFige: s(rd['premier_fige']),
+      suite: ls(rd['suite']),
     ),
     distribution: RegleDistribution(
       regle: s(di['regle']),
@@ -398,6 +399,10 @@ Grammaire lireGrammaire(
       piege: s(pe['piege']),
       chaine: ls(pe['chaine']),
       detecterPasJouer: s(pe['detecter_pas_jouer']),
+      vouloirTests: ls(pe['vouloir_tests']),
+      vouloirMethode: s(pe['vouloir_methode']),
+      planterPourPayer: s(pe['planter_pour_payer']),
+      vouloirAvoue: s(pe['vouloir_avoue']),
       troisCartes: [
         for (final c in maps(pe['trois_cartes']))
           CartePersonnage(
@@ -595,6 +600,7 @@ Grammaire lireGrammaire(
         ModePnj.figurant: s(fiModes['figurant']),
         ModePnj.sbire: s(fiModes['sbire']),
       },
+      spectacle: s(fiModes['spectacle']),
       types: [
         for (final t in maps(fi['types']))
           TypeFigurant(

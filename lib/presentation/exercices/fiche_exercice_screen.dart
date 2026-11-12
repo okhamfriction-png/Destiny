@@ -35,6 +35,8 @@ const Map<String, String> kNotionsExercices = {
   'appuyer_ou_ca_fait_mal': 'regles',
   'choix_seul': 'regles',
   'long_form_labo': 'regles',
+  'scene_1_en_duo': 'vouloir_besoin',
+  'test_du_mobil_home': 'vouloir_besoin',
 };
 
 const Map<String, String> _notionsParTheme = {'crow': 'vouloir_besoin', 'lieu': 'lieux', 'destiny': 'regles'};

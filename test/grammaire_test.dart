@@ -63,7 +63,8 @@ void main() {
       expect(g.paliers.map((p) => p.id), PalierId.values);
       expect(g.palier(PalierId.supprime).nom, 'Il bloque les sorties');
       expect(g.actes, hasLength(4));
-      expect(g.reglesDOr, hasLength(8));
+      expect(g.reglesDOr, hasLength(10));
+      expect(g.reglesDOr.map((r) => r.id).toSet(), hasLength(10), reason: 'chaque règle a son identifiant');
       expect(g.rituel.sequence, isNotEmpty);
     });
 
@@ -84,7 +85,7 @@ void main() {
       final g = (await chargerGrammaire()).grammaire;
       expect(g.oeuvres, hasLength(21));
       expect(g.scenes, hasLength(3));
-      expect(g.exercices, hasLength(19));
+      expect(g.exercices, hasLength(21));
       expect(g.themesExercices.map((t) => t.id), ['crow', 'lieu', 'destiny']);
       expect(g.modelesDe('alarmiste'), isNotEmpty);
       expect(g.directionDe('leader'), isNotNull);
@@ -101,11 +102,9 @@ void main() {
         expect(brut, isNot(contains(x)), reason: x);
       }
       expect(g.exercices.map((e) => e.id), isNot(contains('trois_objets')));
-      for (final a in g.actes) {
-        for (final c in a.consignes) {
-          expect(c.toLowerCase(), isNot(contains('objet')), reason: c);
-        }
-      }
+      // Les objets reviennent comme accessoires de jeu (poser le lieu et des
+      // objets, planter pour payer), pas comme l'ancienne mécanique des trois
+      // objets donnés au départ.
       expect(g.serie.registre.categories.where((c) => c.contains('objet')), isEmpty);
       final textes = jsonDecode(File('assets/data/destiny_textes.json').readAsStringSync()) as Map<String, dynamic>;
       final pbta = textes['pbta'] as Map<String, dynamic>;

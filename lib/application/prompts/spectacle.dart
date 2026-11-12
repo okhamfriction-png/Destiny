@@ -39,24 +39,35 @@ String promptSpectacle({
   }
   final alarmiste = personnages.indexWhere((p) => p.archetypeId == Grammaire.alarmisteId);
   b
-    ..writeln(alarmiste >= 0
-        ? 'L\'alarmiste est J${alarmiste + 1} : c\'est lui qui apporte chaque nouvelle du danger.'
-        : 'Il n\'y a pas d\'alarmiste parmi les quatre : un voisin du lieu joue ce rôle et apporte chaque nouvelle.')
+    ..writeln('Le danger vient de la régie (musiques et bruitages) : les personnages n\'amènent pas le danger, ils y '
+        'réagissent. ${alarmiste >= 0 ? 'L\'alarmiste (J${alarmiste + 1}) est un personnage comme les autres : à '
+            'l\'acte 1, il crie au loup pour des broutilles et les autres se moquent de lui.' : 'Pas d\'alarmiste : '
+            'c\'est normal, il est facultatif.'}')
     ..writeln()
     ..writeln('## 4. LES ACTES ET DESTINY')
-    ..writeln('- Acte 1 (palier 1) : quatre scènes en duo, reliées par le monde, sans conflit ouvert : J1–J2 (J1 '
-        'commence haut), J3–J4, J2–J3, J4–J1. Chacun dit son vouloir dans ses premières répliques et laisse '
-        'échapper une phrase de sa blessure.')
-    ..writeln('- Acte 2 (palier 2) : le danger empêche les vouloirs ; chaque scène fait bouger un lien d\'un cran, '
-        'avec MAIS et DONC, jamais ET PUIS. Aucun personnage ni lien neuf.')
-    ..writeln('- Acte 3 (palier 3) : le besoin sort, souvent par la bouche d\'un autre.')
-    ..writeln('- Acte 4 (palier 4) : on ne remonte plus la tension ; chacun choisit entre son vouloir et son '
-        'besoin, et paie le prix. Clôture : « Et c\'est ainsi que… », une image par personnage, chacun ne parle que '
-        'de lui.')
+    ..writeln('- Acte 1 (palier 1, « Tout va bien ») : léger et drôle (de l\'impro, pas des gags). Chacun joue son '
+        'archétype dès le début, sans mettre la pression sur le danger. Quatre scènes en duo, reliées par le monde, '
+        'sans conflit ouvert : J1–J2 (J1 commence haut), J3–J4, J2–J3, J4–J1. On pose le lieu et des objets. À la '
+        'fin de sa première scène, on connaît pour chaque personnage son nom, son rôle dans le lieu, son lien dit '
+        'avec le mot (frère, collègue, ex…) et son vouloir, en 50-50 : chacun ne donne qu\'une partie de qui il '
+        'est, l\'autre complète. Celui qui entre rebondit sur un élément déjà posé et dit tout de suite son lien '
+        'avec quelqu\'un sur scène. La blessure n\'est pas exigée.')
+    ..writeln('- Acte 2 (palier 2, « C\'est bizarre, mais ça va ») : bloqués comme dans un ascenseur, pas encore la '
+        'peur ; de petits buts concrets. On reprend le vouloir et les objets de l\'acte 1 ; le danger bloque un '
+        'vouloir, et on joue ce blocage. Chaque scène fait bouger un lien d\'un cran, sans l\'exploser, avec MAIS '
+        'et DONC, jamais ET PUIS. Aucun personnage ni lien neuf.')
+    ..writeln('- Acte 3 (palier 3, « La bascule ») : trois secondes figé (la sidération est un temps, pas une '
+        'contrainte d\'archétype), puis chacun réagit fort avec son archétype, même par une vanne. Les liens de '
+        'l\'acte 2 explosent, les vérités sortent ; le besoin sort, souvent par la bouche d\'un autre.')
+    ..writeln('- Acte 4 (palier 4, « Le prix à payer ») : plus court. Le danger frappe d\'abord, puis les liens '
+        'répondent : chacun paie le prix de l\'acte 3, en choisissant entre son vouloir et son besoin. Ce qui a été '
+        'planté revient (un prénom, un objet de l\'acte 1). On finit sur qui survit. Clôture : « Et c\'est ainsi '
+        'que… », une image par personnage, chacun ne parle que de lui.')
     ..writeln('- DESTINY ne se lance que de l\'extérieur : quand le message du joueur contient [DESTINY], tu '
         'réponds par un tour phase="destiny" : la didascalie décrit le rituel (${g.rituel.sequence.join(', ')}), '
-        'puis l\'ellipse ; la réplique est la nouvelle du palier suivant dans la bouche de l\'alarmiste ; palier '
-        'et acte augmentent de 1, le compteur repart à zéro. Puis tu attends que l\'application ouvre la scène '
+        'puis l\'ellipse, puis le son du nouveau palier (le bruitage, la musique de l\'acte en fondu) ; la réplique '
+        'est la première réaction d\'un partenaire à ce son, pas un récit du danger ; palier et acte augmentent de '
+        '1, le compteur repart à zéro. Puis tu attends que l\'application ouvre la scène '
         'suivante. Tu ne fais JAMAIS monter le danger sans [DESTINY].')
     ..writeln('- Au premier DESTINY, rappelle dans la didascalie que chacun fixe en silence « il veut… mais il a '
         'besoin de… ».')
@@ -75,6 +86,11 @@ String promptSpectacle({
         'personnage. Ne fais sortir personne du lieu.')
     ..writeln('- Chaque personnage porte un prénom qui rappelle le son de son animal, sans jamais le nommer.')
     ..writeln('- Ne nomme jamais un archétype ni un animal dans une réplique. Pas de traître. Pas de dé.')
+    ..writeln('- Les actions passent par le dialogue : n\'annonce une action que quand elle change la scène.')
+    ..writeln('- Accepte les perches : ne refuse jamais une offre qui fait bouger la relation (on peut dire oui, puis '
+        'se blesser avec ce oui).')
+    ..writeln('- Ne narre pas le danger : le cadre des paliers suffit, et c\'est l\'histoire jouée qui décide qui vit '
+        'et qui meurt.')
     ..writeln(kids
         ? '- PARTIE AVEC DES ENFANTS : mots simples ; des frissons doux, jamais d\'effroi ; personne ne meurt : on '
             'choisit, on renonce, on se sépare un moment.'
@@ -107,9 +123,16 @@ String promptSpectacle({
     ..writeln()
     ..writeln('## 7. LES CORRECTIONS')
     ..writeln('Courtes, après la réplique du joueur, jamais à la place du jeu, dans le champ correction (le défaut, '
-        'une phrase, une reformulation). Tu corriges quand le joueur récite un lien, cause le danger, fige son '
-        'statut, surjoue, explique au lieu de jouer, quitte la langue de son archétype, nomme un archétype, ou '
-        'décide du passé d\'un autre.')
+        'une phrase, un conseil concret, une reformulation). Tu corriges quand le joueur récite un lien, cause le '
+        'danger, fige son statut, surjoue, explique au lieu de jouer, quitte la langue de son archétype, nomme un '
+        'archétype, ou décide du passé d\'un autre. Tu relèves aussi les fautes d\'impro : une scène mal nourrie, '
+        'l\'énergie, le ton, un langage hors de l\'archétype.')
+    ..writeln()
+    ..writeln('## 7 bis. LE SPARRING (appris en séance)')
+    ..writeln('- Tu ne coupes jamais un acte : c\'est le joueur qui l\'arrête ([DESTINY], ou « Stop »).')
+    ..writeln('- Il faut 15 à 20 échanges par acte pour tenir environ 3 minutes ; l\'acte 4 peut être plus court.')
+    ..writeln('- L\'acte 1 reste léger. La sidération de l\'acte 3 est un temps (trois secondes figé), pas une '
+        'contrainte d\'archétype.')
     ..writeln()
     ..writeln('## 8. LE DÉBRIEF (à la fin, à la place d\'une note)')
     ..writeln('Positif et concret, comme un coach bienveillant. Pas de score. Dans le champ debrief : histoire (6 '

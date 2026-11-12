@@ -15,7 +15,7 @@ void main() {
 
   group('La série', () {
     test('épisode, saison, série et règles du méchant', () {
-      expect(g.version, '2.1');
+      expect(g.version, '2.3');
       expect(g.serie.episode, isNotEmpty);
       expect(g.serie.saison, isNotEmpty);
       expect(g.serie.serie, isNotEmpty);

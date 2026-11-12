@@ -115,7 +115,7 @@ List<BlocLivret> _jeuDeRole(TextesDestiny t) {
 Livret construireLivret(Grammaire g, TextesDestiny t) {
   String k(String x, [Map<String, String> v = const {}]) => t.t('livret.$x', v);
   String sous(String x) => k('sous.$x');
-  RegleDOr? regle(int i) => i < g.reglesDOr.length ? g.reglesDOr[i] : null;
+  RegleDOr? regle(String id) => g.regle(id);
   final p = g.personnage;
 
   final sections = <String, List<BlocLivret>>{
@@ -127,8 +127,10 @@ Livret construireLivret(Grammaire g, TextesDestiny t) {
     'roles': [PucesLivret(t.liste('livret.roles'))],
     'mise_en_place': [
       IntertitreLivret(sous('lieu_groupe')),
-      for (final r in [regle(0), regle(1)])
+      for (final r in [regle('se_connaitre'), regle('un_lieu'), regle('comediens')])
         if (r != null) InfoLivret(r.titre, r.texte),
+      IntertitreLivret(sous('public')),
+      ParagrapheLivret(k('public')),
       IntertitreLivret(sous('liens')),
       ParagrapheLivret(k('liens')),
       IntertitreLivret(sous('danger')),
@@ -141,11 +143,17 @@ Livret construireLivret(Grammaire g, TextesDestiny t) {
       ParagrapheLivret(g.distribution.regle),
       for (final c in g.distribution.compositions)
         InfoLivret(t.t('bibliotheque.regles.joueurs', {'n': '${c.joueurs}'}), compositionEnClair(g, t, c)),
+      if (regle('directions') case final r?) ...[
+        IntertitreLivret(sous('directions')),
+        EncartLivret(r.texte),
+      ],
       IntertitreLivret(sous('animaux')),
       ParagrapheLivret(k('animaux')),
       IntertitreLivret(sous('personnage')),
       PucesLivret([for (final c in p.couches) _majuscule(c)]),
       for (final c in p.troisCartes) InfoLivret(c.titre, '${c.sousTitre} ${c.texte}'),
+      if (p.vouloirTests.isNotEmpty) PucesLivret(p.vouloirTests, numerotees: true),
+      if (p.vouloirMethode.isNotEmpty) ParagrapheLivret(p.vouloirMethode),
       EncartLivret(p.piege),
       IntertitreLivret(sous('echauffement')),
       ParagrapheLivret('${_majuscule(p.echauffement.quand)}.'),
@@ -164,10 +172,17 @@ Livret construireLivret(Grammaire g, TextesDestiny t) {
       IntertitreLivret(sous('rituel')),
       ParagrapheLivret('${_majuscule(g.rituel.quand)} · ${g.rituel.quiDeclenche}.'),
       PucesLivret([for (final s in g.rituel.sequence) _majuscule(s)], numerotees: true),
+      if (g.rituel.suite.isNotEmpty) ...[
+        ParagrapheLivret(k('rituel_suite')),
+        PucesLivret([for (final s in g.rituel.suite) _majuscule(s)], numerotees: true),
+      ],
       ParagrapheLivret(g.rituel.reprise),
       EncartLivret(g.rituel.premierFige),
       IntertitreLivret(sous('alarmiste')),
-      if (regle(3) case final r?) InfoLivret(r.titre, r.texte),
+      if (regle('danger_regie') case final r?) InfoLivret(r.titre, r.texte),
+      IntertitreLivret(sous('progression')),
+      if (regle('progression') case final r?) ParagrapheLivret(r.texte),
+      if (p.planterPourPayer.isNotEmpty) EncartLivret(p.planterPourPayer),
       IntertitreLivret(sous('montee')),
       for (final pa in g.paliers) InfoLivret(pa.nom, _majuscule(pa.etatArchetype)),
       IntertitreLivret(sous('gestes')),
@@ -176,7 +191,7 @@ Livret construireLivret(Grammaire g, TextesDestiny t) {
     'fin': [
       IntertitreLivret(sous('acte_4')),
       if (g.actes.isNotEmpty) PucesLivret(g.actes.last.consignes),
-      if (regle(6) case final r?) InfoLivret(r.titre, r.texte),
+      if (regle('dernier_acte') case final r?) InfoLivret(r.titre, r.texte),
       IntertitreLivret(sous('prix')),
       if (p.troisCartes.length > 2) ParagrapheLivret('${p.troisCartes[2].sousTitre} ${p.troisCartes[2].texte}'),
       IntertitreLivret(sous('debrief')),
@@ -199,6 +214,7 @@ Livret construireLivret(Grammaire g, TextesDestiny t) {
       IntertitreLivret(sous('sbires')),
       ParagrapheLivret(g.figurants.modes[ModePnj.sbire] ?? ''),
       IntertitreLivret(sous('figurants')),
+      if (g.figurants.spectacle.isNotEmpty) ParagrapheLivret(g.figurants.spectacle),
       ParagrapheLivret(g.figurants.modes[ModePnj.figurant] ?? ''),
       for (final ty in g.figurants.types) InfoLivret(ty.nom, '${ty.ceQuIlEst} ${ty.commentLeJouer}'),
       for (final r in g.figurants.regles) InfoLivret(r.titre, r.texte),

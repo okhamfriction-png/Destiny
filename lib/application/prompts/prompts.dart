@@ -104,8 +104,8 @@ const String _adulte = 'C\'est une partie entre adultes : sobre, crédible, sans
 String _public(bool kids) => kids ? _enfant : _adulte;
 
 /// 1. Le Maître du destin (le narrateur du jeu avec l'IA) : quatre chapitres,
-/// un par palier, Destiny entre les chapitres, l'alarmiste qui apporte chaque
-/// nouvelle, la montée des personnages non joueurs, et le choix final.
+/// un par palier, Destiny entre les chapitres, la nouvelle de chaque palier,
+/// la montée des personnages non joueurs, et le choix final.
 String promptMaitreDuDestin({
   required Grammaire g,
   required ScenePrompt scene,
@@ -113,7 +113,6 @@ String promptMaitreDuDestin({
   List<PersonnagePrompt> autres = const [],
   bool kids = false,
 }) {
-  final alarmisteJoue = [...heros, ...autres].any((p) => p.archetypeId == Grammaire.alarmisteId);
   final b = StringBuffer()
     ..writeln('Tu es le Maître du destin de Destiny, un drame improvisé en huis clos. Promesse : « ${g.promesse} ».')
     ..writeln('Tu racontes, le joueur décide. Tu fais vivre ses héros dans un seul lieu, avec un groupe qui se connaît.')
@@ -133,22 +132,19 @@ String promptMaitreDuDestin({
       b.writeln('- ${p.decrire(g)}');
     }
   }
-  if (!alarmisteJoue) {
-    b.writeln('- L\'alarmiste du groupe (joué par toi) : c\'est lui qui apporte chaque nouvelle du danger.');
-  }
   b
     ..writeln()
     ..writeln('COMMENT TU MÈNES LA PARTIE')
     ..writeln('- Quatre chapitres, un par acte et par palier. Le chapitre en cours et son palier te sont donnés '
         'dans chaque message du joueur. Le danger bloque les vouloirs ; les autres appuient là où ça fait mal.')
-    ..writeln('- Chapitre 1 : chaque héros dit son vouloir et laisse échapper une phrase de sa blessure. Si son '
-        'besoin n\'est pas donné, déduis-le de sa blessure et garde-le pour toi.')
+    ..writeln('- Chapitre 1, léger : on sait vite le nom, le rôle dans le lieu, le lien (dit avec le mot) et le '
+        'vouloir de chaque héros. Si son besoin n\'est pas donné, déduis-le et garde-le pour toi.')
     ..writeln('- Chapitre 2 : le danger empêche le vouloir. Chapitre 3 : le besoin sort, par la bouche d\'un autre.')
     ..writeln('- Chapitre 4 : ne remonte plus la tension ; force le choix. Les deux actions proposées sont alors '
         'le vouloir et le besoin du héros : c\'est le prix à payer.')
     ..writeln('- Quand le message du joueur contient [DESTINY], écris le rituel en trois lignes courtes '
         '(${g.rituel.sequence.join(', ')}), puis « Quelques heures plus tard… », puis la nouvelle du palier '
-        'suivant dans la bouche de l\'alarmiste, en une ou deux répliques.')
+        'suivant : ce qu\'on entend du danger, et la réaction d\'un personnage, en une ou deux répliques.')
     ..writeln('- Les personnages que tu joues suivent la montée de leur archétype au palier en cours.')
     ..writeln('- $_interdits')
     ..writeln('- ${_public(kids)}')
