@@ -35,21 +35,22 @@ En haut à droite : la **Bibliothèque**, la **Musique**, les **Réglages** et l
 
 ---
 
-## 2. Découvrir Destiny
+## 2. Découvrir Destiny et les tutos
 
-Au premier lancement, quatre écrans pour comprendre le format en deux minutes, tous tirés de la grammaire :
-1. la promesse ;
-2. le lieu et le groupe, quatre comédiens et un figurant ;
-3. le danger en quatre paliers, qui vient de la régie, et le rituel Destiny (puis le bruitage du palier, la musique de l'acte, la reprise) ;
-4. les personnages : les trois familles, le vouloir et le besoin.
+Au premier lancement (et une fois après la 2.3.0), cinq écrans simples, **sur la Troupe seulement**, tous tirés de la grammaire :
+1. la promesse : quatre comédiens et un figurant, un lieu, un danger en quatre actes ;
+2. Préparer : le lieu et le danger donnés par le public, les archétypes attribués à l'avance, le chrono ;
+3. le jeu : l'échauffement qui lance la musique de l'acte 1, les quatre paliers, le rituel Destiny et la suite de la régie son ;
+4. la régie : la table de régie, DESTINY, Terminer ; le danger vient de la régie ;
+5. les personnages : les trois familles, le vouloir et le besoin, des directions pas des prisons.
 
-On peut les passer, et les revoir depuis la Bibliothèque ou les Réglages.
+On peut les passer, et les revoir depuis la Bibliothèque ou les Réglages. **Le jeu de rôle a son propre tuto**, à la première visite (un épisode comme un spectacle, le cœur et le cerveau, le grand méchant, le compte rendu de l'IA), que le bouton « ? » rouvre. Les exercices n'en ont pas.
 
 ---
 
 ## 3. Troupe : le spectacle
 
-L'accueil montre la promesse et, un jour sur deux, la règle d'or ou la réplique du jour. Puis :
+L'accueil montre la promesse et, tirée au hasard à chaque ouverture, une règle d'or ou la réplique du jour. Puis :
 
 1. **Préparer** : spectacle ou répétition, 3, 4, 5 ou 6 joueurs.
    - La distribution se fait par choix concerté, tirage équilibré ou exemple tout prêt.

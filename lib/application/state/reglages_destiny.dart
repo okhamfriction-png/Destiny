@@ -107,6 +107,9 @@ class ReglagesDestiny extends ChangeNotifier {
   // L'accueil « Découvrir Destiny », vu une fois au premier lancement.
   bool _decouverteVue = false;
 
+  // Le tuto du jeu de rôle, vu une fois à la première visite.
+  bool _tutoJeuDeRoleVu = false;
+
   List<ChronoSpectacle> get chronos => List.unmodifiable(_chronos);
   int get chronoChoisi => _chronoChoisi.clamp(0, _chronos.length - 1);
   ChronoSpectacle get chrono => _chronos[chronoChoisi];
@@ -152,6 +155,9 @@ class ReglagesDestiny extends ChangeNotifier {
 
   /// Vrai une fois l'accueil « Découvrir Destiny » vu (ou passé).
   bool get decouverteVue => _decouverteVue;
+
+  /// Vrai une fois le tuto du jeu de rôle vu (ou passé).
+  bool get tutoJeuDeRoleVu => _tutoJeuDeRoleVu;
 
   Future<void> charger() async {
     try {
@@ -209,7 +215,10 @@ class ReglagesDestiny extends ChangeNotifier {
     _pieceParDefaut = j['serie_piece'] as bool? ?? _pieceParDefaut;
     _evolutionArchetype = j['evolution_archetype'] as bool? ?? _evolutionArchetype;
     _theme = ThemeDestiny.depuisTexte(j['theme'] as String?);
-    _decouverteVue = j['decouverte_vue'] as bool? ?? _decouverteVue;
+    // « _v23 » : l'accueil a été refait en 2.3.0 (la Troupe seulement) ; il
+    // se remontre une fois.
+    _decouverteVue = j['decouverte_vue_v23'] as bool? ?? _decouverteVue;
+    _tutoJeuDeRoleVu = j['tuto_jeu_de_role_vu'] as bool? ?? _tutoJeuDeRoleVu;
   }
 
   Map<String, dynamic> versJson() => {
@@ -242,7 +251,8 @@ class ReglagesDestiny extends ChangeNotifier {
         'serie_piece': _pieceParDefaut,
         'evolution_archetype': _evolutionArchetype,
         'theme': _theme.name,
-        'decouverte_vue': _decouverteVue,
+        'decouverte_vue_v23': _decouverteVue,
+        'tuto_jeu_de_role_vu': _tutoJeuDeRoleVu,
       };
 
   Future<void> _sauver() async {
@@ -305,6 +315,7 @@ class ReglagesDestiny extends ChangeNotifier {
     bool? evolutionArchetype,
     ThemeDestiny? theme,
     bool? decouverteVue,
+    bool? tutoJeuDeRoleVu,
   }) async {
     _declenchement = declenchement ?? _declenchement;
     // Les anciens noms : l'acte 1, l'acte 3 et l'acte 4.
@@ -336,6 +347,7 @@ class ReglagesDestiny extends ChangeNotifier {
     _evolutionArchetype = evolutionArchetype ?? _evolutionArchetype;
     _theme = theme ?? _theme;
     _decouverteVue = decouverteVue ?? _decouverteVue;
+    _tutoJeuDeRoleVu = tutoJeuDeRoleVu ?? _tutoJeuDeRoleVu;
     await _sauver();
   }
 }

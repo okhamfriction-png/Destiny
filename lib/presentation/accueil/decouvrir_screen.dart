@@ -1,30 +1,72 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/grammaire/modeles.dart';
+import '../../domain/serie/serie.dart' show Esprit, Sante;
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
+import '../serie/sante_serie.dart';
 import '../theme/destiny_theme.dart';
 
-/// « Découvrir Destiny » : quatre écrans pour comprendre le format en deux
-/// minutes, tous tirés de la grammaire. La promesse ; le lieu et le groupe ;
-/// le danger en quatre paliers et le rituel Destiny ; les personnages
-/// (archétype, animal, vouloir, besoin). Montré au premier lancement, et à
-/// revoir depuis la Bibliothèque ou les Réglages.
-class DecouvrirScreen extends StatefulWidget {
+/// « Découvrir Destiny » : le tuto du début, simple, sur la Troupe seulement.
+/// Cinq écrans : la promesse, Préparer, le jeu, la régie, les personnages.
+/// Montré au premier lancement (et une fois après la 2.3.0, qui l'a refait),
+/// à revoir depuis la Bibliothèque ou les Réglages. Le jeu de rôle a son
+/// propre tuto ([TutoJeuDeRoleScreen]), à sa première visite.
+class DecouvrirScreen extends StatelessWidget {
   const DecouvrirScreen({super.key, this.quandFini});
 
   /// Appelé quand on termine ou qu'on passe.
   final VoidCallback? quandFini;
 
   @override
-  State<DecouvrirScreen> createState() => _DecouvrirScreenState();
+  Widget build(BuildContext context) => _Visite(
+        titre: context.textes.t('decouvrir.titre'),
+        quandFini: quandFini,
+        ecrans: const [_EcranPromesse(), _EcranPreparer(), _EcranJeu(), _EcranRegie(), _EcranPersonnages()],
+      );
 }
 
-class _DecouvrirScreenState extends State<DecouvrirScreen> {
+/// Le tuto du jeu de rôle : un épisode comme un spectacle, le cœur et le
+/// cerveau, le grand méchant, le compte rendu de l'IA. Montré à la première
+/// visite du jeu de rôle, et à revoir depuis son bouton d'aide.
+class TutoJeuDeRoleScreen extends StatelessWidget {
+  const TutoJeuDeRoleScreen({super.key, this.kids = false, this.quandFini});
+
+  final bool kids;
+  final VoidCallback? quandFini;
+
+  @override
+  Widget build(BuildContext context) => _Visite(
+        titre: context.textes.t('tuto_jdr.titre'),
+        quandFini: quandFini,
+        ecrans: [
+          const _EcranEtapes(cle: 'tuto_jdr.ecrans.episode'),
+          _EcranSante(kids: kids),
+          const _EcranEtapes(cle: 'tuto_jdr.ecrans.mechant'),
+          const _EcranEtapes(cle: 'tuto_jdr.ecrans.compte_rendu'),
+        ],
+      );
+}
+
+/// Une suite d'écrans à faire défiler, avec « Passer », les points et
+/// « Suivant » / « C'est parti ».
+class _Visite extends StatefulWidget {
+  const _Visite({required this.titre, required this.ecrans, this.quandFini});
+
+  final String titre;
+  final List<Widget> ecrans;
+  final VoidCallback? quandFini;
+
+  @override
+  State<_Visite> createState() => _VisiteState();
+}
+
+class _VisiteState extends State<_Visite> {
   final PageController _pages = PageController();
   int _courant = 0;
-  static const _nombre = 4;
+
+  int get _nombre => widget.ecrans.length;
 
   @override
   void dispose() {
@@ -58,7 +100,7 @@ class _DecouvrirScreenState extends State<DecouvrirScreen> {
             padding: const EdgeInsets.fromLTRB(16, 4, 4, 0),
             child: Row(children: [
               Expanded(
-                child: Text(k('titre').toUpperCase(),
+                child: Text(widget.titre.toUpperCase(),
                     style: TextStyle(
                         fontFamily: kPoliceTexte,
                         fontSize: 12.5,
@@ -73,7 +115,7 @@ class _DecouvrirScreenState extends State<DecouvrirScreen> {
             child: PageView(
               controller: _pages,
               onPageChanged: (i) => setState(() => _courant = i),
-              children: const [_EcranPromesse(), _EcranLieu(), _EcranDanger(), _EcranPersonnages()],
+              children: widget.ecrans,
             ),
           ),
           Padding(
@@ -177,6 +219,93 @@ class _Regle extends StatelessWidget {
   }
 }
 
+/// Les icônes des étapes, par nom (dans le fichier de textes).
+const Map<String, IconData> _icones = {
+  'lieu': Icons.place_rounded,
+  'archetypes': Icons.style_rounded,
+  'chrono': Icons.timer_outlined,
+  'echauffement': Icons.self_improvement_rounded,
+  'spectacle': Icons.theater_comedy_rounded,
+  'regie': Icons.tune_rounded,
+  'destiny': Icons.flash_on_rounded,
+  'terminer': Icons.flag_rounded,
+  'preparer': Icons.style_rounded,
+  'jeu': Icons.theater_comedy_rounded,
+  'ombre': Icons.visibility_off_rounded,
+  'personne': Icons.visibility_rounded,
+  'figurants': Icons.groups_rounded,
+  'micro': Icons.mic_rounded,
+  'ia': Icons.auto_awesome,
+  'suite': Icons.video_library_outlined,
+};
+
+/// Les étapes d'un écran (« etapes » dans le fichier de textes) : une icône,
+/// un titre et une phrase chacune.
+class _Etapes extends StatelessWidget {
+  const _Etapes(this.cle);
+
+  final String cle;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.textes;
+    final c = context.destiny;
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      for (final e in t.tables('$cle.etapes'))
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(shape: BoxShape.circle, color: c.teinte(c.or)),
+              child: Icon(_icones['${e['icone']}'] ?? Icons.circle_outlined, size: 20, color: c.titre),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('${e['titre']}',
+                    style:
+                        TextStyle(fontFamily: kPoliceTexte, fontSize: 16, fontWeight: FontWeight.w700, color: c.texte)),
+                const SizedBox(height: 2),
+                Text('${e['texte']}',
+                    style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14.5, height: 1.4, color: c.texte)),
+              ]),
+            ),
+          ]),
+        ),
+    ]);
+  }
+}
+
+/// Un écran fait d'un titre et d'étapes, tout depuis le fichier de textes.
+class _EcranEtapes extends StatelessWidget {
+  const _EcranEtapes({required this.cle});
+
+  final String cle;
+
+  @override
+  Widget build(BuildContext context) => _Ecran(titre: context.textes.t('$cle.titre'), enfants: [_Etapes(cle)]);
+}
+
+/// Des puces pour une séquence (le rituel, puis la régie son).
+class _Sequence extends StatelessWidget {
+  const _Sequence(this.elements, this.couleur);
+
+  final List<String> elements;
+  final Color couleur;
+
+  @override
+  Widget build(BuildContext context) => Wrap(spacing: 6, runSpacing: 6, children: [
+        for (final s in elements)
+          Chip(
+            label: Text(s),
+            visualDensity: VisualDensity.compact,
+            side: BorderSide(color: couleur.withValues(alpha: 0.6)),
+          ),
+      ]);
+}
+
 class _EcranPromesse extends StatelessWidget {
   const _EcranPromesse();
 
@@ -199,58 +328,55 @@ class _EcranPromesse extends StatelessWidget {
   }
 }
 
-class _EcranLieu extends StatelessWidget {
-  const _EcranLieu();
+class _EcranPreparer extends StatelessWidget {
+  const _EcranPreparer();
 
   @override
   Widget build(BuildContext context) {
     final g = context.grammaire;
-    final t = context.textes;
-    return _Ecran(titre: t.t('decouvrir.ecrans.lieu.titre'), enfants: [
-      for (final id in ['se_connaitre', 'un_lieu', 'comediens'])
-        if (g.regle(id) case final r?) _Regle(r),
+    return _Ecran(titre: context.textes.t('decouvrir.ecrans.preparer.titre'), enfants: [
+      const _Etapes('decouvrir.ecrans.preparer'),
+      if (g.regle('comediens') case final r?) _Regle(r),
     ]);
   }
 }
 
-class _EcranDanger extends StatelessWidget {
-  const _EcranDanger();
+class _EcranJeu extends StatelessWidget {
+  const _EcranJeu();
 
   @override
   Widget build(BuildContext context) {
     final g = context.grammaire;
     final t = context.textes;
     final c = context.destiny;
-    // Le danger vient de la régie : musiques et bruitages, au signal du
-    // metteur en scène.
-    final regie = g.regle('danger_regie');
-    return _Ecran(titre: t.t('decouvrir.ecrans.danger.titre'), enfants: [
+    return _Ecran(titre: t.t('decouvrir.ecrans.jeu.titre'), enfants: [
+      const _Etapes('decouvrir.ecrans.jeu'),
       FrisePaliers(textes: [for (final p in g.paliers) p.ambiance], compacte: true),
       const SizedBox(height: 14),
-      Text(t.t('decouvrir.ecrans.danger.rituel'),
+      Text(t.t('decouvrir.ecrans.jeu.rituel'),
           style: TextStyle(fontFamily: kPoliceTexte, fontSize: 17, fontWeight: FontWeight.w700, color: c.bleuTexte)),
       const SizedBox(height: 6),
-      Wrap(spacing: 6, runSpacing: 6, children: [
-        for (final s in g.rituel.sequence)
-          Chip(
-            label: Text(s),
-            visualDensity: VisualDensity.compact,
-            side: BorderSide(color: c.bleuDestiny.withValues(alpha: 0.6)),
-          ),
-      ]),
+      _Sequence(g.rituel.sequence, c.bleuDestiny),
       if (g.rituel.suite.isNotEmpty) ...[
         const SizedBox(height: 6),
-        Wrap(spacing: 6, runSpacing: 6, children: [
-          for (final s in g.rituel.suite)
-            Chip(
-              label: Text(s),
-              visualDensity: VisualDensity.compact,
-              side: BorderSide(color: c.or.withValues(alpha: 0.6)),
-            ),
-        ]),
+        _Sequence(g.rituel.suite, c.or),
       ],
-      const SizedBox(height: 10),
-      if (regie != null) _Regle(regie, couleur: c.bleuDestiny),
+    ]);
+  }
+}
+
+class _EcranRegie extends StatelessWidget {
+  const _EcranRegie();
+
+  @override
+  Widget build(BuildContext context) {
+    final g = context.grammaire;
+    final c = context.destiny;
+    return _Ecran(titre: context.textes.t('decouvrir.ecrans.regie.titre'), enfants: [
+      const _Etapes('decouvrir.ecrans.regie'),
+      // Le danger vient de la régie : musiques et bruitages, au signal du
+      // metteur en scène.
+      if (g.regle('danger_regie') case final r?) _Regle(r, couleur: c.bleuDestiny),
     ]);
   }
 }
@@ -289,6 +415,45 @@ class _EcranPersonnages extends StatelessWidget {
             Text(carte.texte, style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.35, color: c.texte)),
           ]),
         ),
+      if (g.regle('directions') case final r?) _Regle(r),
+    ]);
+  }
+}
+
+/// Le cœur et le cerveau, en vrai : les deux pistes d'un personnage, qu'on
+/// peut toucher pour essayer.
+class _EcranSante extends StatefulWidget {
+  const _EcranSante({required this.kids});
+
+  final bool kids;
+
+  @override
+  State<_EcranSante> createState() => _EcranSanteState();
+}
+
+class _EcranSanteState extends State<_EcranSante> {
+  Sante _sante = Sante.blesse;
+  Esprit _esprit = Esprit.ebranle;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.textes;
+    final c = context.destiny;
+    return _Ecran(titre: t.t('tuto_jdr.ecrans.sante.titre'), enfants: [
+      Paragraphe(t.t('tuto_jdr.ecrans.sante.texte')),
+      const SizedBox(height: 6),
+      CadreLisere(
+        couleur: c.or,
+        child: PistesSante(
+          cle: 'tuto',
+          sante: _sante,
+          esprit: _esprit,
+          kids: widget.kids,
+          onSante: (v) => setState(() => _sante = v),
+          onEsprit: (v) => setState(() => _esprit = v),
+        ),
+      ),
+      Paragraphe(t.t(widget.kids ? 'tuto_jdr.ecrans.sante.kids' : 'tuto_jdr.ecrans.sante.essayer'), italique: true),
     ]);
   }
 }

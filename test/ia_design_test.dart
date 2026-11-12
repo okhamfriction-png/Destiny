@@ -23,6 +23,8 @@ import 'package:destiny/presentation/screens/chat_screen.dart';
 import 'package:destiny/presentation/screens/spectacle_screen.dart';
 import 'package:destiny/presentation/serie/contexte_serie.dart';
 import 'package:destiny/presentation/theme/destiny_theme.dart';
+import 'package:destiny/presentation/accueil/decouvrir_screen.dart';
+import 'package:destiny/presentation/jouer/jeu_de_role_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -229,7 +231,7 @@ void main() {
           body: JouerScreen(
             serie: ContexteSerie(
               store: store,
-              reglages: ReglagesDestiny(),
+              reglages: _sansTutoJdr(),
               catalogue: catalogue,
               audio: audio,
               musique: musique,
@@ -273,6 +275,65 @@ void main() {
     });
   }
 
+  testWidgets('le jeu de rôle ouvre son tuto à la première visite, une seule fois, et le bouton d\'aide le rouvre', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final ia = (await tester.runAsync(AiSettings.load))!;
+    final store = SerieStore(lire: lireFichier);
+    await tester.runAsync(() => store.charger(grammaire: chargee.grammaire));
+    final audio = AudioService()..setMuted(true);
+    final musique = MusicController();
+    final visuels = VisualSettings();
+    final reglages = ReglagesDestiny();
+    await _ouvrir(
+      tester,
+      Scaffold(
+        body: JouerScreen(
+          serie: ContexteSerie(
+            store: store,
+            reglages: reglages,
+            catalogue: catalogue,
+            audio: audio,
+            musique: musique,
+            visuels: visuels,
+          ),
+          chatController: ChatController(
+              chatStore: InMemoryChatStore(), llm: FauxLlm(''), aiSettings: ia, catalogue: catalogue, grammaire: chargee),
+          spectacleController:
+              SpectacleController(catalogue: catalogue, grammaire: chargee, llm: FauxLlm(''), aiSettings: ia),
+          audioService: audio,
+          visualSettings: visuels,
+          musicController: musique,
+        ),
+      ),
+      sombre: true,
+    );
+    Future<void> entrer() async {
+      final adulte = find.byKey(const ValueKey('mode_adulte'));
+      await tester.scrollUntilVisible(adulte, 300, scrollable: find.byType(Scrollable).first);
+      await tester.tap(adulte);
+      await tester.pumpAndSettle();
+    }
+
+    await entrer();
+    expect(find.byType(TutoJeuDeRoleScreen), findsOneWidget);
+    await tester.tap(find.text(t.t('decouvrir.passer')));
+    await tester.pumpAndSettle();
+    expect(find.byType(TutoJeuDeRoleScreen), findsNothing);
+    expect(find.byType(JeuDeRoleScreen), findsOneWidget);
+    expect(reglages.tutoJeuDeRoleVu, isTrue);
+    // Le bouton d'aide le rouvre.
+    await tester.tap(find.byKey(const ValueKey('revoir_tuto_jdr')));
+    await tester.pumpAndSettle();
+    expect(find.byType(TutoJeuDeRoleScreen), findsOneWidget);
+    await tester.tap(find.text(t.t('decouvrir.passer')));
+    await tester.pumpAndSettle();
+    // Une deuxième visite : plus de tuto.
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    await entrer();
+    expect(find.byType(TutoJeuDeRoleScreen), findsNothing);
+  });
+
   testWidgets('Jouer : on choisit d\'abord le mode, et l\'IA le suit sans le redemander', (tester) async {
     SharedPreferences.setMockInitialValues({});
     final ia = (await tester.runAsync(AiSettings.load))!;
@@ -288,7 +349,7 @@ void main() {
         body: JouerScreen(
           serie: ContexteSerie(
             store: store,
-            reglages: ReglagesDestiny(),
+            reglages: _sansTutoJdr(),
             catalogue: catalogue,
             audio: audio,
             musique: musique,
@@ -384,4 +445,12 @@ void main() {
       verifier(table, section);
     }
   });
+}
+
+/// Des réglages où le tuto du jeu de rôle a déjà été vu (il ne s'ouvre pas
+/// par-dessus les écrans testés ici).
+ReglagesDestiny _sansTutoJdr() {
+  final r = ReglagesDestiny();
+  r.changer(tutoJeuDeRoleVu: true);
+  return r;
 }

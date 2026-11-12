@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../accueil/decouvrir_screen.dart';
 import '../../application/services/audio_service.dart';
 import '../../application/state/chat_controller.dart';
 import '../../application/state/music_controller.dart';
@@ -39,13 +40,36 @@ class ContexteJeuDeRole {
 /// Le jeu de rôle dans un mode, adulte ou enfant, choisi en entrant : tout
 /// suit ce choix (les séries, les lieux, les dangers, les méchants, les
 /// règles et l'IA), sans qu'on le redemande.
-class JeuDeRoleScreen extends StatelessWidget {
+class JeuDeRoleScreen extends StatefulWidget {
   const JeuDeRoleScreen({super.key, required this.contexte, required this.public});
 
   final ContexteJeuDeRole contexte;
   final PublicSerie public;
 
+  @override
+  State<JeuDeRoleScreen> createState() => _JeuDeRoleScreenState();
+}
+
+class _JeuDeRoleScreenState extends State<JeuDeRoleScreen> {
+  ContexteJeuDeRole get contexte => widget.contexte;
+  PublicSerie get public => widget.public;
   bool get _kids => public == PublicSerie.kids;
+
+  @override
+  void initState() {
+    super.initState();
+    // À la première visite du jeu de rôle, son tuto. Vu une fois, même passé.
+    if (!contexte.serie.reglages.tutoJeuDeRoleVu) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _tuto().then((_) => contexte.serie.reglages.changer(tutoJeuDeRoleVu: true));
+      });
+    }
+  }
+
+  Future<void> _tuto() => Navigator.of(context).push(MaterialPageRoute<void>(
+        fullscreenDialog: true,
+        builder: (_) => TutoJeuDeRoleScreen(kids: _kids),
+      ));
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +82,14 @@ class JeuDeRoleScreen extends StatelessWidget {
 
     return PageDestiny(
       titre: j('mode.${public.name}.titre'),
+      actions: [
+        IconButton(
+          key: const ValueKey('revoir_tuto_jdr'),
+          tooltip: t.t('tuto_jdr.revoir'),
+          icon: const Icon(Icons.help_outline_rounded),
+          onPressed: _tuto,
+        ),
+      ],
       enfants: [
         BandeauMode(public: public),
         SectionDestiny(titre: j('humains.titre'), enfants: [

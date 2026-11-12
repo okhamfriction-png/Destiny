@@ -1926,7 +1926,7 @@
   },
   "decouvrir": {
     "titre": "Découvrir Destiny",
-    "aide": "Destiny en deux minutes, à revoir quand tu veux.",
+    "aide": "Le spectacle de la Troupe en deux minutes, à revoir quand tu veux.",
     "passer": "Passer",
     "suivant": "Suivant",
     "commencer": "C'est parti",
@@ -1934,18 +1934,67 @@
     "ecrans": {
       "promesse": {
         "titre": "Une histoire, ensemble",
-        "texte": "Destiny se joue sans gagnant ni perdant : on crée ensemble une belle histoire, qui monte jusqu'au bout."
+        "texte": "Destiny est un spectacle d'impro : quatre comédiens et un figurant, un seul lieu, et un danger qui monte en quatre actes. Sans gagnant ni perdant : on crée ensemble une histoire qui va jusqu'au bout."
       },
-      "lieu": {
-        "titre": "Un lieu, un groupe"
+      "preparer": {
+        "titre": "1. Préparer",
+        "etapes": [
+          {
+            "icone": "lieu",
+            "titre": "Le lieu et le danger",
+            "texte": "Le public les donne, ou l'appli les tire. Il peut aussi proposer des objets, que la troupe devra réutiliser."
+          },
+          {
+            "icone": "archetypes",
+            "titre": "Les archétypes",
+            "texte": "Un par comédien, attribué à l'avance, pour que chaque famille soit là. Chacun choisit son animal : son vêtement."
+          },
+          {
+            "icone": "chrono",
+            "titre": "Le chrono",
+            "texte": "Trente minutes, avec trois Destiny prévus. On les fait glisser sur la frise."
+          }
+        ]
       },
-      "danger": {
-        "titre": "Un danger, quatre paliers",
+      "jeu": {
+        "titre": "2. Le jeu",
+        "etapes": [
+          {
+            "icone": "echauffement",
+            "titre": "L'échauffement",
+            "texte": "Le minuteur lance la musique de l'acte 1 : une minute muette, chacun entre dans son corps et son archétype."
+          },
+          {
+            "icone": "spectacle",
+            "titre": "Le spectacle",
+            "texte": "Le chrono et DESTINY restent en haut de l'écran. Quatre actes, un palier du danger chacun :"
+          }
+        ],
         "rituel": "Entre deux actes, Destiny"
+      },
+      "regie": {
+        "titre": "3. La régie",
+        "etapes": [
+          {
+            "icone": "regie",
+            "titre": "La table de régie",
+            "texte": "Le bouton Régie l'ouvre par-dessus le jeu : la musique de chaque acte, le bruitage du danger, les émotions, le mixeur. La croix ramène au jeu ; le spectacle continue."
+          },
+          {
+            "icone": "destiny",
+            "titre": "DESTINY",
+            "texte": "Le régisseur le lance au signal du metteur en scène, ou le chrono aux minutes prévues."
+          },
+          {
+            "icone": "terminer",
+            "titre": "Terminer",
+            "texte": "En bas du jeu : le spectacle est rangé dans l'historique, et l'on revient à l'accueil."
+          }
+        ]
       },
       "personnages": {
         "titre": "Des personnages",
-        "texte": "Chacun a un archétype, sa conviction face au danger, et un animal, son corps. Il y a douze archétypes, en trois familles :"
+        "texte": "Chacun a un archétype, sa conviction face au danger : acte par acte, il est tenté de… Et un animal, son vêtement. Douze archétypes, en trois familles :"
       }
     }
   },
@@ -2216,6 +2265,78 @@
       "score": "Score (ancienne version)",
       "toi": "Toi",
       "toi_personnage": "Toi — {personnage}"
+    }
+  },
+  "tuto_jdr": {
+    "titre": "Le jeu de rôle",
+    "revoir": "Revoir le tuto",
+    "ecrans": {
+      "episode": {
+        "titre": "Un épisode, comme un spectacle",
+        "etapes": [
+          {
+            "icone": "preparer",
+            "titre": "Préparer",
+            "texte": "Le lieu, le danger et ses quatre paliers, le grand méchant, ses sbires et les figurants du lieu."
+          },
+          {
+            "icone": "jeu",
+            "titre": "Le jeu",
+            "texte": "Le chrono et DESTINY, la même table de régie qu'au théâtre. Les joueurs disent ce que font leurs personnages ; le Maître du destin fait vivre le reste."
+          },
+          {
+            "icone": "terminer",
+            "titre": "Fin de l'épisode",
+            "texte": "Le bilan : ce que chacun est devenu, et le compte rendu de l'IA."
+          }
+        ]
+      },
+      "sante": {
+        "titre": "Le cœur et le cerveau",
+        "texte": "Chaque personnage a deux pistes. Le Maître du destin les fait bouger quand l'histoire frappe le corps ou l'esprit. Elles se gardent d'un épisode à l'autre ; un mort quitte la série.",
+        "essayer": "Touche les pistes pour essayer.",
+        "kids": "Avec des enfants, personne ne meurt : on quitte l'histoire. Touche les pistes pour essayer."
+      },
+      "mechant": {
+        "titre": "Le grand méchant",
+        "etapes": [
+          {
+            "icone": "ombre",
+            "titre": "Dans l'ombre",
+            "texte": "Une saison, c'est quatre épisodes. Le méchant agit dans l'ombre : on voit d'abord ses deux sbires et ses présages."
+          },
+          {
+            "icone": "personne",
+            "titre": "En personne",
+            "texte": "Il apparaît à l'épisode 4. On le vainc par sa faille, plutôt que par la force."
+          },
+          {
+            "icone": "figurants",
+            "titre": "Les figurants",
+            "texte": "Ils viennent du lieu. Un figurant peut passer au service du méchant ; un sbire ou un figurant hors jeu ne revient pas."
+          }
+        ]
+      },
+      "compte_rendu": {
+        "titre": "Le compte rendu de l'IA",
+        "etapes": [
+          {
+            "icone": "micro",
+            "titre": "Le micro, si on veut",
+            "texte": "Il écrit l'épisode pendant le jeu ; l'appli ne garde aucun son."
+          },
+          {
+            "icone": "ia",
+            "titre": "Le compte rendu",
+            "texte": "À la fin, l'IA raconte l'épisode et dit où l'on reprendra : depuis la transcription, ou depuis la trame de l'épisode et vos notes. Jamais de prénom de joueur."
+          },
+          {
+            "icone": "suite",
+            "titre": "Faire la suite",
+            "texte": "Un épisode devient le premier d'une saison, une saison le début d'une série."
+          }
+        ]
+      }
     }
   }
 }

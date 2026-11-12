@@ -211,24 +211,53 @@ void main() {
   });
 
   group('Découvrir Destiny', () {
-    testWidgets('quatre écrans, de la promesse aux personnages', (tester) async {
+    testWidgets('cinq écrans sur la Troupe : la promesse, préparer, le jeu, la régie, les personnages', (tester) async {
       var fini = 0;
       await _ouvrir(tester, DecouvrirScreen(quandFini: () => fini++), taille: const Size(360, 640));
       expect(find.text(g.promesse), findsOneWidget);
-      await tester.tap(find.text(t.t('decouvrir.suivant')));
-      await tester.pumpAndSettle();
-      expect(find.text(g.reglesDOr.first.titre), findsOneWidget);
-      await tester.tap(find.text(t.t('decouvrir.suivant')));
-      await tester.pumpAndSettle();
-      expect(find.text(t.t('decouvrir.ecrans.danger.rituel')), findsOneWidget);
+      Future<void> suivant() async {
+        await tester.tap(find.text(t.t('decouvrir.suivant')));
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+      }
+
+      await suivant();
+      expect(find.text(t.t('decouvrir.ecrans.preparer.titre')), findsOneWidget);
+      expect(find.text(g.regle('comediens')!.titre), findsOneWidget);
+      await suivant();
+      expect(find.text(t.t('decouvrir.ecrans.jeu.titre')), findsOneWidget);
+      expect(find.text(t.t('decouvrir.ecrans.jeu.rituel')), findsOneWidget);
       for (final p in g.paliers) {
         expect(find.textContaining(p.nom), findsWidgets);
       }
-      await tester.tap(find.text(t.t('decouvrir.suivant')));
-      await tester.pumpAndSettle();
+      await suivant();
+      expect(find.text(t.t('decouvrir.ecrans.regie.titre')), findsOneWidget);
+      expect(find.text(g.regle('danger_regie')!.titre), findsOneWidget);
+      await suivant();
       expect(find.text(t.t('decouvrir.ecrans.personnages.titre')), findsOneWidget);
       expect(find.text(t.t('decouvrir.passer')), findsNothing);
+      // Rien du jeu de rôle ni des exercices.
+      expect(find.textContaining('épisode'), findsNothing);
+      await tester.tap(find.text(t.t('decouvrir.commencer')));
+      await tester.pumpAndSettle();
+      expect(fini, 1);
+    });
+
+    testWidgets('le tuto du jeu de rôle : quatre écrans, et le cœur et le cerveau qu\'on peut toucher', (tester) async {
+      var fini = 0;
+      await _ouvrir(tester, TutoJeuDeRoleScreen(quandFini: () => fini++), taille: const Size(360, 640));
+      expect(find.text(t.t('tuto_jdr.ecrans.episode.titre')), findsOneWidget);
+      await tester.tap(find.text(t.t('decouvrir.suivant')));
+      await tester.pumpAndSettle();
+      expect(find.text(t.t('tuto_jdr.ecrans.sante.titre')), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('esprit_fou_tuto')));
+      await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
+      for (final cle in ['mechant', 'compte_rendu']) {
+        await tester.tap(find.text(t.t('decouvrir.suivant')));
+        await tester.pumpAndSettle();
+        expect(find.text(t.t('tuto_jdr.ecrans.$cle.titre')), findsOneWidget);
+      }
       await tester.tap(find.text(t.t('decouvrir.commencer')));
       await tester.pumpAndSettle();
       expect(fini, 1);
@@ -239,10 +268,21 @@ void main() {
       final r = ReglagesDestiny();
       await r.charger();
       expect(r.decouverteVue, isFalse);
-      await r.changer(decouverteVue: true);
+      expect(r.tutoJeuDeRoleVu, isFalse);
+      await r.changer(decouverteVue: true, tutoJeuDeRoleVu: true);
       final relu = ReglagesDestiny();
       await relu.charger();
       expect(relu.decouverteVue, isTrue);
+      expect(relu.tutoJeuDeRoleVu, isTrue);
+    });
+
+    test('le tuto refait en 2.3.0 se remontre une fois, même à qui avait vu l\'ancien', () async {
+      SharedPreferences.setMockInitialValues({
+        'reglages_destiny_v1': '{"decouverte_vue": true}',
+      });
+      final r = ReglagesDestiny();
+      await r.charger();
+      expect(r.decouverteVue, isFalse);
     });
 
     test('chaque texte de l\'accueil existe', () {
