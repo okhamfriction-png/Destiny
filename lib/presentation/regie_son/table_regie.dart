@@ -317,11 +317,8 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
 
   // ------------------------------------------------ l'ancienne tablette
 
-  String _ou(String choix, String defaut) => choix.isEmpty || choix == ChoixMusique.aucune ? defaut : choix;
-
-  static const _defauts = [ChoixMusique.commencement, ChoixMusique.lieu, ChoixMusique.lieu, ChoixMusique.conclusion];
-
-  String _choixActe(int acte) => _ou(_r.musiqueActe(acte), _defauts[acte - 1]);
+  /// Sans régie son (jamais dans l'appli) : la musique des réglages.
+  String _choixActe(int acte) => _r.musiqueActe(acte);
 
   /// La piste de l'ambiance du lieu joué, dans la bibliothèque.
   MusicTrack? get _pisteLieu {
@@ -355,12 +352,27 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
     return fichier.split('/').last;
   }
 
+  /// Le pad d'un acte : exactement la musique que la conduite joue pour cet
+  /// acte (celle du pack, ou sans pack celle des réglages).
   void _acte(int acte) {
     if (_audio.muted) return;
-    if (_pack) {
-      _c!.musiqueActe(acte);
-    } else {
+    final c = _c;
+    if (c != null) {
+      c.musiqueActe(acte);
+    } else if (_choixActe(acte) != ChoixMusique.aucune) {
       _jouerChoix(_choixActe(acte));
+    }
+  }
+
+  /// Le pad « Ambiance du lieu » : la même ambiance que la conduite, au même
+  /// volume.
+  void _ambiance() {
+    if (_audio.muted) return;
+    final c = _c;
+    if (c != null) {
+      c.jouerAmbiance();
+    } else {
+      _jouerChoix(ChoixMusique.lieu);
     }
   }
 
@@ -395,11 +407,11 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
     return cles;
   }
 
+  /// Un seul pad allumé à la fois : l'acte dont la musique joue (et pas
+  /// l'ambiance, même quand c'est le même fichier).
   bool _acteJoue(int acte, Set<String> joue) {
-    if (_pack) {
-      final chemin = _c!.musiqueDe(acte).chemin;
-      return chemin != null && joue.contains('pack:$chemin');
-    }
+    final c = _c;
+    if (c != null) return c.acteEnCours == acte;
     final f = _fichier(_choixActe(acte));
     return f != null && joue.contains('asset:$f');
   }
@@ -535,8 +547,9 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
     final pack = _pack;
     final acteCourant = c?.acte ?? s.palierAtteint;
     String? origine(int acte) {
-      if (!pack) return null;
-      return switch (c!.musiqueDe(acte).origine) {
+      if (c == null) return null;
+      if (!pack) return c.sourceActe(acte) == null ? rs('origine_aucune') : null;
+      return switch (c.musiqueDe(acte).origine) {
         OrigineMusique.nomAttendu || OrigineMusique.manifeste => rs('origine_propre'),
         OrigineMusique.famille => rs('origine_famille'),
         OrigineMusique.aucune => rs('origine_aucune'),
@@ -559,8 +572,8 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
         icone: Icons.place_rounded,
         couleur: const Color(0xFF4FC3F7),
         libelle: rg('son_lieu'),
-        actif: _pisteLieu != null && joue.contains('asset:${_pisteLieu!.file}'),
-        onTap: muet ? null : () => _jouerChoix(ChoixMusique.lieu),
+        actif: c != null ? c.ambianceEnCours : _pisteLieu != null && joue.contains('asset:${_pisteLieu!.file}'),
+        onTap: muet ? null : _ambiance,
       ),
       _Pad(
         icone: Icons.flash_on_rounded,

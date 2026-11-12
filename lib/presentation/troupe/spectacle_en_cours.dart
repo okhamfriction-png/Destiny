@@ -68,9 +68,11 @@ class SpectacleEnCours extends ChangeNotifier {
   int get total => s.dureeMinutes * 60;
   PalierId get palier => PalierId.deNumero(s.palierAtteint);
 
-  /// La conduite son automatique du spectacle (pack audio importé et actif).
+  /// La conduite son du spectacle : avec le pack audio, ses musiques et ses
+  /// bruitages ; sans, les musiques des réglages et l'ambiance du lieu. Les
+  /// deux enchaînent pareil.
   ConduiteSon? get conduite => contexte.regieSon?.conduite;
-  bool get conduiteActive => conduite?.active ?? false;
+  bool get conduiteActive => conduite != null;
 
   /// Sans chrono : les Destiny partent à la main, quand on veut.
   bool get avecChrono => s.dureeMinutes > 0 && s.destinyMinutes.isNotEmpty;
@@ -97,8 +99,9 @@ class SpectacleEnCours extends ChangeNotifier {
     if (!_demarre) {
       _demarre = true;
       if (conduiteActive) {
-        // Conduite du spectacle : le son Destiny puis la musique de l'acte 1 ;
-        // un spectacle repris en cours repart sur son acte.
+        // La musique de l'acte 1 (puis le bruitage du palier 1 et l'ambiance
+        // du lieu) ; un spectacle repris en cours repart sur son acte.
+        conduite!.preparer(lieuId: s.lieuId, dangerId: s.dangerId, acte: s.palierAtteint);
         if (s.destinys.isEmpty) {
           // Déjà ouverte par le minuteur du jeu : la musique continue.
           if (!conduite!.ouverte) unawaited(conduite!.ouverture());

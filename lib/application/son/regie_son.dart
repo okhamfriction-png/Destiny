@@ -17,7 +17,8 @@ class RegieSon {
   /// Charge le pack et les réglages, puis branche la conduite sur le son de
   /// l'appli : le bouton qui coupe le son la coupe aussi, et une musique de la
   /// conduite arrête celle du lecteur de la bibliothèque.
-  static Future<RegieSon> creer({required AudioService audio, required MusicController musique}) async {
+  static Future<RegieSon> creer(
+      {required AudioService audio, required MusicController musique, ReglagesDestiny? reglagesDestiny}) async {
     final pack = PackAudio();
     final reglages = ReglagesRegieSon();
     await Future.wait([pack.charger(), reglages.charger()]);
@@ -29,6 +30,8 @@ class RegieSon {
       avantMusique: () {
         if (musique.playing) musique.stop();
       },
+      // Sans pack : la musique de chaque acte choisie dans les réglages.
+      choixSansPack: reglagesDestiny == null ? null : (acte) => reglagesDestiny.musiqueActe(acte),
     );
     return RegieSon(pack: pack, reglages: reglages, conduite: conduite);
   }

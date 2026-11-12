@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../application/son/conduite_son.dart';
-import '../../application/son/lecteur_son.dart';
 import '../../domain/entities/dilemma.dart';
 import '../../domain/grammaire/distribution.dart';
 import '../../domain/grammaire/modeles.dart';
@@ -128,12 +126,7 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
   void _basculer() {
     if (_enMarche) {
       _minuteur?.cancel();
-      // En pause, la musique d'échauffement sort en fondu (pas celle de
-      // l'histoire : elle continue).
-      if (_musiqueEchauffement) {
-        _musiqueEchauffement = false;
-        unawaited(widget.contexte.regieSon?.conduite.couperMusique());
-      }
+      // En pause, la musique de l'histoire continue.
       setState(() {});
       return;
     }
@@ -144,55 +137,21 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
       if (_reste == 0) {
         t.cancel();
         widget.contexte.audio.playShine();
-        if (_musiqueEchauffement) {
-          _musiqueEchauffement = false;
-          unawaited(widget.contexte.regieSon?.conduite.couperMusique(fondu: 3));
-        }
       }
     });
     setState(() {});
   }
 
-  /// Une musique d'échauffement joue (pas celle de l'histoire).
-  bool _musiqueEchauffement = false;
-
-  /// Le minuteur lance l'histoire : avec le pack, l'ouverture du spectacle
-  /// (la musique de l'acte 1, puis le bruitage du palier 1, puis l'ambiance
-  /// du lieu), une seule fois. Sans pack, la musique d'échauffement des
-  /// réglages, s'il y en a une.
+  /// Le minuteur lance l'histoire : la musique de l'acte 1, puis le
+  /// bruitage du palier 1 (avec le pack), puis l'ambiance du lieu, une seule
+  /// fois. Avec ou sans pack, c'est la même conduite.
   void _musique() {
     final regie = widget.contexte.regieSon;
     if (regie == null || widget.contexte.audio.muted) return;
     final c = regie.conduite;
     final s = widget.session;
-    final v = regie.reglages.v;
     c.preparer(lieuId: s.lieuId, dangerId: s.dangerId, acte: s.palierAtteint);
-    if (c.active) {
-      if (!c.ouverte && s.destinys.isEmpty) unawaited(c.ouverture());
-      return;
-    }
-    SourceSon? source;
-    switch (v.musiqueEchauffement) {
-      case 'aucune':
-        return;
-      case 'acte1':
-        final chemin = c.musiqueDe(1).chemin;
-        if (chemin != null) source = SourcePack(chemin, titre: c.titreMusique(1));
-      case 'lieu':
-        final nom = s.lieuNom.trim().toLowerCase();
-        for (final p in widget.contexte.musique.tracks) {
-          if (p.category == 'Lieux' && p.title.trim().toLowerCase() == nom) {
-            source = SourceAsset(p.file, titre: p.title);
-          }
-        }
-      default:
-        source = SourceAsset(v.musiqueEchauffement, titre: v.musiqueEchauffement.split('/').last);
-    }
-    // Déjà en train de jouer (reprise après une pause) : on ne relance pas.
-    final enCours = c.lecteurs[BusSon.musique]!.enCours;
-    if (source == null || enCours?.cle == source.cle) return;
-    _musiqueEchauffement = true;
-    c.jouerMusique(source, volume: v.volumeEchauffement, fondu: 3);
+    if (!c.ouverte && s.destinys.isEmpty) unawaited(c.ouverture());
   }
 
   @override

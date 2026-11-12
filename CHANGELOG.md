@@ -2,6 +2,13 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.3.1 — Les bons sons, acte par acte (novembre 2026)
+
+- **À chaque acte, le même enchaînement** : la musique de l'acte, puis, quand elle se termine, le bruitage du danger au palier de l'acte, puis l'ambiance du lieu en fond à 15 %, jusqu'au Destiny suivant. Le bruitage ne part plus en même temps que la musique au Destiny des actes 2 à 4.
+- **Sans pack audio, c'est pareil** : le minuteur du jeu lance la musique de l'acte 1 des réglages (le Commencement par défaut), et chaque Destiny enchaîne sur la musique de l'acte suivant puis l'ambiance du lieu. Il n'y a plus qu'un seul lecteur de musique, donc plus deux musiques à la fois.
+- **Sur la table de régie, un seul pad allumé** : celui de l'acte dont la musique joue, ou « Ambiance du lieu ». Un acte sans musique affiche « silence » et ne joue plus l'ambiance à sa place.
+- La « musique d'échauffement » disparaît des réglages : le minuteur lance l'histoire.
+
 ## 2.3.0 — Les règles de novembre : des directions, pas des prisons (novembre 2026)
 
 Les règles de Destiny suivent les répétitions du 8 novembre, la séance du 11 et le travail du 12. L'appli dit la même chose partout : Découvrir, le livret (et son PDF), les cartes à imprimer, la Bibliothèque, la régie, le rituel, la distribution et l'IA.

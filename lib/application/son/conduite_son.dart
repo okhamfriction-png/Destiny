@@ -34,6 +34,7 @@ class ConduiteSon extends ChangeNotifier {
     Future<void> Function(Duration)? attendre,
     Random? hasard,
     this.avantMusique,
+    this.choixSansPack,
     this.delaiSecurite = const Duration(seconds: 90),
   })  : _muet = muet ?? (() => false),
         _attendre = attendre ?? ((d) => Future<void>.delayed(d)),
@@ -53,6 +54,11 @@ class ConduiteSon extends ChangeNotifier {
   /// Appelé avant de lancer une musique : coupe la musique « hors conduite »
   /// de l'appli (le lecteur de la bibliothèque), pour ne jamais en avoir deux.
   final VoidCallback? avantMusique;
+
+  /// Sans pack : la musique de chaque acte vient des réglages de Destiny
+  /// (« aucune », « lieu » pour l'ambiance du lieu, ou une piste embarquée
+  /// `music/…`).
+  final String Function(int acte)? choixSansPack;
 
   /// Au-delà, on n'attend plus la fin d'un son (un lecteur muet ne bloque
   /// jamais la suite).
@@ -98,12 +104,14 @@ class ConduiteSon extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// La conduite automatique remplace la régie d'avant : pack importé,
-  /// activé, et lieu connu du manifeste.
+  /// Le pack est importé, activé, et connaît le lieu : les musiques de
+  /// chaque lieu et les bruitages du danger. Sans lui, la conduite enchaîne
+  /// de la même façon avec les sons embarqués (musiques des réglages,
+  /// ambiance du lieu), sans bruitage.
   bool get active =>
       _v.packActif && pack.disponible && _lieuId != null && (_m?.lieux.containsKey(_lieuId) ?? false);
 
-  bool get _peutJouer => active && !_muet();
+  bool get _peutJouer => _lieuId != null && !_muet();
 
   void _etapeVers(EtapeConduite e) {
     _etape = e;
@@ -300,12 +308,12 @@ class ConduiteSon extends ChangeNotifier {
     _etapeVers(EtapeConduite.sonDestiny);
     await _sonDestiny(_v.sonDestiny, seq);
     if (seq != _seq) return;
-    if (_v.revealActe[acte - 1]) {
+    if (active && _v.revealActe[acte - 1]) {
       _etapeVers(EtapeConduite.reveal);
       await _reveal(seq);
       if (seq != _seq) return;
     }
-    if (_v.bruitageAuto[acte - 1]) {
+    if (active && _v.bruitageAuto[acte - 1]) {
       _etapeVers(EtapeConduite.bruitage);
       // Pas attendu : la musique entre pendant le bruitage, atténuée.
       unawaited(_jouerBruitages(bruitagesDuPalier(acte), seq));
@@ -318,7 +326,7 @@ class ConduiteSon extends ChangeNotifier {
   /// Bouton « Danger » : rejoue le bruitage du palier en cours, musique
   /// atténuée.
   Future<void> danger() async {
-    if (!_peutJouer || _dangerId == null) return;
+    if (!_peutJouer || !active || _dangerId == null) return;
     await _jouerBruitages(bruitagesDuPalier(_acte), _seq);
   }
 
@@ -493,20 +501,62 @@ class ConduiteSon extends ChangeNotifier {
     return resoudreMusique(m, pack.index, l, acte, repliFamille: _v.repliFamille);
   }
 
+  /// La musique de l'acte [acte], à jouer : celle du pack pour le lieu, ou,
+  /// sans pack, celle des réglages de Destiny. null : pas de musique (acte
+  /// désactivé, « aucune », ou rien de trouvé).
+  SourceSon? sourceActe(int acte) {
+    if (acte < 1 || acte > 4 || !_v.musiqueActe[acte - 1]) return null;
+    if (active) {
+      final chemin = musiqueDe(acte).chemin;
+      return chemin == null ? null : SourcePack(chemin, titre: titreMusique(acte));
+    }
+    final lieu = _lieuId;
+    final choix = choixSansPack?.call(acte) ?? '';
+    if (choix.isEmpty || choix == 'aucune' || choix == 'aleatoire') return null;
+    if (choix == 'lieu') {
+      return lieu == null ? null : SourceAsset(cheminAmbiance(lieu), titre: titreMusique(acte));
+    }
+    return SourceAsset(choix, titre: titreMusique(acte));
+  }
+
+  /// L'ambiance embarquée d'un lieu.
+  static String cheminAmbiance(String lieuId) => 'audio/ambiences/$lieuId.m4a';
+
+  /// L'acte dont la musique joue en ce moment (null : autre chose, ou rien).
+  int? get acteEnCours {
+    final l = lecteurs[BusSon.musique]!;
+    return l.enCours != null && identical(l.enCours, _sourceActe) ? _acteSource : null;
+  }
+
+  /// L'ambiance du lieu joue en ce moment.
+  bool get ambianceEnCours {
+    final l = lecteurs[BusSon.musique]!;
+    return l.enCours != null && identical(l.enCours, _sourceAmbiance);
+  }
+
+  SourceSon? _sourceActe;
+  int? _acteSource;
+  SourceSon? _sourceAmbiance;
+
+  /// La musique de l'acte [acte], puis, à sa vraie fin, le bruitage du palier
+  /// et l'ambiance du lieu. Sans musique pour cet acte, on passe tout de suite
+  /// à la suite.
   Future<void> _lancerMusique(int acte, int seq) async {
-    if (!_v.musiqueActe[acte - 1]) return;
-    final r = musiqueDe(acte);
-    final chemin = r.chemin;
-    if (chemin == null) return;
+    final source = sourceActe(acte);
+    if (source == null) {
+      unawaited(_apresMusique(acte, null));
+      return;
+    }
     avantMusique?.call();
     _volumeMusique = _v.volumeActe[acte - 1];
-    final source = SourcePack(chemin, titre: titreMusique(acte));
+    _sourceActe = source;
+    _acteSource = acte;
     await _jouerSur(BusSon.musique, source, niveau: 0, boucle: _v.boucle);
     if (seq != _seq) {
       await lecteurs[BusSon.musique]!.arreter();
       return;
     }
-    unawaited(_courbe(source, _dureeMusique(acte, chemin), _v.courbes[acte - 1], _v.finAZero[acte - 1], _volumeMusique));
+    unawaited(_courbe(source, _dureeMusique(acte, source.chemin), _v.courbes[acte - 1], _v.finAZero[acte - 1], _volumeMusique));
     unawaited(_apresMusique(acte, source));
     await _fondre(BusSon.musique, _attenue ? _volumeMusique * _v.attenuation : _volumeMusique, _v.fonduEntree[acte - 1]);
   }
@@ -516,16 +566,16 @@ class ConduiteSon extends ChangeNotifier {
   /// bruitage.
   int _jetonMusique = 0;
 
-  /// Quand la musique de l'acte [acte] arrive à sa vraie fin : le bruitage du
-  /// palier (réglage par acte ; l'acte 1 par défaut), puis l'ambiance du lieu,
-  /// en fond, jusqu'au Destiny suivant.
-  Future<void> _apresMusique(int acte, SourceSon source) async {
+  /// Quand la musique de l'acte [acte] arrive à sa vraie fin (ou tout de
+  /// suite, s'il n'y en a pas) : le bruitage du palier (avec le pack), puis
+  /// l'ambiance du lieu, en fond, jusqu'au Destiny suivant.
+  Future<void> _apresMusique(int acte, SourceSon? source) async {
     final jeton = _jetonMusique;
     final l = lecteurs[BusSon.musique]!;
-    await l.fin;
+    if (source != null) await l.fin;
     bool toujours() => jeton == _jetonMusique && l.enCours == null && _peutJouer && _acte == acte;
     if (!toujours()) return;
-    if (_v.bruitageFinMusique[acte - 1]) {
+    if (active && _v.bruitageFinMusique[acte - 1]) {
       _etapeVers(EtapeConduite.bruitage);
       await _jouerBruitages(bruitagesDuPalier(acte), _seq);
       if (_etape == EtapeConduite.bruitage) _etapeVers(EtapeConduite.repos);
@@ -540,16 +590,14 @@ class ConduiteSon extends ChangeNotifier {
   Future<void> jouerAmbiance() async {
     final lieu = _lieuId;
     if (lieu == null) return;
-    await jouerMusique(
-      SourceAsset('audio/ambiences/$lieu.m4a', titre: 'Ambiance · ${_m?.lieux[lieu]?.nom ?? lieu}'),
-      volume: _v.volumeAmbiance,
-      boucle: true,
-      fondu: 3,
-    );
+    final source = SourceAsset(cheminAmbiance(lieu), titre: 'Ambiance · ${_m?.lieux[lieu]?.nom ?? lieu}');
+    _sourceAmbiance = source;
+    await jouerMusique(source, volume: _v.volumeAmbiance, boucle: true, fondu: 3);
   }
 
   /// La durée de la musique d'un acte, si le manifeste la donne pour ce fichier.
   double? _dureeMusique(int acte, String chemin) {
+    if (!active) return null;
     final m = _m?.lieux[_lieuId]?.musiques[acte];
     if (m != null && pack.index.trouver(m.fichier) == chemin) return m.dureeS;
     for (final l in _m?.lieux.values ?? const <LieuPack>[]) {
@@ -562,7 +610,7 @@ class ConduiteSon extends ChangeNotifier {
 
   /// « Acte 2 · Église » : le nom affiché de la musique d'un acte.
   String titreMusique(int acte) {
-    final nom = _m?.lieux[_lieuId]?.nom;
+    final nom = _m?.lieux[_lieuId]?.nom ?? _lieuId;
     return nom == null ? 'Acte $acte' : 'Acte $acte · $nom';
   }
 
@@ -582,6 +630,8 @@ class ConduiteSon extends ChangeNotifier {
     avantMusique?.call();
     _volumeMusique = volume;
     _attenue = false;
+    _sourceActe = courbeActe == null ? null : source;
+    _acteSource = courbeActe;
     await _jouerSur(BusSon.musique, source, niveau: 0, boucle: boucle ?? _v.boucle);
     if (seq != _seq) return;
     // La courbe de l'acte, pour la musique d'un acte (pas pour les pads ni
@@ -594,11 +644,10 @@ class ConduiteSon extends ChangeNotifier {
 
   /// Le pad d'un acte : la musique de cet acte pour le lieu en cours.
   Future<void> musiqueActe(int acte) async {
-    final r = musiqueDe(acte);
-    final chemin = r.chemin;
-    if (chemin == null) return;
-    await jouerMusique(SourcePack(chemin, titre: titreMusique(acte)),
-        volume: _v.volumeActe[acte - 1], fondu: 2, dureeS: _dureeMusique(acte, chemin), courbeActe: acte);
+    final source = sourceActe(acte);
+    if (source == null) return;
+    await jouerMusique(source,
+        volume: _v.volumeActe[acte - 1], fondu: 2, dureeS: _dureeMusique(acte, source.chemin), courbeActe: acte);
   }
 
   /// Un pad d'effet ponctuel (stinger, Destiny, son embarqué) sur sa voie.

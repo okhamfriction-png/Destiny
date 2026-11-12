@@ -102,7 +102,7 @@ Future<void> _boot() async {
   final assistantJeu = AssistantJeu(llm: llmService, reglages: aiSettings, grammaire: grammaire.grammaire);
 
   // La régie son du spectacle : le pack audio importé, ses réglages, la conduite.
-  final regieSon = await RegieSon.creer(audio: audioService, musique: musicController);
+  final regieSon = await RegieSon.creer(audio: audioService, musique: musicController, reglagesDestiny: reglages);
 
   enregistrerLicencesPolices();
 

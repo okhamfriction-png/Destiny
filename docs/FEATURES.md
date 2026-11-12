@@ -56,7 +56,7 @@ L'accueil montre la promesse et, tirée au hasard à chaque ouverture, une règl
    - La distribution se fait par choix concerté, tirage équilibré ou exemple tout prêt.
    - Chaque famille est représentée ; on choisit des archétypes qui s'opposent dans leur réflexe. L'alarmiste est facultatif au spectacle (le danger vient de la régie). Une distribution déséquilibrée est signalée, avec une phrase qui dit pourquoi et une correction en un geste.
    - Chaque joueur choisit son animal parmi les deux de son archétype.
-2. **Le jeu** (l'écran qui porte le spectacle, sans flèche de retour) : le chrono et DESTINY, les paliers du danger, la carte de chaque joueur, les trois questions (« Comment je me tiens ? »…), la limite (« le corps, pas l'histoire ») et un minuteur, qui lance la musique de l'échauffement.
+2. **Le jeu** (l'écran qui porte le spectacle, sans flèche de retour) : le chrono et DESTINY, les paliers du danger, la carte de chaque joueur, les trois questions (« Comment je me tiens ? »…), la limite (« le corps, pas l'histoire ») et un minuteur, qui lance l'histoire : la musique de l'acte 1.
 3. **Avant d'entrer en scène** : les règles d'or, les quatre paliers et la phrase des débriefs. Aucune critique.
 4. **La régie** : la table de régie, en pop-up par-dessus le jeu (sa croix ramène au jeu, le spectacle continue). Le jeu montre aussi :
    - un gros chrono et l'acte en cours, puis trois cadres : le lieu et le danger, les paliers du danger, les archétypes à ce palier ;
@@ -65,7 +65,7 @@ L'accueil montre la promesse et, tirée au hasard à chaque ouverture, une règl
    - au premier figé, le rappel de fixer le besoin ;
    - pour chaque joueur, ce que fait son archétype et le corps de son animal à ce palier ;
    - à l'acte 4, le dilemme du danger ;
-   - la **table de régie**, en pop-up avec le chrono et DESTINY : la conduite du spectacle, les tranches et les banques de sons par catégorie. Avec le pack audio importé, la **conduite son automatique** enchaîne la musique de chaque acte, le son Destiny et le bruitage du danger.
+   - la **table de régie**, en pop-up avec le chrono et DESTINY : la conduite du spectacle, les banques de sons et le mixeur. La **conduite son** enchaîne, à chaque acte : le son Destiny, la musique de l'acte, puis à sa fin le bruitage du danger au palier de l'acte, puis l'ambiance du lieu à 15 % jusqu'au Destiny suivant. Avec le pack audio importé, chaque lieu a ses musiques et chaque danger ses bruitages ; sans pack, ce sont les musiques choisies dans les réglages et l'ambiance du lieu, sans bruitage. Un seul pad s'allume : ce qui joue.
 5. **Terminer**, en bas du jeu : le spectacle est rangé dans l'historique, et l'on revient à l'accueil.
 6. **L'historique** des spectacles et des répétitions, chacun exportable en **PDF**.
 

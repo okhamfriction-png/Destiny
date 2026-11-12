@@ -101,6 +101,7 @@ Future<void> laisserTourner() async {
   ValeursRegieSon? valeurs,
   bool Function()? muet,
   bool vraiTemps = false,
+  String Function(int acte)? choixSansPack,
 }) {
   final journal = <String>[];
   final lecteurs = <BusSon, LecteurFactice>{};
@@ -117,6 +118,7 @@ Future<void> laisserTourner() async {
         ? null
         : (d) => d >= const Duration(seconds: 60) ? Completer<void>().future : Future<void>.value(),
     hasard: Random(1),
+    choixSansPack: choixSansPack,
   );
   return (conduite: conduite, lecteurs: lecteurs, journal: journal);
 }
@@ -274,7 +276,10 @@ void main() {
   group('réglages de la régie son', () {
     test('aller-retour en JSON, valeurs par défaut de la spec', () {
       final v = ValeursRegieSon();
-      expect(v.bruitageAuto, [false, true, true, true]);
+      // À chaque acte : la musique, puis le bruitage à sa fin, jamais en même
+      // temps.
+      expect(v.bruitageAuto, [false, false, false, false]);
+      expect(v.bruitageFinMusique, [true, true, true, true]);
       expect(v.revealActe, [false, false, true, false]);
       expect(v.courbes.map((c) => [for (final p in c) (p.secondes, p.volume)]), everyElement([(30.0, 0.5)]));
       expect(v.finAZero, [true, true, true, true]);
@@ -339,7 +344,8 @@ void main() {
       expect(t.journal.last, startsWith('musique:jouer:'));
     });
 
-    test('DESTINY 2 (acte 3) : sortie, son Destiny, REVEAL, bruitages décalés, puis musique', () async {
+    test('DESTINY 2 (acte 3) : sortie, son Destiny, REVEAL, la musique, puis à sa fin les bruitages et l\'ambiance',
+        () async {
       final t = conduiteDeTest();
       t.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme', acte: 2);
       // La musique de l'acte 2 joue déjà.
@@ -357,17 +363,23 @@ void main() {
       final codes = m.dangers['siege_arme']!.codes(3);
       int indice(String debut) => t.journal.indexWhere((e) => e.startsWith(debut));
       expect(indice('stinger:jouer:Bruitages/REVEAL'), greaterThan(0));
-      expect(indice('bruitageA:jouer:Bruitages/${codes[0]}'), greaterThan(indice('stinger:jouer')));
-      expect(indice('bruitageB:jouer:Bruitages/${codes[1]}'), greaterThan(indice('bruitageA:jouer')));
-      // La musique entre pendant le bruitage (atténuée), après le 1er code.
-      expect(indice('musique:jouer:Musiques Destiny/Mystère - Église/Destiny Acte 3'), greaterThan(indice('bruitageA:jouer')));
+      expect(indice('musique:jouer:Musiques Destiny/Mystère - Église/Destiny Acte 3'), greaterThan(indice('stinger:jouer')));
+      // Pas de bruitage tant que la musique de l'acte joue.
+      expect(indice('bruitage'), -1);
       expect(t.conduite.acte, 3);
-      // Le bruitage fini, la musique est remontée.
-      expect(t.conduite.attenue, isFalse);
+      expect(t.conduite.acteEnCours, 3);
       expect(t.lecteurs[BusSon.musique]!.volume, closeTo(0.7, 1e-9));
+
+      t.lecteurs[BusSon.musique]!.finir();
+      await laisserTourner();
+      expect(indice('bruitageA:jouer:Bruitages/${codes[0]}'), greaterThan(indice('musique:jouer:Musiques')));
+      expect(indice('bruitageB:jouer:Bruitages/${codes[1]}'), greaterThan(indice('bruitageA:jouer')));
+      expect(indice('musique:jouer:audio/ambiences/eglise.m4a'), greaterThan(indice('bruitageB:jouer')));
+      expect(t.conduite.ambianceEnCours, isTrue);
+      expect(t.conduite.acteEnCours, isNull);
     });
 
-    test('DESTINY 1 (acte 2) : pas de REVEAL par défaut, le bruitage du palier 2', () async {
+    test('DESTINY 1 (acte 2) : pas de REVEAL par défaut, la musique de l\'acte 2, puis le bruitage du palier 2', () async {
       final t = conduiteDeTest();
       t.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
       final fini = t.conduite.destiny(1);
@@ -376,7 +388,144 @@ void main() {
       await laisserTourner();
       await fini;
       expect(t.journal.where((e) => e.startsWith('stinger')), isEmpty);
+      expect(t.journal.last, 'musique:jouer:Musiques Destiny/Mystère - Église/Destiny Acte 2 - 40 - Église.mp3');
+      expect(t.journal.where((e) => e.startsWith('bruitage')), isEmpty);
+      t.lecteurs[BusSon.musique]!.finir();
+      await laisserTourner();
       expect(t.journal, contains(startsWith('bruitageA:jouer:Bruitages/${m.dangers['siege_arme']!.codes(2).first}')));
+    });
+
+    test('le spectacle en entier, avec le pack : à chaque acte sa musique, puis le danger du palier, puis l\'ambiance ; '
+        'jamais deux sons en même temps', () async {
+      final t = conduiteDeTest();
+      t.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
+      final musique = t.lecteurs[BusSon.musique]!;
+      final simultanes = <String>[];
+      // À chaque son qui part, rien d'autre ne doit jouer (sauf l'ambiance
+      // qu'un Destiny vient de faire sortir, déjà arrêtée).
+      void surveiller() {
+        final actifs = [
+          for (final e in t.lecteurs.entries)
+            // L'ambiance à 15 % peut croiser la fin d'un bruitage.
+            if (e.value.actif && !(e.key == BusSon.musique && t.conduite.ambianceEnCours)) e.key.name,
+        ];
+        if (actifs.length > 1 && !(actifs.length == 2 && actifs.contains('bruitageA') && actifs.contains('bruitageB'))) {
+          simultanes.add('${t.journal.last} avec ${actifs.join('+')}');
+        }
+      }
+
+      // Le stinger REVEAL est court : il finit avant la suite (avec les
+      // attentes immédiates du test, on le termine dès qu'il part).
+      final stinger = t.lecteurs[BusSon.stinger]!;
+      stinger.addListener(() {
+        if (stinger.actif) stinger.finir();
+      });
+      for (final l in t.lecteurs.values) {
+        l.addListener(surveiller);
+      }
+
+      Future<void> acte(int n) async {
+        final avant = t.journal.length;
+        if (n == 1) {
+          unawaited(t.conduite.ouverture());
+        } else {
+          unawaited(t.conduite.destiny(n - 1));
+          await laisserTourner();
+          t.lecteurs[BusSon.destiny]!.finir();
+        }
+        await laisserTourner();
+        final attendu = m.lieux['eglise']!.musiques[n]!.fichier;
+        expect(musique.enCours?.chemin, endsWith(attendu.split('/').last), reason: 'la musique de l\'acte $n');
+        expect(t.conduite.acteEnCours, n);
+        musique.finir();
+        await laisserTourner();
+        final codes = m.dangers['siege_arme']!.codes(n);
+        final ici = t.journal.sublist(avant);
+        expect(ici.where((e) => e.startsWith('bruitageA:jouer')).first, startsWith('bruitageA:jouer:Bruitages/${codes.first}'),
+            reason: 'le danger du palier $n');
+        expect(ici.indexOf('musique:jouer:audio/ambiences/eglise.m4a'),
+            greaterThan(ici.indexWhere((e) => e.startsWith('bruitageA:jouer'))),
+            reason: 'puis l\'ambiance du lieu');
+        expect(t.conduite.ambianceEnCours, isTrue);
+        expect(musique.volume, closeTo(0.15, 1e-9));
+        // Les bruitages finissent.
+        t.lecteurs[BusSon.bruitageA]!.finir();
+        t.lecteurs[BusSon.bruitageB]!.finir();
+      }
+
+      for (var n = 1; n <= 4; n++) {
+        await acte(n);
+      }
+      expect(simultanes, isEmpty);
+      expect(t.conduite.acte, 4);
+    });
+
+    test('pour chacun des 40 lieux, les quatre actes ont chacun leur musique, et ce n\'est jamais l\'ambiance', () {
+      final t = conduiteDeTest();
+      for (final lieu in m.lieux.keys) {
+        t.conduite.preparer(lieuId: lieu, dangerId: 'siege_arme');
+        final chemins = [for (var a = 1; a <= 4; a++) t.conduite.sourceActe(a)?.chemin];
+        expect(chemins, everyElement(isNotNull), reason: lieu);
+        expect(chemins.toSet(), hasLength(4), reason: '$lieu : $chemins');
+        expect(chemins[0], contains('Intro'), reason: lieu);
+        for (var a = 2; a <= 4; a++) {
+          expect(chemins[a - 1], contains('Acte $a'), reason: '$lieu, acte $a');
+        }
+        expect(chemins, everyElement(isNot(contains('ambiences'))), reason: lieu);
+      }
+    });
+
+    test('sans pack : la même conduite avec les musiques des réglages et l\'ambiance du lieu, sans bruitage', () async {
+      const choix = ['music/01_commencement.m4a', 'aucune', 'lieu', 'music/02_conclusionainsique.m4a'];
+      final t = conduiteDeTest(fichiers: const [], choixSansPack: (a) => choix[a - 1]);
+      t.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
+      expect(t.conduite.active, isFalse);
+      final musique = t.lecteurs[BusSon.musique]!;
+
+      // Acte 1 : le Commencement, puis l'ambiance à 15 %.
+      await t.conduite.ouverture();
+      await laisserTourner();
+      expect(t.journal, ['musique:jouer:music/01_commencement.m4a']);
+      expect(t.conduite.acteEnCours, 1);
+      expect(t.conduite.ambianceEnCours, isFalse);
+      musique.finir();
+      await laisserTourner();
+      expect(t.journal.last, 'musique:jouer:audio/ambiences/eglise.m4a');
+      expect(musique.volume, closeTo(0.15, 1e-9));
+      expect(t.conduite.ambianceEnCours, isTrue);
+      expect(t.conduite.acteEnCours, isNull, reason: 'un seul pad allumé : l\'ambiance');
+
+      // Acte 2 (« aucune ») : l'ambiance sort, le son Destiny, l'ambiance revient.
+      t.journal.clear();
+      unawaited(t.conduite.destiny(1));
+      await laisserTourner();
+      expect(t.journal, ['musique:arreter', 'destiny:jouer:audio/DestinyStorm.wav']);
+      t.lecteurs[BusSon.destiny]!.finir();
+      await laisserTourner();
+      expect(t.journal.sublist(2), ['musique:jouer:audio/ambiences/eglise.m4a']);
+
+      // Acte 3 (« lieu ») : l'ambiance du lieu comme musique, à 70 %, puis en fond.
+      t.journal.clear();
+      unawaited(t.conduite.destiny(2));
+      await laisserTourner();
+      t.lecteurs[BusSon.destiny]!.finir();
+      await laisserTourner();
+      expect(t.journal.last, 'musique:jouer:audio/ambiences/eglise.m4a');
+      expect(musique.volume, closeTo(0.7, 1e-9));
+      expect(t.conduite.acteEnCours, 3);
+      musique.finir();
+      await laisserTourner();
+      expect(musique.volume, closeTo(0.15, 1e-9));
+
+      // Acte 4 : la Conclusion.
+      t.journal.clear();
+      unawaited(t.conduite.destiny(3));
+      await laisserTourner();
+      t.lecteurs[BusSon.destiny]!.finir();
+      await laisserTourner();
+      expect(t.journal.last, 'musique:jouer:music/02_conclusionainsique.m4a');
+      expect(t.conduite.acteEnCours, 4);
+      expect(t.journal.where((e) => e.startsWith('bruitage') || e.startsWith('stinger')), isEmpty);
     });
 
     test('annuler pendant le son Destiny : plus rien ne part, rien ne reste', () async {
@@ -405,18 +554,24 @@ void main() {
       expect(second, isNot(premier));
     });
 
-    test('son coupé ou pack désactivé : la conduite ne joue rien', () async {
+    test('son coupé : la conduite ne joue rien ; pack désactivé : ni bruitage ni REVEAL', () async {
       final coupe = conduiteDeTest(muet: () => true);
       coupe.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
       await coupe.conduite.ouverture();
       await coupe.conduite.danger();
       expect(coupe.journal, isEmpty);
 
-      final inactif = conduiteDeTest(valeurs: ValeursRegieSon()..packActif = false);
+      final inactif = conduiteDeTest(valeurs: ValeursRegieSon()..sansCourbes()..packActif = false);
       inactif.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
       expect(inactif.conduite.active, isFalse);
-      await inactif.conduite.destiny(1);
-      expect(inactif.journal, isEmpty);
+      final fini = inactif.conduite.destiny(2);
+      await laisserTourner();
+      inactif.lecteurs[BusSon.destiny]!.finir();
+      await laisserTourner();
+      await fini;
+      await inactif.conduite.danger();
+      expect(inactif.journal.where((e) => e.startsWith('bruitage') || e.startsWith('stinger') || e.contains('Musiques')),
+          isEmpty);
 
       final sansPack = conduiteDeTest(fichiers: const []);
       sansPack.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');

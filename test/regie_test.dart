@@ -366,8 +366,9 @@ void main() {
       await tuile('son_acte', {'n': '$acte'});
     }
     await tuile('son_lieu');
-    // L'acte 2 n'a pas de musique par défaut : sa tuile joue l'ambiance du lieu.
-    expect(b.musique.joues, [r.musiqueActe(1), ChoixMusique.lieu, r.musiqueActe(3), r.musiqueActe(4), ChoixMusique.lieu]);
+    // L'acte 2 n'a pas de musique par défaut : sa tuile ne joue rien (pas
+    // l'ambiance à sa place, comme la conduite).
+    expect(b.musique.joues, [r.musiqueActe(1), r.musiqueActe(3), r.musiqueActe(4), ChoixMusique.lieu]);
     await tuile('son_destiny');
     expect(b.audio.effets, [r.sonDestiny]);
     await tuile('son_stop');
@@ -854,6 +855,52 @@ void main() {
     await tester.tap(find.text(t.t('echauffement.pause')));
     await tester.pump();
     expect(journal, isNot(contains('musique:arreter')));
+    await tester.tap(find.byKey(const ValueKey('pilote_basculer')));
+    await tester.pump();
+  });
+
+  testWidgets('sans pack : le minuteur du jeu lance aussi la musique de l\'acte 1, par la conduite', (tester) async {
+    final b = await _banc(tester);
+    b.session.etape = EtapeSession.echauffement;
+    final m = ManifesteAudio.depuisJson(
+        jsonDecode(File('assets/data/destiny_audio.json').readAsStringSync()) as Map<String, dynamic>);
+    final journal = <String>[];
+    final pack = PackAudio.pourTests(m, IndexPack(const []));
+    final reglages = ReglagesRegieSon(ValeursRegieSon()..sansCourbes());
+    final c = b.contexte;
+    final regieSon = RegieSon(
+      pack: pack,
+      reglages: reglages,
+      conduite: ConduiteSon(
+        pack: pack,
+        reglages: reglages,
+        muet: () => b.audio.muted,
+        fabrique: (bus) => LecteurFactice(bus, journal),
+        attendre: (d) => d >= const Duration(seconds: 60) ? Completer<void>().future : Future<void>.value(),
+        choixSansPack: c.reglages.musiqueActe,
+      ),
+    );
+    final contexte = ContexteTroupe(
+      store: c.store,
+      reglages: c.reglages,
+      catalogue: c.catalogue,
+      audio: c.audio,
+      musique: c.musique,
+      visuels: c.visuels,
+      regieSon: regieSon,
+    );
+    await _ouvrir(tester, EchauffementScreen(contexte: contexte, session: b.session));
+    expect(regieSon.conduite.active, isFalse);
+    await tester.tap(find.text(t.t('echauffement.demarrer')));
+    await tester.pump();
+    expect(journal, ['musique:jouer:${c.reglages.musiqueActe(1)}']);
+    // Un seul lecteur de musique : l'ancien (la bibliothèque) ne joue rien.
+    expect(b.musique.joues, isEmpty);
+    // Le chrono du spectacle ne la relance pas.
+    await tester.tap(find.byKey(const ValueKey('pilote_basculer')));
+    await tester.pump(const Duration(seconds: 2));
+    expect(journal.where((e) => e.startsWith('musique:jouer')), hasLength(1));
+    expect(b.musique.joues, isEmpty);
     await tester.tap(find.byKey(const ValueKey('pilote_basculer')));
     await tester.pump();
   });

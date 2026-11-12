@@ -70,12 +70,14 @@ class ValeursRegieSon {
   /// attend sa fin).
   double chevauchement = 0;
 
-  // Bruitage du danger.
-  List<bool> bruitageAuto = [false, true, true, true];
+  /// Bruitage du danger. À chaque acte, la musique d'abord, puis le bruitage
+  /// du palier à la fin de la musique (jamais les deux en même temps par
+  /// défaut).
+  List<bool> bruitageAuto = [false, false, false, false];
 
-  /// Le bruitage du palier quand la musique de l'acte arrive à sa fin
-  /// (l'acte 1 par défaut : la musique d'ouverture, puis le danger se signale).
-  List<bool> bruitageFinMusique = [true, false, false, false];
+  /// Le bruitage du palier quand la musique de l'acte arrive à sa fin : à
+  /// chaque acte, la musique, puis le danger, puis l'ambiance du lieu.
+  List<bool> bruitageFinMusique = [true, true, true, true];
 
   /// Après la musique d'un acte (et son bruitage), l'ambiance du lieu en
   /// fond, en boucle, à ce volume, jusqu'au Destiny suivant.
@@ -129,10 +131,10 @@ class ValeursRegieSon {
         'volume_echauffement': volumeEchauffement,
         // « _v2 » : avant, le son Destiny ouvrait le spectacle.
         'son_ouverture_v2': sonOuverture,
-        'bruitage_fin_musique': bruitageFinMusique,
+        'bruitage_fin_musique_v2': bruitageFinMusique,
         'son_destiny': sonDestiny,
         'chevauchement': chevauchement,
-        'bruitage_auto': bruitageAuto,
+        'bruitage_auto_v2': bruitageAuto,
         'volume_bruitage': volumeBruitage,
         'duree_max_bruitage': dureeMaxBruitage,
         'fondu_bruitage': fonduBruitage,
@@ -180,10 +182,10 @@ class ValeursRegieSon {
       ..volumeAmbiance = d('volume_ambiance', v.volumeAmbiance)
       ..volumeEchauffement = d('volume_echauffement', v.volumeEchauffement)
       ..sonOuverture = j['son_ouverture_v2'] as String? ?? v.sonOuverture
-      ..bruitageFinMusique = _quatre(j['bruitage_fin_musique'], v.bruitageFinMusique, booleen)
+      ..bruitageFinMusique = _quatre(j['bruitage_fin_musique_v2'], v.bruitageFinMusique, booleen)
       ..sonDestiny = j['son_destiny'] as String? ?? v.sonDestiny
       ..chevauchement = d('chevauchement', v.chevauchement)
-      ..bruitageAuto = _quatre(j['bruitage_auto'], v.bruitageAuto, booleen)
+      ..bruitageAuto = _quatre(j['bruitage_auto_v2'], v.bruitageAuto, booleen)
       ..volumeBruitage = d('volume_bruitage', v.volumeBruitage)
       ..dureeMaxBruitage = d('duree_max_bruitage', v.dureeMaxBruitage)
       ..fonduBruitage = d('fondu_bruitage', v.fonduBruitage)

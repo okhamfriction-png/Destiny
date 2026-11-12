@@ -67,7 +67,7 @@ class _RegieScreenState extends State<RegieScreen> {
   ReglagesDestiny get r => widget.contexte.reglages;
   PalierId get _palier => _sp.palier;
   ConduiteSon? get _conduite => _sp.conduite;
-  bool get _conduiteActive => _sp.conduiteActive;
+  bool get _conduiteActive => _sp.conduite?.active ?? false;
 
   @override
   void initState() {

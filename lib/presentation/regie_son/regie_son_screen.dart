@@ -80,19 +80,6 @@ class RegieSonScreen extends StatelessWidget {
                     pourcent: true),
               _Bascule(k('boucle'), v.boucle, (x) => change((v) => v.boucle = x), aide: k('boucle_aide')),
             ]),
-            SectionDestiny(titre: k('echauffement'), enfants: [
-              Paragraphe(k('echauffement_aide'), italique: true),
-              Wrap(spacing: 8, runSpacing: 6, children: [
-                for (final o in const ['aucune', 'lieu', 'acte1'])
-                  ChoiceChip(
-                    label: Text(k('echauffement_$o')),
-                    selected: v.musiqueEchauffement == o,
-                    onSelected: (_) => change((v) => v.musiqueEchauffement = o),
-                  ),
-              ]),
-              _Curseur(k('volume'), v.volumeEchauffement, 0, 1, 20, (x) => change((v) => v.volumeEchauffement = x),
-                  pourcent: true),
-            ]),
             SectionDestiny(titre: k('son_destiny'), enfants: [
               _ChoixEffet(k('son_ouverture'), v.sonOuverture, (x) => change((v) => v.sonOuverture = x)),
               _ChoixEffet(k('son_chaque_destiny'), v.sonDestiny, (x) => change((v) => v.sonDestiny = x)),
@@ -107,14 +94,14 @@ class RegieSonScreen extends StatelessWidget {
               ),
             ]),
             SectionDestiny(titre: k('bruitage'), enfants: [
-              Text(k('bruitage_auto'), style: Theme.of(context).textTheme.titleSmall),
-              const SizedBox(height: 6),
-              _PucesActes(valeurs: v.bruitageAuto, k: k, onChange: (a, x) => change((v) => v.bruitageAuto[a] = x)),
-              const SizedBox(height: 10),
               Text(k('bruitage_fin'), style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 6),
               _PucesActes(
                   valeurs: v.bruitageFinMusique, k: k, onChange: (a, x) => change((v) => v.bruitageFinMusique[a] = x)),
+              const SizedBox(height: 10),
+              Text(k('bruitage_auto'), style: Theme.of(context).textTheme.titleSmall),
+              const SizedBox(height: 6),
+              _PucesActes(valeurs: v.bruitageAuto, k: k, onChange: (a, x) => change((v) => v.bruitageAuto[a] = x)),
               _Curseur(k('volume'), v.volumeBruitage, 0, 1, 20, (x) => change((v) => v.volumeBruitage = x), pourcent: true),
               _Curseur(k('duree_max'), v.dureeMaxBruitage, 2, 30, 28, (x) => change((v) => v.dureeMaxBruitage = x),
                   suffixe: 's'),
