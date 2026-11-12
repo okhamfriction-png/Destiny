@@ -25,6 +25,10 @@ import 'historique_screen.dart';
 import 'preparer_screen.dart';
 
 /// Ce dont le mode Troupe a besoin de l'appli. Tout fonctionne sans réseau.
+/// Le tirage de l'accueil (la règle d'or ou la réplique du jour), fait une
+/// fois par lancement de l'appli.
+final int _tirageAccueil = Random().nextInt(1 << 30);
+
 class ContexteTroupe implements SourcesSon {
   const ContexteTroupe({
     required this.store,
@@ -131,9 +135,11 @@ class TroupeScreen extends StatelessWidget {
     final g = context.grammaire;
     final t = context.textes;
     final c = context.destiny;
-    final jour = DateTime.now().difference(DateTime(2026)).inDays;
+    // Tirées au hasard à chaque ouverture de l'appli (et pas à chaque
+    // reconstruction de l'écran) : une autre réplique à chaque chargement.
+    final jour = _tirageAccueil;
     final regle = g.reglesDOr[jour % g.reglesDOr.length];
-    final animal = g.animaux[jour % g.animaux.length];
+    final animal = g.animaux[(jour ~/ 2) % g.animaux.length];
     final couleurAnimal = c.famille(g.archetype(animal.archetypeId)!.famille);
 
     return ListenableBuilder(
@@ -149,7 +155,7 @@ class TroupeScreen extends StatelessWidget {
                 child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                   BandeauAffiche(titre: g.nom.toUpperCase(), surtitre: t.t('troupe.titre'), sousTitre: g.promesse),
                   const SizedBox(height: 14),
-                  // La règle d'or ou la réplique du jour, en alternance.
+                  // La règle d'or ou la réplique du jour, au hasard.
                   if (jour.isEven)
                     CadreLisere(
                       couleur: c.or,
