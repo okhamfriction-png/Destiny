@@ -164,11 +164,7 @@ class ReglagesDestinyScreen extends StatelessWidget {
               _Bascule(k('leader_obligatoire'), r.leaderObligatoire, (v) => r.changer(leaderObligatoire: v)),
             ]),
             SectionDestiny(titre: k('jeu_de_role'), enfants: [
-              _Bascule(k('traitre_defaut'), r.moduleTraitre, (v) => r.changer(moduleTraitre: v),
-                  aide: t.t('module_traitre.explication')),
               _Bascule(k('registre_defaut'), r.registreParDefaut, (v) => r.changer(registreParDefaut: v)),
-              _Bascule(k('evolution'), r.evolutionArchetype, (v) => r.changer(evolutionArchetype: v),
-                  aide: k('evolution_aide')),
             ]),
             SectionDestiny(titre: k('echauffement'), enfants: [
               Text(k('minuteur', {'n': '${r.minuteurEchauffement}'})),

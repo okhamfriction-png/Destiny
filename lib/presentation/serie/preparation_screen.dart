@@ -17,11 +17,12 @@ import '../theme/destiny_theme.dart';
 import 'composants_serie.dart';
 import 'contexte_serie.dart';
 import 'pbta_composants.dart';
+import 'sante_serie.dart';
 
-/// Préparer un épisode : le présage (en saison), le lieu et le danger tirés
-/// du catalogue de Destiny (avec leur image et leur fiche), les figurants du
-/// lieu, le groupe, le mystère, le vouloir de chacun, ce qu'on
-/// ressort du registre, le chrono et le micro.
+/// Préparer un épisode, aussi simple qu'au théâtre : le présage et le
+/// méchant (en saison), le lieu et le danger tirés du catalogue de Destiny
+/// (avec leur image et leur fiche), les figurants du lieu et les sbires du
+/// méchant, le chrono, et le micro pour le compte rendu de l'IA.
 class PreparationEpisodeScreen extends StatefulWidget {
   const PreparationEpisodeScreen({super.key, required this.contexte, required this.serie, required this.episode});
 
@@ -38,12 +39,7 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
   List<Location> _lieux = const [];
   List<Danger> _dangers = const [];
   bool _catalogueCharge = false;
-  final Map<String, TextEditingController> _champs = {};
-  List<EntreeRegistre> _suggestions = const [];
-  final Map<String, String> _commentaires = {};
-  bool _iaEnCours = false;
   bool _micDispo = false;
-  late final List<String> _ideesVouloir;
 
   Serie get s => widget.serie;
   EpisodeSerie get e => widget.episode;
@@ -52,11 +48,8 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
   void initState() {
     super.initState();
     for (final p in s.personnagesActifs) {
-      if (e.role(p.id) == null) e.roles.add(RoleEpisode(personnageId: p.id));
+      if (e.role(p.id) == null) e.roles.add(s.nouveauRole(p.id, sauf: e));
     }
-    _ideesVouloir = ([...widget.contexte.store.catalogue.vouloirs]..shuffle(_hasard)).take(4).toList();
-    _suggestions = suggestionsRegistre(s.registre,
-        dejaRessortis: [for (final x in s.episodes) if (x != e) ...x.registreRessorti], hasard: _hasard);
     _charger();
     TranscriptionService().disponible().then((d) {
       if (mounted) setState(() => _micDispo = d);
@@ -109,16 +102,6 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
 
   /// Une fiche (lieu, danger, archétype, animal), dans une fenêtre.
   void _ouvrir(Widget page) => ouvrirEnFenetre(context, page);
-
-  @override
-  void dispose() {
-    for (final c in _champs.values) {
-      c.dispose();
-    }
-    super.dispose();
-  }
-
-  TextEditingController _champ(String cle, String valeur) => _champs[cle] ??= TextEditingController(text: valeur);
 
   Future<void> _sauver() => widget.contexte.store.enregistrer(s);
 
@@ -182,33 +165,7 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
         ),
       );
 
-  Future<void> _demanderIa() async {
-    setState(() => _iaEnCours = true);
-    try {
-      final candidats = [
-        for (final r in s.registre)
-          if (r.categorie != CategorieRegistre.mort &&
-              r.categorie != CategorieRegistre.objet &&
-              r.statut != StatutRegistre.tombe)
-            r,
-      ];
-      final choix = await widget.contexte.store
-          .proposerRessortis(s, candidats, prochain: [e.lieuNom, e.dangerNom, e.presage].where((x) => x.isNotEmpty).join(' · '));
-      if (!mounted) return;
-      setState(() {
-        _suggestions = [for (final c in choix) candidats[c.numero - 1]];
-        _commentaires
-          ..clear()
-          ..addAll({for (final c in choix) candidats[c.numero - 1].id: c.comment});
-      });
-    } catch (_) {
-      // L'IA n'a pas répondu : on garde les suggestions locales.
-    } finally {
-      if (mounted) setState(() => _iaEnCours = false);
-    }
-  }
-
-  Future<void> _commencer() async {
+  Future<void> _commencer({bool regie = false}) async {
     final chronos = widget.contexte.reglages.chronos;
     if (e.dureeMinutes > 0 && e.destinyMinutes.length != 3) {
       final ch = chronos.firstWhere((c) => c.dureeMinutes == e.dureeMinutes, orElse: () => chronos.first);
@@ -218,7 +175,7 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
       ..etape = EtapeEpisode.jeu
       ..palierAtteint = 1;
     await _sauver();
-    if (mounted) await ouvrirEpisode(context, widget.contexte, s, e, remplacer: true);
+    if (mounted) await ouvrirEpisode(context, widget.contexte, s, e, remplacer: true, regie: regie);
   }
 
   @override
@@ -234,13 +191,18 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
     final chronos = widget.contexte.reglages.chronos;
     final manque = [
       if (e.lieuNom.isEmpty) m('lieu').toLowerCase(),
-      if (e.groupe.trim().isEmpty) m('groupe').toLowerCase(),
       if (e.dangerNom.isEmpty) m('danger').toLowerCase(),
     ];
 
     return PageDestiny(
       titre: e.saison == 0 && s.saisons.isEmpty ? k('titre_seul') : k('titre', {'n': '${e.numero}'}),
       enfants: [
+        FilEpisode(
+          courante: EtapeFil.preparer,
+          onJeu: manque.isEmpty ? _commencer : null,
+          onRegie: manque.isEmpty ? () => _commencer(regie: true) : null,
+        ),
+        const SizedBox(height: 10),
         if (e.saison > 0)
           Text(t.t('serie.saison_n', {'n': '${e.saison}'}),
               textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleMedium),
@@ -319,19 +281,6 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
             FrisePaliers(textes: e.paliers, compacte: true),
           ],
         ]),
-        SectionDestiny(titre: m('groupe'), enfants: [
-          Text(m('groupe_aide'), style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: 6),
-          ChampAvecIdees(
-            controleur: _champ('groupe', e.groupe),
-            libelle: m('groupe'),
-            idees: t.liste('mise_en_place.groupes'),
-            onChange: (v) {
-              setState(() => e.groupe = v.trim());
-              _sauver();
-            },
-          ),
-        ]),
         if (e.saison == 0)
           SectionDestiny(titre: k('mechant_hors_saison'), enfants: [
             Text(k('mechant_hors_saison_aide'), style: Theme.of(context).textTheme.bodySmall),
@@ -364,76 +313,6 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
                 },
               ),
             ]),
-          ]),
-        SectionDestiny(titre: m('mystere'), enfants: [
-          TextField(
-            controller: _champ('mystere', e.mystere),
-            maxLines: 2,
-            minLines: 1,
-            decoration: InputDecoration(labelText: m('mystere'), helperText: m('mystere_aide'), helperMaxLines: 2),
-            onChanged: (v) {
-              e.mystere = v.trim();
-              _sauver();
-            },
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            controller: _champ('reponse', e.reponseMystere),
-            maxLines: 2,
-            minLines: 1,
-            decoration: InputDecoration(labelText: m('reponse'), helperText: m('reponse_aide'), helperMaxLines: 2),
-            onChanged: (v) {
-              e.reponseMystere = v.trim();
-              _sauver();
-            },
-          ),
-        ]),
-        SectionDestiny(titre: k('vouloirs'), enfants: [
-          Text(k('vouloir_aide'), style: Theme.of(context).textTheme.bodySmall),
-          for (final p in s.personnagesActifs)
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: ChampAvecIdees(
-                controleur: _champ('vouloir.${p.id}', e.role(p.id)?.vouloir ?? ''),
-                libelle: '${[p.appel, g.archetype(p.archetypeId)?.nom ?? ''].where((x) => x.isNotEmpty).join(' · ')} — ${k('vouloir')}',
-                idees: _ideesVouloir,
-                onChange: (v) {
-                  e.role(p.id)?.vouloir = v.trim();
-                  _sauver();
-                },
-              ),
-            ),
-        ]),
-        if (s.reglages.registre)
-          SectionDestiny(titre: k('registre'), enfants: [
-            Text(k('registre_aide'), style: Theme.of(context).textTheme.bodySmall),
-            const SizedBox(height: 6),
-            if (s.registre.isEmpty) Paragraphe(k('registre_vide'), italique: true),
-            for (final r in _suggestions)
-              CheckboxListTile(
-                contentPadding: EdgeInsets.zero,
-                value: e.registreRessorti.contains(r.id),
-                title: Text('${t.t('serie.registre.categories.${r.categorie.name}')} · ${r.nom}'),
-                subtitle: Text([r.detail, _commentaires[r.id] ?? ''].where((x) => x.isNotEmpty).join('\n')),
-                onChanged: (v) {
-                  setState(() {
-                    if (v == true) {
-                      e.registreRessorti.add(r.id);
-                    } else {
-                      e.registreRessorti.remove(r.id);
-                    }
-                  });
-                  _sauver();
-                },
-              ),
-            if (s.registre.isNotEmpty && widget.contexte.store.iaConfiguree)
-              OutlinedButton.icon(
-                onPressed: _iaEnCours ? null : _demanderIa,
-                icon: _iaEnCours
-                    ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
-                    : const Icon(Icons.auto_awesome, color: DestinyCouleurs.ia),
-                label: Text(k('registre_ia')),
-              ),
           ]),
         if (e.pnjs.isNotEmpty)
           SectionDestiny(titre: k('pnjs'), enfants: [
@@ -488,7 +367,7 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
         SwitchListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(k('micro')),
-          subtitle: Text(_micDispo ? k('micro_aide') : k('micro_absent')),
+          subtitle: Text(_micDispo ? k('micro_aide_cr') : k('micro_absent')),
           value: e.transcrire && _micDispo,
           onChanged: _micDispo
               ? (v) {
@@ -500,6 +379,7 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
         const SizedBox(height: 18),
         if (manque.isNotEmpty) Paragraphe(k('manque', {'liste': manque.join(', ')}), italique: true),
         FilledButton.icon(
+          key: const ValueKey('commencer_episode'),
           onPressed: manque.isEmpty ? _commencer : null,
           icon: const Icon(Icons.play_arrow_rounded),
           label: Text(k('commencer')),

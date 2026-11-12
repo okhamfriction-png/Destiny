@@ -12,7 +12,6 @@ import '../theme/destiny_theme.dart';
 import 'composants_serie.dart';
 import 'contexte_serie.dart';
 import 'personnages_screen.dart';
-import 'traitre_screen.dart';
 
 /// Une nouvelle saison : le protagoniste visé, le méchant (son reflet), et
 /// ses quatre présages, validés par le maître du jeu. Avec [depuisEpisode],
@@ -133,18 +132,9 @@ class _SaisonScreenState extends State<SaisonScreen> {
         ..presage = saison.presageDe(1)
         ..mechantId = saison.mechantId;
     }
-    final mechant = widget.contexte.mechant(g, _mechantId);
-    final traitre = s.reglages.traitre ? tirerTraitre(s.personnages, cibleId: _cibleId, hasard: _hasard) : null;
-    if (traitre != null) saison.traitre = TraitreSaison(personnageId: traitre.id);
+    // Plus de traître depuis la 2.2.0 : le jeu de rôle reste simple.
     await widget.contexte.store.enregistrer(s);
     if (!mounted) return;
-
-    if (traitre != null && mechant != null) {
-      await Navigator.of(context).push(MaterialPageRoute<void>(
-        builder: (_) => TraitreScreen(contexte: widget.contexte, serie: s, saison: saison, mechant: mechant),
-      ));
-      if (!mounted) return;
-    }
     if (e != null) {
       Navigator.of(context).pop();
       return;

@@ -1,11 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '../../application/state/location_details.dart';
 import '../../application/state/visual_settings.dart';
 import '../../domain/entities/danger.dart';
 import '../../domain/entities/location.dart';
 import '../../domain/grammaire/modeles.dart';
 import '../../domain/grammaire/progression.dart';
+import '../../domain/repositories/catalog_store.dart';
 import '../../domain/troupe/session.dart';
 import '../bibliotheque/archetypes_screen.dart';
 import '../bibliotheque/bibliotheque_screen.dart';
@@ -422,10 +424,18 @@ class LigneDecor extends StatelessWidget {
 /// Le lieu et le danger d'une session, chacun avec sa bulle d'info. Le
 /// catalogue se charge à l'ouverture (pour les fiches).
 class LieuEtDanger extends StatefulWidget {
-  const LieuEtDanger({super.key, required this.contexte, required this.session});
+  const LieuEtDanger({super.key, required this.catalogue, required this.visuels, required this.session, this.detailsLieux});
 
-  final ContexteTroupe contexte;
-  final SessionTroupe session;
+  /// Pour une session de la Troupe.
+  LieuEtDanger.troupe({super.key, required ContexteTroupe contexte, required this.session})
+      : catalogue = contexte.catalogue,
+        visuels = contexte.visuels,
+        detailsLieux = contexte.detailsLieux;
+
+  final CatalogStore catalogue;
+  final VisualSettings visuels;
+  final LocationDetailsStore? detailsLieux;
+  final SceneJouee session;
 
   @override
   State<LieuEtDanger> createState() => _LieuEtDangerState();
@@ -435,7 +445,7 @@ class _LieuEtDangerState extends State<LieuEtDanger> {
   List<Location> _lieux = const [];
   List<Danger> _dangers = const [];
 
-  SessionTroupe get s => widget.session;
+  SceneJouee get s => widget.session;
 
   @override
   void initState() {
@@ -444,8 +454,8 @@ class _LieuEtDangerState extends State<LieuEtDanger> {
   }
 
   Future<void> _charger() async {
-    final lieux = await widget.contexte.catalogue.getLocations();
-    final dangers = await widget.contexte.catalogue.getDangers();
+    final lieux = await widget.catalogue.getLocations();
+    final dangers = await widget.catalogue.getDangers();
     if (!mounted) return;
     setState(() {
       _lieux = lieux;
@@ -468,7 +478,9 @@ class _LieuEtDangerState extends State<LieuEtDanger> {
     final t = context.textes;
     final lieu = _trouver<Location>(_lieux, s.lieuId, s.lieuNom, (l) => l.id, (l) => l.name);
     final danger = _trouver<Danger>(_dangers, s.dangerId, s.dangerNom, (d) => d.id, (d) => d.name);
-    final source = widget.contexte.visuels.source;
+    final source = widget.visuels.source;
+    final bibliotheque =
+        ContexteBibliotheque(catalogue: widget.catalogue, visuels: widget.visuels, detailsLieux: widget.detailsLieux);
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       LigneDecor(
         dossier: 'locations',
@@ -479,7 +491,7 @@ class _LieuEtDangerState extends State<LieuEtDanger> {
         source: source,
         onInfo: lieu == null
             ? null
-            : () => _ouvrir(context, FicheLieu(lieu: lieu, contexte: bibliothequeDe(widget.contexte))),
+            : () => _ouvrir(context, FicheLieu(lieu: lieu, contexte: bibliotheque)),
       ),
       LigneDecor(
         dossier: 'dangers',
@@ -507,7 +519,7 @@ class RepereDestiny {
 
 /// Les repères des trois Destiny d'une session : ceux déjà lancés à l'heure
 /// où ils l'ont été, les autres à l'heure prévue.
-List<RepereDestiny> reperesDestiny(SessionTroupe s) => [
+List<RepereDestiny> reperesDestiny(SceneJouee s) => [
       for (var i = 0; i < s.destinyMinutes.length; i++)
         RepereDestiny(
           numero: i + 1,
@@ -852,7 +864,7 @@ class FilEtapes extends StatelessWidget {
       label: t.t('troupe.fil.titre'),
       child: Wrap(spacing: 6, runSpacing: 6, children: [
         for (final (etape, icone) in etapes)
-          _EtapeFil(
+          PastilleEtape(
             libelle: t.t('troupe.fil.${etape.name}'),
             icone: icone,
             courante: etape == courante,
@@ -868,8 +880,11 @@ class FilEtapes extends StatelessWidget {
   }
 }
 
-class _EtapeFil extends StatelessWidget {
-  const _EtapeFil({
+/// Une étape du fil (Préparer, Jeu, Régie) : la courante en or, la régie
+/// en bleu Destiny.
+class PastilleEtape extends StatelessWidget {
+  const PastilleEtape({
+    super.key,
     required this.libelle,
     required this.icone,
     required this.courante,

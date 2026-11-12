@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../application/son/conduite_son.dart';
+import '../../application/son/regie_son.dart';
 import '../../application/state/reglages_destiny.dart';
 import '../../domain/entities/dilemma.dart';
 import '../../domain/grammaire/modeles.dart';
@@ -23,7 +24,7 @@ enum RefusDestiny { dejaLance, avantChrono, avantPrecedent, apresSuivant, apresF
 /// Peut-on placer le Destiny [index] (0 à 2) à [minute] ? Il doit tomber
 /// strictement après le chrono, après le Destiny précédent (s'il n'est pas
 /// encore lancé), avant le suivant et avant la fin. Rend null si c'est bon.
-RefusDestiny? refusDestiny(SessionTroupe s, {required int index, required int minute, required int ecouleSecondes}) {
+RefusDestiny? refusDestiny(SceneJouee s, {required int index, required int minute, required int ecouleSecondes}) {
   if (index < s.destinys.length) return RefusDestiny.dejaLance;
   if (minute < 1 || minute * 60 <= ecouleSecondes) return RefusDestiny.avantChrono;
   if (index > s.destinys.length && minute <= s.destinyMinutes[index - 1]) return RefusDestiny.avantPrecedent;
@@ -55,9 +56,9 @@ class RegieScreen extends StatefulWidget {
 
 class _RegieScreenState extends State<RegieScreen> {
   late final SpectacleEnCours _sp = widget.spectacle ??
-      SpectacleEnCours(
-        contexte: widget.contexte,
-        session: widget.session,
+      SpectacleEnCours.troupe(
+        widget.contexte,
+        widget.session,
         contexteRituel: () => mounted ? context : null,
       );
   List<Dilemma> _dilemmes = const [];
@@ -257,7 +258,7 @@ class _RegieScreenState extends State<RegieScreen> {
         if (!collant) panneau,
         // Trois cadres, pour lire d'un coup d'œil : le lieu et le danger, les
         // paliers du danger, puis les archétypes.
-        _Cadre(titre: rg('scene'), enfants: [LieuEtDanger(contexte: widget.contexte, session: s)]),
+        _Cadre(titre: rg('scene'), enfants: [LieuEtDanger.troupe(contexte: widget.contexte, session: s)]),
         _Cadre(titre: rg('paliers'), enfants: [FrisePaliers(textes: s.paliers, courant: _palier)]),
         _Cadre(titre: rg('archetypes'), enfants: [
           for (final p in s.personnages) RectangleArchetype(personnage: p, contexte: widget.contexte, palier: _palier),
@@ -293,8 +294,8 @@ class _RegieScreenState extends State<RegieScreen> {
 class TabletteSon extends StatelessWidget {
   const TabletteSon({super.key, required this.contexte, required this.session});
 
-  final ContexteTroupe contexte;
-  final SessionTroupe session;
+  final SourcesSon contexte;
+  final SceneJouee session;
 
   @override
   Widget build(BuildContext context) => TableRegie(contexte: contexte, session: session);
@@ -302,7 +303,7 @@ class TabletteSon extends StatelessWidget {
 
 /// Ouvre la table de régie en plein écran, par-dessus la régie : on la ferme
 /// avec la croix. Le chrono continue pendant ce temps.
-Future<void> ouvrirRegieSon(BuildContext context, ContexteTroupe contexte, SessionTroupe session,
+Future<void> ouvrirRegieSon(BuildContext context, SourcesSon contexte, SceneJouee session,
         {PiloteSpectacle? pilote}) =>
     ouvrirTableRegie(context, contexte, session,
         contenu: TabletteSon(contexte: contexte, session: session), pilote: pilote);

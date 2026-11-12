@@ -118,7 +118,7 @@ class _DebriefScreenState extends State<DebriefScreen> {
     return PageDestiny(
       titre: d('titre'),
       enfants: [
-        LieuEtDanger(contexte: widget.contexte, session: s),
+        LieuEtDanger.troupe(contexte: widget.contexte, session: s),
         const SizedBox(height: 8),
         Paragraphe(d('intro'), gras: true),
         if (widget.contexte.ia != null)

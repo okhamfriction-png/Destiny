@@ -251,6 +251,50 @@ void main() {
     });
   });
 
+  group('Le cœur et le cerveau', () {
+    test('chaque rôle garde son cœur et son cerveau ; une ancienne sauvegarde est lucide', () {
+      final r = RoleEpisode(personnageId: 'p1', sante: Sante.blesse, esprit: Esprit.auBord);
+      final relu = RoleEpisode.depuisJson(jsonDecode(jsonEncode(r.versJson())) as Map<String, dynamic>);
+      expect(relu.sante, Sante.blesse);
+      expect(relu.esprit, Esprit.auBord);
+      final ancien = RoleEpisode.depuisJson({'personnage': 'p1', 'sante': 'enForme'});
+      expect(ancien.esprit, Esprit.lucide);
+      expect(Esprit.depuisTexte('n importe quoi'), Esprit.lucide);
+    });
+
+    test('un nouvel épisode reprend le cœur et le cerveau du dernier épisode joué', () {
+      final s = Serie(id: 's', creee: DateTime(2026), personnages: [
+        PersonnageSerie(id: 'a', archetypeId: 'leader'),
+        PersonnageSerie(id: 'b', archetypeId: 'cynique'),
+      ]);
+      final e1 = EpisodeSerie(id: 'e1', date: DateTime(2026), etape: EtapeEpisode.termine, roles: [
+        RoleEpisode(personnageId: 'a', sante: Sante.blesse, esprit: Esprit.fou),
+        RoleEpisode(personnageId: 'b', sante: Sante.sorti, esprit: Esprit.ebranle),
+      ]);
+      // Un épisode commencé mais pas fini ne compte pas.
+      final enCours = EpisodeSerie(id: 'e2', date: DateTime(2026), etape: EtapeEpisode.jeu, roles: [
+        RoleEpisode(personnageId: 'a'),
+      ]);
+      s.episodes.addAll([e1, enCours]);
+      final a = s.nouveauRole('a', sauf: enCours);
+      expect(a.sante, Sante.blesse);
+      expect(a.esprit, Esprit.fou);
+      // Un mort ne revient pas « mort » : il a quitté la série au rangement.
+      expect(s.nouveauRole('b').sante, Sante.enForme);
+      expect(s.nouveauRole('inconnu').esprit, Esprit.lucide);
+    });
+
+    test('un épisode est une scène jouée, comme une session de la Troupe', () {
+      final SceneJouee e = EpisodeSerie(id: 'e', date: DateTime(2026), lieuNom: 'Le phare', dureeMinutes: 30, destinyMinutes: [10, 18, 27]);
+      expect(e.lieuNom, 'Le phare');
+      e.palierAtteint = 3;
+      expect(e.palierAtteint, 3);
+      expect(EpisodeSerie.depuisJson((e as EpisodeSerie).versJson()).palierAtteint, 3);
+      final notes = EpisodeSerie(id: 'n', date: DateTime(2026), notesMj: 'Ils ont fui par le toit.');
+      expect(EpisodeSerie.depuisJson(notes.versJson()).notesMj, 'Ils ont fui par le toit.');
+    });
+  });
+
   group('Le méchant de saison', () {
     test('ses reflets ont l\'archétype du protagoniste visé', () {
       for (final a in g.archetypes) {

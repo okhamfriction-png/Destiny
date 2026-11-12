@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../application/son/conduite_son.dart';
+import '../../application/son/regie_son.dart';
 import '../../application/state/reglages_destiny.dart';
 import '../../domain/grammaire/modeles.dart';
 import '../../domain/troupe/session.dart';
@@ -13,17 +14,40 @@ import 'composants_troupe.dart';
 import 'regie_screen.dart';
 import 'troupe_screen.dart';
 
-/// Le spectacle qui se joue : le chrono, les trois Destiny, le rituel et la
-/// conduite son. Il vit avec l'écran du jeu, pas avec la régie : la régie
-/// s'ouvre en pop-up et se ferme sans rien arrêter.
+/// Ce qui se joue : le chrono, les trois Destiny, le rituel et la conduite
+/// son. Il vit avec l'écran du jeu, pas avec la régie : la régie s'ouvre en
+/// pop-up et se ferme sans rien arrêter. Le même sert au théâtre (une
+/// session de la Troupe) et au jeu de rôle (un épisode de la Série).
 class SpectacleEnCours extends ChangeNotifier {
-  SpectacleEnCours({required this.contexte, required this.session, required this.contexteRituel}) {
+  SpectacleEnCours({
+    required this.contexte,
+    required this.session,
+    required this.contexteRituel,
+    required this.enregistrer,
+    this.aLaFin,
+  }) {
     if (session.destinys.isNotEmpty) _ecoule = session.destinys.last.secondes;
     conduite?.preparer(lieuId: session.lieuId, dangerId: session.dangerId, acte: session.palierAtteint);
   }
 
-  final ContexteTroupe contexte;
-  final SessionTroupe session;
+  /// Le spectacle d'une session de la Troupe.
+  factory SpectacleEnCours.troupe(ContexteTroupe c, SessionTroupe s, {required BuildContext? Function() contexteRituel}) =>
+      SpectacleEnCours(
+        contexte: c,
+        session: s,
+        contexteRituel: contexteRituel,
+        enregistrer: () => c.store.enregistrer(s),
+        aLaFin: () => s.etape = EtapeSession.terminee,
+      );
+
+  final SourcesSon contexte;
+  final SceneJouee session;
+
+  /// Enregistre la scène (après un Destiny, une frise déplacée, la fin).
+  final Future<void> Function() enregistrer;
+
+  /// Marque la scène terminée, avant le dernier enregistrement.
+  final void Function()? aLaFin;
 
   /// L'écran d'où ouvrir le rituel Destiny (null s'il n'est plus là).
   BuildContext? Function() contexteRituel;
@@ -35,7 +59,7 @@ class SpectacleEnCours extends ChangeNotifier {
   bool _libere = false;
   final List<Timer> _musiques = [];
 
-  SessionTroupe get s => session;
+  SceneJouee get s => session;
   ReglagesDestiny get r => contexte.reglages;
   int get ecoule => _ecoule;
   bool get demarre => _demarre;
@@ -48,9 +72,14 @@ class SpectacleEnCours extends ChangeNotifier {
   ConduiteSon? get conduite => contexte.regieSon?.conduite;
   bool get conduiteActive => conduite?.active ?? false;
 
+  /// Sans chrono : les Destiny partent à la main, quand on veut.
+  bool get avecChrono => s.dureeMinutes > 0 && s.destinyMinutes.isNotEmpty;
+
   /// L'index (0 à 2) du prochain Destiny, ou null s'ils sont tous passés.
-  int? get prochain =>
-      s.destinys.length < s.destinyMinutes.length && palier != PalierId.supprime ? s.destinys.length : null;
+  int? get prochain {
+    final nombre = avecChrono ? s.destinyMinutes.length : 3;
+    return s.destinys.length < nombre && palier != PalierId.supprime ? s.destinys.length : null;
+  }
 
   void _changer() {
     if (!_libere) notifyListeners();
@@ -102,7 +131,7 @@ class SpectacleEnCours extends ChangeNotifier {
       }
     }
     if (_ecoule == total - 10) contexte.audio.playThunder();
-    final auto = r.declenchement != Declenchement.manuel;
+    final auto = avecChrono && r.declenchement != Declenchement.manuel;
     final p = prochain;
     if (auto && !_rituelEnCours && p != null && _ecoule >= s.destinyMinutes[p] * 60) {
       destiny(manuel: false);
@@ -118,7 +147,7 @@ class SpectacleEnCours extends ChangeNotifier {
     final nouveau = PalierId.values[palier.index + 1];
     s.destinys.add(EvenementDestiny(numero: s.destinys.length + 1, secondes: _ecoule, manuel: manuel));
     s.palierAtteint = nouveau.numero;
-    await contexte.store.enregistrer(s);
+    await enregistrer();
     _programmerMusiques(s.destinys.length);
     if (_libere) return;
     _changer();
@@ -177,21 +206,21 @@ class SpectacleEnCours extends ChangeNotifier {
   bool placer(int index, int minute) {
     if (refusDestiny(s, index: index, minute: minute, ecouleSecondes: _ecoule) != null) return false;
     s.destinyMinutes = [...s.destinyMinutes]..[index] = minute;
-    contexte.store.enregistrer(s);
+    enregistrer();
     _changer();
     return true;
   }
 
-  /// Termine le spectacle : plus de chrono, plus de son. La session est
-  /// rangée dans l'historique (sans débrief).
+  /// Termine le spectacle : plus de chrono, plus de son. La scène est
+  /// marquée terminée ([aLaFin]) et enregistrée.
   Future<void> terminer() async {
     _minuteur?.cancel();
     for (final t in _musiques) {
       t.cancel();
     }
     await conduite?.stopTout();
-    s.etape = EtapeSession.terminee;
-    await contexte.store.enregistrer(s);
+    aLaFin?.call();
+    await enregistrer();
     _changer();
   }
 
@@ -213,7 +242,8 @@ class SpectacleEnCours extends ChangeNotifier {
 /// l'acte, la pause et DESTINY, toujours sous la main.
 PiloteSpectacle piloteDe(BuildContext context, SpectacleEnCours sp) => PiloteSpectacle(
       change: sp,
-      reste: () => horloge(sp.total - sp.ecoule),
+      // Sans chrono, le temps passé.
+      reste: () => horloge(sp.avecChrono ? sp.total - sp.ecoule : sp.ecoule),
       acte: () {
         final t = context.textes;
         final p = context.grammaire.palier(sp.palier);

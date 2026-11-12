@@ -5,10 +5,10 @@
 library;
 
 import '../grammaire/modeles.dart' show ModePnj;
-import '../troupe/session.dart' show ChoixFinal, EvenementDestiny, NoteRegie;
+import '../troupe/session.dart' show ChoixFinal, EvenementDestiny, NoteRegie, SceneJouee;
 import 'pbta.dart' show FacePiece, kCasesBlessure;
 
-export '../troupe/session.dart' show ChoixFinal, EvenementDestiny, NoteRegie;
+export '../troupe/session.dart' show ChoixFinal, EvenementDestiny, NoteRegie, SceneJouee;
 export 'pbta.dart' show FacePiece;
 
 /// Pour qui on joue.
@@ -36,10 +36,8 @@ enum EtapeEpisode {
   }
 }
 
-/// Qui a quitté l'histoire pendant l'épisode (un personnage au bilan, un
-/// figurant, un sbire ou le méchant mis hors jeu). L'état « blessé » vient de
-/// l'ancien module de combat : il reste lisible, mais les blessures se
-/// comptent maintenant en cases ([RoleEpisode.blessures]). En public enfant,
+/// La santé physique (le cœur) : en forme, blessé, mort. Pour un figurant, un
+/// sbire ou le méchant, [sorti] veut dire hors jeu. En public enfant,
 /// personne ne meurt : on « quitte l'histoire ».
 enum Sante {
   enForme,
@@ -55,6 +53,21 @@ enum Sante {
 
   /// En forme → blessé → sorti → en forme.
   Sante get suivante => Sante.values[(index + 1) % Sante.values.length];
+}
+
+/// La santé mentale (le cerveau) : lucide, ébranlé, au bord de la folie, fou.
+enum Esprit {
+  lucide,
+  ebranle,
+  auBord,
+  fou;
+
+  static Esprit depuisTexte(String? s) {
+    for (final e in Esprit.values) {
+      if (e.name == s) return e;
+    }
+    return Esprit.lucide;
+  }
 }
 
 /// Les catégories du registre, dans l'ordre de `serie.registre.categories`
@@ -279,6 +292,7 @@ class RoleEpisode {
     int blessures = 0,
     this.vouloirDit = false,
     this.elan = false,
+    this.esprit = Esprit.lucide,
   }) : _blessures = blessures.clamp(0, kCasesBlessure);
 
   final String personnageId;
@@ -288,9 +302,12 @@ class RoleEpisode {
   ChoixFinal choix;
   String prixPaye;
 
-  /// [Sante.sorti] : il quitte l'histoire (décidé au bilan). Les autres
-  /// états viennent de l'ancien module de combat.
+  /// Le cœur : en forme, blessé, ou mort ([Sante.sorti] : il quitte
+  /// l'histoire, et la série au rangement de l'épisode).
   Sante sante;
+
+  /// Le cerveau : de lucide à fou.
+  Esprit esprit;
 
   /// L'ancien bonus (+) ou malus (−) du combat, gardé pour la relecture.
   int mod;
@@ -328,6 +345,7 @@ class RoleEpisode {
         'blessures': _blessures,
         'vouloir_dit': vouloirDit,
         'elan': elan,
+        'esprit': esprit.name,
       };
 
   factory RoleEpisode.depuisJson(Map<String, dynamic> j) => RoleEpisode(
@@ -340,6 +358,7 @@ class RoleEpisode {
         blessures: _i(j['blessures']),
         vouloirDit: _b(j['vouloir_dit']),
         elan: _b(j['elan']),
+        esprit: Esprit.depuisTexte(j['esprit'] as String?),
       );
 }
 
@@ -424,7 +443,7 @@ class PnjEpisode {
 }
 
 /// Un épisode : un lieu, un groupe, un danger en quatre paliers, quatre actes.
-class EpisodeSerie {
+class EpisodeSerie implements SceneJouee {
   EpisodeSerie({
     required this.id,
     required this.date,
@@ -456,6 +475,7 @@ class EpisodeSerie {
     List<String>? registreRessorti,
     this.transcrire = false,
     this.transcription = '',
+    this.notesMj = '',
     this.resume = '',
     this.suite = '',
     this.ceQuiAMarche = '',
@@ -486,16 +506,21 @@ class EpisodeSerie {
   /// Le numéro de l'épisode dans sa saison (1 à 4).
   int numero;
   EtapeEpisode etape;
+  @override
   String lieuId;
+  @override
   String lieuNom;
   String lieuDescription;
   List<String> espaces;
   String groupe;
+  @override
   String dangerId;
+  @override
   String dangerNom;
 
   /// Les quatre phrases du danger, une par palier (en kids, le palier 4 sans
   /// mort).
+  @override
   List<String> paliers;
 
   /// En saison : le présage du méchant pour cet épisode (son coup).
@@ -512,9 +537,13 @@ class EpisodeSerie {
   String reponseMystere;
 
   /// 0 : sans chrono, le maître du jeu lance Destiny quand il veut.
+  @override
   int dureeMinutes;
+  @override
   List<int> destinyMinutes;
+  @override
   int palierAtteint;
+  @override
   List<EvenementDestiny> destinys;
   List<NoteRegie> notes;
   List<RoleEpisode> roles;
@@ -526,6 +555,9 @@ class EpisodeSerie {
   List<String> registreRessorti;
   bool transcrire;
   String transcription;
+
+  /// Ce que le maître du jeu a noté de l'épisode, pour le compte rendu.
+  String notesMj;
   String resume;
   String suite;
   String ceQuiAMarche;
@@ -586,6 +618,7 @@ class EpisodeSerie {
         'registre_ressorti': registreRessorti,
         'transcrire': transcrire,
         'transcription': transcription,
+        'notes_mj': notesMj,
         'resume': resume,
         'suite': suite,
         'ce_qui_a_marche': ceQuiAMarche,
@@ -628,6 +661,7 @@ class EpisodeSerie {
         registreRessorti: _ls(j['registre_ressorti']),
         transcrire: _b(j['transcrire']),
         transcription: _s(j['transcription']),
+        notesMj: _s(j['notes_mj']),
         resume: _s(j['resume']),
         suite: _s(j['suite']),
         ceQuiAMarche: _s(j['ce_qui_a_marche']),
@@ -872,6 +906,23 @@ class Serie {
       if (e.etape != EtapeEpisode.termine) return e;
     }
     return null;
+  }
+
+  /// Le rôle d'un nouvel épisode pour [personnageId] : le cœur et le cerveau
+  /// reprennent où ils en étaient à la fin du dernier épisode joué (on ne
+  /// guérit pas d'un épisode à l'autre ; un mort, lui, a quitté la série).
+  RoleEpisode nouveauRole(String personnageId, {EpisodeSerie? sauf}) {
+    for (final e in episodes.reversed) {
+      if (e == sauf || e.etape != EtapeEpisode.termine) continue;
+      final r = e.role(personnageId);
+      if (r == null) continue;
+      return RoleEpisode(
+        personnageId: personnageId,
+        sante: r.sante == Sante.blesse ? Sante.blesse : Sante.enForme,
+        esprit: r.esprit,
+      );
+    }
+    return RoleEpisode(personnageId: personnageId);
   }
 
   /// Le dernier épisode terminé.

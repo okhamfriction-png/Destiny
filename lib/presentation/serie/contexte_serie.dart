@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../application/services/assistant_jeu.dart';
 import '../../application/services/audio_service.dart';
+import '../../application/son/regie_son.dart';
 import '../../application/state/music_controller.dart';
 import '../../application/state/reglages_destiny.dart';
 import '../../application/state/serie_store.dart';
@@ -15,7 +16,7 @@ import 'jeu_screen.dart';
 import 'preparation_screen.dart';
 
 /// Ce dont les écrans de la Série ont besoin.
-class ContexteSerie {
+class ContexteSerie implements SourcesSon {
   const ContexteSerie({
     required this.store,
     required this.reglages,
@@ -24,19 +25,27 @@ class ContexteSerie {
     required this.musique,
     required this.visuels,
     this.ia,
+    this.regieSon,
   });
 
   final SerieStore store;
+  @override
   final ReglagesDestiny reglages;
 
   /// Le catalogue de l'appli (lieux et dangers de Destiny).
   final CatalogStore catalogue;
+  @override
   final AudioService audio;
+  @override
   final MusicController musique;
   final VisualSettings visuels;
 
   /// L'IA au service du jeu (facultative).
   final AssistantJeu? ia;
+
+  /// La régie son, la même qu'au théâtre : pack audio, réglages, conduite.
+  @override
+  final RegieSon? regieSon;
 
   /// Le méchant d'une saison ou d'un épisode.
   Mechant? mechant(Grammaire g, String id) => trouverMechant(g, store.catalogue, id);
@@ -49,10 +58,11 @@ Future<void> ouvrirEpisode(
   Serie serie,
   EpisodeSerie episode, {
   bool remplacer = false,
+  bool regie = false,
 }) {
   final Widget page = switch (episode.etape) {
     EtapeEpisode.preparation => PreparationEpisodeScreen(contexte: ctx, serie: serie, episode: episode),
-    EtapeEpisode.jeu => JeuEpisodeScreen(contexte: ctx, serie: serie, episode: episode),
+    EtapeEpisode.jeu => JeuEpisodeScreen(contexte: ctx, serie: serie, episode: episode, ouvrirRegie: regie),
     EtapeEpisode.bilan || EtapeEpisode.termine => BilanEpisodeScreen(contexte: ctx, serie: serie, episode: episode),
   };
   final route = MaterialPageRoute<void>(builder: (_) => page);

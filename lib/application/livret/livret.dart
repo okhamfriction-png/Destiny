@@ -91,56 +91,23 @@ String compositionEnClair(Grammaire g, TextesDestiny t, CompositionDistribution 
       if (c.auChoix > 0) t.t('bibliotheque.regles.au_choix', {'n': '${c.auChoix}'}),
     ].join(', ');
 
-/// Les codes du jeu de rôle entre humains (la Série) : la pièce du destin
-/// BRAVE / SMART, le bonus et le second lancer, les mouvements des joueurs,
-/// l'agenda, les principes et les mouvements du Maître du destin, les
-/// horloges et les blessures. Tout vient de la section `pbta` des textes.
+/// Le jeu de rôle entre humains (la Série), aussi simple que le théâtre : la
+/// même conduite (chrono, Destiny, musique, régie), le cœur et le cerveau de
+/// chaque personnage, et le compte rendu écrit par l'IA.
 List<BlocLivret> _jeuDeRole(TextesDestiny t) {
-  String p(String x) => t.t('pbta.$x');
-  final r = ReglesPbta.depuis(t);
+  String p(String x) => t.t('serie.livret.$x');
+  String coeur(String x) => t.t('serie.sante.coeur.$x');
+  String esprit(String x) => t.t('serie.sante.esprit.$x');
   return [
-    IntertitreLivret(p('piece.titre')),
-    ParagrapheLivret(p('intro')),
-    ParagrapheLivret(p('piece.principe')),
-    for (final f in FacePiece.values) InfoLivret(p('piece.faces.${f.name}.nom'), p('piece.faces.${f.name}.approche')),
-    ParagrapheLivret(p('piece.quand')),
-    InfoLivret(p('piece.succes'), p('piece.succes_texte')),
-    InfoLivret(p('piece.echec'), p('piece.echec_texte')),
-    PucesLivret([p('piece.doux'), p('piece.dur')]),
-    IntertitreLivret(p('bonus.titre')),
-    ParagrapheLivret(p('bonus.principe')),
-    ParagrapheLivret(p('bonus.choisir')),
-    ParagrapheLivret(p('bonus.seconde_chance')),
-    ParagrapheLivret(p('bonus.gene')),
-    IntertitreLivret(p('mouvements_titre')),
-    for (final m in r.mouvements)
-      InfoLivret(
-        m.nom,
-        [
-          m.quand,
-          m.approche,
-          if (m.avecPiece) ...['${p('piece.succes')} : ${m.reussite}', '${p('piece.echec')} : ${m.echec}'] else m.effet,
-        ].where((x) => x.isNotEmpty).join(' '),
-      ),
-    IntertitreLivret(p('agenda_titre')),
-    PucesLivret(r.agenda, numerotees: true),
-    IntertitreLivret(p('principes_titre')),
-    PucesLivret(r.principes),
-    IntertitreLivret(p('mouvements_mj.titre')),
-    ParagrapheLivret(p('mouvements_mj.principe')),
-    ParagrapheLivret(p('mouvements_mj.regle'), italique: true),
-    InfoLivret(p('mouvements_mj.doux_titre'), [for (final m in r.mouvementsMjDe(GraviteMouvement.doux)) m.nom].join(' · ')),
-    InfoLivret(p('mouvements_mj.durs_titre'), [for (final m in r.mouvementsMjDe(GraviteMouvement.dur)) m.nom].join(' · ')),
-    for (final m in r.mouvementsMj) InfoLivret(m.nom, m.texte),
-    EncartLivret(p('mouvements_mj.que_fais_tu')),
-    IntertitreLivret(p('horloges.titre')),
-    PucesLivret([p('horloges.episode'), p('horloges.saison')]),
-    IntertitreLivret(p('blessures.titre')),
-    ParagrapheLivret(p('blessures.principe')),
-    InfoLivret(t.t('serie.creer.adulte'), r.blessures(kids: false).join(' · ')),
-    InfoLivret(t.t('serie.creer.kids'), r.blessures(kids: true).join(' · ')),
-    ParagrapheLivret(p('blessures.hors_jeu')),
-    ParagrapheLivret(p('blessures.hors_jeu_kids')),
+    IntertitreLivret(p('titre')),
+    ParagrapheLivret(p('principe')),
+    IntertitreLivret(p('sante_titre')),
+    ParagrapheLivret(p('sante')),
+    InfoLivret(coeur('titre'), [for (final x in ['enForme', 'blesse', 'sorti']) coeur(x)].join(' · ')),
+    InfoLivret(t.t('serie.sante.esprit_titre'), [for (final x in ['lucide', 'ebranle', 'auBord', 'fou']) esprit(x)].join(' · ')),
+    InfoLivret(t.t('serie.creer.kids'), p('kids')),
+    IntertitreLivret(p('compte_rendu_titre')),
+    ParagrapheLivret(p('compte_rendu')),
   ];
 }
 
@@ -239,8 +206,6 @@ Livret construireLivret(Grammaire g, TextesDestiny t) {
       ParagrapheLivret(g.serie.registre.principe),
       PucesLivret([for (final c in g.serie.registre.categories) _majuscule(c)]),
       ParagrapheLivret(g.serie.registre.suggestion),
-      IntertitreLivret(sous('traitre')),
-      ParagrapheLivret(t.t('module_traitre.explication')),
       IntertitreLivret(sous('kids')),
       ParagrapheLivret(g.modeKids.principe),
       for (final r in g.modeKids.regles) InfoLivret(r.titre, r.texte),

@@ -13,7 +13,6 @@ import '../../domain/son/resolution_son.dart';
 import '../../domain/troupe/session.dart';
 import '../destiny/donnees.dart';
 import '../theme/destiny_theme.dart';
-import '../troupe/troupe_screen.dart';
 import '../widgets/sound_mixer_sheet.dart';
 import 'apparence_sons.dart';
 import 'pack_audio_screen.dart';
@@ -58,8 +57,8 @@ class PiloteSpectacle {
 /// remplace la table (la régie y met sa tablette son, qui l'enveloppe).
 Future<void> ouvrirTableRegie(
   BuildContext context,
-  ContexteTroupe contexte,
-  SessionTroupe session, {
+  SourcesSon contexte,
+  SceneJouee session, {
   Widget? contenu,
   PiloteSpectacle? pilote,
 }) {
@@ -272,8 +271,8 @@ typedef _Banque = ({String id, String libelle, StyleSon style});
 class TableRegie extends StatefulWidget {
   const TableRegie({super.key, required this.contexte, required this.session});
 
-  final ContexteTroupe contexte;
-  final SessionTroupe session;
+  final SourcesSon contexte;
+  final SceneJouee session;
 
   @override
   State<TableRegie> createState() => _TableRegieState();
@@ -283,7 +282,7 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
   late final AnimationController _vu = AnimationController(vsync: this, duration: const Duration(milliseconds: 1600));
   String? _banque;
 
-  SessionTroupe get s => widget.session;
+  SceneJouee get s => widget.session;
   RegieSon? get _rs => widget.contexte.regieSon;
   ConduiteSon? get _c => _rs?.conduite;
   MusicController get _musique => widget.contexte.musique;
@@ -874,13 +873,20 @@ class _Bandeau extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: couleur.withValues(alpha: 0.5)),
         ),
+        // L'action passe sous le texte quand la place manque (texte agrandi).
         child: Row(children: [
           Icon(icone, color: couleur),
           const SizedBox(width: 10),
           Expanded(
-            child: Text(texte, style: const TextStyle(fontFamily: kPoliceTexte, color: Console.texte, height: 1.3)),
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Text(texte, style: const TextStyle(fontFamily: kPoliceTexte, color: Console.texte, height: 1.3)),
+                if (action != null) TextButton(onPressed: onAction, child: Text(action!, style: TextStyle(color: couleur))),
+              ],
+            ),
           ),
-          if (action != null) TextButton(onPressed: onAction, child: Text(action!, style: TextStyle(color: couleur))),
         ]),
       );
 }

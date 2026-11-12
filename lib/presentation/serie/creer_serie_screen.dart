@@ -31,7 +31,7 @@ class _CreerSerieScreenState extends State<CreerSerieScreen> {
   final TextEditingController _nom = TextEditingController();
   final TextEditingController _contexte = TextEditingController();
   late final ReglagesSerie _reglages = ReglagesSerie(
-    traitre: widget.contexte.reglages.moduleTraitre && !_kids,
+    traitre: false,
     registre: widget.contexte.reglages.registreParDefaut,
   );
 
@@ -84,22 +84,6 @@ class _CreerSerieScreenState extends State<CreerSerieScreen> {
               decoration: InputDecoration(labelText: k('contexte'), helperText: k('contexte_aide'), helperMaxLines: 2),
             ),
           ],
-        ]),
-        SectionDestiny(titre: k('reglages'), enfants: [
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(k('traitre')),
-            subtitle: Text(_kids ? '${k('traitre_aide')} ${k('traitre_kids')}' : k('traitre_aide')),
-            value: _reglages.traitre,
-            onChanged: (v) => setState(() => _reglages.traitre = v),
-          ),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(k('registre')),
-            subtitle: Text(k('registre_aide')),
-            value: _reglages.registre,
-            onChanged: (v) => setState(() => _reglages.registre = v),
-          ),
         ]),
         const SizedBox(height: 18),
         FilledButton.icon(

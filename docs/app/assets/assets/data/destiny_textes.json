@@ -865,7 +865,7 @@
     "creer": {
       "titre_episode": "Nouvel épisode",
       "titre_saison": "Nouvelle saison",
-      "intro": "Un jeu de rôle : les joueurs inventent leur monde et disent ce que font leurs personnages, le Maître du destin le fait vivre, et la pièce du destin tranche quand l'issue est incertaine.",
+      "intro": "Un jeu de rôle : les joueurs inventent leur monde et disent ce que font leurs personnages, le Maître du destin le fait vivre, avec la musique et la régie du théâtre. L'IA écrit le compte rendu de chaque épisode.",
       "nom": "Titre",
       "nom_aide": "Facultatif.",
       "contexte": "Contexte",
@@ -882,7 +882,7 @@
     },
     "personnages": {
       "titre": "Les personnages",
-      "intro": "Chaque joueur a un archétype, un animal et un bonus à la pièce du destin (BRAVE ou SMART). L'alarmiste est toujours là : à moins de quatre joueurs, c'est le maître du jeu qui le joue.",
+      "intro": "Chaque joueur a un archétype et un animal. L'alarmiste est toujours là : à moins de quatre joueurs, c'est le maître du jeu qui le joue.",
       "joueurs": "Combien de joueurs ?",
       "tirer": "Tirer une distribution",
       "prenom": "Prénom du joueur",
@@ -981,7 +981,8 @@
       "manque": "Il manque encore : {liste}.",
       "commencer": "Lever le rideau",
       "choisir_mechant": "Choisir parmi les grands méchants",
-      "mechant_hasard": "Au hasard"
+      "mechant_hasard": "Au hasard",
+      "micro_aide_cr": "La reconnaissance vocale du téléphone écrit l'épisode, pour que l'IA en fasse le compte rendu. L'appli ne garde aucun son ; le texte reste sur l'appareil et ne part vers l'IA qu'au bilan, si vous le demandez, sans les prénoms."
     },
     "jeu": {
       "titre": "Épisode {n}",
@@ -1010,7 +1011,7 @@
       "rappel_forcer": "Dernier acte de la saison : forcez le choix, plutôt que de remonter la tension.",
       "rappel_kids": "Personne ne meurt : on choisit, on renonce, on se sépare un moment.",
       "terminer": "Fin de l'épisode",
-      "terminer_confirmer": "Terminer l'épisode et passer au bilan ?",
+      "terminer_confirmer": "Terminer l'épisode et passer au compte rendu ?",
       "micro_on": "transcription",
       "micro_echec": "Le micro n'a pas démarré ({raison}). L'épisode continue.",
       "tirer_piece": "Tirer la pièce",
@@ -1026,11 +1027,15 @@
       "rappel_vouloir": "il dit son vouloir",
       "rappel_pouvoir": "il utilise son pouvoir",
       "dit_vouloir": "Il dit son vouloir",
-      "elan": "Prochaine action : deux lancers"
+      "elan": "Prochaine action : deux lancers",
+      "episode": "L'épisode",
+      "quitter_confirmer": "Quitter l'épisode ? Il reste en cours : vous le reprendrez depuis la série.",
+      "destinys": "Les Destiny de l'épisode",
+      "plan": "Épisode de {duree} min : Destiny à {liste} min."
     },
     "bilan": {
       "titre": "Bravo !",
-      "personnages": "Ce qu'ils ont vécu",
+      "personnages": "Ce qu'ils sont devenus",
       "choix": "Son choix",
       "choix_aucun": "Pas encore",
       "prix": "Le prix payé",
@@ -1053,13 +1058,30 @@
       "registre_ajouter": "Ajouter au registre",
       "transcription": "La transcription",
       "transcription_aide": "Elle est gardée avec l'épisode, sur l'appareil.",
-      "resumer": "Faire résumer l'épisode",
+      "resumer": "Faire le compte rendu par l'IA",
       "terminer": "Ranger l'épisode",
       "fin_saison": "Fin de la saison {n}.",
       "quitte": "Il quitte l'histoire",
       "quitte_kids": "Il quitte l'histoire jusqu'à la saison suivante",
       "quitte_aide": "Il a fini l'épisode hors jeu.",
-      "blesses_anciens": "Les blessés (ancienne campagne)"
+      "blesses_anciens": "Les blessés (ancienne campagne)",
+      "compte_rendu": "Le compte rendu",
+      "compte_rendu_aide": "Pas de transcription : l'IA écrit le compte rendu à partir de la trame de l'épisode (le lieu, le danger, les paliers, ce que sont devenus les personnages) et de vos notes.",
+      "compte_rendu_transcription": "L'IA écrit le compte rendu à partir de la transcription de l'épisode et de vos notes.",
+      "notes_mj": "Ce qui s'est passé",
+      "notes_mj_aide": "Quelques mots pour l'IA : les moments forts, les choix, la fin. Jamais de prénom.",
+      "reresumer": "Refaire le compte rendu",
+      "un_personnage": "un personnage",
+      "trame": {
+        "lieu": "Lieu : {lieu}. Danger : {danger}.",
+        "palier": "Palier {n} : {texte}",
+        "presage": "Le présage du méchant : {texte}",
+        "mechant": "Le méchant : {nom}.",
+        "mechant_vaincu": "Le méchant, {nom}, a été mis hors jeu.",
+        "personnage": "{nom} ({archetype}) : cœur {coeur}, cerveau {esprit}.",
+        "hors_jeu": "{nom} est hors jeu.",
+        "notes": "Ce qui s'est passé : {texte}"
+      }
     },
     "resume": {
       "titre": "Résumé",
@@ -1175,6 +1197,42 @@
         "Le MJ",
         "Horloges et blessures"
       ]
+    },
+    "sante": {
+      "coeur": {
+        "titre": "Cœur",
+        "enForme": "En forme",
+        "blesse": "Blessé",
+        "sorti": "Mort",
+        "sorti_kids": "Quitte l'histoire"
+      },
+      "esprit_titre": "Cerveau",
+      "esprit": {
+        "lucide": "Lucide",
+        "ebranle": "Ébranlé",
+        "auBord": "Au bord de la folie",
+        "fou": "Fou"
+      },
+      "esprit_kids": {
+        "lucide": "Serein",
+        "ebranle": "Inquiet",
+        "auBord": "Affolé",
+        "fou": "Perdu"
+      }
+    },
+    "fil": {
+      "preparer": "Préparer",
+      "jeu": "Jeu",
+      "regie": "Régie"
+    },
+    "livret": {
+      "titre": "Le jeu de rôle, simplement",
+      "principe": "Comme au théâtre : un lieu, un danger en quatre paliers, trois Destiny, la musique de chaque acte et la régie son. Les joueurs disent ce que font leurs personnages ; le Maître du destin fait vivre le lieu, le danger, le grand méchant, ses sbires et les figurants.",
+      "sante_titre": "Le cœur et le cerveau",
+      "sante": "Chaque personnage a deux pistes. Le Maître du destin les fait bouger quand l'histoire frappe le corps ou l'esprit. Elles se gardent d'un épisode à l'autre ; un mort quitte la série.",
+      "kids": "Personne ne meurt : on quitte l'histoire. Le cerveau : serein, inquiet, affolé, perdu.",
+      "compte_rendu_titre": "Le compte rendu",
+      "compte_rendu": "À la fin de l'épisode, l'IA écrit son compte rendu et dit où l'on reprendra : depuis la transcription du micro, ou depuis la trame de l'épisode et vos notes. Les prénoms des joueurs ne partent jamais."
     }
   },
   "pbta": {

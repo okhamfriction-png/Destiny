@@ -25,7 +25,7 @@ import 'historique_screen.dart';
 import 'preparer_screen.dart';
 
 /// Ce dont le mode Troupe a besoin de l'appli. Tout fonctionne sans réseau.
-class ContexteTroupe {
+class ContexteTroupe implements SourcesSon {
   const ContexteTroupe({
     required this.store,
     required this.reglages,
@@ -40,9 +40,12 @@ class ContexteTroupe {
   });
 
   final TroupeStore store;
+  @override
   final ReglagesDestiny reglages;
   final CatalogStore catalogue;
+  @override
   final AudioService audio;
+  @override
   final MusicController musique;
   final VisualSettings visuels;
   final RelationCheatsheet? relations;
@@ -53,6 +56,7 @@ class ContexteTroupe {
 
   /// La régie son du spectacle : pack audio, réglages et conduite automatique
   /// (facultative : sans elle, la régie garde son comportement d'avant).
+  @override
   final RegieSon? regieSon;
 }
 

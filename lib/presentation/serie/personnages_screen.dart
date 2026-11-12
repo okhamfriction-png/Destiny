@@ -225,9 +225,6 @@ class _PersonnagesScreenState extends State<PersonnagesScreen> {
     String k(String x, [Map<String, String> v = const {}]) => t.t('serie.personnages.$x', v);
     final arch = g.archetype(p.archetypeId);
     final couleur = arch == null ? c.filet : c.famille(arch.famille);
-    final suggere = _regles.bonusSuggere(p.archetypeId);
-    final avis = controlerBesoin(p.besoin, t);
-    final messageBesoinTexte = p.besoin.trim().isEmpty ? '' : messageBesoin(avis, g, t);
 
     void champ(String cle, String v) {
       switch (cle) {
@@ -301,28 +298,6 @@ class _PersonnagesScreenState extends State<PersonnagesScreen> {
           ),
         ],
         texte('nom', p.nom, k('nom')),
-        const SizedBox(height: 10),
-        Text(k('bonus'), style: Theme.of(context).textTheme.titleSmall),
-        const SizedBox(height: 4),
-        ChoixFace(
-          face: p.bonus,
-          onChoisi: (f) {
-            setState(() => p.bonus = f);
-            _sauver();
-          },
-        ),
-        Text(
-          suggere == null ? k('bonus_aide') : '${k('bonus_aide')} ${k('bonus_propose', {'face': nomFace(context, suggere)})}',
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        texte('blessure', p.blessure, s.kids ? t.t('mode_enfant.mots.blessure') : k('blessure'),
-            aide: k('blessure_aide'), idees: s.kids ? t.liste('mode_enfant.exemples_de_soucis') : const []),
-        texte('besoin', p.besoin, k('besoin'), aide: k('besoin_aide')),
-        if (messageBesoinTexte.isNotEmpty && avis != AvisBesoin.ok)
-          Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Text(messageBesoinTexte, style: TextStyle(color: c.famille(FamilleId.fissure), fontSize: 12.5)),
-          ),
         if (s.kids)
           texte('pouvoir', p.pouvoir, k('pouvoir'),
               aide: k('pouvoir_aide'), idees: g.modeKids.pouvoirsExemples.take(8).toList()),

@@ -41,9 +41,9 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
 
   /// Le spectacle (le chrono, les Destiny, la conduite son) : il vit ici, la
   /// régie en pop-up ne fait que le montrer.
-  late final SpectacleEnCours _sp = SpectacleEnCours(
-    contexte: widget.contexte,
-    session: widget.session,
+  late final SpectacleEnCours _sp = SpectacleEnCours.troupe(
+    widget.contexte,
+    widget.session,
     contexteRituel: () => mounted ? context : null,
   );
   bool _regieOuverte = false;
@@ -326,7 +326,7 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
           ),
         ),
         SectionDestiny(titre: t.t('regie.scene'), enfants: [
-          LieuEtDanger(contexte: widget.contexte, session: session),
+          LieuEtDanger.troupe(contexte: widget.contexte, session: session),
         ]),
         SectionDestiny(titre: t.t('regie.paliers'), enfants: [
           FrisePaliers(textes: session.paliers, courant: _sp.palier),

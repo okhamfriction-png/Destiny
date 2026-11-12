@@ -127,7 +127,26 @@ enum TypeSession { spectacle, repetition }
 /// Où en est la session.
 enum EtapeSession { preparation, echauffement, miseEnPlace, regie, debrief, terminee }
 
-class SessionTroupe {
+/// Ce qui se joue sous le chrono, au théâtre (une session de la Troupe) comme
+/// au jeu de rôle (un épisode de la Série) : un lieu, un danger en quatre
+/// paliers, trois Destiny. La régie son et le chrono n'ont besoin que de ça.
+abstract interface class SceneJouee {
+  String get lieuId;
+  String get lieuNom;
+  String get dangerId;
+  String get dangerNom;
+  List<String> get paliers;
+
+  /// La durée du chrono (0 : sans chrono, Destiny à la main).
+  int get dureeMinutes;
+  abstract List<int> destinyMinutes;
+
+  /// Le palier atteint (1 à 4).
+  abstract int palierAtteint;
+  List<EvenementDestiny> get destinys;
+}
+
+class SessionTroupe implements SceneJouee {
   SessionTroupe({
     required this.id,
     required this.date,
@@ -163,13 +182,18 @@ class SessionTroupe {
   TypeSession type;
   EtapeSession etape;
   List<PersonnageTroupe> personnages;
+  @override
   String lieuId;
+  @override
   String lieuNom;
   String groupe;
+  @override
   String dangerId;
+  @override
   String dangerNom;
 
   /// Les quatre paliers du danger, tels que joués.
+  @override
   List<String> paliers;
 
   /// Ancien : les trois objets donnés au départ (avant la 2.0.2). L'appli ne
@@ -177,11 +201,15 @@ class SessionTroupe {
   List<String> objets;
   String mystere;
   String reponseMystere;
+  @override
   int dureeMinutes;
+  @override
   List<int> destinyMinutes;
 
   /// Palier atteint (1 à 4).
+  @override
   int palierAtteint;
+  @override
   List<EvenementDestiny> destinys;
   List<NoteRegie> notes;
   List<String> ceQuiAMarche;

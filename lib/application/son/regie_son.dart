@@ -1,5 +1,6 @@
 import '../services/audio_service.dart';
 import '../state/music_controller.dart';
+import '../state/reglages_destiny.dart';
 import 'conduite_son.dart';
 import 'pack_audio.dart';
 import 'reglages_regie_son.dart';
@@ -31,4 +32,15 @@ class RegieSon {
     );
     return RegieSon(pack: pack, reglages: reglages, conduite: conduite);
   }
+}
+
+/// Ce dont la table de régie et le chrono ont besoin pour faire du son, au
+/// théâtre comme au jeu de rôle.
+abstract interface class SourcesSon {
+  ReglagesDestiny get reglages;
+  AudioService get audio;
+  MusicController get musique;
+
+  /// La régie son du spectacle (facultative).
+  RegieSon? get regieSon;
 }

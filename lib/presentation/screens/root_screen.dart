@@ -139,6 +139,7 @@ class _RootScreenState extends State<RootScreen> {
           musique: widget.musicController,
           visuels: widget.visualSettings,
           ia: widget.assistantJeu,
+          regieSon: widget.regieSon,
         ),
         chatController: widget.chatController,
         spectacleController: widget.spectacleController,

@@ -189,7 +189,6 @@ class _FicheSerieScreenState extends State<FicheSerieScreen> {
               sousTitre: [
                 g.archetype(p.archetypeId)?.nom ?? '',
                 g.animal(p.animalId)?.nom ?? '',
-                if (p.bonus != null) '${t.t('serie.piece.bonus')} ${nomFace(context, p.bonus!)}',
                 if (p.pnj) t.t('serie.personnages.pnj'),
                 if (s.kids && p.pouvoir.isNotEmpty) p.pouvoir,
               ].where((x) => x.isNotEmpty).join(' · '),
@@ -204,7 +203,6 @@ class _FicheSerieScreenState extends State<FicheSerieScreen> {
         ]),
         SectionDestiny(titre: k('reglages'), enfants: [
           for (final (cle, valeur, changer) in [
-            ('traitre', s.reglages.traitre, (bool v) => s.reglages.traitre = v),
             ('registre', s.reglages.registre, (bool v) => s.reglages.registre = v),
           ])
             SwitchListTile(
