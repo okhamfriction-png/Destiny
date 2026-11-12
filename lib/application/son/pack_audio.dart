@@ -44,9 +44,9 @@ class ResultatImport {
 /// Sur le web, le pack est lu à côté de l'appli (`destiny_pack/index.json`) :
 /// c'est ce qui sert à répéter la régie dans un navigateur, en local.
 ///
-/// Sur Android, le pack est aussi intégré à l'appli (un asset pack livré à
-/// l'installation, `assets/pack/`) : il sert tant qu'aucun pack n'a été
-/// importé à la main.
+/// Le pack est aussi intégré à l'appli (`assets/pack/` : sur Android, un
+/// asset pack livré à l'installation ; sur le web, copié à côté de l'appli) :
+/// il sert tant qu'aucun pack n'a été importé à la main.
 class PackAudio extends ChangeNotifier {
   PackAudio();
 
@@ -128,8 +128,9 @@ class PackAudio extends ChangeNotifier {
       debugPrint('Pack audio : rien de chargé ($e)');
       _index = IndexPack.vide;
     }
-    // Rien d'importé : le pack intégré à l'appli, s'il est là.
-    if (_index.estVide && !kIsWeb) {
+    // Rien d'importé (ni servi à côté, sur le web) : le pack intégré à
+    // l'appli, s'il est là.
+    if (_index.estVide) {
       _manifeste = appli;
       _manifesteDuPack = false;
       try {
