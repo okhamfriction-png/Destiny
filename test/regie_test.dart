@@ -492,6 +492,8 @@ void main() {
 
   testWidgets('l\'échauffement : des petits rectangles, plus de grandes cartes', (tester) async {
     final b = await _banc(tester);
+    // Au jeu (une session à la régie ouvrirait la régie par-dessus).
+    b.session.etape = EtapeSession.echauffement;
     await _ouvrir(tester, EchauffementScreen(contexte: b.contexte, session: b.session));
     expect(find.byType(CarteArchetype), findsNothing);
     expect(find.byType(RectangleArchetype), findsNWidgets(4));
@@ -552,10 +554,25 @@ void main() {
       return b;
     }
 
-    testWidgets('le lieu, le danger et les Destiny prévus ; ni questions, ni régie son, ni boutons en bas', (tester) async {
+    testWidgets('le jeu : le spectacle, le lieu, le danger et ses paliers, les Destiny prévus ; ni questions, ni régie son',
+        (tester) async {
       final b = await echauffement(tester);
       final s = b.session;
+      expect(find.text(t.t('echauffement.titre')), findsWidgets);
       expect(find.byType(FilEtapes), findsOneWidget);
+      // Plus de mise en place dans le fil, ni de flèche de retour.
+      expect(find.text(t.t('troupe.fil.miseEnPlace')), findsNothing);
+      expect(find.text(t.t('troupe.fil.echauffement')), findsOneWidget);
+      expect(find.byType(BackButton), findsNothing);
+      // Le spectacle sous la main : le chrono, DESTINY et la régie.
+      expect(find.byKey(const ValueKey('pilote_reste')), findsOneWidget);
+      expect(find.byKey(const ValueKey('pilote_destiny')), findsOneWidget);
+      expect(find.byKey(const ValueKey('ouvrir_regie')), findsOneWidget);
+      // La section du danger : ses quatre paliers.
+      expect(find.byType(FrisePaliers), findsOneWidget);
+      for (final p in s.paliers) {
+        expect(find.text(p), findsWidgets, reason: p);
+      }
       expect(find.byType(LieuEtDanger), findsOneWidget);
       expect(find.text(s.lieuNom), findsWidgets);
       expect(find.text(s.dangerNom), findsWidgets);
@@ -570,7 +587,6 @@ void main() {
         expect(find.text(q), findsNothing, reason: q);
       }
       expect(find.text(g.personnage.echauffement.limite), findsNothing);
-      expect(find.byType(FilledButton), findsNothing);
       expect(find.byType(OutlinedButton), findsOneWidget, reason: 'le minuteur seul');
     });
 
@@ -642,41 +658,73 @@ void main() {
       expect(relu.sessions.firstWhere((x) => x.id == s.id).destinyMinutes, [10, 11, 27]);
     });
 
-    testWidgets('le fil des étapes mène à la régie en un appui, avec un groupe tiré d\'office', (tester) async {
+    testWidgets('« Régie » ouvre la régie en pop-up ; sa grande croix ramène au jeu, et le chrono continue',
+        (tester) async {
       final b = await echauffement(tester);
       await tester.tap(find.text(t.t('troupe.fil.regie')));
-      await tester.pumpAndSettle();
-      expect(find.byType(RegieScreen), findsOneWidget);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      final regie = find.byType(RegieScreen);
+      expect(regie, findsOneWidget);
+      expect(find.byType(EchauffementScreen), findsOneWidget, reason: 'le jeu reste dessous');
       expect(b.session.etape, EtapeSession.regie);
-      expect(b.session.groupe, isNotEmpty);
-      expect(find.byKey(const ValueKey('bouton_destiny')), findsOneWidget);
+      expect(b.session.groupe, isEmpty, reason: 'plus de groupe tiré d\'office');
       expect(find.byKey(const ValueKey('bouton_regie_son')), findsOneWidget);
+      // Pas de flèche de retour : une grande croix « Fermer ».
+      final croix = find.byKey(const ValueKey('fermer_popup'));
+      expect(croix, findsOneWidget);
+      expect(find.descendant(of: croix, matching: find.text(_rg('fermer'))), findsOneWidget);
+      expect(find.descendant(of: regie, matching: find.byType(BackButton)), findsNothing);
+      // Le chrono part dans la régie…
+      await tester.tap(find.descendant(of: regie, matching: find.byTooltip(_rg('demarrer'))));
+      await tester.pump(const Duration(seconds: 3));
+      expect(find.text('29:57'), findsWidgets);
+      // …et continue une fois la régie fermée.
+      await tester.tap(croix);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(find.byType(RegieScreen), findsNothing);
+      await tester.pump(const Duration(seconds: 2));
+      expect(tester.widget<Text>(find.byKey(const ValueKey('pilote_reste'))).data, '29:55');
+      // On la rouvre depuis le jeu : même chrono.
+      await tester.tap(find.byKey(const ValueKey('ouvrir_regie')));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(tester.widget<Text>(find.byKey(const ValueKey('chrono_reste'))).data, '29:55');
+      await tester.tap(find.descendant(of: find.byType(RegieScreen), matching: find.byTooltip(_rg('pause'))));
+      await tester.pump();
     });
 
-    testWidgets('les Destiny déplacés à l\'échauffement restent à la mise en place, et au lever de rideau', (tester) async {
+    testWidgets('les Destiny déplacés au jeu restent dans la régie', (tester) async {
       final b = await echauffement(tester);
       final s = b.session;
       await tester.drag(find.byKey(const ValueKey('repere_destiny_1')), const Offset(-400, 0));
       await tester.pumpAndSettle();
       expect(s.destinyMinutes, [1, 18, 27]);
-      await tester.tap(find.text(t.t('troupe.fil.miseEnPlace')));
-      await tester.pumpAndSettle();
-      expect(find.byType(MiseEnPlaceScreen), findsOneWidget);
-      expect(s.destinyMinutes, [1, 18, 27]);
-      // On les déplace aussi à la mise en place.
-      final repere = find.byKey(const ValueKey('repere_destiny_3'));
-      await tester.ensureVisible(repere);
-      await tester.pumpAndSettle();
-      await tester.drag(repere, const Offset(400, 0));
-      await tester.pumpAndSettle();
-      expect(s.destinyMinutes, [1, 18, 29]);
-      final rideau = find.text(t.t('mise_en_place.lever_rideau'));
-      await tester.ensureVisible(rideau);
-      await tester.pumpAndSettle();
-      await tester.tap(rideau);
-      await tester.pumpAndSettle();
+      final bouton = find.byKey(const ValueKey('ouvrir_regie'));
+      await tester.ensureVisible(bouton);
+      await tester.tap(bouton);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
       expect(find.byType(RegieScreen), findsOneWidget);
-      expect(s.destinyMinutes, [1, 18, 29]);
+      expect(s.destinyMinutes, [1, 18, 27]);
+    });
+
+    testWidgets('« Terminer » : plus de débrief, retour à l\'accueil', (tester) async {
+      final b = await echauffement(tester);
+      await tester.tap(find.byKey(const ValueKey('ouvrir_regie')));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      final terminer = find.text(_rg('terminer'));
+      await tester.ensureVisible(terminer);
+      await tester.pumpAndSettle();
+      await tester.tap(terminer);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.t('troupe.oui')));
+      await tester.pumpAndSettle();
+      expect(b.session.etape, EtapeSession.terminee);
+      expect(find.byType(DebriefScreen), findsNothing);
+      expect(find.byType(RegieScreen), findsNothing);
     });
   });
 

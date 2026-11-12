@@ -128,7 +128,7 @@ Future<void> ouvrirTableRegie(
                     if (pilote != null)
                       Padding(
                         padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-                        child: _BarrePilote(pilote: pilote),
+                        child: BarrePilote(pilote: pilote),
                       ),
                     Expanded(
                       child: SingleChildScrollView(
@@ -159,8 +159,8 @@ Future<void> ouvrirTableRegie(
 
 /// Le chrono en petit, en haut de la table : le temps qui reste, l'acte, la
 /// pause et DESTINY.
-class _BarrePilote extends StatelessWidget {
-  const _BarrePilote({required this.pilote});
+class BarrePilote extends StatelessWidget {
+  const BarrePilote({super.key, required this.pilote});
 
   final PiloteSpectacle pilote;
 

@@ -22,9 +22,7 @@ import '../theme/destiny_theme.dart';
 import 'debrief_screen.dart';
 import 'echauffement_screen.dart';
 import 'historique_screen.dart';
-import 'mise_en_place_screen.dart';
 import 'preparer_screen.dart';
-import 'regie_screen.dart';
 
 /// Ce dont le mode Troupe a besoin de l'appli. Tout fonctionne sans réseau.
 class ContexteTroupe {
@@ -69,9 +67,10 @@ Future<void> ouvrirEtape(BuildContext context, ContexteTroupe ctx, SessionTroupe
   }
   final Widget page = switch (s.etape) {
     EtapeSession.preparation => PreparerScreen(contexte: ctx, session: s),
-    EtapeSession.echauffement => EchauffementScreen(contexte: ctx, session: s),
-    EtapeSession.miseEnPlace => MiseEnPlaceScreen(contexte: ctx, session: s),
-    EtapeSession.regie => RegieScreen(contexte: ctx, session: s),
+    // Le jeu porte le spectacle ; la régie s'y ouvre en pop-up (2.2.0). Une
+    // ancienne session à la mise en place reprend au jeu.
+    EtapeSession.echauffement || EtapeSession.miseEnPlace || EtapeSession.regie =>
+      EchauffementScreen(contexte: ctx, session: s),
     EtapeSession.debrief => DebriefScreen(contexte: ctx, session: s),
     EtapeSession.terminee => FicheSession(contexte: ctx, session: s),
   };
@@ -98,11 +97,10 @@ void tirerGroupeSiVide(SessionTroupe s, TextesDestiny t, {Random? hasard}) {
 
 /// Va directement à une étape du spectacle (le fil des étapes), la régie
 /// comprise. Ce qui n'a pas encore été fait est rempli d'office : le chrono
-/// des réglages en quittant la préparation, et le groupe avant la régie.
+/// des réglages en quittant la préparation.
 Future<void> allerAEtape(BuildContext context, ContexteTroupe ctx, SessionTroupe s, EtapeSession etape) async {
   if (etape == s.etape) return;
   if (s.etape == EtapeSession.preparation) appliquerChrono(s, ctx.reglages.chrono);
-  if (etape == EtapeSession.regie) tirerGroupeSiVide(s, context.textes);
   s.etape = etape;
   await ctx.store.enregistrer(s);
   if (context.mounted) ouvrirEtape(context, ctx, s, remplacer: true);

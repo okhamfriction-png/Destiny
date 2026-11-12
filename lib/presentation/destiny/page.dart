@@ -33,6 +33,9 @@ class PageDestiny extends StatelessWidget {
     this.actions,
     this.entete,
     this.largeurMax = 760,
+    this.retour = true,
+    this.fermer,
+    this.libelleFermer = '',
   });
 
   final String titre;
@@ -43,17 +46,41 @@ class PageDestiny extends StatelessWidget {
   final Widget? entete;
   final double largeurMax;
 
+  /// Faux : pas de flèche de retour (le jeu, qu'on ne quitte pas par erreur).
+  final bool retour;
+
+  /// Une page en pop-up : une grande croix [libelleFermer], bien en vue, la
+  /// ferme (la régie par-dessus le jeu).
+  final VoidCallback? fermer;
+  final String libelleFermer;
+
   @override
   Widget build(BuildContext context) {
     final fenetre = EnFenetre.de(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(titre),
-        primary: !fenetre,
-        automaticallyImplyLeading: !fenetre,
+        primary: !fenetre && fermer == null,
+        automaticallyImplyLeading: !fenetre && retour && fermer == null,
         actions: [
           ...?actions,
-          if (fenetre)
+          if (fermer != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: FilledButton.icon(
+                key: const ValueKey('fermer_popup'),
+                style: FilledButton.styleFrom(
+                  backgroundColor: context.destiny.or,
+                  foregroundColor: context.destiny.surOr,
+                  minimumSize: const Size(48, 46),
+                  textStyle: const TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w800, fontSize: 15),
+                ),
+                onPressed: fermer,
+                icon: const Icon(Icons.close_rounded, size: 26),
+                label: Text(libelleFermer),
+              ),
+            )
+          else if (fenetre)
             CloseButton(key: const ValueKey('fermer_fenetre'), onPressed: () => Navigator.of(context).maybePop()),
         ],
       ),

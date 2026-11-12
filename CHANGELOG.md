@@ -17,6 +17,9 @@ Les nouveautés de chaque version, racontées pour les comédiens, les troupes e
   Sans pack, la régie fait comme avant.
 - **Importer le pack** (Réglages, Destiny, « Pack audio du spectacle ») : un .zip ou un dossier qui contient « Musiques Destiny » et « Bruitages ». Réimporter n'ajoute que les nouveaux fichiers. Le bilan dit quels lieux ont leur musique, lesquels prennent celle de leur famille, et quels sons manquent. Une musique propre ajoutée plus tard sous le bon nom est prise toute seule.
 - **Régler la régie son** (Réglages, Destiny, « Régie son du spectacle ») : volumes, fondus et silences par acte, le son Destiny, les bruitages automatiques, l'atténuation de la musique, la révélation, la fin. **La banque de sons** fait écouter les candidats de chaque son, pour choisir celui qui joue et son volume. **Tester la conduite** rejoue l'ouverture et les trois Destiny sans chrono, pour répéter.
+- **Le spectacle en trois étapes : Préparer, le Jeu, la Régie.** La mise en place disparaît ; l'échauffement devient **le Jeu**, l'écran qui porte le spectacle : le chrono et DESTINY en haut, le minuteur d'échauffement, le lieu et le danger, **les paliers du danger**, les archétypes et les Destiny prévus. Pas de flèche de retour : le bouton retour du téléphone demande avant de quitter le spectacle.
+- **La régie s'ouvre en pop-up par-dessus le jeu**, et se ferme avec une grande croix **« Fermer »** qui ramène au jeu. Le chrono, les Destiny et le son continuent pendant ce temps.
+- **Plus de débrief** : « Terminer » range le spectacle dans l'historique et revient à l'accueil.
 - **Le spectacle à 3 joueurs** : l'alarmiste, un qui tient, un qui se fissure.
 - **Plus de groupe ni de mystère au spectacle**, à la mise en place comme à la régie.
 - **Une régie plus claire** : trois cadres, le lieu et le danger, les paliers du danger, les archétypes à ce palier. « Pour la régie » et les moments forts disparaissent.

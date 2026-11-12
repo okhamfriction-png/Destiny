@@ -823,6 +823,7 @@ class FilEtapes extends StatelessWidget {
     required this.session,
     required this.courante,
     this.peutAvancer = true,
+    this.onRegie,
   });
 
   final ContexteTroupe contexte;
@@ -833,10 +834,13 @@ class FilEtapes extends StatelessWidget {
   /// attendent.
   final bool peutAvancer;
 
+  /// Depuis le jeu, « Régie » ouvre la régie en pop-up par-dessus.
+  final VoidCallback? onRegie;
+
+  /// Préparer, le jeu, la régie (plus de mise en place depuis la 2.2.0).
   static const List<(EtapeSession, IconData)> etapes = [
     (EtapeSession.preparation, Icons.style_rounded),
-    (EtapeSession.echauffement, Icons.self_improvement_rounded),
-    (EtapeSession.miseEnPlace, Icons.theater_comedy_rounded),
+    (EtapeSession.echauffement, Icons.theater_comedy_rounded),
     (EtapeSession.regie, Icons.play_circle_rounded),
   ];
 
@@ -853,9 +857,11 @@ class FilEtapes extends StatelessWidget {
             icone: icone,
             courante: etape == courante,
             regie: etape == EtapeSession.regie,
-            onTap: etape == courante || (!peutAvancer && etape.index > courante.index)
-                ? null
-                : () => allerAEtape(context, contexte, session, etape),
+            onTap: etape == EtapeSession.regie && onRegie != null
+                ? onRegie
+                : etape == courante || (!peutAvancer && etape.index > courante.index)
+                    ? null
+                    : () => allerAEtape(context, contexte, session, etape),
           ),
       ]),
     );

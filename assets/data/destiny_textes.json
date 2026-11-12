@@ -471,8 +471,8 @@
     "reprendre": "Reprendre : {etape}",
     "etapes": {
       "preparation": "la distribution",
-      "echauffement": "l'échauffement",
-      "miseEnPlace": "la mise en place",
+      "echauffement": "le jeu",
+      "miseEnPlace": "le jeu",
       "regie": "la régie",
       "debrief": "le débrief",
       "terminee": "terminé"
@@ -499,10 +499,11 @@
     "fil": {
       "titre": "Les étapes du spectacle",
       "preparation": "Préparer",
-      "echauffement": "Échauffement",
+      "echauffement": "Jeu",
       "miseEnPlace": "Mise en place",
       "regie": "Régie"
-    }
+    },
+    "quitter_confirmer": "Quitter le spectacle ? Le chrono et le son s'arrêtent ; tu pourras le reprendre depuis l'accueil."
   },
   "preparer": {
     "titre": "Préparer",
@@ -513,7 +514,7 @@
     "autre_exemple": "Autre exemple",
     "choisir_archetype": "Choisir un archétype",
     "appliquer": "Appliquer la proposition",
-    "vers_echauffement": "Passer à l'échauffement",
+    "vers_echauffement": "Passer au jeu",
     "tirer_aide": "Un lieu, un danger et les archétypes, d'un seul geste.",
     "tirage": "Le tirage",
     "lieu": "Le lieu",
@@ -528,7 +529,7 @@
     "catalogue_vide": "Aucun lieu ou danger actif à tirer : vérifie le catalogue dans les Réglages."
   },
   "echauffement": {
-    "titre": "Échauffement",
+    "titre": "Le jeu",
     "intro": "Chacun prépare son archétype et son corps. Touche le « i » pour relire sa fiche.",
     "demarrer": "Lancer le minuteur",
     "pause": "Pause",
@@ -537,7 +538,9 @@
     "personnages": "Les personnages",
     "temps": "Temps d'échauffement",
     "destinys": "Les Destiny du spectacle",
-    "plan": "Spectacle de {duree} min : Destiny à {liste} min."
+    "plan": "Spectacle de {duree} min : Destiny à {liste} min.",
+    "ouvrir_regie": "Ouvrir la régie",
+    "spectacle": "Le spectacle"
   },
   "mise_en_place": {
     "titre": "La mise en place",
@@ -611,7 +614,8 @@
     "son_coupe": "Le son est coupé.",
     "son_remettre": "Remettre le son",
     "paliers": "Les paliers du danger",
-    "archetypes": "Les archétypes à ce palier"
+    "archetypes": "Les archétypes à ce palier",
+    "fermer": "Fermer"
   },
   "regie_son": {
     "titre": "Table de régie",

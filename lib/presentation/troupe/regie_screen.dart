@@ -10,11 +10,11 @@ import '../../domain/troupe/session.dart';
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
-import '../destiny/rituel_destiny.dart';
 import '../regie_son/apparence_sons.dart';
 import '../regie_son/table_regie.dart';
 import '../theme/destiny_theme.dart';
 import 'composants_troupe.dart';
+import 'spectacle_en_cours.dart';
 import 'troupe_screen.dart';
 
 /// Pourquoi un Destiny ne peut pas aller à la minute demandée.
@@ -37,45 +37,41 @@ RefusDestiny? refusDestiny(SessionTroupe s, {required int index, required int mi
 /// le lieu et le danger, les rappels, la montée de chacun et les notes. Rien
 /// ne dépend du réseau.
 class RegieScreen extends StatefulWidget {
-  const RegieScreen({super.key, required this.contexte, required this.session});
+  const RegieScreen({super.key, required this.contexte, required this.session, this.spectacle, this.enPopup = false});
 
   final ContexteTroupe contexte;
   final SessionTroupe session;
+
+  /// Le spectacle en cours (le chrono), tenu par l'écran du jeu. Sans lui, la
+  /// régie tient le sien.
+  final SpectacleEnCours? spectacle;
+
+  /// Ouverte en pop-up par-dessus le jeu : une grande croix la ferme.
+  final bool enPopup;
 
   @override
   State<RegieScreen> createState() => _RegieScreenState();
 }
 
 class _RegieScreenState extends State<RegieScreen> {
-  Timer? _minuteur;
-  int _ecoule = 0;
-  bool _demarre = false;
-  bool _rituelEnCours = false;
-  final List<Timer> _musiques = [];
-
-  /// Prévient la table de régie à chaque seconde et à chaque changement.
-  final ValueNotifier<int> _tic = ValueNotifier<int>(0);
+  late final SpectacleEnCours _sp = widget.spectacle ??
+      SpectacleEnCours(
+        contexte: widget.contexte,
+        session: widget.session,
+        contexteRituel: () => mounted ? context : null,
+      );
   List<Dilemma> _dilemmes = const [];
 
   SessionTroupe get s => widget.session;
   ReglagesDestiny get r => widget.contexte.reglages;
-  PalierId get _palier => PalierId.deNumero(s.palierAtteint);
-  bool get _enMarche => _minuteur?.isActive ?? false;
-  int get _total => s.dureeMinutes * 60;
-
-  /// La conduite son automatique du spectacle (pack audio importé et actif).
-  ConduiteSon? get _conduite => widget.contexte.regieSon?.conduite;
-  bool get _conduiteActive => _conduite?.active ?? false;
-
-  /// L'index (0 à 2) du prochain Destiny, ou null s'ils sont tous passés.
-  int? get _prochain =>
-      s.destinys.length < s.destinyMinutes.length && _palier != PalierId.supprime ? s.destinys.length : null;
+  PalierId get _palier => _sp.palier;
+  ConduiteSon? get _conduite => _sp.conduite;
+  bool get _conduiteActive => _sp.conduiteActive;
 
   @override
   void initState() {
     super.initState();
-    if (s.destinys.isNotEmpty) _ecoule = s.destinys.last.secondes;
-    _conduite?.preparer(lieuId: s.lieuId, dangerId: s.dangerId, acte: s.palierAtteint);
+    _sp.addListener(_maj);
     widget.contexte.catalogue.getDilemmas().then((d) {
       if (!mounted) return;
       setState(() => _dilemmes = [
@@ -85,138 +81,20 @@ class _RegieScreenState extends State<RegieScreen> {
     });
   }
 
+  void _maj() {
+    if (mounted) setState(() {});
+  }
+
   @override
   void dispose() {
-    _minuteur?.cancel();
-    for (final t in _musiques) {
-      t.cancel();
-    }
-    // En quittant la régie, plus rien ne joue : ni séquence, ni son orphelin.
-    final conduite = _conduite;
-    if (conduite != null) unawaited(conduite.stopTout());
-    _tic.dispose();
+    _sp.removeListener(_maj);
+    // La régie ne tient le spectacle que si personne ne le lui a donné.
+    if (widget.spectacle == null) _sp.dispose();
     super.dispose();
   }
 
-  void _basculer() {
-    if (_enMarche) {
-      _minuteur?.cancel();
-      // Une séquence Destiny en cours s'arrête net avec le chrono.
-      if (_conduiteActive) unawaited(_conduite!.annulerSequence());
-      setState(() {});
-      _tic.value++;
-      return;
-    }
-    if (!_demarre) {
-      _demarre = true;
-      if (_conduiteActive) {
-        // Conduite du spectacle : le son Destiny puis la musique de l'acte 1 ;
-        // une régie reprise en cours de spectacle repart sur son acte.
-        if (s.destinys.isEmpty) {
-          unawaited(_conduite!.ouverture());
-        } else {
-          unawaited(_conduite!.musiqueActe(s.palierAtteint));
-        }
-      } else if (!widget.contexte.audio.muted && r.musiqueActe(1) != ChoixMusique.aucune) {
-        _conduite?.arreterBus(BusSon.musique);
-        widget.contexte.musique.jouerChoix(r.musiqueActe(1), lieu: s.lieuNom);
-      }
-    }
-    _minuteur = Timer.periodic(const Duration(seconds: 1), (_) => _seconde());
-    setState(() {});
-    _tic.value++;
-  }
-
-  void _seconde() {
-    if (!mounted) return;
-    setState(() => _ecoule++);
-    _tic.value++;
-    if (_ecoule == _total) {
-      widget.contexte.audio.playCrack();
-      // Pas de coupure automatique (l'impro peut déborder), sauf si on la veut.
-      final regie = widget.contexte.regieSon;
-      if (_conduiteActive && regie != null) {
-        if (regie.reglages.v.conclusionFinChrono) {
-          unawaited(_conduite!.conclusion());
-        } else if (regie.reglages.v.coupureFinChrono) {
-          unawaited(_conduite!.fonduFin());
-        }
-      }
-    }
-    if (_ecoule == _total - 10) widget.contexte.audio.playThunder();
-    final auto = r.declenchement != Declenchement.manuel;
-    final prochain = _prochain;
-    if (auto && !_rituelEnCours && prochain != null && _ecoule >= s.destinyMinutes[prochain] * 60) {
-      _destiny(manuel: false);
-    }
-  }
-
-  /// Lance le prochain Destiny : à la main (le bouton, quel que soit le
-  /// réglage du déclenchement) ou par le chrono.
-  Future<void> _destiny({required bool manuel}) async {
-    if (_rituelEnCours || _prochain == null) return;
-    _rituelEnCours = true;
-    final premier = s.destinys.isEmpty;
-    final nouveau = PalierId.values[_palier.index + 1];
-    s.destinys.add(EvenementDestiny(numero: s.destinys.length + 1, secondes: _ecoule, manuel: manuel));
-    s.palierAtteint = nouveau.numero;
-    await widget.contexte.store.enregistrer(s);
-    _programmerMusiques(s.destinys.length);
-    if (!mounted) return;
-    setState(() {});
-    _tic.value++;
-    final nouvelle = s.paliers.length > nouveau.index ? s.paliers[nouveau.index] : null;
-    await lancerRituelDestiny(
-      context,
-      nouveauPalier: nouveau,
-      nouvelle: nouvelle,
-      premierFige: premier,
-      reglages: ReglagesRituel(
-        lumiereBleue: r.lumiereBleue,
-        dureeFige: Duration(seconds: r.dureeFigeSecondes),
-        texteEllipse: r.texteEllipse.isEmpty ? null : r.texteEllipse,
-        reduireAnimations: r.reduireAnimations,
-        rappelPremierFige: r.rappelPremierFige,
-      ),
-      auTonnerre: () {
-        if (widget.contexte.audio.muted) return;
-        if (_conduiteActive) {
-          // La conduite enchaîne tout : sortie de la musique, son Destiny,
-          // REVEAL, bruitage du nouveau palier, musique de l'acte.
-          unawaited(_conduite!.destiny(s.destinys.length));
-          return;
-        }
-        widget.contexte.audio.playEffet(r.sonDestiny);
-        widget.contexte.musique.jouerDestiny(r.musiqueDestiny);
-      },
-    );
-    _rituelEnCours = false;
-    if (mounted) setState(() {});
-    _tic.value++;
-  }
-
-  /// La musique de l'acte qui commence, 15 s après le Destiny [numero] (celle
-  /// des réglages : l'acte 2 après le 1er Destiny, et ainsi de suite).
-  void _programmerMusiques(int numero) {
-    if (widget.contexte.audio.muted || _conduiteActive) return;
-    final choix = r.musiqueActe(numero + 1);
-    if (choix == ChoixMusique.aucune) return;
-    _musiques.add(Timer(const Duration(seconds: 15), () {
-      if (!mounted) return;
-      _conduite?.arreterBus(BusSon.musique);
-      widget.contexte.musique.jouerChoix(choix, lieu: s.lieuNom);
-    }));
-  }
-
-  /// Place le Destiny [index] à [minute], au doigt sur la frise. Rend faux
-  /// si les règles le refusent.
-  bool _placer(int index, int minute) {
-    if (refusDestiny(s, index: index, minute: minute, ecouleSecondes: _ecoule) != null) return false;
-    setState(() => s.destinyMinutes = [...s.destinyMinutes]..[index] = minute);
-    widget.contexte.store.enregistrer(s);
-    return true;
-  }
-
+  /// « Terminer » : plus de débrief. Le spectacle s'arrête, il est rangé dans
+  /// l'historique, et on revient à l'accueil.
   Future<void> _terminer() async {
     final t = context.textes;
     final ok = await showDialog<bool>(
@@ -230,35 +108,9 @@ class _RegieScreenState extends State<RegieScreen> {
       ),
     );
     if (ok != true) return;
-    _minuteur?.cancel();
-    s.etape = EtapeSession.debrief;
-    await widget.contexte.store.enregistrer(s);
-    if (mounted) ouvrirEtape(context, widget.contexte, s, remplacer: true);
+    await _sp.terminer();
+    if (mounted) Navigator.of(context).popUntil((route) => route.isFirst);
   }
-
-  /// Le spectacle vu depuis la table de régie : le chrono et DESTINY restent
-  /// sous la main quand elle est ouverte.
-  PiloteSpectacle get _pilote => PiloteSpectacle(
-        change: _tic,
-        reste: () => horloge(_total - _ecoule),
-        acte: () {
-          final t = context.textes;
-          return '${t.t('regie.acte', {'n': '${context.grammaire.palier(_palier).acte}'})} — '
-              '${context.grammaire.palier(_palier).nom}';
-        },
-        enMarche: () => _enMarche,
-        basculer: _basculer,
-        libelleBasculer: () {
-          final t = context.textes;
-          return t.t(_enMarche ? 'regie.pause' : (_demarre ? 'regie.reprendre' : 'regie.demarrer'));
-        },
-        destiny: () => _prochain == null || _rituelEnCours ? null : () => _destiny(manuel: true),
-        libelleDestiny: () {
-          final t = context.textes;
-          final p = _prochain;
-          return p == null ? t.t('regie.destiny') : t.t('regie.destiny_n', {'n': '${p + 1}'});
-        },
-      );
 
   /// Le panneau du chrono, toujours visible en haut : le temps qui reste, le
   /// temps écoulé, la frise des trois Destiny, le prochain, et DESTINY.
@@ -268,8 +120,8 @@ class _RegieScreenState extends State<RegieScreen> {
     final c = context.destiny;
     String rg(String k, [Map<String, String> v = const {}]) => t.t('regie.$k', v);
     final palier = g.palier(_palier);
-    final reste = _total - _ecoule;
-    final prochain = _prochain;
+    final reste = _sp.total - _sp.ecoule;
+    final prochain = _sp.prochain;
     final couleurReste = reste <= 0 ? Theme.of(context).colorScheme.error : c.titre;
 
     // Le panneau reste compact même avec un texte très agrandi : ses chiffres
@@ -303,7 +155,7 @@ class _RegieScreenState extends State<RegieScreen> {
               // passer à la ligne.
               Wrap(spacing: 10, children: [
                 Text(
-                  rg('ecoule', {'t': horloge(_ecoule)}),
+                  rg('ecoule', {'t': horloge(_sp.ecoule)}),
                   key: const ValueKey('chrono_ecoule'),
                   style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, height: 1.3, color: c.texteSecondaire),
                 ),
@@ -322,23 +174,23 @@ class _RegieScreenState extends State<RegieScreen> {
           ),
           const SizedBox(width: 10),
           IconButton.filled(
-            tooltip: _enMarche ? rg('pause') : (_demarre ? rg('reprendre') : rg('demarrer')),
+            tooltip: _sp.enMarche ? rg('pause') : (_sp.demarre ? rg('reprendre') : rg('demarrer')),
             iconSize: 34,
             style: ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(c.or),
               foregroundColor: WidgetStatePropertyAll(c.surOr),
               minimumSize: const WidgetStatePropertyAll(Size(60, 60)),
             ),
-            icon: Icon(_enMarche ? Icons.pause_rounded : Icons.play_arrow_rounded),
-            onPressed: _basculer,
+            icon: Icon(_sp.enMarche ? Icons.pause_rounded : Icons.play_arrow_rounded),
+            onPressed: _sp.basculer,
           ),
         ]),
         const SizedBox(height: 12),
         FriseDestiny(
-          totalSecondes: _total,
-          ecouleSecondes: _ecoule,
+          totalSecondes: _sp.total,
+          ecouleSecondes: _sp.ecoule,
           reperes: reperesDestiny(s),
-          deplacer: _placer,
+          deplacer: _sp.placer,
         ),
         if (reste <= 0)
           Padding(
@@ -359,7 +211,7 @@ class _RegieScreenState extends State<RegieScreen> {
                   minimumSize: const Size(48, 58),
                   textStyle: const TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w900, fontSize: 21),
                 ),
-                onPressed: prochain == null || _rituelEnCours ? null : () => _destiny(manuel: true),
+                onPressed: prochain == null || _sp.rituelEnCours ? null : () => _sp.destiny(manuel: true),
                 icon: const Icon(Icons.flash_on_rounded),
                 label: Text(
                   prochain == null
@@ -377,7 +229,7 @@ class _RegieScreenState extends State<RegieScreen> {
           // La régie son, sauf si on l'a retirée dans les réglages.
           if (r.regieSon) ...[
             const SizedBox(width: 10),
-            BoutonRegieSon(contexte: widget.contexte, session: s, compact: true, pilote: _pilote),
+            BoutonRegieSon(contexte: widget.contexte, session: s, compact: true, pilote: piloteDe(context, _sp)),
           ],
         ]),
         if (_conduiteActive) _EtatConduite(conduite: _conduite!),
@@ -398,6 +250,8 @@ class _RegieScreenState extends State<RegieScreen> {
 
     return PageDestiny(
       titre: rg('titre'),
+      fermer: widget.enPopup ? () => Navigator.of(context).pop() : null,
+      libelleFermer: rg('fermer'),
       entete: collant ? panneau : null,
       enfants: [
         if (!collant) panneau,
@@ -431,6 +285,46 @@ class _RegieScreenState extends State<RegieScreen> {
       ],
     );
   }
+}
+
+/// Ouvre la régie en pop-up par-dessus le jeu : le spectacle ([spectacle])
+/// continue derrière, et la grande croix « Fermer » ramène au jeu.
+Future<void> ouvrirRegieEnPopup(
+    BuildContext context, ContexteTroupe contexte, SessionTroupe session, SpectacleEnCours spectacle) {
+  return showGeneralDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    barrierColor: Colors.black54,
+    transitionDuration: const Duration(milliseconds: 220),
+    pageBuilder: (ctx, _, __) {
+      final large = MediaQuery.sizeOf(ctx).width >= 720;
+      return SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(large ? 20 : 6),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 860),
+              child: Material(
+                clipBehavior: Clip.antiAlias,
+                borderRadius: BorderRadius.circular(22),
+                child: RegieScreen(contexte: contexte, session: session, spectacle: spectacle, enPopup: true),
+              ),
+            ),
+          ),
+        ),
+      );
+    },
+    transitionBuilder: (ctx, a, _, enfant) {
+      final courbe = CurvedAnimation(parent: a, curve: Curves.easeOutCubic);
+      return FadeTransition(
+        opacity: courbe,
+        child: SlideTransition(
+          position: Tween(begin: const Offset(0, 0.05), end: Offset.zero).animate(courbe),
+          child: enfant,
+        ),
+      );
+    },
+  );
 }
 
 /// La régie son : la table de régie (conduite du spectacle, tranches,

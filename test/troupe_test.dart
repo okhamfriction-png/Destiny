@@ -18,7 +18,10 @@ import 'package:destiny/domain/repositories/catalog_store.dart';
 import 'package:destiny/domain/troupe/session.dart';
 import 'package:destiny/presentation/destiny/donnees.dart';
 import 'package:destiny/presentation/theme/destiny_theme.dart';
+import 'package:destiny/presentation/destiny/composants.dart';
 import 'package:destiny/presentation/troupe/composants_troupe.dart';
+import 'package:destiny/presentation/troupe/echauffement_screen.dart';
+import 'package:destiny/presentation/troupe/regie_screen.dart';
 import 'package:destiny/presentation/troupe/troupe_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -196,58 +199,56 @@ void main() {
     await tester.tap(find.text(t.t('preparer.vers_echauffement')));
     await tester.pumpAndSettle();
 
-    // L'échauffement (chaque archétype en petit rectangle), puis la mise en
-    // place par le fil des étapes.
+    // Le jeu (chaque archétype en petit rectangle, les paliers du danger).
+    // Plus de mise en place dans le fil.
+    expect(find.text(t.t('echauffement.titre')), findsWidgets);
     expect(find.byType(RectangleArchetype), findsNWidgets(4));
-    await tester.tap(find.text(t.t('troupe.fil.miseEnPlace')));
-    await tester.pumpAndSettle();
-
-    // La mise en place : le lieu et le danger. Plus de groupe ni de mystère
-    // au spectacle.
-    expect(find.text(t.t('mise_en_place.groupe').toUpperCase()), findsNothing);
-    expect(find.text(t.t('mise_en_place.mystere').toUpperCase()), findsNothing);
-    await tester.tap(find.byType(ChoiceChip).first);
-    await tester.pump();
-    final puceDanger = find.byType(ChoiceChip).at(3);
-    await tester.tap(puceDanger);
-    await tester.pumpAndSettle();
-    expect(s.dangerNom, isNotEmpty);
+    expect(find.byType(FrisePaliers), findsOneWidget);
+    expect(find.text(t.t('troupe.fil.miseEnPlace')), findsNothing);
     expect(s.paliers, hasLength(4));
-    await tester.tap(find.text(t.t('mise_en_place.lever_rideau')));
-    await tester.pumpAndSettle();
 
-    // La régie : le chrono, la frise des trois Destiny, la régie son ; le
-    // bouton Destiny fait monter d'un palier.
+    // « Régie » : la régie s'ouvre en pop-up par-dessus le jeu. Le chrono, la
+    // frise des trois Destiny, la régie son ; DESTINY fait monter d'un palier.
+    await tester.tap(find.text(t.t('troupe.fil.regie')));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.byType(RegieScreen), findsOneWidget);
+    expect(find.byKey(const ValueKey('fermer_popup')), findsOneWidget);
     expect(find.text(g.palier(PalierId.signale).nom), findsWidgets);
     for (final n in [1, 2, 3]) {
-      expect(find.byKey(ValueKey('repere_destiny_$n')), findsOneWidget);
+      expect(find.byKey(ValueKey('repere_destiny_$n')), findsWidgets);
     }
     expect(find.byKey(const ValueKey('bouton_regie_son')), findsOneWidget);
     expect(find.text(t.t('regie.son_acte', {'n': '1'})), findsNothing, reason: 'la régie son est rangée dans sa fenêtre');
-    await tester.tap(find.text(t.t('regie.destiny_n', {'n': '1'}).toUpperCase()));
+    await tester.tap(find.byKey(const ValueKey('bouton_destiny')));
     await tester.pump();
     await tester.pump();
     await tester.pump(const Duration(seconds: 10));
     await tester.pump(const Duration(seconds: 2));
     expect(find.text(s.paliers[1]), findsWidgets); // la nouvelle de l'alarmiste
     await tester.tap(find.text(t.t('rituel.reprendre')));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
     expect(s.palierAtteint, 2);
     expect(s.destinys.single.manuel, isTrue);
-    // Plus de moments forts, de mystère ni de rappels « Pour la régie ».
+    // Plus de groupe, de mystère, de moments forts ni de « Pour la régie ».
     expect(find.text(t.t('regie.noter')), findsNothing);
     expect(find.text(t.t('regie.mystere').toUpperCase()), findsNothing);
     expect(find.text(t.t('regie.rappel').toUpperCase()), findsNothing);
+    expect(find.text(t.t('mise_en_place.groupe').toUpperCase()), findsNothing);
 
-    // Terminer, puis le débrief.
-    await tester.tap(find.text(t.t('regie.terminer')));
+    // Terminer : plus de débrief, retour à l'accueil.
+    final terminer = find.text(t.t('regie.terminer'));
+    await tester.ensureVisible(terminer);
+    await tester.pumpAndSettle();
+    await tester.tap(terminer);
     await tester.pumpAndSettle();
     await tester.tap(find.text(t.t('troupe.oui')));
     await tester.pumpAndSettle();
-    expect(find.text(t.t('debrief.intro')), findsOneWidget);
-    await tester.tap(find.text(t.t('debrief.enregistrer')));
-    await tester.pumpAndSettle();
+    expect(find.text(t.t('debrief.intro')), findsNothing);
+    expect(find.byType(TroupeScreen), findsOneWidget);
+    expect(find.byType(RegieScreen), findsNothing);
+    expect(find.byType(EchauffementScreen), findsNothing);
     expect(s.etape, EtapeSession.terminee);
-    expect(find.text(t.t('historique.exporter')), findsOneWidget);
   });
 }

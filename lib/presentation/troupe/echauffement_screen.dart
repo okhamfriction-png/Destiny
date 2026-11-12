@@ -7,17 +7,22 @@ import '../../application/son/lecteur_son.dart';
 import '../../domain/grammaire/distribution.dart';
 import '../../domain/troupe/session.dart';
 import '../destiny/bouton_ia.dart';
+import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
 import '../theme/destiny_theme.dart';
 import 'composants_troupe.dart';
+import '../regie_son/table_regie.dart';
 import 'regie_screen.dart';
+import 'spectacle_en_cours.dart';
 import 'troupe_screen.dart';
 
-/// L'échauffement : le fil des étapes (la régie à un appui), le minuteur
-/// (30 minutes par défaut), le lieu et le danger, chaque archétype en petit
-/// rectangle (sa fiche à portée d'une bulle d'info), et les Destiny prévus,
-/// qu'on fait glisser sur la frise.
+/// Le jeu (l'ancien échauffement) : l'écran qui porte le spectacle. Le fil
+/// des étapes, le spectacle (chrono, DESTINY, et la régie qui s'ouvre en
+/// pop-up par-dessus), le minuteur d'échauffement, le lieu et le danger, les
+/// paliers du danger, chaque archétype en petit rectangle, et les Destiny
+/// prévus, qu'on fait glisser sur la frise. Pas de flèche de retour : on ne
+/// quitte pas le spectacle par erreur.
 class EchauffementScreen extends StatefulWidget {
   const EchauffementScreen({super.key, required this.contexte, required this.session});
 
@@ -31,6 +36,62 @@ class EchauffementScreen extends StatefulWidget {
 class _EchauffementScreenState extends State<EchauffementScreen> {
   late int _reste = widget.contexte.reglages.minuteurEchauffement * 60;
   Timer? _minuteur;
+
+  /// Le spectacle (le chrono, les Destiny, la conduite son) : il vit ici, la
+  /// régie en pop-up ne fait que le montrer.
+  late final SpectacleEnCours _sp = SpectacleEnCours(
+    contexte: widget.contexte,
+    session: widget.session,
+    contexteRituel: () => mounted ? context : null,
+  );
+  bool _regieOuverte = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _sp.addListener(_maj);
+    // Arrivé par « Régie » (ou une régie reprise) : elle s'ouvre d'office.
+    if (widget.session.etape == EtapeSession.regie) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _ouvrirRegie();
+      });
+    }
+  }
+
+  void _maj() {
+    if (mounted) setState(() {});
+  }
+
+  /// La régie en pop-up, par-dessus le jeu ; sa grande croix ramène ici.
+  Future<void> _ouvrirRegie() async {
+    if (_regieOuverte) return;
+    _regieOuverte = true;
+    final s = widget.session;
+    if (s.etape != EtapeSession.regie) {
+      s.etape = EtapeSession.regie;
+      await widget.contexte.store.enregistrer(s);
+    }
+    if (!mounted) return;
+    await ouvrirRegieEnPopup(context, widget.contexte, s, _sp);
+    _regieOuverte = false;
+    if (mounted) setState(() {});
+  }
+
+  /// Le bouton retour du téléphone : on demande avant de quitter le spectacle.
+  Future<void> _quitter() async {
+    final t = context.textes;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        content: Text(t.t('troupe.quitter_confirmer')),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(t.t('troupe.non'))),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(t.t('troupe.oui'))),
+        ],
+      ),
+    );
+    if (ok == true && mounted) Navigator.of(context).popUntil((route) => route.isFirst);
+  }
 
   bool get _enMarche => _minuteur?.isActive ?? false;
 
@@ -91,6 +152,8 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
   @override
   void dispose() {
     _minuteur?.cancel();
+    _sp.removeListener(_maj);
+    _sp.dispose();
     super.dispose();
   }
 
@@ -144,13 +207,7 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
   }
 
   /// Fait glisser un Destiny sur la frise : mêmes règles qu'à la régie.
-  bool _placer(int index, int minute) {
-    final s = widget.session;
-    if (refusDestiny(s, index: index, minute: minute, ecouleSecondes: 0) != null) return false;
-    setState(() => s.destinyMinutes = [...s.destinyMinutes]..[index] = minute);
-    widget.contexte.store.enregistrer(s);
-    return true;
-  }
+  bool _placer(int index, int minute) => _sp.placer(index, minute);
 
   @override
   Widget build(BuildContext context) {
@@ -159,11 +216,35 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
     final m = _reste ~/ 60;
     final s = _reste % 60;
     final session = widget.session;
-    return PageDestiny(
+    final page = PageDestiny(
       titre: t.t('echauffement.titre'),
+      retour: false,
       enfants: [
-        FilEtapes(contexte: widget.contexte, session: session, courante: EtapeSession.echauffement),
+        FilEtapes(
+          contexte: widget.contexte,
+          session: session,
+          courante: EtapeSession.echauffement,
+          onRegie: _ouvrirRegie,
+        ),
         const SizedBox(height: 14),
+        // Le spectacle, toujours sous la main : le chrono, DESTINY, et la régie.
+        SectionDestiny(titre: t.t('echauffement.spectacle'), espace: 0, enfants: [
+          BarrePilote(pilote: piloteDe(context, _sp)),
+          const SizedBox(height: 8),
+          FilledButton.icon(
+            key: const ValueKey('ouvrir_regie'),
+            style: FilledButton.styleFrom(
+              backgroundColor: c.or,
+              foregroundColor: c.surOr,
+              minimumSize: const Size(48, 54),
+              textStyle: const TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w800, fontSize: 16),
+            ),
+            onPressed: _ouvrirRegie,
+            icon: const Icon(Icons.play_circle_rounded),
+            label: Text(t.t('echauffement.ouvrir_regie')),
+          ),
+        ]),
+        const SizedBox(height: 18),
         Paragraphe(t.t('echauffement.intro')),
         Center(
           child: Text(
@@ -201,6 +282,9 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
         SectionDestiny(titre: t.t('regie.scene'), enfants: [
           LieuEtDanger(contexte: widget.contexte, session: session),
         ]),
+        SectionDestiny(titre: t.t('regie.paliers'), enfants: [
+          FrisePaliers(textes: session.paliers, courant: _sp.palier),
+        ]),
         SectionDestiny(titre: t.t('echauffement.personnages'), enfants: [
           for (final p in widget.session.personnages)
             RectangleArchetype(
@@ -220,8 +304,8 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
         SectionDestiny(titre: t.t('echauffement.destinys'), enfants: [
           FriseDestiny(
             totalSecondes: session.dureeMinutes * 60,
-            ecouleSecondes: 0,
-            curseur: false,
+            ecouleSecondes: _sp.ecoule,
+            curseur: _sp.demarre,
             reperes: reperesDestiny(session),
             deplacer: _placer,
           ),
@@ -237,6 +321,13 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
         ]),
         const SizedBox(height: 12),
       ],
+    );
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (aSorti, _) {
+        if (!aSorti) _quitter();
+      },
+      child: page,
     );
   }
 }

@@ -987,6 +987,14 @@ Une conduite son automatique quand le pack audio du spectacle est là (`/Volumes
 - **La carte de l'acte** se ferme seule après 10 s sans action (`ReglagesRituel.fermetureAuto`) ; un toucher relance le compte.
 - **La musique** : plus de boucle par défaut (nouvelle clé `boucle_v2`) ; atténuation progressive réglable (30 s, 50 % → 0 à la fin du morceau, durée lue dans le manifeste ou le lecteur) ; musique d'échauffement avec son minuteur. « Quand je lance le minuteur, la musique ne se lance pas » visait le minuteur d'échauffement, qui n'en avait pas.
 
+### Le jeu et la régie en pop-up
+
+- **Le fil des étapes** : Préparer, Jeu (l'ancien échauffement), Régie. Une session à la mise en place ou à la régie reprend au jeu.
+- **`SpectacleEnCours`** : le chrono, les Destiny, le rituel et la conduite son sortent de la régie et vivent avec l'écran du jeu. La régie (`ouvrirRegieEnPopup`) ne fait que le montrer : la fermer n'arrête rien. Ouverte seule (tests), elle tient son propre spectacle.
+- **Le jeu** : la barre du spectacle (chrono, acte, pause, DESTINY) et « Ouvrir la régie », la section des paliers du danger ; plus de flèche de retour (`PageDestiny.retour`), le retour du téléphone demande confirmation.
+- **La grande croix** : `PageDestiny.fermer`, un bouton « Fermer » en or, à la place de la flèche.
+- **Terminer** : la session passe à « terminée » et l'on revient à l'accueil ; le débrief n'est plus proposé (l'écran reste pour les anciennes sessions).
+
 ### Tests
 
-**337 tests passent.** Les nouveaux portent sur la résolution (propre, famille, NFD, absent), les bruitages (vide, remplacement, « Autre »), l'import, le bilan du vrai pack, les séquences avec un faux lecteur (ordre, annulation, son coupé) et la table dans la régie. Les 7 tests de rendu des cartes échouaient déjà avant (images de référence d'une autre machine).
+**338 tests passent.** Les nouveaux portent sur la résolution (propre, famille, NFD, absent), les bruitages (vide, remplacement, « Autre »), l'import, le bilan du vrai pack, les séquences avec un faux lecteur (ordre, annulation, son coupé) et la table dans la régie. Les 7 tests de rendu des cartes échouaient déjà avant (images de référence d'une autre machine).
