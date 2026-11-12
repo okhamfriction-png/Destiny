@@ -53,6 +53,11 @@ android {
         }
     }
 
+    // Le pack audio embarqué (asset pack install-time), s'il a été préparé.
+    if (rootProject.findProject(":destiny_pack") != null) {
+        assetPacks += listOf(":destiny_pack")
+    }
+
     buildTypes {
         release {
             // Utilise la clé de release si key.properties existe, sinon la clé debug

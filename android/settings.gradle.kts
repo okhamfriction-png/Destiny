@@ -25,3 +25,8 @@ plugins {
 }
 
 include(":app")
+
+// Le pack audio embarqué, seulement s'il a été préparé (tool/pack_embarque.py).
+if (file("destiny_pack/src/main/assets/flutter_assets/assets/pack/index.json").exists()) {
+    include(":destiny_pack")
+}

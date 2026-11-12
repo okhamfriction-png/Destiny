@@ -2,6 +2,12 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.3.2 — Le pack audio dans l'appli (novembre 2026)
+
+- **Les musiques de chaque lieu et les bruitages des dangers sont intégrés à l'appli Android** : plus besoin d'importer le pack. Dès l'installation, la régie passe en « pack », et le minuteur lance la musique de l'acte 1 du lieu, puis le bruitage du danger, puis l'ambiance du lieu.
+- Le pack voyage à part de l'appli (le Play Store l'installe en même temps) : l'appli elle-même reste sous la limite de taille du Play Store.
+- Un pack importé à la main reste prioritaire, s'il y en a un.
+
 ## 2.3.1 — Les bons sons, acte par acte (novembre 2026)
 
 - **À chaque acte, le même enchaînement** : la musique de l'acte, puis, quand elle se termine, le bruitage du danger au palier de l'acte, puis l'ambiance du lieu en fond à 15 %, jusqu'au Destiny suivant. Le bruitage ne part plus en même temps que la musique au Destiny des actes 2 à 4.

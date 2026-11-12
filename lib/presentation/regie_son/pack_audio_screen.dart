@@ -65,7 +65,9 @@ class PackAudioScreen extends StatelessWidget {
               Paragraphe(k('aide')),
               LigneInfo(
                 k('fichiers'),
-                _pack.disponible ? k('fichiers_n', {'n': '${_pack.index.chemins.length}'}) : k('aucun_fichier'),
+                !_pack.disponible
+                    ? k('aucun_fichier')
+                    : k(_pack.integre ? 'integre_n' : 'fichiers_n', {'n': '${_pack.index.chemins.length}'}),
               ),
               if (m != null)
                 LigneInfo(k('manifeste'),
@@ -117,7 +119,7 @@ class PackAudioScreen extends StatelessWidget {
                 ),
                 _LigneBilan(Icons.visibility_rounded, k('stingers', {'n': '${bilan.stingers}'}), ''),
               ]),
-            if (_pack.disponible && _pack.importPossible)
+            if (_pack.disponible && _pack.importPossible && !_pack.integre)
               SectionDestiny(titre: k('supprimer'), enfants: [
                 OutlinedButton.icon(
                   onPressed: () => _supprimer(context),

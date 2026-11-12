@@ -53,7 +53,8 @@ class RegieSonScreen extends StatelessWidget {
                 leading: Icon(pack.disponible ? Icons.library_music_rounded : Icons.library_music_outlined),
                 title: Text(t.t('regie_son.pack.titre')),
                 subtitle: Text(pack.disponible
-                    ? t.t('regie_son.pack.fichiers_n', {'n': '${pack.index.chemins.length}'})
+                    ? t.t(pack.integre ? 'regie_son.pack.integre_n' : 'regie_son.pack.fichiers_n',
+                        {'n': '${pack.index.chemins.length}'})
                     : t.t('regie_son.pack.aucun_fichier')),
                 trailing: const Icon(Icons.chevron_right_rounded),
                 onTap: () => Navigator.of(context)

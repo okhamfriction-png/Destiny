@@ -11,6 +11,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../../domain/son/manifeste_audio.dart';
+import '../../domain/son/nfc.dart';
 import '../../domain/son/resolution_son.dart';
 import 'lecteur_son.dart';
 
@@ -42,6 +43,10 @@ class ResultatImport {
 ///
 /// Sur le web, le pack est lu à côté de l'appli (`destiny_pack/index.json`) :
 /// c'est ce qui sert à répéter la régie dans un navigateur, en local.
+///
+/// Sur Android, le pack est aussi intégré à l'appli (un asset pack livré à
+/// l'installation, `assets/pack/`) : il sert tant qu'aucun pack n'a été
+/// importé à la main.
 class PackAudio extends ChangeNotifier {
   PackAudio();
 
@@ -61,6 +66,10 @@ class PackAudio extends ChangeNotifier {
   bool _charge = false;
   bool _manifesteDuPack = false;
 
+  /// Le pack intégré à l'appli : chemin dans le pack → fichier sous
+  /// `assets/pack/` (null : pas de pack intégré en usage).
+  Map<String, String>? _embarque;
+
   bool _importEnCours = false;
   int _importTraites = 0;
 
@@ -70,6 +79,9 @@ class PackAudio extends ChangeNotifier {
 
   /// Des fichiers ont été importés (ou, sur le web, trouvés à côté).
   bool get disponible => _manifeste != null && !_index.estVide;
+
+  /// Le pack en usage est celui intégré à l'appli (pas un pack importé).
+  bool get integre => _embarque != null;
 
   /// Le manifeste utilisé vient du pack importé (plus récent que l'appli).
   bool get manifesteDuPack => _manifesteDuPack;
@@ -88,6 +100,8 @@ class PackAudio extends ChangeNotifier {
   /// disque, ou adresse à côté de l'appli sur le web.
   Source versSource(SourceSon source) => switch (source) {
         SourceAsset() => AssetSource(source.chemin),
+        SourcePack() when _embarque != null =>
+          AssetSource('pack/${_embarque![source.chemin] ?? _embarque![nfc(source.chemin)] ?? source.chemin}'),
         SourcePack() => kIsWeb
             ? UrlSource(Uri.base.resolve('$dossier/${source.chemin.split('/').map(Uri.encodeComponent).join('/')}').toString())
             : DeviceFileSource(p.joinAll([_racine ?? '', ...source.chemin.split('/')])),
@@ -103,6 +117,7 @@ class PackAudio extends ChangeNotifier {
     }
     _manifeste = appli;
     _manifesteDuPack = false;
+    _embarque = null;
     try {
       if (kIsWeb) {
         await _chargerWeb(appli);
@@ -112,6 +127,18 @@ class PackAudio extends ChangeNotifier {
     } catch (e) {
       debugPrint('Pack audio : rien de chargé ($e)');
       _index = IndexPack.vide;
+    }
+    // Rien d'importé : le pack intégré à l'appli, s'il est là.
+    if (_index.estVide && !kIsWeb) {
+      _manifeste = appli;
+      _manifesteDuPack = false;
+      try {
+        await _chargerEmbarque(appli);
+      } catch (e) {
+        debugPrint('Pack audio : pas de pack intégré ($e)');
+        _embarque = null;
+        _index = IndexPack.vide;
+      }
     }
     _charge = true;
     notifyListeners();
@@ -160,6 +187,25 @@ class PackAudio extends ChangeNotifier {
     final m = await http.get(Uri.base.resolve('$dossier/$kNomManifestePack'));
     if (m.statusCode == 200) _prendreManifeste(appli, jsonDecode(utf8.decode(m.bodyBytes)) as Map<String, dynamic>);
   }
+
+  /// Le pack intégré : `assets/pack/index.json` (livré par l'asset pack
+  /// Android `destiny_pack`), qui fait le lien chemin du pack → fichier.
+  Future<void> _chargerEmbarque(ManifesteAudio? appli) async {
+    final j = jsonDecode(await rootBundle.loadString('$dossierEmbarque/index.json', cache: false)) as Map<String, dynamic>;
+    final table = <String, String>{
+      for (final e in (j['fichiers'] as Map<String, dynamic>? ?? const {}).entries) nfc(e.key): '${e.value}',
+    };
+    if (table.isEmpty) return;
+    _embarque = table;
+    _index = IndexPack(table.keys);
+    try {
+      final m = await rootBundle.loadString('$dossierEmbarque/$kNomManifestePack', cache: false);
+      _prendreManifeste(appli, jsonDecode(m) as Map<String, dynamic>);
+    } catch (_) {}
+  }
+
+  /// Le dossier du pack intégré, parmi les assets de l'appli.
+  static const String dossierEmbarque = 'assets/pack';
 
   void _progression(int n) {
     _importTraites = n;
