@@ -72,7 +72,32 @@ class RegieSonScreen extends StatelessWidget {
               _Curseur(k('fondu_sortie'), v.fonduSortie, 0, 6, 12, (x) => change((v) => v.fonduSortie = x), suffixe: 's'),
               _Bascule(k('repli_famille'), v.repliFamille, (x) => change((v) => v.repliFamille = x),
                   aide: k('repli_famille_aide')),
-              _Bascule(k('boucle'), v.boucle, (x) => change((v) => v.boucle = x)),
+              _Bascule(k('boucle'), v.boucle, (x) => change((v) => v.boucle = x), aide: k('boucle_aide')),
+              _Bascule(k('decrescendo'), v.decrescendo, (x) => change((v) => v.decrescendo = x),
+                  aide: k('decrescendo_aide', {
+                    'apres': v.decrescendoApres.round().toString(),
+                    'depart': (v.decrescendoDepart * 100).round().toString(),
+                  })),
+              if (v.decrescendo) ...[
+                _Curseur(k('decrescendo_apres'), v.decrescendoApres, 5, 180, 35, (x) => change((v) => v.decrescendoApres = x),
+                    suffixe: 's'),
+                _Curseur(k('decrescendo_depart'), v.decrescendoDepart, 0, 1, 20,
+                    (x) => change((v) => v.decrescendoDepart = x),
+                    pourcent: true),
+              ],
+            ]),
+            SectionDestiny(titre: k('echauffement'), enfants: [
+              Paragraphe(k('echauffement_aide'), italique: true),
+              Wrap(spacing: 8, runSpacing: 6, children: [
+                for (final o in const ['aucune', 'lieu', 'acte1'])
+                  ChoiceChip(
+                    label: Text(k('echauffement_$o')),
+                    selected: v.musiqueEchauffement == o,
+                    onSelected: (_) => change((v) => v.musiqueEchauffement = o),
+                  ),
+              ]),
+              _Curseur(k('volume'), v.volumeEchauffement, 0, 1, 20, (x) => change((v) => v.volumeEchauffement = x),
+                  pourcent: true),
             ]),
             SectionDestiny(titre: k('son_destiny'), enfants: [
               _ChoixEffet(k('son_ouverture'), v.sonOuverture, (x) => change((v) => v.sonOuverture = x)),

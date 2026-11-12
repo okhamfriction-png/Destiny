@@ -636,6 +636,14 @@
     "regle": "L'alarmiste est toujours là. Les autres se choisissent ou se tirent pour que chaque famille soit représentée. Le leader est facultatif. Le leader et le gardien de l'ordre peuvent jouer ensemble.",
     "par_nombre": [
       {
+        "joueurs": 3,
+        "alarmiste": 1,
+        "tient": 1,
+        "interprete": 0,
+        "fissure": 1,
+        "au_choix": 0
+      },
+      {
         "joueurs": 4,
         "alarmiste": 1,
         "tient": 1,

@@ -271,7 +271,8 @@ class ExempleDistribution {
   final String plusACinq;
   final String plusASix;
 
-  /// Les archétypes de l'exemple pour [joueurs] (4, 5 ou 6).
+  /// Les archétypes de l'exemple pour [joueurs] (4, 5 ou 6 ; à 3, voir
+  /// `exemplesDistribution`).
   List<String> pour(int joueurs) => [
         ...aQuatre,
         if (joueurs >= 5) plusACinq,

@@ -239,7 +239,7 @@ List<String> tirerDistribution(
   final rng = hasard ?? Random();
   final compo = g.distribution.pour(joueurs);
   if (compo == null) {
-    throw ArgumentError.value(joueurs, 'joueurs', 'Destiny se joue à 4, 5 ou 6.');
+    throw ArgumentError.value(joueurs, 'joueurs', 'Destiny se joue de 3 à 6.');
   }
   final choisis = <String>[];
   void ajouter(String id) {
@@ -280,10 +280,19 @@ List<String> tirerDistribution(
   return choisis..shuffle(rng);
 }
 
-/// Les exemples tout prêts pour [joueurs] joueurs.
+/// Les exemples tout prêts pour [joueurs] joueurs. À 3, l'exemple à 4 perd
+/// son archétype qui « interprète le danger » en plus de l'alarmiste : il
+/// reste l'alarmiste, celui qui tient et celui qui se fissure.
 List<List<String>> exemplesDistribution(Grammaire g, int joueurs) => [
-      for (final e in g.distribution.exemples) e.pour(joueurs),
+      for (final e in g.distribution.exemples)
+        if (joueurs == 3) _aTrois(g, e.aQuatre) else e.pour(joueurs),
     ];
+
+List<String> _aTrois(Grammaire g, List<String> aQuatre) {
+  final i = aQuatre.indexWhere(
+      (id) => id != Grammaire.alarmisteId && g.archetype(id)?.famille == FamilleId.interprete);
+  return [...aQuatre]..removeAt(i < 0 ? aQuatre.length - 1 : i);
+}
 
 /// Tire un animal parmi les deux de l'archétype.
 String tirerAnimal(Grammaire g, String archetypeId, {Random? hasard}) {

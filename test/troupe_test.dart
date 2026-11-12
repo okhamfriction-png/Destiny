@@ -202,12 +202,11 @@ void main() {
     await tester.tap(find.text(t.t('troupe.fil.miseEnPlace')));
     await tester.pumpAndSettle();
 
-    // La mise en place : lieu, groupe et danger.
+    // La mise en place : le lieu et le danger. Plus de groupe ni de mystère
+    // au spectacle.
+    expect(find.text(t.t('mise_en_place.groupe').toUpperCase()), findsNothing);
+    expect(find.text(t.t('mise_en_place.mystere').toUpperCase()), findsNothing);
     await tester.tap(find.byType(ChoiceChip).first);
-    await tester.pump();
-    // Le bouton du groupe : le groupe tiré d'office peut avoir le même texte
-    // dans le champ.
-    await tester.tap(find.widgetWithText(ActionChip, t.liste('mise_en_place.groupes').first));
     await tester.pump();
     final puceDanger = find.byType(ChoiceChip).at(3);
     await tester.tap(puceDanger);
@@ -235,10 +234,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(s.palierAtteint, 2);
     expect(s.destinys.single.manuel, isTrue);
-    await tester.enterText(find.byType(TextField).last, 'Un silence magnifique');
-    await tester.tap(find.text(t.t('regie.noter')));
-    await tester.pump();
-    expect(s.notes.single.texte, 'Un silence magnifique');
+    // Plus de moments forts, de mystère ni de rappels « Pour la régie ».
+    expect(find.text(t.t('regie.noter')), findsNothing);
+    expect(find.text(t.t('regie.mystere').toUpperCase()), findsNothing);
+    expect(find.text(t.t('regie.rappel').toUpperCase()), findsNothing);
 
     // Terminer, puis le débrief.
     await tester.tap(find.text(t.t('regie.terminer')));

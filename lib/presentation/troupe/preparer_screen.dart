@@ -222,7 +222,7 @@ class _PreparerScreenState extends State<PreparerScreen> {
         SectionDestiny(titre: p('joueurs'), espace: 14, enfants: [
           SegmentedButton<int>(
             segments: [
-              for (final n in [4, 5, 6]) ButtonSegment(value: n, label: Text('$n'))
+              for (final n in [3, 4, 5, 6]) ButtonSegment(value: n, label: Text('$n'))
             ],
             selected: {s.personnages.length},
             onSelectionChanged: (v) => _changerNombre(v.first),

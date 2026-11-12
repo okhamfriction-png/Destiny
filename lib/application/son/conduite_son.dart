@@ -121,7 +121,13 @@ class ConduiteSon extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _appliquer(BusSon b) => lecteurs[b]!.regler((_niveau[b]! * _gain[b]!).clamp(0.0, 1.0));
+  /// Le facteur de l'atténuation progressive (voie musique seulement).
+  double _facteur = 1;
+
+  double _volumeDe(BusSon b) =>
+      (_niveau[b]! * _gain[b]! * (b == BusSon.musique ? _facteur : 1)).clamp(0.0, 1.0);
+
+  Future<void> _appliquer(BusSon b) => lecteurs[b]!.regler(_volumeDe(b));
 
   void _annulerFondu(BusSon b) => _jetonFondu[b] = (_jetonFondu[b] ?? 0) + 1;
 
@@ -148,7 +154,61 @@ class ConduiteSon extends ChangeNotifier {
   Future<void> _jouerSur(BusSon b, SourceSon s, {required double niveau, bool boucle = false}) {
     _annulerFondu(b);
     _niveau[b] = niveau;
-    return lecteurs[b]!.jouer(s, volume: (niveau * _gain[b]!).clamp(0.0, 1.0), boucle: boucle);
+    if (b == BusSon.musique) {
+      _jetonDecrescendo++;
+      _facteur = 1;
+    }
+    return lecteurs[b]!.jouer(s, volume: _volumeDe(b), boucle: boucle);
+  }
+
+  int _jetonDecrescendo = 0;
+
+  /// L'atténuation progressive de la musique qui vient de partir : à partir
+  /// de `decrescendoApres` secondes, elle glisse (3 s) vers `decrescendoDepart`
+  /// puis descend jusqu'à 0 à la fin du morceau, et s'arrête. [dureeS] : la
+  /// durée si on la connaît (manifeste) ; sinon le lecteur la donne.
+  Future<void> _decrescendo(SourceSon source, double? dureeS) async {
+    if (!_v.decrescendo) return;
+    final jeton = _jetonDecrescendo;
+    final l = lecteurs[BusSon.musique]!;
+    bool toujours() => jeton == _jetonDecrescendo && l.enCours == source;
+    var duree = dureeS;
+    for (var i = 0; duree == null && i < 20; i++) {
+      final d = await l.duree();
+      if (d != null && d > Duration.zero) {
+        duree = d.inMilliseconds / 1000;
+      } else {
+        await _attendre(const Duration(milliseconds: 300));
+      }
+      if (!toujours()) return;
+    }
+    final apres = _v.decrescendoApres;
+    final reste = (duree ?? apres + 60) - apres;
+    if (reste <= 0) return;
+    await _attendre(_s(apres));
+    if (!toujours()) return;
+    final f0 = min(1.0, _v.decrescendoDepart / max(_volumeMusique, 0.01));
+    final glisse = min(3.0, reste / 4);
+    const pas = 0.25;
+    final n = max(1, (reste / pas).round());
+    for (var i = 0; i <= n; i++) {
+      if (!toujours()) return;
+      final t = i * pas;
+      _facteur = t < glisse ? 1 + (f0 - 1) * (t / glisse) : f0 * (1 - (t - glisse) / (reste - glisse));
+      _facteur = _facteur.clamp(0.0, 1.0);
+      await _appliquer(BusSon.musique);
+      if (i < n) await _attendre(_s(pas));
+    }
+    if (toujours()) await l.arreter();
+  }
+
+  /// La musique en cours sort en fondu, puis s'arrête (échauffement en pause).
+  Future<void> couperMusique({double fondu = 2}) async {
+    final l = lecteurs[BusSon.musique]!;
+    if (!l.actif) return;
+    final source = l.enCours;
+    await _fondre(BusSon.musique, 0, fondu);
+    if (l.enCours == source) await l.arreter();
   }
 
   /// Attend la fin de ce qui joue sur [b], sans jamais dépasser [max].
@@ -418,12 +478,26 @@ class ConduiteSon extends ChangeNotifier {
     if (chemin == null) return;
     avantMusique?.call();
     _volumeMusique = _v.volumeActe[acte - 1];
-    await _jouerSur(BusSon.musique, SourcePack(chemin, titre: titreMusique(acte)), niveau: 0, boucle: _v.boucle);
+    final source = SourcePack(chemin, titre: titreMusique(acte));
+    await _jouerSur(BusSon.musique, source, niveau: 0, boucle: _v.boucle);
     if (seq != _seq) {
       await lecteurs[BusSon.musique]!.arreter();
       return;
     }
+    unawaited(_decrescendo(source, _dureeMusique(acte, chemin)));
     await _fondre(BusSon.musique, _attenue ? _volumeMusique * _v.attenuation : _volumeMusique, _v.fonduEntree[acte - 1]);
+  }
+
+  /// La durée de la musique d'un acte, si le manifeste la donne pour ce fichier.
+  double? _dureeMusique(int acte, String chemin) {
+    final m = _m?.lieux[_lieuId]?.musiques[acte];
+    if (m != null && pack.index.trouver(m.fichier) == chemin) return m.dureeS;
+    for (final l in _m?.lieux.values ?? const <LieuPack>[]) {
+      for (final x in l.musiques.values) {
+        if (pack.index.trouver(x.fichier) == chemin) return x.dureeS;
+      }
+    }
+    return null;
   }
 
   /// « Acte 2 · Église » : le nom affiché de la musique d'un acte.
@@ -436,7 +510,7 @@ class ConduiteSon extends ChangeNotifier {
 
   /// Un pad de musique : enchaîne en fondu sur la voie musique (une seule
   /// musique à la fois).
-  Future<void> jouerMusique(SourceSon source, {double volume = 0.7, bool boucle = true, double fondu = 1.5}) async {
+  Future<void> jouerMusique(SourceSon source, {double volume = 0.7, bool? boucle, double fondu = 1.5, double? dureeS}) async {
     if (_muet()) return;
     final seq = ++_seq;
     if (lecteurs[BusSon.musique]!.actif) {
@@ -446,8 +520,9 @@ class ConduiteSon extends ChangeNotifier {
     avantMusique?.call();
     _volumeMusique = volume;
     _attenue = false;
-    await _jouerSur(BusSon.musique, source, niveau: 0, boucle: boucle);
+    await _jouerSur(BusSon.musique, source, niveau: 0, boucle: boucle ?? _v.boucle);
     if (seq != _seq) return;
+    unawaited(_decrescendo(source, dureeS));
     await _fondre(BusSon.musique, volume, fondu);
   }
 
@@ -457,7 +532,7 @@ class ConduiteSon extends ChangeNotifier {
     final chemin = r.chemin;
     if (chemin == null) return;
     await jouerMusique(SourcePack(chemin, titre: titreMusique(acte)),
-        volume: _v.volumeActe[acte - 1], boucle: _v.boucle, fondu: 2);
+        volume: _v.volumeActe[acte - 1], fondu: 2, dureeS: _dureeMusique(acte, chemin));
   }
 
   /// Un pad d'effet ponctuel (stinger, Destiny, son embarqué) sur sa voie.

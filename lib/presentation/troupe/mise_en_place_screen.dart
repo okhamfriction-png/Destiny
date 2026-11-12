@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import '../../domain/entities/danger.dart';
 import '../../domain/entities/location.dart';
 import '../../domain/troupe/session.dart';
-import '../../application/prompts/prompts.dart';
 import '../bibliotheque/dangers_lieux_screen.dart';
-import '../destiny/bouton_ia.dart';
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
@@ -17,8 +15,9 @@ import 'regie_screen.dart';
 import 'troupe_screen.dart';
 
 /// La mise en place : le lieu et le danger tirés à la préparation (chacun
-/// avec sa bulle d'info), que le public peut changer par un vote ; le groupe ;
-/// le mystère ; le chrono et ses trois Destiny.
+/// avec sa bulle d'info), que le public peut changer par un vote ; le chrono
+/// et ses trois Destiny. Plus de groupe ni de mystère au spectacle (2.2.0) :
+/// leurs champs restent dans la session, pour les anciennes sauvegardes.
 class MiseEnPlaceScreen extends StatefulWidget {
   const MiseEnPlaceScreen({super.key, required this.contexte, required this.session});
 
@@ -35,9 +34,6 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
   List<Danger> _dangers = const [];
   List<Location> _propLieux = const [];
   List<Danger> _propDangers = const [];
-  late final TextEditingController _groupe = TextEditingController(text: s.groupe);
-  late final TextEditingController _mystere = TextEditingController(text: s.mystere);
-  late final TextEditingController _reponse = TextEditingController(text: s.reponseMystere);
   /// Le chrono de la session parmi ceux des réglages, reconnu à sa durée
   /// (ses Destiny ont pu être déplacés à la main) ; celui des réglages sinon.
   late int _chrono = _chronoDeLaSession() ?? widget.contexte.reglages.chronoChoisi;
@@ -64,15 +60,6 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
   void initState() {
     super.initState();
     _charger();
-    // Un groupe déjà tiré, comme le lieu et le danger : on peut le changer,
-    // mais rien n'empêche de lever le rideau.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || s.groupe.trim().isNotEmpty) return;
-      setState(() {
-        tirerGroupeSiVide(s, context.textes, hasard: _hasard);
-        _groupe.text = s.groupe;
-      });
-    });
     // La session a toujours un chrono : le fil des étapes peut mener à la
     // régie sans passer par « Lever le rideau ». Les Destiny déplacés à la
     // main restent.
@@ -114,9 +101,6 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
 
   @override
   void dispose() {
-    _groupe.dispose();
-    _mystere.dispose();
-    _reponse.dispose();
     super.dispose();
   }
 
@@ -144,33 +128,6 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
         ),
       );
 
-  /// L'IA propose le mystère et sa réponse ; elle ne remplit que ce
-  /// qui est encore vide.
-  Future<void> _proposerAvecIa() async {
-    final r = await widget.contexte.ia!.miseEnPlace(
-      ScenePrompt(
-        lieu: s.lieuNom,
-        groupe: s.groupe,
-        danger: s.dangerNom,
-        paliers: s.paliers,
-        mystere: s.mystere,
-      ),
-      kids: s.kids,
-    );
-    if (!mounted) return;
-    setState(() {
-      if (s.mystere.trim().isEmpty && r.mystere.isNotEmpty) {
-        s.mystere = r.mystere;
-        _mystere.text = r.mystere;
-      }
-      if (s.reponseMystere.trim().isEmpty && r.reponse.isNotEmpty) {
-        s.reponseMystere = r.reponse;
-        _reponse.text = r.reponse;
-      }
-    });
-    await widget.contexte.store.enregistrer(s);
-  }
-
   @override
   Widget build(BuildContext context) {
     final t = context.textes;
@@ -178,7 +135,6 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
     String m(String k, [Map<String, String> v = const {}]) => t.t('mise_en_place.$k', v);
     final chronos = widget.contexte.reglages.chronos;
     final pret = s.lieuNom.isNotEmpty && s.dangerNom.isNotEmpty;
-    final liens = (widget.contexte.relations?.links ?? const []).take(2).toList();
     final source = widget.contexte.visuels.source;
 
     return PageDestiny(
@@ -214,27 +170,6 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
             },
           ),
         ]),
-        SectionDestiny(titre: m('groupe'), enfants: [
-          Text(m('groupe_aide'), style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: 6),
-          Wrap(spacing: 6, runSpacing: 6, children: [
-            for (final gr in t.liste('mise_en_place.groupes'))
-              ActionChip(
-                label: Text(gr),
-                onPressed: () => setState(() {
-                  _groupe.text = gr;
-                  s.groupe = gr;
-                }),
-              ),
-          ]),
-          const SizedBox(height: 8),
-          TextField(controller: _groupe, onChanged: (v) => setState(() => s.groupe = v.trim())),
-          if (liens.isNotEmpty) ...[
-            const SizedBox(height: 10),
-            Text(m('liens'), style: Theme.of(context).textTheme.bodySmall),
-            for (final l in liens) Puce(l.texte),
-          ],
-        ]),
         SectionDestiny(titre: m('danger'), enfants: [
           LigneDecor(
             dossier: 'dangers',
@@ -262,24 +197,6 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
             const SizedBox(height: 14),
             FrisePaliers(textes: s.paliers),
           ],
-        ]),
-        if (widget.contexte.ia != null)
-          BoutonIA(
-            libelle: t.t('ia_jeu.proposer_mystere'),
-            disponible: widget.contexte.ia!.disponible,
-            action: _proposerAvecIa,
-          ),
-        SectionDestiny(titre: m('mystere'), enfants: [
-          Text(m('mystere_aide'), style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: 6),
-          TextField(controller: _mystere, onChanged: (v) => s.mystere = v.trim(), maxLines: 2),
-          const SizedBox(height: 8),
-          TextField(
-            controller: _reponse,
-            decoration: InputDecoration(labelText: m('reponse'), helperText: m('reponse_aide'), helperMaxLines: 2),
-            onChanged: (v) => s.reponseMystere = v.trim(),
-            maxLines: 2,
-          ),
         ]),
         SectionDestiny(titre: m('chrono'), enfants: [
           Wrap(spacing: 8, runSpacing: 8, children: [

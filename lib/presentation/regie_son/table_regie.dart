@@ -20,74 +20,227 @@ import 'apparence_sons.dart';
 import 'pack_audio_screen.dart';
 import 'regie_son_screen.dart';
 
-/// Ouvre la table de régie en plein écran, par-dessus la régie : le chrono
-/// continue pendant ce temps. [contenu] remplace la table (la régie y met sa
-/// tablette son, qui l'enveloppe).
-Future<void> ouvrirTableRegie(BuildContext context, ContexteTroupe contexte, SessionTroupe session, {Widget? contenu}) {
+/// Le spectacle vu depuis la table de régie : le chrono, l'acte, la pause et
+/// DESTINY. La table ne fait jamais perdre le spectacle de vue.
+class PiloteSpectacle {
+  const PiloteSpectacle({
+    required this.change,
+    required this.reste,
+    required this.acte,
+    required this.enMarche,
+    required this.basculer,
+    required this.libelleBasculer,
+    required this.destiny,
+    required this.libelleDestiny,
+  });
+
+  /// Prévient à chaque seconde et à chaque changement de la régie.
+  final Listenable change;
+
+  /// Le temps qui reste (« 28:43 »).
+  final String Function() reste;
+
+  /// « Acte 2 — Il enferme ».
+  final String Function() acte;
+  final bool Function() enMarche;
+  final VoidCallback basculer;
+
+  /// « Démarrer », « Pause » ou « Reprendre ».
+  final String Function() libelleBasculer;
+
+  /// L'action du bouton DESTINY, ou null quand aucun ne peut partir.
+  final VoidCallback? Function() destiny;
+  final String Function() libelleDestiny;
+}
+
+/// Ouvre la table de régie en pop-up, par-dessus la régie : par le bas sur un
+/// téléphone, au centre sur un grand écran. Un appui à côté ou la croix la
+/// ferme. Avec [pilote], le chrono et DESTINY restent sous la main. [contenu]
+/// remplace la table (la régie y met sa tablette son, qui l'enveloppe).
+Future<void> ouvrirTableRegie(
+  BuildContext context,
+  ContexteTroupe contexte,
+  SessionTroupe session, {
+  Widget? contenu,
+  PiloteSpectacle? pilote,
+}) {
   final t = context.textes;
   return showGeneralDialog<void>(
     context: context,
-    barrierDismissible: false,
-    barrierColor: Colors.black87,
-    transitionDuration: const Duration(milliseconds: 220),
-    pageBuilder: (ctx, _, __) => Theme(
-      data: themeConsole(Theme.of(ctx)),
-      child: Scaffold(
-        backgroundColor: Console.fond,
-        body: SafeArea(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1180),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 6, 0),
-                  child: Row(children: [
-                    const Icon(Icons.tune_rounded, color: Console.or),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        t.t('regie_son.titre').toUpperCase(),
-                        style: const TextStyle(
-                          fontFamily: kPoliceTitres,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 20,
-                          letterSpacing: 2,
-                          color: Console.or,
+    barrierDismissible: true,
+    barrierLabel: t.t('regie.son_fermer'),
+    barrierColor: Colors.black54,
+    transitionDuration: const Duration(milliseconds: 240),
+    pageBuilder: (ctx, _, __) {
+      final taille = MediaQuery.sizeOf(ctx);
+      final large = taille.width >= 720;
+      return Theme(
+        data: themeConsole(Theme.of(ctx)),
+        child: SafeArea(
+          child: Align(
+            alignment: large ? Alignment.center : Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.all(large ? 24 : 6),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 1100, maxHeight: taille.height * (large ? 0.9 : 0.86)),
+                child: Material(
+                  color: Console.fond,
+                  elevation: 18,
+                  clipBehavior: Clip.antiAlias,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    side: BorderSide(color: Console.or.withValues(alpha: 0.35)),
+                  ),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 6, 4, 0),
+                      child: Row(children: [
+                        const Icon(Icons.tune_rounded, color: Console.or),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            t.t('regie_son.titre').toUpperCase(),
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontFamily: kPoliceTitres,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 18,
+                              letterSpacing: 2,
+                              color: Console.or,
+                            ),
+                          ),
                         ),
-                      ),
+                        if (contexte.regieSon != null)
+                          IconButton(
+                            tooltip: t.t('regie_son.reglages'),
+                            icon: const Icon(Icons.settings_rounded, color: Console.doux),
+                            onPressed: () => Navigator.of(ctx).push(MaterialPageRoute<void>(
+                                builder: (_) => RegieSonScreen(regieSon: contexte.regieSon!, musique: contexte.musique))),
+                          ),
+                        IconButton(
+                          key: const ValueKey('fermer_regie_son'),
+                          tooltip: t.t('regie.son_fermer'),
+                          icon: const Icon(Icons.close_rounded, color: Console.texte),
+                          onPressed: () => Navigator.pop(ctx),
+                        ),
+                      ]),
                     ),
-                    if (contexte.regieSon != null)
-                      IconButton(
-                        tooltip: t.t('regie_son.reglages'),
-                        icon: const Icon(Icons.settings_rounded, color: Console.doux),
-                        onPressed: () => Navigator.of(ctx).push(MaterialPageRoute<void>(
-                            builder: (_) => RegieSonScreen(regieSon: contexte.regieSon!, musique: contexte.musique))),
+                    if (pilote != null)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+                        child: _BarrePilote(pilote: pilote),
                       ),
-                    IconButton(
-                      key: const ValueKey('fermer_regie_son'),
-                      tooltip: t.t('regie.son_fermer'),
-                      icon: const Icon(Icons.close_rounded, color: Console.texte),
-                      onPressed: () => Navigator.pop(ctx),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(12, 6, 12, 20),
+                        child: contenu ?? TableRegie(contexte: contexte, session: session),
+                      ),
                     ),
                   ]),
                 ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(14, 4, 14, 24),
-                    child: contenu ?? TableRegie(contexte: contexte, session: session),
-                  ),
-                ),
-              ]),
+              ),
             ),
           ),
         ),
-      ),
-    ),
-    transitionBuilder: (ctx, a, _, enfant) => FadeTransition(
-      opacity: a,
-      child: ScaleTransition(scale: Tween(begin: 0.97, end: 1.0).animate(a), child: enfant),
-    ),
+      );
+    },
+    transitionBuilder: (ctx, a, _, enfant) {
+      final courbe = CurvedAnimation(parent: a, curve: Curves.easeOutCubic);
+      return FadeTransition(
+        opacity: courbe,
+        child: SlideTransition(
+          position: Tween(begin: const Offset(0, 0.06), end: Offset.zero).animate(courbe),
+          child: enfant,
+        ),
+      );
+    },
   );
+}
+
+/// Le chrono en petit, en haut de la table : le temps qui reste, l'acte, la
+/// pause et DESTINY.
+class _BarrePilote extends StatelessWidget {
+  const _BarrePilote({required this.pilote});
+
+  final PiloteSpectacle pilote;
+
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+        listenable: pilote.change,
+        builder: (context, _) {
+          final destiny = pilote.destiny();
+          final enMarche = pilote.enMarche();
+          return Container(
+            padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
+            decoration: BoxDecoration(
+              color: Console.panneau,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Console.trait),
+            ),
+            child: LayoutBuilder(builder: (context, contraintes) {
+              final temps = Text(
+                pilote.reste(),
+                key: const ValueKey('pilote_reste'),
+                style: const TextStyle(
+                  fontFamily: kPoliceTitres,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 30,
+                  height: 1,
+                  color: Console.or,
+                ),
+              );
+              final acte = Text(
+                pilote.acte(),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 13, color: Console.texte),
+              );
+              final basculer = IconButton.filled(
+                key: const ValueKey('pilote_basculer'),
+                tooltip: pilote.libelleBasculer(),
+                style: const ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(Console.or),
+                  foregroundColor: WidgetStatePropertyAll(Color(0xFF141414)),
+                ),
+                onPressed: pilote.basculer,
+                icon: Icon(enMarche ? Icons.pause_rounded : Icons.play_arrow_rounded),
+              );
+              final bouton = FilledButton.icon(
+                key: const ValueKey('pilote_destiny'),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Console.bleuDestiny,
+                  foregroundColor: Colors.white,
+                  disabledBackgroundColor: Console.trait,
+                  minimumSize: const Size(48, 44),
+                  textStyle: const TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w900, fontSize: 15),
+                ),
+                onPressed: destiny,
+                icon: const Icon(Icons.flash_on_rounded, size: 18),
+                label: Text(pilote.libelleDestiny().toUpperCase(), maxLines: 1, overflow: TextOverflow.ellipsis),
+              );
+              final ligne = Row(children: [
+                Flexible(child: FittedBox(fit: BoxFit.scaleDown, child: temps)),
+                const SizedBox(width: 12),
+                Expanded(child: acte),
+                basculer,
+              ]);
+              // Étroit (téléphone) : DESTINY sur sa propre ligne, en grand.
+              if (contraintes.maxWidth < 560) {
+                return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                  ligne,
+                  const SizedBox(height: 8),
+                  bouton,
+                ]);
+              }
+              return Row(children: [
+                Expanded(child: ligne),
+                const SizedBox(width: 8),
+                bouton,
+              ]);
+            }),
+          );
+        },
+      );
 }
 
 /// Le thème sombre de la console, quel que soit celui de l'appli.
@@ -563,7 +716,7 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
                   if (joue.contains('asset:${p.file}')) {
                     c != null ? c.arreterBus(BusSon.musique) : _musique.stop();
                   } else if (c != null) {
-                    c.jouerMusique(SourceAsset(p.file, titre: p.title), boucle: true);
+                    c.jouerMusique(SourceAsset(p.file, titre: p.title));
                   } else {
                     _musique.playTrack(p, forceLoop: true);
                   }

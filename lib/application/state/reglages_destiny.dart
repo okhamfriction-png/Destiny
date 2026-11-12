@@ -323,7 +323,7 @@ class ReglagesDestiny extends ChangeNotifier {
     _rappelPremierFige = rappelPremierFige ?? _rappelPremierFige;
     _rappelsRegie = rappelsRegie ?? _rappelsRegie;
     _reduireAnimations = reduireAnimations ?? _reduireAnimations;
-    _joueursParDefaut = (joueursParDefaut ?? _joueursParDefaut).clamp(4, 6);
+    _joueursParDefaut = (joueursParDefaut ?? _joueursParDefaut).clamp(3, 6);
     _modeDistribution = modeDistribution ?? _modeDistribution;
     _leaderObligatoire = leaderObligatoire ?? _leaderObligatoire;
     _moduleTraitre = moduleTraitre ?? _moduleTraitre;

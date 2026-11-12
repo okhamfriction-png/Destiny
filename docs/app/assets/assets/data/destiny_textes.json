@@ -17,7 +17,7 @@
   },
   "distribution": {
     "ok": "Distribution équilibrée : chaque famille est là, et l'alarmiste porte le danger.",
-    "nombre": "Destiny se joue à 4, 5 ou 6 joueurs.",
+    "nombre": "Destiny se joue de 3 à 6 joueurs.",
     "sans_alarmiste": "Il manque l'alarmiste : c'est lui qui porte le danger.",
     "deux_alarmistes": "Un seul alarmiste suffit : c'est lui qui apporte chaque nouvelle.",
     "famille_manquante": "Il manque quelqu'un qui {famille}. {pourquoi}",
@@ -541,7 +541,7 @@
   },
   "mise_en_place": {
     "titre": "La mise en place",
-    "intro": "Le lieu et le danger sont déjà tirés : le public peut les changer. Puis le groupe, le mystère et le chrono.",
+    "intro": "Le lieu et le danger sont déjà tirés : le public peut les changer. Puis le chrono et ses trois Destiny.",
     "lieu": "Le lieu",
     "groupe": "Le groupe",
     "danger": "Le danger",
@@ -609,7 +609,9 @@
     "son_mixeur": "Tout le mixeur",
     "son_en_cours": "En cours : {titre}",
     "son_coupe": "Le son est coupé.",
-    "son_remettre": "Remettre le son"
+    "son_remettre": "Remettre le son",
+    "paliers": "Les paliers du danger",
+    "archetypes": "Les archétypes à ce palier"
   },
   "regie_son": {
     "titre": "Table de régie",
@@ -759,7 +761,17 @@
       "ouverture": "Ouverture",
       "destiny_n": "Destiny {n}",
       "stop": "Stop",
-      "remettre": "Remettre les réglages de départ"
+      "remettre": "Remettre les réglages de départ",
+      "boucle_aide": "Sinon, elle s'arrête toute seule à la fin du morceau.",
+      "decrescendo": "Atténuation progressive",
+      "decrescendo_aide": "À partir de {apres} s, la musique descend vers {depart} %, puis jusqu'au silence à la fin du morceau.",
+      "decrescendo_apres": "À partir de",
+      "decrescendo_depart": "Volume au départ de la descente",
+      "echauffement": "L'échauffement",
+      "echauffement_aide": "La musique qui part avec le minuteur de l'échauffement. Elle sort en fondu à la pause, et la régie la fait sortir au début du spectacle.",
+      "echauffement_aucune": "Aucune",
+      "echauffement_lieu": "Ambiance du lieu",
+      "echauffement_acte1": "Musique de l'acte 1"
     },
     "arreter_voie": "Arrêter cette voie"
   },

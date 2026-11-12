@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../application/son/conduite_son.dart';
+import '../../application/son/lecteur_son.dart';
 import '../../domain/grammaire/distribution.dart';
 import '../../domain/troupe/session.dart';
 import '../destiny/bouton_ia.dart';
@@ -35,18 +37,55 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
   void _basculer() {
     if (_enMarche) {
       _minuteur?.cancel();
+      // En pause, la musique de l'échauffement sort en fondu.
+      unawaited(widget.contexte.regieSon?.conduite.couperMusique());
       setState(() {});
       return;
     }
+    _musique();
     _minuteur = Timer.periodic(const Duration(seconds: 1), (t) {
       if (!mounted) return;
       setState(() => _reste = (_reste - 1).clamp(0, 1 << 30));
       if (_reste == 0) {
         t.cancel();
         widget.contexte.audio.playShine();
+        unawaited(widget.contexte.regieSon?.conduite.couperMusique(fondu: 3));
       }
     });
     setState(() {});
+  }
+
+  /// La musique de l'échauffement (réglage de la régie son), lancée avec le
+  /// minuteur : l'ambiance du lieu par défaut. Elle continue jusqu'à la
+  /// régie, où l'ouverture du spectacle la fait sortir en fondu.
+  void _musique() {
+    final regie = widget.contexte.regieSon;
+    if (regie == null || widget.contexte.audio.muted) return;
+    final c = regie.conduite;
+    final s = widget.session;
+    final v = regie.reglages.v;
+    c.preparer(lieuId: s.lieuId, dangerId: s.dangerId, acte: s.palierAtteint);
+    SourceSon? source;
+    switch (v.musiqueEchauffement) {
+      case 'aucune':
+        return;
+      case 'acte1':
+        final chemin = c.musiqueDe(1).chemin;
+        if (chemin != null) source = SourcePack(chemin, titre: c.titreMusique(1));
+      case 'lieu':
+        final nom = s.lieuNom.trim().toLowerCase();
+        for (final p in widget.contexte.musique.tracks) {
+          if (p.category == 'Lieux' && p.title.trim().toLowerCase() == nom) {
+            source = SourceAsset(p.file, titre: p.title);
+          }
+        }
+      default:
+        source = SourceAsset(v.musiqueEchauffement, titre: v.musiqueEchauffement.split('/').last);
+    }
+    // Déjà en train de jouer (reprise après une pause) : on ne relance pas.
+    final enCours = c.lecteurs[BusSon.musique]!.enCours;
+    if (source == null || enCours?.cle == source.cle) return;
+    c.jouerMusique(source, volume: v.volumeEchauffement, fondu: 3);
   }
 
   @override

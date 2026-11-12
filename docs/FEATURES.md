@@ -51,21 +51,21 @@ On peut les passer, et les revoir depuis la Bibliothèque ou les Réglages.
 
 L'accueil montre la promesse et, un jour sur deux, la règle d'or ou la réplique du jour. Puis :
 
-1. **Préparer** : spectacle ou répétition, 4, 5 ou 6 joueurs.
+1. **Préparer** : spectacle ou répétition, 3, 4, 5 ou 6 joueurs.
    - La distribution se fait par choix concerté, tirage équilibré ou exemple tout prêt.
    - L'alarmiste est toujours là, et chaque famille est représentée. Une distribution déséquilibrée est refusée, avec une phrase qui dit pourquoi et une correction en un geste.
    - Chaque joueur choisit son animal parmi les deux de son archétype.
-2. **L'échauffement** : la carte de chaque joueur, les trois questions (« Comment je me tiens ? »…), la limite (« le corps, pas l'histoire ») et un minuteur.
+2. **L'échauffement** : la carte de chaque joueur, les trois questions (« Comment je me tiens ? »…), la limite (« le corps, pas l'histoire ») et un minuteur, qui lance la musique de l'échauffement.
 3. **Avant d'entrer en scène** : les règles d'or, les quatre paliers et la phrase des débriefs. Aucune critique.
-4. **La mise en place** : trois lieux et trois dangers à voter à main levée (ou un choix libre), le groupe, deux liens pour commencer, le mystère et sa réponse, le chrono (20, 30 ou 45 min). Avec l'IA, l'appli peut proposer le mystère.
+4. **La mise en place** : trois lieux et trois dangers à voter à main levée (ou un choix libre), et le chrono (20, 30 ou 45 min).
 5. **La régie** :
-   - un gros chrono et l'acte en cours ;
+   - un gros chrono et l'acte en cours, puis trois cadres : le lieu et le danger, les paliers du danger, les archétypes à ce palier ;
    - le **bouton Destiny**, réservé à la régie. Il se déclenche aussi tout seul aux minutes prévues, selon le réglage ;
-   - le rituel en plein écran : le tonnerre, le rire du destin, la lumière bleue, le figé, l'ellipse ; puis la nouvelle de l'alarmiste ;
+   - le rituel en plein écran : le tonnerre, le rire du destin, la lumière bleue, le figé, l'ellipse ; puis la nouvelle de l'alarmiste, qui se ferme seule après 10 secondes sans action ;
    - au premier figé, le rappel de fixer le besoin ;
-   - à chaque acte, le geste (Dire, Bloquer, Nommer, Choisir) ; pour chaque joueur, ce que fait son archétype et le corps de son animal à ce palier ;
+   - pour chaque joueur, ce que fait son archétype et le corps de son animal à ce palier ;
    - à l'acte 4, le dilemme du danger ;
-   - les moments forts notés avec l'heure, et la **table de régie** : la conduite du spectacle, les tranches et les banques de sons par catégorie. Avec le pack audio importé, la **conduite son automatique** enchaîne la musique de chaque acte, le son Destiny et le bruitage du danger.
+   - la **table de régie**, en pop-up avec le chrono et DESTINY : la conduite du spectacle, les tranches et les banques de sons par catégorie. Avec le pack audio importé, la **conduite son automatique** enchaîne la musique de chaque acte, le son Destiny et le bruitage du danger.
 6. **Le débrief**, pour chaque personnage : « il veut… mais il a besoin de… », face à la phrase fixée au premier figé ; le choix de l'acte 4 et le prix payé ; ce qui a marché. Avec l'IA, un coach peut proposer ses phrases (les prénoms ne partent pas).
 7. **L'historique** des spectacles et des répétitions, chacun exportable en **PDF**.
 

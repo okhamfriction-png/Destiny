@@ -18,7 +18,22 @@ class ValeursRegieSon {
   double fonduSortie = 2;
   List<double> silenceAvant = [0, 0, 0, 2];
   bool repliFamille = true;
-  bool boucle = true;
+
+  /// La musique tourne en boucle (sinon elle s'arrête à la fin du morceau).
+  bool boucle = false;
+
+  /// Atténuation progressive : à partir de [decrescendoApres] secondes, la
+  /// musique glisse vers [decrescendoDepart] puis descend jusqu'à 0 à la fin
+  /// du morceau, où elle s'arrête.
+  bool decrescendo = true;
+  double decrescendoApres = 30;
+  double decrescendoDepart = 0.5;
+
+  /// La musique de l'échauffement, lancée avec son minuteur : « aucune »,
+  /// « lieu » (l'ambiance du lieu), « acte1 » (la musique de l'acte 1 du
+  /// pack) ou le chemin d'une piste de la bibliothèque.
+  String musiqueEchauffement = 'lieu';
+  double volumeEchauffement = 0.6;
 
   // Son Destiny (clés de `AudioService.effets`).
   String sonOuverture = 'storm';
@@ -66,7 +81,13 @@ class ValeursRegieSon {
         'fondu_sortie': fonduSortie,
         'silence_avant': silenceAvant,
         'repli_famille': repliFamille,
-        'boucle': boucle,
+        // « boucle_v2 » : avant la 2.2.0, la boucle était active par défaut.
+        'boucle_v2': boucle,
+        'decrescendo': decrescendo,
+        'decrescendo_apres': decrescendoApres,
+        'decrescendo_depart': decrescendoDepart,
+        'musique_echauffement': musiqueEchauffement,
+        'volume_echauffement': volumeEchauffement,
         'son_ouverture': sonOuverture,
         'son_destiny': sonDestiny,
         'chevauchement': chevauchement,
@@ -110,7 +131,12 @@ class ValeursRegieSon {
       ..fonduSortie = d('fondu_sortie', v.fonduSortie)
       ..silenceAvant = _quatre(j['silence_avant'], v.silenceAvant, nombre)
       ..repliFamille = b('repli_famille', v.repliFamille)
-      ..boucle = b('boucle', v.boucle)
+      ..boucle = b('boucle_v2', v.boucle)
+      ..decrescendo = b('decrescendo', v.decrescendo)
+      ..decrescendoApres = d('decrescendo_apres', v.decrescendoApres)
+      ..decrescendoDepart = d('decrescendo_depart', v.decrescendoDepart)
+      ..musiqueEchauffement = j['musique_echauffement'] as String? ?? v.musiqueEchauffement
+      ..volumeEchauffement = d('volume_echauffement', v.volumeEchauffement)
       ..sonOuverture = j['son_ouverture'] as String? ?? v.sonOuverture
       ..sonDestiny = j['son_destiny'] as String? ?? v.sonDestiny
       ..chevauchement = d('chevauchement', v.chevauchement)

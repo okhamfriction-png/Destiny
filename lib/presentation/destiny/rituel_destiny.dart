@@ -17,7 +17,12 @@ class ReglagesRituel {
     this.texteEllipse,
     this.reduireAnimations = false,
     this.rappelPremierFige = true,
+    this.fermetureAuto = const Duration(seconds: 10),
   });
+
+  /// La carte de l'acte se ferme seule après ce temps sans action (null :
+  /// elle attend « Reprendre »).
+  final Duration? fermetureAuto;
 
   final bool lumiereBleue;
   final Duration dureeFige;
@@ -87,9 +92,9 @@ class _RituelDestinyState extends State<RituelDestiny> with SingleTickerProvider
   late final AnimationController _secousse =
       AnimationController(vsync: this, duration: const Duration(milliseconds: 700));
   final List<Timer> _minuteurs = [];
+  Timer? _fermeture;
 
-  bool get _reduit =>
-      widget.reglages.reduireAnimations || MediaQuery.maybeDisableAnimationsOf(context) == true;
+  bool get _reduit => widget.reglages.reduireAnimations || MediaQuery.maybeDisableAnimationsOf(context) == true;
 
   @override
   void initState() {
@@ -111,13 +116,31 @@ class _RituelDestinyState extends State<RituelDestiny> with SingleTickerProvider
     ];
     for (final (delai, etape) in etapes) {
       _minuteurs.add(Timer(delai, () {
-        if (mounted) setState(() => _etape = etape);
+        if (mounted) _aller(etape);
       }));
     }
   }
 
+  /// Passe à [etape]. Sur la carte de l'acte, la fermeture automatique part.
+  void _aller(EtapeRituel etape) {
+    setState(() => _etape = etape);
+    if (etape == EtapeRituel.palier) _relancerFermeture();
+  }
+
+  /// La carte se ferme seule après [ReglagesRituel.fermetureAuto] sans action :
+  /// chaque toucher relance le compte.
+  void _relancerFermeture() {
+    final d = widget.reglages.fermetureAuto;
+    if (d == null || _etape != EtapeRituel.palier) return;
+    _fermeture?.cancel();
+    _fermeture = Timer(d, () {
+      if (mounted) Navigator.of(context).maybePop();
+    });
+  }
+
   @override
   void dispose() {
+    _fermeture?.cancel();
     for (final t in _minuteurs) {
       t.cancel();
     }
@@ -154,56 +177,59 @@ class _RituelDestinyState extends State<RituelDestiny> with SingleTickerProvider
         final dx = _reduit ? 0.0 : math.sin(v * math.pi * 10) * 9 * (1 - v);
         return Transform.translate(offset: Offset(dx, 0), child: child);
       },
-      child: Material(
-        type: MaterialType.transparency,
-        child: Stack(fit: StackFit.expand, children: [
-          // Le figé : l'écran derrière se fige (flou et désaturé).
-          BackdropFilter(filter: flou, child: const SizedBox.expand()),
-          // L'éclair du tonnerre.
-          AnimatedOpacity(
-            opacity: _etape == EtapeRituel.tonnerre && !_reduit ? 0.75 : 0,
-            duration: const Duration(milliseconds: 180),
-            child: const ColoredBox(color: Colors.white),
-          ),
-          // La lumière bleue.
-          AnimatedOpacity(
-            opacity: voile ? 0.62 : (avance >= EtapeRituel.ellipse.index ? 0.62 : 0),
-            duration: Duration(milliseconds: _reduit ? 150 : 700),
-            child: ColoredBox(color: c.bleuDestiny),
-          ),
-          if (avance >= EtapeRituel.ellipse.index)
-            const ColoredBox(color: Color(0x88000000)),
-          SafeArea(
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: AnimatedSwitcher(
-                  duration: Duration(milliseconds: _reduit ? 120 : 500),
-                  child: _contenu(context, palier),
+      child: Listener(
+        // Un toucher, c'est une action : la carte reste encore 10 s.
+        onPointerDown: (_) => _relancerFermeture(),
+        child: Material(
+          type: MaterialType.transparency,
+          child: Stack(fit: StackFit.expand, children: [
+            // Le figé : l'écran derrière se fige (flou et désaturé).
+            BackdropFilter(filter: flou, child: const SizedBox.expand()),
+            // L'éclair du tonnerre.
+            AnimatedOpacity(
+              opacity: _etape == EtapeRituel.tonnerre && !_reduit ? 0.75 : 0,
+              duration: const Duration(milliseconds: 180),
+              child: const ColoredBox(color: Colors.white),
+            ),
+            // La lumière bleue.
+            AnimatedOpacity(
+              opacity: voile ? 0.62 : (avance >= EtapeRituel.ellipse.index ? 0.62 : 0),
+              duration: Duration(milliseconds: _reduit ? 150 : 700),
+              child: ColoredBox(color: c.bleuDestiny),
+            ),
+            if (avance >= EtapeRituel.ellipse.index) const ColoredBox(color: Color(0x88000000)),
+            SafeArea(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: AnimatedSwitcher(
+                    duration: Duration(milliseconds: _reduit ? 120 : 500),
+                    child: _contenu(context, palier),
+                  ),
                 ),
               ),
             ),
-          ),
-          // Pendant le figé : chaque étape du rituel, en petit.
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 24,
-            child: _Frise(etape: _etape, libelles: t.liste('rituel.etapes_courtes')),
-          ),
-          if (_etape != EtapeRituel.palier)
+            // Pendant le figé : chaque étape du rituel, en petit.
             Positioned(
-              top: 8,
-              right: 8,
-              child: SafeArea(
-                child: TextButton(
-                  onPressed: () => setState(() => _etape = EtapeRituel.palier),
-                  style: TextButton.styleFrom(foregroundColor: Colors.white70),
-                  child: const Icon(Icons.skip_next_rounded),
+              left: 0,
+              right: 0,
+              bottom: 24,
+              child: _Frise(etape: _etape, libelles: t.liste('rituel.etapes_courtes')),
+            ),
+            if (_etape != EtapeRituel.palier)
+              Positioned(
+                top: 8,
+                right: 8,
+                child: SafeArea(
+                  child: TextButton(
+                    onPressed: () => _aller(EtapeRituel.palier),
+                    style: TextButton.styleFrom(foregroundColor: Colors.white70),
+                    child: const Icon(Icons.skip_next_rounded),
+                  ),
                 ),
               ),
-            ),
-        ]),
+          ]),
+        ),
       ),
     );
   }
@@ -358,8 +384,7 @@ class _CartePalier extends StatelessWidget {
               border: Border.all(color: c.or),
               borderRadius: BorderRadius.circular(99),
             ),
-            child: Text(geste!,
-                style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, color: c.or)),
+            child: Text(geste!, style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, color: c.or)),
           ),
         ],
         const SizedBox(height: 18),

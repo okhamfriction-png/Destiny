@@ -730,7 +730,8 @@ void main() {
       }
       expect(find.textContaining('Objet 1'), findsNothing);
       expect(find.textContaining('trois objets'), findsNothing);
-      expect(find.textContaining(RegExp('mystère', caseSensitive: false)), findsWidgets);
+      // Le mystère n'est plus au spectacle (2.2.0).
+      expect(find.textContaining(RegExp('mystère', caseSensitive: false)), findsNothing);
     }
     // Les anciennes données restent dans la sauvegarde.
     expect(SessionTroupe.depuisJson(b.session.versJson()).objets, anciens);

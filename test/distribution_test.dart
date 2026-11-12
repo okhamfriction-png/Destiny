@@ -17,8 +17,8 @@ void main() {
   });
 
   group('validerDistribution', () {
-    test('accepte les quatre exemples à 4, 5 et 6 joueurs', () {
-      for (final n in [4, 5, 6]) {
+    test('accepte les quatre exemples à 3, 4, 5 et 6 joueurs', () {
+      for (final n in [3, 4, 5, 6]) {
         for (final e in exemplesDistribution(g, n)) {
           final v = validerDistribution(g, e);
           expect(v.valide, isTrue, reason: '$n : $e → ${v.raison(g, t)}');
@@ -89,10 +89,18 @@ void main() {
       expect(validerDistribution(g, v.correction!.appliquer(ids)).valide, isTrue);
     });
 
-    test('refuse moins de 4 ou plus de 6 joueurs', () {
-      expect(validerDistribution(g, ['alarmiste', 'leader', 'cynique']).problemes.single.type,
-          TypeProbleme.nombre);
+    test('refuse moins de 3 ou plus de 6 joueurs', () {
+      expect(validerDistribution(g, ['alarmiste', 'leader']).problemes.single.type, TypeProbleme.nombre);
       expect(validerDistribution(g, List.filled(7, 'leader')).valide, isFalse);
+    });
+
+    test('à 3 joueurs : l\'alarmiste, un qui tient, un qui se fissure', () {
+      for (final e in exemplesDistribution(g, 3)) {
+        expect(e, hasLength(3));
+        expect(e, contains('alarmiste'));
+        expect(e.map((id) => g.archetype(id)!.famille).toSet(),
+            containsAll([FamilleId.tient, FamilleId.fissure]), reason: '$e');
+      }
     });
   });
 
@@ -100,7 +108,7 @@ void main() {
     test('rend toujours une distribution équilibrée', () {
       final rng = Random(42);
       for (var i = 0; i < 300; i++) {
-        for (final n in [4, 5, 6]) {
+        for (final n in [3, 4, 5, 6]) {
           final ids = tirerDistribution(g, n, hasard: rng);
           expect(ids, hasLength(n));
           expect(validerDistribution(g, ids).valide, isTrue, reason: '$ids');
@@ -118,8 +126,9 @@ void main() {
       }
     });
 
-    test('n\'existe pas à 3 joueurs', () {
-      expect(() => tirerDistribution(g, 3), throwsArgumentError);
+    test('n\'existe ni à 2 ni à 7 joueurs', () {
+      expect(() => tirerDistribution(g, 2), throwsArgumentError);
+      expect(() => tirerDistribution(g, 7), throwsArgumentError);
     });
 
     test('tirerAnimal choisit un des deux animaux de l\'archétype', () {

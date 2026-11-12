@@ -6,7 +6,6 @@ import '../../application/son/conduite_son.dart';
 import '../../application/state/reglages_destiny.dart';
 import '../../domain/entities/dilemma.dart';
 import '../../domain/grammaire/modeles.dart';
-import '../../domain/grammaire/progression.dart';
 import '../../domain/troupe/session.dart';
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
@@ -53,7 +52,9 @@ class _RegieScreenState extends State<RegieScreen> {
   bool _demarre = false;
   bool _rituelEnCours = false;
   final List<Timer> _musiques = [];
-  final TextEditingController _note = TextEditingController();
+
+  /// Prévient la table de régie à chaque seconde et à chaque changement.
+  final ValueNotifier<int> _tic = ValueNotifier<int>(0);
   List<Dilemma> _dilemmes = const [];
 
   SessionTroupe get s => widget.session;
@@ -93,7 +94,7 @@ class _RegieScreenState extends State<RegieScreen> {
     // En quittant la régie, plus rien ne joue : ni séquence, ni son orphelin.
     final conduite = _conduite;
     if (conduite != null) unawaited(conduite.stopTout());
-    _note.dispose();
+    _tic.dispose();
     super.dispose();
   }
 
@@ -103,6 +104,7 @@ class _RegieScreenState extends State<RegieScreen> {
       // Une séquence Destiny en cours s'arrête net avec le chrono.
       if (_conduiteActive) unawaited(_conduite!.annulerSequence());
       setState(() {});
+      _tic.value++;
       return;
     }
     if (!_demarre) {
@@ -122,11 +124,13 @@ class _RegieScreenState extends State<RegieScreen> {
     }
     _minuteur = Timer.periodic(const Duration(seconds: 1), (_) => _seconde());
     setState(() {});
+    _tic.value++;
   }
 
   void _seconde() {
     if (!mounted) return;
     setState(() => _ecoule++);
+    _tic.value++;
     if (_ecoule == _total) {
       widget.contexte.audio.playCrack();
       // Pas de coupure automatique (l'impro peut déborder), sauf si on la veut.
@@ -160,6 +164,7 @@ class _RegieScreenState extends State<RegieScreen> {
     _programmerMusiques(s.destinys.length);
     if (!mounted) return;
     setState(() {});
+    _tic.value++;
     final nouvelle = s.paliers.length > nouveau.index ? s.paliers[nouveau.index] : null;
     await lancerRituelDestiny(
       context,
@@ -187,6 +192,7 @@ class _RegieScreenState extends State<RegieScreen> {
     );
     _rituelEnCours = false;
     if (mounted) setState(() {});
+    _tic.value++;
   }
 
   /// La musique de l'acte qui commence, 15 s après le Destiny [numero] (celle
@@ -211,16 +217,6 @@ class _RegieScreenState extends State<RegieScreen> {
     return true;
   }
 
-  Future<void> _noter() async {
-    final texte = _note.text.trim();
-    if (texte.isEmpty) return;
-    setState(() {
-      s.notes.add(NoteRegie(secondes: _ecoule, texte: texte));
-      _note.clear();
-    });
-    await widget.contexte.store.enregistrer(s);
-  }
-
   Future<void> _terminer() async {
     final t = context.textes;
     final ok = await showDialog<bool>(
@@ -239,6 +235,30 @@ class _RegieScreenState extends State<RegieScreen> {
     await widget.contexte.store.enregistrer(s);
     if (mounted) ouvrirEtape(context, widget.contexte, s, remplacer: true);
   }
+
+  /// Le spectacle vu depuis la table de régie : le chrono et DESTINY restent
+  /// sous la main quand elle est ouverte.
+  PiloteSpectacle get _pilote => PiloteSpectacle(
+        change: _tic,
+        reste: () => horloge(_total - _ecoule),
+        acte: () {
+          final t = context.textes;
+          return '${t.t('regie.acte', {'n': '${context.grammaire.palier(_palier).acte}'})} — '
+              '${context.grammaire.palier(_palier).nom}';
+        },
+        enMarche: () => _enMarche,
+        basculer: _basculer,
+        libelleBasculer: () {
+          final t = context.textes;
+          return t.t(_enMarche ? 'regie.pause' : (_demarre ? 'regie.reprendre' : 'regie.demarrer'));
+        },
+        destiny: () => _prochain == null || _rituelEnCours ? null : () => _destiny(manuel: true),
+        libelleDestiny: () {
+          final t = context.textes;
+          final p = _prochain;
+          return p == null ? t.t('regie.destiny') : t.t('regie.destiny_n', {'n': '${p + 1}'});
+        },
+      );
 
   /// Le panneau du chrono, toujours visible en haut : le temps qui reste, le
   /// temps écoulé, la frise des trois Destiny, le prochain, et DESTINY.
@@ -357,7 +377,7 @@ class _RegieScreenState extends State<RegieScreen> {
           // La régie son, sauf si on l'a retirée dans les réglages.
           if (r.regieSon) ...[
             const SizedBox(width: 10),
-            BoutonRegieSon(contexte: widget.contexte, session: s, compact: true),
+            BoutonRegieSon(contexte: widget.contexte, session: s, compact: true, pilote: _pilote),
           ],
         ]),
         if (_conduiteActive) _EtatConduite(conduite: _conduite!),
@@ -368,13 +388,9 @@ class _RegieScreenState extends State<RegieScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final g = context.grammaire;
     final t = context.textes;
     final c = context.destiny;
     String rg(String k, [Map<String, String> v = const {}]) => t.t('regie.$k', v);
-    final palier = g.palier(_palier);
-    final acte = g.actes.firstWhere((a) => a.palier == _palier);
-    final geste = gestePourActe(g, palier.acte);
     // Assez de hauteur : le chrono reste fixé en haut. Sinon (téléphone à
     // l'horizontale), il défile avec le reste.
     final collant = MediaQuery.sizeOf(context).height >= 600;
@@ -385,22 +401,12 @@ class _RegieScreenState extends State<RegieScreen> {
       entete: collant ? panneau : null,
       enfants: [
         if (!collant) panneau,
-        SectionDestiny(titre: rg('scene'), enfants: [
-          LieuEtDanger(contexte: widget.contexte, session: s),
-          LigneInfo(t.t('mise_en_place.groupe'), s.groupe),
-          FrisePaliers(textes: s.paliers, courant: _palier),
-        ]),
-        if (r.rappelsRegie)
-          SectionDestiny(titre: rg('rappel'), enfants: [
-            if (geste != null) LigneInfo(geste.verbe, geste.consigne),
-            for (final consigne in acte.consignes) Puce(consigne),
-          ]),
-        SectionDestiny(titre: rg('montee'), enfants: [
+        // Trois cadres, pour lire d'un coup d'œil : le lieu et le danger, les
+        // paliers du danger, puis les archétypes.
+        _Cadre(titre: rg('scene'), enfants: [LieuEtDanger(contexte: widget.contexte, session: s)]),
+        _Cadre(titre: rg('paliers'), enfants: [FrisePaliers(textes: s.paliers, courant: _palier)]),
+        _Cadre(titre: rg('archetypes'), enfants: [
           for (final p in s.personnages) RectangleArchetype(personnage: p, contexte: widget.contexte, palier: _palier),
-        ]),
-        SectionDestiny(titre: rg('mystere'), enfants: [
-          LigneInfo(t.t('mise_en_place.mystere'), s.mystere),
-          LigneInfo(t.t('mise_en_place.reponse'), s.reponseMystere, italique: true),
         ]),
         if (_palier == PalierId.supprime && _dilemmes.isNotEmpty)
           SectionDestiny(titre: rg('dilemme'), enfants: [
@@ -416,21 +422,6 @@ class _RegieScreenState extends State<RegieScreen> {
                 ]),
               ),
           ]),
-        SectionDestiny(titre: rg('notes'), enfants: [
-          Row(children: [
-            Expanded(
-              child: TextField(
-                controller: _note,
-                decoration: InputDecoration(hintText: rg('note_aide'), isDense: true),
-                onSubmitted: (_) => _noter(),
-              ),
-            ),
-            const SizedBox(width: 8),
-            FilledButton(onPressed: _noter, child: Text(rg('noter'))),
-          ]),
-          const SizedBox(height: 8),
-          for (final n in s.notes.reversed) LigneInfo(n.horodatage, n.texte),
-        ]),
         const SizedBox(height: 18),
         OutlinedButton.icon(
           onPressed: _terminer,
@@ -457,8 +448,10 @@ class TabletteSon extends StatelessWidget {
 
 /// Ouvre la table de régie en plein écran, par-dessus la régie : on la ferme
 /// avec la croix. Le chrono continue pendant ce temps.
-Future<void> ouvrirRegieSon(BuildContext context, ContexteTroupe contexte, SessionTroupe session) =>
-    ouvrirTableRegie(context, contexte, session, contenu: TabletteSon(contexte: contexte, session: session));
+Future<void> ouvrirRegieSon(BuildContext context, ContexteTroupe contexte, SessionTroupe session,
+        {PiloteSpectacle? pilote}) =>
+    ouvrirTableRegie(context, contexte, session,
+        contenu: TabletteSon(contexte: contexte, session: session), pilote: pilote);
 
 /// Le bouton « Danger » du panneau du chrono : rejoue le bruitage du palier
 /// en cours, musique atténuée.
@@ -543,10 +536,13 @@ class _EtatConduite extends StatelessWidget {
 /// Le bouton de la régie son : il ouvre toute la tablette son dans une
 /// fenêtre ([ouvrirRegieSon]), et dit ce qui joue.
 class BoutonRegieSon extends StatelessWidget {
-  const BoutonRegieSon({super.key, required this.contexte, required this.session, this.compact = false});
+  const BoutonRegieSon({super.key, required this.contexte, required this.session, this.compact = false, this.pilote});
 
   final ContexteTroupe contexte;
   final SessionTroupe session;
+
+  /// Le chrono et DESTINY, repris en haut de la table de régie.
+  final PiloteSpectacle? pilote;
 
   /// Un bouton carré, à côté de DESTINY dans le panneau du chrono.
   final bool compact;
@@ -556,7 +552,7 @@ class BoutonRegieSon extends StatelessWidget {
     final t = context.textes;
     final c = context.destiny;
     String rg(String k, [Map<String, String> v = const {}]) => t.t('regie.$k', v);
-    void ouvrir() => ouvrirRegieSon(context, contexte, session);
+    void ouvrir() => ouvrirRegieSon(context, contexte, session, pilote: pilote);
     final bord = BorderSide(color: c.or, width: 1.5);
     if (compact) {
       return Tooltip(
@@ -613,4 +609,21 @@ class BoutonRegieSon extends StatelessWidget {
       },
     );
   }
+}
+
+/// Un cadre de la régie : un titre de section et son contenu, dans une
+/// carte, pour regrouper ce qui va ensemble.
+class _Cadre extends StatelessWidget {
+  const _Cadre({required this.titre, required this.enfants});
+
+  final String titre;
+  final List<Widget> enfants;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        margin: const EdgeInsets.only(top: 18),
+        padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+        decoration: decorCarte(context.destiny, rayon: 18),
+        child: SectionDestiny(titre: titre, espace: 0, enfants: enfants),
+      );
 }

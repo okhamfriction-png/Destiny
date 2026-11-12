@@ -61,8 +61,14 @@ class LecteurFactice extends LecteurSon {
     notifyListeners();
   }
 
+  /// Chaque volume réglé, dans l'ordre (fondus et atténuation).
+  final List<double> volumes = [];
+
   @override
-  Future<void> regler(double volume) async => _volume = volume;
+  Future<void> regler(double volume) async {
+    _volume = volume;
+    volumes.add(volume);
+  }
 
   @override
   Future<void> arreter() async {
@@ -94,15 +100,22 @@ Future<void> laisserTourner() async {
   List<String>? fichiers,
   ValeursRegieSon? valeurs,
   bool Function()? muet,
+  bool vraiTemps = false,
 }) {
   final journal = <String>[];
   final lecteurs = <BusSon, LecteurFactice>{};
   final conduite = ConduiteSon(
     pack: PackAudio.pourTests(m, IndexPack(fichiers ?? fichiersDuManifeste(m))),
-    reglages: ReglagesRegieSon(valeurs),
+    // L'atténuation progressive coupe la musique tout de suite quand les
+    // attentes sont immédiates : elle a son propre test.
+    reglages: ReglagesRegieSon(valeurs ?? (ValeursRegieSon()..decrescendo = false)),
     muet: muet,
     fabrique: (b) => lecteurs[b] = LecteurFactice(b, journal),
-    attendre: (d) => d >= const Duration(seconds: 60) ? Completer<void>().future : Future<void>.value(),
+    // vraiTemps : les vrais délais (Future.delayed), menés par l'horloge d'un
+    // testWidgets.
+    attendre: vraiTemps
+        ? null
+        : (d) => d >= const Duration(seconds: 60) ? Completer<void>().future : Future<void>.value(),
     hasard: Random(1),
   );
   return (conduite: conduite, lecteurs: lecteurs, journal: journal);
@@ -376,6 +389,38 @@ void main() {
       final sansPack = conduiteDeTest(fichiers: const []);
       sansPack.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
       expect(sansPack.conduite.active, isFalse);
+    });
+
+    testWidgets('atténuation progressive : à 30 s la musique glisse à 50 %, puis descend au silence et s\'arrête',
+        (tester) async {
+      expect(ValeursRegieSon().boucle, isFalse, reason: 'les musiques s\'arrêtent à la fin');
+      final t = conduiteDeTest(valeurs: ValeursRegieSon(), vraiTemps: true);
+      t.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
+      final musique = t.lecteurs[BusSon.musique]!;
+      unawaited(t.conduite.musiqueActe(1));
+      // Le fondu d'entrée (2 s) : la musique est à son volume, 70 %.
+      await tester.pump(const Duration(seconds: 3));
+      expect(musique.volume, closeTo(0.7, 1e-9));
+      // Avant 30 s, rien ne bouge.
+      await tester.pump(const Duration(seconds: 25));
+      expect(musique.volume, closeTo(0.7, 1e-9));
+      // Après 30 s : la glissade vers 50 % (3 s).
+      for (var i = 0; i < 6 * 4; i++) {
+        await tester.pump(const Duration(milliseconds: 250));
+      }
+      expect(musique.volume, lessThan(0.5 + 1e-6));
+      expect(musique.volume, greaterThan(0.45));
+      // Puis la descente jusqu'à la fin du morceau (115 s pour l'Église).
+      for (var i = 0; i < 90 * 4 && musique.actif; i++) {
+        await tester.pump(const Duration(milliseconds: 250));
+      }
+      expect(musique.actif, isFalse);
+      expect(t.journal.last, 'musique:arreter');
+      expect(musique.volumes.last, lessThan(0.01));
+      final apres = musique.volumes.sublist(musique.volumes.lastIndexWhere((v) => (v - 0.7).abs() < 1e-9));
+      for (var i = 1; i < apres.length; i++) {
+        expect(apres[i], lessThanOrEqualTo(apres[i - 1] + 1e-9));
+      }
     });
 
     test('« Fondu de fin » éteint tout puis arrête', () async {

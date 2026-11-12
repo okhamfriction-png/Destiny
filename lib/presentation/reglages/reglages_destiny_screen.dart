@@ -144,7 +144,7 @@ class ReglagesDestinyScreen extends StatelessWidget {
             SectionDestiny(titre: k('distribution'), enfants: [
               Text(k('joueurs'), style: Theme.of(context).textTheme.titleSmall),
               Wrap(spacing: 8, children: [
-                for (final n in [4, 5, 6])
+                for (final n in [3, 4, 5, 6])
                   ChoiceChip(
                     label: Text('$n'),
                     selected: r.joueursParDefaut == n,
