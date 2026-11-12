@@ -72,6 +72,11 @@ class RegieSonScreen extends StatelessWidget {
               _Curseur(k('fondu_sortie'), v.fonduSortie, 0, 6, 12, (x) => change((v) => v.fonduSortie = x), suffixe: 's'),
               _Bascule(k('repli_famille'), v.repliFamille, (x) => change((v) => v.repliFamille = x),
                   aide: k('repli_famille_aide')),
+              _Bascule(k('ambiance_apres'), v.ambianceApresMusique, (x) => change((v) => v.ambianceApresMusique = x),
+                  aide: k('ambiance_apres_aide')),
+              if (v.ambianceApresMusique)
+                _Curseur(k('volume_ambiance'), v.volumeAmbiance, 0, 1, 20, (x) => change((v) => v.volumeAmbiance = x),
+                    pourcent: true),
               _Bascule(k('boucle'), v.boucle, (x) => change((v) => v.boucle = x), aide: k('boucle_aide')),
               _Bascule(k('decrescendo'), v.decrescendo, (x) => change((v) => v.decrescendo = x),
                   aide: k('decrescendo_aide', {

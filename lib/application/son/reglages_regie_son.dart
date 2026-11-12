@@ -32,7 +32,7 @@ class ValeursRegieSon {
   /// La musique de l'échauffement, lancée avec son minuteur : « aucune »,
   /// « lieu » (l'ambiance du lieu), « acte1 » (la musique de l'acte 1 du
   /// pack) ou le chemin d'une piste de la bibliothèque.
-  String musiqueEchauffement = 'lieu';
+  String musiqueEchauffement = 'aucune';
   double volumeEchauffement = 0.6;
 
   // Son Destiny (clés de `AudioService.effets`). Le spectacle démarre par
@@ -50,6 +50,11 @@ class ValeursRegieSon {
   /// Le bruitage du palier quand la musique de l'acte arrive à sa fin
   /// (l'acte 1 par défaut : la musique d'ouverture, puis le danger se signale).
   List<bool> bruitageFinMusique = [true, false, false, false];
+
+  /// Après la musique d'un acte (et son bruitage), l'ambiance du lieu en
+  /// fond, en boucle, à ce volume, jusqu'au Destiny suivant.
+  bool ambianceApresMusique = true;
+  double volumeAmbiance = 0.15;
   double volumeBruitage = 0.9;
   double dureeMaxBruitage = 10;
   double fonduBruitage = 2;
@@ -91,7 +96,10 @@ class ValeursRegieSon {
         'decrescendo': decrescendo,
         'decrescendo_apres': decrescendoApres,
         'decrescendo_depart': decrescendoDepart,
-        'musique_echauffement': musiqueEchauffement,
+        // « _v2 » : avant, l'ambiance du lieu partait avec l'échauffement.
+        'musique_echauffement_v2': musiqueEchauffement,
+        'ambiance_apres_musique': ambianceApresMusique,
+        'volume_ambiance': volumeAmbiance,
         'volume_echauffement': volumeEchauffement,
         // « _v2 » : avant, le son Destiny ouvrait le spectacle.
         'son_ouverture_v2': sonOuverture,
@@ -142,7 +150,9 @@ class ValeursRegieSon {
       ..decrescendo = b('decrescendo', v.decrescendo)
       ..decrescendoApres = d('decrescendo_apres', v.decrescendoApres)
       ..decrescendoDepart = d('decrescendo_depart', v.decrescendoDepart)
-      ..musiqueEchauffement = j['musique_echauffement'] as String? ?? v.musiqueEchauffement
+      ..musiqueEchauffement = j['musique_echauffement_v2'] as String? ?? v.musiqueEchauffement
+      ..ambianceApresMusique = b('ambiance_apres_musique', v.ambianceApresMusique)
+      ..volumeAmbiance = d('volume_ambiance', v.volumeAmbiance)
       ..volumeEchauffement = d('volume_echauffement', v.volumeEchauffement)
       ..sonOuverture = j['son_ouverture_v2'] as String? ?? v.sonOuverture
       ..bruitageFinMusique = _quatre(j['bruitage_fin_musique'], v.bruitageFinMusique, booleen)

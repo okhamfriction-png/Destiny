@@ -20,7 +20,8 @@ Les nouveautés de chaque version, racontées pour les comédiens, les troupes e
 - **Le spectacle en trois étapes : Préparer, le Jeu, la Régie.** La mise en place disparaît ; l'échauffement devient **le Jeu**, l'écran qui porte le spectacle : le chrono et DESTINY en haut, le minuteur d'échauffement, le lieu et le danger, **les paliers du danger**, les archétypes et les Destiny prévus. Pas de flèche de retour : le bouton retour du téléphone demande avant de quitter le spectacle.
 - **« Régie » ouvre directement la table de régie**, en pop-up par-dessus le jeu, avec le chrono et DESTINY en haut ; sa croix ramène au jeu. Le chrono, les Destiny et le son continuent pendant ce temps.
 - **Plus de débrief** : « Terminer », en bas du jeu, range le spectacle dans l'historique et revient à l'accueil.
-- **Le spectacle démarre par la musique de l'acte 1**, et le bruitage du danger arrive à la fin de cette musique (réglable acte par acte). Un son d'ouverture peut encore passer avant, si on en choisit un.
+- **Le spectacle démarre par la musique de l'acte 1** ; à sa fin, le bruitage du danger (palier 1), puis **l'ambiance du lieu en fond, à 15 %**, jusqu'au Destiny suivant (réglable). Le minuteur d'échauffement ne lance plus de musique par défaut.
+- **La table, dans l'ordre** : la conduite, les banques de sons (tous les onglets visibles d'un coup, *Ce danger* puis *Émotions* en premier), puis le **mixeur**.
 - **Le spectacle à 3 joueurs** : l'alarmiste, un qui tient, un qui se fissure.
 - **Plus de groupe ni de mystère au spectacle**, à la mise en place comme à la régie.
 - **Une régie plus claire** : trois cadres, le lieu et le danger, les paliers du danger, les archétypes à ce palier. « Pour la régie » et les moments forts disparaissent.

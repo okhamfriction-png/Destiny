@@ -451,14 +451,15 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
             const SizedBox(height: 12),
             _Titre(rs('conduite'), icone: Icons.theater_comedy_rounded),
             _conduite(context, rs, rg, joue, muet),
+            const SizedBox(height: 18),
+            _Titre(rs('banques'), icone: Icons.grid_view_rounded),
+            _banques(context, rs, joue, muet),
+            // Le mixeur : une tranche par voie (vumètre, fader, stop).
             if (c != null) ...[
               const SizedBox(height: 18),
               _Titre(rs('tranches'), icone: Icons.equalizer_rounded),
               _tranches(rs),
             ],
-            const SizedBox(height: 18),
-            _Titre(rs('banques'), icone: Icons.grid_view_rounded),
-            _banques(context, rs, joue, muet),
             const SizedBox(height: 14),
             Align(
               alignment: Alignment.centerLeft,
@@ -643,11 +644,12 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
     return [
       if (avecPack && m.dangers.containsKey(s.dangerId))
         (id: 'danger', libelle: rs('onglets.danger'), style: const StyleSon(Icons.warning_rounded, Color(0xFFFF7043))),
+      // Les émotions juste après le danger : ce qu'on cherche le plus souvent.
+      (id: 'emotions', libelle: rs('onglets.emotions'), style: const StyleSon(Icons.mood_rounded, Color(0xFFFFD54F))),
       if (avecPack)
         for (final cat in CategorieBruitage.values)
           if (m.sons.keys.any((code) => CategorieBruitage.de(code) == cat))
             (id: 'cat:${cat.name}', libelle: rs('categories.${cat.name}'), style: kStylesCategories[cat]!),
-      (id: 'emotions', libelle: rs('onglets.emotions'), style: const StyleSon(Icons.mood_rounded, Color(0xFFFFD54F))),
       (id: 'ambiances', libelle: rs('onglets.ambiances'), style: const StyleSon(Icons.landscape_rounded, Color(0xFF4FC3F7))),
       (id: 'lieux', libelle: rs('onglets.lieux'), style: const StyleSon(Icons.place_rounded, Color(0xFF81C784))),
       (id: 'univers', libelle: rs('onglets.univers'), style: const StyleSon(Icons.public_rounded, Color(0xFF90CAF9))),
@@ -669,22 +671,20 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
           onAction: () => Navigator.of(context)
               .push(MaterialPageRoute<void>(builder: (_) => PackAudioScreen(regieSon: rsOk))),
         ),
-      SizedBox(
-        height: 46,
-        child: ListView(scrollDirection: Axis.horizontal, children: [
-          for (final b in banques)
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: _Onglet(
-                key: ValueKey('banque_${b.id}'),
-                libelle: b.libelle,
-                style: b.style,
-                choisi: b.id == choisie.id,
-                onTap: () => setState(() => _banque = b.id),
-              ),
+      // Tous les onglets visibles d'un coup, sur plusieurs lignes au besoin.
+      Wrap(spacing: 8, runSpacing: 8, children: [
+        for (final b in banques)
+          SizedBox(
+            height: 42,
+            child: _Onglet(
+              key: ValueKey('banque_${b.id}'),
+              libelle: b.libelle,
+              style: b.style,
+              choisi: b.id == choisie.id,
+              onTap: () => setState(() => _banque = b.id),
             ),
-        ]),
-      ),
+          ),
+      ]),
       const SizedBox(height: 12),
       _contenuBanque(context, choisie, rs, joue, muet),
     ]);

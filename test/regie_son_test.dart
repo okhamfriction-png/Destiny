@@ -290,7 +290,7 @@ void main() {
   });
 
   group('la conduite', () {
-    test('ouverture : le spectacle démarre par la musique de l\'acte 1, le bruitage arrive à sa fin', () async {
+    test('ouverture : la musique de l\'acte 1, à sa fin le bruitage du palier 1, puis l\'ambiance du lieu à 15 %', () async {
       final t = conduiteDeTest();
       t.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
       expect(t.conduite.active, isTrue);
@@ -304,6 +304,12 @@ void main() {
       t.lecteurs[BusSon.musique]!.finir();
       await laisserTourner();
       expect(t.journal, contains(startsWith('bruitageA:jouer:Bruitages/${m.dangers['siege_arme']!.codes(1).first}')));
+      // Puis l'ambiance du lieu, en fond, à 15 %.
+      final bruitage = t.journal.indexWhere((e) => e.startsWith('bruitageA:jouer'));
+      final ambiance = t.journal.indexOf('musique:jouer:audio/ambiences/eglise.m4a');
+      expect(ambiance, greaterThan(bruitage));
+      expect(t.lecteurs[BusSon.musique]!.volume, closeTo(0.15, 1e-9));
+      expect(t.lecteurs[BusSon.musique]!.actif, isTrue);
     });
 
     test('une musique coupée par la régie (Stop, Destiny) n\'appelle pas le bruitage', () async {

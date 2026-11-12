@@ -494,7 +494,7 @@ class ConduiteSon extends ChangeNotifier {
       return;
     }
     unawaited(_decrescendo(source, _dureeMusique(acte, chemin)));
-    unawaited(_bruitageEnFin(acte, source));
+    unawaited(_apresMusique(acte, source));
     await _fondre(BusSon.musique, _attenue ? _volumeMusique * _v.attenuation : _volumeMusique, _v.fonduEntree[acte - 1]);
   }
 
@@ -503,17 +503,37 @@ class ConduiteSon extends ChangeNotifier {
   /// bruitage.
   int _jetonMusique = 0;
 
-  /// Le bruitage du palier quand la musique de l'acte [acte] arrive à sa fin
-  /// (réglage par acte ; l'acte 1 par défaut).
-  Future<void> _bruitageEnFin(int acte, SourceSon source) async {
-    if (!_v.bruitageFinMusique[acte - 1]) return;
+  /// Quand la musique de l'acte [acte] arrive à sa vraie fin : le bruitage du
+  /// palier (réglage par acte ; l'acte 1 par défaut), puis l'ambiance du lieu,
+  /// en fond, jusqu'au Destiny suivant.
+  Future<void> _apresMusique(int acte, SourceSon source) async {
     final jeton = _jetonMusique;
     final l = lecteurs[BusSon.musique]!;
     await l.fin;
-    if (jeton != _jetonMusique || l.enCours != null || !_peutJouer || _acte != acte) return;
-    _etapeVers(EtapeConduite.bruitage);
-    await _jouerBruitages(bruitagesDuPalier(acte), _seq);
-    if (_etape == EtapeConduite.bruitage) _etapeVers(EtapeConduite.repos);
+    bool toujours() => jeton == _jetonMusique && l.enCours == null && _peutJouer && _acte == acte;
+    if (!toujours()) return;
+    if (_v.bruitageFinMusique[acte - 1]) {
+      _etapeVers(EtapeConduite.bruitage);
+      await _jouerBruitages(bruitagesDuPalier(acte), _seq);
+      if (_etape == EtapeConduite.bruitage) _etapeVers(EtapeConduite.repos);
+      if (!toujours()) return;
+    }
+    if (_v.ambianceApresMusique) await jouerAmbiance();
+  }
+
+  /// L'ambiance du lieu (`assets/audio/ambiences/<lieu>.m4a`), en boucle et
+  /// basse (15 % par défaut) : le fond entre la musique d'un acte et le
+  /// Destiny suivant.
+  Future<void> jouerAmbiance() async {
+    final lieu = _lieuId;
+    if (lieu == null) return;
+    await jouerMusique(
+      SourceAsset('audio/ambiences/$lieu.m4a', titre: 'Ambiance · ${_m?.lieux[lieu]?.nom ?? lieu}'),
+      volume: _v.volumeAmbiance,
+      boucle: true,
+      fondu: 3,
+      decrescendo: false,
+    );
   }
 
   /// La durée de la musique d'un acte, si le manifeste la donne pour ce fichier.
@@ -538,7 +558,8 @@ class ConduiteSon extends ChangeNotifier {
 
   /// Un pad de musique : enchaîne en fondu sur la voie musique (une seule
   /// musique à la fois).
-  Future<void> jouerMusique(SourceSon source, {double volume = 0.7, bool? boucle, double fondu = 1.5, double? dureeS}) async {
+  Future<void> jouerMusique(SourceSon source,
+      {double volume = 0.7, bool? boucle, double fondu = 1.5, double? dureeS, bool decrescendo = true}) async {
     if (_muet()) return;
     final seq = ++_seq;
     _jetonMusique++;
@@ -551,7 +572,7 @@ class ConduiteSon extends ChangeNotifier {
     _attenue = false;
     await _jouerSur(BusSon.musique, source, niveau: 0, boucle: boucle ?? _v.boucle);
     if (seq != _seq) return;
-    unawaited(_decrescendo(source, dureeS));
+    if (decrescendo) unawaited(_decrescendo(source, dureeS));
     await _fondre(BusSon.musique, volume, fondu);
   }
 

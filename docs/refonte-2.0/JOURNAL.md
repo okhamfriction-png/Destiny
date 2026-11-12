@@ -1001,6 +1001,12 @@ Une conduite son automatique quand le pack audio du spectacle est là (`/Volumes
 - **L'ouverture** : la musique de l'acte 1 d'abord (son d'ouverture « aucun » par défaut, nouvelle clé `son_ouverture_v2`) ; le bruitage du palier part à la fin **naturelle** de la musique (`bruitageFinMusique`, acte 1 par défaut). Toute intervention de la régie sur la musique (Destiny, Stop, autre pad) l'annule.
 - **Texte très agrandi** : trois lignes de la table débordaient (titres de section, paliers de « Ce danger », étape en cours) ; leur texte se replie maintenant.
 
+### L'ouverture, puis l'ambiance ; la table réordonnée
+
+- Après la musique d'un acte (et son bruitage), l'ambiance du lieu (`assets/audio/ambiences/<lieu>.m4a`, une par lieu du manifeste) tourne en fond, à 15 %, sans atténuation progressive (`ambianceApresMusique`, `volumeAmbiance`).
+- La musique de l'échauffement passe à « aucune » par défaut (clé `musique_echauffement_v2`) : le début de l'histoire, c'est la musique de l'acte 1.
+- La table : conduite, banques (onglets sur plusieurs lignes, Émotions juste après Ce danger), puis le mixeur (ex-« Tranches »).
+
 ### Tests
 
 **340 tests passent.** Les nouveaux portent sur la résolution (propre, famille, NFD, absent), les bruitages (vide, remplacement, « Autre »), l'import, le bilan du vrai pack, les séquences avec un faux lecteur (ordre, annulation, son coupé) et la table dans la régie. Les 7 tests de rendu des cartes échouaient déjà avant (images de référence d'une autre machine).
