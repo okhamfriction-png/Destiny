@@ -2,6 +2,14 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.4.2 — Un exemple de vouloir pour chaque vêtement (novembre 2026)
+
+- **À la préparation, quand on choisit l'animal d'un personnage**, une ligne en italique propose un exemple de vouloir dans sa manière (« Je veux qu'il me rende les 300 euros qu'il me doit. » pour le Rat). Ce n'est qu'un exemple : on l'adapte au lieu et au partenaire. Le vêtement donne surtout la manière : le même vouloir, le Lion l'exige devant tout le monde, le Rat le négocie en douce.
+- **La fiche de chaque animal et la page Animaux** montrent aussi son exemple.
+- **« Trouver son vouloir »**, dans « Vouloir et besoin » et dans le livret (et son PDF) : la formule, les trois tests, ce qui ne marche pas, pourquoi c'est important, et le tableau des 24 exemples.
+- **En mode kids**, des exemples pour les enfants (jamais ceux des adultes), et un livret en version enfants.
+- **Mode admin** : les exemples se modifient dans l'écran de la grammaire.
+
 ## 2.4.1 — Un seul chrono (novembre 2026)
 
 - **Le minuteur d'échauffement et le chrono du spectacle ne font plus qu'un** : le même temps s'affiche aux deux endroits, et « Pause » ou « Reprendre » agit sur les deux à la fois. Le réglage de durée du minuteur d'échauffement disparaît : c'est la durée du spectacle qui compte.

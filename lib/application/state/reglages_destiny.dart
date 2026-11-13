@@ -110,10 +110,30 @@ class ReglagesDestiny extends ChangeNotifier {
   // Le tuto du jeu de rôle, vu une fois à la première visite.
   bool _tutoJeuDeRoleVu = false;
 
+  // Les exemples de vouloir changés en mode admin (« lion », « lion.kids ») :
+  // ils passent par-dessus ceux de la grammaire.
+  Map<String, String> _exemplesVouloir = {};
+
+  /// Les exemples de vouloir changés en mode admin, par animal (« lion ») et
+  /// pour les enfants (« lion.kids »).
+  Map<String, String> get exemplesVouloir => Map.unmodifiable(_exemplesVouloir);
+
+  /// Change l'exemple de vouloir d'un animal ; null le rend à la grammaire.
+  Future<void> changerExempleVouloir(String animalId, String? texte, {bool kids = false}) async {
+    final cle = kids ? '$animalId.kids' : animalId;
+    if (texte == null) {
+      _exemplesVouloir.remove(cle);
+    } else {
+      _exemplesVouloir[cle] = texte;
+    }
+    await _sauver();
+  }
+
   List<ChronoSpectacle> get chronos => List.unmodifiable(_chronos);
   int get chronoChoisi => _chronoChoisi.clamp(0, _chronos.length - 1);
   ChronoSpectacle get chrono => _chronos[chronoChoisi];
   Declenchement get declenchement => _declenchement;
+
   /// La musique de l'acte [acte] (1 à 4) : l'acte 1 au début du spectacle,
   /// l'acte n + 1 après le n-ième Destiny.
   String musiqueActe(int acte) => _musiquesActes[(acte - 1).clamp(0, 3)];
@@ -138,6 +158,7 @@ class ReglagesDestiny extends ChangeNotifier {
   String get modeDistribution => _modeDistribution;
   bool get leaderObligatoire => _leaderObligatoire;
   bool get moduleTraitre => _moduleTraitre;
+
   /// Ancien « public par défaut » (avant la 2.1.0) : gardé, mais l'appli ne
   /// s'en sert plus. Le mode enfant ou adulte se choisit en entrant dans le
   /// jeu de rôle, et le théâtre se joue toujours en adulte.
@@ -181,7 +202,10 @@ class ReglagesDestiny extends ChangeNotifier {
     if (chronos.length == kChronosParDefaut.length) _chronos = chronos;
     _chronoChoisi = (j['chrono_choisi'] as num?)?.toInt() ?? _chronoChoisi;
     _declenchement = Declenchement.depuisTexte(j['declenchement'] as String?);
-    final actes = [for (final x in (j['musiques_actes'] as List? ?? const [])) if (x is String) x];
+    final actes = [
+      for (final x in (j['musiques_actes'] as List? ?? const []))
+        if (x is String) x
+    ];
     if (actes.length == 4) {
       _musiquesActes = actes;
     } else {
@@ -219,6 +243,10 @@ class ReglagesDestiny extends ChangeNotifier {
     // se remontre une fois.
     _decouverteVue = j['decouverte_vue_v23'] as bool? ?? _decouverteVue;
     _tutoJeuDeRoleVu = j['tuto_jeu_de_role_vu'] as bool? ?? _tutoJeuDeRoleVu;
+    _exemplesVouloir = {
+      for (final e in (j['exemples_vouloir'] as Map? ?? const {}).entries)
+        if (e.value is String) '${e.key}': e.value as String,
+    };
   }
 
   Map<String, dynamic> versJson() => {
@@ -253,6 +281,7 @@ class ReglagesDestiny extends ChangeNotifier {
         'theme': _theme.name,
         'decouverte_vue_v23': _decouverteVue,
         'tuto_jeu_de_role_vu': _tutoJeuDeRoleVu,
+        'exemples_vouloir': _exemplesVouloir,
       };
 
   Future<void> _sauver() async {

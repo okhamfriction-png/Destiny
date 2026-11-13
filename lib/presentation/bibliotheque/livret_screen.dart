@@ -21,6 +21,10 @@ class _LivretScreenState extends State<LivretScreen> {
   final Map<String, GlobalKey> _ancres = {for (final id in kSectionsLivret) id: GlobalKey()};
   bool _export = false;
 
+  /// La version pour jouer avec des enfants (la formule et les exemples de
+  /// vouloir des enfants).
+  bool _kids = false;
+
   Future<void> _exporter(Livret livret) async {
     final g = context.grammaire;
     final t = context.textes;
@@ -30,7 +34,7 @@ class _LivretScreenState extends State<LivretScreen> {
     try {
       final polices = await PolicesPdf.chargerDepuisAssets();
       final octets = await livretPdf(livret: livret, g: g, polices: polices);
-      await Printing.sharePdf(bytes: octets, filename: 'destiny-livret-de-regles.pdf');
+      await Printing.sharePdf(bytes: octets, filename: _kids ? 'destiny-livret-de-regles-enfants.pdf' : 'destiny-livret-de-regles.pdf');
     } catch (_) {
       messager.showSnackBar(SnackBar(content: Text(t.t('livret.export_echec'))));
     } finally {
@@ -50,11 +54,19 @@ class _LivretScreenState extends State<LivretScreen> {
     final g = context.grammaire;
     final t = context.textes;
     final c = context.destiny;
-    final livret = construireLivret(g, t);
+    final livret = construireLivret(g, t, kids: _kids);
     return Scaffold(
       appBar: AppBar(
         title: Text(livret.titre),
         actions: [
+          IconButton(
+            key: const ValueKey('livret_kids'),
+            tooltip: t.t(_kids ? 'trouver_vouloir.version_adultes' : 'trouver_vouloir.version_kids'),
+            isSelected: _kids,
+            icon: const Icon(Icons.child_care_outlined),
+            selectedIcon: const Icon(Icons.child_care_rounded),
+            onPressed: () => setState(() => _kids = !_kids),
+          ),
           IconButton(
             tooltip: t.t('livret.exporter'),
             icon: const Icon(Icons.picture_as_pdf_outlined),
@@ -124,6 +136,39 @@ class BlocLivretVue extends StatelessWidget {
           for (var i = 0; i < items.length; i++) Puce(items[i], numero: numerotees ? i + 1 : null),
         ]),
       InfoLivret(:final libelle, :final valeur) => LigneInfo(libelle, valeur),
+      TableauLivret(:final entetes, :final lignes) => Padding(
+          padding: const EdgeInsets.only(top: 2, bottom: 10),
+          child: Table(
+            columnWidths: const {0: FlexColumnWidth(1.1), 1: FlexColumnWidth(0.9), 2: FlexColumnWidth(3)},
+            border: TableBorder(horizontalInside: BorderSide(color: c.ligne)),
+            children: [
+              TableRow(children: [
+                for (final e in entetes)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 7),
+                    child: Text(e,
+                        style: TextStyle(
+                            fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 13, color: c.titre)),
+                  ),
+              ]),
+              for (final l in lignes)
+                TableRow(children: [
+                  for (final (i, x) in l.indexed)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 7),
+                      child: Text(x,
+                          style: TextStyle(
+                              fontFamily: kPoliceTexte,
+                              fontSize: 13.5,
+                              height: 1.35,
+                              color: c.texte,
+                              fontWeight: i == 0 ? FontWeight.w600 : null,
+                              fontStyle: i == l.length - 1 ? FontStyle.italic : null)),
+                    ),
+                ]),
+            ],
+          ),
+        ),
       EncartLivret(:final texte) => Container(
           margin: const EdgeInsets.only(top: 2, bottom: 10),
           padding: const EdgeInsets.fromLTRB(12, 8, 10, 8),

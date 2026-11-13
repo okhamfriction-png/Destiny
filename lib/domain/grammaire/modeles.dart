@@ -118,6 +118,8 @@ class Animal {
     this.repliqueKids = '',
     this.sourceRepliqueKids = '',
     this.repliqueAdulteSeulement = false,
+    this.exempleVouloir = '',
+    this.exempleVouloirKids = '',
     this.temperament = '',
     this.niveauxCorps = const {},
     this.ancienMoteur = '',
@@ -149,6 +151,17 @@ class Animal {
 
   String sourcePour({bool kids = false}) => kids && sourceRepliqueKids.isNotEmpty ? sourceRepliqueKids : sourceReplique;
 
+  /// Un exemple de vouloir dans la manière de cet animal (« Je veux que mon
+  /// frère signe ce soir… ») : un exemple à adapter, jamais une consigne.
+  final String exempleVouloir;
+
+  /// L'exemple de vouloir pour jouer avec des enfants.
+  final String exempleVouloirKids;
+
+  /// L'exemple à afficher : en mode kids, seulement l'exemple kids (vide s'il
+  /// manque : jamais l'exemple adulte devant des enfants).
+  String exempleVouloirPour({bool kids = false}) => kids ? exempleVouloirKids : exempleVouloir;
+
   /// Tempérament (venu des données des animaux de l'appli).
   final String temperament;
 
@@ -168,6 +181,29 @@ class Animal {
 
   /// Chemin de l'image de l'animal dans l'appli.
   String get image => 'assets/images/archetypes/$id.jpg';
+
+  /// Le même animal, avec d'autres exemples de vouloir (null : inchangé).
+  Animal avecExemples({String? adulte, String? kids}) => Animal(
+        id: id,
+        nom: nom,
+        archetypeId: archetypeId,
+        statutDepart: statutDepart,
+        port: port,
+        posture: posture,
+        replique: replique,
+        sourceReplique: sourceReplique,
+        repliqueKids: repliqueKids,
+        sourceRepliqueKids: sourceRepliqueKids,
+        repliqueAdulteSeulement: repliqueAdulteSeulement,
+        exempleVouloir: adulte ?? exempleVouloir,
+        exempleVouloirKids: kids ?? exempleVouloirKids,
+        temperament: temperament,
+        niveauxCorps: niveauxCorps,
+        // ignore: deprecated_member_use_from_same_package
+        ancienMoteur: ancienMoteur,
+        // ignore: deprecated_member_use_from_same_package
+        ancienneIntention: ancienneIntention,
+      );
 }
 
 /// Un palier du danger (commun à tous les dangers).
@@ -946,6 +982,40 @@ class Grammaire {
 
   /// L'identifiant du leader (facultatif dans la distribution).
   static const String leaderId = 'leader';
+
+  /// La même grammaire, avec les exemples de vouloir changés en mode admin
+  /// ([surcharges] : « lion » pour l'adulte, « lion.kids » pour les enfants).
+  Grammaire avecExemplesVouloir(Map<String, String> surcharges) {
+    if (surcharges.isEmpty) return this;
+    return Grammaire(
+      version: version,
+      nom: nom,
+      promesse: promesse,
+      familles: familles,
+      archetypes: archetypes,
+      animaux: [
+        for (final a in animaux) a.avecExemples(adulte: surcharges[a.id], kids: surcharges['${a.id}.kids']),
+      ],
+      paliers: paliers,
+      actes: actes,
+      reglesDOr: reglesDOr,
+      rituel: rituel,
+      distribution: distribution,
+      personnage: personnage,
+      dangers: dangers,
+      lieux: lieux,
+      oeuvres: oeuvres,
+      scenes: scenes,
+      exercices: exercices,
+      themesExercices: themesExercices,
+      obsolete: obsolete,
+      directionArtistique: directionArtistique,
+      serie: serie,
+      mechants: mechants,
+      figurants: figurants,
+      modeKids: modeKids,
+    );
+  }
 
   Archetype? archetype(String id) => _archetypesParId[id];
   Animal? animal(String id) => _animauxParId[id];

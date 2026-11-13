@@ -121,6 +121,7 @@ class SettingsScreen extends StatelessWidget {
                 () => _ouvrir(
                     context,
                     GrammaireAdminScreen(
+                      reglages: reglages,
                       contexteBibliotheque: ContexteBibliotheque(
                           catalogue: catalogStore, visuels: visualSettings, detailsLieux: locationDetails),
                     ))),

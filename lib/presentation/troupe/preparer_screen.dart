@@ -149,7 +149,6 @@ class _PreparerScreenState extends State<PreparerScreen> {
     _sauver();
   }
 
-
   void _attribuer(List<String> ids) {
     setState(() {
       for (var i = 0; i < s.personnages.length && i < ids.length; i++) {
@@ -391,11 +390,16 @@ class _PreparerScreenState extends State<PreparerScreen> {
                     _sauver();
                   },
                   info: p('info_de', {'nom': a.nom}),
-                  onInfo: () => _ouvrir(FicheAnimal(animalId: a.id, contexte: _bibliotheque)),
+                  onInfo: () => _ouvrir(FicheAnimal(animalId: a.id, contexte: _bibliotheque, kids: s.kids)),
                 ),
               ),
             ],
           ]),
+          // L'exemple de vouloir du vêtement choisi (en kids : celui des enfants).
+          if (g.animal(pers.animalId)?.exempleVouloirPour(kids: s.kids) case final ex? when ex.trim().isNotEmpty) ...[
+            const SizedBox(height: 8),
+            ExempleVouloir(ex),
+          ],
         ],
       ]),
     );
@@ -565,8 +569,8 @@ class _PuceAnimal extends StatelessWidget {
             Expanded(
               child: Text(animal.nom,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 14.5, color: c.texte)),
+                  style:
+                      TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 14.5, color: c.texte)),
             ),
             IconButton(
               tooltip: info,
@@ -608,7 +612,8 @@ class _Verdict extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
               child: Text(texte,
-                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 15, fontWeight: FontWeight.w600, color: c.texte))),
+                  style:
+                      TextStyle(fontFamily: kPoliceTexte, fontSize: 15, fontWeight: FontWeight.w600, color: c.texte))),
         ]),
         if (!ok && correction.isNotEmpty) ...[
           const SizedBox(height: 6),

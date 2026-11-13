@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'application/son/regie_son.dart';
+import 'domain/grammaire/modeles.dart' show Grammaire;
 import 'application/services/assistant_jeu.dart';
 import 'application/services/audio_service.dart';
 import 'application/services/llm_service.dart';
@@ -141,8 +144,7 @@ class _BootError extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: SingleChildScrollView(
-              child: Text('BOOT ERROR:\n$message',
-                  style: const TextStyle(color: Colors.white, fontSize: 12)),
+              child: Text('BOOT ERROR:\n$message', style: const TextStyle(color: Colors.white, fontSize: 12)),
             ),
           ),
         ),
@@ -196,6 +198,19 @@ class DestinyApp extends StatelessWidget {
     );
   }
 
+  /// La grammaire, avec les exemples de vouloir changés en mode admin (la
+  /// même instance tant qu'ils ne changent pas).
+  Grammaire _grammaireDuJour() {
+    final surcharges = reglages.exemplesVouloir;
+    final cle = jsonEncode(surcharges);
+    if (_grammaireCache?.$1 != cle || _grammaireCache?.$2 != grammaire.grammaire) {
+      _grammaireCache = (cle, grammaire.grammaire, grammaire.grammaire.avecExemplesVouloir(surcharges));
+    }
+    return _grammaireCache!.$3;
+  }
+
+  static (String, Grammaire, Grammaire)? _grammaireCache;
+
   Widget _appli() {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -211,7 +226,8 @@ class DestinyApp extends StatelessWidget {
         ThemeDestiny.auto => ThemeMode.system,
       },
       builder: (context, child) => DestinyDonnees(
-        grammaire: grammaire.grammaire,
+        // Les exemples de vouloir changés en mode admin, par-dessus le fichier.
+        grammaire: _grammaireDuJour(),
         textes: grammaire.textes,
         child: child ?? const SizedBox.shrink(),
       ),
@@ -219,7 +235,7 @@ class DestinyApp extends StatelessWidget {
         audioService: audioService,
         visualSettings: visualSettings,
         musicController: musicController,
-                catalogStore: catalogStore,
+        catalogStore: catalogStore,
         aiSettings: aiSettings,
         chatController: chatController,
         spectacleController: spectacleController,

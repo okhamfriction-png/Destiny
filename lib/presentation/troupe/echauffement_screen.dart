@@ -261,6 +261,7 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
           for (final p in widget.session.personnages)
             RectangleArchetype(
               personnage: p,
+              kids: session.kids,
               contexte: widget.contexte,
               reactions: true,
               onChanger: () => _changerArchetype(p),

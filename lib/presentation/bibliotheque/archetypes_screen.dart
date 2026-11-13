@@ -219,6 +219,7 @@ class AnimauxScreen extends StatelessWidget {
             sousTitre: '${g.archetype(a.archetypeId)?.nom ?? ''} · ${a.posture}\n« ${a.replique} »',
             couleur: c.famille(g.archetype(a.archetypeId)!.famille),
             devant: MedaillonAnimal(a, taille: 44, source: contexte.visuels.source),
+            pied: ExempleVouloir(a.exempleVouloir, taille: 13.5),
             onTap: () => Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => FicheAnimal(animalId: a.id, contexte: contexte))),
           ),
@@ -230,10 +231,14 @@ class AnimauxScreen extends StatelessWidget {
 /// La fiche d'un animal : sa carte, son corps à chaque palier, sa réplique et
 /// sa source.
 class FicheAnimal extends StatelessWidget {
-  const FicheAnimal({super.key, required this.animalId, required this.contexte});
+  const FicheAnimal({super.key, required this.animalId, required this.contexte, this.kids = false});
 
   final String animalId;
   final ContexteBibliotheque contexte;
+
+  /// Ouverte depuis une séance kids : l'exemple de vouloir des enfants
+  /// (jamais l'exemple adulte).
+  final bool kids;
 
   @override
   Widget build(BuildContext context) {
@@ -266,6 +271,10 @@ class FicheAnimal extends StatelessWidget {
             child: Text('${f('source')} ${a.sourceReplique}',
                 style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: c.texteSecondaire)),
           ),
+          if (a.exempleVouloirPour(kids: kids).trim().isNotEmpty) ...[
+            const SizedBox(height: 8),
+            ExempleVouloir(a.exempleVouloirPour(kids: kids)),
+          ],
           if (a.repliqueKids.isNotEmpty && a.repliqueKids != a.replique) ...[
             const SizedBox(height: 10),
             Row(children: [

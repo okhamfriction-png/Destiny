@@ -52,7 +52,9 @@
           "image": "img/lion.jpg",
           "replique_kids": "Viens avec moi si tu veux vivre.",
           "source_replique_kids": "Terminator",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que mon frère signe ce soir et me laisse reprendre le resto de papa.",
+          "exemple_vouloir_kids": "Je veux que mon frère me laisse être le chef de la cabane."
         },
         {
           "id": "aigle",
@@ -65,7 +67,9 @@
           "image": "img/aigle.jpg",
           "replique_kids": "À mon signal, déclenchez l'enfer !",
           "source_replique_kids": "Gladiator",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que le patron me donne le poste de chef d'équipe avant la fin de la soirée.",
+          "exemple_vouloir_kids": "Je veux que le capitaine me prenne dans son équipe pour le match."
         }
       ]
     },
@@ -92,7 +96,9 @@
           "image": "img/ours.jpg",
           "replique_kids": "Vous ne passerez pas !",
           "source_replique_kids": "Le Seigneur des anneaux",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que ma petite sœur rentre avec moi ce soir et quitte ce type.",
+          "exemple_vouloir_kids": "Je veux que mon petit frère reste avec moi et n'aille pas jouer avec les grands."
         },
         {
           "id": "loup",
@@ -105,7 +111,9 @@
           "image": "img/loup.jpg",
           "replique_kids": "Tu deviens responsable pour toujours de ce que tu as apprivoisé.",
           "source_replique_kids": "Le Petit Prince",
-          "replique_adulte_seulement": true
+          "replique_adulte_seulement": true,
+          "exemple_vouloir": "Je veux que mon associé me dise qui nous a balancés.",
+          "exemple_vouloir_kids": "Je veux que mon copain me dise qui a cassé ma trottinette."
         }
       ]
     },
@@ -132,7 +140,9 @@
           "image": "img/chien.jpg",
           "replique_kids": "Je serai toujours là.",
           "source_replique_kids": "E.T. l'extra-terrestre",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que mes deux meilleurs amis se reparlent avant la fin de la soirée.",
+          "exemple_vouloir_kids": "Je veux que mes deux meilleurs copains se réconcilient avant la récré."
         },
         {
           "id": "mouton",
@@ -145,7 +155,9 @@
           "image": "img/mouton.jpg",
           "replique_kids": "Tous pour un, un pour tous !",
           "source_replique_kids": "Les Trois Mousquetaires",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que la bande m'invite enfin au week-end à la mer.",
+          "exemple_vouloir_kids": "Je veux que la bande me laisse jouer au foot avec eux."
         }
       ]
     },
@@ -172,7 +184,9 @@
           "image": "img/souris.jpg",
           "replique_kids": "Vers l'infini et au-delà !",
           "source_replique_kids": "Toy Story",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que mon cousin me prête sa voiture pour mon déménagement demain.",
+          "exemple_vouloir_kids": "Je veux que ma cousine me prête son vélo pour la course."
         },
         {
           "id": "hibou",
@@ -185,7 +199,9 @@
           "image": "img/hibou.jpg",
           "replique_kids": "Fais-le ou ne le fais pas. Il n'y a pas d'essai.",
           "source_replique_kids": "Star Wars : L'Empire contre-attaque",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que mon neveu me promette de reprendre ses études.",
+          "exemple_vouloir_kids": "Je veux que mon copain me promette de réviser sa dictée avec moi."
         }
       ]
     },
@@ -212,7 +228,9 @@
           "image": "img/coq.jpg",
           "replique_kids": "Houston, on a un problème !",
           "source_replique_kids": "Apollo 13",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que tout le monde me confirme ce soir sa venue à mon anniversaire.",
+          "exemple_vouloir_kids": "Je veux que tout le monde vienne à mon anniversaire samedi."
         },
         {
           "id": "rat",
@@ -225,7 +243,9 @@
           "image": "img/rat.jpg",
           "replique_kids": "J'ai un mauvais pressentiment.",
           "source_replique_kids": "Star Wars",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux qu'il me rende les 300 euros qu'il me doit.",
+          "exemple_vouloir_kids": "Je veux qu'il me rende les cartes qu'il m'a empruntées."
         }
       ]
     },
@@ -252,7 +272,9 @@
           "image": "img/ane.jpg",
           "replique_kids": "Jusqu'ici tout va bien.",
           "source_replique_kids": "La Haine",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que ma femme accepte qu'on ne vende pas la maison.",
+          "exemple_vouloir_kids": "Je veux que maman accepte qu'on ne range pas la chambre ce soir."
         },
         {
           "id": "porc",
@@ -265,7 +287,9 @@
           "image": "img/porc.jpg",
           "replique_kids": "Hakuna matata !",
           "source_replique_kids": "Le Roi lion",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que mon coloc me laisse fêter mon anniversaire chez nous ce soir.",
+          "exemple_vouloir_kids": "Je veux que papa me laisse manger le gâteau avant le dîner."
         }
       ]
     },
@@ -292,7 +316,9 @@
           "image": "img/paon.jpg",
           "replique_kids": "L'hiver vient.",
           "source_replique_kids": "Game of Thrones",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que ma sœur me laisse faire le discours à son mariage.",
+          "exemple_vouloir_kids": "Je veux que mon grand frère me laisse chanter en premier à la fête."
         },
         {
           "id": "corbeau",
@@ -305,7 +331,9 @@
           "image": "img/corbeau.jpg",
           "replique_kids": "Que la Force soit avec toi.",
           "source_replique_kids": "Star Wars",
-          "replique_adulte_seulement": true
+          "replique_adulte_seulement": true,
+          "exemple_vouloir": "Je veux que mon ami annule son départ demain, parce que je sens que ça va mal finir.",
+          "exemple_vouloir_kids": "Je veux que mon copain ne monte pas dans l'arbre, parce que je sens qu'il va tomber."
         }
       ]
     },
@@ -332,7 +360,9 @@
           "image": "img/singe.jpg",
           "replique_kids": "Pourquoi cet air si sérieux ?",
           "source_replique_kids": "The Dark Knight",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que mon pote avoue devant tout le monde qu'il s'est fait larguer.",
+          "exemple_vouloir_kids": "Je veux que mon frère avoue devant tout le monde qu'il a peur du noir."
         },
         {
           "id": "renard",
@@ -345,7 +375,9 @@
           "image": "img/renard.jpg",
           "replique_kids": "Ils sont fous, ces Romains !",
           "source_replique_kids": "Astérix",
-          "replique_adulte_seulement": true
+          "replique_adulte_seulement": true,
+          "exemple_vouloir": "Je veux que le chef apprenne que son fils pique dans la caisse, sans que ça vienne de moi.",
+          "exemple_vouloir_kids": "Je veux que la maîtresse découvre qui a caché la craie, sans que ça vienne de moi."
         }
       ]
     },
@@ -372,7 +404,9 @@
           "image": "img/hyene.jpg",
           "replique_kids": "Je vais lui faire une offre qu'il ne pourra pas refuser.",
           "source_replique_kids": "Le Parrain",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que le gérant me vende tout son stock à moitié prix.",
+          "exemple_vouloir_kids": "Je veux que mon copain m'échange son goûter contre une seule bille."
         },
         {
           "id": "vautour",
@@ -385,7 +419,9 @@
           "image": "img/vautour.jpg",
           "replique_kids": "Mon précieux…",
           "source_replique_kids": "Le Seigneur des anneaux",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que ma tante signe pour me laisser son appartement.",
+          "exemple_vouloir_kids": "Je veux que mamie me donne la plus grosse part du gâteau."
         }
       ]
     },
@@ -412,7 +448,9 @@
           "image": "img/fourmi.jpg",
           "replique_kids": "Alors comment voulez-vous obtenir le laissez-passer A-38 ?",
           "source_replique_kids": "Les 12 travaux d'Astérix",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que mon collègue refasse son rapport avant la fermeture, comme le veut le règlement.",
+          "exemple_vouloir_kids": "Je veux que mon frère range ses jouets avant de jouer, comme c'est la règle."
         },
         {
           "id": "taureau",
@@ -425,7 +463,9 @@
           "image": "img/taureau.jpg",
           "replique_kids": "La loi, c'est moi !",
           "source_replique_kids": "Judge Dredd",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que mon fils rentre à minuit, pas une minute de plus.",
+          "exemple_vouloir_kids": "Je veux que ma petite sœur aille se coucher à l'heure, pas une minute de plus."
         }
       ]
     },
@@ -452,7 +492,9 @@
           "image": "img/chat.jpg",
           "replique_kids": "Hasta la vista, baby !",
           "source_replique_kids": "Terminator 2",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que ma coloc accepte que je parte vivre seul.",
+          "exemple_vouloir_kids": "Je veux que mes copains me laissent jouer tout seul dans mon coin."
         },
         {
           "id": "cerf",
@@ -465,7 +507,9 @@
           "image": "img/cerf.jpg",
           "replique_kids": "Je ne suis pas un numéro, je suis un homme libre !",
           "source_replique_kids": "Le Prisonnier",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que mon père accepte que je ne reprenne pas l'entreprise familiale.",
+          "exemple_vouloir_kids": "Je veux que papa accepte que je fasse du dessin au lieu du foot."
         }
       ]
     },
@@ -492,7 +536,9 @@
           "image": "img/lapin.jpg",
           "replique_kids": "La vérité est ailleurs.",
           "source_replique_kids": "X-Files",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que ma copine me montre son téléphone.",
+          "exemple_vouloir_kids": "Je veux que ma copine me dise à qui elle a raconté mon secret."
         },
         {
           "id": "serpent",
@@ -505,7 +551,9 @@
           "image": "img/serpent.jpg",
           "replique_kids": "Ne faites confiance à personne.",
           "source_replique_kids": "X-Files",
-          "replique_adulte_seulement": false
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que mon associé avoue qu'il négocie dans mon dos.",
+          "exemple_vouloir_kids": "Je veux que mon copain avoue qu'il a triché au jeu."
         }
       ]
     }

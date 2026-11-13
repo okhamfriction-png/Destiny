@@ -114,7 +114,7 @@ class FicheSession extends StatelessWidget {
             CadreLisere(
               couleur: g.archetype(p.archetypeId) == null ? c.or : c.famille(g.archetype(p.archetypeId)!.famille),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                EnteteArchetype(personnage: p, contexte: contexte),
+                EnteteArchetype(personnage: p, contexte: contexte, kids: s.kids),
                 const SizedBox(height: 8),
                 LigneInfo(t.t('debrief.groupe'), [p.groupeVeut, p.groupeBesoin].where((x) => x.isNotEmpty).join(' / ')),
                 LigneInfo(t.t('debrief.fixe'), [p.fixeVeut, p.fixeBesoin].where((x) => x.isNotEmpty).join(' / ')),

@@ -261,7 +261,7 @@ class _RegieScreenState extends State<RegieScreen> {
         _Cadre(titre: rg('scene'), enfants: [LieuEtDanger.troupe(contexte: widget.contexte, session: s)]),
         _Cadre(titre: rg('paliers'), enfants: [FrisePaliers(textes: s.paliers, courant: _palier)]),
         _Cadre(titre: rg('archetypes'), enfants: [
-          for (final p in s.personnages) RectangleArchetype(personnage: p, contexte: widget.contexte, palier: _palier),
+          for (final p in s.personnages) RectangleArchetype(personnage: p, contexte: widget.contexte, palier: _palier, kids: s.kids),
         ]),
         if (_palier == PalierId.supprime && _dilemmes.isNotEmpty)
           SectionDestiny(titre: rg('dilemme'), enfants: [

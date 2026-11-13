@@ -88,10 +88,14 @@ class BulleInfo extends StatelessWidget {
 /// l'animal s'il a été choisi, le nom de l'archétype, une ligne courte, et la
 /// bulle d'info. Sert aussi d'en-tête aux cartes du débrief.
 class EnteteArchetype extends StatelessWidget {
-  const EnteteArchetype({super.key, required this.personnage, required this.contexte, this.palier, this.onChanger});
+  const EnteteArchetype(
+      {super.key, required this.personnage, required this.contexte, this.palier, this.onChanger, this.kids = false});
 
   final PersonnageTroupe personnage;
   final ContexteTroupe contexte;
+
+  /// Une séance kids : la fiche de l'animal montre l'exemple pour enfants.
+  final bool kids;
 
   /// Changer d'archétype à la main (un bouton « ⇄ » à côté de la bulle).
   final VoidCallback? onChanger;
@@ -120,7 +124,7 @@ class EnteteArchetype extends StatelessWidget {
           child: _MedaillonInfo(
             animal: animal,
             source: contexte.visuels.source,
-            onTap: () => _ouvrir(context, FicheAnimal(animalId: animal.id, contexte: bibliotheque)),
+            onTap: () => _ouvrir(context, FicheAnimal(animalId: animal.id, contexte: bibliotheque, kids: kids)),
           ),
         ),
         const SizedBox(width: 12),
@@ -231,10 +235,14 @@ class RectangleArchetype extends StatelessWidget {
     this.reactions = false,
     this.onChanger,
     this.pied,
+    this.kids = false,
   });
 
   final PersonnageTroupe personnage;
   final ContexteTroupe contexte;
+
+  /// Une séance kids (voir [EnteteArchetype]).
+  final bool kids;
 
   /// À la régie : la montée à ce palier (voir [EnteteArchetype]).
   final PalierId? palier;
@@ -257,7 +265,7 @@ class RectangleArchetype extends StatelessWidget {
       couleur: c.famille(a.famille),
       marge: 10,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        EnteteArchetype(personnage: personnage, contexte: contexte, palier: palier, onChanger: onChanger),
+        EnteteArchetype(personnage: personnage, contexte: contexte, palier: palier, onChanger: onChanger, kids: kids),
         if (reactions) Padding(padding: const EdgeInsets.only(top: 8), child: ReactionsArchetype(archetype: a)),
         if (pied != null) Padding(padding: const EdgeInsets.only(top: 8), child: pied),
       ]),
@@ -424,7 +432,8 @@ class LigneDecor extends StatelessWidget {
 /// Le lieu et le danger d'une session, chacun avec sa bulle d'info. Le
 /// catalogue se charge à l'ouverture (pour les fiches).
 class LieuEtDanger extends StatefulWidget {
-  const LieuEtDanger({super.key, required this.catalogue, required this.visuels, required this.session, this.detailsLieux});
+  const LieuEtDanger(
+      {super.key, required this.catalogue, required this.visuels, required this.session, this.detailsLieux});
 
   /// Pour une session de la Troupe.
   LieuEtDanger.troupe({super.key, required ContexteTroupe contexte, required this.session})
@@ -489,9 +498,7 @@ class _LieuEtDangerState extends State<LieuEtDanger> {
         nom: s.lieuNom,
         icone: Icons.place_rounded,
         source: source,
-        onInfo: lieu == null
-            ? null
-            : () => _ouvrir(context, FicheLieu(lieu: lieu, contexte: bibliotheque)),
+        onInfo: lieu == null ? null : () => _ouvrir(context, FicheLieu(lieu: lieu, contexte: bibliotheque)),
       ),
       LigneDecor(
         dossier: 'dangers',

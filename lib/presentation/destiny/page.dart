@@ -263,8 +263,7 @@ class Puce extends StatelessWidget {
                 ),
         ),
         Expanded(
-          child: Text(texte,
-              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 15, height: 1.4, color: c.texte)),
+          child: Text(texte, style: TextStyle(fontFamily: kPoliceTexte, fontSize: 15, height: 1.4, color: c.texte)),
         ),
       ]),
     );
@@ -301,8 +300,7 @@ class PastilleIcone extends StatelessWidget {
 
 /// Le fond d'une carte : une surface pleine, plus claire que la page, avec
 /// une ombre douce. Pas de bordure, sauf si elle dit quelque chose.
-BoxDecoration decorCarte(DestinyCouleurs c, {double rayon = 16, Color? bordure, double largeur = 1.5}) =>
-    BoxDecoration(
+BoxDecoration decorCarte(DestinyCouleurs c, {double rayon = 16, Color? bordure, double largeur = 1.5}) => BoxDecoration(
       color: c.carte,
       borderRadius: BorderRadius.circular(rayon),
       border: bordure == null ? null : Border.all(color: bordure, width: largeur),
@@ -323,12 +321,16 @@ class ElementListe extends StatelessWidget {
     this.apres,
     this.onTap,
     this.couleur,
+    this.pied,
   });
 
   final String titre;
   final String? sousTitre;
   final Widget? devant;
   final Widget? apres;
+
+  /// Sous le sous-titre (l'exemple de vouloir d'un animal, par exemple).
+  final Widget? pied;
   final VoidCallback? onTap;
 
   /// Couleur du liseré gauche (couleur de famille, par exemple).
@@ -385,6 +387,7 @@ class ElementListe extends StatelessWidget {
                               ),
                             ),
                           ],
+                          if (pied != null) ...[const SizedBox(height: 4), pied!],
                         ]),
                       ),
                       if (apres != null) Padding(padding: const EdgeInsets.only(left: 10), child: apres),

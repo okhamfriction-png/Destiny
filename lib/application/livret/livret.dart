@@ -50,6 +50,15 @@ class EncartLivret extends BlocLivret {
   final String texte;
 }
 
+/// Un tableau : une ligne d'en-têtes, puis les lignes.
+class TableauLivret extends BlocLivret {
+  const TableauLivret(this.entetes, this.lignes);
+  final List<String> entetes;
+  final List<List<String>> lignes;
+  @override
+  String get texte => [entetes.join(' | '), for (final l in lignes) l.join(' | ')].join('\n');
+}
+
 /// Une section du livret.
 class SectionLivret {
   const SectionLivret(this.id, this.titre, this.blocs);
@@ -80,6 +89,27 @@ const List<String> kSectionsLivret = [
   'variantes',
   'regles_d_or',
 ];
+
+/// « Trouver son vouloir » : la formule, les trois tests, ce qui ne marche
+/// pas, pourquoi, la manière que donne le vêtement, et un exemple par animal.
+List<BlocLivret> _trouverSonVouloir(Grammaire g, TextesDestiny t, {required bool kids}) {
+  String k(String x) => t.t('trouver_vouloir.$x');
+  return [
+    IntertitreLivret(k('titre')),
+    InfoLivret(k('formule_titre'), k(kids ? 'formule_kids' : 'formule')),
+    ParagrapheLivret('${k('tests_titre')} :'),
+    PucesLivret(t.liste('trouver_vouloir.tests'), numerotees: true),
+    InfoLivret(k('ne_marche_pas_titre'), k('ne_marche_pas')),
+    InfoLivret(k('pourquoi_titre'), k('pourquoi')),
+    EncartLivret(k('vetement')),
+    ParagrapheLivret(k('exemples_intro'), italique: true),
+    TableauLivret(t.liste('trouver_vouloir.colonnes'), [
+      for (final a in g.animaux)
+        if (a.exempleVouloirPour(kids: kids).trim().isNotEmpty)
+          [g.archetype(a.archetypeId)?.nom ?? '', a.nom, a.exempleVouloirPour(kids: kids)],
+    ]),
+  ];
+}
 
 String _majuscule(String s) => s.isEmpty ? s : '${s[0].toUpperCase()}${s.substring(1)}';
 
@@ -120,7 +150,9 @@ List<BlocLivret> _jeuDeRole(TextesDestiny t) {
 }
 
 /// Compose le livret depuis la grammaire [g] et les textes [t].
-Livret construireLivret(Grammaire g, TextesDestiny t) {
+/// [kids] : la version pour jouer avec des enfants (la formule du vouloir
+/// et les exemples des enfants).
+Livret construireLivret(Grammaire g, TextesDestiny t, {bool kids = false}) {
   String k(String x, [Map<String, String> v = const {}]) => t.t('livret.$x', v);
   String sous(String x) => k('sous.$x');
   RegleDOr? regle(String id) => g.regle(id);
@@ -163,6 +195,7 @@ Livret construireLivret(Grammaire g, TextesDestiny t) {
       if (p.vouloirTests.isNotEmpty) PucesLivret(p.vouloirTests, numerotees: true),
       if (p.vouloirMethode.isNotEmpty) ParagrapheLivret(p.vouloirMethode),
       EncartLivret(p.piege),
+      ..._trouverSonVouloir(g, t, kids: kids),
       IntertitreLivret(sous('echauffement')),
       ParagrapheLivret('${_majuscule(p.echauffement.quand)}.'),
       PucesLivret(p.echauffement.questions, numerotees: true),

@@ -112,6 +112,51 @@ void main() {
     expect(p.animalId, isEmpty);
   });
 
+  testWidgets('l\'exemple de vouloir apparaît sous les animaux quand on en choisit un, change avec lui, part avec lui',
+      (tester) async {
+    final (_, s) = await _preparer(tester);
+    final p = s.personnages.first;
+    final [premier, second] = g.animauxDe(p.archetypeId);
+    String ligne(Animal a) => '« ${a.exempleVouloir} »';
+    expect(find.byType(ExempleVouloir), findsNothing, reason: 'aucun animal choisi');
+    await tester.tap(find.text(premier.nom).first);
+    await tester.pump();
+    expect(find.byType(ExempleVouloir), findsOneWidget);
+    final texte = tester.widget<Text>(find.byKey(const ValueKey('exemple_vouloir'))).textSpan!.toPlainText();
+    expect(texte, '${t.t('trouver_vouloir.exemple')} ${ligne(premier)}');
+    // En italique, couleur du texte secondaire, sans troncature.
+    final rich = tester.widget<Text>(find.byKey(const ValueKey('exemple_vouloir')));
+    expect(rich.style!.fontStyle, FontStyle.italic);
+    expect(rich.maxLines, isNull);
+    // On change d'animal : la ligne change.
+    await tester.tap(find.text(second.nom).first);
+    await tester.pump();
+    expect(tester.widget<Text>(find.byKey(const ValueKey('exemple_vouloir'))).textSpan!.toPlainText(),
+        endsWith(ligne(second)));
+    // On le désélectionne : elle disparaît.
+    await tester.tap(find.text(second.nom).first);
+    await tester.pump();
+    expect(find.byType(ExempleVouloir), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('en mode kids, c\'est l\'exemple des enfants qui s\'affiche, jamais l\'exemple adulte', (tester) async {
+    final (_, s) = await _preparer(tester);
+    s.kids = true;
+    final p = s.personnages.first;
+    final animal = g.animauxDe(p.archetypeId).first;
+    await tester.tap(find.text(animal.nom).first);
+    await tester.pump();
+    final texte = tester.widget<Text>(find.byKey(const ValueKey('exemple_vouloir'))).textSpan!.toPlainText();
+    expect(texte, endsWith('« ${animal.exempleVouloirKids} »'));
+    expect(texte, isNot(contains(animal.exempleVouloir)));
+    expect(find.textContaining(animal.exempleVouloir, findRichText: true), findsNothing);
+    // Sans exemple pour les enfants : rien, plutôt que l'exemple adulte.
+    final sansKids = animal.avecExemples(kids: '');
+    expect(sansKids.exempleVouloirPour(kids: true), isEmpty);
+    expect(sansKids.exempleVouloirPour(kids: false), animal.exempleVouloir);
+  });
+
   testWidgets('« Tirer » et « un autre lieu » changent le tirage', (tester) async {
     final (_, s) = await _preparer(tester);
     final lieu = s.lieuId;

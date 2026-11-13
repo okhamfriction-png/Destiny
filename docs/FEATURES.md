@@ -55,7 +55,7 @@ L'accueil montre la promesse et, tirée au hasard à chaque ouverture, une règl
 1. **Préparer** : spectacle ou répétition, 3, 4, 5 ou 6 joueurs.
    - La distribution se fait par choix concerté, tirage équilibré ou exemple tout prêt.
    - Chaque famille est représentée ; on choisit des archétypes qui s'opposent dans leur réflexe. L'alarmiste est facultatif au spectacle (le danger vient de la régie). Une distribution déséquilibrée est signalée, avec une phrase qui dit pourquoi et une correction en un geste.
-   - Chaque joueur choisit son animal parmi les deux de son archétype.
+   - Chaque joueur choisit son animal parmi les deux de son archétype. Sous les deux animaux, en italique, un **exemple de vouloir** dans la manière de l'animal choisi (« Exemple de vouloir : « Je veux qu'il me rende les 300 euros qu'il me doit. » » pour le Rat) : un exemple à adapter au lieu et au partenaire, jamais une consigne. Il change avec l'animal ; en mode kids, c'est l'exemple des enfants.
 2. **Le jeu** (l'écran qui porte le spectacle, sans flèche de retour) : le chrono et DESTINY, les paliers du danger, la carte de chaque joueur, les trois questions (« Comment je me tiens ? »…), la limite (« le corps, pas l'histoire ») et un minuteur, qui lance l'histoire : la musique de l'acte 1.
 3. **Avant d'entrer en scène** : les règles d'or, les quatre paliers et la phrase des débriefs. Aucune critique.
 4. **La régie** : la table de régie, en pop-up par-dessus le jeu (sa croix ramène au jeu, le spectacle continue). Le jeu montre aussi :
@@ -124,10 +124,10 @@ Facultatif : il faut une clé d'API (Anthropic, OpenAI ou Google), à régler da
 ## 7. La Bibliothèque
 
 - **Découvrir Destiny** (les quatre écrans du début).
-- **Le livret de règles** : le but, le matériel, les rôles (quatre comédiens, le figurant, la régie), la mise en place (ce que donne le public), le déroulé (les actes, le rituel et la suite de la régie son, chaque acte reprend le précédent, planter pour payer), la fin, les variantes (Série, méchants, sbires, figurants, registre, mode kids) et les dix règles d'or. Chaque règle vient de la grammaire. **Export PDF.**
+- **Le livret de règles** : le but, le matériel, les rôles (quatre comédiens, le figurant, la régie), la mise en place (ce que donne le public), le déroulé (les actes, le rituel et la suite de la régie son, chaque acte reprend le précédent, planter pour payer), la fin, les variantes (Série, méchants, sbires, figurants, registre, mode kids) et les dix règles d'or. Chaque règle vient de la grammaire. La mise en place a une partie **« Trouver son vouloir »** : la formule, les trois tests, ce qui ne marche pas, pourquoi c'est important, la manière que donne le vêtement, et le tableau des 24 exemples. Une **version enfants** (le bouton en haut) donne la formule « aujourd'hui » et les exemples des enfants. **Export PDF**, dans les deux versions.
 - **Les archétypes** : « des directions, pas des prisons ». Les 12, rangés en trois familles, avec ce qu'ils sont tentés de faire acte par acte, leurs deux animaux, leurs modèles dans les œuvres et leurs méchants reflets. **Cartes à imprimer en PDF** : un recto par archétype (12 cartes) ou par animal (24 cartes), un verso Destiny, neuf cartes de 63 × 88 mm par page.
 - **Les animaux** : les 24, avec leur port, leur posture, leur statut de départ, leur réplique (et sa version kids) et leur corps à chaque palier.
-- **Vouloir et besoin** : les trois tests d'un bon vouloir (ici, ce soir ; il dépend de l'autre ; le danger peut l'empêcher), le piège (« un besoin n'est jamais un objet »), planter pour payer, le vouloir avoué (Succession), les six couches du personnage et la phrase clé.
+- **Vouloir et besoin** : les trois tests d'un bon vouloir (ici, ce soir ; il dépend de l'autre ; le danger peut l'empêcher), le piège (« un besoin n'est jamais un objet »), planter pour payer, le vouloir avoué (Succession), les six couches du personnage et la phrase clé ; et **« Trouver son vouloir »** (la formule, les trois tests, ce qui ne marche pas, pourquoi, le vêtement qui donne la manière, et un exemple par animal). La page Animaux et chaque fiche d'animal montrent aussi son exemple de vouloir.
 - **Les dangers** et **les lieux**, avec leurs paliers, leurs espaces, leurs rôles et leurs figurants.
 - **Les œuvres** : des séries, des pièces et des films lus avec la grammaire.
 - **Les méchants** : les 24 grands méchants et ceux des 21 univers, avec leurs sbires et leurs présages.
@@ -150,7 +150,7 @@ Facultatif : il faut une clé d'API (Anthropic, OpenAI ou Google), à régler da
 - **IA** : le fournisseur, le modèle et la clé.
 - **Apparence** : le thème (sombre, clair, comme le téléphone), les visuels des cartes, la taille et l'écriture manuscrite du texte de l'histoire.
 - **Données** : les lieux et les dangers (espaces, rôles, quatre paliers nommés comme dans la grammaire, palier 4 en version kids, sigle KIDS), les détails des lieux, l'antisèche des relations, les **dilemmes de l'acte 4**, et le rapport de synchronisation avec la grammaire.
-- **Mode admin** : la vérification de la grammaire et la lecture des archétypes.
+- **Mode admin** : la vérification de la grammaire, la lecture des archétypes, et l'éditeur des **exemples de vouloir** (adulte et enfants, pour chaque animal ; un champ vidé reprend le texte de la grammaire).
 - **Aide** : Découvrir Destiny, Me contacter, Crédits (dont les licences des polices), À propos.
 
 ---

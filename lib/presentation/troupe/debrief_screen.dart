@@ -204,7 +204,7 @@ class _DebriefScreenState extends State<DebriefScreen> {
       couleur: couleur,
       marge: 14,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        EnteteArchetype(personnage: p, contexte: widget.contexte),
+        EnteteArchetype(personnage: p, contexte: widget.contexte, kids: s.kids),
         const SizedBox(height: 12),
         Text(d('groupe'), style: Theme.of(context).textTheme.labelMedium),
         const SizedBox(height: 6),

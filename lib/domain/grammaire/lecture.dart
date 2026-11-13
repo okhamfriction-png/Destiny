@@ -284,6 +284,8 @@ Grammaire lireGrammaire(
         repliqueKids: s(an['replique_kids']),
         sourceRepliqueKids: s(an['source_replique_kids']),
         repliqueAdulteSeulement: an['replique_adulte_seulement'] == true,
+        exempleVouloir: s(an['exemple_vouloir']),
+        exempleVouloirKids: s(an['exemple_vouloir_kids']),
         temperament: appli.temperament,
         niveauxCorps: {
           for (var i = 0; i < PalierId.values.length && i < appli.niveaux.length; i++)

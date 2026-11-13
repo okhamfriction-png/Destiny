@@ -427,3 +427,36 @@ class _LignePalier extends StatelessWidget {
     );
   }
 }
+
+/// L'exemple de vouloir d'un animal, en italique : un petit libellé discret,
+/// « Exemple de vouloir : », puis l'exemple entre guillemets. Rien si
+/// l'exemple est vide. Ce n'est qu'un exemple, jamais une consigne.
+class ExempleVouloir extends StatelessWidget {
+  const ExempleVouloir(this.exemple, {super.key, this.taille = 14});
+
+  final String exemple;
+  final double taille;
+
+  @override
+  Widget build(BuildContext context) {
+    if (exemple.trim().isEmpty) return const SizedBox.shrink();
+    final c = context.destiny;
+    final style = TextStyle(
+        fontFamily: kPoliceTexte,
+        fontSize: taille,
+        height: 1.35,
+        fontStyle: FontStyle.italic,
+        color: c.texteSecondaire);
+    return Text.rich(
+      key: const ValueKey('exemple_vouloir'),
+      TextSpan(children: [
+        TextSpan(
+            text: '${context.textes.t('trouver_vouloir.exemple')} ',
+            style: style.copyWith(fontSize: taille - 1.5, letterSpacing: 0.2)),
+        TextSpan(text: '« ${exemple.trim()} »'),
+      ]),
+      style: style,
+      softWrap: true,
+    );
+  }
+}

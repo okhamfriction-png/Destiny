@@ -17,6 +17,11 @@ construit sans pack embarqué.
 Avec `--web <build/web>`, le pack va dans `<build/web>/assets/assets/pack`
 (là où l'appli web lit ses assets), et les .ogg sont convertis en .m4a :
 Safari, sur iPhone, ne lit pas toujours l'Ogg.
+
+Si [racine_pack] est un pack déjà préparé (il contient `index.json`, comme
+celui d'Android), on part de lui au lieu du NAS :
+
+    python3 tool/pack_embarque.py --web build/web android/destiny_pack/src/main/assets/flutter_assets/assets/pack
 """
 
 import hashlib
@@ -69,7 +74,40 @@ def fichiers():
     return sorted(trouves)
 
 
+def depuis_pack_prepare():
+    """Le pack web à partir d'un pack déjà préparé (sans le NAS)."""
+    source = os.path.abspath(PACK)
+    index = json.load(open(os.path.join(source, "index.json"), encoding="utf-8"))["fichiers"]
+    if os.path.abspath(SORTIE) == source:
+        sys.exit("La source et la sortie sont le même dossier.")
+    if os.path.isdir(SORTIE):
+        shutil.rmtree(SORTIE)
+    os.makedirs(os.path.join(SORTIE, "f"))
+    table = {}
+    total = 0
+    for rel, nom in index.items():
+        src = os.path.join(source, nom)
+        convertir = WEB is not None and nom.lower().endswith(".ogg")
+        cible_nom = nom[:-4] + ".m4a" if convertir else nom
+        cible = os.path.join(SORTIE, cible_nom)
+        if convertir:
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", src, "-vn", "-c:a", "aac", "-b:a", "128k", "-ar", "44100", cible],
+                           check=True)
+        else:
+            shutil.copyfile(src, cible)
+        total += os.path.getsize(cible)
+        table[rel] = cible_nom
+    with open(os.path.join(SORTIE, "index.json"), "w", encoding="utf-8") as f:
+        json.dump({"fichiers": table}, f, ensure_ascii=False)
+    m = os.path.join(source, "destiny_audio_manifest.json")
+    if os.path.isfile(m):
+        shutil.copyfile(m, os.path.join(SORTIE, "destiny_audio_manifest.json"))
+    print(f"{len(table)} fichiers ({total / 1e6:.0f} Mo, depuis {os.path.normpath(source)}) → {os.path.normpath(SORTIE)}")
+
+
 def main():
+    if os.path.isfile(os.path.join(PACK, "index.json")):
+        return depuis_pack_prepare()
     if not os.path.isdir(PACK):
         sys.exit(f"Pack introuvable : {PACK} (le NAS est-il monté ?)")
     liste = fichiers()

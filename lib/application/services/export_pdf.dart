@@ -241,6 +241,37 @@ Future<Uint8List> livretPdf({
             padding: const pw.EdgeInsets.fromLTRB(10, 6, 8, 6),
             decoration: pw.BoxDecoration(border: pw.Border(left: pw.BorderSide(color: bleu, width: 3))),
             child: pw.Text(texte, style: pw.TextStyle(font: italique, fontSize: 11)),
+          ),        TableauLivret(:final entetes, :final lignes) => pw.Padding(
+            padding: const pw.EdgeInsets.only(top: 4, bottom: 8),
+            child: pw.Table(
+              columnWidths: const {
+                0: pw.FlexColumnWidth(1.1),
+                1: pw.FlexColumnWidth(0.9),
+                2: pw.FlexColumnWidth(3),
+              },
+              border: pw.TableBorder(horizontalInside: pw.BorderSide(color: or, width: 0.4)),
+              children: [
+                pw.TableRow(children: [
+                  for (final e in entetes)
+                    pw.Padding(
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Text(e, style: pw.TextStyle(font: gras, fontSize: 9.5, color: or))),
+                ]),
+                for (final l in lignes)
+                  pw.TableRow(children: [
+                    for (final (i, x) in l.indexed)
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Text(x,
+                            style: i == 0
+                                ? pw.TextStyle(font: gras, fontSize: 9.5)
+                                : i == l.length - 1
+                                    ? pw.TextStyle(font: italique, fontSize: 9.5)
+                                    : const pw.TextStyle(fontSize: 9.5)),
+                      ),
+                  ]),
+              ],
+            ),
           ),
       };
 

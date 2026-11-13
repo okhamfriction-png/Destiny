@@ -133,6 +133,35 @@
       "billet d'avion"
     ]
   },
+  "trouver_vouloir": {
+    "titre": "Trouver son vouloir",
+    "exemple": "Exemple de vouloir :",
+    "formule_titre": "La formule",
+    "formule": "Je veux que [quelqu'un sur scène] [fasse quelque chose] ce soir.",
+    "formule_kids": "Je veux que [quelqu'un ici] [fasse quelque chose] aujourd'hui.",
+    "tests_titre": "Les trois tests",
+    "tests": [
+      "Ça se passe ici, ce soir.",
+      "Ça dépend de l'autre personnage.",
+      "Le danger peut l'empêcher."
+    ],
+    "ne_marche_pas_titre": "Ce qui ne marche pas",
+    "ne_marche_pas": "Un vouloir vague (« je veux être heureux »), ou gardé dans la tête et jamais dit. Ni le public ni les partenaires ne peuvent jouer avec.",
+    "pourquoi_titre": "Pourquoi c'est important",
+    "pourquoi": "C'est le vouloir que le danger vient casser. Sans vouloir, tout le monde veut la même chose, survivre, et les relations ne bougent pas.",
+    "vetement_titre": "Le vêtement donne la manière",
+    "vetement": "Le vêtement donne la manière de vouloir : même vouloir, le Lion l'exige, le Rat le négocie en douce.",
+    "exemples_titre": "Un exemple par vêtement",
+    "exemples_intro": "Ce ne sont que des exemples : on les adapte au lieu et au partenaire.",
+    "colonnes": ["Archétype", "Animal", "Exemple"],
+    "version_kids": "Version enfants",
+    "version_adultes": "Version adultes",
+    "admin_titre": "Exemples de vouloir",
+    "admin_aide": "Un exemple par animal, montré à la préparation, sur la fiche de l'animal et dans le livret. Un champ vidé reprend le texte de la grammaire.",
+    "admin_adulte": "Exemple",
+    "admin_kids": "Exemple pour les enfants",
+    "admin_remettre": "Revenir au texte de la grammaire"
+  },
   "lexique": {
     "titre": "Les mots de Destiny",
     "utiliser": [

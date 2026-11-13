@@ -3,18 +3,23 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
+import '../../application/state/reglages_destiny.dart';
 import '../../domain/grammaire/lecture.dart';
 
 import '../bibliotheque/archetypes_screen.dart';
 import '../bibliotheque/bibliotheque_screen.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
+import 'editeur_exemples_vouloir_screen.dart';
 
-/// Le mode admin : la grammaire en lecture seule (sa version, ce qu'elle
-/// contient), et la liste des archétypes. Rien ne s'y modifie : la grammaire
-/// se change dans son fichier.
+/// Le mode admin : la grammaire (sa version, ce qu'elle contient), la liste
+/// des archétypes, et l'éditeur des exemples de vouloir. Le reste de la
+/// grammaire se change dans son fichier.
 class GrammaireAdminScreen extends StatelessWidget {
-  const GrammaireAdminScreen({super.key, this.contexteBibliotheque});
+  const GrammaireAdminScreen({super.key, this.contexteBibliotheque, this.reglages});
+
+  /// Pour modifier les exemples de vouloir.
+  final ReglagesDestiny? reglages;
 
   /// Pour ouvrir les fiches des archétypes.
   final ContexteBibliotheque? contexteBibliotheque;
@@ -75,6 +80,16 @@ class GrammaireAdminScreen extends StatelessWidget {
             icon: const Icon(Icons.style_outlined),
             label: Text(t.t('bibliotheque.entrees.archetypes.titre')),
           ),
+        if (reglages != null) ...[
+          const SizedBox(height: 10),
+          OutlinedButton.icon(
+            key: const ValueKey('admin_exemples_vouloir'),
+            onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => EditeurExemplesVouloirScreen(reglages: reglages!))),
+            icon: const Icon(Icons.edit_note_rounded),
+            label: Text(t.t('trouver_vouloir.admin_titre')),
+          ),
+        ],
       ],
     );
   }
