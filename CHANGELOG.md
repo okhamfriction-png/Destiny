@@ -2,6 +2,10 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.4.1 — Un seul chrono (novembre 2026)
+
+- **Le minuteur d'échauffement et le chrono du spectacle ne font plus qu'un** : le même temps s'affiche aux deux endroits, et « Pause » ou « Reprendre » agit sur les deux à la fois. Le réglage de durée du minuteur d'échauffement disparaît : c'est la durée du spectacle qui compte.
+
 ## 2.4.0 — Le rituel fluide (novembre 2026)
 
 - **Un nouvel enchaînement de la régie son, « fluide » (par défaut)** : un seul bouton, « Destiny ». Le son Destiny part tout de suite et la musique d'avant sort dessous. Pendant le rire, la musique du nouvel acte monte ; elle est à son maximum quand le rire se termine, au moment où part le bruitage du danger. Les comédiens jouent sans parler sur la musique pendant 15 s, puis elle redescend sous les voix, et on parle. Elle tourne ensuite en boucle jusqu'au Destiny suivant.

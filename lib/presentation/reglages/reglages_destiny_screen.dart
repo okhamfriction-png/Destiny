@@ -166,17 +166,6 @@ class ReglagesDestinyScreen extends StatelessWidget {
             SectionDestiny(titre: k('jeu_de_role'), enfants: [
               _Bascule(k('registre_defaut'), r.registreParDefaut, (v) => r.changer(registreParDefaut: v)),
             ]),
-            SectionDestiny(titre: k('echauffement'), enfants: [
-              Text(k('minuteur', {'n': '${r.minuteurEchauffement}'})),
-              Slider(
-                value: r.minuteurEchauffement.toDouble().clamp(10, 60),
-                min: 10,
-                max: 60,
-                divisions: 10,
-                label: '${r.minuteurEchauffement} min',
-                onChanged: (v) => r.changer(minuteurEchauffement: v.round()),
-              ),
-            ]),
             SectionDestiny(titre: k('cartes'), enfants: [
               _Bascule(k('repliques'), r.afficherRepliques, (v) => r.changer(afficherRepliques: v)),
             ]),

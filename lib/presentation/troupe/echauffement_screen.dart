@@ -34,9 +34,6 @@ class EchauffementScreen extends StatefulWidget {
 }
 
 class _EchauffementScreenState extends State<EchauffementScreen> {
-  late int _reste = widget.contexte.reglages.minuteurEchauffement * 60;
-  Timer? _minuteur;
-
   /// Le spectacle (le chrono, les Destiny, la conduite son) : il vit ici, la
   /// régie en pop-up ne fait que le montrer.
   late final SpectacleEnCours _sp = SpectacleEnCours.troupe(
@@ -121,42 +118,13 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
     if (ok == true && mounted) Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
-  bool get _enMarche => _minuteur?.isActive ?? false;
-
-  void _basculer() {
-    if (_enMarche) {
-      _minuteur?.cancel();
-      // En pause, la musique de l'histoire continue.
-      setState(() {});
-      return;
-    }
-    _musique();
-    _minuteur = Timer.periodic(const Duration(seconds: 1), (t) {
-      if (!mounted) return;
-      setState(() => _reste = (_reste - 1).clamp(0, 1 << 30));
-      if (_reste == 0) {
-        t.cancel();
-        widget.contexte.audio.playShine();
-      }
-    });
-    setState(() {});
-  }
-
-  /// Le minuteur lance l'histoire : la musique de l'acte 1, puis le
-  /// bruitage du palier 1 (avec le pack), puis l'ambiance du lieu, une seule
-  /// fois. Avec ou sans pack, c'est la même conduite.
-  void _musique() {
-    final regie = widget.contexte.regieSon;
-    if (regie == null || widget.contexte.audio.muted) return;
-    final c = regie.conduite;
-    final s = widget.session;
-    c.preparer(lieuId: s.lieuId, dangerId: s.dangerId, acte: s.palierAtteint);
-    if (!c.ouverte && s.destinys.isEmpty) unawaited(c.ouverture());
-  }
+  /// Le minuteur d'échauffement est le chrono du spectacle : le même temps,
+  /// et son bouton démarre ou met en pause le chrono (qui lance l'histoire,
+  /// la musique de l'acte 1). Les deux ne peuvent pas se décaler.
+  int get _reste => _sp.avecChrono ? (_sp.total - _sp.ecoule).clamp(0, 1 << 30) : _sp.ecoule;
 
   @override
   void dispose() {
-    _minuteur?.cancel();
     _sp.removeListener(_maj);
     _sp.dispose();
     super.dispose();
@@ -272,16 +240,15 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
             ),
           ),
         ),
-        if (_reste == 0) Center(child: Paragraphe(t.t('echauffement.fini'), gras: true)),
+        if (_sp.avecChrono && _reste == 0) Center(child: Paragraphe(t.t('echauffement.fini'), gras: true)),
         Center(
           child: OutlinedButton.icon(
-            onPressed: _reste == 0 ? null : _basculer,
-            icon: Icon(_enMarche ? Icons.pause_rounded : Icons.timer_outlined),
-            label: Text(_enMarche
+            key: const ValueKey('echauffement_basculer'),
+            onPressed: _sp.basculer,
+            icon: Icon(_sp.enMarche ? Icons.pause_rounded : Icons.timer_outlined),
+            label: Text(_sp.enMarche
                 ? t.t('echauffement.pause')
-                : (_reste < widget.contexte.reglages.minuteurEchauffement * 60
-                    ? t.t('echauffement.reprendre')
-                    : t.t('echauffement.demarrer'))),
+                : (_sp.demarre ? t.t('echauffement.reprendre') : t.t('echauffement.demarrer'))),
           ),
         ),
         SectionDestiny(titre: t.t('regie.scene'), enfants: [

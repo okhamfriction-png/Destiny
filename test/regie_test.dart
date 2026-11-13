@@ -929,14 +929,22 @@ void main() {
     await tester.tap(find.text(t.t('echauffement.demarrer')));
     await tester.pump();
     expect(journal, ['musique:jouer:$acte1']);
-    // Le chrono du spectacle ne la relance pas.
+    // Le minuteur d'échauffement EST le chrono du spectacle : même temps.
+    await tester.pump(const Duration(seconds: 3));
+    final reste = (tester.widget<Text>(find.byKey(const ValueKey('pilote_reste')))).data!;
+    expect(find.text(reste), findsNWidgets(2), reason: 'les deux minuteurs affichent $reste');
+    // La pause du chrono met l'échauffement en pause, sans couper la musique.
     await tester.tap(find.byKey(const ValueKey('pilote_basculer')));
     await tester.pump(const Duration(seconds: 2));
+    expect(find.text(t.t('echauffement.reprendre')), findsOneWidget);
+    expect(find.text(reste), findsNWidgets(2), reason: 'en pause, les deux restent ensemble');
     expect(journal.where((e) => e.startsWith('musique:jouer')), hasLength(1));
-    // La pause du minuteur ne coupe pas la musique de l'histoire.
-    await tester.tap(find.text(t.t('echauffement.pause')));
-    await tester.pump();
     expect(journal, isNot(contains('musique:arreter')));
+    // Et la reprise depuis l'échauffement relance le chrono.
+    await tester.tap(find.byKey(const ValueKey('echauffement_basculer')));
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.text(t.t('echauffement.pause')), findsOneWidget);
+    expect(journal.where((e) => e.startsWith('musique:jouer')), hasLength(1), reason: 'la musique ne repart pas');
     await tester.tap(find.byKey(const ValueKey('pilote_basculer')));
     await tester.pump();
   });
@@ -978,7 +986,9 @@ void main() {
     expect(journal, ['musique:jouer:${c.reglages.musiqueActe(1)}']);
     // Un seul lecteur de musique : l'ancien (la bibliothèque) ne joue rien.
     expect(b.musique.joues, isEmpty);
-    // Le chrono du spectacle ne la relance pas.
+    // La pause et la reprise du chrono ne la relancent pas.
+    await tester.tap(find.byKey(const ValueKey('pilote_basculer')));
+    await tester.pump(const Duration(seconds: 2));
     await tester.tap(find.byKey(const ValueKey('pilote_basculer')));
     await tester.pump(const Duration(seconds: 2));
     expect(journal.where((e) => e.startsWith('musique:jouer')), hasLength(1));
