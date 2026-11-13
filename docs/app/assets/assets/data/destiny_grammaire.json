@@ -647,15 +647,25 @@
       "le tonnerre",
       "le rire du destin",
       "la lumière bleue",
-      "les comédiens se figent",
+      "les comédiens jouent au ralenti et glissent vers leur archétype",
       "ellipse : le temps passe"
     ],
-    "reprise": "Des heures ont passé, le danger a monté d'un palier ; on reprend directement dans la situation pire, en réagissant au son du nouveau palier.",
+    "reprise": "Des heures ont passé, le danger a monté d'un palier : on reprend dans la situation pire, d'abord sans parler, en réagissant au son du nouveau palier.",
     "suite": [
-      "le bruitage du nouveau palier",
-      "la musique de l'acte, en fondu",
-      "les comédiens reprennent en réagissant au son du danger"
+      "la musique du nouvel acte monte pendant le rire",
+      "à son maximum, le bruitage du nouveau palier : on joue sans parler",
+      "la musique redescend sous les voix : on parle"
     ],
+    "pendant_destiny": "Pendant le son Destiny, on ne se fige plus : on joue au ralenti et on glisse vers la posture de son archétype au palier suivant. Le rire trouble les personnages sans qu'ils en parlent : un frisson, une tête qui se lève, sans être sûr d'avoir entendu.",
+    "questions_intro": "Chacun se pose une question en silence :",
+    "questions": {
+      "2": "qui je suis, ce que je veux, ce qui m'a marqué",
+      "3": "ce que je risque de perdre",
+      "4": "ce que je suis prêt à sacrifier"
+    },
+    "musique_max": "Quand la musique est au maximum, on reprend une vitesse normale. On réagit au bruitage du danger et aux autres, sans parler : aller vers un objet, regarder quelqu'un.",
+    "musique_descend": "Quand la musique redescend, on parle. Le premier qui parle est de préférence celui que le danger vient de toucher.",
+    "acte_1": "À l'acte 1, on pose ce qui compte pour chacun (l'enjeu), sans tension. C'est le danger qui viendra l'abîmer.",
     "premier_fige": "Chaque comédien choisit en silence sa phrase : « il veut… mais il a besoin de… »."
   },
   "distribution": {

@@ -11,9 +11,11 @@
       "Tonnerre",
       "Rire",
       "Lumière bleue",
-      "Figé"
+      "Ralenti"
     ],
     "acte": "Acte {numero}",
+    "avant_acte": "Avant l'acte {n}",
+    "ralenti": "Au ralenti, vers ton archétype",
     "reprendre": "Reprendre"
   },
   "distribution": {
@@ -136,7 +138,7 @@
     "utiliser": [
       "archétype, famille, montée",
       "palier : il se signale, il enferme, il envahit, il bloque les sorties",
-      "Destiny (le rituel), le figé, l'ellipse",
+      "Destiny (le rituel), le ralenti, l'ellipse",
       "vouloir, besoin, blessure, prix à payer",
       "tient le groupe, interprète le danger, fissure le groupe",
       "le lieu, ses espaces, le groupe",
@@ -688,6 +690,12 @@
       "musique": "La musique de l'acte entre",
       "fin": "Fondu de fin"
     },
+    "phase": {
+      "destiny": "Destiny — ralenti",
+      "jeuMuet": "Musique — jeu muet",
+      "fond": "Fond — on parle",
+      "reste": "{n} s"
+    },
     "onglets": {
       "danger": "Ce danger",
       "emotions": "Émotions",
@@ -743,6 +751,21 @@
     },
     "r": {
       "titre": "Régie son du spectacle",
+      "enchainement": "L'enchaînement",
+      "fluide": "Fluide",
+      "classique": "Classique",
+      "fluide_aide": "Un seul bouton, « Destiny ». Pendant le son Destiny, les comédiens jouent au ralenti ; la musique du nouvel acte monte pendant le rire et arrive à son maximum quand il se termine, avec le bruitage du danger. Jeu muet sur la musique, puis elle redescend sous les voix et tourne en boucle jusqu'au Destiny suivant.",
+      "classique_aide": "Une étape après l'autre : la musique sort, le son Destiny, puis la musique de l'acte, et à sa fin le bruitage du danger et l'ambiance du lieu.",
+      "montee": "Montée de la musique pendant le Destiny",
+      "maintien": "Maximum après le Destiny (jeu muet)",
+      "maintien_ouverture": "Maximum à l'ouverture (acte 1)",
+      "descente": "Descente vers le fond",
+      "decalage_bruitage": "Bruitage par rapport à la fin du Destiny",
+      "attenuation_fluide": "La musique sous un bruitage",
+      "sortie_sous_destiny": "Sortie de la musique précédente sous le Destiny",
+      "volume_max": "Volume maximum",
+      "niveau_fond": "Niveau de fond (on parle)",
+      "musique_aide_fluide": "La musique de l'acte 1 ouvre le spectacle, puis celle de chaque acte pendant son Destiny. Pour chaque acte : le volume maximum (le jeu muet) et le niveau de fond (quand on parle). La musique tourne en boucle jusqu'au Destiny suivant.",
       "entree_aide": "La conduite son automatique : musiques des actes, son Destiny, bruitages du danger.",
       "pack": "Le pack",
       "pack_actif": "Conduite son automatique",
@@ -1743,7 +1766,7 @@
     "declenchement_aide": "Automatique : aux minutes du chrono. À la main : seulement quand la régie appuie. Les deux : le chrono propose, la régie peut aussi le lancer avant.",
     "rituel": "Le rituel",
     "lumiere_bleue": "La lumière bleue",
-    "duree_fige": "La durée du figé : {n} s",
+    "duree_fige": "La durée du ralenti à l'écran : {n} s",
     "texte_ellipse": "Le texte de l'ellipse",
     "texte_ellipse_aide": "Vide : « {defaut} »",
     "rappel_premier_fige": "Rappeler de fixer le besoin au premier figé",
