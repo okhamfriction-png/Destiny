@@ -231,6 +231,13 @@ class _CarteLieu extends StatelessWidget {
     final d = context.destiny;
     final t = context.textes;
     final c = controller;
+    // Le groupe du lieu : celui qui joue le plus d'actes (le Stade reste le
+    // Stade même si son acte 1 vient du Restaurant).
+    final parGroupe = <String, int>{};
+    for (var acte = 1; acte <= 4; acte++) {
+      if (groupeMusique(_chemin(acte) ?? '') case final g?) parGroupe[g] = (parGroupe[g] ?? 0) + 1;
+    }
+    final groupeDuLieu = parGroupe.isEmpty ? null : parGroupe.entries.reduce((a, b) => b.value > a.value ? b : a).key;
     Widget bouton(String libelle, IconData icone, MusicTrack? piste, {String? aide}) {
       final enCours = piste != null && c.current?.file == piste.file;
       final joue = enCours && c.playing;
@@ -255,7 +262,11 @@ class _CarteLieu extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(children: [
-                Icon(Icons.place_rounded, size: 18, color: d.titre),
+                Tooltip(
+                  message: groupeDuLieu == null ? '' : t.t('musique.groupe', {'groupe': groupeDuLieu}),
+                  child: Icon(groupeDuLieu == null ? Icons.place_rounded : iconeGroupeMusique(groupeDuLieu),
+                      size: 18, color: d.titre),
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(lieu.nom,
