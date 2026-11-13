@@ -98,7 +98,7 @@ class _RootScreenState extends State<RootScreen> {
 
   void _ouvrirMusique() => _ouvrir(Scaffold(
         appBar: AppBar(title: Text(context.textes.t('navigation.musique'))),
-        body: MusicScreen(controller: widget.musicController),
+        body: MusicScreen(controller: widget.musicController, regieSon: widget.regieSon),
       ));
 
   void _ouvrirReglages() => _ouvrir(SettingsScreen(

@@ -1,15 +1,27 @@
+import 'package:audioplayers/audioplayers.dart' show AssetSource;
 import 'package:flutter/material.dart';
 
+import '../../application/son/conduite_son.dart';
+import '../../application/son/lecteur_son.dart';
+import '../../application/son/regie_son.dart';
 import '../../application/state/music_controller.dart';
+import '../../domain/grammaire/modeles.dart' show Grammaire;
+import '../../domain/son/manifeste_audio.dart';
+import '../../domain/son/resolution_son.dart';
 import '../destiny/donnees.dart';
 import '../theme/destiny_theme.dart';
 
 /// La bibliothèque musicale : les pistes par catégorie, triées de A à Z (ou
-/// de Z à A), et la barre de lecture en bas.
+/// de Z à A), et la barre de lecture en bas. En tête, « Spectacle » : pour
+/// chaque lieu, les musiques des actes 1 à 4 (celles du pack, comme la
+/// régie les joue) et l'ambiance du lieu.
 class MusicScreen extends StatefulWidget {
-  const MusicScreen({required this.controller, super.key});
+  const MusicScreen({required this.controller, this.regieSon, super.key});
 
   final MusicController controller;
+
+  /// La régie son : son pack donne les musiques des actes par lieu.
+  final RegieSon? regieSon;
 
   @override
   State<MusicScreen> createState() => _MusicScreenState();
@@ -22,16 +34,29 @@ class _MusicScreenState extends State<MusicScreen> {
   void initState() {
     super.initState();
     widget.controller.addListener(_onChange);
+    widget.regieSon?.pack.addListener(_onChange);
   }
 
   @override
   void dispose() {
     widget.controller.removeListener(_onChange);
+    widget.regieSon?.pack.removeListener(_onChange);
     super.dispose();
   }
 
   void _onChange() {
     if (mounted) setState(() {});
+  }
+
+  /// La catégorie des musiques du spectacle, par lieu.
+  static const String _spectacle = '\u0000spectacle';
+
+  /// Les lieux du pack, si le pack est là.
+  List<LieuPack> _lieux() {
+    final pack = widget.regieSon?.pack;
+    final m = pack?.manifeste;
+    if (pack == null || m == null || !pack.disponible) return const [];
+    return m.lieux.values.toList();
   }
 
   static const Map<String, IconData> _categoryIcons = {
@@ -52,7 +77,8 @@ class _MusicScreenState extends State<MusicScreen> {
     if (c.loading) {
       return const Center(child: CircularProgressIndicator());
     }
-    if (c.tracks.isEmpty) {
+    final lieux = _lieux();
+    if (c.tracks.isEmpty && lieux.isEmpty) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -65,9 +91,17 @@ class _MusicScreenState extends State<MusicScreen> {
       );
     }
 
-    final categories = c.categories;
+    final categories = [if (lieux.isNotEmpty) _spectacle, ...c.categories];
     final selected = (_selected != null && categories.contains(_selected)) ? _selected! : categories.first;
-    final tracks = c.tracksOf(selected);
+    final spectacle = selected == _spectacle;
+    final tracks = spectacle ? const <MusicTrack>[] : c.tracksOf(selected);
+    if (spectacle) {
+      lieux.sort((a, b) {
+        // Sans les accents : « Aéroport » avant « Avion en vol ».
+        final x = Grammaire.normaliser(a.nom).compareTo(Grammaire.normaliser(b.nom));
+        return c.ascending ? x : -x;
+      });
+    }
 
     Widget centre(Widget enfant) =>
         Center(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 760), child: enfant));
@@ -84,8 +118,12 @@ class _MusicScreenState extends State<MusicScreen> {
             children: [
               for (final category in categories)
                 ChoiceChip(
-                  avatar: Icon(_categoryIcons[category] ?? Icons.library_music, size: 18, color: d.titre),
-                  label: Text(k('categorie', {'nom': category, 'n': '${c.tracksOf(category).length}'})),
+                  avatar: Icon(category == _spectacle ? Icons.theater_comedy : _categoryIcons[category] ?? Icons.library_music,
+                      size: 18, color: d.titre),
+                  label: Text(k('categorie', {
+                    'nom': category == _spectacle ? k('spectacle') : category,
+                    'n': '${category == _spectacle ? lieux.length : c.tracksOf(category).length}',
+                  })),
                   selected: selected == category,
                   selectedColor: d.or.withValues(alpha: 0.3),
                   side: BorderSide(color: selected == category ? d.titre : d.filet),
@@ -101,7 +139,11 @@ class _MusicScreenState extends State<MusicScreen> {
           child: Row(
             children: [
               Text(
-                tracks.length == 1 ? k('piste') : k('pistes', {'n': '${tracks.length}'}),
+                spectacle
+                    ? k('lieux', {'n': '${lieux.length}'})
+                    : tracks.length == 1
+                        ? k('piste')
+                        : k('pistes', {'n': '${tracks.length}'}),
                 style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, color: d.texteSecondaire),
               ),
               const Spacer(),
@@ -117,6 +159,14 @@ class _MusicScreenState extends State<MusicScreen> {
           child: ListView(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
             children: [
+              if (spectacle) ...[
+                centre(Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Text(k('spectacle_aide'),
+                      style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: d.texteSecondaire)),
+                )),
+                for (final lieu in lieux) centre(_CarteLieu(lieu: lieu, regieSon: widget.regieSon!, controller: c)),
+              ],
               for (final piste in tracks)
                 centre(_TrackTile(
                   track: piste,
@@ -129,6 +179,90 @@ class _MusicScreenState extends State<MusicScreen> {
         ),
         if (c.current != null) _NowPlayingBar(controller: c),
       ],
+    );
+  }
+}
+
+/// Un lieu du spectacle : ses quatre musiques d'acte et son ambiance.
+class _CarteLieu extends StatelessWidget {
+  const _CarteLieu({required this.lieu, required this.regieSon, required this.controller});
+
+  final LieuPack lieu;
+  final RegieSon regieSon;
+  final MusicController controller;
+
+  /// La musique de l'acte [acte] pour ce lieu, comme la régie la choisit.
+  MusicTrack? _acte(BuildContext context, int acte) {
+    final pack = regieSon.pack;
+    final m = pack.manifeste;
+    if (m == null) return null;
+    final chemin = resoudreMusique(m, pack.index, lieu.id, acte, repliFamille: regieSon.reglages.v.repliFamille).chemin;
+    if (chemin == null) return null;
+    return MusicTrack(
+      file: 'spectacle:${lieu.id}:$acte',
+      title: context.textes.t('musique.piste_acte', {'lieu': lieu.nom, 'n': '$acte'}),
+      category: 'Spectacle',
+      loop: false,
+      source: pack.versSource(SourcePack(chemin)),
+    );
+  }
+
+  MusicTrack _ambiance(BuildContext context) {
+    final chemin = ConduiteSon.cheminAmbiance(lieu.id);
+    return MusicTrack(
+      file: 'spectacle:${lieu.id}:ambiance',
+      title: context.textes.t('musique.piste_ambiance', {'lieu': lieu.nom}),
+      category: 'Spectacle',
+      loop: true,
+      source: AssetSource(chemin),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final d = context.destiny;
+    final t = context.textes;
+    final c = controller;
+    Widget bouton(String libelle, IconData icone, MusicTrack? piste) {
+      final enCours = piste != null && c.current?.file == piste.file;
+      final joue = enCours && c.playing;
+      return ActionChip(
+        avatar: Icon(joue ? Icons.pause_rounded : icone, size: 18, color: piste == null ? d.texteSecondaire : d.titre),
+        label: Text(libelle),
+        side: BorderSide(color: enCours ? d.titre : d.filet, width: enCours ? 1.4 : 1),
+        backgroundColor: enCours ? Color.alphaBlend(d.or.withValues(alpha: 0.18), d.carte) : null,
+        onPressed: piste == null ? null : () => c.toggle(piste),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Material(
+        color: d.carte,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14), side: BorderSide(color: d.filet)),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(14, 10, 14, 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(children: [
+                Icon(Icons.place_rounded, size: 18, color: d.titre),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(lieu.nom,
+                      style: TextStyle(fontFamily: kPoliceTexte, fontSize: 15.5, fontWeight: FontWeight.w700, color: d.texte)),
+                ),
+              ]),
+              const SizedBox(height: 8),
+              Wrap(spacing: 8, runSpacing: 6, children: [
+                for (var acte = 1; acte <= 4; acte++)
+                  bouton(t.t('musique.acte', {'n': '$acte'}), Icons.play_arrow_rounded, _acte(context, acte)),
+                bouton(t.t('musique.ambiance'), Icons.landscape_rounded, _ambiance(context)),
+              ]),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

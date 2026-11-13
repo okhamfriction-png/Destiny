@@ -10,6 +10,7 @@ import 'package:destiny/application/son/reglages_regie_son.dart';
 import 'package:destiny/domain/son/manifeste_audio.dart';
 import 'package:destiny/domain/son/resolution_son.dart';
 import 'package:destiny/presentation/regie_son/table_regie.dart';
+import 'package:destiny/presentation/screens/music_screen.dart';
 import 'package:destiny/application/state/music_controller.dart';
 import 'package:destiny/application/state/reglages_destiny.dart';
 import 'package:destiny/application/state/troupe_store.dart';
@@ -31,6 +32,7 @@ import 'package:destiny/presentation/troupe/regie_screen.dart';
 import 'package:destiny/presentation/troupe/troupe_screen.dart';
 import 'package:destiny/presentation/widgets/sound_mixer_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -806,6 +808,47 @@ void main() {
 
   test('chaque texte des écrans Troupe existe', () {
     expect(textesManquants(['lib/presentation/troupe']), isEmpty);
+  });
+
+  testWidgets('l\'écran Musique : « Spectacle », chaque lieu avec ses actes 1 à 4 et son ambiance', (tester) async {
+    final m = ManifesteAudio.depuisJson(
+        jsonDecode(File('assets/data/destiny_audio.json').readAsStringSync()) as Map<String, dynamic>);
+    final pack = PackAudio.pourTests(m, IndexPack(fichiersDuManifeste(m)));
+    final reglages = ReglagesRegieSon(ValeursRegieSon()..sansCourbes());
+    final regieSon = RegieSon(
+      pack: pack,
+      reglages: reglages,
+      conduite: ConduiteSon(pack: pack, reglages: reglages, muet: () => false, fabrique: (bus) => LecteurFactice(bus, [])),
+    );
+    // La bibliothèque se charge pour de vrai (sinon, le sablier tourne sans fin).
+    // (Le cache des assets garde des chargements lancés par les tests
+    // d'avant, dans leur zone de test : on le vide.)
+    final musique = (await tester.runAsync(() async {
+      rootBundle.clear();
+      final c = MusicController();
+      for (var i = 0; i < 300 && c.loading; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+      }
+      return c;
+    }))!;
+    await _ouvrir(tester, Scaffold(body: MusicScreen(controller: musique, regieSon: regieSon)));
+    // « Spectacle » vient en tête, avec les 40 lieux.
+    expect(find.text(t.t('musique.categorie', {'nom': t.t('musique.spectacle'), 'n': '${m.lieux.length}'})), findsOneWidget);
+    final premier = (m.lieux.values.toList()..sort((a, b) => Grammaire.normaliser(a.nom).compareTo(Grammaire.normaliser(b.nom)))).first;
+    expect(find.text(premier.nom), findsOneWidget);
+    for (var acte = 1; acte <= 4; acte++) {
+      expect(find.text(t.t('musique.acte', {'n': '$acte'})), findsWidgets);
+      // Chaque acte a sa musique dans le pack : aucun bouton grisé.
+      final chemin = resoudreMusique(m, pack.index, premier.id, acte).chemin;
+      expect(chemin, isNotNull, reason: '${premier.nom}, acte $acte');
+    }
+    expect(find.text(t.t('musique.ambiance')), findsWidgets);
+    final boutons = tester.widgetList<ActionChip>(find.byType(ActionChip));
+    expect(boutons.every((b) => b.onPressed != null), isTrue);
+  });
+
+  test('chaque texte de l\'écran Musique existe', () {
+    expect(textesManquants(['lib/presentation/screens/music_screen.dart']), isEmpty);
   });
 
   test('chaque texte de la régie son existe', () {

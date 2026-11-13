@@ -2,6 +2,10 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.3.3 — Toutes les musiques du spectacle dans « Musique » (novembre 2026)
+
+- **Le bouton Musique, en haut, a une nouvelle catégorie « Spectacle »** : les 40 lieux, chacun avec ses musiques de l'acte 1, 2, 3 et 4 (celles que la régie joue au spectacle) et son ambiance. Un toucher lance la musique, un second la met en pause.
+
 ## 2.3.2 — Le pack audio dans l'appli (novembre 2026)
 
 - **Les musiques de chaque lieu et les bruitages des dangers sont intégrés à l'appli Android** : plus besoin d'importer le pack. Dès l'installation, la régie passe en « pack », et le minuteur lance la musique de l'acte 1 du lieu, puis le bruitage du danger, puis l'ambiance du lieu.

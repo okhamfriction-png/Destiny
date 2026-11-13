@@ -31,10 +31,15 @@ class MusicTrack {
     required this.title,
     required this.category,
     required this.loop,
+    this.source,
   });
 
-  /// Chemin relatif au préfixe 'assets/' (ex. 'music/atm_forest.m4a').
+  /// Chemin relatif au préfixe 'assets/' (ex. 'music/atm_forest.m4a') ; pour
+  /// une piste du pack, un identifiant (la lecture passe par [source]).
   final String file;
+
+  /// D'où lire la piste, si ce n'est pas l'asset [file] (le pack audio).
+  final Source? source;
   final String title;
   final String category;
   final bool loop;
@@ -409,7 +414,7 @@ class MusicController extends ChangeNotifier {
     );
     await _player.stop();
     await _player.setVolume(_volume);
-    await _player.play(AssetSource(track.file));
+    await _player.play(track.source ?? AssetSource(track.file));
   }
 
   /// Lecture/pause d'une piste depuis la régie (boucle selon le réglage).
