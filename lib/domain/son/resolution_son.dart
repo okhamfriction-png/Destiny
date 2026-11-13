@@ -30,6 +30,7 @@ class IndexPack {
       final nom = n.substring(i + 1);
       (_parDossier[dossier] ??= []).add(c);
       (_parNom[nom] ??= []).add(c);
+      (_parSouche[_souche(nom)] ??= []).add(c);
     }
     for (final l in _parDossier.values) {
       l.sort(_ordreCandidats);
@@ -43,6 +44,13 @@ class IndexPack {
   final Map<String, String> _parNfc = {};
   final Map<String, List<String>> _parDossier = {};
   final Map<String, List<String>> _parNom = {};
+  final Map<String, List<String>> _parSouche = {};
+
+  /// Le nom sans son extension audio (« Destiny Intro 02 - Avion en vol »).
+  static String _souche(String nom) {
+    final i = nom.lastIndexOf('.');
+    return i > 0 && kExtensionsAudio.contains(nom.substring(i).toLowerCase()) ? nom.substring(0, i) : nom;
+  }
 
   bool get estVide => chemins.isEmpty;
 
@@ -50,9 +58,15 @@ class IndexPack {
   String? trouver(String chemin) => _parNfc[nfc(chemin)];
 
   /// Un fichier nommé [nom] n'importe où sous [racine] (recherche récursive).
+  /// À défaut, le même nom avec une autre extension audio : un
+  /// « Destiny Intro 21 - Navire de croisière.m4a » téléchargé de Suno vaut
+  /// le « .mp3 » attendu.
   String? trouverNom(String nom, {required String racine}) {
     final r = '${nfc(racine)}/';
     for (final c in _parNom[nfc(nom)] ?? const <String>[]) {
+      if (nfc(c).startsWith(r)) return c;
+    }
+    for (final c in _parSouche[_souche(nfc(nom))] ?? const <String>[]) {
       if (nfc(c).startsWith(r)) return c;
     }
     return null;

@@ -204,6 +204,15 @@ void main() {
       expect(r.chemin, 'Musiques Destiny/Nouveautés/Destiny Acte 3 - 03 - Aéroport.mp3');
     });
 
+    test('le nom attendu en .m4a (téléchargé de Suno) vaut le .mp3, le .mp3 passe avant', () {
+      const m4a = 'Musiques Destiny/Transports - Aéroport/Destiny Acte 3 - 03 - Aéroport.m4a';
+      final r = resoudreMusique(m, IndexPack([...fichiersDuManifeste(m), m4a]), 'aeroport', 3);
+      expect(r.origine, OrigineMusique.nomAttendu);
+      expect(r.chemin, m4a);
+      const mp3 = 'Musiques Destiny/Nouveautés/Destiny Acte 3 - 03 - Aéroport.mp3';
+      expect(resoudreMusique(m, IndexPack([...fichiersDuManifeste(m), m4a, mp3]), 'aeroport', 3).chemin, mp3);
+    });
+
     test('fichier absent : silence, sans plantage', () {
       expect(resoudreMusique(m, IndexPack.vide, 'eglise', 1).chemin, isNull);
       expect(resoudreMusique(m, IndexPack(fichiersDuManifeste(m)), 'lieu_inconnu', 1).chemin, isNull);
