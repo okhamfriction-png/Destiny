@@ -2,6 +2,11 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.3.4 — 21 musiques pour les 40 lieux (novembre 2026)
+
+- **Plus de musiques différentes au spectacle** : les 40 lieux jouent maintenant 21 musiques au lieu de 6. Les lieux proches partagent la leur (le Port maritime celle du Navire de croisière, le Casino celle de la Boîte de nuit, l'Aquarium celle du Zoo…).
+- **Une icône par musique dans « Musique » → « Spectacle »** : devant le nom du lieu et sur chaque bouton d'acte. Même icône, même musique : on repère d'un coup d'œil les lieux qui partagent un morceau.
+
 ## 2.3.3 — Toutes les musiques du spectacle dans « Musique » (novembre 2026)
 
 - **Le bouton Musique, en haut, a une nouvelle catégorie « Spectacle »** : les 40 lieux, chacun avec ses musiques de l'acte 1, 2, 3 et 4 (celles que la régie joue au spectacle) et son ambiance. Un toucher lance la musique, un second la met en pause.
