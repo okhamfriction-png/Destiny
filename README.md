@@ -6,6 +6,35 @@ Tout fonctionne **hors ligne**. Seuls les modes « avec l'IA » demandent une cl
 
 > 📖 Les fonctionnalités en détail : [`docs/FEATURES.md`](docs/FEATURES.md) · Les nouveautés : [`CHANGELOG.md`](CHANGELOG.md)
 
+## Installer l'appli
+
+DestinyStory est une appli personnelle : elle n'est ni sur l'App Store, ni en accès public sur le Play Store. Voici comment l'installer.
+
+### Sur Android : l'APK
+
+1. Sur le téléphone ou la tablette, ouvrir la page de la dernière version : **https://github.com/okhamfriction-png/Destiny/releases/latest**
+2. Dans « Assets », toucher **`DestinyStory-vX.Y.Z.apk`** pour le télécharger. Il pèse environ 560 Mo, car les musiques et les bruitages du spectacle sont dedans : passer en Wi-Fi.
+3. Ouvrir le fichier téléchargé, depuis la notification ou l'appli Fichiers. La première fois, Android demande d'**autoriser l'installation depuis cette source** (Chrome ou Fichiers) : Paramètres → autoriser → revenir en arrière.
+4. Toucher **Installer**, puis **Ouvrir**.
+
+**Mettre à jour** : refaire les mêmes étapes avec le nouvel APK. Il s'installe par-dessus l'ancien, et l'historique et les réglages sont gardés.
+
+> Si l'appli a été installée par le **Play Store** (test fermé, réservé aux testeurs invités), il faut la mettre à jour par le Play Store. Android refuse l'APK de GitHub par-dessus, parce que le Play Store signe l'appli avec une autre clé. Pour passer de l'un à l'autre, il faut désinstaller l'appli, ce qui efface ses données.
+
+### Sur iPhone et iPad : l'appli web
+
+Il n'y a pas d'appli iOS à installer : il faudrait un compte développeur Apple et Xcode pour la signer. La même appli tourne dans Safari, sur l'écran d'accueil comme une vraie appli.
+
+1. Ouvrir **https://okhamfriction-png.github.io/Destiny/app/** dans **Safari** (pas Chrome, qui ne sait pas l'ajouter à l'écran d'accueil sur iPhone).
+2. Toucher le bouton **Partager** (le carré avec la flèche), puis **Sur l'écran d'accueil**, puis **Ajouter**.
+3. Lancer DestinyStory depuis son icône : elle s'ouvre en plein écran, sans la barre de Safari.
+
+**Mettre à jour** : rien à faire. La nouvelle version se charge toute seule à l'ouverture. Si l'ancienne s'affiche encore, fermer l'appli (balayer vers le haut) et la rouvrir.
+
+> L'appli web a besoin d'Internet : les musiques se chargent quand on les joue. Les données (historique, réglages) restent dans le téléphone, liées à cette icône. Supprimer l'icône ou effacer les données de Safari les efface aussi.
+
+L'appli web marche aussi sur un ordinateur, dans n'importe quel navigateur, à la même adresse.
+
 ## Lancer le projet
 
 1. Installer Flutter **3.41.9** (la version de `pubspec.lock`).

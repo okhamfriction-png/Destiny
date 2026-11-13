@@ -6,6 +6,7 @@ import '../../application/son/lecteur_son.dart';
 import '../../application/son/regie_son.dart';
 import '../../application/state/music_controller.dart';
 import '../../domain/grammaire/modeles.dart' show Grammaire;
+import '../../domain/grammaire/textes.dart' show TextesDestiny;
 import '../../domain/son/manifeste_audio.dart';
 import '../../domain/son/resolution_son.dart';
 import '../destiny/donnees.dart';
@@ -46,6 +47,34 @@ class _MusicScreenState extends State<MusicScreen> {
 
   void _onChange() {
     if (mounted) setState(() {});
+  }
+
+  /// Le fichier de l'acte [acte] du lieu, comme la régie le choisit.
+  String? _chemin(LieuPack lieu, int acte) {
+    final regie = widget.regieSon;
+    final m = regie?.pack.manifeste;
+    if (regie == null || m == null) return null;
+    return resoudreMusique(m, regie.pack.index, lieu.id, acte, repliFamille: regie.reglages.v.repliFamille).chemin;
+  }
+
+  /// La musique de l'acte [acte] du lieu [i] de [lieux] (dans l'ordre affiché).
+  /// À la fin, elle enchaîne sur l'acte suivant, puis sur l'acte 1 du lieu
+  /// suivant ; après le dernier lieu, la lecture s'arrête.
+  MusicTrack? _pisteActe(TextesDestiny t, List<LieuPack> lieux, int i, int acte) {
+    final chemin = _chemin(lieux[i], acte);
+    if (chemin == null) return null;
+    final ordre = List<LieuPack>.unmodifiable(lieux);
+    return MusicTrack(
+      file: 'spectacle:${ordre[i].id}:$acte',
+      title: t.t('musique.piste_acte', {'lieu': ordre[i].nom, 'n': '$acte'}),
+      category: 'Spectacle',
+      loop: false,
+      source: widget.regieSon!.pack.versSource(SourcePack(chemin)),
+      suivante: () {
+        final s = acteSuivant(ordre.length, i, acte, (j, a) => _chemin(ordre[j], a) != null);
+        return s == null ? null : _pisteActe(t, ordre, s.$1, s.$2);
+      },
+    );
   }
 
   /// La catégorie des musiques du spectacle, par lieu.
@@ -167,7 +196,13 @@ class _MusicScreenState extends State<MusicScreen> {
                   child: Text(k('spectacle_aide'),
                       style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: d.texteSecondaire)),
                 )),
-                for (final lieu in lieux) centre(_CarteLieu(lieu: lieu, regieSon: widget.regieSon!, controller: c)),
+                for (var i = 0; i < lieux.length; i++)
+                  centre(_CarteLieu(
+                    lieu: lieux[i],
+                    controller: c,
+                    chemin: (acte) => _chemin(lieux[i], acte),
+                    acte: (acte) => _pisteActe(t, lieux, i, acte),
+                  )),
               ],
               for (final piste in tracks)
                 centre(_TrackTile(
@@ -187,33 +222,16 @@ class _MusicScreenState extends State<MusicScreen> {
 
 /// Un lieu du spectacle : ses quatre musiques d'acte et son ambiance.
 class _CarteLieu extends StatelessWidget {
-  const _CarteLieu({required this.lieu, required this.regieSon, required this.controller});
+  const _CarteLieu({required this.lieu, required this.controller, required this.chemin, required this.acte});
 
   final LieuPack lieu;
-  final RegieSon regieSon;
   final MusicController controller;
 
-  /// Le fichier de l'acte [acte] pour ce lieu, comme la régie le choisit.
-  String? _chemin(int acte) {
-    final pack = regieSon.pack;
-    final m = pack.manifeste;
-    if (m == null) return null;
-    return resoudreMusique(m, pack.index, lieu.id, acte, repliFamille: regieSon.reglages.v.repliFamille).chemin;
-  }
+  /// Le fichier de l'acte (1 à 4) pour ce lieu, comme la régie le choisit.
+  final String? Function(int acte) chemin;
 
-  /// La musique de l'acte [acte] pour ce lieu, comme la régie la choisit.
-  MusicTrack? _acte(BuildContext context, int acte) {
-    final pack = regieSon.pack;
-    final chemin = _chemin(acte);
-    if (chemin == null) return null;
-    return MusicTrack(
-      file: 'spectacle:${lieu.id}:$acte',
-      title: context.textes.t('musique.piste_acte', {'lieu': lieu.nom, 'n': '$acte'}),
-      category: 'Spectacle',
-      loop: false,
-      source: pack.versSource(SourcePack(chemin)),
-    );
-  }
+  /// La musique de l'acte (1 à 4), qui enchaîne sur la suivante.
+  final MusicTrack? Function(int acte) acte;
 
   MusicTrack _ambiance(BuildContext context) {
     final chemin = ConduiteSon.cheminAmbiance(lieu.id);
@@ -235,7 +253,7 @@ class _CarteLieu extends StatelessWidget {
     // Stade même si son acte 1 vient du Restaurant).
     final parGroupe = <String, int>{};
     for (var acte = 1; acte <= 4; acte++) {
-      if (groupeMusique(_chemin(acte) ?? '') case final g?) parGroupe[g] = (parGroupe[g] ?? 0) + 1;
+      if (groupeMusique(chemin(acte) ?? '') case final g?) parGroupe[g] = (parGroupe[g] ?? 0) + 1;
     }
     final groupeDuLieu = parGroupe.isEmpty ? null : parGroupe.entries.reduce((a, b) => b.value > a.value ? b : a).key;
     Widget bouton(String libelle, IconData icone, MusicTrack? piste, {String? aide}) {
@@ -276,9 +294,9 @@ class _CarteLieu extends StatelessWidget {
               ]),
               const SizedBox(height: 8),
               Wrap(spacing: 8, runSpacing: 6, children: [
-                for (var acte = 1; acte <= 4; acte++)
-                  if (groupeMusique(_chemin(acte) ?? '') case final groupe)
-                    bouton(t.t('musique.acte', {'n': '$acte'}), iconeGroupeMusique(groupe), _acte(context, acte),
+                for (var n = 1; n <= 4; n++)
+                  if (groupeMusique(chemin(n) ?? '') case final groupe)
+                    bouton(t.t('musique.acte', {'n': '$n'}), iconeGroupeMusique(groupe), acte(n),
                         aide: groupe == null ? null : t.t('musique.groupe', {'groupe': groupe})),
                 bouton(t.t('musique.ambiance'), Icons.landscape_rounded, _ambiance(context)),
               ]),
@@ -287,6 +305,18 @@ class _CarteLieu extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// Ce qui suit l'acte [acte] du lieu [lieu] (sur [nbLieux], dans l'ordre
+/// affiché) : l'acte suivant, puis l'acte 1 du lieu suivant, en sautant ce
+/// qui n'a pas de musique ([existe]). Null après le dernier lieu.
+(int, int)? acteSuivant(int nbLieux, int lieu, int acte, bool Function(int lieu, int acte) existe) {
+  var (j, a) = (lieu, acte);
+  while (true) {
+    (j, a) = a < 4 ? (j, a + 1) : (j + 1, 1);
+    if (j >= nbLieux) return null;
+    if (existe(j, a)) return (j, a);
   }
 }
 

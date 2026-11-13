@@ -32,6 +32,7 @@ class MusicTrack {
     required this.category,
     required this.loop,
     this.source,
+    this.suivante,
   });
 
   /// Chemin relatif au préfixe 'assets/' (ex. 'music/atm_forest.m4a') ; pour
@@ -43,6 +44,10 @@ class MusicTrack {
   final String title;
   final String category;
   final bool loop;
+
+  /// La piste à enchaîner quand celle-ci se termine (les musiques du
+  /// spectacle : acte suivant, puis lieu suivant). Null : on s'arrête.
+  final MusicTrack? Function()? suivante;
 
   factory MusicTrack.fromJson(Map<String, dynamic> json) {
     var title = json['title'] as String;
@@ -141,6 +146,8 @@ class MusicController extends ChangeNotifier {
       _playing = false;
       _position = Duration.zero;
       notifyListeners();
+      final suite = _current?.suivante?.call();
+      if (suite != null) playTrack(suite, forceLoop: _boucle);
     });
   }
 
@@ -149,13 +156,11 @@ class MusicController extends ChangeNotifier {
     try {
       final raw = await rootBundle.loadString('assets/music/manifest.json');
       final data = jsonDecode(raw) as Map<String, dynamic>;
-      tracks.addAll((data['tracks'] as List<dynamic>)
-          .map((e) => MusicTrack.fromJson(e as Map<String, dynamic>)));
+      tracks.addAll((data['tracks'] as List<dynamic>).map((e) => MusicTrack.fromJson(e as Map<String, dynamic>)));
     } catch (_) {}
     // Ambiances de lieux (téléchargées, libres de droit) → catégorie « Lieux ».
     try {
-      final raw =
-          await rootBundle.loadString('assets/audio/ambiences/manifest.json');
+      final raw = await rootBundle.loadString('assets/audio/ambiences/manifest.json');
       final data = jsonDecode(raw) as Map<String, dynamic>;
       tracks.addAll((data['ambiences'] as List<dynamic>).map((e) {
         final m = e as Map<String, dynamic>;
@@ -169,8 +174,7 @@ class MusicController extends ChangeNotifier {
     } catch (_) {}
     // Thèmes musicaux par univers d'histoire → catégorie « Univers ».
     try {
-      final raw =
-          await rootBundle.loadString('assets/audio/universes/manifest.json');
+      final raw = await rootBundle.loadString('assets/audio/universes/manifest.json');
       final data = jsonDecode(raw) as Map<String, dynamic>;
       tracks.addAll((data['universes'] as List<dynamic>).map((e) {
         final m = e as Map<String, dynamic>;
@@ -218,12 +222,10 @@ class MusicController extends ChangeNotifier {
   }
 
   /// Musique du Commencement, lancée au démarrage du chrono d'histoire.
-  Future<void> playCommencement() =>
-      _playScore('music/01_commencement.m4a', 'Commencement');
+  Future<void> playCommencement() => _playScore('music/01_commencement.m4a', 'Commencement');
 
   /// Musique de Conclusion, lancée 15 s après le 3ᵉ DESTINY.
-  Future<void> playConclusion() =>
-      _playScore('music/02_conclusionainsique.m4a', 'Conclusion');
+  Future<void> playConclusion() => _playScore('music/02_conclusionainsique.m4a', 'Conclusion');
 
   /// Joue une musique scénaristique du chrono (one-shot, sans boucle).
   Future<void> _playScore(String file, String title) => playTrack(MusicTrack(
@@ -281,9 +283,7 @@ class MusicController extends ChangeNotifier {
   Future<void> _persisterImportees() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final data = _importees
-          .map((m) => {'fichier': m.fichier, 'nom': m.nom})
-          .toList();
+      final data = _importees.map((m) => {'fichier': m.fichier, 'nom': m.nom}).toList();
       await prefs.setString(_kMusiquesImportees, jsonEncode(data));
     } catch (_) {}
   }
@@ -300,10 +300,7 @@ class MusicController extends ChangeNotifier {
       if (src == null) continue;
       // Nom de fichier unique et lisible (garde l'extension d'origine).
       final ext = p.extension(f.name);
-      final tige = p
-          .basenameWithoutExtension(f.name)
-          .replaceAll(RegExp(r'[^A-Za-z0-9À-ÿ _-]'), '_')
-          .trim();
+      final tige = p.basenameWithoutExtension(f.name).replaceAll(RegExp(r'[^A-Za-z0-9À-ÿ _-]'), '_').trim();
       var cible = p.join(dir.path, '$tige$ext');
       var n = 2;
       while (await File(cible).exists()) {

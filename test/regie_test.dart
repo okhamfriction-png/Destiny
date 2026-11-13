@@ -875,6 +875,17 @@ void main() {
     expect(find.byIcon(iconeGroupeMusique(groupeAeroport)), findsWidgets);
   });
 
+  test('à l\'écoute, ça suit : acte 1 → 2 → 3 → 4, puis l\'acte 1 du lieu suivant ; on saute ce qui manque', () {
+    bool tout(int lieu, int acte) => true;
+    expect(acteSuivant(3, 0, 1, tout), (0, 2));
+    expect(acteSuivant(3, 0, 4, tout), (1, 1));
+    expect(acteSuivant(3, 2, 4, tout), isNull, reason: 'après le dernier lieu, on s\'arrête');
+    // Le lieu 1 n'a pas d'acte 1 : on passe à son acte 2.
+    expect(acteSuivant(3, 0, 4, (l, a) => !(l == 1 && a == 1)), (1, 2));
+    // Le lieu 1 n'a rien : on va au lieu 2.
+    expect(acteSuivant(3, 0, 4, (l, a) => l != 1), (2, 1));
+  });
+
   test('chaque texte de l\'écran Musique existe', () {
     expect(textesManquants(['lib/presentation/screens/music_screen.dart']), isEmpty);
   });
