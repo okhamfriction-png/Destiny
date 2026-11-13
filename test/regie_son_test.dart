@@ -271,10 +271,11 @@ void main() {
       expect(cheminDansPack(m, 'Spectacle/Bruitages/../../etc/x.ogg'), isNull);
     });
 
-    test('le bilan du pack du NAS : 6 lieux propres, 34 en repli famille', () {
+    test('le bilan du pack du NAS : 20 lieux propres (21 groupes, le Stade sans son acte 1), 20 en repli', () {
       final b = BilanPack.calculer(m, IndexPack(fichiersDuManifeste(m)));
-      expect(b.lieuxPropres, hasLength(6));
-      expect(b.lieuxFamille, hasLength(34));
+      expect(b.lieuxPropres, hasLength(20));
+      expect(b.lieuxFamille, hasLength(20));
+      expect(b.lieuxFamille, contains('stade'));
       expect(b.lieuxSansMusique, isEmpty);
       expect(b.sonsRemplaces, ['MONITEUR']);
       expect(b.sonsManquants, ['HELICO']);

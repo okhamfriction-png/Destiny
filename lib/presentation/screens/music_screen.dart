@@ -118,8 +118,10 @@ class _MusicScreenState extends State<MusicScreen> {
             children: [
               for (final category in categories)
                 ChoiceChip(
-                  avatar: Icon(category == _spectacle ? Icons.theater_comedy : _categoryIcons[category] ?? Icons.library_music,
-                      size: 18, color: d.titre),
+                  avatar: Icon(
+                      category == _spectacle ? Icons.theater_comedy : _categoryIcons[category] ?? Icons.library_music,
+                      size: 18,
+                      color: d.titre),
                   label: Text(k('categorie', {
                     'nom': category == _spectacle ? k('spectacle') : category,
                     'n': '${category == _spectacle ? lieux.length : c.tracksOf(category).length}',
@@ -191,12 +193,18 @@ class _CarteLieu extends StatelessWidget {
   final RegieSon regieSon;
   final MusicController controller;
 
-  /// La musique de l'acte [acte] pour ce lieu, comme la régie la choisit.
-  MusicTrack? _acte(BuildContext context, int acte) {
+  /// Le fichier de l'acte [acte] pour ce lieu, comme la régie le choisit.
+  String? _chemin(int acte) {
     final pack = regieSon.pack;
     final m = pack.manifeste;
     if (m == null) return null;
-    final chemin = resoudreMusique(m, pack.index, lieu.id, acte, repliFamille: regieSon.reglages.v.repliFamille).chemin;
+    return resoudreMusique(m, pack.index, lieu.id, acte, repliFamille: regieSon.reglages.v.repliFamille).chemin;
+  }
+
+  /// La musique de l'acte [acte] pour ce lieu, comme la régie la choisit.
+  MusicTrack? _acte(BuildContext context, int acte) {
+    final pack = regieSon.pack;
+    final chemin = _chemin(acte);
     if (chemin == null) return null;
     return MusicTrack(
       file: 'spectacle:${lieu.id}:$acte',
@@ -223,12 +231,13 @@ class _CarteLieu extends StatelessWidget {
     final d = context.destiny;
     final t = context.textes;
     final c = controller;
-    Widget bouton(String libelle, IconData icone, MusicTrack? piste) {
+    Widget bouton(String libelle, IconData icone, MusicTrack? piste, {String? aide}) {
       final enCours = piste != null && c.current?.file == piste.file;
       final joue = enCours && c.playing;
       return ActionChip(
         avatar: Icon(joue ? Icons.pause_rounded : icone, size: 18, color: piste == null ? d.texteSecondaire : d.titre),
         label: Text(libelle),
+        tooltip: aide,
         side: BorderSide(color: enCours ? d.titre : d.filet, width: enCours ? 1.4 : 1),
         backgroundColor: enCours ? Color.alphaBlend(d.or.withValues(alpha: 0.18), d.carte) : null,
         onPressed: piste == null ? null : () => c.toggle(piste),
@@ -250,13 +259,16 @@ class _CarteLieu extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(lieu.nom,
-                      style: TextStyle(fontFamily: kPoliceTexte, fontSize: 15.5, fontWeight: FontWeight.w700, color: d.texte)),
+                      style: TextStyle(
+                          fontFamily: kPoliceTexte, fontSize: 15.5, fontWeight: FontWeight.w700, color: d.texte)),
                 ),
               ]),
               const SizedBox(height: 8),
               Wrap(spacing: 8, runSpacing: 6, children: [
                 for (var acte = 1; acte <= 4; acte++)
-                  bouton(t.t('musique.acte', {'n': '$acte'}), Icons.play_arrow_rounded, _acte(context, acte)),
+                  if (groupeMusique(_chemin(acte) ?? '') case final groupe)
+                    bouton(t.t('musique.acte', {'n': '$acte'}), iconeGroupeMusique(groupe), _acte(context, acte),
+                        aide: groupe == null ? null : t.t('musique.groupe', {'groupe': groupe})),
                 bouton(t.t('musique.ambiance'), Icons.landscape_rounded, _ambiance(context)),
               ]),
             ],
@@ -266,6 +278,48 @@ class _CarteLieu extends StatelessWidget {
     );
   }
 }
+
+/// L'icône d'un groupe de musique du spectacle (le lieu de référence) : même
+/// icône, même musique. Un groupe inconnu reçoit une icône stable tirée de
+/// son nom.
+IconData iconeGroupeMusique(String? groupe) {
+  if (groupe == null) return Icons.play_arrow_rounded;
+  return _iconesGroupes[groupe] ??
+      _iconesDeReserve[groupe.codeUnits.fold<int>(0, (a, b) => (a * 31 + b) & 0xFFFF) % _iconesDeReserve.length];
+}
+
+const Map<String, IconData> _iconesGroupes = {
+  'Avion en vol': Icons.flight_rounded,
+  'Navire de croisière': Icons.directions_boat_rounded,
+  'Métro': Icons.subway_rounded,
+  'Restaurant gastronomique': Icons.restaurant_rounded,
+  'Boîte de nuit': Icons.nightlife_rounded,
+  'Théâtre': Icons.theater_comedy_rounded,
+  'Stade': Icons.stadium_rounded,
+  'Centre commercial': Icons.shopping_bag_rounded,
+  'Refuge de montagne': Icons.cabin_rounded,
+  'Forêt': Icons.forest_rounded,
+  'Zoo': Icons.pets_rounded,
+  'Sous-marin': Icons.scuba_diving_rounded,
+  'Station spatiale': Icons.rocket_launch_rounded,
+  'Hôpital': Icons.local_hospital_rounded,
+  'Église': Icons.church_rounded,
+  'Manoir abandonné': Icons.castle_rounded,
+  'Musée': Icons.palette_rounded,
+  'Commissariat': Icons.local_police_rounded,
+  'Tribunal': Icons.gavel_rounded,
+  'Banque': Icons.account_balance_rounded,
+  'École': Icons.school_rounded,
+};
+
+const List<IconData> _iconesDeReserve = [
+  Icons.music_note_rounded,
+  Icons.star_rounded,
+  Icons.bolt_rounded,
+  Icons.diamond_rounded,
+  Icons.anchor_rounded,
+  Icons.eco_rounded,
+];
 
 /// Icône thématique par piste (clé = titre sans le numéro de variante).
 const Map<String, IconData> _trackIcons = {
@@ -346,8 +400,7 @@ const Map<String, List<Color>> _categoryFallback = {
   'Thèmes': [Color(0xFFF7971E), Color(0xFFFFD200)],
 };
 
-String _baseKey(MusicTrack t) =>
-    t.title.replaceFirst(RegExp(r'\s*\d+$'), '').trim();
+String _baseKey(MusicTrack t) => t.title.replaceFirst(RegExp(r'\s*\d+$'), '').trim();
 
 IconData _iconFor(MusicTrack t) {
   return _trackIcons[_baseKey(t)] ??
@@ -360,9 +413,7 @@ IconData _iconFor(MusicTrack t) {
 }
 
 List<Color> _gradientFor(MusicTrack t) {
-  return _trackColors[_baseKey(t)] ??
-      _categoryFallback[t.category] ??
-      const [Color(0xFF614385), Color(0xFF516395)];
+  return _trackColors[_baseKey(t)] ?? _categoryFallback[t.category] ?? const [Color(0xFF614385), Color(0xFF516395)];
 }
 
 class _TrackTile extends StatelessWidget {
@@ -489,7 +540,8 @@ class _NowPlayingBar extends StatelessWidget {
                 Expanded(
                   child: Text(
                     current.title,
-                    style: TextStyle(fontFamily: kPoliceTexte, fontSize: 16, fontWeight: FontWeight.w600, color: d.texte),
+                    style:
+                        TextStyle(fontFamily: kPoliceTexte, fontSize: 16, fontWeight: FontWeight.w600, color: d.texte),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),

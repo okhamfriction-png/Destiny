@@ -150,6 +150,18 @@ MusiqueResolue resoudreMusique(
   return r.chemin == null ? MusiqueResolue.aucune : MusiqueResolue(r.chemin, OrigineMusique.famille);
 }
 
+/// Le groupe de musique d'un fichier du pack : le lieu de référence qui donne
+/// son nom au dossier (« Musiques Destiny/Transports - Navire de croisière/… »
+/// → « Navire de croisière »). Deux lieux du même groupe jouent la même
+/// musique. Null pour un fichier posé à la racine.
+String? groupeMusique(String chemin) {
+  final parties = nfc(chemin).split('/');
+  if (parties.length < 3) return null;
+  final dossier = parties[parties.length - 2];
+  final i = dossier.indexOf(' - ');
+  return i < 0 ? dossier : dossier.substring(i + 3);
+}
+
 /// Les fichiers candidats d'un code de bruitage présents dans le pack (vide si
 /// le dossier est vide ou absent).
 List<String> candidatsBruitage(ManifesteAudio m, IndexPack index, String code) {
@@ -169,7 +181,8 @@ const int kCandidatAleatoire = -1;
 
 /// Un bruitage prêt à jouer.
 class BruitageResolu {
-  const BruitageResolu({required this.code, required this.codeJoue, required this.chemin, this.dureeS, this.boucle = false});
+  const BruitageResolu(
+      {required this.code, required this.codeJoue, required this.chemin, this.dureeS, this.boucle = false});
 
   /// Le code demandé par le palier.
   final String code;

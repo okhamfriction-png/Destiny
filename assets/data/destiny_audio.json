@@ -132,23 +132,23 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Intro 29 - Sous-marin.mp3",
-     "duree_s": 183.6,
+     "fichier": "Musiques Destiny/Science et huis clos - Station spatiale/Destiny Intro 31 - Station spatiale.m4a",
+     "duree_s": 193.6,
      "source": "famille"
     },
     "2": {
-     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 2 - 29 - Sous-marin.mp3",
-     "duree_s": 138.0,
+     "fichier": "Musiques Destiny/Science et huis clos - Station spatiale/Destiny Acte 2 - 31 - Station spatiale.m4a",
+     "duree_s": 103.04,
      "source": "famille"
     },
     "3": {
-     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 3 - 29 - Sous-marin.mp3",
-     "duree_s": 104.5,
+     "fichier": "Musiques Destiny/Science et huis clos - Station spatiale/Destiny Acte 3 - 31 - Station spatiale.m4a",
+     "duree_s": 124.12,
      "source": "famille"
     },
     "4": {
-     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 4 - 29 - Sous-marin.mp3",
-     "duree_s": 180.0,
+     "fichier": "Musiques Destiny/Science et huis clos - Station spatiale/Destiny Acte 4 - 31 - Station spatiale.m4a",
+     "duree_s": 204.8,
      "source": "famille"
     }
    }
@@ -198,23 +198,23 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Intro 26 - Refuge de montagne.mp3",
-     "duree_s": 151.8,
+     "fichier": "Musiques Destiny/Nature - Forêt/Destiny Intro 14 - Forêt.m4a",
+     "duree_s": 118.92,
      "source": "famille"
     },
     "2": {
-     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 2 - 26 - Refuge de montagne.mp3",
-     "duree_s": 163.9,
+     "fichier": "Musiques Destiny/Nature - Forêt/Destiny Acte 2 - 14 - Forêt.m4a",
+     "duree_s": 172.76,
      "source": "famille"
     },
     "3": {
-     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 3 - 26 - Refuge de montagne.mp3",
-     "duree_s": 148.8,
+     "fichier": "Musiques Destiny/Nature - Forêt/Destiny Acte 3 - 14 - Forêt.m4a",
+     "duree_s": 99.6,
      "source": "famille"
     },
     "4": {
-     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 4 - 26 - Refuge de montagne.mp3",
-     "duree_s": 197.6,
+     "fichier": "Musiques Destiny/Nature - Forêt/Destiny Acte 4 - 14 - Forêt.m4a",
+     "duree_s": 188.8,
      "source": "famille"
     }
    }
@@ -264,23 +264,23 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Mystère - Église/Destiny Intro 40 - Église.mp3",
-     "duree_s": 115.2,
+     "fichier": "Musiques Destiny/Mystère - Musée/Destiny Intro 19 - Musée.m4a",
+     "duree_s": 89.96,
      "source": "famille"
     },
     "2": {
-     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 2 - 40 - Église.mp3",
-     "duree_s": 103.4,
+     "fichier": "Musiques Destiny/Mystère - Musée/Destiny Acte 2 - 19 - Musée.m4a",
+     "duree_s": 123.56,
      "source": "famille"
     },
     "3": {
-     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 3 - 40 - Église.mp3",
-     "duree_s": 110.0,
+     "fichier": "Musiques Destiny/Mystère - Musée/Destiny Acte 3 - 19 - Musée.m4a",
+     "duree_s": 82.76,
      "source": "famille"
     },
     "4": {
-     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 4 - 40 - Église.mp3",
-     "duree_s": 415.9,
+     "fichier": "Musiques Destiny/Mystère - Musée/Destiny Acte 4 - 19 - Musée.m4a",
+     "duree_s": 170.0,
      "source": "famille"
     }
    }
@@ -396,24 +396,24 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Intro 27 - Restaurant gastronomique.mp3",
-     "duree_s": 157.7,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Loisirs - Centre commercial/Destiny Intro 11 - Centre commercial.m4a",
+     "duree_s": 177.52,
+     "source": "lieu"
     },
     "2": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 167.1,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Loisirs - Centre commercial/Destiny Acte 2 - 11 - Centre commercial.m4a",
+     "duree_s": 81.4,
+     "source": "lieu"
     },
     "3": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 154.0,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Loisirs - Centre commercial/Destiny Acte 3 - 11 - Centre commercial.m4a",
+     "duree_s": 149.2,
+     "source": "lieu"
     },
     "4": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 199.2,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Loisirs - Centre commercial/Destiny Acte 4 - 11 - Centre commercial.m4a",
+     "duree_s": 202.4,
+     "source": "lieu"
     }
    }
   },
@@ -429,24 +429,24 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Intro 26 - Refuge de montagne.mp3",
-     "duree_s": 151.8,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Nature - Zoo/Destiny Intro 38 - Zoo.m4a",
+     "duree_s": 67.92,
+     "source": "lieu"
     },
     "2": {
-     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 2 - 26 - Refuge de montagne.mp3",
-     "duree_s": 163.9,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Nature - Zoo/Destiny Acte 2 - 38 - Zoo.m4a",
+     "duree_s": 102.68,
+     "source": "lieu"
     },
     "3": {
-     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 3 - 26 - Refuge de montagne.mp3",
-     "duree_s": 148.8,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Nature - Zoo/Destiny Acte 3 - 38 - Zoo.m4a",
+     "duree_s": 132.76,
+     "source": "lieu"
     },
     "4": {
-     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 4 - 26 - Refuge de montagne.mp3",
-     "duree_s": 197.6,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Nature - Zoo/Destiny Acte 4 - 38 - Zoo.m4a",
+     "duree_s": 179.92,
+     "source": "lieu"
     }
    }
   },
@@ -462,24 +462,24 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Mystère - Église/Destiny Intro 40 - Église.mp3",
-     "duree_s": 115.2,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Mystère - Musée/Destiny Intro 19 - Musée.m4a",
+     "duree_s": 89.96,
+     "source": "lieu"
     },
     "2": {
-     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 2 - 40 - Église.mp3",
-     "duree_s": 103.4,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Mystère - Musée/Destiny Acte 2 - 19 - Musée.m4a",
+     "duree_s": 123.56,
+     "source": "lieu"
     },
     "3": {
-     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 3 - 40 - Église.mp3",
-     "duree_s": 110.0,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Mystère - Musée/Destiny Acte 3 - 19 - Musée.m4a",
+     "duree_s": 82.76,
+     "source": "lieu"
     },
     "4": {
-     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 4 - 40 - Église.mp3",
-     "duree_s": 415.9,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Mystère - Musée/Destiny Acte 4 - 19 - Musée.m4a",
+     "duree_s": 170.0,
+     "source": "lieu"
     }
    }
   },
@@ -528,23 +528,23 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Intro 27 - Restaurant gastronomique.mp3",
-     "duree_s": 157.7,
+     "fichier": "Musiques Destiny/Loisirs - Théâtre/Destiny Intro 34 - Théâtre.m4a",
+     "duree_s": 104.6,
      "source": "famille"
     },
     "2": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 167.1,
+     "fichier": "Musiques Destiny/Loisirs - Théâtre/Destiny Acte 2 - 34 - Théâtre.m4a",
+     "duree_s": 152.4,
      "source": "famille"
     },
     "3": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 154.0,
+     "fichier": "Musiques Destiny/Loisirs - Théâtre/Destiny Acte 3 - 34 - Théâtre.m4a",
+     "duree_s": 100.76,
      "source": "famille"
     },
     "4": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 199.2,
+     "fichier": "Musiques Destiny/Loisirs - Théâtre/Destiny Acte 4 - 34 - Théâtre.m4a",
+     "duree_s": 149.96,
      "source": "famille"
     }
    }
@@ -561,24 +561,24 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Intro 27 - Restaurant gastronomique.mp3",
-     "duree_s": 157.7,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Loisirs - Boîte de nuit/Destiny Intro 06 - Boîte de nuit.m4a",
+     "duree_s": 184.04,
+     "source": "lieu"
     },
     "2": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 167.1,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Loisirs - Boîte de nuit/Destiny Acte 2 - 06 - Boîte de nuit.m4a",
+     "duree_s": 168.72,
+     "source": "lieu"
     },
     "3": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 154.0,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Loisirs - Boîte de nuit/Destiny Acte 3 - 06 - Boîte de nuit.m4a",
+     "duree_s": 82.32,
+     "source": "lieu"
     },
     "4": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 199.2,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Loisirs - Boîte de nuit/Destiny Acte 4 - 06 - Boîte de nuit.m4a",
+     "duree_s": 182.2,
+     "source": "lieu"
     }
    }
   },
@@ -594,24 +594,24 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Intro 29 - Sous-marin.mp3",
-     "duree_s": 183.6,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Science et huis clos - Station spatiale/Destiny Intro 31 - Station spatiale.m4a",
+     "duree_s": 193.6,
+     "source": "lieu"
     },
     "2": {
-     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 2 - 29 - Sous-marin.mp3",
-     "duree_s": 138.0,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Science et huis clos - Station spatiale/Destiny Acte 2 - 31 - Station spatiale.m4a",
+     "duree_s": 103.04,
+     "source": "lieu"
     },
     "3": {
-     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 3 - 29 - Sous-marin.mp3",
-     "duree_s": 104.5,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Science et huis clos - Station spatiale/Destiny Acte 3 - 31 - Station spatiale.m4a",
+     "duree_s": 124.12,
+     "source": "lieu"
     },
     "4": {
-     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 4 - 29 - Sous-marin.mp3",
-     "duree_s": 180.0,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Science et huis clos - Station spatiale/Destiny Acte 4 - 31 - Station spatiale.m4a",
+     "duree_s": 204.8,
+     "source": "lieu"
     }
    }
   },
@@ -627,23 +627,23 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Intro 12 - Commissariat.mp3",
-     "duree_s": 93.2,
+     "fichier": "Musiques Destiny/Institutions - Banque/Destiny Intro 04 - Banque.m4a",
+     "duree_s": 92.8,
      "source": "famille"
     },
     "2": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 2 - 12 - Commissariat.mp3",
-     "duree_s": 189.7,
+     "fichier": "Musiques Destiny/Institutions - Banque/Destiny Acte 2 - 04 - Banque.m4a",
+     "duree_s": 94.96,
      "source": "famille"
     },
     "3": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 3 - 12 - Commissariat.mp3",
-     "duree_s": 154.4,
+     "fichier": "Musiques Destiny/Institutions - Banque/Destiny Acte 3 - 04 - Banque.m4a",
+     "duree_s": 73.48,
      "source": "famille"
     },
     "4": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 4 - 12 - Commissariat.mp3",
-     "duree_s": 194.8,
+     "fichier": "Musiques Destiny/Institutions - Banque/Destiny Acte 4 - 04 - Banque.m4a",
+     "duree_s": 209.72,
      "source": "famille"
     }
    }
@@ -660,23 +660,23 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Intro 12 - Commissariat.mp3",
-     "duree_s": 93.2,
+     "fichier": "Musiques Destiny/Institutions - Tribunal/Destiny Intro 35 - Tribunal.m4a",
+     "duree_s": 87.68,
      "source": "famille"
     },
     "2": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 2 - 12 - Commissariat.mp3",
-     "duree_s": 189.7,
+     "fichier": "Musiques Destiny/Institutions - Tribunal/Destiny Acte 2 - 35 - Tribunal.m4a",
+     "duree_s": 118.8,
      "source": "famille"
     },
     "3": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 3 - 12 - Commissariat.mp3",
-     "duree_s": 154.4,
+     "fichier": "Musiques Destiny/Institutions - Tribunal/Destiny Acte 3 - 35 - Tribunal.m4a",
+     "duree_s": 109.2,
      "source": "famille"
     },
     "4": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 4 - 12 - Commissariat.mp3",
-     "duree_s": 194.8,
+     "fichier": "Musiques Destiny/Institutions - Tribunal/Destiny Acte 4 - 35 - Tribunal.m4a",
+     "duree_s": 189.88,
      "source": "famille"
     }
    }
@@ -693,24 +693,24 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Mystère - Église/Destiny Intro 40 - Église.mp3",
-     "duree_s": 115.2,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Mystère - Manoir abandonné/Destiny Intro 18 - Manoir abandonné.m4a",
+     "duree_s": 49.4,
+     "source": "lieu"
     },
     "2": {
-     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 2 - 40 - Église.mp3",
-     "duree_s": 103.4,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Mystère - Manoir abandonné/Destiny Acte 2 - 18 - Manoir abandonné.m4a",
+     "duree_s": 119.2,
+     "source": "lieu"
     },
     "3": {
-     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 3 - 40 - Église.mp3",
-     "duree_s": 110.0,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Mystère - Manoir abandonné/Destiny Acte 3 - 18 - Manoir abandonné.m4a",
+     "duree_s": 92.76,
+     "source": "lieu"
     },
     "4": {
-     "fichier": "Musiques Destiny/Mystère - Église/Destiny Acte 4 - 40 - Église.mp3",
-     "duree_s": 415.9,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Mystère - Manoir abandonné/Destiny Acte 4 - 18 - Manoir abandonné.m4a",
+     "duree_s": 179.2,
+     "source": "lieu"
     }
    }
   },
@@ -764,19 +764,19 @@
      "source": "famille"
     },
     "2": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 167.1,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Loisirs - Stade/Destiny Acte 2 - 30 - Stade.m4a",
+     "duree_s": 153.96,
+     "source": "lieu"
     },
     "3": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 154.0,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Loisirs - Stade/Destiny Acte 3 - 30 - Stade.m4a",
+     "duree_s": 112.96,
+     "source": "lieu"
     },
     "4": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 199.2,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Loisirs - Stade/Destiny Acte 4 - 30 - Stade.m4a",
+     "duree_s": 85.56,
+     "source": "lieu"
     }
    }
   },
@@ -825,24 +825,24 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Intro 12 - Commissariat.mp3",
-     "duree_s": 93.2,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Institutions - Banque/Destiny Intro 04 - Banque.m4a",
+     "duree_s": 92.8,
+     "source": "lieu"
     },
     "2": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 2 - 12 - Commissariat.mp3",
-     "duree_s": 189.7,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Institutions - Banque/Destiny Acte 2 - 04 - Banque.m4a",
+     "duree_s": 94.96,
+     "source": "lieu"
     },
     "3": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 3 - 12 - Commissariat.mp3",
-     "duree_s": 154.4,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Institutions - Banque/Destiny Acte 3 - 04 - Banque.m4a",
+     "duree_s": 73.48,
+     "source": "lieu"
     },
     "4": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 4 - 12 - Commissariat.mp3",
-     "duree_s": 194.8,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Institutions - Banque/Destiny Acte 4 - 04 - Banque.m4a",
+     "duree_s": 209.72,
+     "source": "lieu"
     }
    }
   },
@@ -858,23 +858,23 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Intro 26 - Refuge de montagne.mp3",
-     "duree_s": 151.8,
+     "fichier": "Musiques Destiny/Nature - Zoo/Destiny Intro 38 - Zoo.m4a",
+     "duree_s": 67.92,
      "source": "famille"
     },
     "2": {
-     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 2 - 26 - Refuge de montagne.mp3",
-     "duree_s": 163.9,
+     "fichier": "Musiques Destiny/Nature - Zoo/Destiny Acte 2 - 38 - Zoo.m4a",
+     "duree_s": 102.68,
      "source": "famille"
     },
     "3": {
-     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 3 - 26 - Refuge de montagne.mp3",
-     "duree_s": 148.8,
+     "fichier": "Musiques Destiny/Nature - Zoo/Destiny Acte 3 - 38 - Zoo.m4a",
+     "duree_s": 132.76,
      "source": "famille"
     },
     "4": {
-     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 4 - 26 - Refuge de montagne.mp3",
-     "duree_s": 197.6,
+     "fichier": "Musiques Destiny/Nature - Zoo/Destiny Acte 4 - 38 - Zoo.m4a",
+     "duree_s": 179.92,
      "source": "famille"
     }
    }
@@ -924,23 +924,23 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Intro 02 - Avion en vol.mp3",
-     "duree_s": 165.0,
-     "source": "famille"
-    },
-    "2": {
-     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 2 - 02 - Avion en vol.mp3",
-     "duree_s": 173.4,
-     "source": "famille"
-    },
-    "3": {
-     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 3 - 02 - Avion en vol.mp3",
+     "fichier": "Musiques Destiny/Transports - Navire de croisière/Destiny Intro 21 - Navire de croisière.m4a",
      "duree_s": 147.2,
      "source": "famille"
     },
+    "2": {
+     "fichier": "Musiques Destiny/Transports - Navire de croisière/Destiny Acte 2 - 21 - Navire de croisière.m4a",
+     "duree_s": 174.8,
+     "source": "famille"
+    },
+    "3": {
+     "fichier": "Musiques Destiny/Transports - Navire de croisière/Destiny Acte 3 - 21 - Navire de croisière.m4a",
+     "duree_s": 98.28,
+     "source": "famille"
+    },
     "4": {
-     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 4 - 02 - Avion en vol.mp3",
-     "duree_s": 169.2,
+     "fichier": "Musiques Destiny/Transports - Navire de croisière/Destiny Acte 4 - 21 - Navire de croisière.m4a",
+     "duree_s": 184.92,
      "source": "famille"
     }
    }
@@ -995,18 +995,18 @@
      "source": "famille"
     },
     "2": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 167.1,
+     "fichier": "Musiques Destiny/Loisirs - Stade/Destiny Acte 2 - 30 - Stade.m4a",
+     "duree_s": 153.96,
      "source": "famille"
     },
     "3": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 154.0,
+     "fichier": "Musiques Destiny/Loisirs - Stade/Destiny Acte 3 - 30 - Stade.m4a",
+     "duree_s": 112.96,
      "source": "famille"
     },
     "4": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 199.2,
+     "fichier": "Musiques Destiny/Loisirs - Stade/Destiny Acte 4 - 30 - Stade.m4a",
+     "duree_s": 85.56,
      "source": "famille"
     }
    }
@@ -1023,24 +1023,24 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Intro 26 - Refuge de montagne.mp3",
-     "duree_s": 151.8,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Nature - Forêt/Destiny Intro 14 - Forêt.m4a",
+     "duree_s": 118.92,
+     "source": "lieu"
     },
     "2": {
-     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 2 - 26 - Refuge de montagne.mp3",
-     "duree_s": 163.9,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Nature - Forêt/Destiny Acte 2 - 14 - Forêt.m4a",
+     "duree_s": 172.76,
+     "source": "lieu"
     },
     "3": {
-     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 3 - 26 - Refuge de montagne.mp3",
-     "duree_s": 148.8,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Nature - Forêt/Destiny Acte 3 - 14 - Forêt.m4a",
+     "duree_s": 99.6,
+     "source": "lieu"
     },
     "4": {
-     "fichier": "Musiques Destiny/Nature - Refuge de montagne/Destiny Acte 4 - 26 - Refuge de montagne.mp3",
-     "duree_s": 197.6,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Nature - Forêt/Destiny Acte 4 - 14 - Forêt.m4a",
+     "duree_s": 188.8,
+     "source": "lieu"
     }
    }
   },
@@ -1089,24 +1089,24 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Intro 02 - Avion en vol.mp3",
-     "duree_s": 165.0,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Transports - Métro/Destiny Intro 20 - Métro.m4a",
+     "duree_s": 122.04,
+     "source": "lieu"
     },
     "2": {
-     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 2 - 02 - Avion en vol.mp3",
-     "duree_s": 173.4,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Transports - Métro/Destiny Acte 2 - 20 - Métro.m4a",
+     "duree_s": 164.88,
+     "source": "lieu"
     },
     "3": {
-     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 3 - 02 - Avion en vol.mp3",
-     "duree_s": 147.2,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Transports - Métro/Destiny Acte 3 - 20 - Métro.m4a",
+     "duree_s": 144.84,
+     "source": "lieu"
     },
     "4": {
-     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 4 - 02 - Avion en vol.mp3",
-     "duree_s": 169.2,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Transports - Métro/Destiny Acte 4 - 20 - Métro.m4a",
+     "duree_s": 233.2,
+     "source": "lieu"
     }
    }
   },
@@ -1122,24 +1122,24 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Intro 02 - Avion en vol.mp3",
-     "duree_s": 165.0,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Transports - Navire de croisière/Destiny Intro 21 - Navire de croisière.m4a",
+     "duree_s": 147.2,
+     "source": "lieu"
     },
     "2": {
-     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 2 - 02 - Avion en vol.mp3",
-     "duree_s": 173.4,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Transports - Navire de croisière/Destiny Acte 2 - 21 - Navire de croisière.m4a",
+     "duree_s": 174.8,
+     "source": "lieu"
     },
     "3": {
-     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 3 - 02 - Avion en vol.mp3",
-     "duree_s": 147.2,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Transports - Navire de croisière/Destiny Acte 3 - 21 - Navire de croisière.m4a",
+     "duree_s": 98.28,
+     "source": "lieu"
     },
     "4": {
-     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 4 - 02 - Avion en vol.mp3",
-     "duree_s": 169.2,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Transports - Navire de croisière/Destiny Acte 4 - 21 - Navire de croisière.m4a",
+     "duree_s": 184.92,
+     "source": "lieu"
     }
    }
   },
@@ -1155,23 +1155,23 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Intro 12 - Commissariat.mp3",
-     "duree_s": 93.2,
+     "fichier": "Musiques Destiny/Institutions - École/Destiny Intro 39 - École.m4a",
+     "duree_s": 81.72,
      "source": "famille"
     },
     "2": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 2 - 12 - Commissariat.mp3",
-     "duree_s": 189.7,
+     "fichier": "Musiques Destiny/Institutions - École/Destiny Acte 2 - 39 - École.m4a",
+     "duree_s": 98.4,
      "source": "famille"
     },
     "3": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 3 - 12 - Commissariat.mp3",
-     "duree_s": 154.4,
+     "fichier": "Musiques Destiny/Institutions - École/Destiny Acte 3 - 39 - École.m4a",
+     "duree_s": 97.2,
      "source": "famille"
     },
     "4": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 4 - 12 - Commissariat.mp3",
-     "duree_s": 194.8,
+     "fichier": "Musiques Destiny/Institutions - École/Destiny Acte 4 - 39 - École.m4a",
+     "duree_s": 168.0,
      "source": "famille"
     }
    }
@@ -1188,24 +1188,24 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Intro 29 - Sous-marin.mp3",
-     "duree_s": 183.6,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Science et huis clos - Hôpital/Destiny Intro 15 - Hôpital.m4a",
+     "duree_s": 47.64,
+     "source": "lieu"
     },
     "2": {
-     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 2 - 29 - Sous-marin.mp3",
-     "duree_s": 138.0,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Science et huis clos - Hôpital/Destiny Acte 2 - 15 - Hôpital.m4a",
+     "duree_s": 129.96,
+     "source": "lieu"
     },
     "3": {
-     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 3 - 29 - Sous-marin.mp3",
-     "duree_s": 104.5,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Science et huis clos - Hôpital/Destiny Acte 3 - 15 - Hôpital.m4a",
+     "duree_s": 39.8,
+     "source": "lieu"
     },
     "4": {
-     "fichier": "Musiques Destiny/Science et huis clos - Sous-marin/Destiny Acte 4 - 29 - Sous-marin.mp3",
-     "duree_s": 180.0,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Science et huis clos - Hôpital/Destiny Acte 4 - 15 - Hôpital.m4a",
+     "duree_s": 173.0,
+     "source": "lieu"
     }
    }
   },
@@ -1221,24 +1221,24 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Intro 12 - Commissariat.mp3",
-     "duree_s": 93.2,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Institutions - École/Destiny Intro 39 - École.m4a",
+     "duree_s": 81.72,
+     "source": "lieu"
     },
     "2": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 2 - 12 - Commissariat.mp3",
-     "duree_s": 189.7,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Institutions - École/Destiny Acte 2 - 39 - École.m4a",
+     "duree_s": 98.4,
+     "source": "lieu"
     },
     "3": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 3 - 12 - Commissariat.mp3",
-     "duree_s": 154.4,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Institutions - École/Destiny Acte 3 - 39 - École.m4a",
+     "duree_s": 97.2,
+     "source": "lieu"
     },
     "4": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 4 - 12 - Commissariat.mp3",
-     "duree_s": 194.8,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Institutions - École/Destiny Acte 4 - 39 - École.m4a",
+     "duree_s": 168.0,
+     "source": "lieu"
     }
    }
   },
@@ -1254,23 +1254,23 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Intro 27 - Restaurant gastronomique.mp3",
-     "duree_s": 157.7,
+     "fichier": "Musiques Destiny/Loisirs - Centre commercial/Destiny Intro 11 - Centre commercial.m4a",
+     "duree_s": 177.52,
      "source": "famille"
     },
     "2": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 167.1,
+     "fichier": "Musiques Destiny/Loisirs - Centre commercial/Destiny Acte 2 - 11 - Centre commercial.m4a",
+     "duree_s": 81.4,
      "source": "famille"
     },
     "3": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 154.0,
+     "fichier": "Musiques Destiny/Loisirs - Centre commercial/Destiny Acte 3 - 11 - Centre commercial.m4a",
+     "duree_s": 149.2,
      "source": "famille"
     },
     "4": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 199.2,
+     "fichier": "Musiques Destiny/Loisirs - Centre commercial/Destiny Acte 4 - 11 - Centre commercial.m4a",
+     "duree_s": 202.4,
      "source": "famille"
     }
    }
@@ -1287,23 +1287,23 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Intro 27 - Restaurant gastronomique.mp3",
-     "duree_s": 157.7,
+     "fichier": "Musiques Destiny/Loisirs - Boîte de nuit/Destiny Intro 06 - Boîte de nuit.m4a",
+     "duree_s": 184.04,
      "source": "famille"
     },
     "2": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 167.1,
+     "fichier": "Musiques Destiny/Loisirs - Boîte de nuit/Destiny Acte 2 - 06 - Boîte de nuit.m4a",
+     "duree_s": 168.72,
      "source": "famille"
     },
     "3": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 154.0,
+     "fichier": "Musiques Destiny/Loisirs - Boîte de nuit/Destiny Acte 3 - 06 - Boîte de nuit.m4a",
+     "duree_s": 82.32,
      "source": "famille"
     },
     "4": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 199.2,
+     "fichier": "Musiques Destiny/Loisirs - Boîte de nuit/Destiny Acte 4 - 06 - Boîte de nuit.m4a",
+     "duree_s": 182.2,
      "source": "famille"
     }
    }
@@ -1320,24 +1320,24 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Intro 27 - Restaurant gastronomique.mp3",
-     "duree_s": 157.7,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Loisirs - Théâtre/Destiny Intro 34 - Théâtre.m4a",
+     "duree_s": 104.6,
+     "source": "lieu"
     },
     "2": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 2 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 167.1,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Loisirs - Théâtre/Destiny Acte 2 - 34 - Théâtre.m4a",
+     "duree_s": 152.4,
+     "source": "lieu"
     },
     "3": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 3 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 154.0,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Loisirs - Théâtre/Destiny Acte 3 - 34 - Théâtre.m4a",
+     "duree_s": 100.76,
+     "source": "lieu"
     },
     "4": {
-     "fichier": "Musiques Destiny/Loisirs - Restaurant gastronomique/Destiny Acte 4 - 27 - Restaurant gastronomique.mp3",
-     "duree_s": 199.2,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Loisirs - Théâtre/Destiny Acte 4 - 34 - Théâtre.m4a",
+     "duree_s": 149.96,
+     "source": "lieu"
     }
    }
   },
@@ -1353,24 +1353,24 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Intro 12 - Commissariat.mp3",
-     "duree_s": 93.2,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Institutions - Tribunal/Destiny Intro 35 - Tribunal.m4a",
+     "duree_s": 87.68,
+     "source": "lieu"
     },
     "2": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 2 - 12 - Commissariat.mp3",
-     "duree_s": 189.7,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Institutions - Tribunal/Destiny Acte 2 - 35 - Tribunal.m4a",
+     "duree_s": 118.8,
+     "source": "lieu"
     },
     "3": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 3 - 12 - Commissariat.mp3",
-     "duree_s": 154.4,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Institutions - Tribunal/Destiny Acte 3 - 35 - Tribunal.m4a",
+     "duree_s": 109.2,
+     "source": "lieu"
     },
     "4": {
-     "fichier": "Musiques Destiny/Institutions - Commissariat/Destiny Acte 4 - 12 - Commissariat.mp3",
-     "duree_s": 194.8,
-     "source": "famille"
+     "fichier": "Musiques Destiny/Institutions - Tribunal/Destiny Acte 4 - 35 - Tribunal.m4a",
+     "duree_s": 189.88,
+     "source": "lieu"
     }
    }
   },
@@ -1386,23 +1386,23 @@
    },
    "musiques": {
     "1": {
-     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Intro 02 - Avion en vol.mp3",
-     "duree_s": 165.0,
+     "fichier": "Musiques Destiny/Transports - Métro/Destiny Intro 20 - Métro.m4a",
+     "duree_s": 122.04,
      "source": "famille"
     },
     "2": {
-     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 2 - 02 - Avion en vol.mp3",
-     "duree_s": 173.4,
+     "fichier": "Musiques Destiny/Transports - Métro/Destiny Acte 2 - 20 - Métro.m4a",
+     "duree_s": 164.88,
      "source": "famille"
     },
     "3": {
-     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 3 - 02 - Avion en vol.mp3",
-     "duree_s": 147.2,
+     "fichier": "Musiques Destiny/Transports - Métro/Destiny Acte 3 - 20 - Métro.m4a",
+     "duree_s": 144.84,
      "source": "famille"
     },
     "4": {
-     "fichier": "Musiques Destiny/Transports - Avion en vol/Destiny Acte 4 - 02 - Avion en vol.mp3",
-     "duree_s": 169.2,
+     "fichier": "Musiques Destiny/Transports - Métro/Destiny Acte 4 - 20 - Métro.m4a",
+     "duree_s": 233.2,
      "source": "famille"
     }
    }
@@ -3704,5 +3704,48 @@
     ]
    }
   }
+ },
+ "groupes_musique": {
+  "navire_croisiere": [
+   "port_maritime"
+  ],
+  "metro": [
+   "station_service"
+  ],
+  "boite_nuit": [
+   "casino"
+  ],
+  "theatre": [
+   "plateau_tele"
+  ],
+  "stade": [
+   "salle_sport"
+  ],
+  "centre_commercial": [
+   "supermarche"
+  ],
+  "foret": [
+   "ferme"
+  ],
+  "zoo": [
+   "aquarium"
+  ],
+  "base_spatiale": [
+   "laboratoire"
+  ],
+  "hopital": [],
+  "manoir_abandonne": [],
+  "musee": [
+   "bibliotheque"
+  ],
+  "tribunal": [
+   "palais_presidentiel"
+  ],
+  "banque": [
+   "bureau"
+  ],
+  "ecole": [
+   "universite"
+  ]
  }
 }

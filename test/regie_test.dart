@@ -236,7 +236,8 @@ void main() {
     });
   });
 
-  testWidgets('la frise montre les trois Destiny et leur heure ; plus de compte à rebours ni de « ±1 min »', (tester) async {
+  testWidgets('la frise montre les trois Destiny et leur heure ; plus de compte à rebours ni de « ±1 min »',
+      (tester) async {
     await _regie(tester);
     for (final n in [1, 2, 3]) {
       expect(find.byKey(ValueKey('repere_destiny_$n')), findsOneWidget);
@@ -455,7 +456,8 @@ void main() {
     expect(b.session.personnages, hasLength(4));
   });
 
-  testWidgets('une bulle « i » ouvre la fiche dans une fenêtre : l\'écran reste dessous, le chrono aussi', (tester) async {
+  testWidgets('une bulle « i » ouvre la fiche dans une fenêtre : l\'écran reste dessous, le chrono aussi',
+      (tester) async {
     final b = await _regie(tester);
     await tester.tap(find.byTooltip(t.t('troupe.info_de', {'nom': b.session.lieuNom})).first);
     await tester.pumpAndSettle();
@@ -557,7 +559,8 @@ void main() {
       return b;
     }
 
-    testWidgets('le jeu : le spectacle, le lieu, le danger et ses paliers, les Destiny prévus ; ni questions, ni régie son',
+    testWidgets(
+        'le jeu : le spectacle, le lieu, le danger et ses paliers, les Destiny prévus ; ni questions, ni régie son',
         (tester) async {
       final b = await echauffement(tester);
       final s = b.session;
@@ -619,10 +622,15 @@ void main() {
       // autre famille : sa famille manque.
       final seul = s.personnages.firstWhere((p) =>
           p.archetypeId != 'alarmiste' &&
-          s.personnages.where((q) => q.archetypeId != 'alarmiste' && g.archetype(q.archetypeId)!.famille == g.archetype(p.archetypeId)!.famille).length == 1);
+          s.personnages
+                  .where((q) =>
+                      q.archetypeId != 'alarmiste' &&
+                      g.archetype(q.archetypeId)!.famille == g.archetype(p.archetypeId)!.famille)
+                  .length ==
+              1);
       final famille = g.archetype(seul.archetypeId)!.famille;
-      final libre = g.archetypes.firstWhere((a) =>
-          a.id != 'alarmiste' && a.famille != famille && s.personnages.every((p) => p.archetypeId != a.id));
+      final libre = g.archetypes.firstWhere(
+          (a) => a.id != 'alarmiste' && a.famille != famille && s.personnages.every((p) => p.archetypeId != a.id));
       await tester.tap(find.byKey(ValueKey('changer_${seul.archetypeId}')));
       await tester.pumpAndSettle();
       final choix = find.descendant(of: find.byType(BottomSheet), matching: find.text(libre.nom));
@@ -639,7 +647,9 @@ void main() {
       final b = await echauffement(tester);
       final s = b.session;
       final libre = g.archetypes.firstWhere((a) =>
-          a.id != 'alarmiste' && a.famille == FamilleId.interprete && s.personnages.every((p) => p.archetypeId != a.id));
+          a.id != 'alarmiste' &&
+          a.famille == FamilleId.interprete &&
+          s.personnages.every((p) => p.archetypeId != a.id));
       await tester.tap(find.byKey(const ValueKey('changer_alarmiste')));
       await tester.pumpAndSettle();
       final choix = find.descendant(of: find.byType(BottomSheet), matching: find.text(libre.nom));
@@ -670,7 +680,8 @@ void main() {
       await tester.drag(find.byKey(const ValueKey('repere_destiny_2')), const Offset(60, 0));
       await tester.pumpAndSettle();
       expect(s.destinyMinutes[1], inExclusiveRange(18, 27));
-      expect(tester.widget<Text>(find.byKey(const ValueKey('heure_destiny_2'))).data, horloge(s.destinyMinutes[1] * 60));
+      expect(
+          tester.widget<Text>(find.byKey(const ValueKey('heure_destiny_2'))).data, horloge(s.destinyMinutes[1] * 60));
       expect(tester.widget<Text>(find.byKey(const ValueKey('plan_destiny'))).data, contains('${s.destinyMinutes[1]}'));
       // Trop loin : il s'arrête juste avant le troisième.
       await tester.drag(find.byKey(const ValueKey('repere_destiny_2')), const Offset(400, 0));
@@ -818,7 +829,8 @@ void main() {
     final regieSon = RegieSon(
       pack: pack,
       reglages: reglages,
-      conduite: ConduiteSon(pack: pack, reglages: reglages, muet: () => false, fabrique: (bus) => LecteurFactice(bus, [])),
+      conduite:
+          ConduiteSon(pack: pack, reglages: reglages, muet: () => false, fabrique: (bus) => LecteurFactice(bus, [])),
     );
     // La bibliothèque se charge pour de vrai (sinon, le sablier tourne sans fin).
     // (Le cache des assets garde des chargements lancés par les tests
@@ -833,8 +845,11 @@ void main() {
     }))!;
     await _ouvrir(tester, Scaffold(body: MusicScreen(controller: musique, regieSon: regieSon)));
     // « Spectacle » vient en tête, avec les 40 lieux.
-    expect(find.text(t.t('musique.categorie', {'nom': t.t('musique.spectacle'), 'n': '${m.lieux.length}'})), findsOneWidget);
-    final premier = (m.lieux.values.toList()..sort((a, b) => Grammaire.normaliser(a.nom).compareTo(Grammaire.normaliser(b.nom)))).first;
+    expect(find.text(t.t('musique.categorie', {'nom': t.t('musique.spectacle'), 'n': '${m.lieux.length}'})),
+        findsOneWidget);
+    final premier = (m.lieux.values.toList()
+          ..sort((a, b) => Grammaire.normaliser(a.nom).compareTo(Grammaire.normaliser(b.nom))))
+        .first;
     expect(find.text(premier.nom), findsOneWidget);
     for (var acte = 1; acte <= 4; acte++) {
       expect(find.text(t.t('musique.acte', {'n': '$acte'})), findsWidgets);
@@ -845,6 +860,19 @@ void main() {
     expect(find.text(t.t('musique.ambiance')), findsWidgets);
     final boutons = tester.widgetList<ActionChip>(find.byType(ActionChip));
     expect(boutons.every((b) => b.onPressed != null), isTrue);
+
+    // Une icône par groupe de musique : même icône, même musique, et deux
+    // groupes n'ont jamais la même.
+    final groupes = <String>{
+      for (final l in m.lieux.keys)
+        for (var acte = 1; acte <= 4; acte++) groupeMusique(resoudreMusique(m, pack.index, l, acte).chemin!)!,
+    };
+    expect(groupes.length, 21);
+    expect({for (final g in groupes) iconeGroupeMusique(g)}.length, groupes.length);
+    expect(groupeMusique(resoudreMusique(m, pack.index, 'aquarium', 2).chemin!), 'Zoo');
+    // Le premier lieu (Aéroport) montre l'icône de son groupe (l'Avion).
+    final groupeAeroport = groupeMusique(resoudreMusique(m, pack.index, premier.id, 1).chemin!);
+    expect(find.byIcon(iconeGroupeMusique(groupeAeroport)), findsWidgets);
   });
 
   test('chaque texte de l\'écran Musique existe', () {
