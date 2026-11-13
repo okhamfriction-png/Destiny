@@ -251,8 +251,30 @@ class _RituelDestinyState extends State<RituelDestiny> with SingleTickerProvider
         return Text(t.t('rituel.titre').toUpperCase(),
             key: const ValueKey('destiny'), style: style.copyWith(fontSize: 54, letterSpacing: 8));
       case EtapeRituel.fige:
+        final question = g.rituel.questions[palier.acte];
         return Column(key: const ValueKey('fige'), mainAxisSize: MainAxisSize.min, children: [
           Text(t.t('rituel.titre').toUpperCase(), style: style.copyWith(fontSize: 40, letterSpacing: 6)),
+          // On ne se fige plus : le ralenti, et la question de l'acte.
+          const SizedBox(height: 18),
+          Text(
+            t.t('rituel.ralenti'),
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+                fontFamily: kPoliceTexte, fontSize: 20, color: Colors.white, fontWeight: FontWeight.w700, height: 1.3),
+          ),
+          if (question != null) ...[
+            const SizedBox(height: 10),
+            Text(
+              '${t.t('rituel.avant_acte', {'n': '${palier.acte}'})} : $question',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  fontFamily: kPoliceTexte,
+                  fontSize: 17,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.white,
+                  height: 1.35),
+            ),
+          ],
           if (widget.premierFige && widget.reglages.rappelPremierFige) ...[
             const SizedBox(height: 22),
             Text(
@@ -372,7 +394,8 @@ class _CartePalier extends StatelessWidget {
           Text(
             t.t('rituel.nouvelle_aide'),
             textAlign: TextAlign.center,
-            style: const TextStyle(fontFamily: kPoliceTexte, fontSize: 11.5, fontStyle: FontStyle.italic, color: Colors.white60),
+            style: const TextStyle(
+                fontFamily: kPoliceTexte, fontSize: 11.5, fontStyle: FontStyle.italic, color: Colors.white60),
           ),
           const SizedBox(height: 4),
           Text(

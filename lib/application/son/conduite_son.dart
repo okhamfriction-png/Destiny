@@ -16,6 +16,22 @@ enum BusSon { musique, destiny, bruitageA, bruitageB, stinger }
 /// Une étape de la conduite, pour savoir où l'on en est (et pour les tests).
 enum EtapeConduite { repos, ouverture, sortieMusique, sonDestiny, reveal, bruitage, silence, musique, fin }
 
+/// La phase de l'enchaînement fluide, affichée en grand sur la régie : ce que
+/// font les comédiens en ce moment.
+enum PhaseFluide {
+  /// Rien en cours (ou le mode classique).
+  aucune,
+
+  /// Le son Destiny : on joue au ralenti, on glisse vers son archétype.
+  destiny,
+
+  /// La musique au maximum : on joue sans parler.
+  jeuMuet,
+
+  /// La musique redescend sous les voix : on parle.
+  fond,
+}
+
 /// La conduite son automatique du spectacle : une musique par lieu et par
 /// acte, le son Destiny, le stinger de révélation et le bruitage du danger au
 /// bon palier, enchaînés. Elle tourne quand le pack est importé et actif ;
@@ -33,12 +49,14 @@ class ConduiteSon extends ChangeNotifier {
     LecteurSon Function(BusSon bus)? fabrique,
     Future<void> Function(Duration)? attendre,
     Random? hasard,
+    DateTime Function()? maintenant,
     this.avantMusique,
     this.choixSansPack,
     this.delaiSecurite = const Duration(seconds: 90),
   })  : _muet = muet ?? (() => false),
         _attendre = attendre ?? ((d) => Future<void>.delayed(d)),
-        _hasard = hasard ?? Random() {
+        _hasard = hasard ?? Random(),
+        _maintenant = maintenant ?? DateTime.now {
     final f = fabrique ?? (_) => LecteurAudioplayers(pack.versSource);
     lecteurs = {for (final b in BusSon.values) b: f(b)};
     for (final l in lecteurs.values) {
@@ -67,6 +85,7 @@ class ConduiteSon extends ChangeNotifier {
   final bool Function() _muet;
   final Future<void> Function(Duration) _attendre;
   final Random _hasard;
+  final DateTime Function() _maintenant;
   ValueListenable<bool>? _muetNotifier;
   late final Map<BusSon, LecteurSon> lecteurs;
 
@@ -108,8 +127,7 @@ class ConduiteSon extends ChangeNotifier {
   /// chaque lieu et les bruitages du danger. Sans lui, la conduite enchaîne
   /// de la même façon avec les sons embarqués (musiques des réglages,
   /// ambiance du lieu), sans bruitage.
-  bool get active =>
-      _v.packActif && pack.disponible && _lieuId != null && (_m?.lieux.containsKey(_lieuId) ?? false);
+  bool get active => _v.packActif && pack.disponible && _lieuId != null && (_m?.lieux.containsKey(_lieuId) ?? false);
 
   bool get _peutJouer => _lieuId != null && !_muet();
 
@@ -117,6 +135,31 @@ class ConduiteSon extends ChangeNotifier {
     _etape = e;
     notifyListeners();
   }
+
+  PhaseFluide _phase = PhaseFluide.aucune;
+  DateTime? _finPhase;
+
+  /// La phase de l'enchaînement fluide en cours.
+  PhaseFluide get phase => _phase;
+
+  /// Le temps qui reste dans la phase (null : elle dure jusqu'au Destiny
+  /// suivant, ou rien n'est en cours).
+  Duration? get resteDePhase {
+    final fin = _finPhase;
+    if (fin == null || _phase == PhaseFluide.aucune) return null;
+    final r = fin.difference(_maintenant());
+    return r.isNegative ? Duration.zero : r;
+  }
+
+  void _phaseVers(PhaseFluide p, [double? secondes]) {
+    _phase = p;
+    _finPhase = secondes == null ? null : _maintenant().add(_s(secondes));
+    notifyListeners();
+  }
+
+  /// La musique en cours vient d'une séquence fluide : une annulation la fige
+  /// où elle en est, sans la faire remonter.
+  bool _sequenceFluide = false;
 
   // ------------------------------------------------------- volumes et fondus
 
@@ -139,8 +182,7 @@ class ConduiteSon extends ChangeNotifier {
   /// Le facteur de l'atténuation progressive (voie musique seulement).
   double _facteur = 1;
 
-  double _volumeDe(BusSon b) =>
-      (_niveau[b]! * _gain[b]! * (b == BusSon.musique ? _facteur : 1)).clamp(0.0, 1.0);
+  double _volumeDe(BusSon b) => (_niveau[b]! * _gain[b]! * (b == BusSon.musique ? _facteur : 1)).clamp(0.0, 1.0);
 
   Future<void> _appliquer(BusSon b) => lecteurs[b]!.regler(_volumeDe(b));
 
@@ -264,6 +306,9 @@ class ConduiteSon extends ChangeNotifier {
     final seq = ++_seq;
     _jetonMusique++;
     _acte = 1;
+    _sequenceFluide = _v.fluide;
+    _phaseVers(PhaseFluide.aucune);
+    if (_v.fluide) return _ouvertureFluide(seq);
     _etapeVers(EtapeConduite.ouverture);
     if (lecteurs[BusSon.musique]!.actif) {
       await _fondre(BusSon.musique, 0, _v.fonduSortie);
@@ -293,6 +338,9 @@ class ConduiteSon extends ChangeNotifier {
     final acte = (numero + 1).clamp(1, 4);
     _acte = acte;
     _jetonBruitage++;
+    _sequenceFluide = _v.fluide;
+    _phaseVers(PhaseFluide.aucune);
+    if (_v.fluide) return _destinyFluide(acte, seq);
     _etapeVers(EtapeConduite.sortieMusique);
     // La musique sort en fondu, et le bruitage de l'acte d'avant avec elle.
     const sortants = [BusSon.musique, BusSon.bruitageA, BusSon.bruitageB];
@@ -346,6 +394,7 @@ class ConduiteSon extends ChangeNotifier {
     final seq = ++_seq;
     _jetonMusique++;
     _jetonBruitage++;
+    _phaseVers(PhaseFluide.aucune);
     _etapeVers(EtapeConduite.fin);
     await Future.wait([
       for (final b in BusSon.values)
@@ -365,12 +414,18 @@ class ConduiteSon extends ChangeNotifier {
       _annulerFondu(b);
       await lecteurs[b]!.arreter();
     }
-    if (_attenue) {
+    if (_sequenceFluide) {
+      // Fluide : la musique reste où elle en est (ni montée, ni descente, ni
+      // remontée après le bruitage).
+      _attenue = false;
+      _annulerFondu(BusSon.musique);
+    } else if (_attenue) {
       _attenue = false;
       _annulerFondu(BusSon.musique);
       _niveau[BusSon.musique] = _volumeMusique;
       await _appliquer(BusSon.musique);
     }
+    _phaseVers(PhaseFluide.aucune);
     _etapeVers(EtapeConduite.repos);
   }
 
@@ -379,6 +434,7 @@ class ConduiteSon extends ChangeNotifier {
     _seq++;
     _jetonMusique++;
     _jetonBruitage++;
+    _phaseVers(PhaseFluide.aucune);
     await _toutArreter();
     _etapeVers(EtapeConduite.repos);
   }
@@ -393,6 +449,169 @@ class ConduiteSon extends ChangeNotifier {
 
   void _surMuet() {
     if (_muetNotifier?.value ?? false) unawaited(stopTout());
+  }
+
+  // ------------------------------------------------- l'enchaînement fluide
+
+  /// Fluide, au lancement du chrono : la musique de l'acte 1 tout de suite à
+  /// son maximum (jeu muet), qui tient, puis descend au niveau de fond et
+  /// tourne en boucle. Le son d'ouverture des réglages passe avant, s'il y en
+  /// a un. Le bruitage du palier 1 reste manuel (« Danger »).
+  Future<void> _ouvertureFluide(int seq) async {
+    // Les valeurs du moment : un réglage changé pendant la séquence vaut pour
+    // la suivante.
+    final v = ValeursRegieSon.depuisJson(_v.versJson());
+    _etapeVers(EtapeConduite.ouverture);
+    if (lecteurs[BusSon.musique]!.actif) {
+      await _fondre(BusSon.musique, 0, v.fonduSortie);
+      if (seq != _seq) return;
+      await lecteurs[BusSon.musique]!.arreter();
+    }
+    if (AudioService.assetsEffets.containsKey(v.sonOuverture)) {
+      _etapeVers(EtapeConduite.sonDestiny);
+      _phaseVers(PhaseFluide.destiny);
+      await _sonDestiny(v.sonOuverture, seq);
+      if (seq != _seq) return;
+    }
+    final source = sourceActe(1);
+    if (source == null) {
+      _phaseVers(PhaseFluide.fond);
+      _etapeVers(EtapeConduite.repos);
+      return;
+    }
+    avantMusique?.call();
+    _volumeMusique = v.volumeActe[0];
+    _sourceActe = source;
+    _acteSource = 1;
+    _etapeVers(EtapeConduite.musique);
+    await _jouerSur(BusSon.musique, source, niveau: _volumeMusique, boucle: true);
+    if (seq != _seq) return;
+    _phaseVers(PhaseFluide.jeuMuet, v.maintienOuverture);
+    await _attendre(_s(v.maintienOuverture));
+    if (seq != _seq) return;
+    await _descendreAuFond(1, v, seq);
+    if (seq == _seq) _etapeVers(EtapeConduite.repos);
+  }
+
+  /// Fluide, le Destiny qui ouvre l'acte [acte] (T : la fin du son Destiny) :
+  /// - 0 s : le son Destiny part ; la musique d'avant et ses bruitages sortent
+  ///   en fondu dessous ;
+  /// - T − montée : la musique du nouvel acte part à 0 et monte ;
+  /// - T : elle est au maximum ; le bruitage du palier part (à T + décalage),
+  ///   le REVEAL aussi à l'acte choisi ;
+  /// - T + maintien : la musique descend au niveau de fond, puis tourne en
+  ///   boucle jusqu'au Destiny suivant.
+  Future<void> _destinyFluide(int acte, int seq) async {
+    final v = ValeursRegieSon.depuisJson(_v.versJson());
+    _attenue = false;
+    _etapeVers(EtapeConduite.sonDestiny);
+    _phaseVers(PhaseFluide.destiny);
+
+    // 0 s : le Destiny tout de suite, la musique d'avant sort dessous.
+    final asset = AudioService.assetsEffets[v.sonDestiny];
+    final destiny = asset == null ? null : SourceAsset(asset, titre: 'Destiny');
+    if (destiny != null) await _jouerSur(BusSon.destiny, destiny, niveau: 1);
+    unawaited(_sortirSousDestiny(seq, v.sortieSousDestiny));
+
+    // T : la vraie durée du son Destiny, donnée par le lecteur.
+    double? t = destiny == null ? 0 : await _dureeDe(BusSon.destiny, destiny, seq);
+    if (seq != _seq) return;
+    if (t == null) {
+      // Durée inconnue : on attend la fin du Destiny, et T est ce moment.
+      await _attendreFin(BusSon.destiny);
+      if (seq != _seq) return;
+      t = 0;
+    }
+    _phaseVers(PhaseFluide.destiny, t);
+    final montee = min(v.monteeDestiny, t);
+    final depart = t - montee;
+    final bruitage = max(0.0, t + v.decalageBruitage);
+    final maxi = v.volumeActe[acte - 1];
+
+    // Les instants, dans l'ordre (à égalité, dans l'ordre de la liste).
+    final evenements = <(double, Future<void> Function())>[
+      (
+        depart,
+        () async {
+          final source = sourceActe(acte);
+          if (source == null) return;
+          avantMusique?.call();
+          _volumeMusique = maxi;
+          _sourceActe = source;
+          _acteSource = acte;
+          _etapeVers(EtapeConduite.musique);
+          await _jouerSur(BusSon.musique, source, niveau: 0, boucle: true);
+          if (seq != _seq) return;
+          // Si le Destiny est trop court, une montée d'une seconde au moins.
+          unawaited(_fondre(BusSon.musique, _attenue ? maxi * _facteurAttenuation : maxi, max(montee, 1)));
+        }
+      ),
+      (
+        t,
+        () async {
+          _phaseVers(PhaseFluide.jeuMuet, v.maintienDestiny);
+          if (active && v.revealActe[acte - 1]) unawaited(_reveal(seq));
+        }
+      ),
+      (
+        bruitage,
+        () async {
+          if (active) unawaited(_jouerBruitages(bruitagesDuPalier(acte), seq));
+        }
+      ),
+      (t + v.maintienDestiny, () => _descendreAuFond(acte, v, seq)),
+    ];
+    final ordre = [for (var i = 0; i < evenements.length; i++) i]..sort((a, b) {
+        final c = evenements[a].$1.compareTo(evenements[b].$1);
+        return c != 0 ? c : a.compareTo(b);
+      });
+    var ici = 0.0;
+    for (final i in ordre) {
+      final (quand, faire) = evenements[i];
+      if (quand > ici) {
+        await _attendre(_s(quand - ici));
+        ici = quand;
+      }
+      if (seq != _seq) return;
+      await faire();
+      if (seq != _seq) return;
+    }
+    _etapeVers(EtapeConduite.repos);
+  }
+
+  /// La musique de l'acte descend au niveau de fond (sous un bruitage : à son
+  /// niveau atténué), puis continue en boucle.
+  Future<void> _descendreAuFond(int acte, ValeursRegieSon v, int seq) async {
+    _volumeMusique = v.niveauFond[acte - 1];
+    _phaseVers(PhaseFluide.fond);
+    if (!lecteurs[BusSon.musique]!.actif) return;
+    await _fondre(BusSon.musique, _attenue ? _volumeMusique * _facteurAttenuation : _volumeMusique, v.descenteFond);
+  }
+
+  /// La musique d'avant et ses bruitages sortent en fondu sous le Destiny,
+  /// puis s'arrêtent (sauf si un nouveau son a pris leur voie entre-temps).
+  Future<void> _sortirSousDestiny(int seq, double secondes) async {
+    final sortants = [
+      for (final b in [BusSon.musique, BusSon.bruitageA, BusSon.bruitageB])
+        if (lecteurs[b]!.actif) (b, lecteurs[b]!.enCours),
+    ];
+    await Future.wait([for (final (b, _) in sortants) _fondre(b, 0, secondes)]);
+    for (final (b, source) in sortants) {
+      if (seq == _seq && lecteurs[b]!.enCours == source) await lecteurs[b]!.arreter();
+    }
+  }
+
+  /// La durée de [source] qui joue sur [b], en secondes, dès que le lecteur la
+  /// connaît (null : il ne la donne pas).
+  Future<double?> _dureeDe(BusSon b, SourceSon source, int seq) async {
+    final l = lecteurs[b]!;
+    for (var i = 0; i < 20; i++) {
+      final d = await l.duree();
+      if (d != null && d > Duration.zero) return d.inMilliseconds / 1000;
+      if (seq != _seq || l.enCours != source) return null;
+      await _attendre(const Duration(milliseconds: 100));
+    }
+    return null;
   }
 
   // --------------------------------------------------------- les morceaux
@@ -441,8 +660,7 @@ class ConduiteSon extends ChangeNotifier {
     final m = _m;
     final d = _dangerId;
     if (m == null || d == null) return const [];
-    return resoudreBruitage(m, pack.index, d, palier,
-        choix: _v.choixCandidat, suivant: _suivant, hasard: _hasard);
+    return resoudreBruitage(m, pack.index, d, palier, choix: _v.choixCandidat, suivant: _suivant, hasard: _hasard);
   }
 
   /// Joue [liste] : le 2ᵉ code décalé, chacun coupé à la durée maximale avec
@@ -479,10 +697,14 @@ class ConduiteSon extends ChangeNotifier {
     if (lecteurs[b]!.enCours == source) await lecteurs[b]!.arreter();
   }
 
+  /// L'atténuation de la musique sous un bruitage : plus légère en fluide,
+  /// où la musique doit rester présente.
+  double get _facteurAttenuation => _sequenceFluide ? _v.attenuationFluide : _v.attenuation;
+
   void _attenuer() {
     _attenue = true;
     if (lecteurs[BusSon.musique]!.actif) {
-      unawaited(_fondre(BusSon.musique, _volumeMusique * _v.attenuation, 0.3));
+      unawaited(_fondre(BusSon.musique, _volumeMusique * _facteurAttenuation, 0.3));
     }
     notifyListeners();
   }
@@ -556,9 +778,11 @@ class ConduiteSon extends ChangeNotifier {
       await lecteurs[BusSon.musique]!.arreter();
       return;
     }
-    unawaited(_courbe(source, _dureeMusique(acte, source.chemin), _v.courbes[acte - 1], _v.finAZero[acte - 1], _volumeMusique));
+    unawaited(_courbe(
+        source, _dureeMusique(acte, source.chemin), _v.courbes[acte - 1], _v.finAZero[acte - 1], _volumeMusique));
     unawaited(_apresMusique(acte, source));
-    await _fondre(BusSon.musique, _attenue ? _volumeMusique * _v.attenuation : _volumeMusique, _v.fonduEntree[acte - 1]);
+    await _fondre(
+        BusSon.musique, _attenue ? _volumeMusique * _v.attenuation : _volumeMusique, _v.fonduEntree[acte - 1]);
   }
 
   /// Change à chaque intervention de la régie sur la musique (Destiny, Stop,
@@ -630,6 +854,8 @@ class ConduiteSon extends ChangeNotifier {
     avantMusique?.call();
     _volumeMusique = volume;
     _attenue = false;
+    _sequenceFluide = false;
+    _phaseVers(PhaseFluide.aucune);
     _sourceActe = courbeActe == null ? null : source;
     _acteSource = courbeActe;
     await _jouerSur(BusSon.musique, source, niveau: 0, boucle: boucle ?? _v.boucle);

@@ -103,8 +103,16 @@ List<BlocLivret> _jeuDeRole(TextesDestiny t) {
     ParagrapheLivret(p('principe')),
     IntertitreLivret(p('sante_titre')),
     ParagrapheLivret(p('sante')),
-    InfoLivret(coeur('titre'), [for (final x in ['enForme', 'blesse', 'sorti']) coeur(x)].join(' · ')),
-    InfoLivret(t.t('serie.sante.esprit_titre'), [for (final x in ['lucide', 'ebranle', 'auBord', 'fou']) esprit(x)].join(' · ')),
+    InfoLivret(
+        coeur('titre'),
+        [
+          for (final x in ['enForme', 'blesse', 'sorti']) coeur(x)
+        ].join(' · ')),
+    InfoLivret(
+        t.t('serie.sante.esprit_titre'),
+        [
+          for (final x in ['lucide', 'ebranle', 'auBord', 'fou']) esprit(x)
+        ].join(' · ')),
     InfoLivret(t.t('serie.creer.kids'), p('kids')),
     IntertitreLivret(p('compte_rendu_titre')),
     ParagrapheLivret(p('compte_rendu')),
@@ -172,11 +180,22 @@ Livret construireLivret(Grammaire g, TextesDestiny t) {
       IntertitreLivret(sous('rituel')),
       ParagrapheLivret('${_majuscule(g.rituel.quand)} · ${g.rituel.quiDeclenche}.'),
       PucesLivret([for (final s in g.rituel.sequence) _majuscule(s)], numerotees: true),
+      if (g.rituel.pendantDestiny.isNotEmpty) ParagrapheLivret(g.rituel.pendantDestiny),
+      if (g.rituel.questions.isNotEmpty) ...[
+        ParagrapheLivret(g.rituel.questionsIntro),
+        PucesLivret([
+          for (final e in g.rituel.questions.entries.toList()..sort((a, b) => a.key.compareTo(b.key)))
+            '${t.t('rituel.avant_acte', {'n': '${e.key}'})} : ${e.value}',
+        ]),
+      ],
       if (g.rituel.suite.isNotEmpty) ...[
         ParagrapheLivret(k('rituel_suite')),
         PucesLivret([for (final s in g.rituel.suite) _majuscule(s)], numerotees: true),
       ],
+      if (g.rituel.musiqueMax.isNotEmpty) ParagrapheLivret(g.rituel.musiqueMax),
+      if (g.rituel.musiqueDescend.isNotEmpty) ParagrapheLivret(g.rituel.musiqueDescend),
       ParagrapheLivret(g.rituel.reprise),
+      if (g.rituel.acte1.isNotEmpty) EncartLivret(g.rituel.acte1),
       EncartLivret(g.rituel.premierFige),
       IntertitreLivret(sous('alarmiste')),
       if (regle('danger_regie') case final r?) InfoLivret(r.titre, r.texte),

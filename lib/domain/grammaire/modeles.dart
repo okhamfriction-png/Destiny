@@ -145,11 +145,9 @@ class Animal {
   final bool repliqueAdulteSeulement;
 
   /// La réplique à afficher : la version kids en mode kids.
-  String repliquePour({bool kids = false}) =>
-      kids && repliqueKids.isNotEmpty ? repliqueKids : replique;
+  String repliquePour({bool kids = false}) => kids && repliqueKids.isNotEmpty ? repliqueKids : replique;
 
-  String sourcePour({bool kids = false}) =>
-      kids && sourceRepliqueKids.isNotEmpty ? sourceRepliqueKids : sourceReplique;
+  String sourcePour({bool kids = false}) => kids && sourceRepliqueKids.isNotEmpty ? sourceRepliqueKids : sourceReplique;
 
   /// Tempérament (venu des données des animaux de l'appli).
   final String temperament;
@@ -228,6 +226,12 @@ class RituelDestiny {
     required this.reprise,
     required this.premierFige,
     this.suite = const [],
+    this.pendantDestiny = '',
+    this.questionsIntro = '',
+    this.questions = const {},
+    this.musiqueMax = '',
+    this.musiqueDescend = '',
+    this.acte1 = '',
   });
 
   final String quand;
@@ -236,9 +240,27 @@ class RituelDestiny {
   final String reprise;
   final String premierFige;
 
-  /// Ce que la régie son enchaîne après l'ellipse : le bruitage du nouveau
-  /// palier, la musique de l'acte, la reprise des comédiens.
+  /// Ce que la régie son enchaîne : la musique du nouvel acte qui monte, le
+  /// bruitage du palier au maximum, puis la musique qui redescend.
   final List<String> suite;
+
+  /// Pendant le son Destiny : le ralenti, le glissement vers l'archétype.
+  final String pendantDestiny;
+
+  /// « Chacun se pose une question en silence : »
+  final String questionsIntro;
+
+  /// La question de chacun avant l'acte (2 à 4).
+  final Map<int, String> questions;
+
+  /// Quand la musique est au maximum : le jeu muet.
+  final String musiqueMax;
+
+  /// Quand la musique redescend : on parle.
+  final String musiqueDescend;
+
+  /// À l'acte 1 : poser l'enjeu, sans tension.
+  final String acte1;
 }
 
 /// Combien d'archétypes de chaque famille pour un nombre de joueurs.
@@ -444,9 +466,7 @@ class DangerGrammaire {
   /// Les quatre textes, avec le palier 4 kids en mode kids.
   List<String> textesPour({bool kids = false}) => [
         for (final p in PalierId.values)
-          kids && p == PalierId.supprime && supprimeKids.isNotEmpty
-              ? supprimeKids
-              : paliers[p] ?? '',
+          kids && p == PalierId.supprime && supprimeKids.isNotEmpty ? supprimeKids : paliers[p] ?? '',
       ];
 }
 
@@ -635,11 +655,9 @@ class Mechant {
   final String failleKids;
 
   /// L'histoire à montrer : la version kids en mode kids.
-  String histoirePour({bool kids = false}) =>
-      kids && versionKids.isNotEmpty ? versionKids : histoire;
+  String histoirePour({bool kids = false}) => kids && versionKids.isNotEmpty ? versionKids : histoire;
 
-  String faillePour({bool kids = false}) =>
-      kids && failleKids.isNotEmpty ? failleKids : faille;
+  String faillePour({bool kids = false}) => kids && failleKids.isNotEmpty ? failleKids : faille;
 }
 
 /// Le registre de la série : la mémoire de ce qui a été joué.
@@ -902,6 +920,7 @@ class Grammaire {
     }
     return null;
   }
+
   final RituelDestiny rituel;
   final RegleDistribution distribution;
   final PedagogiePersonnage personnage;
@@ -948,8 +967,10 @@ class Grammaire {
       ];
 
   /// Les archétypes d'une famille, dans l'ordre du fichier.
-  List<Archetype> archetypesDe(FamilleId f) =>
-      [for (final a in archetypes) if (a.famille == f) a];
+  List<Archetype> archetypesDe(FamilleId f) => [
+        for (final a in archetypes)
+          if (a.famille == f) a
+      ];
 
   Palier palier(PalierId id) => paliers.firstWhere((p) => p.id == id);
 
@@ -1006,9 +1027,7 @@ class Grammaire {
   }
 
   /// Les personnages d'œuvres qui ont cet archétype, avec leur œuvre.
-  List<({Oeuvre oeuvre, PersonnageOeuvre personnage})> modelesDe(
-          String archetypeId) =>
-      [
+  List<({Oeuvre oeuvre, PersonnageOeuvre personnage})> modelesDe(String archetypeId) => [
         for (final o in oeuvres)
           for (final p in o.personnages)
             if (p.archetypeId == archetypeId) (oeuvre: o, personnage: p),
@@ -1031,13 +1050,28 @@ class Grammaire {
   /// Minuscules, sans accents ni ponctuation : sert à rapprocher deux noms.
   static String normaliser(String s) {
     const accents = {
-      'à': 'a', 'â': 'a', 'ä': 'a', 'á': 'a',
+      'à': 'a',
+      'â': 'a',
+      'ä': 'a',
+      'á': 'a',
       'ç': 'c',
-      'é': 'e', 'è': 'e', 'ê': 'e', 'ë': 'e',
-      'î': 'i', 'ï': 'i', 'í': 'i',
-      'ô': 'o', 'ö': 'o', 'ó': 'o',
-      'ù': 'u', 'û': 'u', 'ü': 'u', 'ú': 'u',
-      'ÿ': 'y', 'œ': 'oe', 'æ': 'ae',
+      'é': 'e',
+      'è': 'e',
+      'ê': 'e',
+      'ë': 'e',
+      'î': 'i',
+      'ï': 'i',
+      'í': 'i',
+      'ô': 'o',
+      'ö': 'o',
+      'ó': 'o',
+      'ù': 'u',
+      'û': 'u',
+      'ü': 'u',
+      'ú': 'u',
+      'ÿ': 'y',
+      'œ': 'oe',
+      'æ': 'ae',
     };
     final buf = StringBuffer();
     for (final ch in s.toLowerCase().split('')) {

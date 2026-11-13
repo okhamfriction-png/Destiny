@@ -14,6 +14,7 @@ import '../destiny/donnees.dart';
 import '../destiny/page.dart';
 import 'apparence_sons.dart';
 import 'pack_audio_screen.dart';
+import 'repere_phase.dart';
 
 /// « Régie son du spectacle » : la conduite automatique (musique par acte,
 /// son Destiny, bruitage du danger, REVEAL), la banque de sons à trier à
@@ -61,8 +62,42 @@ class RegieSonScreen extends StatelessWidget {
                     .push(MaterialPageRoute<void>(builder: (_) => PackAudioScreen(regieSon: regieSon))),
               ),
             ]),
+            SectionDestiny(titre: k('enchainement'), enfants: [
+              SegmentedButton<bool>(
+                key: const ValueKey('enchainement'),
+                segments: [
+                  ButtonSegment(value: true, label: Text(k('fluide')), icon: const Icon(Icons.waves_rounded)),
+                  ButtonSegment(
+                      value: false, label: Text(k('classique')), icon: const Icon(Icons.linear_scale_rounded)),
+                ],
+                selected: {v.fluide},
+                onSelectionChanged: (x) => change((v) => v.fluide = x.first),
+              ),
+              const SizedBox(height: 8),
+              Paragraphe(k(v.fluide ? 'fluide_aide' : 'classique_aide'), italique: true),
+              if (v.fluide) ...[
+                _Curseur(k('montee'), v.monteeDestiny, 3, 20, 17, (x) => change((v) => v.monteeDestiny = x),
+                    suffixe: 's'),
+                _Curseur(k('maintien'), v.maintienDestiny, 0, 30, 30, (x) => change((v) => v.maintienDestiny = x),
+                    suffixe: 's'),
+                _Curseur(k('maintien_ouverture'), v.maintienOuverture, 0, 60, 60,
+                    (x) => change((v) => v.maintienOuverture = x),
+                    suffixe: 's'),
+                _Curseur(k('descente'), v.descenteFond, 1, 10, 18, (x) => change((v) => v.descenteFond = x),
+                    suffixe: 's'),
+                _Curseur(
+                    k('decalage_bruitage'), v.decalageBruitage, -5, 5, 20, (x) => change((v) => v.decalageBruitage = x),
+                    suffixe: 's', signe: true),
+                _Curseur(k('attenuation_fluide'), v.attenuationFluide, 0, 1, 20,
+                    (x) => change((v) => v.attenuationFluide = x),
+                    pourcent: true),
+                _Curseur(k('sortie_sous_destiny'), v.sortieSousDestiny, 0.5, 5, 9,
+                    (x) => change((v) => v.sortieSousDestiny = x),
+                    suffixe: 's'),
+              ],
+            ]),
             SectionDestiny(titre: k('musique'), enfants: [
-              Paragraphe(k('musique_aide'), italique: true),
+              Paragraphe(k(v.fluide ? 'musique_aide_fluide' : 'musique_aide'), italique: true),
               for (var a = 1; a <= 4; a++)
                 _CarteActe(
                   acte: a,
@@ -71,45 +106,59 @@ class RegieSonScreen extends StatelessWidget {
                   k: k,
                   change: change,
                 ),
-              _Curseur(k('fondu_sortie'), v.fonduSortie, 0, 6, 12, (x) => change((v) => v.fonduSortie = x), suffixe: 's'),
+              _Curseur(k('fondu_sortie'), v.fonduSortie, 0, 6, 12, (x) => change((v) => v.fonduSortie = x),
+                  suffixe: 's'),
               _Bascule(k('repli_famille'), v.repliFamille, (x) => change((v) => v.repliFamille = x),
                   aide: k('repli_famille_aide')),
-              _Bascule(k('ambiance_apres'), v.ambianceApresMusique, (x) => change((v) => v.ambianceApresMusique = x),
-                  aide: k('ambiance_apres_aide')),
-              if (v.ambianceApresMusique)
-                _Curseur(k('volume_ambiance'), v.volumeAmbiance, 0, 1, 20, (x) => change((v) => v.volumeAmbiance = x),
-                    pourcent: true),
-              _Bascule(k('boucle'), v.boucle, (x) => change((v) => v.boucle = x), aide: k('boucle_aide')),
+              if (!v.fluide) ...[
+                _Bascule(k('ambiance_apres'), v.ambianceApresMusique, (x) => change((v) => v.ambianceApresMusique = x),
+                    aide: k('ambiance_apres_aide')),
+                if (v.ambianceApresMusique)
+                  _Curseur(k('volume_ambiance'), v.volumeAmbiance, 0, 1, 20, (x) => change((v) => v.volumeAmbiance = x),
+                      pourcent: true),
+                _Bascule(k('boucle'), v.boucle, (x) => change((v) => v.boucle = x), aide: k('boucle_aide')),
+              ],
             ]),
             SectionDestiny(titre: k('son_destiny'), enfants: [
               _ChoixEffet(k('son_ouverture'), v.sonOuverture, (x) => change((v) => v.sonOuverture = x)),
               _ChoixEffet(k('son_chaque_destiny'), v.sonDestiny, (x) => change((v) => v.sonDestiny = x)),
-              _Curseur(
-                v.chevauchement == 0 ? k('attendre_fin') : k('chevauchement', {'n': v.chevauchement.toStringAsFixed(1)}),
-                v.chevauchement,
-                0,
-                10,
-                20,
-                (x) => change((v) => v.chevauchement = x),
-                suffixe: 's',
-              ),
+              if (!v.fluide)
+                _Curseur(
+                  v.chevauchement == 0
+                      ? k('attendre_fin')
+                      : k('chevauchement', {'n': v.chevauchement.toStringAsFixed(1)}),
+                  v.chevauchement,
+                  0,
+                  10,
+                  20,
+                  (x) => change((v) => v.chevauchement = x),
+                  suffixe: 's',
+                ),
             ]),
             SectionDestiny(titre: k('bruitage'), enfants: [
-              Text(k('bruitage_fin'), style: Theme.of(context).textTheme.titleSmall),
-              const SizedBox(height: 6),
-              _PucesActes(
-                  valeurs: v.bruitageFinMusique, k: k, onChange: (a, x) => change((v) => v.bruitageFinMusique[a] = x)),
-              const SizedBox(height: 10),
-              Text(k('bruitage_auto'), style: Theme.of(context).textTheme.titleSmall),
-              const SizedBox(height: 6),
-              _PucesActes(valeurs: v.bruitageAuto, k: k, onChange: (a, x) => change((v) => v.bruitageAuto[a] = x)),
-              _Curseur(k('volume'), v.volumeBruitage, 0, 1, 20, (x) => change((v) => v.volumeBruitage = x), pourcent: true),
+              if (!v.fluide) ...[
+                Text(k('bruitage_fin'), style: Theme.of(context).textTheme.titleSmall),
+                const SizedBox(height: 6),
+                _PucesActes(
+                    valeurs: v.bruitageFinMusique,
+                    k: k,
+                    onChange: (a, x) => change((v) => v.bruitageFinMusique[a] = x)),
+                const SizedBox(height: 10),
+                Text(k('bruitage_auto'), style: Theme.of(context).textTheme.titleSmall),
+                const SizedBox(height: 6),
+                _PucesActes(valeurs: v.bruitageAuto, k: k, onChange: (a, x) => change((v) => v.bruitageAuto[a] = x)),
+              ],
+              _Curseur(k('volume'), v.volumeBruitage, 0, 1, 20, (x) => change((v) => v.volumeBruitage = x),
+                  pourcent: true),
               _Curseur(k('duree_max'), v.dureeMaxBruitage, 2, 30, 28, (x) => change((v) => v.dureeMaxBruitage = x),
                   suffixe: 's'),
               _Curseur(k('fondu_bruitage'), v.fonduBruitage, 0, 5, 10, (x) => change((v) => v.fonduBruitage = x),
                   suffixe: 's'),
-              _Curseur(k('decalage'), v.decalageCodes, 0, 3, 15, (x) => change((v) => v.decalageCodes = x), suffixe: 's'),
-              _Curseur(k('attenuation'), v.attenuation, 0, 1, 20, (x) => change((v) => v.attenuation = x), pourcent: true),
+              _Curseur(k('decalage'), v.decalageCodes, 0, 3, 15, (x) => change((v) => v.decalageCodes = x),
+                  suffixe: 's'),
+              if (!v.fluide)
+                _Curseur(k('attenuation'), v.attenuation, 0, 1, 20, (x) => change((v) => v.attenuation = x),
+                    pourcent: true),
               _Curseur(k('remontee'), v.remontee, 0, 5, 10, (x) => change((v) => v.remontee = x), suffixe: 's'),
             ]),
             SectionDestiny(titre: k('reveal'), enfants: [
@@ -174,7 +223,7 @@ class _Bascule extends StatelessWidget {
 
 class _Curseur extends StatelessWidget {
   const _Curseur(this.titre, this.valeur, this.min, this.max, this.divisions, this.onChange,
-      {this.suffixe = '', this.pourcent = false});
+      {this.suffixe = '', this.pourcent = false, this.signe = false});
 
   final String titre;
   final double valeur;
@@ -185,9 +234,15 @@ class _Curseur extends StatelessWidget {
   final String suffixe;
   final bool pourcent;
 
-  String get _texte => pourcent
-      ? '${(valeur * 100).round()} %'
-      : '${valeur == valeur.roundToDouble() ? valeur.toStringAsFixed(0) : valeur.toStringAsFixed(1)} $suffixe';
+  /// Afficher le signe (+2 s, −1,5 s).
+  final bool signe;
+
+  String get _texte {
+    if (pourcent) return '${(valeur * 100).round()} %';
+    final n = valeur == valeur.roundToDouble() ? valeur.abs().toStringAsFixed(0) : valeur.abs().toStringAsFixed(1);
+    final s = !signe || valeur == 0 ? (valeur < 0 ? '−' : '') : (valeur > 0 ? '+' : '−');
+    return '$s$n $suffixe';
+  }
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -246,7 +301,13 @@ class _CarteActe extends StatelessWidget {
           Expanded(child: Text(titre, style: Theme.of(context).textTheme.titleMedium)),
           Switch(value: v.musiqueActe[i], onChanged: (x) => change((v) => v.musiqueActe[i] = x)),
         ]),
-        if (v.musiqueActe[i]) ...[
+        if (v.musiqueActe[i] && v.fluide) ...[
+          _Curseur(k('volume_max'), v.volumeActe[i], 0, 1, 20, (x) => change((v) => v.volumeActe[i] = x),
+              pourcent: true),
+          _Curseur(k('niveau_fond'), v.niveauFond[i], 0, 1, 20, (x) => change((v) => v.niveauFond[i] = x),
+              pourcent: true),
+        ],
+        if (v.musiqueActe[i] && !v.fluide) ...[
           _Curseur(k('volume_depart'), v.volumeActe[i], 0, 1, 20, (x) => change((v) => v.volumeActe[i] = x),
               pourcent: true),
           _Curseur(k('fondu_entree'), v.fonduEntree[i], 0, 10, 20, (x) => change((v) => v.fonduEntree[i] = x),
@@ -313,8 +374,8 @@ class _EditeurCourbe extends StatelessWidget {
                 _Curseur(k('repere_temps'), points[j].secondes, 5, 600, 119,
                     (x) => change((v) => v.courbes[_i][j].secondes = x.roundToDouble()),
                     suffixe: 's'),
-                _Curseur(k('repere_volume'), points[j].volume, 0, 1, 20,
-                    (x) => change((v) => v.courbes[_i][j].volume = x),
+                _Curseur(
+                    k('repere_volume'), points[j].volume, 0, 1, 20, (x) => change((v) => v.courbes[_i][j].volume = x),
                     pourcent: true),
               ]),
             ),
@@ -642,6 +703,7 @@ class _BancEssaiState extends State<_BancEssai> {
           onChanged: (x) => setState(() => _danger = x),
         ),
         _Curseur(k('par_acte'), _parActe, 5, 90, 17, (x) => setState(() => _parActe = x), suffixe: 's'),
+        ReperePhase(conduite: _c),
         if (_c.etape != EtapeConduite.repos)
           Padding(
             padding: const EdgeInsets.only(bottom: 8),

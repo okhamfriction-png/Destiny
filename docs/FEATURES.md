@@ -61,11 +61,13 @@ L'accueil montre la promesse et, tirée au hasard à chaque ouverture, une règl
 4. **La régie** : la table de régie, en pop-up par-dessus le jeu (sa croix ramène au jeu, le spectacle continue). Le jeu montre aussi :
    - un gros chrono et l'acte en cours, puis trois cadres : le lieu et le danger, les paliers du danger, les archétypes à ce palier ;
    - le **bouton Destiny**, réservé à la régie. Il se déclenche aussi tout seul aux minutes prévues, selon le réglage ;
-   - le rituel en plein écran : le tonnerre, le rire du destin, la lumière bleue, le figé, l'ellipse ; puis la nouvelle du palier (à faire entendre par la régie son, ou à souffler au figurant), qui se ferme seule après 10 secondes sans action ;
+   - le rituel en plein écran : le tonnerre, le rire du destin, la lumière bleue, le ralenti (on ne se fige plus : on joue au ralenti en glissant vers son archétype, avec la question de l'acte : qui je suis, ce que je risque de perdre, ce que je suis prêt à sacrifier), l'ellipse ; puis la nouvelle du palier (à faire entendre par la régie son, ou à souffler au figurant), qui se ferme seule après 10 secondes sans action ;
    - au premier figé, le rappel de fixer le besoin ;
    - pour chaque joueur, ce que fait son archétype et le corps de son animal à ce palier ;
    - à l'acte 4, le dilemme du danger ;
-   - la **table de régie**, en pop-up avec le chrono et DESTINY : la conduite du spectacle, les banques de sons et le mixeur. La **conduite son** enchaîne, à chaque acte : le son Destiny, la musique de l'acte, puis à sa fin le bruitage du danger au palier de l'acte, puis l'ambiance du lieu à 15 % jusqu'au Destiny suivant. Avec le pack audio importé, chaque lieu a ses musiques et chaque danger ses bruitages ; sans pack, ce sont les musiques choisies dans les réglages et l'ambiance du lieu, sans bruitage. Un seul pad s'allume : ce qui joue.
+   - la **table de régie**, en pop-up avec le chrono et DESTINY : la conduite du spectacle, les banques de sons et le mixeur. La **conduite son** a deux enchaînements, au choix dans la régie son :
+     - **fluide** (par défaut) : un seul bouton, « Destiny ». Le son Destiny part tout de suite et la musique d'avant sort dessous en 2 s ; la musique du nouvel acte monte pendant les 10 dernières secondes du Destiny et arrive à son maximum quand le rire se termine, avec le bruitage du nouveau palier (et le REVEAL à l'acte 3) ; jeu muet 15 s au maximum, puis la musique redescend en 3 s à son niveau de fond et tourne en boucle jusqu'au Destiny suivant. À l'ouverture, la musique de l'acte 1 part à son maximum, 30 s, puis redescend. Un repère en grand dit où l'on en est, avec le temps qui reste : « Destiny — ralenti », « Musique — jeu muet », « Fond — on parle » ;
+     - **classique** : le son Destiny, la musique de l'acte, puis à sa fin le bruitage du danger au palier de l'acte, puis l'ambiance du lieu à 15 % jusqu'au Destiny suivant. Avec le pack audio importé, chaque lieu a ses musiques et chaque danger ses bruitages ; sans pack, ce sont les musiques choisies dans les réglages et l'ambiance du lieu, sans bruitage. Un seul pad s'allume : ce qui joue.
 5. **Terminer**, en bas du jeu : le spectacle est rangé dans l'historique, et l'on revient à l'accueil.
 6. **L'historique** des spectacles et des répétitions, chacun exportable en **PDF**.
 
@@ -135,7 +137,8 @@ Facultatif : il faut une clé d'API (Anthropic, OpenAI ou Google), à régler da
 
 ## 8. Musique et régie son
 
-- **La Musique** : les pistes classées par catégorie (Émotions, Lieux, Ambiances, Thèmes, Univers), avec un lecteur.
+- **La Musique** : les pistes classées par catégorie (Émotions, Lieux, Ambiances, Thèmes, Univers), avec un lecteur. La catégorie **Spectacle** donne, pour chacun des 40 lieux, ses musiques des actes 1 à 4 et son ambiance ; une icône par musique (même icône, même musique : 21 musiques pour 40 lieux), et à l'écoute les actes s'enchaînent, puis le lieu suivant.
+- **La régie son du spectacle** (Réglages) : l'enchaînement fluide ou classique et tous ses temps (montée pendant le Destiny, maximum après le Destiny et à l'ouverture, descente, niveau de fond par acte, décalage du bruitage, atténuation sous le bruitage, sortie de la musique d'avant), la musique de chaque acte, le son Destiny, le bruitage du danger, le REVEAL, la banque de sons et un banc d'essai qui rejoue l'ouverture et les trois Destiny.
 - **La régie son** : un mixeur accessible pendant le jeu, avec la lecture en boucle et le volume.
 - **Chaque acte a sa musique**, dans les Réglages : celle de l'acte 1 part au début du chrono, puis celle de l'acte suivant 15 secondes après chaque Destiny. S'y ajoutent le son de Destiny et, si on veut, une musique importée à chaque Destiny. On peut importer ses propres musiques, et retirer le bouton « Son » de la régie.
 

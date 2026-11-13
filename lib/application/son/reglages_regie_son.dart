@@ -30,6 +30,39 @@ class ValeursRegieSon {
   /// La conduite son automatique, quand le pack est importé.
   bool packActif = true;
 
+  /// L'enchaînement « fluide » (par défaut) : le son Destiny, la musique de
+  /// l'acte suivant et le bruitage du danger se chevauchent. Sinon,
+  /// « classique » : une étape après l'autre (musique, bruitage à sa fin,
+  /// ambiance du lieu).
+  bool fluide = true;
+
+  /// Fluide : la musique du nouvel acte monte pendant les [monteeDestiny]
+  /// dernières secondes du son Destiny et arrive à son maximum à sa fin.
+  double monteeDestiny = 10;
+
+  /// Fluide : le maximum tient tant de secondes après le Destiny (jeu muet).
+  double maintienDestiny = 15;
+
+  /// Fluide : à l'ouverture, la musique de l'acte 1 tient son maximum tant de
+  /// secondes.
+  double maintienOuverture = 30;
+
+  /// Fluide : la descente vers le niveau de fond, en secondes.
+  double descenteFond = 3;
+
+  /// Fluide : le niveau de fond de chaque acte (0 à 1), sous les voix.
+  List<double> niveauFond = [0.4, 0.4, 0.4, 0.4];
+
+  /// Fluide : le bruitage du palier part tant de secondes après la fin du son
+  /// Destiny (négatif : avant).
+  double decalageBruitage = 0;
+
+  /// Fluide : la musique sous un bruitage (plus présente qu'en classique).
+  double attenuationFluide = 0.6;
+
+  /// Fluide : la musique de l'acte précédent sort en fondu sous le Destiny.
+  double sortieSousDestiny = 2;
+
   // Musique.
   List<bool> musiqueActe = [true, true, true, true];
   List<double> volumeActe = [0.7, 0.7, 0.7, 0.7];
@@ -113,6 +146,15 @@ class ValeursRegieSon {
 
   Map<String, dynamic> versJson() => {
         'pack_actif': packActif,
+        'enchainement': fluide ? 'fluide' : 'classique',
+        'montee_destiny': monteeDestiny,
+        'maintien_destiny': maintienDestiny,
+        'maintien_ouverture': maintienOuverture,
+        'descente_fond': descenteFond,
+        'niveau_fond': niveauFond,
+        'decalage_bruitage': decalageBruitage,
+        'attenuation_fluide': attenuationFluide,
+        'sortie_sous_destiny': sortieSousDestiny,
         'musique_acte': musiqueActe,
         'volume_acte': volumeActe,
         'fondu_entree': fonduEntree,
@@ -168,12 +210,26 @@ class ValeursRegieSon {
     bool booleen(Object x) => x as bool;
     v
       ..packActif = b('pack_actif', v.packActif)
+      ..fluide = (j['enchainement'] as String? ?? 'fluide') != 'classique'
+      ..monteeDestiny = d('montee_destiny', v.monteeDestiny).clamp(3.0, 20.0)
+      ..maintienDestiny = d('maintien_destiny', v.maintienDestiny).clamp(0.0, 30.0)
+      ..maintienOuverture = d('maintien_ouverture', v.maintienOuverture).clamp(0.0, 60.0)
+      ..descenteFond = d('descente_fond', v.descenteFond).clamp(1.0, 10.0)
+      ..niveauFond = _quatre(j['niveau_fond'], v.niveauFond, (x) => nombre(x).clamp(0.0, 1.0))
+      ..decalageBruitage = d('decalage_bruitage', v.decalageBruitage).clamp(-5.0, 5.0)
+      ..attenuationFluide = d('attenuation_fluide', v.attenuationFluide).clamp(0.0, 1.0)
+      ..sortieSousDestiny = d('sortie_sous_destiny', v.sortieSousDestiny).clamp(0.5, 5.0)
       ..musiqueActe = _quatre(j['musique_acte'], v.musiqueActe, booleen)
       ..volumeActe = _quatre(j['volume_acte'], v.volumeActe, nombre)
       ..fonduEntree = _quatre(j['fondu_entree'], v.fonduEntree, nombre)
       ..fonduSortie = d('fondu_sortie', v.fonduSortie)
-      ..courbes = _quatre(j['courbes'], v.courbes,
-          (x) => [for (final p in x as List) if (PointVolume.depuisJson(p) case final q?) q])
+      ..courbes = _quatre(
+          j['courbes'],
+          v.courbes,
+          (x) => [
+                for (final p in x as List)
+                  if (PointVolume.depuisJson(p) case final q?) q
+              ])
       ..finAZero = _quatre(j['fin_a_zero'], v.finAZero, booleen)
       ..repliFamille = b('repli_famille', v.repliFamille)
       ..boucle = b('boucle_v2', v.boucle)

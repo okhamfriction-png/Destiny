@@ -2,6 +2,14 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.4.0 — Le rituel fluide (novembre 2026)
+
+- **Un nouvel enchaînement de la régie son, « fluide » (par défaut)** : un seul bouton, « Destiny ». Le son Destiny part tout de suite et la musique d'avant sort dessous. Pendant le rire, la musique du nouvel acte monte ; elle est à son maximum quand le rire se termine, au moment où part le bruitage du danger. Les comédiens jouent sans parler sur la musique pendant 15 s, puis elle redescend sous les voix, et on parle. Elle tourne ensuite en boucle jusqu'au Destiny suivant.
+- **À l'ouverture**, la musique de l'acte 1 part à son maximum (le jeu muet du début), 30 s, puis redescend.
+- **Sur la régie, un repère en grand** dit où l'on en est, avec le temps qui reste : « Destiny — ralenti », « Musique — jeu muet », « Fond — on parle ».
+- **Tous les temps se règlent** dans la régie son : montée, maximum, descente, niveau de fond de chaque acte, décalage du bruitage, atténuation sous le bruitage, sortie de la musique d'avant. L'ancien enchaînement reste disponible, « classique ».
+- **Le rituel change** : pendant le son Destiny, on ne se fige plus. On joue au ralenti et on glisse vers la posture de son archétype, en se posant une question en silence (avant l'acte 2 : qui je suis, ce que je veux, ce qui m'a marqué ; avant l'acte 3 : ce que je risque de perdre ; avant l'acte 4 : ce que je suis prêt à sacrifier). Le livret, Découvrir Destiny et l'écran du rituel le racontent.
+
 ## 2.3.4 — 21 musiques pour les 40 lieux (novembre 2026)
 
 - **Plus de musiques différentes au spectacle** : les 40 lieux jouent maintenant 21 musiques au lieu de 6. Les lieux proches partagent la leur (le Port maritime celle du Navire de croisière, le Casino celle de la Boîte de nuit, l'Aquarium celle du Zoo…).

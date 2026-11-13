@@ -17,6 +17,7 @@ import '../widgets/sound_mixer_sheet.dart';
 import 'apparence_sons.dart';
 import 'pack_audio_screen.dart';
 import 'regie_son_screen.dart';
+import 'repere_phase.dart';
 
 /// Le spectacle vu depuis la table de régie : le chrono, l'acte, la pause et
 /// DESTINY. La table ne fait jamais perdre le spectacle de vue.
@@ -113,7 +114,8 @@ Future<void> ouvrirTableRegie(
                             tooltip: t.t('regie_son.reglages'),
                             icon: const Icon(Icons.settings_rounded, color: Console.doux),
                             onPressed: () => Navigator.of(ctx).push(MaterialPageRoute<void>(
-                                builder: (_) => RegieSonScreen(regieSon: contexte.regieSon!, musique: contexte.musique))),
+                                builder: (_) =>
+                                    RegieSonScreen(regieSon: contexte.regieSon!, musique: contexte.musique))),
                           ),
                         IconButton(
                           key: const ValueKey('fermer_regie_son'),
@@ -191,7 +193,8 @@ class BarrePilote extends StatelessWidget {
                 pilote.acte(),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 13, color: Console.texte),
+                style: const TextStyle(
+                    fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 13, color: Console.texte),
               );
               final basculer = IconButton.filled(
                 key: const ValueKey('pilote_basculer'),
@@ -537,6 +540,8 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
             ),
           ]),
         ],
+        // Enchaînement fluide : ce que font les comédiens, en grand.
+        if (c != null) ReperePhase(conduite: c),
       ]),
     );
   }
@@ -661,7 +666,8 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
     ];
   }
 
-  Widget _banques(BuildContext context, String Function(String, [Map<String, String>]) rs, Set<String> joue, bool muet) {
+  Widget _banques(
+      BuildContext context, String Function(String, [Map<String, String>]) rs, Set<String> joue, bool muet) {
     final banques = _listeBanques(rs);
     final choisie = banques.firstWhere((b) => b.id == _banque, orElse: () => banques.first);
     final rsOk = _rs;
@@ -672,8 +678,8 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
           couleur: Console.or,
           texte: rs('banque_vide'),
           action: rsOk.pack.importPossible ? rs('importer') : null,
-          onAction: () => Navigator.of(context)
-              .push(MaterialPageRoute<void>(builder: (_) => PackAudioScreen(regieSon: rsOk))),
+          onAction: () =>
+              Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => PackAudioScreen(regieSon: rsOk))),
         ),
       // Tous les onglets visibles d'un coup, sur plusieurs lignes au besoin.
       Wrap(spacing: 8, runSpacing: 8, children: [
@@ -694,8 +700,8 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
     ]);
   }
 
-  Widget _contenuBanque(BuildContext context, _Banque b, String Function(String, [Map<String, String>]) rs,
-      Set<String> joue, bool muet) {
+  Widget _contenuBanque(
+      BuildContext context, _Banque b, String Function(String, [Map<String, String>]) rs, Set<String> joue, bool muet) {
     final c = _c;
     Widget padCode(String code) {
       final style = styleCode(code);
@@ -862,7 +868,8 @@ class _PuceEtat extends StatelessWidget {
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(actif ? Icons.auto_mode_rounded : Icons.library_music_outlined, size: 14, color: couleur),
         const SizedBox(width: 6),
-        Text(texte, style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12, fontWeight: FontWeight.w700, color: couleur)),
+        Text(texte,
+            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12, fontWeight: FontWeight.w700, color: couleur)),
       ]),
     );
   }
@@ -896,7 +903,8 @@ class _Bandeau extends StatelessWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 Text(texte, style: const TextStyle(fontFamily: kPoliceTexte, color: Console.texte, height: 1.3)),
-                if (action != null) TextButton(onPressed: onAction, child: Text(action!, style: TextStyle(color: couleur))),
+                if (action != null)
+                  TextButton(onPressed: onAction, child: Text(action!, style: TextStyle(color: couleur))),
               ],
             ),
           ),
@@ -917,7 +925,8 @@ class _Led extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: allumee ? couleur : Console.trait,
-          boxShadow: allumee ? [BoxShadow(color: couleur.withValues(alpha: 0.8), blurRadius: 8, spreadRadius: 1)] : null,
+          boxShadow:
+              allumee ? [BoxShadow(color: couleur.withValues(alpha: 0.8), blurRadius: 8, spreadRadius: 1)] : null,
         ),
       );
 }
@@ -1148,7 +1157,11 @@ class _Tranche extends StatelessWidget {
             child: Text(nom.toUpperCase(),
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                    fontFamily: kPoliceTexte, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 0.4, color: Console.doux)),
+                    fontFamily: kPoliceTexte,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.4,
+                    color: Console.doux)),
           ),
         ]),
         const SizedBox(height: 6),
@@ -1180,7 +1193,8 @@ class _Tranche extends StatelessWidget {
             maxLines: 2,
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 10.5, height: 1.2, color: attenue ? Console.or : Console.texte),
+            style: TextStyle(
+                fontFamily: kPoliceTexte, fontSize: 10.5, height: 1.2, color: attenue ? Console.or : Console.texte),
           ),
         ),
         SizedBox(
@@ -1210,7 +1224,8 @@ class _Vumetre extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final battement = 0.62 + 0.38 * (sin(t * 2 * pi * 3 + phase).abs() * 0.7 + sin(t * 2 * pi * 7 + phase * 2).abs() * 0.3);
+    final battement =
+        0.62 + 0.38 * (sin(t * 2 * pi * 3 + phase).abs() * 0.7 + sin(t * 2 * pi * 7 + phase * 2).abs() * 0.3);
     final allumes = (niveau * battement * segments).round();
     final h = size.height / segments;
     for (var i = 0; i < segments; i++) {

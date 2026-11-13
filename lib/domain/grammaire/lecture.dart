@@ -16,8 +16,7 @@ class DonneesAnimalAppli {
   final String intention;
 
   /// Lit une entrée de `archetypes.json` (marqueurs markdown retirés).
-  factory DonneesAnimalAppli.depuisJson(Map<String, dynamic> j) =>
-      DonneesAnimalAppli(
+  factory DonneesAnimalAppli.depuisJson(Map<String, dynamic> j) => DonneesAnimalAppli(
         temperament: _nettoyer(j['temperament']),
         niveaux: [for (final n in (j['niveaux'] as List? ?? const [])) '$n'.trim()],
         moteur: _nettoyer(j['moteur']),
@@ -182,8 +181,7 @@ List<String> validerGrammaire(Map<String, dynamic> j) {
       if (nomsAnimaux.containsKey(mm['animal'])) {
         erreurs.add('Le méchant ${mm['id']} prend un animal des comédiens.');
       }
-      if (mm['kids'] == true &&
-          ('${mm['version_kids'] ?? ''}'.isEmpty || '${mm['faille_kids'] ?? ''}'.isEmpty)) {
+      if (mm['kids'] == true && ('${mm['version_kids'] ?? ''}'.isEmpty || '${mm['faille_kids'] ?? ''}'.isEmpty)) {
         erreurs.add('Le méchant kids ${mm['id']} n\'a pas sa version kids.');
       }
       final sbires = mm['sbires'];
@@ -206,8 +204,7 @@ List<String> validerGrammaire(Map<String, dynamic> j) {
 
   // Figurants des lieux.
   final types = {
-    for (final t in ((j['figurants'] as Map?)?['types'] as List? ?? const []))
-      (t as Map)['id'],
+    for (final t in ((j['figurants'] as Map?)?['types'] as List? ?? const [])) (t as Map)['id'],
   };
   for (final l in (j['lieux'] as List? ?? const [])) {
     final lm = l as Map;
@@ -242,8 +239,7 @@ Grammaire lireGrammaire(
   String s(Object? v) => (v as String? ?? '').trim();
   List<String> ls(Object? v) => [for (final x in (v as List? ?? const [])) s(x)];
   Map<PalierId, String> parPalier(Object? v) => {
-        for (final p in PalierId.values)
-          p: v is Map ? s(v[p.name]) : '',
+        for (final p in PalierId.values) p: v is Map ? s(v[p.name]) : '',
       };
   List<Map<String, dynamic>> maps(Object? v) =>
       [for (final x in (v as List? ?? const [])) Map<String, dynamic>.from(x as Map)];
@@ -359,8 +355,7 @@ Grammaire lireGrammaire(
     paliers: paliers,
     actes: actes,
     reglesDOr: [
-      for (final r in maps(j['regles_d_or']))
-        RegleDOr(id: s(r['id']), titre: s(r['titre']), texte: s(r['texte'])),
+      for (final r in maps(j['regles_d_or'])) RegleDOr(id: s(r['id']), titre: s(r['titre']), texte: s(r['texte'])),
     ],
     rituel: RituelDestiny(
       quand: s(rd['quand']),
@@ -369,6 +364,15 @@ Grammaire lireGrammaire(
       reprise: s(rd['reprise']),
       premierFige: s(rd['premier_fige']),
       suite: ls(rd['suite']),
+      pendantDestiny: s(rd['pendant_destiny']),
+      questionsIntro: s(rd['questions_intro']),
+      questions: {
+        for (final e in (rd['questions'] as Map? ?? const {}).entries)
+          if (int.tryParse('${e.key}') case final n?) n: s(e.value),
+      },
+      musiqueMax: s(rd['musique_max']),
+      musiqueDescend: s(rd['musique_descend']),
+      acte1: s(rd['acte_1']),
     ),
     distribution: RegleDistribution(
       regle: s(di['regle']),
