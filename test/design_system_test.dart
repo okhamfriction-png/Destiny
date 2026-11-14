@@ -118,10 +118,10 @@ void main() {
     });
 
     testWidgets('la carte kids montre la réplique kids et le sigle', (tester) async {
-      await tester.pumpWidget(_scene(const CarteArchetype.kids('renard', source: VisualSource.minimal)));
-      final renard = g.animal('renard')!;
-      expect(find.textContaining(renard.repliqueKids), findsOneWidget);
-      expect(find.textContaining(renard.replique), findsNothing);
+      await tester.pumpWidget(_scene(const CarteArchetype.kids('vautour', source: VisualSource.minimal)));
+      final vautour = g.animal('vautour')!;
+      expect(find.textContaining('Mon précieux…'), findsOneWidget);
+      expect(find.textContaining(vautour.replique), findsNothing);
       expect(find.byType(SigleKids), findsOneWidget);
     });
 

@@ -13,6 +13,7 @@ import '../prompts/spectacle.dart';
 import '../services/llm_service.dart';
 import 'ai_settings.dart';
 import 'spectacle_store.dart';
+import '../../domain/grammaire/migration_archetypes.dart';
 
 /// Sous-mode de jeu.
 enum SpectacleMode {
@@ -68,7 +69,7 @@ class PersonnageSpectacle {
   Map<String, dynamic> versJson() => {'archetype': archetypeId, 'animal': animalId, 'name': name, 'line': line};
 
   factory PersonnageSpectacle.depuisJson(Map<String, dynamic> j) => PersonnageSpectacle(
-        archetypeId: j['archetype'] as String? ?? '',
+        archetypeId: migrerArchetype(j['archetype'] as String? ?? '', animal: j['animal'] as String? ?? ''),
         animalId: j['animal'] as String? ?? '',
         name: j['name'] as String? ?? '',
         line: j['line'] as String? ?? '',

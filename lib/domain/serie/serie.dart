@@ -7,6 +7,7 @@ library;
 import '../grammaire/modeles.dart' show ModePnj;
 import '../troupe/session.dart' show ChoixFinal, EvenementDestiny, NoteRegie, SceneJouee;
 import 'pbta.dart' show FacePiece, kCasesBlessure;
+import '../grammaire/migration_archetypes.dart';
 
 export '../troupe/session.dart' show ChoixFinal, EvenementDestiny, NoteRegie, SceneJouee;
 export 'pbta.dart' show FacePiece;
@@ -266,9 +267,9 @@ class PersonnageSerie {
         nom: _s(j['nom']),
         fonction: _s(j['fonction']),
         peuple: _s(j['peuple']),
-        archetypeId: _s(j['archetype']),
+        archetypeId: migrerArchetype(_s(j['archetype']), animal: _s(j['animal'])),
         animalId: _s(j['animal']),
-        anciensArchetypes: _ls(j['anciens_archetypes']),
+        anciensArchetypes: migrerArchetypes(_ls(j['anciens_archetypes'])),
         blessure: _s(j['blessure']),
         besoin: _s(j['besoin']),
         besoinNomme: _b(j['besoin_nomme']),
@@ -429,7 +430,7 @@ class PnjEpisode {
         nom: _s(j['nom']),
         mode: ModePnj.depuisTexte(j['mode'] as String?),
         type: _s(j['type']),
-        archetypeId: _s(j['archetype']),
+        archetypeId: migrerArchetype(_s(j['archetype']), animal: _s(j['animal'])),
         animalId: _s(j['animal']),
         veut: _s(j['veut']),
         vientDe: _s(j['vient_de']),

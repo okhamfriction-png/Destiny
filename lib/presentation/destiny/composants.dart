@@ -116,7 +116,7 @@ const Map<String, String> kEmojiAnimal = {
 };
 
 /// L'icône d'un animal, à partir de son id (« hyene »), de son nom (« Hyène »)
-/// ou d'un libellé « Opportuniste · Hyène » (on prend le dernier mot).
+/// ou d'un libellé « Tyran · Hyène » (on prend le dernier mot).
 String? emojiAnimal(String nomOuId) {
   var s = nomOuId.split('·').last.toLowerCase().trim();
   const accents = 'àâäáãåçéèêëíìîïñóòôöõúùûüýÿ';

@@ -10,6 +10,9 @@ import '../../domain/troupe/session.dart';
 class TroupeStore extends ChangeNotifier {
   static const String _cle = 'troupe_sessions_v1';
 
+  /// Posée quand les sessions ont été réécrites avec les huit archétypes.
+  static const String _cleArchetypesHuit = 'troupe_archetypes_huit_v1';
+
   final List<SessionTroupe> _sessions = [];
   bool _lectureEchouee = false;
 
@@ -36,6 +39,12 @@ class TroupeStore extends ChangeNotifier {
             for (final e in jsonDecode(brut) as List)
               SessionTroupe.depuisJson(Map<String, dynamic>.from(e as Map)),
           ]);
+      }
+      if (prefs.getBool(_cleArchetypesHuit) != true) {
+        // Les anciens archétypes ont été migrés à la lecture : on les
+        // réécrit une fois pour toutes.
+        if (brut != null) await _sauver();
+        await prefs.setBool(_cleArchetypesHuit, true);
       }
     } catch (_) {
       // Jamais d'écriture par-dessus des données qu'on n'a pas su lire.

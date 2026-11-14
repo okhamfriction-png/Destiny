@@ -97,7 +97,7 @@ class _PersonnagesScreenState extends State<PersonnagesScreen> {
     _ajusterAlarmiste(g);
   }
 
-  /// Un nouvel archétype : un de ses deux animaux, et le bonus qu'il propose
+  /// Un nouvel archétype : un de ses trois animaux, et le bonus qu'il propose
   /// (le joueur peut le changer).
   void _donnerArchetype(Grammaire g, PersonnageSerie p, String id) {
     p

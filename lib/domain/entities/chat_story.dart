@@ -1,4 +1,5 @@
 import 'chat_message.dart';
+import '../grammaire/migration_archetypes.dart';
 
 /// Un héros d'une histoire avec l'IA : son nom, son archétype et son animal,
 /// et les couches connues de son personnage.
@@ -34,7 +35,7 @@ class ChatPlayer {
 
   factory ChatPlayer.fromJson(Map<String, dynamic> json) => ChatPlayer(
         name: json['name'] as String,
-        archetypeId: json['archetype_id'] as String? ?? '',
+        archetypeId: migrerArchetype(json['archetype_id'] as String? ?? '', animal: json['animal_id'] as String? ?? ''),
         animalId: json['animal_id'] as String? ?? '',
         blessure: json['blessure'] as String? ?? '',
         vouloir: json['vouloir'] as String? ?? '',

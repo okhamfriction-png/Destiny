@@ -160,12 +160,12 @@ void main() {
       }
     });
 
-    test('les archétypes : tentés de, à l\'infinitif ; le gardien punit qui désobéit', () {
+    test('les archétypes : tentés de, à l\'infinitif ; le tyran punit qui désobéit', () {
       expect(t.t('cartes.montee'), 'Acte par acte, il est tenté de…');
       expect(g.archetype('leader')!.monteeA(PalierId.signale), 'Organiser la journée');
-      expect(g.archetype('gardien_de_l_ordre')!.monteeA(PalierId.envahit), 'Punir qui désobéit');
+      expect(g.archetype('tyran')!.monteeA(PalierId.envahit), 'Punir qui désobéit');
+      expect(g.archetype('tyran')!.ceQuIlFait, 'Impose sa loi, rationne, punit qui désobéit.');
       expect(g.archetype('denegateur')!.ceQuIlFait, contains('se fiche du danger'));
-      expect(g.archetype('cynique')!.ceQuIlFait, contains('sans paniquer'));
       expect(g.palier(PalierId.signale).etatArchetype, 'joué léger');
       expect(g.personnage.echauffement.limite, isNot(contains('dort')));
       expect(g.personnage.troisCartes.first.exemple, contains('Alors dégage'));
@@ -185,10 +185,10 @@ void main() {
   });
 
   group('les cartes à imprimer', () {
-    test('un recto par archétype : 12 cartes, 2 pages de rectos et leurs 2 pages de versos', () async {
+    test('un recto par archétype : 8 cartes, une page de rectos et sa page de versos', () async {
       final pdf = await cartesArchetypesPdf(g: g, t: t, polices: await _polices());
       expect(String.fromCharCodes(pdf.take(4)), '%PDF');
-      expect(_pages(pdf), 4);
+      expect(_pages(pdf), 2);
     });
 
     test('un recto par animal : 24 cartes, 3 pages de rectos et 3 de versos', () async {

@@ -102,16 +102,16 @@ void main() {
     }
   });
 
-  testWidgets('archétypes : douze cartes, filtre par famille', (tester) async {
+  testWidgets('archétypes : huit cartes, filtre par famille', (tester) async {
     await _ouvrir(tester);
     await _entrer(tester, 'archetypes');
-    expect(find.byType(CarteArchetype), findsNWidgets(12));
+    expect(find.byType(CarteArchetype), findsNWidgets(8));
     final puce = find.widgetWithText(ChoiceChip, g.famille(FamilleId.fissure).nom);
     await tester.ensureVisible(puce);
     await tester.pumpAndSettle();
     await tester.tap(puce);
     await tester.pumpAndSettle();
-    expect(find.byType(CarteArchetype), findsNWidgets(4));
+    expect(find.byType(CarteArchetype), findsNWidgets(2));
   });
 
   testWidgets('la fiche d\'un archétype donne la source des répliques et ses modèles', (tester) async {

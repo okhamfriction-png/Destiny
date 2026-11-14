@@ -18,24 +18,24 @@ void main() {
       expect(c.erreurs, isEmpty);
     });
 
-    test('12 archétypes, 3 familles, 24 animaux uniques', () async {
+    test('8 archétypes, 3 familles, 24 animaux uniques', () async {
       final g = (await chargerGrammaire()).grammaire;
-      expect(g.archetypes, hasLength(12));
+      expect(g.archetypes, hasLength(8));
       expect(g.familles.map((f) => f.id), FamilleId.values);
       expect(g.animaux, hasLength(24));
       expect(g.animaux.map((a) => a.id).toSet(), hasLength(24));
-      for (final f in FamilleId.values) {
-        expect(g.archetypesDe(f), hasLength(4), reason: 'famille ${f.name}');
-      }
+      expect(g.archetypesDe(FamilleId.tient), hasLength(3));
+      expect(g.archetypesDe(FamilleId.interprete), hasLength(3));
+      expect(g.archetypesDe(FamilleId.fissure), hasLength(2));
     });
 
-    test('chaque archétype a sa montée complète et deux animaux', () async {
+    test('chaque archétype a sa montée complète et trois animaux', () async {
       final g = (await chargerGrammaire()).grammaire;
       for (final a in g.archetypes) {
         for (final p in PalierId.values) {
           expect(a.monteeA(p), isNotEmpty, reason: '${a.id} ${p.name}');
         }
-        expect(g.animauxDe(a.id), hasLength(2));
+        expect(g.animauxDe(a.id), hasLength(3));
         for (final an in g.animauxDe(a.id)) {
           expect(g.archetypeDeLAnimal(an.id)?.id, a.id);
         }
@@ -55,7 +55,7 @@ void main() {
         }
       }
       // Le port vient de la grammaire.
-      expect(g.animal('chat')!.port, 'feutré');
+      expect(g.animal('chat')!.port, 'aux aguets');
     });
 
     test('quatre paliers nommés, quatre actes, huit règles d\'or', () async {

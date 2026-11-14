@@ -42,7 +42,8 @@ Future<String?> choisirArchetype(BuildContext context) {
   );
 }
 
-/// Les deux animaux d'un archétype, côte à côte : on tape pour choisir.
+/// Les trois animaux d'un archétype, côte à côte (l'image au-dessus du nom,
+/// pour tenir sur un petit téléphone) : on tape pour choisir.
 class ChoixAnimal extends StatelessWidget {
   const ChoixAnimal({
     super.key,
@@ -71,21 +72,27 @@ class ChoixAnimal extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             onTap: () => onChoisi(a.id),
             child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 4),
+              margin: const EdgeInsets.symmetric(horizontal: 3),
               padding: const EdgeInsets.all(6),
+              width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: animalId == a.id ? couleur : c.filet, width: animalId == a.id ? 2 : 1),
                 color: animalId == a.id ? couleur.withValues(alpha: 0.12) : null,
               ),
-              child: Row(children: [
-                MedaillonAnimal(a, taille: 34, source: source),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(a.nom,
+              child: Stack(children: [
+                Column(mainAxisSize: MainAxisSize.min, children: [
+                  const SizedBox(width: double.infinity),
+                  MedaillonAnimal(a, taille: 34, source: source),
+                  const SizedBox(height: 4),
+                  Text(a.nom,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
                       style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w700, color: c.texte)),
-                ),
-                if (animalId == a.id) Icon(Icons.check_circle_rounded, color: couleur, size: 18),
+                ]),
+                if (animalId == a.id)
+                  Positioned(top: 0, right: 0, child: Icon(Icons.check_circle_rounded, color: couleur, size: 18)),
               ]),
             ),
           ),

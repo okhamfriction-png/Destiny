@@ -128,8 +128,8 @@ Future<Banc> _banc(
     ..personnages = [
       PersonnageTroupe(joueur: '', archetypeId: 'alarmiste', animalId: 'rat'),
       PersonnageTroupe(joueur: '', archetypeId: 'leader'),
-      PersonnageTroupe(joueur: '', archetypeId: 'cynique', animalId: 'singe'),
-      PersonnageTroupe(joueur: '', archetypeId: 'paranoiaque'),
+      PersonnageTroupe(joueur: '', archetypeId: 'denegateur', animalId: 'singe'),
+      PersonnageTroupe(joueur: '', archetypeId: 'tyran'),
     ]
     ..lieuId = lieu.id
     ..lieuNom = lieu.name
@@ -600,10 +600,10 @@ void main() {
     testWidgets('on change un archétype à la main ; son animal repart à zéro', (tester) async {
       final b = await echauffement(tester);
       final s = b.session;
-      final cynique = s.personnages.firstWhere((p) => p.archetypeId == 'cynique');
+      final cynique = s.personnages.firstWhere((p) => p.archetypeId == 'denegateur');
       expect(cynique.animalId, 'singe');
       final libre = g.archetypes.firstWhere((a) => s.personnages.every((p) => p.archetypeId != a.id));
-      await tester.tap(find.byKey(const ValueKey('changer_cynique')));
+      await tester.tap(find.byKey(const ValueKey('changer_denegateur')));
       await tester.pumpAndSettle();
       final choix = find.descendant(of: find.byType(BottomSheet), matching: find.text(libre.nom));
       await tester.ensureVisible(choix);
@@ -646,18 +646,24 @@ void main() {
     testWidgets('sans alarmiste, le spectacle reste équilibré : le danger vient de la régie', (tester) async {
       final b = await echauffement(tester);
       final s = b.session;
-      final libre = g.archetypes.firstWhere((a) =>
-          a.id != 'alarmiste' &&
-          a.famille == FamilleId.interprete &&
-          s.personnages.every((p) => p.archetypeId != a.id));
-      await tester.tap(find.byKey(const ValueKey('changer_alarmiste')));
+      Future<void> changer(String ancien, String nouveau) async {
+        await tester.tap(find.byKey(ValueKey('changer_$ancien')));
+        await tester.pumpAndSettle();
+        final choix = find.descendant(of: find.byType(BottomSheet), matching: find.text(g.archetype(nouveau)!.nom));
+        await tester.ensureVisible(choix);
+        await tester.pumpAndSettle();
+        await tester.tap(choix);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 500));
+      }
+
+      // Le duel Alarmiste-Dénégateur devient Protecteur-Prophète : toujours
+      // deux duels et trois couleurs, sans alarmiste.
+      await changer('alarmiste', 'protecteur');
+      expect(find.byType(SnackBar), findsOneWidget, reason: 'le protecteur joue sans son adversaire');
+      ScaffoldMessenger.of(tester.element(find.byType(SnackBar))).removeCurrentSnackBar();
       await tester.pumpAndSettle();
-      final choix = find.descendant(of: find.byType(BottomSheet), matching: find.text(libre.nom));
-      await tester.ensureVisible(choix);
-      await tester.pumpAndSettle();
-      await tester.tap(choix);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 500));
+      await changer('denegateur', 'prophete');
       expect(s.personnages.any((p) => p.archetypeId == 'alarmiste'), isFalse);
       expect(find.byType(SnackBar), findsNothing);
     });

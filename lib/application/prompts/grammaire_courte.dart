@@ -31,7 +31,11 @@ String grammaireCourte(Grammaire g, {bool kids = false}) {
         '${g.rituel.suite.isEmpty ? '' : ' Puis la régie son enchaîne : ${g.rituel.suite.join(' → ')}.'}')
     ..writeln('Au premier figé : ${g.rituel.premierFige}')
     ..writeln()
-    ..writeln('LA DISTRIBUTION : ${g.distribution.regle}')
+    ..writeln('LA DISTRIBUTION : ${g.distribution.regle}');
+  for (final d in g.distribution.duels) {
+    b.writeln('- Duel ${g.archetype(d.premier)?.nom} contre ${g.archetype(d.second)?.nom}, sur ${d.sur} : ${d.enjeu}.');
+  }
+  b
     ..writeln()
     ..writeln('LE PERSONNAGE, EN SIX COUCHES : ${g.personnage.couches.join(' ; ')}.')
     ..writeln('Le piège : ${g.personnage.piege}')
@@ -45,7 +49,7 @@ String grammaireCourte(Grammaire g, {bool kids = false}) {
   }
   b
     ..writeln()
-    ..writeln('LES DOUZE ARCHÉTYPES (une conviction face au danger) ET, ACTE PAR ACTE, CE QU\'ILS SONT TENTÉS DE '
+    ..writeln('LES HUIT ARCHÉTYPES (une conviction face au danger) ET, ACTE PAR ACTE, CE QU\'ILS SONT TENTÉS DE '
         'FAIRE. Ce sont des directions, pas des prisons : la fiction passe avant la carte.');
   for (final f in g.familles) {
     b.writeln('${f.nom} :');

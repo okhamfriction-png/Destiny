@@ -20,7 +20,7 @@ import 'troupe_screen.dart';
 
 /// Préparer une répétition ou un spectacle. Sans prénoms : on se les donne
 /// sur le plateau. « Tirer » donne d'un seul geste le lieu, le danger et la
-/// distribution des archétypes, chacun avec ses deux animaux possibles, et
+/// distribution des archétypes, chacun avec ses trois animaux possibles et son adversaire, et
 /// un bouton pour en savoir plus à chaque niveau.
 class PreparerScreen extends StatefulWidget {
   const PreparerScreen({super.key, required this.contexte, required this.session});
@@ -304,6 +304,7 @@ class _PreparerScreenState extends State<PreparerScreen> {
               style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.4, color: c.texteSecondaire)),
           const SizedBox(height: 12),
           for (var i = 0; i < s.personnages.length; i++) _ligneArchetype(i),
+          _Duels(ids: ids),
           _Verdict(
             ok: verdict.valide,
             texte: verdict.raison(g, t),
@@ -336,8 +337,9 @@ class _PreparerScreenState extends State<PreparerScreen> {
     );
   }
 
-  /// Un archétype, en version compacte : son nom, ce qu'il fait, et ses deux
-  /// animaux possibles, avec un bouton info à chaque niveau.
+  /// Un archétype, en version compacte : son nom, son adversaire, ce qu'il
+  /// fait, et ses trois animaux possibles, avec un bouton info à chaque
+  /// niveau.
   Widget _ligneArchetype(int i) {
     final t = context.textes;
     final c = context.destiny;
@@ -371,30 +373,44 @@ class _PreparerScreenState extends State<PreparerScreen> {
             ),
         ]),
         if (arch != null) ...[
+          if (g.distribution.duelDe(arch.id)?.adversaire(arch.id) case final adv?)
+            _Adversaire(
+              key: ValueKey('adversaire_$i'),
+              nom: g.archetype(adv)?.nom ?? adv,
+              present: s.personnages.any((x) => x.archetypeId == adv),
+              couleur: c.famille(g.archetype(adv)?.famille ?? arch.famille),
+            ),
+          const SizedBox(height: 4),
           Text(arch.ceQuIlFait,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.35, color: c.texteSecondaire)),
           const SizedBox(height: 10),
-          Row(children: [
-            for (final (j, a) in g.animauxDe(arch.id).indexed) ...[
-              if (j > 0) const SizedBox(width: 8),
-              Expanded(
-                child: _PuceAnimal(
-                  animal: a,
-                  choisi: pers.animalId == a.id,
-                  couleur: couleur,
-                  source: widget.contexte.visuels.source,
-                  onChoisir: () {
-                    setState(() => pers.animalId = pers.animalId == a.id ? '' : a.id);
-                    _sauver();
-                  },
-                  info: p('info_de', {'nom': a.nom}),
-                  onInfo: () => _ouvrir(FicheAnimal(animalId: a.id, contexte: _bibliotheque, kids: s.kids)),
+          // Trois puces sur une ligne ; sur un petit téléphone, elles passent
+          // en colonne (image au-dessus du nom) pour garder le nom lisible.
+          LayoutBuilder(builder: (context, contraintes) {
+            final compacte = (contraintes.maxWidth - 16) / 3 < 128;
+            return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              for (final (j, a) in g.animauxDe(arch.id).indexed) ...[
+                if (j > 0) const SizedBox(width: 8),
+                Expanded(
+                  child: _PuceAnimal(
+                    animal: a,
+                    choisi: pers.animalId == a.id,
+                    couleur: couleur,
+                    source: widget.contexte.visuels.source,
+                    compacte: compacte,
+                    onChoisir: () {
+                      setState(() => pers.animalId = pers.animalId == a.id ? '' : a.id);
+                      _sauver();
+                    },
+                    info: p('info_de', {'nom': a.nom}),
+                    onInfo: () => _ouvrir(FicheAnimal(animalId: a.id, contexte: _bibliotheque, kids: s.kids)),
+                  ),
                 ),
-              ),
-            ],
-          ]),
+              ],
+            ]);
+          }),
           // L'exemple de vouloir du vêtement choisi (en kids : celui des enfants).
           if (g.animal(pers.animalId)?.exempleVouloirPour(kids: s.kids) case final ex? when ex.trim().isNotEmpty) ...[
             const SizedBox(height: 8),
@@ -528,8 +544,87 @@ class _VignetteTirage extends StatelessWidget {
   }
 }
 
-/// Un des deux animaux possibles d'un archétype : on le touche pour le
-/// choisir (facultatif), et « i » ouvre sa fiche.
+/// L'adversaire d'un archétype : celui contre qui il joue.
+class _Adversaire extends StatelessWidget {
+  const _Adversaire({super.key, required this.nom, required this.present, required this.couleur});
+
+  final String nom;
+  final bool present;
+  final Color couleur;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.destiny;
+    final t = context.textes;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 2),
+      child: Row(children: [
+        Icon(present ? Icons.compare_arrows_rounded : Icons.person_outline_rounded,
+            size: 18, color: present ? couleur : c.texteSecondaire),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            t.t(present ? 'preparer.adversaire' : 'preparer.adversaire_absent', {'nom': nom}),
+            style: TextStyle(
+              fontFamily: kPoliceTexte,
+              fontSize: 14,
+              fontWeight: present ? FontWeight.w700 : FontWeight.w500,
+              fontStyle: present ? FontStyle.normal : FontStyle.italic,
+              color: present ? c.texte : c.texteSecondaire,
+            ),
+          ),
+        ),
+      ]),
+    );
+  }
+}
+
+/// Les duels complets de la distribution, sous la liste des archétypes.
+class _Duels extends StatelessWidget {
+  const _Duels({required this.ids});
+
+  final List<String> ids;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.destiny;
+    final t = context.textes;
+    final g = context.grammaire;
+    final duels = g.distribution.duelsComplets(ids);
+    String nom(String id) => g.archetype(id)?.nom ?? id;
+    return Padding(
+      key: const ValueKey('duels_preparation'),
+      padding: const EdgeInsets.only(top: 4, bottom: 10),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Text(t.t('preparer.duels'),
+            style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w800, fontSize: 15.5, color: c.titre)),
+        const SizedBox(height: 6),
+        if (duels.isEmpty)
+          Text(t.t('preparer.duels_aucun'),
+              style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, fontStyle: FontStyle.italic, color: c.texteSecondaire))
+        else
+          for (final d in duels)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Text.rich(
+                TextSpan(children: [
+                  TextSpan(
+                    text: t.t('bibliotheque.regles.duel', {'premier': nom(d.premier), 'second': nom(d.second)}),
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  TextSpan(text: ' · ${t.t('bibliotheque.regles.duel_enjeu', {'sur': d.sur, 'enjeu': d.enjeu})}'),
+                ]),
+                style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, height: 1.35, color: c.texte),
+              ),
+            ),
+      ]),
+    );
+  }
+}
+
+/// Un des trois animaux possibles d'un archétype : on le touche pour le
+/// choisir (facultatif), et « i » ouvre sa fiche. En [compacte], l'image
+/// passe au-dessus du nom, pour que trois puces tiennent sur un téléphone.
 class _PuceAnimal extends StatelessWidget {
   const _PuceAnimal({
     required this.animal,
@@ -539,6 +634,7 @@ class _PuceAnimal extends StatelessWidget {
     required this.onChoisir,
     required this.info,
     required this.onInfo,
+    this.compacte = false,
   });
 
   final Animal animal;
@@ -548,10 +644,53 @@ class _PuceAnimal extends StatelessWidget {
   final VoidCallback onChoisir;
   final String info;
   final VoidCallback onInfo;
+  final bool compacte;
 
   @override
   Widget build(BuildContext context) {
     final c = context.destiny;
+    if (compacte) {
+      return Material(
+        color: choisi ? couleur.withValues(alpha: c.sombre ? 0.26 : 0.12) : c.champ,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: choisi ? couleur : c.ligne, width: choisi ? 2 : 1),
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: onChoisir,
+          child: Stack(children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(4, 8, 4, 6),
+              child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                const SizedBox(width: double.infinity),
+                MedaillonAnimal(animal, taille: 34, source: source),
+                const SizedBox(height: 4),
+                Text(animal.nom,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, fontSize: 13.5, color: c.texte)),
+              ]),
+            ),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: IconButton(
+                tooltip: info,
+                visualDensity: VisualDensity.compact,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 30, minHeight: 30),
+                iconSize: 16,
+                icon: Icon(Icons.info_outline_rounded, color: c.texteSecondaire),
+                onPressed: onInfo,
+              ),
+            ),
+          ]),
+        ),
+      );
+    }
     return Material(
       color: choisi ? couleur.withValues(alpha: c.sombre ? 0.26 : 0.12) : c.champ,
       shape: RoundedRectangleBorder(

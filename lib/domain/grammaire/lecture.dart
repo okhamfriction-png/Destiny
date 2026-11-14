@@ -55,8 +55,8 @@ List<String> validerGrammaire(Map<String, dynamic> j) {
   }
 
   final archetypes = liste('archetypes');
-  if (archetypes.length != 12) {
-    erreurs.add('Il faut 12 archétypes, il y en a ${archetypes.length}.');
+  if (archetypes.length != 8) {
+    erreurs.add('Il faut 8 archétypes, il y en a ${archetypes.length}.');
   }
   final idsArchetypes = <String>{};
   final idsAnimaux = <String>{};
@@ -75,16 +75,18 @@ List<String> validerGrammaire(Map<String, dynamic> j) {
       }
     }
     final animaux = m['animaux'];
-    if (animaux is! List || animaux.length != 2) {
-      erreurs.add('L\'archétype $id doit avoir 2 animaux.');
+    if (animaux is! List || animaux.length != 3) {
+      erreurs.add('L\'archétype $id doit avoir 3 animaux.');
     } else {
       for (final an in animaux) {
         final aid = '${(an as Map)['id']}';
         if (!idsAnimaux.add(aid)) {
           erreurs.add('L\'animal $aid sert à plusieurs archétypes.');
         }
-        if ((an['replique'] as String? ?? '').trim().isEmpty) {
-          erreurs.add('L\'animal $aid n\'a pas de réplique.');
+        for (final cle in ['replique', 'replique_kids', 'exemple_vouloir', 'exemple_vouloir_kids']) {
+          if ((an[cle] as String? ?? '').trim().isEmpty) {
+            erreurs.add('L\'animal $aid n\'a pas de $cle.');
+          }
         }
       }
     }
@@ -132,6 +134,24 @@ List<String> validerGrammaire(Map<String, dynamic> j) {
         if (!idsArchetypes.contains(id)) {
           erreurs.add('Un exemple de distribution cite un archétype inconnu : $id.');
         }
+      }
+    }
+    for (final c in (distribution['par_nombre'] as List? ?? const [])) {
+      final m = c as Map;
+      final n = (m['joueurs'] as num?)?.toInt() ?? 0;
+      final duels = (m['duels'] as num?)?.toInt() ?? 0;
+      final seul = (m['seul'] as num?)?.toInt() ?? 0;
+      if (2 * duels + seul != n) {
+        erreurs.add('À $n joueurs, $duels duels et $seul seul ne font pas le compte.');
+      }
+    }
+    final dansUnDuel = <String>{};
+    for (final d in (distribution['duels'] as List? ?? const [])) {
+      final ids = [for (final x in ((d as Map)['archetypes'] as List? ?? const [])) '$x'];
+      if (ids.length != 2) erreurs.add('Un duel doit opposer deux archétypes.');
+      for (final id in ids) {
+        if (!idsArchetypes.contains(id)) erreurs.add('Un duel cite un archétype inconnu : $id.');
+        if (!dansUnDuel.add(id)) erreurs.add('L\'archétype $id est dans deux duels.');
       }
     }
   }
@@ -382,11 +402,8 @@ Grammaire lireGrammaire(
         for (final c in maps(di['par_nombre']))
           CompositionDistribution(
             joueurs: (c['joueurs'] as num?)?.toInt() ?? 0,
-            alarmiste: (c['alarmiste'] as num?)?.toInt() ?? 1,
-            tient: (c['tient'] as num?)?.toInt() ?? 0,
-            interprete: (c['interprete'] as num?)?.toInt() ?? 0,
-            fissure: (c['fissure'] as num?)?.toInt() ?? 0,
-            auChoix: (c['au_choix'] as num?)?.toInt() ?? 0,
+            duels: (c['duels'] as num?)?.toInt() ?? 0,
+            seuls: (c['seul'] as num?)?.toInt() ?? 0,
           ),
       ],
       exemples: [
@@ -398,6 +415,16 @@ Grammaire lireGrammaire(
           ),
       ],
       aSix: s(di['a_6']),
+      duels: [
+        for (final d in maps(di['duels']))
+          if (ls(d['archetypes']).length == 2)
+            Duel(
+              premier: ls(d['archetypes'])[0],
+              second: ls(d['archetypes'])[1],
+              sur: s(d['sur']),
+              enjeu: s(d['enjeu']),
+            ),
+      ],
     ),
     personnage: PedagogiePersonnage(
       couches: ls(pe['couches']),

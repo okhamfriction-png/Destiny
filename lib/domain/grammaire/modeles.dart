@@ -89,7 +89,7 @@ class Archetype {
     required this.animalIds,
   });
 
-  /// Identifiant venu du fichier (`leader`, `gardien_de_l_ordre`…).
+  /// Identifiant venu du fichier (`leader`, `tyran`…).
   final String id;
   final String nom;
   final FamilleId famille;
@@ -98,7 +98,7 @@ class Archetype {
   /// Ce que fait l'archétype à chaque palier.
   final Map<PalierId, String> montee;
 
-  /// Les deux animaux de l'archétype.
+  /// Les trois animaux de l'archétype.
   final List<String> animalIds;
 
   String monteeA(PalierId p) => montee[p] ?? '';
@@ -299,34 +299,22 @@ class RituelDestiny {
   final String acte1;
 }
 
-/// Combien d'archétypes de chaque famille pour un nombre de joueurs.
+/// Combien de duels complets, et d'archétypes seuls, pour un nombre de
+/// joueurs.
 class CompositionDistribution {
-  const CompositionDistribution({
-    required this.joueurs,
-    required this.alarmiste,
-    required this.tient,
-    required this.interprete,
-    required this.fissure,
-    required this.auChoix,
-  });
+  const CompositionDistribution({required this.joueurs, required this.duels, required this.seuls});
 
   final int joueurs;
-  final int alarmiste;
-  final int tient;
 
-  /// Nombre d'archétypes « interprète le danger » en plus de l'alarmiste.
-  final int interprete;
-  final int fissure;
-  final int auChoix;
+  /// Les duels complets : un archétype et son adversaire.
+  final int duels;
 
-  int minimumPour(FamilleId f) => switch (f) {
-        FamilleId.tient => tient,
-        FamilleId.interprete => interprete,
-        FamilleId.fissure => fissure,
-      };
+  /// Les archétypes seuls, sans leur adversaire (0 ou 1).
+  final int seuls;
 }
 
-/// Un exemple de distribution équilibrée.
+/// Un exemple de distribution : deux duels à 4, un archétype de plus à 5,
+/// son adversaire à 6.
 class ExempleDistribution {
   const ExempleDistribution({
     required this.aQuatre,
@@ -334,17 +322,43 @@ class ExempleDistribution {
     required this.plusASix,
   });
 
+  /// Les deux duels, à la suite (« alarmiste, dénégateur, leader, tyran »).
   final List<String> aQuatre;
   final String plusACinq;
   final String plusASix;
 
-  /// Les archétypes de l'exemple pour [joueurs] (4, 5 ou 6 ; à 3, voir
-  /// `exemplesDistribution`).
+  /// Les archétypes de l'exemple pour [joueurs] : à 3, le premier duel et
+  /// l'archétype seul de 5.
   List<String> pour(int joueurs) => [
-        ...aQuatre,
+        if (joueurs <= 3) ...[...aQuatre.take(2), plusACinq] else ...aQuatre,
         if (joueurs >= 5) plusACinq,
         if (joueurs >= 6) plusASix,
       ];
+}
+
+/// Deux archétypes qui s'opposent dans leur réflexe : mis ensemble en scène,
+/// ils font naître le conflit tout seuls.
+class Duel {
+  const Duel({required this.premier, required this.second, required this.sur, required this.enjeu});
+
+  final String premier;
+  final String second;
+
+  /// Sur quoi ils s'opposent (« qui commande »).
+  final String sur;
+
+  /// Les deux réflexes (« sauver le groupe, ou se faire obéir »).
+  final String enjeu;
+
+  List<String> get archetypes => [premier, second];
+
+  bool contient(String id) => id == premier || id == second;
+
+  /// L'autre archétype du duel.
+  String adversaire(String id) => id == premier ? second : premier;
+
+  /// Les deux archétypes sont dans la distribution.
+  bool completDans(Iterable<String> ids) => ids.contains(premier) && ids.contains(second);
 }
 
 /// Les règles de distribution.
@@ -354,12 +368,30 @@ class RegleDistribution {
     required this.compositions,
     required this.exemples,
     required this.aSix,
+    this.duels = const [],
   });
 
   final String regle;
   final List<CompositionDistribution> compositions;
   final List<ExempleDistribution> exemples;
   final String aSix;
+
+  /// Les quatre duels : chaque archétype a son adversaire.
+  final List<Duel> duels;
+
+  /// Le duel de l'archétype, s'il en a un.
+  Duel? duelDe(String archetypeId) {
+    for (final d in duels) {
+      if (d.contient(archetypeId)) return d;
+    }
+    return null;
+  }
+
+  /// Les duels complets d'une distribution, dans l'ordre du fichier.
+  List<Duel> duelsComplets(Iterable<String> ids) => [
+        for (final d in duels)
+          if (d.completDans(ids)) d,
+      ];
 
   CompositionDistribution? pour(int joueurs) {
     for (final c in compositions) {
@@ -1030,7 +1062,7 @@ class Grammaire {
     return a == null ? null : _archetypesParId[a.archetypeId];
   }
 
-  /// Les deux animaux d'un archétype.
+  /// Les trois animaux d'un archétype.
   List<Animal> animauxDe(String archetypeId) => [
         for (final id in _archetypesParId[archetypeId]?.animalIds ?? const [])
           if (_animauxParId[id] != null) _animauxParId[id]!,

@@ -28,6 +28,9 @@ class SerieStore extends ChangeNotifier {
   static const String cleCampagnesV1 = 'campagnes_v1';
   static const String cleSeancesV1 = 'campagne_seances_v1';
 
+  /// Posée quand les séries ont été réécrites avec les huit archétypes.
+  static const String cleArchetypesHuit = 'series_archetypes_huit_v1';
+
   final Future<String> Function(String) _lire;
   final AiSettings? _aiSettings;
   final CampagneAssistant? _assistant;
@@ -101,6 +104,14 @@ class SerieStore extends ChangeNotifier {
       _lectureEchouee = true;
     }
     if (!_lectureEchouee) await _migrer(prefs);
+    if (!_lectureEchouee && prefs.getBool(cleArchetypesHuit) != true) {
+      // Les anciens archétypes ont été migrés à la lecture : on les réécrit
+      // une fois pour toutes.
+      if (prefs.getString(cleSeries) != null) await _sauver();
+      try {
+        await prefs.setBool(cleArchetypesHuit, true);
+      } catch (_) {}
+    }
     _charge = true;
     notifyListeners();
   }

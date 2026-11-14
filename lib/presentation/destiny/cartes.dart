@@ -11,7 +11,7 @@ enum VarianteCarte { archetype, animal, kids }
 
 /// La carte d'archétype, d'après les cartes imprimées de la troupe.
 ///
-/// - [CarteArchetype.archetype] : l'archétype, ses deux animaux et sa montée ;
+/// - [CarteArchetype.archetype] : l'archétype, ses trois animaux et sa montée ;
 /// - [CarteArchetype.animal] : un animal avec sa réplique ;
 /// - [CarteArchetype.kids] : un animal avec sa réplique kids.
 ///
@@ -98,7 +98,7 @@ class CarteArchetype extends StatelessWidget {
                     for (final a in g.animauxDe(archetype.id))
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          padding: const EdgeInsets.symmetric(horizontal: 3),
                           child: _TuileAnimal(animal: a, couleur: couleur, source: source),
                         ),
                       ),
@@ -189,9 +189,10 @@ class _TuileAnimal extends StatelessWidget {
         style: TextStyle(fontFamily: kPoliceTexte, fontStyle: FontStyle.italic, fontSize: 12.5, color: c.texteSecondaire),
       ),
       const SizedBox(height: 3),
-      PastilleStatut(animal.statutDepart),
+      // Trois tuiles côte à côte : la pastille reste sur une ligne.
+      FittedBox(fit: BoxFit.scaleDown, child: PastilleStatut(animal.statutDepart)),
       const SizedBox(height: 6),
-      EncartReplique(animal.replique, couleur: couleur, taille: 12.5),
+      EncartReplique(animal.replique, couleur: couleur, taille: 12),
     ]);
   }
 }

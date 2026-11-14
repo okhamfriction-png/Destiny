@@ -50,7 +50,7 @@ void main() {
   }
 
   group('La grammaire courte', () {
-    test('vient du fichier : paliers, actes, rituel, douze archétypes', () {
+    test('vient du fichier : paliers, actes, rituel, huit archétypes', () {
       final t = grammaireCourte(g);
       expect(t, contains(g.promesse));
       for (final p in g.paliers) {
@@ -141,7 +141,7 @@ void main() {
     });
 
     test('le coach d\'échauffement reprend les trois questions', () {
-      final p = promptCoachEchauffement(g: g, archetypeId: 'cynique', animalId: 'singe');
+      final p = promptCoachEchauffement(g: g, archetypeId: 'denegateur', animalId: 'singe');
       for (final q in g.personnage.echauffement.questions) {
         expect(p, contains(q));
       }
@@ -156,7 +156,7 @@ void main() {
 
   group('Le Spectacle avec l\'IA', () {
     final personnages = [
-      for (final (id, animal) in [('alarmiste', 'rat'), ('leader', 'lion'), ('cynique', 'singe'), ('solitaire', 'chat')])
+      for (final (id, animal) in [('alarmiste', 'rat'), ('leader', 'lion'), ('denegateur', 'singe'), ('paranoiaque', 'vautour')])
         PersonnagePrompt(nom: id, archetypeId: id, animalId: animal, joueur: false),
     ];
 
@@ -317,7 +317,7 @@ void main() {
       final (a, _) = await assistant('{"questions": [{"question": "Q1", "idees": ["a", "b"]}], '
           '"personnages": [{"nom": "Personnage 1", "veut": "sortir", "besoin": "faire confiance"}], '
           '"ce_qui_a_marche": ["le silence"]}');
-      final idees = await a.echauffement(archetypeId: 'cynique', animalId: 'singe');
+      final idees = await a.echauffement(archetypeId: 'denegateur', animalId: 'singe');
       expect(idees.single.idees, ['a', 'b']);
       final d = await a.debrief(
         personnages: const [PersonnagePrompt(nom: 'Personnage 1', archetypeId: 'leader')],

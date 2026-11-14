@@ -113,13 +113,26 @@ List<BlocLivret> _trouverSonVouloir(Grammaire g, TextesDestiny t, {required bool
 
 String _majuscule(String s) => s.isEmpty ? s : '${s[0].toUpperCase()}${s.substring(1)}';
 
-/// La composition d'une partie à [c].joueurs joueurs, en clair.
+/// La composition d'une partie à [c].joueurs joueurs, en clair : ses duels
+/// complets et son archétype seul.
 String compositionEnClair(Grammaire g, TextesDestiny t, CompositionDistribution c) => [
-      t.t('bibliotheque.regles.alarmiste'),
-      for (final f in FamilleId.values)
-        if (c.minimumPour(f) > 0) '${c.minimumPour(f)} · ${g.famille(f).nom.toLowerCase()}',
-      if (c.auChoix > 0) t.t('bibliotheque.regles.au_choix', {'n': '${c.auChoix}'}),
-    ].join(', ');
+      c.duels == 1
+          ? t.t('bibliotheque.regles.un_duel')
+          : t.t('bibliotheque.regles.des_duels', {'n': '${c.duels}'}),
+      if (c.seuls > 0) t.t('bibliotheque.regles.un_seul'),
+    ].join(' + ');
+
+/// Les quatre duels, en clair : « Leader contre Tyran », et leur enjeu.
+List<BlocLivret> duelsLivret(Grammaire g, TextesDestiny t) => [
+      for (final d in g.distribution.duels)
+        InfoLivret(
+          t.t('bibliotheque.regles.duel', {
+            'premier': g.archetype(d.premier)?.nom ?? d.premier,
+            'second': g.archetype(d.second)?.nom ?? d.second,
+          }),
+          t.t('bibliotheque.regles.duel_enjeu', {'sur': d.sur, 'enjeu': d.enjeu}),
+        ),
+    ];
 
 /// Le jeu de rôle entre humains (la Série), aussi simple que le théâtre : la
 /// même conduite (chrono, Destiny, musique, régie), le cœur et le cerveau de
@@ -183,6 +196,8 @@ Livret construireLivret(Grammaire g, TextesDestiny t, {bool kids = false}) {
       ParagrapheLivret(g.distribution.regle),
       for (final c in g.distribution.compositions)
         InfoLivret(t.t('bibliotheque.regles.joueurs', {'n': '${c.joueurs}'}), compositionEnClair(g, t, c)),
+      ParagrapheLivret('${t.t('bibliotheque.regles.duels')} :'),
+      ...duelsLivret(g, t),
       if (regle('directions') case final r?) ...[
         IntertitreLivret(sous('directions')),
         EncartLivret(r.texte),

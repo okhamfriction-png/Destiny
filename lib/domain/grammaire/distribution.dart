@@ -15,40 +15,40 @@ enum TypeProbleme {
   inconnu,
   doublon,
   sansAlarmiste,
+  duelIncomplet,
   familleManquante,
-  familleInsuffisante,
   leaderDemande,
 }
 
 class ProblemeDistribution {
-  const ProblemeDistribution(this.type,
-      {this.archetypeId, this.famille, this.joueurs = 0, this.minimum = 0});
+  const ProblemeDistribution(this.type, {this.archetypeId, this.famille});
 
   final TypeProbleme type;
   final String? archetypeId;
   final FamilleId? famille;
-
-  /// Nombre de joueurs et minimum attendu (pour « famille insuffisante »).
-  final int joueurs;
-  final int minimum;
 }
 
-/// Une correction proposée : remplacer l'archétype à [index] (ou en ajouter
-/// un si [index] vaut null) par [nouveauId].
+/// Une correction proposée : un ou deux remplacements (l'archétype à
+/// l'index devient le nouveau), ou un ajout quand l'index vaut null.
 class CorrectionDistribution {
-  const CorrectionDistribution({this.index, this.ancienId, required this.nouveauId});
+  const CorrectionDistribution({this.index, this.ancienId, required this.nouveauId, this.autres = const []});
 
   final int? index;
   final String? ancienId;
   final String nouveauId;
 
+  /// D'autres remplacements à faire en même temps (changer un duel entier).
+  final List<CorrectionDistribution> autres;
+
   /// Applique la correction à une distribution.
   List<String> appliquer(List<String> ids) {
     final copie = [...ids];
-    if (index == null) {
-      copie.add(nouveauId);
-    } else {
-      copie[index!] = nouveauId;
+    for (final c in [this, ...autres]) {
+      if (c.index == null) {
+        copie.add(c.nouveauId);
+      } else {
+        copie[c.index!] = c.nouveauId;
+      }
     }
     return copie;
   }
@@ -73,33 +73,34 @@ class VerdictDistribution {
   String phraseCorrection(Grammaire g, TextesDestiny t) {
     final c = correction;
     if (c == null) return '';
-    final nouveau = g.archetype(c.nouveauId)?.nom ?? c.nouveauId;
+    String nom(String id) => g.archetype(id)?.nom ?? id;
     if (c.ancienId == null) {
-      return t.t('distribution.correction_ajout', {'nouveau': nouveau});
+      return t.t('distribution.correction_ajout', {'nouveau': nom(c.nouveauId)});
     }
+    final toutes = [c, ...c.autres];
     return t.t('distribution.correction', {
-      'ancien': g.archetype(c.ancienId!)?.nom ?? c.ancienId!,
-      'nouveau': nouveau,
+      'ancien': toutes.map((x) => nom(x.ancienId ?? '')).join(' et '),
+      'nouveau': toutes.map((x) => nom(x.nouveauId)).join(' et '),
     });
   }
 
   static String message(ProblemeDistribution p, Grammaire g, TextesDestiny t) {
     String famille(FamilleId f) => _minusculeInitiale(g.famille(f).nom);
-    final nomArchetype = g.archetype(p.archetypeId ?? '')?.nom ?? p.archetypeId ?? '';
+    final id = p.archetypeId ?? '';
+    final nomArchetype = g.archetype(id)?.nom ?? id;
     return switch (p.type) {
       TypeProbleme.nombre => t.t('distribution.nombre'),
       TypeProbleme.inconnu => t.t('distribution.inconnu', {'archetype': nomArchetype}),
       TypeProbleme.doublon => t.t('distribution.doublon', {'archetype': nomArchetype}),
       TypeProbleme.sansAlarmiste => t.t('distribution.sans_alarmiste'),
+      TypeProbleme.duelIncomplet => t.t('distribution.duel_incomplet', {
+          'archetype': nomArchetype,
+          'adversaire': g.archetype(g.distribution.duelDe(id)?.adversaire(id) ?? '')?.nom ?? '',
+        }),
       TypeProbleme.familleManquante => t.t('distribution.famille_manquante', {
           'famille': famille(p.famille!),
           'pourquoi': g.famille(p.famille!).pourquoi,
         }).trim(),
-      TypeProbleme.familleInsuffisante => t.t('distribution.famille_insuffisante', {
-          'famille': famille(p.famille!),
-          'joueurs': '${p.joueurs}',
-          'minimum': '${p.minimum}',
-        }),
       TypeProbleme.leaderDemande => t.t('distribution.leader_demande'),
     };
   }
@@ -108,26 +109,39 @@ class VerdictDistribution {
       s.isEmpty ? s : s[0].toLowerCase() + s.substring(1);
 }
 
-/// Combien d'archétypes de la [famille] compte la distribution (l'alarmiste
-/// n'est pas compté avec les autres « interprète le danger »).
-int compterFamille(Grammaire g, List<String> ids, FamilleId famille) => ids
-    .where((id) => id != Grammaire.alarmisteId && g.archetype(id)?.famille == famille)
-    .length;
+/// Combien d'archétypes de la [famille] (de la couleur) compte la
+/// distribution, l'alarmiste compris.
+int compterFamille(Grammaire g, Iterable<String> ids, FamilleId famille) =>
+    ids.where((id) => g.archetype(id)?.famille == famille).length;
 
-/// Vérifie une distribution d'archétypes (un par joueur).
+/// Les couleurs absentes d'une distribution.
+List<FamilleId> couleursManquantes(Grammaire g, Iterable<String> ids) =>
+    [for (final f in FamilleId.values) if (compterFamille(g, ids, f) == 0) f];
+
+/// Les archétypes de la distribution qui jouent sans leur adversaire.
+List<String> archetypesSeuls(Grammaire g, List<String> ids) => [
+      for (final id in ids)
+        if (g.archetype(id) != null && !(g.distribution.duelDe(id)?.completDans(ids) ?? false)) id,
+    ];
+
+/// Vérifie une distribution d'archétypes (un par joueur) : des duels
+/// complets (`par_nombre`), et dès quatre joueurs les trois couleurs.
 VerdictDistribution validerDistribution(
   Grammaire g,
   List<String> ids, {
   bool leaderObligatoire = false,
   ModeDistribution mode = ModeDistribution.spectacle,
 }) {
-  final alarmisteObligatoire = mode == ModeDistribution.serie;
-  final problemes = <ProblemeDistribution>[];
+  final problemes = _problemes(g, ids, leaderObligatoire, mode);
+  if (problemes.isEmpty) return const VerdictDistribution([], null);
+  if (problemes.first.type == TypeProbleme.nombre) return VerdictDistribution(problemes, null);
+  return VerdictDistribution(problemes, _proposerCorrection(g, ids, problemes.length, leaderObligatoire, mode));
+}
+
+List<ProblemeDistribution> _problemes(Grammaire g, List<String> ids, bool leaderObligatoire, ModeDistribution mode) {
   final compo = g.distribution.pour(ids.length);
-  if (compo == null) {
-    return const VerdictDistribution(
-        [ProblemeDistribution(TypeProbleme.nombre)], null);
-  }
+  if (compo == null) return const [ProblemeDistribution(TypeProbleme.nombre)];
+  final problemes = <ProblemeDistribution>[];
   final vus = <String>{};
   for (final id in ids) {
     if (g.archetype(id) == null) {
@@ -136,109 +150,78 @@ VerdictDistribution validerDistribution(
       problemes.add(ProblemeDistribution(TypeProbleme.doublon, archetypeId: id));
     }
   }
-  if (alarmisteObligatoire && !ids.contains(Grammaire.alarmisteId)) {
+  if (mode == ModeDistribution.serie && !ids.contains(Grammaire.alarmisteId)) {
     problemes.add(const ProblemeDistribution(TypeProbleme.sansAlarmiste));
   }
-  for (final f in FamilleId.values) {
-    final n = compterFamille(g, ids, f);
-    final min = compo.minimumPour(f);
-    if (n == 0 && min > 0) {
+  final seuls = archetypesSeuls(g, ids.toSet().toList());
+  final enTrop = seuls.length - compo.seuls;
+  for (final id in seuls.take(enTrop < 0 ? 0 : enTrop)) {
+    problemes.add(ProblemeDistribution(TypeProbleme.duelIncomplet, archetypeId: id));
+  }
+  if (ids.length >= 4) {
+    for (final f in couleursManquantes(g, ids)) {
       problemes.add(ProblemeDistribution(TypeProbleme.familleManquante, famille: f));
-    } else if (n < min) {
-      problemes.add(ProblemeDistribution(TypeProbleme.familleInsuffisante,
-          famille: f, joueurs: ids.length, minimum: min));
     }
   }
   if (leaderObligatoire && !ids.contains(Grammaire.leaderId)) {
     problemes.add(const ProblemeDistribution(TypeProbleme.leaderDemande));
   }
-  if (problemes.isEmpty) return const VerdictDistribution([], null);
-  return VerdictDistribution(
-      problemes, _proposerCorrection(g, ids, compo, problemes.first, leaderObligatoire, alarmisteObligatoire));
+  return problemes;
 }
 
-/// Cherche un seul remplacement qui règle le premier problème.
+/// Cherche le plus petit changement qui règle le plus de problèmes : un
+/// remplacement, sinon un duel changé pour un autre.
 CorrectionDistribution? _proposerCorrection(
-  Grammaire g,
-  List<String> ids,
-  CompositionDistribution compo,
-  ProblemeDistribution p,
-  bool leaderObligatoire,
-  bool alarmisteObligatoire,
-) {
-  // L'archétype à faire entrer.
-  String? entrant;
-  switch (p.type) {
-    case TypeProbleme.sansAlarmiste:
-      entrant = Grammaire.alarmisteId;
-    case TypeProbleme.leaderDemande:
-      entrant = Grammaire.leaderId;
-    case TypeProbleme.familleManquante:
-    case TypeProbleme.familleInsuffisante:
-      entrant = g
-          .archetypesDe(p.famille!)
-          .map((a) => a.id)
-          .where((id) => id != Grammaire.alarmisteId && !ids.contains(id))
-          .firstOrNull;
-    case TypeProbleme.doublon:
-    case TypeProbleme.inconnu:
-      // On remplace l'intrus par un archétype d'une famille en manque, sinon
-      // par le premier archétype libre.
-      final index = p.type == TypeProbleme.doublon
-          ? ids.lastIndexOf(p.archetypeId!)
-          : ids.indexOf(p.archetypeId!);
-      final reste = [...ids]..removeAt(index);
-      final manque = FamilleId.values.where(
-          (f) => compterFamille(g, reste, f) < compo.minimumPour(f));
-      final candidats = [
-        if (alarmisteObligatoire && !reste.contains(Grammaire.alarmisteId)) Grammaire.alarmisteId,
-        for (final f in manque) ...g.archetypesDe(f).map((a) => a.id),
-        ...g.archetypes.map((a) => a.id),
-      ].where((id) => !reste.contains(id));
-      final nouveau = candidats.firstOrNull;
-      return nouveau == null
-          ? null
-          : CorrectionDistribution(index: index, ancienId: ids[index], nouveauId: nouveau);
-    case TypeProbleme.nombre:
-      return null;
-  }
-  if (entrant == null) return null;
-  // Le joueur à changer : celui dont le départ ne crée pas de nouveau manque.
+    Grammaire g, List<String> ids, int avant, bool leaderObligatoire, ModeDistribution mode) {
+  int compter(List<String> essai) => _problemes(g, essai, leaderObligatoire, mode).length;
+  final tous = [for (final a in g.archetypes) a.id];
+  CorrectionDistribution? meilleure;
+  var score = avant;
   for (var i = ids.length - 1; i >= 0; i--) {
-    final ancien = ids[i];
-    if (alarmisteObligatoire && ancien == Grammaire.alarmisteId) continue;
-    if (leaderObligatoire && ancien == Grammaire.leaderId) continue;
-    final essai = [...ids]..[i] = entrant;
-    final avant = _compterProblemes(g, ids, leaderObligatoire, alarmisteObligatoire);
-    final apres = _compterProblemes(g, essai, leaderObligatoire, alarmisteObligatoire);
-    if (apres < avant) {
-      return CorrectionDistribution(index: i, ancienId: ancien, nouveauId: entrant);
+    for (final id in tous) {
+      if (ids.contains(id)) continue;
+      final n = compter([...ids]..[i] = id);
+      if (n < score) {
+        score = n;
+        meilleure = CorrectionDistribution(index: i, ancienId: ids[i], nouveauId: id);
+      }
     }
   }
-  return null;
+  if (meilleure != null && score == 0) return meilleure;
+  // Changer tout un duel : les deux qui le forment deviennent un autre duel.
+  for (final present in g.distribution.duels) {
+    final i = ids.indexOf(present.premier), j = ids.indexOf(present.second);
+    if (i < 0 || j < 0) continue;
+    for (final autre in g.distribution.duels) {
+      if (autre.premier == present.premier || ids.contains(autre.premier) || ids.contains(autre.second)) continue;
+      final essai = [...ids]
+        ..[i] = autre.premier
+        ..[j] = autre.second;
+      final n = compter(essai);
+      if (n < score) {
+        score = n;
+        meilleure = CorrectionDistribution(
+          index: i,
+          ancienId: present.premier,
+          nouveauId: autre.premier,
+          autres: [CorrectionDistribution(index: j, ancienId: present.second, nouveauId: autre.second)],
+        );
+      }
+    }
+  }
+  return meilleure;
 }
 
-int _compterProblemes(Grammaire g, List<String> ids, bool leaderObligatoire, bool alarmisteObligatoire) {
-  final compo = g.distribution.pour(ids.length);
-  if (compo == null) return 1;
-  var n = 0;
-  final vus = <String>{};
-  for (final id in ids) {
-    if (g.archetype(id) == null || !vus.add(id)) n++;
-  }
-  if (alarmisteObligatoire && !ids.contains(Grammaire.alarmisteId)) n++;
-  for (final f in FamilleId.values) {
-    if (compterFamille(g, ids, f) < compo.minimumPour(f)) n++;
-  }
-  if (leaderObligatoire && !ids.contains(Grammaire.leaderId)) n++;
-  return n;
-}
-
-/// Tire une distribution équilibrée pour [joueurs] joueurs. Les archétypes
-/// [imposes] sont gardés ; le reste est tiré pour que chaque famille soit
-/// représentée. En jeu de rôle, l'alarmiste est toujours tiré ; au
-/// spectacle, il n'a pas de place réservée (il peut venir en plus). L'ordre
-/// final est mélangé.
+/// Tire une distribution par duels, au hasard (`par_nombre`) :
+/// 1. le nombre de duels voulu, parmi les quatre ;
+/// 2. dès quatre joueurs, un tirage où une couleur manque est refusé, et on
+///    retire ;
+/// 3. à 3 et 5 joueurs, l'archétype seul vient des duels restants, et
+///    complète la couleur qui manque s'il y en a une ;
+/// 4. l'ordre est mélangé : les archétypes sont répartis au hasard entre les
+///    joueurs.
+/// Les archétypes [imposes] (et le leader demandé, et l'alarmiste en jeu de
+/// rôle) sont gardés : on retire tant qu'ils ne sont pas dans le tirage.
 List<String> tirerDistribution(
   Grammaire g,
   int joueurs, {
@@ -252,60 +235,91 @@ List<String> tirerDistribution(
   if (compo == null) {
     throw ArgumentError.value(joueurs, 'joueurs', 'Destiny se joue de 3 à 6.');
   }
-  final choisis = <String>[];
-  void ajouter(String id) {
-    if (!choisis.contains(id) && choisis.length < joueurs && g.archetype(id) != null) {
-      choisis.add(id);
-    }
+  final requis = <String>{
+    if (mode == ModeDistribution.serie) Grammaire.alarmisteId,
+    for (final id in imposes)
+      if (g.archetype(id) != null) id,
+    if (leaderObligatoire) Grammaire.leaderId,
+  };
+  // Les requis qu'aucun tirage ne peut tenir ensemble sont lâchés, du
+  // dernier au premier, plutôt que de boucler sans fin.
+  final gardes = [...requis];
+  while (gardes.isNotEmpty && !_possible(g, compo, gardes)) {
+    gardes.removeLast();
   }
-
-  if (mode == ModeDistribution.serie) ajouter(Grammaire.alarmisteId);
-  for (final id in imposes) {
-    ajouter(id);
+  for (;;) {
+    final tirage = _unTirage(g, compo, rng);
+    if (tirage == null) continue;
+    if (!gardes.every(tirage.contains)) continue;
+    return tirage..shuffle(rng);
   }
-  if (leaderObligatoire) ajouter(Grammaire.leaderId);
-
-  for (final f in FamilleId.values) {
-    final libres = g
-        .archetypesDe(f)
-        .map((a) => a.id)
-        .where((id) => id != Grammaire.alarmisteId && !choisis.contains(id))
-        .toList()
-      ..shuffle(rng);
-    var manque = compo.minimumPour(f) - compterFamille(g, choisis, f);
-    for (final id in libres) {
-      if (manque <= 0) break;
-      ajouter(id);
-      manque--;
-    }
-  }
-  final restants = g.archetypes
-      .map((a) => a.id)
-      .where((id) => !choisis.contains(id))
-      .toList()
-    ..shuffle(rng);
-  for (final id in restants) {
-    if (choisis.length >= joueurs) break;
-    ajouter(id);
-  }
-  return choisis..shuffle(rng);
 }
 
-/// Les exemples tout prêts pour [joueurs] joueurs. À 3, l'exemple à 4 perd
-/// son archétype qui « interprète le danger » en plus de l'alarmiste : il
-/// reste l'alarmiste, celui qui tient et celui qui se fissure.
+/// Un tirage brut (null : refusé, une couleur manque).
+List<String>? _unTirage(Grammaire g, CompositionDistribution compo, Random rng) {
+  final duels = [...g.distribution.duels]..shuffle(rng);
+  final pris = duels.take(compo.duels).toList();
+  final ids = [for (final d in pris) ...d.archetypes];
+  if (compo.seuls > 0) {
+    final restants = [for (final d in duels.skip(compo.duels)) ...d.archetypes];
+    final manque = couleursManquantes(g, ids);
+    final candidats = manque.isEmpty
+        ? restants
+        : [for (final id in restants) if (manque.contains(g.archetype(id)!.famille)) id];
+    if (candidats.isEmpty) return null;
+    for (var i = 0; i < compo.seuls; i++) {
+      final libres = candidats.where((id) => !ids.contains(id)).toList();
+      if (libres.isEmpty) return null;
+      ids.add(libres[rng.nextInt(libres.length)]);
+    }
+  }
+  if (compo.joueurs >= 4 && couleursManquantes(g, ids).isNotEmpty) return null;
+  return ids;
+}
+
+/// Un tirage peut-il contenir tous les [requis] ?
+bool _possible(Grammaire g, CompositionDistribution compo, List<String> requis) {
+  final duels = g.distribution.duels;
+  Iterable<List<Duel>> combinaisons(int k, [int depuis = 0]) sync* {
+    if (k == 0) {
+      yield const [];
+      return;
+    }
+    for (var i = depuis; i <= duels.length - k; i++) {
+      for (final suite in combinaisons(k - 1, i + 1)) {
+        yield [duels[i], ...suite];
+      }
+    }
+  }
+
+  for (final pris in combinaisons(compo.duels)) {
+    final ids = [for (final d in pris) ...d.archetypes];
+    final restants = [
+      for (final d in duels)
+        if (!pris.contains(d)) ...d.archetypes,
+    ];
+    final manque = couleursManquantes(g, ids);
+    final seuls = compo.seuls == 0
+        ? [<String>[]]
+        : [
+            for (final id in restants)
+              if (manque.isEmpty || manque.contains(g.archetype(id)!.famille)) [id],
+          ];
+    for (final s in seuls) {
+      final tirage = [...ids, ...s];
+      if (compo.joueurs >= 4 && couleursManquantes(g, tirage).isNotEmpty) continue;
+      if (requis.every(tirage.contains)) return true;
+    }
+  }
+  return false;
+}
+
+/// Les exemples tout prêts pour [joueurs] joueurs.
 List<List<String>> exemplesDistribution(Grammaire g, int joueurs) => [
-      for (final e in g.distribution.exemples)
-        if (joueurs == 3) _aTrois(g, e.aQuatre) else e.pour(joueurs),
+      for (final e in g.distribution.exemples) e.pour(joueurs),
     ];
 
-List<String> _aTrois(Grammaire g, List<String> aQuatre) {
-  final i = aQuatre.indexWhere(
-      (id) => id != Grammaire.alarmisteId && g.archetype(id)?.famille == FamilleId.interprete);
-  return [...aQuatre]..removeAt(i < 0 ? aQuatre.length - 1 : i);
-}
-
-/// Tire un animal parmi les deux de l'archétype.
+/// Tire un animal parmi les trois de l'archétype.
 String tirerAnimal(Grammaire g, String archetypeId, {Random? hasard}) {
   final animaux = g.animauxDe(archetypeId);
   if (animaux.isEmpty) return '';

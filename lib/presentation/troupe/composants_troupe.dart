@@ -32,7 +32,7 @@ ContexteBibliotheque bibliothequeDe(ContexteTroupe c) => ContexteBibliotheque(
 /// Une fiche (lieu, danger, archétype, animal), dans une fenêtre.
 void _ouvrir(BuildContext context, Widget page) => ouvrirEnFenetre(context, page);
 
-/// Choisir un archétype à la main : les douze, rangés par famille. Rend son
+/// Choisir un archétype à la main : les huit, rangés par famille. Rend son
 /// identifiant, ou null si on ferme sans choisir.
 Future<String?> choisirArchetype(BuildContext context) {
   final g = context.grammaire;

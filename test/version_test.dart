@@ -4,10 +4,10 @@ import 'package:destiny/application/version.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('la version affichée est celle du pubspec : 2.4.3+34', () {
+  test('la version affichée est celle du pubspec : 2.5.0+35', () {
     final ligne = File('pubspec.yaml').readAsLinesSync().firstWhere((l) => l.startsWith('version:'));
     final version = ligne.split(':').last.trim();
-    expect(version, '2.4.3+34');
+    expect(version, '2.5.0+35');
     expect(version.split('+').first, kVersionAppli);
   });
 

@@ -266,7 +266,7 @@ void main() {
     test('un nouvel épisode reprend le cœur et le cerveau du dernier épisode joué', () {
       final s = Serie(id: 's', creee: DateTime(2026), personnages: [
         PersonnageSerie(id: 'a', archetypeId: 'leader'),
-        PersonnageSerie(id: 'b', archetypeId: 'cynique'),
+        PersonnageSerie(id: 'b', archetypeId: 'denegateur'),
       ]);
       final e1 = EpisodeSerie(id: 'e1', date: DateTime(2026), etape: EtapeEpisode.termine, roles: [
         RoleEpisode(personnageId: 'a', sante: Sante.blesse, esprit: Esprit.fou),
@@ -455,7 +455,7 @@ void main() {
         }
       }
       // Une distribution sans alarmiste, valide au spectacle, ne l'est pas en Série.
-      const sans = ['leader', 'prophete', 'denegateur', 'opportuniste'];
+      const sans = ['leader', 'tyran', 'protecteur', 'prophete'];
       expect(validerDistribution(g, sans).valide, isTrue);
       expect(validerDistribution(g, sans, mode: ModeDistribution.serie).valide, isFalse);
     });
@@ -470,7 +470,7 @@ void main() {
       final ps = [
         PersonnageSerie(id: 'a', archetypeId: 'leader'),
         PersonnageSerie(id: 'b', archetypeId: 'alarmiste', pnj: true),
-        PersonnageSerie(id: 'c', archetypeId: 'cynique'),
+        PersonnageSerie(id: 'c', archetypeId: 'denegateur'),
       ];
       for (var i = 0; i < 20; i++) {
         final t = tirerTraitre(ps, cibleId: 'a', hasard: Random(i))!;
@@ -631,7 +631,7 @@ void main() {
       final m = SerieStore(lire: lireFichier, llm: llm, aiSettings: ia);
       await m.charger(grammaire: g);
       final s = await m.creer(public: PublicSerie.kids, contexte: 'Pour $prenom et sa sœur.');
-      s.personnages.add(PersonnageSerie(id: 'p1', joueur: prenom, nom: 'le petit renard', archetypeId: 'cynique'));
+      s.personnages.add(PersonnageSerie(id: 'p1', joueur: prenom, nom: 'le petit renard', archetypeId: 'leader'));
       return (m, llm, s);
     }
 

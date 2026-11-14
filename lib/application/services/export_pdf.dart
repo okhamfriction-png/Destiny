@@ -317,7 +317,7 @@ Future<Uint8List> livretPdf({
 }
 
 /// Les cartes d'archétypes à imprimer, au format 63 × 88 mm, neuf par page
-/// A4 : un recto par archétype (12 cartes) ou par animal (24 cartes), et
+/// A4 : un recto par archétype (8 cartes) ou par animal (24 cartes), et
 /// après chaque page de rectos, sa page de versos Destiny, placée pour une
 /// impression recto verso (bord long).
 Future<Uint8List> cartesArchetypesPdf({

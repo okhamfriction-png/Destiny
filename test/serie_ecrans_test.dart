@@ -112,7 +112,7 @@ Future<(Serie, EpisodeSerie)> _serieEnJeu(ContexteSerie ctx, {bool kids = false}
   s.personnages.addAll([
     PersonnageSerie(
         id: 'p1', joueur: 'Léa', nom: 'Rose', archetypeId: 'leader', animalId: 'lion', pouvoir: kids ? 'voler' : ''),
-    PersonnageSerie(id: 'p2', joueur: 'Tom', nom: 'Gus', archetypeId: 'cynique', animalId: 'singe'),
+    PersonnageSerie(id: 'p2', joueur: 'Tom', nom: 'Gus', archetypeId: 'denegateur', animalId: 'singe'),
     PersonnageSerie(id: 'p3', archetypeId: 'alarmiste', animalId: 'rat', pnj: true),
   ]);
   final lieu = catalogue.lieux.firstWhere((l) => !kids || l.kids);

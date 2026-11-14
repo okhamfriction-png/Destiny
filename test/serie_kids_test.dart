@@ -25,10 +25,10 @@ void main() {
   });
 
   group('Les grands méchants', () {
-    test('24 méchants, deux par archétype, chacun avec un animal hors des 24', () {
+    test('24 méchants, au moins deux par archétype, chacun avec un animal hors des 24', () {
       expect(g.mechants, hasLength(24));
       for (final a in g.archetypes) {
-        expect(g.mechantsReflets(a.id), hasLength(2), reason: a.id);
+        expect(g.mechantsReflets(a.id).length, greaterThanOrEqualTo(2), reason: a.id);
       }
       for (final m in g.mechants) {
         expect(g.animalNomme(m.animal), isNull, reason: m.id);
@@ -112,7 +112,7 @@ void main() {
 
     test('trois répliques réservées aux adultes ont leur version kids', () {
       final adultes = g.animaux.where((a) => a.repliqueAdulteSeulement).map((a) => a.id);
-      expect(adultes.toSet(), {'loup', 'corbeau', 'renard'});
+      expect(adultes.toSet(), {'loup', 'corbeau', 'vautour'});
       final loup = g.animal('loup')!;
       expect(loup.repliquePour(kids: true), loup.repliqueKids);
       expect(loup.repliquePour(kids: true), isNot(loup.replique));
@@ -121,7 +121,7 @@ void main() {
   });
 
   group('Les méchants des univers', () {
-    test('chacun des 42 a un archétype, et les 12 sont présents', () async {
+    test('chacun des 42 a un archétype, et les 8 sont présents', () async {
       final d = jsonDecode(await lireFichier('assets/data/campagne_mechants.json')) as Map<String, dynamic>;
       final mechants = [for (final m in d['mechants'] as List) m as Map<String, dynamic>];
       expect(mechants, hasLength(42));
@@ -131,7 +131,7 @@ void main() {
         expect(a, isNotNull, reason: '${m['id']}');
         vus.add(a!.id);
       }
-      expect(vus, hasLength(12));
+      expect(vus, hasLength(8));
     });
   });
 

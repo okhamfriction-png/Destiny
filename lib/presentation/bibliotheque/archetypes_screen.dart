@@ -13,7 +13,7 @@ import 'fiches.dart';
 import 'mechants_screen.dart';
 import 'oeuvres_screen.dart';
 
-/// Les 12 archétypes, rangés par famille, avec un filtre.
+/// Les 8 archétypes, rangés par famille, avec un filtre.
 class ArchetypesScreen extends StatefulWidget {
   const ArchetypesScreen({super.key, required this.contexte});
 
@@ -141,6 +141,18 @@ class FicheArchetype extends StatelessWidget {
       titre: a.nom,
       enfants: [
         Center(child: CarteArchetype.archetype(a.id, source: contexte.visuels.source)),
+        if (g.distribution.duelDe(a.id) case final duel?)
+          SectionDestiny(titre: f('adversaire'), enfants: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: PuceArchetype(duel.adversaire(a.id),
+                  key: const ValueKey('fiche_adversaire'),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => FicheArchetype(archetypeId: duel.adversaire(a.id), contexte: contexte)))),
+            ),
+            const SizedBox(height: 6),
+            Paragraphe(t.t('bibliotheque.regles.duel_enjeu', {'sur': duel.sur, 'enjeu': duel.enjeu})),
+          ]),
         SectionDestiny(titre: f('animaux'), enfants: [
           for (final animal in g.animauxDe(a.id)) ...[
             Row(children: [

@@ -116,7 +116,7 @@ void main() {
       (tester) async {
     final (_, s) = await _preparer(tester);
     final p = s.personnages.first;
-    final [premier, second] = g.animauxDe(p.archetypeId);
+    final [premier, second, ...] = g.animauxDe(p.archetypeId);
     String ligne(Animal a) => '« ${a.exempleVouloir} »';
     expect(find.byType(ExempleVouloir), findsNothing, reason: 'aucun animal choisi');
     await tester.tap(find.text(premier.nom).first);

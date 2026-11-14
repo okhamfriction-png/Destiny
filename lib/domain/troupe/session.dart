@@ -3,6 +3,8 @@
 /// débrief.
 library;
 
+import '../grammaire/migration_archetypes.dart';
+
 /// Le choix final de l'acte 4.
 enum ChoixFinal {
   aucun,
@@ -66,7 +68,7 @@ class PersonnageTroupe {
 
   factory PersonnageTroupe.depuisJson(Map<String, dynamic> j) => PersonnageTroupe(
         joueur: j['joueur'] as String? ?? '',
-        archetypeId: j['archetype'] as String? ?? '',
+        archetypeId: migrerArchetype(j['archetype'] as String? ?? '', animal: j['animal'] as String? ?? ''),
         animalId: j['animal'] as String? ?? '',
         blessure: j['blessure'] as String? ?? '',
         vouloir: j['vouloir'] as String? ?? '',

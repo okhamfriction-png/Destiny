@@ -5,6 +5,7 @@
 /// tous les écrans les traitent de la même façon.
 library;
 
+import '../grammaire/migration_archetypes.dart';
 import '../grammaire/modeles.dart';
 
 List<String> _ls(Object? v) => [for (final x in (v as List? ?? const [])) '$x'];
@@ -138,7 +139,7 @@ FigurantPret figurantDepuisJson(Map<String, dynamic> j, {required String idParDe
       id: _s(j['id']).isEmpty ? idParDefaut : _s(j['id']),
       nom: _s(j['nom']),
       type: _s(j['type']),
-      archetypeId: _s(j['archetype']),
+      archetypeId: migrerArchetype(_s(j['archetype']), animal: _s(j['animal'])),
       animalId: _idAnimal(grammaire, _s(j['animal'])),
       veut: _s(j['veut']),
       vientDe: _s(j['vient_de']),
@@ -175,7 +176,7 @@ class MechantUnivers {
       sbires.add(Sbire(
         id: _s(x['id']).isEmpty ? '$id.s$i' : _s(x['id']),
         nom: _s(x['nom']),
-        archetypeId: _s(x['archetype']),
+        archetypeId: migrerArchetype(_s(x['archetype']), animal: _s(x['animal'])),
         animalId: _idAnimal(grammaire, _s(x['animal'])),
         veut: _s(x['veut']).isEmpty ? _s(x['description']) : _s(x['veut']),
         vientDe: _s(x['vient_de']).isEmpty ? _s(x['description']) : _s(x['vient_de']),
@@ -192,7 +193,7 @@ class MechantUnivers {
       mechant: Mechant(
         id: id,
         nom: _s(j['nom']),
-        archetypeId: _s(j['archetype']),
+        archetypeId: migrerArchetype(_s(j['archetype']), animal: _s(j['animal'])),
         animal: _s(j['animal']),
         inspiration: '',
         posture: _s(j['posture']),
