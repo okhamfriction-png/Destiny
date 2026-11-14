@@ -2,6 +2,11 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.4.3 — Les cartes de dangers (novembre 2026)
+
+- **Les dangers s'impriment en cartes**, comme les archétypes : dans la Bibliothèque, page Dangers, le bouton imprimer. Au recto, le danger et ses quatre paliers (il se signale, il enferme, il envahit, il bloque les sorties) ; au verso, un dos « Danger » commun, pour les tirer face cachée. Dix cartes de 95 × 55 mm par page A4, à imprimer en recto verso (bord long).
+- Deux jeux : tous les dangers, ou les dangers kids avec le palier 4 des enfants (personne ne meurt).
+
 ## 2.4.2 — Un exemple de vouloir pour chaque vêtement (novembre 2026)
 
 - **À la préparation, quand on choisit l'animal d'un personnage**, une ligne en italique propose un exemple de vouloir dans sa manière (« Je veux qu'il me rende les 300 euros qu'il me doit. » pour le Rat). Ce n'est qu'un exemple : on l'adapte au lieu et au partenaire. Le vêtement donne surtout la manière : le même vouloir, le Lion l'exige devant tout le monde, le Rat le négocie en douce.

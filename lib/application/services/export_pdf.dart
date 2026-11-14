@@ -4,6 +4,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
+import '../../domain/entities/danger.dart';
 import '../../domain/grammaire/modeles.dart';
 import '../../domain/grammaire/textes.dart';
 import '../../domain/serie/serie.dart';
@@ -457,6 +458,146 @@ Future<Uint8List> cartesArchetypesPdf({
     final page = rectos.skip(debut).take(parPage).toList();
     final cases = <pw.Widget?>[for (var i = 0; i < parPage; i++) i < page.length ? page[i] : null];
     // Au verso, une carte en colonne c se retrouve en colonne 2 - c.
+    final dos = <pw.Widget?>[
+      for (var i = 0; i < parPage; i++)
+        (i ~/ colonnes) * colonnes + (colonnes - 1 - i % colonnes) < page.length ? verso() : null,
+    ];
+    doc.addPage(pw.Page(pageFormat: PdfPageFormat.a4, theme: theme, margin: pw.EdgeInsets.zero, build: (_) => grille(cases)));
+    doc.addPage(pw.Page(pageFormat: PdfPageFormat.a4, theme: theme, margin: pw.EdgeInsets.zero, build: (_) => grille(dos)));
+  }
+  return doc.save();
+}
+
+/// Les cartes de dangers à imprimer : 95 × 55 mm, dix par page A4 (deux
+/// colonnes, cinq lignes). Au recto, le danger et ses quatre paliers ; au
+/// verso, un dos « Danger » commun (on les tire face cachée), placé pour une
+/// impression recto verso, bord long. [kids] : le palier 4 des enfants.
+Future<Uint8List> cartesDangersPdf({
+  required Grammaire g,
+  required TextesDestiny t,
+  required PolicesPdf polices,
+  required List<Danger> dangers,
+  bool kids = false,
+}) async {
+  final titre = pw.Font.ttf(polices.titre);
+  final texte = pw.Font.ttf(polices.texte);
+  final gras = pw.Font.ttf(polices.texteGras);
+  final italique = pw.Font.ttf(polices.italique);
+  final da = g.directionArtistique.couleurs;
+  final or = _hex(da['or'] ?? '#C9A24A');
+  final orFonce = _hex(da['or_fonce'] ?? '#8a5f14');
+  final nuit = _hex(da['nuit'] ?? '#14100a');
+  final creme = _hex(da['creme'] ?? '#f6efe0');
+  final encre = _hex(da['encre'] ?? '#2a2108');
+  final kidsCouleur = _hex(da['kids'] ?? '#F2C230');
+  final theme = pw.ThemeData.withFont(base: texte, bold: gras, italic: italique);
+  // Le danger monte : de l'or au rouge sombre, palier après palier.
+  final teintes = [orFonce, _hex('#B5651D'), _hex('#A8322D'), _hex('#6E1414')];
+  const rouge = PdfColor.fromInt(0xFF7A1C1C);
+
+  const largeur = 95 * PdfPageFormat.mm;
+  const hauteur = 55 * PdfPageFormat.mm;
+  const colonnes = 2;
+  const lignes = 5;
+  const parPage = colonnes * lignes;
+  const trait = PdfColors.grey400;
+
+  pw.Widget recto(Danger d) {
+    final paliers = d.paliersPour(kids: kids);
+    return pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
+      pw.Container(
+        width: double.infinity,
+        padding: const pw.EdgeInsets.fromLTRB(8, 5, 8, 5),
+        color: rouge,
+        child: pw.Row(children: [
+          pw.Expanded(
+            child: pw.Text(d.name, style: pw.TextStyle(font: titre, fontSize: 12.5, color: PdfColors.white)),
+          ),
+          if (d.kids)
+            pw.Container(
+              padding: const pw.EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+              color: kidsCouleur,
+              child: pw.Text('KIDS', style: pw.TextStyle(font: gras, fontSize: 6.5, color: encre)),
+            ),
+        ]),
+      ),
+      pw.Padding(
+        padding: const pw.EdgeInsets.fromLTRB(8, 6, 8, 0),
+        child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
+          for (final p in g.paliers)
+            if (p.numero <= paliers.length)
+              pw.Padding(
+                padding: const pw.EdgeInsets.only(bottom: 4),
+                child: pw.Row(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
+                  pw.Container(
+                    width: 11,
+                    height: 11,
+                    margin: const pw.EdgeInsets.only(right: 5, top: 0.3),
+                    alignment: pw.Alignment.center,
+                    decoration: pw.BoxDecoration(color: teintes[p.numero - 1], shape: pw.BoxShape.circle),
+                    child: pw.Text('${p.numero}', style: pw.TextStyle(font: gras, fontSize: 7, color: PdfColors.white)),
+                  ),
+                  pw.Expanded(
+                    child: pw.RichText(
+                      text: pw.TextSpan(children: [
+                        pw.TextSpan(
+                            text: '${p.nom}  ',
+                            style: pw.TextStyle(font: gras, fontSize: 8.3, color: teintes[p.numero - 1])),
+                        pw.TextSpan(text: paliers[p.numero - 1], style: pw.TextStyle(fontSize: 8.3, lineSpacing: 0.6, color: encre)),
+                      ]),
+                    ),
+                  ),
+                ]),
+              ),
+        ]),
+      ),
+    ]);
+  }
+
+  pw.Widget verso() => pw.Container(
+        color: nuit,
+        child: pw.Stack(alignment: pw.Alignment.center, children: [
+          pw.Container(
+            margin: const pw.EdgeInsets.all(5),
+            decoration: pw.BoxDecoration(border: pw.Border.all(color: rouge, width: 0.9)),
+          ),
+          pw.Column(mainAxisAlignment: pw.MainAxisAlignment.center, children: [
+            pw.Text(t.t('cartes.danger').toUpperCase(),
+                style: pw.TextStyle(font: titre, fontSize: 17, letterSpacing: 3, color: _hex('#C0392B'))),
+            pw.SizedBox(height: 4),
+            pw.Container(width: 30, height: 0.8, color: or),
+            pw.SizedBox(height: 4),
+            pw.Text(g.nom.toUpperCase(), style: pw.TextStyle(font: titre, fontSize: 8, letterSpacing: 2, color: or)),
+            pw.SizedBox(height: 3),
+            pw.Text(t.t('cartes.danger_dos'), style: pw.TextStyle(font: italique, fontSize: 6.5, color: creme)),
+          ]),
+        ]),
+      );
+
+  pw.Widget grille(List<pw.Widget?> cases) => pw.Center(
+        child: pw.Column(mainAxisSize: pw.MainAxisSize.min, children: [
+          for (var r = 0; r < lignes; r++)
+            pw.Row(mainAxisSize: pw.MainAxisSize.min, children: [
+              for (var c = 0; c < colonnes; c++)
+                pw.Container(
+                  width: largeur,
+                  height: hauteur,
+                  // Une case vide reste blanche, sans trait de coupe.
+                  decoration: cases[r * colonnes + c] == null
+                      ? null
+                      : pw.BoxDecoration(color: PdfColors.white, border: pw.Border.all(color: trait, width: 0.3)),
+                  child: cases[r * colonnes + c],
+                ),
+            ]),
+        ]),
+      );
+
+  final rectos = [for (final d in dangers) recto(d)];
+  final doc = pw.Document(title: '${g.nom} — ${t.t('bibliotheque.entrees.dangers.titre')}', author: g.nom);
+  for (var debut = 0; debut < rectos.length; debut += parPage) {
+    final page = rectos.skip(debut).take(parPage).toList();
+    final cases = <pw.Widget?>[for (var i = 0; i < parPage; i++) i < page.length ? page[i] : null];
+    // Au verso (bord long), une carte en colonne c se retrouve en colonne 1 - c.
     final dos = <pw.Widget?>[
       for (var i = 0; i < parPage; i++)
         (i ~/ colonnes) * colonnes + (colonnes - 1 - i % colonnes) < page.length ? verso() : null,

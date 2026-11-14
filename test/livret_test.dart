@@ -8,6 +8,7 @@ import 'package:destiny/domain/grammaire/modeles.dart';
 import 'package:destiny/domain/grammaire/textes.dart';
 import 'package:destiny/domain/serie/pbta.dart';
 import 'package:destiny/presentation/accueil/decouvrir_screen.dart';
+import 'package:destiny/presentation/bibliotheque/dangers_lieux_screen.dart' show dangersAImprimer;
 import 'package:destiny/presentation/bibliotheque/livret_screen.dart';
 import 'package:destiny/presentation/destiny/donnees.dart';
 import 'package:destiny/presentation/theme/destiny_theme.dart';
@@ -193,6 +194,27 @@ void main() {
     test('un recto par animal : 24 cartes, 3 pages de rectos et 3 de versos', () async {
       final pdf = await cartesArchetypesPdf(g: g, t: t, polices: await _polices(), parAnimal: true);
       expect(_pages(pdf), 6);
+    });
+
+    test('les cartes de dangers : dix par page, chaque page de rectos suivie de ses versos ; la version kids', () async {
+      final tous = await donneesDeTest().loadDangers();
+      final dangers = dangersAImprimer(tous);
+      expect(dangers, isNotEmpty);
+      expect(dangers.every((d) => d.actif && d.paliers.length == 4), isTrue);
+      final pdf = await cartesDangersPdf(g: g, t: t, polices: await _polices(), dangers: dangers);
+      expect(String.fromCharCodes(pdf.take(4)), '%PDF');
+      expect(_pages(pdf), (dangers.length / 10).ceil() * 2);
+      final kids = dangersAImprimer(tous, kids: true);
+      expect(kids.every((d) => d.kids), isTrue);
+      expect(kids.length, lessThan(dangers.length));
+      final pdfKids = await cartesDangersPdf(g: g, t: t, polices: await _polices(), dangers: kids, kids: true);
+      expect(_pages(pdfKids), (kids.length / 10).ceil() * 2);
+      // Pour regarder les cartes : DESTINY_PDF=/chemin/dossier flutter test …
+      final dossier = Platform.environment['DESTINY_PDF'];
+      if (dossier != null) {
+        File('$dossier/cartes-dangers.pdf').writeAsBytesSync(pdf);
+        File('$dossier/cartes-dangers-kids.pdf').writeAsBytesSync(pdfKids);
+      }
     });
   });
 

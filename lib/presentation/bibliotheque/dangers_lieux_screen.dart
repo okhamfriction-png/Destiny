@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:printing/printing.dart';
+
+import '../../application/services/export_pdf.dart';
 
 import '../../domain/entities/danger.dart';
 import '../../domain/entities/location.dart';
@@ -17,9 +20,11 @@ class _ListeCatalogue<T> extends StatefulWidget {
     required this.nom,
     required this.kids,
     required this.element,
+    this.actions,
   });
 
   final String titre;
+  final List<Widget>? actions;
   final Future<List<T>> Function() charger;
   final String Function(T) nom;
   final bool Function(T) kids;
@@ -48,6 +53,7 @@ class _ListeCatalogueState<T> extends State<_ListeCatalogue<T>> {
         ];
         return PageDestiny(
           titre: widget.titre,
+          actions: widget.actions,
           entete: Column(children: [
             TextField(
               decoration: InputDecoration(
@@ -96,6 +102,14 @@ class DangersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return _ListeCatalogue<Danger>(
       titre: context.textes.t('bibliotheque.entrees.dangers.titre'),
+      actions: [
+        IconButton(
+          key: const ValueKey('imprimer_dangers'),
+          tooltip: context.textes.t('bibliotheque.imprimer.dangers_titre'),
+          icon: const Icon(Icons.print_outlined),
+          onPressed: () => imprimerCartesDangers(context, contexte),
+        ),
+      ],
       charger: contexte.catalogue.getDangers,
       nom: (d) => d.name,
       kids: (d) => d.kids,
@@ -106,6 +120,64 @@ class DangersScreen extends StatelessWidget {
         onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => FicheDanger(danger: d))),
       ),
     );
+  }
+}
+
+/// Les dangers à imprimer : les dangers actifs du catalogue (ou seulement
+/// ceux qu'on joue avec des enfants), par ordre alphabétique.
+List<Danger> dangersAImprimer(List<Danger> tous, {bool kids = false}) => [
+      for (final d in tous)
+        if (d.actif && d.paliers.isNotEmpty && (!kids || d.kids)) d,
+    ]..sort((a, b) => Grammaire.normaliser(a.name).compareTo(Grammaire.normaliser(b.name)));
+
+/// Propose d'imprimer les cartes de dangers (tous, ou les dangers kids avec
+/// le palier 4 des enfants), puis partage le PDF.
+Future<void> imprimerCartesDangers(BuildContext context, ContexteBibliotheque contexte) async {
+  final g = context.grammaire;
+  final t = context.textes;
+  final messager = ScaffoldMessenger.of(context);
+  String k(String x, [Map<String, String> v = const {}]) => t.t('bibliotheque.imprimer.$x', v);
+  final tous = await contexte.catalogue.getDangers();
+  if (!context.mounted) return;
+  final adultes = dangersAImprimer(tous);
+  final enfants = dangersAImprimer(tous, kids: true);
+  final kids = await showModalBottomSheet<bool>(
+    context: context,
+    showDragHandle: true,
+    builder: (context) => SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Text(k('dangers_titre'), style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 4),
+          Paragraphe(k('dangers_aide')),
+          ElementListe(
+            titre: k('dangers_tous'),
+            sousTitre: k('dangers_tous_aide', {'n': '${adultes.length}'}),
+            devant: const Icon(Icons.warning_amber_rounded),
+            onTap: () => Navigator.of(context).pop(false),
+          ),
+          ElementListe(
+            titre: k('dangers_kids'),
+            sousTitre: k('dangers_kids_aide', {'n': '${enfants.length}'}),
+            devant: const Icon(Icons.child_care_outlined),
+            apres: const SigleKids(petit: true),
+            onTap: () => Navigator.of(context).pop(true),
+          ),
+        ]),
+      ),
+    ),
+  );
+  if (kids == null) return;
+  messager.showSnackBar(SnackBar(content: Text(k('en_cours'))));
+  try {
+    final polices = await PolicesPdf.chargerDepuisAssets();
+    final octets =
+        await cartesDangersPdf(g: g, t: t, polices: polices, dangers: kids ? enfants : adultes, kids: kids);
+    await Printing.sharePdf(
+        bytes: octets, filename: kids ? 'destiny-cartes-dangers-kids.pdf' : 'destiny-cartes-dangers.pdf');
+  } catch (_) {
+    messager.showSnackBar(SnackBar(content: Text(k('echec'))));
   }
 }
 

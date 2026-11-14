@@ -312,7 +312,9 @@
     "corps": "Le corps à ce palier",
     "source": "Réplique tirée de",
     "famille": "Famille",
-    "palier_courant": "Palier en cours"
+    "palier_courant": "Palier en cours",
+    "danger": "Danger",
+    "danger_dos": "Il monte en quatre paliers."
   },
   "bibliotheque": {
     "titre": "Bibliothèque",
@@ -500,7 +502,13 @@
       "par_animal": "Un recto par animal",
       "par_animal_aide": "24 cartes : la posture, la réplique, le corps à chaque palier.",
       "en_cours": "Les cartes se préparent…",
-      "echec": "Le PDF n'a pas pu être créé. Réessaie dans un instant."
+      "echec": "Le PDF n'a pas pu être créé. Réessaie dans un instant.",
+      "dangers_titre": "Imprimer les cartes de dangers",
+      "dangers_aide": "Cartes de 95 × 55 mm, dix par page A4 : le danger et ses quatre paliers. Imprime en recto verso, bord long : le dos « Danger » tombe au dos de chaque carte.",
+      "dangers_tous": "Tous les dangers",
+      "dangers_tous_aide": "{n} cartes, les dangers actifs du catalogue.",
+      "dangers_kids": "Les dangers kids",
+      "dangers_kids_aide": "{n} cartes, avec le palier 4 des enfants (personne ne meurt)."
     },
     "archetypes_principe": "Les cartes donnent des directions, pas des prisons. La fiction passe avant la carte."
   },
