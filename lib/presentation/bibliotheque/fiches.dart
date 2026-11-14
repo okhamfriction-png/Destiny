@@ -33,7 +33,13 @@ class PuceArchetype extends StatelessWidget {
           borderRadius: BorderRadius.circular(99),
           border: Border.all(color: couleur),
         ),
-        child: Text(
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          if (kIconesArchetypes[a.id] case final icone?) ...[
+            Icon(icone, size: 15, color: c.sombre ? Color.lerp(couleur, Colors.white, 0.55) : couleur),
+            const SizedBox(width: 5),
+          ],
+          Flexible(
+            child: Text(
           suffixe == null ? a.nom : '${a.nom} · $suffixe',
           style: TextStyle(
             fontFamily: kPoliceTexte,
@@ -42,6 +48,8 @@ class PuceArchetype extends StatelessWidget {
             color: c.sombre ? Color.lerp(couleur, Colors.white, 0.55) : couleur,
           ),
         ),
+          ),
+        ]),
       ),
     );
   }

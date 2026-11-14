@@ -23,6 +23,15 @@ late Grammaire g;
 late TextesDestiny t;
 late Livret livret;
 
+/// Les images du projet, lues sur le disque.
+Future<Uint8List> _image(String chemin) => File(chemin).readAsBytes();
+
+/// Pour regarder les cartes : DESTINY_PDF=/chemin/dossier flutter test …
+void _ecrire(String nom, Uint8List pdf) {
+  final dossier = Platform.environment['DESTINY_PDF'];
+  if (dossier != null) File('$dossier/$nom').writeAsBytesSync(pdf);
+}
+
 Future<PolicesPdf> _polices() async {
   Future<ByteData> f(String n) async =>
       ByteData.sublistView(Uint8List.fromList(await File('assets/fonts/$n').readAsBytes()));
@@ -186,14 +195,18 @@ void main() {
 
   group('les cartes à imprimer', () {
     test('un recto par archétype : 8 cartes, une page de rectos et sa page de versos', () async {
-      final pdf = await cartesArchetypesPdf(g: g, t: t, polices: await _polices());
+      final pdf = await cartesArchetypesPdf(g: g, t: t, polices: await _polices(), lireImage: _image);
       expect(String.fromCharCodes(pdf.take(4)), '%PDF');
       expect(_pages(pdf), 2);
+      // Les photos des 24 animaux, le dé et les huit icônes sont embarqués.
+      expect(pdf.length, greaterThan(500000));
+      _ecrire('cartes-archetypes.pdf', pdf);
     });
 
     test('un recto par animal : 24 cartes, 3 pages de rectos et 3 de versos', () async {
-      final pdf = await cartesArchetypesPdf(g: g, t: t, polices: await _polices(), parAnimal: true);
+      final pdf = await cartesArchetypesPdf(g: g, t: t, polices: await _polices(), parAnimal: true, lireImage: _image);
       expect(_pages(pdf), 6);
+      _ecrire('cartes-animaux.pdf', pdf);
     });
 
     test('les cartes de dangers : dix par page, chaque page de rectos suivie de ses versos ; la version kids', () async {
@@ -201,20 +214,17 @@ void main() {
       final dangers = dangersAImprimer(tous);
       expect(dangers, isNotEmpty);
       expect(dangers.every((d) => d.actif && d.paliers.length == 4), isTrue);
-      final pdf = await cartesDangersPdf(g: g, t: t, polices: await _polices(), dangers: dangers);
+      final pdf = await cartesDangersPdf(g: g, t: t, polices: await _polices(), dangers: dangers, lireImage: _image);
       expect(String.fromCharCodes(pdf.take(4)), '%PDF');
       expect(_pages(pdf), (dangers.length / 10).ceil() * 2);
       final kids = dangersAImprimer(tous, kids: true);
       expect(kids.every((d) => d.kids), isTrue);
       expect(kids.length, lessThan(dangers.length));
-      final pdfKids = await cartesDangersPdf(g: g, t: t, polices: await _polices(), dangers: kids, kids: true);
+      final pdfKids =
+          await cartesDangersPdf(g: g, t: t, polices: await _polices(), dangers: kids, kids: true, lireImage: _image);
       expect(_pages(pdfKids), (kids.length / 10).ceil() * 2);
-      // Pour regarder les cartes : DESTINY_PDF=/chemin/dossier flutter test …
-      final dossier = Platform.environment['DESTINY_PDF'];
-      if (dossier != null) {
-        File('$dossier/cartes-dangers.pdf').writeAsBytesSync(pdf);
-        File('$dossier/cartes-dangers-kids.pdf').writeAsBytesSync(pdfKids);
-      }
+      _ecrire('cartes-dangers.pdf', pdf);
+      _ecrire('cartes-dangers-kids.pdf', pdfKids);
     });
   });
 

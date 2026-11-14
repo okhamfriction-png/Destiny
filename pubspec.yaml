@@ -78,6 +78,7 @@ flutter:
     - assets/audio/ambiences/
     - assets/audio/universes/
     - assets/images/archetypes/
+    - assets/images/icones_archetypes/
     - assets/images/locations/
     - assets/images/dangers/
     - assets/images/destiny_cube.png

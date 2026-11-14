@@ -151,7 +151,8 @@ class FicheArchetype extends StatelessWidget {
                       builder: (_) => FicheArchetype(archetypeId: duel.adversaire(a.id), contexte: contexte)))),
             ),
             const SizedBox(height: 6),
-            Paragraphe(t.t('bibliotheque.regles.duel_enjeu', {'sur': duel.sur, 'enjeu': duel.enjeu})),
+            Paragraphe(t.t('cartes.duel_phrase', {'mien': duel.reflexe(a.id), 'sien': duel.reflexe(duel.adversaire(a.id))})),
+            Paragraphe(t.t('bibliotheque.regles.duel_enjeu', {'sur': duel.sur, 'enjeu': duel.enjeu}), italique: true),
           ]),
         SectionDestiny(titre: f('animaux'), enfants: [
           for (final animal in g.animauxDe(a.id)) ...[

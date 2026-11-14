@@ -36,6 +36,40 @@ class SigleKids extends StatelessWidget {
 }
 
 /// La puce d'une famille : un point de couleur et son nom.
+/// L'icône de chaque archétype (les mêmes que sur les cartes à imprimer) :
+/// le marteau de juge pour le Tyran.
+const Map<String, IconData> kIconesArchetypes = {
+  'leader': Icons.workspace_premium_rounded,
+  'protecteur': Icons.shield_outlined,
+  'aidant': Icons.volunteer_activism_rounded,
+  'alarmiste': Icons.campaign_rounded,
+  'denegateur': Icons.visibility_off_rounded,
+  'prophete': Icons.visibility_rounded,
+  'tyran': Icons.gavel_rounded,
+  'paranoiaque': Icons.search_rounded,
+};
+
+/// L'icône d'un archétype, blanche dans une pastille de sa couleur.
+class PastilleArchetype extends StatelessWidget {
+  const PastilleArchetype(this.archetypeId, {super.key, this.taille = 26});
+
+  final String archetypeId;
+  final double taille;
+
+  @override
+  Widget build(BuildContext context) {
+    final a = context.grammaire.archetype(archetypeId);
+    final icone = kIconesArchetypes[archetypeId];
+    if (a == null || icone == null) return const SizedBox.shrink();
+    return Container(
+      width: taille,
+      height: taille,
+      decoration: BoxDecoration(color: context.destiny.famille(a.famille), shape: BoxShape.circle),
+      child: Icon(icone, size: taille * 0.62, color: Colors.white),
+    );
+  }
+}
+
 class PuceFamille extends StatelessWidget {
   const PuceFamille(this.famille, {super.key, this.compacte = false});
 

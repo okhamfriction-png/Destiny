@@ -29,7 +29,11 @@ void main() {
       for (final d in duels) {
         expect(d.sur, isNotEmpty);
         expect(d.enjeu, isNotEmpty);
+        // Le réflexe de chacun, pour « Lui …, l'autre … » sur les cartes.
+        expect(d.reflexe(d.premier), isNotEmpty);
+        expect(d.reflexe(d.second), isNotEmpty);
       }
+      expect(t.t('cartes.duel_phrase', {'mien': 'a', 'sien': 'b'}), "Lui a, l'autre b.");
       expect(g.distribution.duelDe('tyran')!.adversaire('tyran'), 'leader');
       expect(g.distribution.duelDe('prophete')!.adversaire('prophete'), 'protecteur');
     });

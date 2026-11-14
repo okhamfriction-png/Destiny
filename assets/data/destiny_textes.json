@@ -310,7 +310,15 @@
     "famille": "Famille",
     "palier_courant": "Palier en cours",
     "danger": "Danger",
-    "danger_dos": "Il monte en quatre paliers."
+    "danger_dos": "Il monte en quatre paliers.",
+    "son_duel": "Son duel",
+    "contre": "contre",
+    "duel_phrase": "Lui {mien}, l'autre {sien}.",
+    "vetements": "Vêtements · facultatif",
+    "exemple": "Son exemple de vouloir",
+    "corps_actes": "Le corps, acte par acte",
+    "acte": "Acte {n}",
+    "promesse": "Rien n'est écrit"
   },
   "bibliotheque": {
     "titre": "Bibliothèque",

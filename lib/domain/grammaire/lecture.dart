@@ -423,6 +423,10 @@ Grammaire lireGrammaire(
               second: ls(d['archetypes'])[1],
               sur: s(d['sur']),
               enjeu: s(d['enjeu']),
+              reflexes: {
+                if (d['reflexes'] is Map)
+                  for (final e in (d['reflexes'] as Map).entries) '${e.key}': s(e.value),
+              },
             ),
       ],
     ),

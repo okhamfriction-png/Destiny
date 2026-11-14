@@ -669,7 +669,11 @@
           "denegateur"
         ],
         "sur": "ce qu'est le danger",
-        "enjeu": "il arrive, ou ça va se régler"
+        "enjeu": "il arrive, ou ça va se régler",
+        "reflexes": {
+          "alarmiste": "crie que le danger arrive",
+          "denegateur": "jure que ça va se régler"
+        }
       },
       {
         "archetypes": [
@@ -677,7 +681,11 @@
           "tyran"
         ],
         "sur": "qui commande",
-        "enjeu": "sauver le groupe, ou se faire obéir"
+        "enjeu": "sauver le groupe, ou se faire obéir",
+        "reflexes": {
+          "leader": "veut sauver le groupe",
+          "tyran": "veut qu'on lui obéisse"
+        }
       },
       {
         "archetypes": [
@@ -685,7 +693,11 @@
           "paranoiaque"
         ],
         "sur": "les autres",
-        "enjeu": "tendre la main, ou repousser"
+        "enjeu": "tendre la main, ou repousser",
+        "reflexes": {
+          "aidant": "tend la main",
+          "paranoiaque": "repousse et accuse"
+        }
       },
       {
         "archetypes": [
@@ -693,7 +705,11 @@
           "prophete"
         ],
         "sur": "la victime",
-        "enjeu": "le Prophète exige un sacrifice, le Protecteur se met devant"
+        "enjeu": "le Prophète exige un sacrifice, le Protecteur se met devant",
+        "reflexes": {
+          "protecteur": "se met devant la victime",
+          "prophete": "exige un sacrifice"
+        }
       }
     ],
     "par_nombre": [

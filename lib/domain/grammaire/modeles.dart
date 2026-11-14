@@ -339,7 +339,13 @@ class ExempleDistribution {
 /// Deux archétypes qui s'opposent dans leur réflexe : mis ensemble en scène,
 /// ils font naître le conflit tout seuls.
 class Duel {
-  const Duel({required this.premier, required this.second, required this.sur, required this.enjeu});
+  const Duel({
+    required this.premier,
+    required this.second,
+    required this.sur,
+    required this.enjeu,
+    this.reflexes = const {},
+  });
 
   final String premier;
   final String second;
@@ -350,7 +356,13 @@ class Duel {
   /// Les deux réflexes (« sauver le groupe, ou se faire obéir »).
   final String enjeu;
 
+  /// Le réflexe de chacun, vu de lui (« veut sauver le groupe »).
+  final Map<String, String> reflexes;
+
   List<String> get archetypes => [premier, second];
+
+  /// Le réflexe d'un des deux archétypes.
+  String reflexe(String id) => reflexes[id] ?? '';
 
   bool contient(String id) => id == premier || id == second;
 

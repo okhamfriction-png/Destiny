@@ -136,6 +136,8 @@ class _Entete extends StatelessWidget {
       child: Stack(alignment: Alignment.topCenter, children: [
         Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           const SizedBox(width: double.infinity),
+          PastilleArchetype(archetype.id),
+          const SizedBox(height: 4),
           Text(
             archetype.nom.toUpperCase(),
             textAlign: TextAlign.center,
