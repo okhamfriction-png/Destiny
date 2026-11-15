@@ -27,7 +27,6 @@
     "duel_incomplet": "{archetype} joue sans son adversaire, {adversaire} : on distribue par duels.",
     "doublon": "{archetype} est choisi deux fois : chaque joueur a son propre archétype.",
     "inconnu": "Archétype inconnu : {archetype}.",
-    "leader_demande": "Le leader est demandé dans les réglages : il faut l'ajouter.",
     "correction": "Proposition : {ancien} devient {nouveau}.",
     "correction_ajout": "Proposition : ajouter {nouveau}.",
     "modes": {
@@ -1840,7 +1839,6 @@
     "distribution": "La distribution",
     "joueurs": "Joueurs par défaut",
     "mode_distribution": "Le mode de distribution",
-    "leader_obligatoire": "Le leader est obligatoire",
     "jeu_de_role": "Le jeu de rôle (Série)",
     "traitre_defaut": "Le module traître, par défaut",
     "registre_defaut": "Le registre, par défaut",

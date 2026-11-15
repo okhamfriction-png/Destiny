@@ -327,13 +327,26 @@ class ExempleDistribution {
   final String plusACinq;
   final String plusASix;
 
-  /// Les archétypes de l'exemple pour [joueurs] : à 3, le premier duel et
-  /// l'archétype seul de 5.
-  List<String> pour(int joueurs) => [
-        if (joueurs <= 3) ...[...aQuatre.take(2), plusACinq] else ...aQuatre,
-        if (joueurs >= 5) plusACinq,
-        if (joueurs >= 6) plusASix,
-      ];
+  /// Les archétypes de l'exemple pour [joueurs]. À 3 : un des deux duels
+  /// et un archétype seul (celui de 5, de 6, puis ceux de l'autre duel),
+  /// le premier trio que [accepte] retient (les trois couleurs).
+  List<String> pour(int joueurs, {bool Function(List<String>)? accepte}) {
+    if (joueurs <= 3) {
+      final duels = [aQuatre.take(2).toList(), aQuatre.skip(2).take(2).toList()];
+      for (final (i, duel) in duels.indexed) {
+        for (final seul in [plusACinq, plusASix, ...duels[1 - i]]) {
+          final trio = [...duel, seul];
+          if (accepte == null || accepte(trio)) return trio;
+        }
+      }
+      return [...duels.first, plusACinq];
+    }
+    return [
+      ...aQuatre,
+      if (joueurs >= 5) plusACinq,
+      if (joueurs >= 6) plusASix,
+    ];
+  }
 }
 
 /// Deux archétypes qui s'opposent dans leur réflexe : mis ensemble en scène,

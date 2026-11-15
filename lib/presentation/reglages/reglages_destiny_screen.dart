@@ -161,7 +161,6 @@ class ReglagesDestinyScreen extends StatelessWidget {
                     onSelected: (_) => r.changer(modeDistribution: m),
                   ),
               ]),
-              _Bascule(k('leader_obligatoire'), r.leaderObligatoire, (v) => r.changer(leaderObligatoire: v)),
             ]),
             SectionDestiny(titre: k('jeu_de_role'), enfants: [
               _Bascule(k('registre_defaut'), r.registreParDefaut, (v) => r.changer(registreParDefaut: v)),

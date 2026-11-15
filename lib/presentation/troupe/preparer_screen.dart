@@ -169,7 +169,7 @@ class _PreparerScreenState extends State<PreparerScreen> {
       _attribuer(exemples[_exemple % exemples.length]..shuffle(_hasard));
     } else {
       _attribuer(
-          tirerDistribution(g, n, hasard: _hasard, leaderObligatoire: widget.contexte.reglages.leaderObligatoire));
+          tirerDistribution(g, n, hasard: _hasard));
     }
   }
 
@@ -194,7 +194,7 @@ class _PreparerScreenState extends State<PreparerScreen> {
     final t = context.textes;
     final c = context.destiny;
     final ids = [for (final p in s.personnages) p.archetypeId];
-    final verdict = validerDistribution(g, ids, leaderObligatoire: widget.contexte.reglages.leaderObligatoire);
+    final verdict = validerDistribution(g, ids);
     String p(String k, [Map<String, String> v = const {}]) => t.t('preparer.$k', v);
 
     return PageDestiny(

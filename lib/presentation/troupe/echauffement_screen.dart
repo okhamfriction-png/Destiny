@@ -168,11 +168,7 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
     if (!mounted) return;
     final g = context.grammaire;
     final t = context.textes;
-    final verdict = validerDistribution(
-      g,
-      [for (final x in widget.session.personnages) x.archetypeId],
-      leaderObligatoire: widget.contexte.reglages.leaderObligatoire,
-    );
+    final verdict = validerDistribution(g, [for (final x in widget.session.personnages) x.archetypeId]);
     if (verdict.valide) return;
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()

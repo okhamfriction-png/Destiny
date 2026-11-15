@@ -115,16 +115,21 @@ void main() {
       expect(validerDistribution(g, ['alarmiste', 'denegateur', 'protecteur', 'prophete', 'leader']).valide, isFalse);
     });
 
-    test('à 3, les couleurs ne sont pas exigées', () {
-      expect(validerDistribution(g, ['alarmiste', 'denegateur', 'prophete']).valide, isTrue);
+    test('à 3 aussi, les trois couleurs sont exigées', () {
+      expect(validerDistribution(g, ['leader', 'tyran', 'prophete']).valide, isTrue);
+      expect(validerDistribution(g, ['aidant', 'paranoiaque', 'denegateur']).valide, isTrue);
+      // Le duel Alarmiste-Dénégateur est tout bleu : à 3, il manque une couleur.
+      final ids = ['alarmiste', 'denegateur', 'prophete'];
+      final v = validerDistribution(g, ids);
+      expect(v.valide, isFalse);
+      expect(v.problemes.map((p) => p.type), everyElement(TypeProbleme.familleManquante));
+      final corrige = v.correction!.appliquer(ids);
+      expect(validerDistribution(g, corrige).valide, isTrue, reason: '$corrige');
     });
 
-    test('le leader est facultatif, sauf si on le demande', () {
-      final ids = ['alarmiste', 'denegateur', 'aidant', 'paranoiaque'];
-      expect(validerDistribution(g, ids).valide, isTrue);
-      final v = validerDistribution(g, ids, leaderObligatoire: true);
-      expect(v.problemes.first.type, TypeProbleme.leaderDemande);
-      expect(validerDistribution(g, v.correction!.appliquer(ids), leaderObligatoire: true).valide, isTrue);
+    test('le leader n\'est jamais exigé : les duels et les trois couleurs suffisent', () {
+      expect(validerDistribution(g, ['alarmiste', 'denegateur', 'aidant', 'paranoiaque']).valide, isTrue);
+      expect(validerDistribution(g, ['aidant', 'paranoiaque', 'prophete']).valide, isTrue);
     });
 
     test('refuse un archétype pris deux fois', () {
@@ -141,7 +146,7 @@ void main() {
   });
 
   group('tirerDistribution', () {
-    test('sur 1 000 tirages à 3, 4, 5 et 6 : les bons duels, jamais un seul en trop, trois couleurs dès 4', () {
+    test('sur 1 000 tirages à 3, 4, 5 et 6 : les bons duels, jamais un seul en trop, toujours trois couleurs', () {
       final rng = Random(42);
       for (final n in [3, 4, 5, 6]) {
         final compo = g.distribution.pour(n)!;
@@ -152,7 +157,7 @@ void main() {
           expect(ids.toSet(), hasLength(n), reason: '$ids');
           expect(g.distribution.duelsComplets(ids), hasLength(compo.duels), reason: '$n : $ids');
           expect(archetypesSeuls(g, ids), hasLength(compo.seuls), reason: '$n : $ids');
-          if (n >= 4) expect(couleursManquantes(g, ids), isEmpty, reason: '$n : $ids');
+          expect(couleursManquantes(g, ids), isEmpty, reason: '$n : $ids');
           expect(validerDistribution(g, ids).valide, isTrue, reason: '$ids');
           vus.add((ids.toList()..sort()).join(','));
         }
@@ -169,14 +174,18 @@ void main() {
       }
     });
 
-    test('à 3, l\'archétype seul complète une couleur qui manque', () {
+    test('à 3, l\'archétype seul complète la couleur qui manque, et jamais le duel tout bleu', () {
       final rng = Random(4);
+      final seuls = <String>{};
       for (var i = 0; i < 300; i++) {
         final ids = tirerDistribution(g, 3, hasard: rng);
         final duel = g.distribution.duelsComplets(ids).single;
+        expect(duel.premier, isNot('alarmiste'), reason: '$ids');
         final seul = ids.firstWhere((id) => !duel.contient(id));
-        expect(couleursManquantes(g, duel.archetypes), contains(g.archetype(seul)!.famille), reason: '$ids');
+        expect(couleursManquantes(g, duel.archetypes), [g.archetype(seul)!.famille], reason: '$ids');
+        seuls.add(seul);
       }
+      expect(seuls, containsAll(['alarmiste', 'denegateur', 'prophete', 'tyran', 'paranoiaque']));
     });
 
     test('l\'ordre est mélangé : chacun peut recevoir n\'importe quel archétype', () {
@@ -199,12 +208,12 @@ void main() {
       }
     });
 
-    test('garde les archétypes imposés et le leader demandé', () {
+    test('garde les archétypes imposés', () {
       final rng = Random(7);
       for (var i = 0; i < 100; i++) {
-        final ids = tirerDistribution(g, 5, hasard: rng, imposes: ['paranoiaque'], leaderObligatoire: true);
+        final ids = tirerDistribution(g, 5, hasard: rng, imposes: ['paranoiaque', 'leader']);
         expect(ids, containsAll(['paranoiaque', 'leader']));
-        expect(validerDistribution(g, ids, leaderObligatoire: true).valide, isTrue);
+        expect(validerDistribution(g, ids).valide, isTrue);
       }
     });
 

@@ -89,7 +89,6 @@ class ReglagesDestiny extends ChangeNotifier {
   // Distribution et jeu.
   int _joueursParDefaut = 4;
   String _modeDistribution = 'tirage';
-  bool _leaderObligatoire = false;
   bool _moduleTraitre = false;
   bool _kidsParDefaut = false;
   int _minuteurEchauffement = 30;
@@ -156,7 +155,6 @@ class ReglagesDestiny extends ChangeNotifier {
   bool get reduireAnimations => _reduireAnimations;
   int get joueursParDefaut => _joueursParDefaut;
   String get modeDistribution => _modeDistribution;
-  bool get leaderObligatoire => _leaderObligatoire;
   bool get moduleTraitre => _moduleTraitre;
 
   /// Ancien « public par défaut » (avant la 2.1.0) : gardé, mais l'appli ne
@@ -229,7 +227,6 @@ class ReglagesDestiny extends ChangeNotifier {
     _reduireAnimations = j['reduire_animations'] as bool? ?? _reduireAnimations;
     _joueursParDefaut = (j['joueurs'] as num?)?.toInt() ?? _joueursParDefaut;
     _modeDistribution = j['mode_distribution'] as String? ?? _modeDistribution;
-    _leaderObligatoire = j['leader_obligatoire'] as bool? ?? _leaderObligatoire;
     _moduleTraitre = j['module_traitre'] as bool? ?? _moduleTraitre;
     _kidsParDefaut = j['kids'] as bool? ?? _kidsParDefaut;
     _minuteurEchauffement = (j['echauffement'] as num?)?.toInt() ?? _minuteurEchauffement;
@@ -269,7 +266,6 @@ class ReglagesDestiny extends ChangeNotifier {
         'reduire_animations': _reduireAnimations,
         'joueurs': _joueursParDefaut,
         'mode_distribution': _modeDistribution,
-        'leader_obligatoire': _leaderObligatoire,
         'module_traitre': _moduleTraitre,
         'kids': _kidsParDefaut,
         'echauffement': _minuteurEchauffement,
@@ -333,7 +329,6 @@ class ReglagesDestiny extends ChangeNotifier {
     bool? reduireAnimations,
     int? joueursParDefaut,
     String? modeDistribution,
-    bool? leaderObligatoire,
     bool? moduleTraitre,
     bool? kidsParDefaut,
     int? minuteurEchauffement,
@@ -365,7 +360,6 @@ class ReglagesDestiny extends ChangeNotifier {
     _reduireAnimations = reduireAnimations ?? _reduireAnimations;
     _joueursParDefaut = (joueursParDefaut ?? _joueursParDefaut).clamp(3, 6);
     _modeDistribution = modeDistribution ?? _modeDistribution;
-    _leaderObligatoire = leaderObligatoire ?? _leaderObligatoire;
     _moduleTraitre = moduleTraitre ?? _moduleTraitre;
     _kidsParDefaut = kidsParDefaut ?? _kidsParDefaut;
     _minuteurEchauffement = (minuteurEchauffement ?? _minuteurEchauffement).clamp(5, 90);

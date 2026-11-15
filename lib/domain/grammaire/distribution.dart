@@ -17,7 +17,6 @@ enum TypeProbleme {
   sansAlarmiste,
   duelIncomplet,
   familleManquante,
-  leaderDemande,
 }
 
 class ProblemeDistribution {
@@ -101,7 +100,6 @@ class VerdictDistribution {
           'famille': famille(p.famille!),
           'pourquoi': g.famille(p.famille!).pourquoi,
         }).trim(),
-      TypeProbleme.leaderDemande => t.t('distribution.leader_demande'),
     };
   }
 
@@ -125,20 +123,19 @@ List<String> archetypesSeuls(Grammaire g, List<String> ids) => [
     ];
 
 /// Vérifie une distribution d'archétypes (un par joueur) : des duels
-/// complets (`par_nombre`), et dès quatre joueurs les trois couleurs.
+/// complets (`par_nombre`), et toujours les trois couleurs.
 VerdictDistribution validerDistribution(
   Grammaire g,
   List<String> ids, {
-  bool leaderObligatoire = false,
   ModeDistribution mode = ModeDistribution.spectacle,
 }) {
-  final problemes = _problemes(g, ids, leaderObligatoire, mode);
+  final problemes = _problemes(g, ids, mode);
   if (problemes.isEmpty) return const VerdictDistribution([], null);
   if (problemes.first.type == TypeProbleme.nombre) return VerdictDistribution(problemes, null);
-  return VerdictDistribution(problemes, _proposerCorrection(g, ids, problemes.length, leaderObligatoire, mode));
+  return VerdictDistribution(problemes, _proposerCorrection(g, ids, problemes.length, mode));
 }
 
-List<ProblemeDistribution> _problemes(Grammaire g, List<String> ids, bool leaderObligatoire, ModeDistribution mode) {
+List<ProblemeDistribution> _problemes(Grammaire g, List<String> ids, ModeDistribution mode) {
   final compo = g.distribution.pour(ids.length);
   if (compo == null) return const [ProblemeDistribution(TypeProbleme.nombre)];
   final problemes = <ProblemeDistribution>[];
@@ -158,13 +155,8 @@ List<ProblemeDistribution> _problemes(Grammaire g, List<String> ids, bool leader
   for (final id in seuls.take(enTrop < 0 ? 0 : enTrop)) {
     problemes.add(ProblemeDistribution(TypeProbleme.duelIncomplet, archetypeId: id));
   }
-  if (ids.length >= 4) {
-    for (final f in couleursManquantes(g, ids)) {
-      problemes.add(ProblemeDistribution(TypeProbleme.familleManquante, famille: f));
-    }
-  }
-  if (leaderObligatoire && !ids.contains(Grammaire.leaderId)) {
-    problemes.add(const ProblemeDistribution(TypeProbleme.leaderDemande));
+  for (final f in couleursManquantes(g, ids)) {
+    problemes.add(ProblemeDistribution(TypeProbleme.familleManquante, famille: f));
   }
   return problemes;
 }
@@ -172,8 +164,8 @@ List<ProblemeDistribution> _problemes(Grammaire g, List<String> ids, bool leader
 /// Cherche le plus petit changement qui règle le plus de problèmes : un
 /// remplacement, sinon un duel changé pour un autre.
 CorrectionDistribution? _proposerCorrection(
-    Grammaire g, List<String> ids, int avant, bool leaderObligatoire, ModeDistribution mode) {
-  int compter(List<String> essai) => _problemes(g, essai, leaderObligatoire, mode).length;
+    Grammaire g, List<String> ids, int avant, ModeDistribution mode) {
+  int compter(List<String> essai) => _problemes(g, essai, mode).length;
   final tous = [for (final a in g.archetypes) a.id];
   CorrectionDistribution? meilleure;
   var score = avant;
@@ -214,20 +206,19 @@ CorrectionDistribution? _proposerCorrection(
 
 /// Tire une distribution par duels, au hasard (`par_nombre`) :
 /// 1. le nombre de duels voulu, parmi les quatre ;
-/// 2. dès quatre joueurs, un tirage où une couleur manque est refusé, et on
-///    retire ;
-/// 3. à 3 et 5 joueurs, l'archétype seul vient des duels restants, et
+/// 2. à 3 et 5 joueurs, l'archétype seul vient des duels restants, et
 ///    complète la couleur qui manque s'il y en a une ;
+/// 3. un tirage où une couleur manque est refusé, et on retire : les trois
+///    couleurs sont toujours sur scène (à 3, jamais le duel
+///    Alarmiste-Dénégateur, tout bleu) ;
 /// 4. l'ordre est mélangé : les archétypes sont répartis au hasard entre les
 ///    joueurs.
-/// Les archétypes [imposes] (et le leader demandé, et l'alarmiste en jeu de
-/// rôle) sont gardés : on retire tant qu'ils ne sont pas dans le tirage.
+/// Les archétypes [imposes] (et l'alarmiste en jeu de rôle) sont gardés : on retire tant qu'ils ne sont pas dans le tirage.
 List<String> tirerDistribution(
   Grammaire g,
   int joueurs, {
   Random? hasard,
   List<String> imposes = const [],
-  bool leaderObligatoire = false,
   ModeDistribution mode = ModeDistribution.spectacle,
 }) {
   final rng = hasard ?? Random();
@@ -239,7 +230,6 @@ List<String> tirerDistribution(
     if (mode == ModeDistribution.serie) Grammaire.alarmisteId,
     for (final id in imposes)
       if (g.archetype(id) != null) id,
-    if (leaderObligatoire) Grammaire.leaderId,
   };
   // Les requis qu'aucun tirage ne peut tenir ensemble sont lâchés, du
   // dernier au premier, plutôt que de boucler sans fin.
@@ -273,7 +263,7 @@ List<String>? _unTirage(Grammaire g, CompositionDistribution compo, Random rng) 
       ids.add(libres[rng.nextInt(libres.length)]);
     }
   }
-  if (compo.joueurs >= 4 && couleursManquantes(g, ids).isNotEmpty) return null;
+  if (couleursManquantes(g, ids).isNotEmpty) return null;
   return ids;
 }
 
@@ -307,7 +297,7 @@ bool _possible(Grammaire g, CompositionDistribution compo, List<String> requis) 
           ];
     for (final s in seuls) {
       final tirage = [...ids, ...s];
-      if (compo.joueurs >= 4 && couleursManquantes(g, tirage).isNotEmpty) continue;
+      if (couleursManquantes(g, tirage).isNotEmpty) continue;
       if (requis.every(tirage.contains)) return true;
     }
   }
@@ -316,7 +306,7 @@ bool _possible(Grammaire g, CompositionDistribution compo, List<String> requis) 
 
 /// Les exemples tout prêts pour [joueurs] joueurs.
 List<List<String>> exemplesDistribution(Grammaire g, int joueurs) => [
-      for (final e in g.distribution.exemples) e.pour(joueurs),
+      for (final e in g.distribution.exemples) e.pour(joueurs, accepte: (ids) => couleursManquantes(g, ids).isEmpty),
     ];
 
 /// Tire un animal parmi les trois de l'archétype.
