@@ -70,6 +70,21 @@
           "replique_adulte_seulement": false,
           "exemple_vouloir": "Je veux que le patron me donne le poste de chef d'équipe avant la fin de la soirée.",
           "exemple_vouloir_kids": "Je veux que le capitaine me prenne dans son équipe pour le match."
+        },
+        {
+          "id": "renard",
+          "nom": "Renard",
+          "statut_depart": "neutre",
+          "port": "souple",
+          "posture": "souriant, il mène sans en avoir l'air et fait croire aux autres que c'était leur idée",
+          "replique": "J'adore quand un plan se déroule sans accroc.",
+          "source_replique": "L'Agence tous risques",
+          "image": "img/renard.jpg",
+          "replique_kids": "J'adore quand un plan se déroule sans accroc.",
+          "source_replique_kids": "L'Agence tous risques",
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que mes frères me confient l'héritage ce soir, en croyant que c'est leur idée.",
+          "exemple_vouloir_kids": "Je veux que mes copains me laissent choisir le jeu, en croyant que c'est leur idée."
         }
       ]
     },
@@ -114,6 +129,21 @@
           "replique_adulte_seulement": true,
           "exemple_vouloir": "Je veux que mon associé me dise qui nous a balancés.",
           "exemple_vouloir_kids": "Je veux que mon copain me dise qui a cassé ma trottinette."
+        },
+        {
+          "id": "cerf",
+          "nom": "Cerf",
+          "statut_depart": "haut",
+          "port": "droit",
+          "posture": "droit, la tête haute, il se dresse devant celui qu'on attaque",
+          "replique": "On ne laisse pas Bébé dans un coin.",
+          "source_replique": "Dirty Dancing",
+          "image": "img/cerf.jpg",
+          "replique_kids": "On ne laisse pas Bébé dans un coin.",
+          "source_replique_kids": "Dirty Dancing",
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que le patron retire l'avertissement de ma collègue avant la fin de la soirée.",
+          "exemple_vouloir_kids": "Je veux que la maîtresse enlève la punition de mon copain avant la récré."
         }
       ]
     },
@@ -158,50 +188,21 @@
           "replique_adulte_seulement": false,
           "exemple_vouloir": "Je veux que la bande m'invite enfin au week-end à la mer.",
           "exemple_vouloir_kids": "Je veux que la bande me laisse jouer au foot avec eux."
-        }
-      ]
-    },
-    {
-      "id": "debrouillard",
-      "nom": "Débrouillard",
-      "famille": "tient",
-      "ce_qu_il_fait": "Bricole avec ce qu'il y a dans le lieu et propose des plans.",
-      "montee": {
-        "signale": "Bricoler avec ce qu'il trouve",
-        "enferme": "Chercher une issue",
-        "envahit": "Tenter le plan risqué",
-        "supprime": "Un dernier plan, avec ce qui reste"
-      },
-      "animaux": [
+        },
         {
           "id": "souris",
           "nom": "Souris",
           "statut_depart": "bas",
           "port": "menu, vif",
-          "posture": "petite, rapide, elle sursaute mais avance",
-          "replique": "Vers l'infini et au-delà !",
-          "source_replique": "Toy Story",
+          "posture": "petite, rapide, elle se rend utile partout sans qu'on le lui demande",
+          "replique": "Je ne peux pas le porter pour vous, mais je peux vous porter !",
+          "source_replique": "Le Seigneur des anneaux : Le Retour du roi",
           "image": "img/souris.jpg",
-          "replique_kids": "Vers l'infini et au-delà !",
-          "source_replique_kids": "Toy Story",
+          "replique_kids": "Je ne peux pas le porter pour vous, mais je peux vous porter !",
+          "source_replique_kids": "Le Seigneur des anneaux : Le Retour du roi",
           "replique_adulte_seulement": false,
-          "exemple_vouloir": "Je veux que mon cousin me prête sa voiture pour mon déménagement demain.",
-          "exemple_vouloir_kids": "Je veux que ma cousine me prête son vélo pour la course."
-        },
-        {
-          "id": "hibou",
-          "nom": "Hibou",
-          "statut_depart": "haut",
-          "port": "posé",
-          "posture": "immobile, il observe, parle peu et juste",
-          "replique": "Fais-le ou ne le fais pas. Il n'y a pas d'essai.",
-          "source_replique": "Star Wars : L'Empire contre-attaque",
-          "image": "img/hibou.jpg",
-          "replique_kids": "Fais-le ou ne le fais pas. Il n'y a pas d'essai.",
-          "source_replique_kids": "Star Wars : L'Empire contre-attaque",
-          "replique_adulte_seulement": false,
-          "exemple_vouloir": "Je veux que mon neveu me promette de reprendre ses études.",
-          "exemple_vouloir_kids": "Je veux que mon copain me promette de réviser sa dictée avec moi."
+          "exemple_vouloir": "Je veux que mon frère me laisse l'aider à préparer son entretien de demain.",
+          "exemple_vouloir_kids": "Je veux que ma grande sœur me laisse l'aider à faire son gâteau."
         }
       ]
     },
@@ -246,6 +247,21 @@
           "replique_adulte_seulement": false,
           "exemple_vouloir": "Je veux qu'il me rende les 300 euros qu'il me doit.",
           "exemple_vouloir_kids": "Je veux qu'il me rende les cartes qu'il m'a empruntées."
+        },
+        {
+          "id": "chat",
+          "nom": "Chat",
+          "statut_depart": "neutre",
+          "port": "aux aguets",
+          "posture": "le poil hérissé, il sent la menace avant tout le monde",
+          "replique": "Ils sont là !",
+          "source_replique": "Poltergeist",
+          "image": "img/chat.jpg",
+          "replique_kids": "Ils sont là !",
+          "source_replique_kids": "Poltergeist",
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que ma sœur me croie quand je lui dis que son fiancé lui ment.",
+          "exemple_vouloir_kids": "Je veux que maman me croie quand je dis qu'il y a un monstre sous mon lit."
         }
       ]
     },
@@ -290,6 +306,21 @@
           "replique_adulte_seulement": false,
           "exemple_vouloir": "Je veux que mon coloc me laisse fêter mon anniversaire chez nous ce soir.",
           "exemple_vouloir_kids": "Je veux que papa me laisse manger le gâteau avant le dîner."
+        },
+        {
+          "id": "singe",
+          "nom": "Singe",
+          "statut_depart": "neutre",
+          "port": "remuant",
+          "posture": "mobile, il fait le clown pour ne pas voir ce qui arrive",
+          "replique": "Ce n'est qu'une égratignure !",
+          "source_replique": "Monty Python : Sacré Graal",
+          "image": "img/singe.jpg",
+          "replique_kids": "Ce n'est qu'une égratignure !",
+          "source_replique_kids": "Monty Python : Sacré Graal",
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que ma copine arrête de parler de rupture et vienne danser avec moi.",
+          "exemple_vouloir_kids": "Je veux que mon copain arrête de dire que j'ai perdu et rejoue avec moi."
         }
       ]
     },
@@ -334,102 +365,29 @@
           "replique_adulte_seulement": true,
           "exemple_vouloir": "Je veux que mon ami annule son départ demain, parce que je sens que ça va mal finir.",
           "exemple_vouloir_kids": "Je veux que mon copain ne monte pas dans l'arbre, parce que je sens qu'il va tomber."
-        }
-      ]
-    },
-    {
-      "id": "cynique",
-      "nom": "Cynique",
-      "famille": "interprete",
-      "ce_qu_il_fait": "Tourne tout en dérision et dit en riant ce que personne n'ose dire. Il s'en moque à voix haute, sans paniquer.",
-      "montee": {
-        "signale": "Faire rire",
-        "enferme": "Blaguer sur le danger",
-        "envahit": "Rendre l'humour cruel",
-        "supprime": "Rire jusqu'à ce que ça casse"
-      },
-      "animaux": [
-        {
-          "id": "singe",
-          "nom": "Singe",
-          "statut_depart": "neutre",
-          "port": "remuant",
-          "posture": "mobile, il fait rire pour ne pas avoir peur",
-          "replique": "Pourquoi cet air si sérieux ?",
-          "source_replique": "The Dark Knight",
-          "image": "img/singe.jpg",
-          "replique_kids": "Pourquoi cet air si sérieux ?",
-          "source_replique_kids": "The Dark Knight",
-          "replique_adulte_seulement": false,
-          "exemple_vouloir": "Je veux que mon pote avoue devant tout le monde qu'il s'est fait larguer.",
-          "exemple_vouloir_kids": "Je veux que mon frère avoue devant tout le monde qu'il a peur du noir."
         },
         {
-          "id": "renard",
-          "nom": "Renard",
-          "statut_depart": "neutre",
-          "port": "souple",
-          "posture": "souriant, il ironise et pique",
-          "replique": "Les cons, ça ose tout. C'est même à ça qu'on les reconnaît.",
-          "source_replique": "Les Tontons flingueurs",
-          "image": "img/renard.jpg",
-          "replique_kids": "Ils sont fous, ces Romains !",
-          "source_replique_kids": "Astérix",
-          "replique_adulte_seulement": true,
-          "exemple_vouloir": "Je veux que le chef apprenne que son fils pique dans la caisse, sans que ça vienne de moi.",
-          "exemple_vouloir_kids": "Je veux que la maîtresse découvre qui a caché la craie, sans que ça vienne de moi."
+          "id": "hibou",
+          "nom": "Hibou",
+          "statut_depart": "haut",
+          "port": "posé",
+          "posture": "immobile, il observe, parle peu, et ce qu'il annonce arrive",
+          "replique": "Difficile à voir. Toujours en mouvement est l'avenir.",
+          "source_replique": "Star Wars : L'Empire contre-attaque",
+          "image": "img/hibou.jpg",
+          "replique_kids": "Difficile à voir. Toujours en mouvement est l'avenir.",
+          "source_replique_kids": "Star Wars : L'Empire contre-attaque",
+          "replique_adulte_seulement": false,
+          "exemple_vouloir": "Je veux que mon neveu me promette de reprendre ses études.",
+          "exemple_vouloir_kids": "Je veux que mon copain me promette de réviser sa dictée avec moi."
         }
       ]
     },
     {
-      "id": "opportuniste",
-      "nom": "Opportuniste",
+      "id": "tyran",
+      "nom": "Tyran",
       "famille": "fissure",
-      "ce_qu_il_fait": "Monnaie ses services, prend les ressources ou le pouvoir.",
-      "montee": {
-        "signale": "Repérer ce qui a de la valeur",
-        "enferme": "Monnayer un service",
-        "envahit": "Prendre, quitte à écraser",
-        "supprime": "Pactiser, ou vendre sa place"
-      },
-      "animaux": [
-        {
-          "id": "hyene",
-          "nom": "Hyène",
-          "statut_depart": "neutre",
-          "port": "rôdeur",
-          "posture": "elle rôde et attend que quelqu'un faiblisse",
-          "replique": "Je vais lui faire une offre qu'il ne pourra pas refuser.",
-          "source_replique": "Le Parrain",
-          "image": "img/hyene.jpg",
-          "replique_kids": "Je vais lui faire une offre qu'il ne pourra pas refuser.",
-          "source_replique_kids": "Le Parrain",
-          "replique_adulte_seulement": false,
-          "exemple_vouloir": "Je veux que le gérant me vende tout son stock à moitié prix.",
-          "exemple_vouloir_kids": "Je veux que mon copain m'échange son goûter contre une seule bille."
-        },
-        {
-          "id": "vautour",
-          "nom": "Vautour",
-          "statut_depart": "neutre",
-          "port": "nonchalant",
-          "posture": "patient, à l'écart, il ramasse ce qui reste",
-          "replique": "Mon précieux…",
-          "source_replique": "Le Seigneur des anneaux",
-          "image": "img/vautour.jpg",
-          "replique_kids": "Mon précieux…",
-          "source_replique_kids": "Le Seigneur des anneaux",
-          "replique_adulte_seulement": false,
-          "exemple_vouloir": "Je veux que ma tante signe pour me laisser son appartement.",
-          "exemple_vouloir_kids": "Je veux que mamie me donne la plus grosse part du gâteau."
-        }
-      ]
-    },
-    {
-      "id": "gardien_de_l_ordre",
-      "nom": "Gardien de l'ordre",
-      "famille": "fissure",
-      "ce_qu_il_fait": "Fixe des règles, rationne, punit ceux qui désobéissent.",
+      "ce_qu_il_fait": "Impose sa loi, rationne, punit qui désobéit.",
       "montee": {
         "signale": "Ranger, cadrer",
         "enferme": "Fixer les règles",
@@ -449,7 +407,7 @@
           "replique_kids": "Alors comment voulez-vous obtenir le laissez-passer A-38 ?",
           "source_replique_kids": "Les 12 travaux d'Astérix",
           "replique_adulte_seulement": false,
-          "exemple_vouloir": "Je veux que mon collègue refasse son rapport avant la fermeture, comme le veut le règlement.",
+          "exemple_vouloir": "Je veux que mon collègue refasse son rapport ce soir, comme le veut le règlement.",
           "exemple_vouloir_kids": "Je veux que mon frère range ses jouets avant de jouer, comme c'est la règle."
         },
         {
@@ -466,50 +424,21 @@
           "replique_adulte_seulement": false,
           "exemple_vouloir": "Je veux que mon fils rentre à minuit, pas une minute de plus.",
           "exemple_vouloir_kids": "Je veux que ma petite sœur aille se coucher à l'heure, pas une minute de plus."
-        }
-      ]
-    },
-    {
-      "id": "solitaire",
-      "nom": "Solitaire",
-      "famille": "fissure",
-      "ce_qu_il_fait": "Refuse le plan du groupe et prépare sa propre sortie, sans quitter le lieu.",
-      "montee": {
-        "signale": "Se tenir à l'écart",
-        "enferme": "Refuser le plan",
-        "envahit": "Préparer sa sortie",
-        "supprime": "Partir seul, ou revenir"
-      },
-      "animaux": [
-        {
-          "id": "chat",
-          "nom": "Chat",
-          "statut_depart": "neutre",
-          "port": "feutré",
-          "posture": "à l'écart, nonchalant, toujours près d'une sortie",
-          "replique": "Hasta la vista, baby !",
-          "source_replique": "Terminator 2",
-          "image": "img/chat.jpg",
-          "replique_kids": "Hasta la vista, baby !",
-          "source_replique_kids": "Terminator 2",
-          "replique_adulte_seulement": false,
-          "exemple_vouloir": "Je veux que ma coloc accepte que je parte vivre seul.",
-          "exemple_vouloir_kids": "Je veux que mes copains me laissent jouer tout seul dans mon coin."
         },
         {
-          "id": "cerf",
-          "nom": "Cerf",
-          "statut_depart": "haut",
-          "port": "droit, raide",
-          "posture": "droit, la tête haute, il refuse de suivre",
-          "replique": "Je ne suis pas un numéro, je suis un homme libre !",
-          "source_replique": "Le Prisonnier",
-          "image": "img/cerf.jpg",
-          "replique_kids": "Je ne suis pas un numéro, je suis un homme libre !",
-          "source_replique_kids": "Le Prisonnier",
+          "id": "hyene",
+          "nom": "Hyène",
+          "statut_depart": "neutre",
+          "port": "rôdeur",
+          "posture": "elle ricane, rôde autour du plus faible et le fait plier",
+          "replique": "Je vais lui faire une offre qu'il ne pourra pas refuser.",
+          "source_replique": "Le Parrain",
+          "image": "img/hyene.jpg",
+          "replique_kids": "Je vais lui faire une offre qu'il ne pourra pas refuser.",
+          "source_replique_kids": "Le Parrain",
           "replique_adulte_seulement": false,
-          "exemple_vouloir": "Je veux que mon père accepte que je ne reprenne pas l'entreprise familiale.",
-          "exemple_vouloir_kids": "Je veux que papa accepte que je fasse du dessin au lieu du foot."
+          "exemple_vouloir": "Je veux que le nouveau s'excuse devant toute l'équipe de m'avoir contredit.",
+          "exemple_vouloir_kids": "Je veux que le petit nouveau me donne sa place sur le banc."
         }
       ]
     },
@@ -554,6 +483,21 @@
           "replique_adulte_seulement": false,
           "exemple_vouloir": "Je veux que mon associé avoue qu'il négocie dans mon dos.",
           "exemple_vouloir_kids": "Je veux que mon copain avoue qu'il a triché au jeu."
+        },
+        {
+          "id": "vautour",
+          "nom": "Vautour",
+          "statut_depart": "neutre",
+          "port": "perché",
+          "posture": "perché à l'écart, il observe et attend que quelqu'un se trahisse",
+          "replique": "Je sais ce que vous avez fait l'été dernier.",
+          "source_replique": "Souviens-toi… l'été dernier",
+          "image": "img/vautour.jpg",
+          "replique_kids": "Mon précieux…",
+          "source_replique_kids": "Le Seigneur des anneaux",
+          "replique_adulte_seulement": true,
+          "exemple_vouloir": "Je veux que mon frère avoue qu'il a fait changer le testament de papa.",
+          "exemple_vouloir_kids": "Je veux que ma sœur avoue qu'elle a pris les bonbons de ma cachette."
         }
       ]
     }
@@ -717,81 +661,119 @@
     "premier_fige": "Chaque comédien choisit en silence sa phrase : « il veut… mais il a besoin de… »."
   },
   "distribution": {
-    "regle": "Au spectacle, on joue à quatre comédiens et un figurant. Les archétypes sont attribués à l'avance, pour que chacun les travaille avant la répète ou le spectacle. Chaque famille reste représentée, et on choisit des archétypes qui s'opposent dans leur réflexe : l'Aidant qui tend la main face au Paranoïaque qui repousse. Le danger vient de la régie : l'alarmiste est un archétype comme les autres, facultatif au spectacle. En jeu de rôle, le maître du jeu le tient s'il manque. Le leader est facultatif. Le leader et le gardien de l'ordre peuvent jouer ensemble.",
+    "regle": "Au spectacle, on joue à quatre comédiens et un figurant. Les archétypes sont attribués à l'avance, pour que chacun les travaille avant la répète ou le spectacle. On distribue par duels : on tire toujours un archétype avec son adversaire, pour que chacun sache dès le départ contre qui il joue. Les trois couleurs sont toujours sur scène : le vert, le bleu et le rouge. Le danger vient de la régie : l'alarmiste est un archétype comme les autres, facultatif. En jeu de rôle, le maître du jeu le tient s'il manque.",
+    "duels": [
+      {
+        "archetypes": [
+          "alarmiste",
+          "denegateur"
+        ],
+        "sur": "ce qu'est le danger",
+        "enjeu": "il arrive, ou ça va se régler",
+        "reflexes": {
+          "alarmiste": "crie que le danger arrive",
+          "denegateur": "jure que ça va se régler"
+        }
+      },
+      {
+        "archetypes": [
+          "leader",
+          "tyran"
+        ],
+        "sur": "qui commande",
+        "enjeu": "sauver le groupe, ou se faire obéir",
+        "reflexes": {
+          "leader": "veut sauver le groupe",
+          "tyran": "veut qu'on lui obéisse"
+        }
+      },
+      {
+        "archetypes": [
+          "aidant",
+          "paranoiaque"
+        ],
+        "sur": "les autres",
+        "enjeu": "tendre la main, ou repousser",
+        "reflexes": {
+          "aidant": "tend la main",
+          "paranoiaque": "repousse et accuse"
+        }
+      },
+      {
+        "archetypes": [
+          "protecteur",
+          "prophete"
+        ],
+        "sur": "la victime",
+        "enjeu": "le Prophète exige un sacrifice, le Protecteur se met devant",
+        "reflexes": {
+          "protecteur": "se met devant la victime",
+          "prophete": "exige un sacrifice"
+        }
+      }
+    ],
     "par_nombre": [
       {
         "joueurs": 3,
-        "alarmiste": 1,
-        "tient": 1,
-        "interprete": 0,
-        "fissure": 1,
-        "au_choix": 0
+        "duels": 1,
+        "seul": 1
       },
       {
         "joueurs": 4,
-        "alarmiste": 1,
-        "tient": 1,
-        "interprete": 1,
-        "fissure": 1,
-        "au_choix": 0
+        "duels": 2,
+        "seul": 0
       },
       {
         "joueurs": 5,
-        "alarmiste": 1,
-        "tient": 1,
-        "interprete": 1,
-        "fissure": 1,
-        "au_choix": 1
+        "duels": 2,
+        "seul": 1
       },
       {
         "joueurs": 6,
-        "alarmiste": 1,
-        "tient": 2,
-        "interprete": 1,
-        "fissure": 2,
-        "au_choix": 0
+        "duels": 3,
+        "seul": 0
       }
     ],
     "exemples": [
       {
         "a_4": [
           "alarmiste",
-          "leader",
           "denegateur",
-          "opportuniste"
+          "leader",
+          "tyran"
         ],
-        "plus_a_5": "protecteur",
+        "plus_a_5": "aidant",
         "plus_a_6": "paranoiaque"
       },
       {
         "a_4": [
           "alarmiste",
+          "denegateur",
           "aidant",
-          "prophete",
           "paranoiaque"
         ],
-        "plus_a_5": "debrouillard",
-        "plus_a_6": "gardien_de_l_ordre"
+        "plus_a_5": "protecteur",
+        "plus_a_6": "prophete"
       },
       {
         "a_4": [
-          "alarmiste",
-          "debrouillard",
-          "cynique",
-          "gardien_de_l_ordre"
-        ],
-        "plus_a_5": "leader",
-        "plus_a_6": "solitaire"
-      },
-      {
-        "a_4": [
-          "alarmiste",
+          "leader",
+          "tyran",
           "protecteur",
-          "cynique",
-          "solitaire"
+          "prophete"
         ],
-        "plus_a_5": "aidant",
-        "plus_a_6": "opportuniste"
+        "plus_a_5": "alarmiste",
+        "plus_a_6": "denegateur"
+      },
+      {
+        "a_4": [
+          "aidant",
+          "paranoiaque",
+          "protecteur",
+          "prophete"
+        ],
+        "plus_a_5": "denegateur",
+        "plus_a_6": "alarmiste"
       }
     ],
     "a_6": "Deux duos déjà liés commencent."
@@ -902,7 +884,7 @@
         "acte4": "Il prend la parole et mène tout le monde vers la sortie qu'il a vue, ou laisse encore un autre décider."
       },
       {
-        "archetype": "cynique",
+        "archetype": "denegateur",
         "personnage": "Le témoin du marié",
         "besoin": "dire ce qu'il ressent",
         "acte1_veut": "Veut que toute la salle rie à son discours.",
@@ -912,22 +894,22 @@
         "acte4": "Il dit enfin ce qu'il ressent, sans blague, ou garde le masque jusqu'au bout."
       },
       {
-        "archetype": "opportuniste",
+        "archetype": "tyran",
         "personnage": "L'agent immobilier",
         "besoin": "recevoir sans payer",
         "acte1_veut": "Veut signer la vente ce soir.",
         "acte1_blessure": "« Personne ne m'a jamais rien donné. »",
-        "acte2": "Il vend tout : la place près du chauffage, son téléphone chargé, ce qu'il sait.",
+        "acte2": "Il impose ses prix : la place près du chauffage, son téléphone chargé, ce qu'il sait.",
         "acte3": "On lui tend la dernière bouteille d'eau : « Je ne veux rien en échange. »",
         "acte4": "Il donne sa place dans la dernière sortie, ou la vend au plus offrant."
       },
       {
-        "archetype": "solitaire",
+        "archetype": "paranoiaque",
         "personnage": "La sœur revenue pour le testament",
         "besoin": "se laisser retenir",
         "acte1_veut": "Veut repartir dès que le testament est lu.",
         "acte1_blessure": "« Je suis partie à dix-huit ans, personne ne m'a retenue. »",
-        "acte2": "Elle refuse le plan du groupe et cherche seule une autre sortie.",
+        "acte2": "Elle soupçonne le plan du groupe et cherche seule une autre sortie.",
         "acte3": "Son frère : « On t'a attendue dix ans. »",
         "acte4": "Elle part seule par sa sortie, ou revient chercher les autres."
       }
@@ -1409,7 +1391,7 @@
         {
           "nom": "Bastien, le technicien",
           "type": "aide",
-          "archetype": "debrouillard",
+          "archetype": "aidant",
           "animal": "Souris",
           "veut": "Qu'on le laisse enfin montrer ce qu'il sait réparer.",
           "vient_de": "Il entretient les pompes de l'aquarium depuis dix ans, surtout la nuit.",
@@ -1419,7 +1401,7 @@
         {
           "nom": "Lila, la visiteuse",
           "type": "curieux",
-          "archetype": "cynique",
+          "archetype": "denegateur",
           "animal": "Singe",
           "veut": "Voir les coulisses que le public n'a jamais le droit de voir.",
           "vient_de": "Elle vient chaque samedi avec son carnet de croquis de poissons.",
@@ -1429,7 +1411,7 @@
         {
           "nom": "Inès, la biologiste",
           "type": "victime",
-          "archetype": "solitaire",
+          "archetype": "alarmiste",
           "animal": "Chat",
           "veut": "Finir ses mesures seule, loin du bruit des visiteurs.",
           "vient_de": "Elle a quitté un grand institut pour étudier une seule pieuvre.",
@@ -1511,7 +1493,7 @@
         {
           "nom": "Mamadou, le bagagiste",
           "type": "aide",
-          "archetype": "solitaire",
+          "archetype": "alarmiste",
           "animal": "Chat",
           "veut": "Rendre service, puis retourner à sa pause sans qu'on le dérange.",
           "vient_de": "Il charge les soutes depuis quinze ans, par tous les temps.",
@@ -1572,7 +1554,7 @@
         {
           "nom": "Corinne, l'auditrice",
           "type": "officiel",
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Fourmi",
           "veut": "Que chaque centime et chaque porte soient notés dans son registre.",
           "vient_de": "Envoyée par le siège pour un contrôle surprise de trois jours.",
@@ -1623,7 +1605,7 @@
         {
           "nom": "Marc, le bibliothécaire",
           "type": "officiel",
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Taureau",
           "veut": "Le silence total, et chaque livre rendu à sa place.",
           "vient_de": "Il dirige la bibliothèque comme une caserne depuis vingt ans.",
@@ -1633,7 +1615,7 @@
         {
           "nom": "Yanis, l'étudiant",
           "type": "innocent",
-          "archetype": "debrouillard",
+          "archetype": "aidant",
           "animal": "Souris",
           "veut": "Que personne ne reste enfermé dans la salle de lecture.",
           "vient_de": "Il révise ici tous les soirs parce que chez lui c'est trop bruyant.",
@@ -1684,7 +1666,7 @@
         {
           "nom": "Jonathan, le client",
           "type": "victime",
-          "archetype": "opportuniste",
+          "archetype": "tyran",
           "animal": "Hyène",
           "veut": "Entrer dans le carré VIP, peu importe ce que ça coûte.",
           "vient_de": "Il fête sa promotion et a déjà commandé trois bouteilles.",
@@ -1715,7 +1697,7 @@
         {
           "nom": "Lucien, le technicien radio",
           "type": "aide",
-          "archetype": "debrouillard",
+          "archetype": "prophete",
           "animal": "Hibou",
           "veut": "Garder le contact avec la surface, quoi qu'il arrive.",
           "vient_de": "Il a monté lui-même la salle radio, pièce par pièce.",
@@ -1735,7 +1717,7 @@
         {
           "nom": "Anaïs, la recrue",
           "type": "victime",
-          "archetype": "solitaire",
+          "archetype": "protecteur",
           "animal": "Cerf",
           "veut": "Prouver qu'elle n'a besoin de personne pour tenir son poste.",
           "vient_de": "Arrivée il y a trois jours, elle est sortie première de sa promotion.",
@@ -1786,7 +1768,7 @@
         {
           "nom": "Hervé, le directeur",
           "type": "sceptique",
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Taureau",
           "veut": "Une explication simple, et que la réunion de demain soit maintenue.",
           "vient_de": "Il a monté l'entreprise seul et refuse qu'on lui dicte quoi faire.",
@@ -1837,7 +1819,7 @@
         {
           "nom": "Enzo, le vacancier",
           "type": "victime",
-          "archetype": "solitaire",
+          "archetype": "protecteur",
           "animal": "Cerf",
           "veut": "Être tranquille, loin de ses parents et du club enfants.",
           "vient_de": "Ado de quinze ans, il s'ennuie ferme depuis le début des vacances.",
@@ -1868,7 +1850,7 @@
         {
           "nom": "Armand, le croupier",
           "type": "aide",
-          "archetype": "opportuniste",
+          "archetype": "paranoiaque",
           "animal": "Vautour",
           "veut": "Aider le groupe, à condition d'en tirer un petit bénéfice.",
           "vient_de": "Il distribue les cartes depuis trente ans et compte les jours jusqu'à sa retraite.",
@@ -1878,7 +1860,7 @@
         {
           "nom": "Sabrina, la serveuse",
           "type": "temoin",
-          "archetype": "cynique",
+          "archetype": "leader",
           "animal": "Renard",
           "veut": "Qu'on la croie, pour une fois, sans lever les yeux au ciel.",
           "vient_de": "Elle sert les cocktails au bar et entend toutes les confidences.",
@@ -1919,7 +1901,7 @@
         {
           "nom": "Laurence, l'agente de sécurité",
           "type": "aide",
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Fourmi",
           "veut": "Mettre enfin ses procédures d'urgence en pratique avec quelqu'un.",
           "vient_de": "Elle a écrit seule le plan d'évacuation que personne n'a jamais lu.",
@@ -1929,7 +1911,7 @@
         {
           "nom": "Kylian, le client",
           "type": "curieux",
-          "archetype": "cynique",
+          "archetype": "denegateur",
           "animal": "Singe",
           "veut": "Filmer tout ce qui se passe pour sa chaîne vidéo.",
           "vient_de": "Il traîne dans la galerie marchande tous les mercredis après les cours.",
@@ -1970,7 +1952,7 @@
         {
           "nom": "Ginette, la standardiste",
           "type": "aide",
-          "archetype": "debrouillard",
+          "archetype": "prophete",
           "animal": "Hibou",
           "veut": "Quitter enfin son standard et participer à une vraie enquête.",
           "vient_de": "Elle décroche le téléphone du commissariat depuis trente-deux ans.",
@@ -2031,7 +2013,7 @@
         {
           "nom": "Delphine, l'inspectrice sanitaire",
           "type": "officiel",
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Fourmi",
           "veut": "Que chaque bête et chaque bâtiment soient conformes au règlement.",
           "vient_de": "Elle visite trente fermes par mois avec son classeur et ses tampons.",
@@ -2092,7 +2074,7 @@
         {
           "nom": "Margaux, la randonneuse",
           "type": "victime",
-          "archetype": "solitaire",
+          "archetype": "protecteur",
           "animal": "Cerf",
           "veut": "Faire sa randonnée seule, sans carte ni téléphone.",
           "vient_de": "Elle a tout quitté en ville pour se retrouver dans la nature.",
@@ -2174,7 +2156,7 @@
         {
           "nom": "Aïcha, la femme de chambre",
           "type": "aide",
-          "archetype": "debrouillard",
+          "archetype": "aidant",
           "animal": "Souris",
           "veut": "Qu'on la remarque enfin, et faire partie de l'aventure.",
           "vient_de": "Elle fait les suites depuis six ans, sans jamais être vue.",
@@ -2184,7 +2166,7 @@
         {
           "nom": "Édouard, le concierge",
           "type": "commere",
-          "archetype": "cynique",
+          "archetype": "leader",
           "animal": "Renard",
           "veut": "Tout savoir sur les clients et le glisser au bon moment.",
           "vient_de": "Trente ans de réception, il connaît tous les secrets de l'hôtel.",
@@ -2194,7 +2176,7 @@
         {
           "nom": "Béatrice, la cliente fortunée",
           "type": "victime",
-          "archetype": "opportuniste",
+          "archetype": "paranoiaque",
           "animal": "Vautour",
           "veut": "Repartir avec le tableau du hall, quel que soit son prix.",
           "vient_de": "Héritière d'une grande famille, elle loue la même suite chaque année.",
@@ -2225,7 +2207,7 @@
         {
           "nom": "Clémence, la stagiaire",
           "type": "aide",
-          "archetype": "debrouillard",
+          "archetype": "aidant",
           "animal": "Souris",
           "veut": "Prouver qu'elle est utile et décrocher un vrai poste.",
           "vient_de": "Étudiante en chimie, elle est arrivée au labo lundi dernier.",
@@ -2296,7 +2278,7 @@
         {
           "nom": "Hector, l'héritier",
           "type": "victime",
-          "archetype": "opportuniste",
+          "archetype": "tyran",
           "animal": "Hyène",
           "veut": "Trouver le trésor de la famille avant le notaire.",
           "vient_de": "Arrière-petit-fils du propriétaire, il a hérité du manoir hier.",
@@ -2327,7 +2309,7 @@
         {
           "nom": "Hugo, le guide",
           "type": "aide",
-          "archetype": "cynique",
+          "archetype": "leader",
           "animal": "Renard",
           "veut": "Montrer qu'il connaît le musée mieux que le conservateur.",
           "vient_de": "Il fait la même visite guidée six fois par jour depuis cinq ans.",
@@ -2337,7 +2319,7 @@
         {
           "nom": "Pauline, la journaliste",
           "type": "curieux",
-          "archetype": "opportuniste",
+          "archetype": "paranoiaque",
           "animal": "Vautour",
           "veut": "Décrocher le scoop qui la fera passer en première page.",
           "vient_de": "Elle prépare un article sur l'exposition et cherche un angle.",
@@ -2398,7 +2380,7 @@
         {
           "nom": "Félix, le musicien",
           "type": "victime",
-          "archetype": "solitaire",
+          "archetype": "alarmiste",
           "animal": "Chat",
           "veut": "Jouer de son violon tranquille, loin de la foule.",
           "vient_de": "Il joue sur le même quai chaque soir pour gagner sa vie.",
@@ -2429,7 +2411,7 @@
         {
           "nom": "Ludovic, le steward",
           "type": "aide",
-          "archetype": "opportuniste",
+          "archetype": "tyran",
           "animal": "Hyène",
           "veut": "Rendre service aux passagers, contre un bon pourboire.",
           "vient_de": "Il fait la saison sur le navire pour mettre de l'argent de côté.",
@@ -2439,7 +2421,7 @@
         {
           "nom": "Colette, la croisiériste",
           "type": "curieux",
-          "archetype": "cynique",
+          "archetype": "denegateur",
           "animal": "Singe",
           "veut": "Ne rien rater de ce qui se passe à bord.",
           "vient_de": "Retraitée, elle fait sa dixième croisière avec ses amies de bridge.",
@@ -2490,7 +2472,7 @@
         {
           "nom": "Vanessa, la garde du corps",
           "type": "officiel",
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Taureau",
           "veut": "Que personne n'approche le président sans son autorisation.",
           "vient_de": "Ancienne championne de judo, elle a été choisie pour son calme absolu.",
@@ -2541,7 +2523,7 @@
         {
           "nom": "Jérémy, le maquilleur",
           "type": "commere",
-          "archetype": "cynique",
+          "archetype": "denegateur",
           "animal": "Singe",
           "veut": "Tout savoir sur les invités avant qu'ils montent sur le plateau.",
           "vient_de": "Il maquille les stars depuis dix ans et elles lui disent tout.",
@@ -2551,7 +2533,7 @@
         {
           "nom": "Océane, l'invitée",
           "type": "victime",
-          "archetype": "solitaire",
+          "archetype": "protecteur",
           "animal": "Cerf",
           "veut": "Faire son passage à l'antenne sans écouter les consignes de personne.",
           "vient_de": "Chanteuse à succès, elle vient présenter son nouvel album.",
@@ -2602,7 +2584,7 @@
         {
           "nom": "Tony, le docker",
           "type": "victime",
-          "archetype": "opportuniste",
+          "archetype": "paranoiaque",
           "animal": "Vautour",
           "veut": "Récupérer ce que les autres laissent tomber des cargaisons.",
           "vient_de": "Il décharge les conteneurs le jour et revend des babioles le soir.",
@@ -2633,7 +2615,7 @@
         {
           "nom": "Simone, l'avocate",
           "type": "aide",
-          "archetype": "cynique",
+          "archetype": "leader",
           "animal": "Renard",
           "veut": "Faire sortir son client, et ridiculiser la direction au passage.",
           "vient_de": "Elle défend les causes perdues depuis vingt ans, avec le sourire.",
@@ -2643,7 +2625,7 @@
         {
           "nom": "Roger, le gardien",
           "type": "officiel",
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Taureau",
           "veut": "Que chaque détenu soit compté et chaque porte bien verrouillée.",
           "vient_de": "Trente ans de service, il ne laisse rien passer, même à ses collègues.",
@@ -2704,7 +2686,7 @@
         {
           "nom": "Dylan, le randonneur",
           "type": "victime",
-          "archetype": "opportuniste",
+          "archetype": "tyran",
           "animal": "Hyène",
           "veut": "Faire la photo du sommet au lever du soleil, coûte que coûte.",
           "vient_de": "Influenceur montagne, il a promis cette photo à ses abonnés.",
@@ -2796,7 +2778,7 @@
         {
           "nom": "Jessica, la réceptionniste",
           "type": "commere",
-          "archetype": "opportuniste",
+          "archetype": "tyran",
           "animal": "Hyène",
           "veut": "Tout savoir sur les adhérents, et vendre des abonnements au passage.",
           "vient_de": "Elle tient l'accueil depuis trois ans et connaît tous les ragots.",
@@ -2837,7 +2819,7 @@
         {
           "nom": "Benoît, le technicien",
           "type": "aide",
-          "archetype": "debrouillard",
+          "archetype": "prophete",
           "animal": "Hibou",
           "veut": "Que le sous-marin tienne, et qu'on l'écoute quand il parle.",
           "vient_de": "Il a passé plus de temps sous l'eau que sur terre.",
@@ -2857,7 +2839,7 @@
         {
           "nom": "Frédéric, l'officier",
           "type": "sceptique",
-          "archetype": "cynique",
+          "archetype": "leader",
           "animal": "Renard",
           "veut": "Une explication technique, sans affoler l'équipage pour rien.",
           "vient_de": "Sorti premier de l'école navale, il ne croit que les instruments.",
@@ -2908,7 +2890,7 @@
         {
           "nom": "Ibrahim, le joueur",
           "type": "victime",
-          "archetype": "opportuniste",
+          "archetype": "tyran",
           "animal": "Hyène",
           "veut": "Briller devant les recruteurs, même si le match doit être arrêté.",
           "vient_de": "Jeune espoir du centre de formation, c'est son premier match pro.",
@@ -2959,7 +2941,7 @@
         {
           "nom": "Amandine, l'astronaute",
           "type": "victime",
-          "archetype": "solitaire",
+          "archetype": "protecteur",
           "animal": "Cerf",
           "veut": "Faire sa sortie dans l'espace prévue, même seule s'il le faut.",
           "vient_de": "Première de sa promotion, c'est sa toute première mission à bord.",
@@ -2990,7 +2972,7 @@
         {
           "nom": "Mathis, le mécanicien",
           "type": "aide",
-          "archetype": "debrouillard",
+          "archetype": "aidant",
           "animal": "Souris",
           "veut": "Réparer tout ce qui tombe en panne, et se rendre utile.",
           "vient_de": "Il a appris la mécanique tout seul dans le garage de son père.",
@@ -3000,7 +2982,7 @@
         {
           "nom": "Norbert, le livreur",
           "type": "temoin",
-          "archetype": "solitaire",
+          "archetype": "alarmiste",
           "animal": "Chat",
           "veut": "Qu'on le croie, puis reprendre la route au plus vite.",
           "vient_de": "Routier depuis vingt ans, il fait toujours sa pause ici la nuit.",
@@ -3041,7 +3023,7 @@
         {
           "nom": "Martine, la réassortisseuse",
           "type": "aide",
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Fourmi",
           "veut": "Que tout soit rangé, et aider le groupe avec méthode.",
           "vient_de": "Elle remplit les rayons chaque matin depuis l'ouverture du magasin.",
@@ -3092,7 +3074,7 @@
         {
           "nom": "Pierre, le régisseur",
           "type": "aide",
-          "archetype": "debrouillard",
+          "archetype": "prophete",
           "animal": "Hibou",
           "veut": "Que le spectacle ait lieu, et que le groupe s'en sorte.",
           "vient_de": "Il connaît ce théâtre mieux que sa propre maison.",
@@ -3102,7 +3084,7 @@
         {
           "nom": "Noé, le comédien",
           "type": "curieux",
-          "archetype": "cynique",
+          "archetype": "denegateur",
           "animal": "Singe",
           "veut": "Être au centre de tout, même loin de la scène.",
           "vient_de": "Jeune comédien, il joue ce soir son premier vrai rôle.",
@@ -3112,7 +3094,7 @@
         {
           "nom": "Agathe, la costumière",
           "type": "innocent",
-          "archetype": "solitaire",
+          "archetype": "protecteur",
           "animal": "Cerf",
           "veut": "Que personne ne soit laissé seul dans les loges.",
           "vient_de": "Elle coud les costumes de la troupe dans son atelier, à l'écart.",
@@ -3143,7 +3125,7 @@
         {
           "nom": "Élodie, la greffière",
           "type": "aide",
-          "archetype": "debrouillard",
+          "archetype": "aidant",
           "animal": "Souris",
           "veut": "Que la vérité sorte enfin, au lieu de dormir dans ses dossiers.",
           "vient_de": "Elle tape chaque mot prononcé dans ce tribunal depuis douze ans.",
@@ -3153,7 +3135,7 @@
         {
           "nom": "Raoul, l'huissier",
           "type": "officiel",
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Taureau",
           "veut": "Que la salle d'audience reste calme et que chacun reste assis.",
           "vient_de": "Ancien militaire, il fait régner l'ordre dans ce palais de justice.",
@@ -3163,7 +3145,7 @@
         {
           "nom": "Hélène, la juge",
           "type": "sceptique",
-          "archetype": "cynique",
+          "archetype": "leader",
           "animal": "Renard",
           "veut": "Des faits, des preuves, et pas de contes à dormir debout.",
           "vient_de": "Trente ans de carrière, elle a entendu tous les mensonges possibles.",
@@ -3194,7 +3176,7 @@
         {
           "nom": "Sophie, la chercheuse",
           "type": "aide",
-          "archetype": "debrouillard",
+          "archetype": "prophete",
           "animal": "Hibou",
           "veut": "Mettre son savoir au service du groupe, sans se faire remarquer.",
           "vient_de": "Elle prépare sa thèse au labo de recherche depuis quatre ans.",
@@ -3265,7 +3247,7 @@
         {
           "nom": "Didier, l'ouvrier",
           "type": "victime",
-          "archetype": "opportuniste",
+          "archetype": "paranoiaque",
           "animal": "Vautour",
           "veut": "Faire des heures en plus pour payer les vacances de sa famille.",
           "vient_de": "Il travaille à l'usine depuis vingt ans et ne refuse jamais une heure.",
@@ -3296,7 +3278,7 @@
         {
           "nom": "Basile, le dresseur",
           "type": "aide",
-          "archetype": "solitaire",
+          "archetype": "alarmiste",
           "animal": "Chat",
           "veut": "Aider le groupe à sa façon, sans recevoir d'ordres.",
           "vient_de": "Il a grandi dans un cirque et parle mieux aux bêtes qu'aux gens.",
@@ -3306,7 +3288,7 @@
         {
           "nom": "Louna, la visiteuse",
           "type": "curieux",
-          "archetype": "cynique",
+          "archetype": "denegateur",
           "animal": "Singe",
           "veut": "Voir les animaux de plus près que tout le monde.",
           "vient_de": "Elle est venue avec sa classe et s'est déjà séparée du groupe.",
@@ -3347,7 +3329,7 @@
         {
           "nom": "Germain, le concierge",
           "type": "aide",
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Fourmi",
           "veut": "Que l'école reste en ordre, et aider ceux qui en ont besoin.",
           "vient_de": "Il vit dans la loge de l'école depuis trente ans.",
@@ -3398,7 +3380,7 @@
         {
           "nom": "Augustin, le bedeau",
           "type": "aide",
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Fourmi",
           "veut": "Que chaque chose reste à sa place, et rendre service.",
           "vient_de": "Il ouvre et ferme l'église chaque jour depuis quarante ans.",
@@ -3481,7 +3463,7 @@
           "choix": "Elle s'est trompée de roi. Elle aide une dernière fois les vivants, puis se laisse mourir."
         },
         {
-          "archetype": "cynique",
+          "archetype": "leader",
           "animal": "Renard",
           "nom": "Tyrion Lannister",
           "veut": "Être respecté par son père, qui le méprise.",
@@ -3490,7 +3472,7 @@
           "choix": "Il tue son père, et se met au service d'une autre reine."
         },
         {
-          "archetype": "opportuniste",
+          "archetype": "tyran",
           "animal": "Hyène",
           "nom": "Littlefinger",
           "veut": "Le pouvoir, et la femme qu'il n'a jamais eue.",
@@ -3499,7 +3481,7 @@
           "choix": "Sansa le fait juger pour ses trahisons, et Arya l'exécute."
         },
         {
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Taureau",
           "nom": "Ned Stark",
           "veut": "Servir le roi et la loi, sans jamais mentir.",
@@ -3544,7 +3526,7 @@
           "choix": "À la fin, c'est elle qui doit arrêter Eren."
         },
         {
-          "archetype": "debrouillard",
+          "archetype": "aidant",
           "animal": "Souris",
           "nom": "Armin Arlert",
           "veut": "Voir l'océan, dont parlent les livres interdits.",
@@ -3571,7 +3553,7 @@
           "choix": "Il est torturé et tué pour garder le secret."
         },
         {
-          "archetype": "solitaire",
+          "archetype": "alarmiste",
           "animal": "Chat",
           "nom": "Jean Kirstein",
           "veut": "Entrer dans les Brigades spéciales, pour vivre à l'abri, loin des Titans.",
@@ -3607,7 +3589,7 @@
           "choix": "Il tue Shane, son meilleur ami, pour sauver le groupe."
         },
         {
-          "archetype": "opportuniste",
+          "archetype": "tyran",
           "animal": "Hyène",
           "nom": "Shane Walsh",
           "veut": "Garder la femme et le fils de Rick, qu'il a protégés pendant son coma.",
@@ -3634,7 +3616,7 @@
           "choix": "Seule Andrea le soutient. Il meurt la nuit même, éventré par un rôdeur."
         },
         {
-          "archetype": "solitaire",
+          "archetype": "alarmiste",
           "animal": "Chat",
           "nom": "Daryl Dixon",
           "veut": "Ne dépendre de personne.",
@@ -3643,7 +3625,7 @@
           "choix": "Il devient le bras droit de Rick."
         },
         {
-          "archetype": "debrouillard",
+          "archetype": "aidant",
           "animal": "Souris",
           "nom": "Glenn Rhee",
           "veut": "Se rendre utile.",
@@ -3697,7 +3679,7 @@
           "choix": "Il quitte l'île pour faire revenir les autres, et meurt. Une créature prend son apparence."
         },
         {
-          "archetype": "opportuniste",
+          "archetype": "paranoiaque",
           "animal": "Vautour",
           "nom": "Sawyer",
           "veut": "Ne compter sur personne, et garder son butin.",
@@ -3706,7 +3688,7 @@
           "choix": "Il saute d'un hélicoptère trop lourd pour que les autres puissent partir."
         },
         {
-          "archetype": "solitaire",
+          "archetype": "alarmiste",
           "animal": "Chat",
           "nom": "Kate Austen",
           "veut": "Ne jamais être rattrapée : elle voyageait menottée, escortée par un policier.",
@@ -3778,7 +3760,7 @@
           "choix": "Ses belles-sœurs sont emprisonnées, leurs amants exécutés. Elle-même finira par renverser son mari."
         },
         {
-          "archetype": "opportuniste",
+          "archetype": "tyran",
           "animal": "Hyène",
           "nom": "Robert d'Artois",
           "veut": "Récupérer l'Artois, que la justice a donné à sa tante Mahaut.",
@@ -3787,7 +3769,7 @@
           "choix": "Banni pour avoir fabriqué de faux documents, il passe en Angleterre et pousse le roi anglais à réclamer la couronne de France."
         },
         {
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Fourmi",
           "nom": "Enguerrand de Marigny",
           "veut": "Tenir le royaume en ordre, et ses finances.",
@@ -3823,7 +3805,7 @@
           "choix": "La peste s'en va, et il apprend que sa femme, partie se soigner loin d'Oran, est morte."
         },
         {
-          "archetype": "debrouillard",
+          "archetype": "prophete",
           "animal": "Hibou",
           "nom": "Jean Tarrou",
           "veut": "Observer : il note tout dans ses carnets.",
@@ -3841,7 +3823,7 @@
           "choix": "La mort d'un enfant l'ébranle, mais il choisit de tout croire plutôt que de tout nier. Il tombe malade, et meurt en refusant presque d'être soigné."
         },
         {
-          "archetype": "solitaire",
+          "archetype": "alarmiste",
           "animal": "Chat",
           "nom": "Raymond Rambert",
           "veut": "Sortir de la ville pour rejoindre la femme qu'il aime, à Paris.",
@@ -3850,7 +3832,7 @@
           "choix": "Le soir où il peut partir, il reste : il aurait honte d'être heureux tout seul."
         },
         {
-          "archetype": "opportuniste",
+          "archetype": "paranoiaque",
           "animal": "Vautour",
           "nom": "Cottard",
           "veut": "Échapper à la police, qui le recherche pour une vieille affaire.",
@@ -3859,7 +3841,7 @@
           "choix": "Quand l'épidémie recule, il perd pied, tire sur les passants depuis sa fenêtre et se fait arrêter."
         },
         {
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Fourmi",
           "nom": "Le juge Othon",
           "veut": "Que la loi soit appliquée, à tous et à lui-même.",
@@ -3895,7 +3877,7 @@
           "choix": "Traqué par tous, il ne doit sa vie qu'à l'arrivée d'un officier de marine."
         },
         {
-          "archetype": "debrouillard",
+          "archetype": "prophete",
           "animal": "Hibou",
           "nom": "Piggy",
           "veut": "Qu'on l'écoute, lui dont tout le monde se moque.",
@@ -3904,7 +3886,7 @@
           "choix": "Il est tué en défendant la conque et les règles."
         },
         {
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Taureau",
           "nom": "Jack",
           "veut": "Être le chef.",
@@ -3967,7 +3949,7 @@
           "choix": "Il est condamné à dix ans de camp de travail."
         },
         {
-          "archetype": "debrouillard",
+          "archetype": "prophete",
           "animal": "Hibou",
           "nom": "Ulana Khomyuk",
           "veut": "Comprendre ce qui s'est passé.",
@@ -3976,7 +3958,7 @@
           "choix": "Elle reconstitue la nuit de l'accident, minute par minute."
         },
         {
-          "archetype": "cynique",
+          "archetype": "denegateur",
           "animal": "Singe",
           "nom": "Glukhov",
           "veut": "Faire le travail, et protéger ses gars.",
@@ -3985,7 +3967,7 @@
           "choix": "Ses mineurs creusent le tunnel ; beaucoup mourront jeunes."
         },
         {
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Taureau",
           "nom": "Charkov",
           "veut": "Que le secret soit gardé.",
@@ -4012,7 +3994,7 @@
       ],
       "personnages": [
         {
-          "archetype": "solitaire",
+          "archetype": "protecteur",
           "animal": "Cerf",
           "nom": "Garcin",
           "veut": "Qu'on lui dise qu'il n'est pas un lâche.",
@@ -4066,7 +4048,7 @@
           "choix": "Il tue enfin Claudius, alors que le poison de l'épée le tue déjà."
         },
         {
-          "archetype": "opportuniste",
+          "archetype": "tyran",
           "animal": "Hyène",
           "nom": "Claudius",
           "veut": "Garder le trône, et la reine.",
@@ -4084,7 +4066,7 @@
           "choix": "Elle boit la coupe empoisonnée destinée à son fils."
         },
         {
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Fourmi",
           "nom": "Polonius",
           "veut": "Servir le roi, et tenir ses enfants.",
@@ -4138,7 +4120,7 @@
           "choix": "Il gagne contre son frère, sans rien régler du problème de l'eau."
         },
         {
-          "archetype": "opportuniste",
+          "archetype": "paranoiaque",
           "animal": "Vautour",
           "nom": "Hovstad",
           "veut": "Un scandale qui fasse tomber les notables, et vende son journal.",
@@ -4147,7 +4129,7 @@
           "choix": "Il se range du côté du plus fort."
         },
         {
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Fourmi",
           "nom": "Aslaksen",
           "veut": "La modération, en toute chose.",
@@ -4183,7 +4165,7 @@
       ],
       "personnages": [
         {
-          "archetype": "opportuniste",
+          "archetype": "tyran",
           "animal": "Hyène",
           "nom": "Abigail Williams",
           "veut": "John Proctor, et la place de sa femme.",
@@ -4192,7 +4174,7 @@
           "choix": "Quand le vent tourne, elle vole son oncle et s'enfuit."
         },
         {
-          "archetype": "solitaire",
+          "archetype": "protecteur",
           "animal": "Cerf",
           "nom": "John Proctor",
           "veut": "Rester à l'écart, et cacher sa faute : sa liaison avec Abigail.",
@@ -4219,7 +4201,7 @@
           "choix": "Il supplie les condamnés de mentir pour sauver leur vie."
         },
         {
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Taureau",
           "nom": "Le juge Danforth",
           "veut": "Que le tribunal ait raison.",
@@ -4237,7 +4219,7 @@
           "choix": "Sa nièce Abigail s'enfuit avec ses économies."
         }
       ],
-      "lecon": "Le danger n'existe peut-être pas, mais la peur qu'il provoque, si. Chacun s'en sert pour régler ses comptes : c'est le terrain de jeu de l'opportuniste et du paranoïaque."
+      "lecon": "Le danger n'existe peut-être pas, mais la peur qu'il provoque, si. Chacun s'en sert pour régler ses comptes : c'est le terrain de jeu de du tyran et du paranoïaque."
     },
     {
       "categorie": "theatre",
@@ -4255,7 +4237,7 @@
       ],
       "personnages": [
         {
-          "archetype": "solitaire",
+          "archetype": "protecteur",
           "animal": "Cerf",
           "nom": "Bérenger",
           "veut": "Boire un verre, et qu'on le laisse tranquille.",
@@ -4264,7 +4246,7 @@
           "choix": "Seul, il réclame sa carabine : « Je ne capitule pas ! »"
         },
         {
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Taureau",
           "nom": "Jean",
           "veut": "Que Bérenger se tienne bien, et ait de la volonté.",
@@ -4282,7 +4264,7 @@
           "choix": "Il finit par se transformer, pour suivre son temps."
         },
         {
-          "archetype": "opportuniste",
+          "archetype": "paranoiaque",
           "animal": "Vautour",
           "nom": "Dudard",
           "veut": "Réussir au bureau, et plaire à Daisy.",
@@ -4318,7 +4300,7 @@
       ],
       "personnages": [
         {
-          "archetype": "debrouillard",
+          "archetype": "prophete",
           "animal": "Hibou",
           "nom": "Le juré n° 8",
           "veut": "Qu'on prenne le temps d'en parler.",
@@ -4354,7 +4336,7 @@
           "choix": "Pendant sa tirade, les autres jurés se lèvent et lui tournent le dos."
         },
         {
-          "archetype": "opportuniste",
+          "archetype": "paranoiaque",
           "animal": "Vautour",
           "nom": "Le juré n° 7",
           "veut": "Ne pas rater son match de base-ball.",
@@ -4363,7 +4345,7 @@
           "choix": "Il change son vote par lassitude, et un autre juré l'oblige à dire pourquoi."
         },
         {
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Fourmi",
           "nom": "Le juré n° 1",
           "veut": "Que la délibération se passe dans les règles.",
@@ -4399,7 +4381,7 @@
           "choix": "Elle perd le domaine, et repart à Paris vers l'homme qui l'a ruinée."
         },
         {
-          "archetype": "opportuniste",
+          "archetype": "paranoiaque",
           "animal": "Vautour",
           "nom": "Lopakhine",
           "veut": "Sauver la famille… et devenir quelqu'un, lui le fils de serfs.",
@@ -4417,7 +4399,7 @@
           "choix": "Il part, en promettant à Ania une vie nouvelle."
         },
         {
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Fourmi",
           "nom": "Varia",
           "veut": "Tenir la maison, et que Lopakhine la demande en mariage.",
@@ -4462,7 +4444,7 @@
           "choix": "Il fait sauter la base pour que la chose ne puisse pas s'échapper."
         },
         {
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Fourmi",
           "nom": "Garry",
           "veut": "Garder son autorité de chef de base.",
@@ -4498,7 +4480,7 @@
           "choix": "Il meurt en voulant réanimer un homme qui était la chose."
         },
         {
-          "archetype": "debrouillard",
+          "archetype": "aidant",
           "animal": "Souris",
           "nom": "Fuchs",
           "veut": "Aider Blair à comprendre.",
@@ -4525,7 +4507,7 @@
       ],
       "personnages": [
         {
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Taureau",
           "nom": "John Ruth",
           "veut": "Livrer sa prisonnière vivante, pour qu'elle soit pendue dans les règles.",
@@ -4543,7 +4525,7 @@
           "choix": "Il finit grièvement blessé, allongé à côté de l'homme qui le méprisait au début."
         },
         {
-          "archetype": "opportuniste",
+          "archetype": "tyran",
           "animal": "Hyène",
           "nom": "Daisy Domergue",
           "veut": "Être libérée.",
@@ -4624,7 +4606,7 @@
       ],
       "personnages": [
         {
-          "archetype": "solitaire",
+          "archetype": "protecteur",
           "animal": "Cerf",
           "nom": "Billy Costigan",
           "veut": "Redevenir flic, et retrouver une existence officielle.",
@@ -4633,7 +4615,7 @@
           "choix": "Il démasque Sullivan, puis il est abattu dans un ascenseur."
         },
         {
-          "archetype": "opportuniste",
+          "archetype": "paranoiaque",
           "animal": "Vautour",
           "nom": "Colin Sullivan",
           "veut": "Monter dans la police, et la belle vie qui va avec.",
@@ -4660,7 +4642,7 @@
           "choix": "Il meurt sans avoir livré son nom."
         },
         {
-          "archetype": "cynique",
+          "archetype": "leader",
           "animal": "Renard",
           "nom": "Dignam",
           "veut": "Faire tomber Costello.",
@@ -4714,7 +4696,7 @@
           "choix": "On ne les revoit jamais."
         },
         {
-          "archetype": "debrouillard",
+          "archetype": "aidant",
           "animal": "Souris",
           "nom": "Ollie Weeks",
           "veut": "Faire son travail, discrètement.",
@@ -4741,7 +4723,7 @@
       ],
       "personnages": [
         {
-          "archetype": "solitaire",
+          "archetype": "alarmiste",
           "animal": "Chat",
           "nom": "Seok-woo",
           "veut": "Ne penser qu'à lui et à sa fille : il lui apprend à ne compter que sur elle-même.",
@@ -4759,7 +4741,7 @@
           "choix": "Il se sacrifie en retenant les zombies pour laisser passer les autres."
         },
         {
-          "archetype": "opportuniste",
+          "archetype": "tyran",
           "animal": "Hyène",
           "nom": "Yon-suk",
           "veut": "Arriver vivant, à n'importe quel prix.",
@@ -4882,7 +4864,7 @@
         {
           "id": "la_gouvernante",
           "nom": "La Gouvernante",
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Fourmi",
           "veut": "Que le château soit prêt pour le retour de la dame.",
           "vient_de": "Elle servait déjà la famille avant la brume.",
@@ -4923,7 +4905,7 @@
         {
           "id": "le_marchand_d_huile",
           "nom": "Le Marchand d'huile",
-          "archetype": "opportuniste",
+          "archetype": "tyran",
           "animal": "Hyène",
           "veut": "Sa part du trésor, avant les autres.",
           "vient_de": "Un revendeur du marché, payé par la bande.",
@@ -5003,7 +4985,7 @@
         {
           "id": "le_chat_revenu",
           "nom": "Le Chat revenu",
-          "archetype": "solitaire",
+          "archetype": "alarmiste",
           "animal": "Chat",
           "veut": "Rentrer à la maison, et qu'on ne le regarde pas.",
           "vient_de": "Le chat de la famille, enterré la semaine dernière.",
@@ -5072,7 +5054,7 @@
         {
           "id": "le_debiteur",
           "nom": "Le Débiteur",
-          "archetype": "opportuniste",
+          "archetype": "paranoiaque",
           "animal": "Vautour",
           "veut": "Payer sa dette en lui envoyant quelqu'un d'autre.",
           "vient_de": "Elle a guéri sa fille il y a dix ans.",
@@ -5096,7 +5078,7 @@
     {
       "id": "le_magicien_de_la_lampe",
       "nom": "Le Magicien de la lampe",
-      "archetype": "debrouillard",
+      "archetype": "aidant",
       "animal": "Caméléon",
       "inspiration": "Aladdin ou la Lampe merveilleuse, Les Mille et Une Nuits",
       "posture": "Il change de visage et de voix selon celui qu'il veut séduire.",
@@ -5104,7 +5086,7 @@
       "veut": "La lampe, et ce qu'elle permet.",
       "besoin": "Accepter de ne pas tout pouvoir.",
       "faille": "Il ne peut pas prendre la lampe lui-même : celui qui la garde le tient.",
-      "cible": "Le débrouillard, plus malin que lui.",
+      "cible": "L'aidant, plus malin que lui.",
       "offre_au_traitre": "Il propose d'échanger des lampes neuves contre des vieilles.",
       "kids": true,
       "version_kids": "Il veut la lampe magique, mais il ne peut pas descendre la chercher lui-même.",
@@ -5113,7 +5095,7 @@
         {
           "id": "le_faux_mendiant",
           "nom": "Le Faux mendiant",
-          "archetype": "cynique",
+          "archetype": "leader",
           "animal": "Renard",
           "veut": "Amuser son maître en trompant les naïfs.",
           "vient_de": "Un conteur de rue, acheté par le magicien.",
@@ -5137,7 +5119,7 @@
     {
       "id": "le_reanimateur",
       "nom": "Le Réanimateur",
-      "archetype": "debrouillard",
+      "archetype": "aidant",
       "animal": "Mille-pattes",
       "inspiration": "Herbert West, réanimateur, H. P. Lovecraft",
       "posture": "Agité, les mains tachées, une seringue toujours prête.",
@@ -5145,7 +5127,7 @@
       "veut": "Prouver qu'il a raison.",
       "besoin": "Accepter l'échec.",
       "faille": "Ceux qu'il a ramenés se souviennent de lui.",
-      "cible": "Le débrouillard, qui bricole pour sauver, pas pour prouver.",
+      "cible": "L'aidant, qui bricole pour sauver, pas pour prouver.",
       "offre_au_traitre": "Il offre de sauver un mourant.",
       "kids": false,
       "sbires": [
@@ -5202,7 +5184,7 @@
         {
           "id": "le_garde_muet",
           "nom": "Le Garde muet",
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Taureau",
           "veut": "Que personne n'interrompe son maître.",
           "vient_de": "Venu d'Égypte avec lui, il ne parle jamais.",
@@ -5243,7 +5225,7 @@
         {
           "id": "la_petite_qui_la_voit",
           "nom": "La Petite qui la voit",
-          "archetype": "debrouillard",
+          "archetype": "aidant",
           "animal": "Souris",
           "veut": "Que la dame soit enfin entendue.",
           "vient_de": "Une enfant du lieu, la seule qui la voit.",
@@ -5284,7 +5266,7 @@
         {
           "id": "l_aubergiste",
           "nom": "L'Aubergiste",
-          "archetype": "opportuniste",
+          "archetype": "tyran",
           "animal": "Hyène",
           "veut": "Garder ses clients, pour toujours.",
           "vient_de": "Né au port, il a les yeux un peu trop ronds.",
@@ -5312,7 +5294,7 @@
         {
           "id": "le_barman",
           "nom": "Le Barman",
-          "archetype": "opportuniste",
+          "archetype": "paranoiaque",
           "animal": "Vautour",
           "veut": "Servir le verre de trop.",
           "vient_de": "Il sert au bar de l'hôtel depuis 1921.",
@@ -5323,7 +5305,7 @@
         {
           "id": "les_jumelles",
           "nom": "Les Jumelles",
-          "archetype": "cynique",
+          "archetype": "denegateur",
           "animal": "Singe",
           "veut": "Qu'on vienne jouer avec elles, pour toujours.",
           "vient_de": "Les filles de l'ancien gardien.",
@@ -5353,7 +5335,7 @@
         {
           "id": "le_sculpteur",
           "nom": "Le Sculpteur",
-          "archetype": "debrouillard",
+          "archetype": "prophete",
           "animal": "Hibou",
           "veut": "Finir la statue du Dormeur.",
           "vient_de": "Un artiste qui fait le même rêve chaque nuit.",
@@ -5416,7 +5398,7 @@
     {
       "id": "le_revenant",
       "nom": "Le Revenant",
-      "archetype": "cynique",
+      "archetype": "denegateur",
       "animal": "Araignée",
       "inspiration": "Ça, Stephen King",
       "posture": "Il surgit en riant, et prend la forme de ce qui fait peur.",
@@ -5424,14 +5406,14 @@
       "veut": "Que la ville tremble.",
       "besoin": "Qu'on se souvienne de son nom, et qu'on le pleure.",
       "faille": "Son vrai nom.",
-      "cible": "Le cynique, qui rit pour ne pas avoir peur.",
+      "cible": "Le dénégateur, qui rit pour ne pas avoir peur.",
       "offre_au_traitre": "Il promet à l'un d'eux de ne plus jamais avoir peur.",
       "kids": false,
       "sbires": [
         {
           "id": "le_caid_du_lycee",
           "nom": "Le Caïd du lycée",
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Taureau",
           "veut": "Faire la loi dans la ville.",
           "vient_de": "Le fils du policier, il entend une voix dans les égouts.",
@@ -5455,7 +5437,7 @@
     {
       "id": "l_inconnu_au_masque_pale",
       "nom": "L'Inconnu au masque pâle",
-      "archetype": "cynique",
+      "archetype": "denegateur",
       "animal": "Phalène",
       "inspiration": "Le Roi en jaune, Robert W. Chambers",
       "posture": "Vêtu de jaune, il sourit derrière un masque blanc.",
@@ -5463,7 +5445,7 @@
       "veut": "Que chacun montre son vrai visage.",
       "besoin": "Qu'on accepte le sien.",
       "faille": "Quelqu'un qui le regarde sans fuir.",
-      "cible": "Le cynique, qui cache tout derrière ses blagues.",
+      "cible": "Le dénégateur, qui cache tout derrière ses blagues.",
       "offre_au_traitre": "Il donne à l'un d'eux le livret de la pièce.",
       "kids": true,
       "version_kids": "Un inconnu au masque blanc qui oblige chacun à enlever le sien et à dire ce qu'il cache.",
@@ -5496,7 +5478,7 @@
     {
       "id": "le_marchand",
       "nom": "Le Marchand",
-      "archetype": "opportuniste",
+      "archetype": "tyran",
       "animal": "Scorpion",
       "inspiration": "Bazaar, Stephen King, et les pactes de Donjons et Dragons",
       "posture": "Affable, il connaît le prénom de chacun avant qu'on se présente.",
@@ -5504,7 +5486,7 @@
       "veut": "Que chacun lui doive quelque chose.",
       "besoin": "Que quelqu'un refuse enfin son offre.",
       "faille": "Un refus sincère.",
-      "cible": "L'opportuniste, qui négocie comme lui.",
+      "cible": "Le tyran, qui négocie comme lui.",
       "offre_au_traitre": "Il exauce un vœu contre un petit service : jouer un tour à l'un des autres.",
       "kids": true,
       "version_kids": "Il exauce les vœux, contre une petite farce à faire à un ami.",
@@ -5513,7 +5495,7 @@
         {
           "id": "le_commis",
           "nom": "Le Commis",
-          "archetype": "debrouillard",
+          "archetype": "aidant",
           "animal": "Souris",
           "veut": "Devenir marchand à son tour.",
           "vient_de": "Un ancien client, qui doit encore beaucoup.",
@@ -5537,7 +5519,7 @@
     {
       "id": "le_vieillard_de_la_mer",
       "nom": "Le Vieillard de la mer",
-      "archetype": "opportuniste",
+      "archetype": "tyran",
       "animal": "Sangsue",
       "inspiration": "le cinquième voyage de Sindbad le marin, Les Mille et Une Nuits",
       "posture": "Frêle, le sourire triste, il tend les bras pour qu'on le porte.",
@@ -5545,7 +5527,7 @@
       "veut": "Être porté, sans jamais marcher.",
       "besoin": "Marcher seul.",
       "faille": "Le vin : ivre, il lâche prise.",
-      "cible": "L'opportuniste, qui vit lui aussi sur le dos des autres.",
+      "cible": "Le tyran, qui vit lui aussi sur le dos des autres.",
       "offre_au_traitre": "Il promet sa sagesse et ses secrets à celui qui accepte de le porter.",
       "kids": true,
       "version_kids": "Un vieux monsieur qui grimpe sur votre dos et ne veut plus jamais descendre.",
@@ -5554,7 +5536,7 @@
         {
           "id": "le_singe_de_l_ile",
           "nom": "Le Singe de l'île",
-          "archetype": "cynique",
+          "archetype": "denegateur",
           "animal": "Singe",
           "veut": "S'amuser de ceux qui se font prendre.",
           "vient_de": "Un des singes chapardeurs de l'île.",
@@ -5565,7 +5547,7 @@
         {
           "id": "l_ancien_porteur",
           "nom": "L'Ancien porteur",
-          "archetype": "solitaire",
+          "archetype": "protecteur",
           "animal": "Cerf",
           "veut": "Être libre, enfin, et seul.",
           "vient_de": "Il a porté le vieillard pendant des années.",
@@ -5578,7 +5560,7 @@
     {
       "id": "le_roi_de_l_aube",
       "nom": "Le Roi de l'aube",
-      "archetype": "gardien_de_l_ordre",
+      "archetype": "tyran",
       "animal": "Faucon",
       "inspiration": "Shahriar, Les Mille et Une Nuits",
       "posture": "Droit sur son trône, il ne dort jamais avant l'aube.",
@@ -5586,7 +5568,7 @@
       "veut": "Ne plus jamais être trahi.",
       "besoin": "Refaire confiance.",
       "faille": "Une histoire qui le tient éveillé jusqu'au matin.",
-      "cible": "Le gardien de l'ordre, qui croit encore à la justice.",
+      "cible": "Le tyran, qui croit encore à la justice.",
       "offre_au_traitre": "Il épargne la famille de celui qui lui livre la prochaine victime.",
       "kids": true,
       "version_kids": "Un roi qui ne fait plus confiance à personne : chaque matin, il chasse quelqu'un du palais. Seule une histoire le tient éveillé.",
@@ -5595,7 +5577,7 @@
         {
           "id": "le_vizir",
           "nom": "Le Vizir",
-          "archetype": "gardien_de_l_ordre",
+          "archetype": "tyran",
           "animal": "Fourmi",
           "veut": "Obéir, sans regarder ce qu'il fait.",
           "vient_de": "Il sert le roi depuis vingt ans.",
@@ -5619,7 +5601,7 @@
     {
       "id": "le_directeur",
       "nom": "Le Directeur",
-      "archetype": "gardien_de_l_ordre",
+      "archetype": "tyran",
       "animal": "Crocodile",
       "inspiration": "Rita Hayworth et la Rédemption de Shawshank, Stephen King",
       "posture": "La Bible sous le bras, il parle doucement et ne cligne jamais des yeux.",
@@ -5627,7 +5609,7 @@
       "veut": "Que l'ordre règne, et que ses comptes restent secrets.",
       "besoin": "Se regarder en face.",
       "faille": "Ses propres livres de comptes.",
-      "cible": "Le gardien de l'ordre, qui applique la règle sans se servir.",
+      "cible": "Le tyran, qui applique la règle sans se servir.",
       "offre_au_traitre": "Il offre une remise de peine, ou une cellule plus douce.",
       "kids": false,
       "sbires": [
@@ -5658,7 +5640,7 @@
     {
       "id": "le_djinn_de_la_bouteille",
       "nom": "Le Djinn de la bouteille",
-      "archetype": "solitaire",
+      "archetype": "paranoiaque",
       "animal": "Salamandre",
       "inspiration": "Le Pêcheur et le Génie, Les Mille et Une Nuits",
       "posture": "Immense, fait de fumée, il se recroqueville dès qu'on parle de la bouteille.",
@@ -5666,7 +5648,7 @@
       "veut": "Se venger de celui qui ouvre la bouteille.",
       "besoin": "Pardonner l'attente.",
       "faille": "Son orgueil : si l'on doute qu'il tienne dans la bouteille, il y rentre pour le prouver.",
-      "cible": "Le solitaire, qui prépare sa sortie comme lui.",
+      "cible": "Le paranoïaque, qui prépare sa sortie comme lui.",
       "offre_au_traitre": "Il promet la richesse à celui qui l'aidera à sortir pour de bon.",
       "kids": true,
       "version_kids": "Enfermé trop longtemps, il a juré de jouer un très mauvais tour à celui qui ouvrirait la bouteille.",
@@ -5675,7 +5657,7 @@
         {
           "id": "le_feu_follet",
           "nom": "Le Feu follet",
-          "archetype": "cynique",
+          "archetype": "leader",
           "animal": "Renard",
           "veut": "Donner aux curieux l'envie d'ouvrir la bouteille.",
           "vient_de": "Une petite flamme échappée de la bouteille.",
@@ -5699,7 +5681,7 @@
     {
       "id": "l_etranger",
       "nom": "L'Étranger",
-      "archetype": "solitaire",
+      "archetype": "paranoiaque",
       "animal": "Albatros",
       "inspiration": "L'Étranger (The Outsider), H. P. Lovecraft",
       "posture": "Grand, maladroit, il évite les miroirs et les fenêtres.",
@@ -5707,7 +5689,7 @@
       "veut": "Rejoindre les vivants.",
       "besoin": "S'accepter tel qu'il est.",
       "faille": "Un miroir.",
-      "cible": "Le solitaire, qui a choisi d'être seul.",
+      "cible": "Le paranoïaque, qui a choisi d'être seul.",
       "offre_au_traitre": "Il offre son amitié à celui qui reste.",
       "kids": true,
       "version_kids": "Un être que personne n'a jamais regardé, et qui voudrait juste être invité à la fête.",
@@ -5716,7 +5698,7 @@
         {
           "id": "le_vieux_valet",
           "nom": "Le Vieux valet",
-          "archetype": "debrouillard",
+          "archetype": "prophete",
           "animal": "Hibou",
           "veut": "Trouver enfin un ami à son maître.",
           "vient_de": "Il a élevé l'Étranger loin des miroirs.",
@@ -5727,7 +5709,7 @@
         {
           "id": "l_invite_masque",
           "nom": "L'Invité masqué",
-          "archetype": "solitaire",
+          "archetype": "alarmiste",
           "animal": "Chat",
           "veut": "Emmener l'Étranger loin des vivants, au bal des ombres.",
           "vient_de": "Un fantôme du château, qui danse seul depuis cent ans.",
@@ -5809,7 +5791,7 @@
         {
           "id": "le_voisin_du_dernier_etage",
           "nom": "Le Voisin du dernier étage",
-          "archetype": "solitaire",
+          "archetype": "protecteur",
           "animal": "Cerf",
           "veut": "Qu'on le laisse seul chez lui.",
           "vient_de": "Un homme qui ne sort jamais.",
@@ -5984,10 +5966,10 @@
         "source": "Star Wars"
       },
       {
-        "animal": "Renard",
-        "adulte": "Les cons, ça ose tout. C'est même à ça qu'on les reconnaît.",
-        "kids": "Ils sont fous, ces Romains !",
-        "source": "Astérix"
+        "animal": "Vautour",
+        "adulte": "Je sais ce que vous avez fait l'été dernier.",
+        "kids": "Mon précieux…",
+        "source": "Le Seigneur des anneaux"
       }
     ],
     "mechants": [
@@ -6308,7 +6290,7 @@
       "exemples": [
         "Des soigneurs dans un zoo, quand les animaux s'échappent : celui qui organise gère les doses de médicaments.",
         "Des assistants dans une église, pendant un séisme : le protecteur fait mettre tout le monde sous la table, « respire trois secondes ».",
-        "Des wedding planners, pendant une alerte radioactive : l'opportuniste profite de l'alerte.",
+        "Des wedding planners, pendant une alerte radioactive : le tyran profite de l'alerte.",
         "Mark : la menace provoque la réaction, puis la réaction révèle le vrai problème du personnage."
       ],
       "debrief": "La réaction s'est-elle ajoutée au personnage, sans le remplacer ? Le moment du figé a-t-il duré assez longtemps ?",
@@ -6536,7 +6518,9 @@
     "le sidéré",
     "l'archétype dort à l'acte 1",
     "l'alarmiste porte le danger",
-    "commencer in medias res"
+    "commencer in medias res",
+    "les archétypes Débrouillard, Cynique, Opportuniste et Solitaire (remplacés par huit archétypes, trois vêtements chacun)",
+    "le Gardien de l'ordre (devenu le Tyran)"
   ],
   "direction_artistique": {
     "nuit": "#100d08",

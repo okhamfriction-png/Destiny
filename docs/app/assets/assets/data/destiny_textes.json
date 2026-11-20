@@ -19,20 +19,19 @@
     "reprendre": "Reprendre"
   },
   "distribution": {
-    "ok": "Distribution équilibrée : chaque famille est là.",
+    "ok": "Distribution en duels : chacun sait contre qui il joue.",
     "nombre": "Destiny se joue de 3 à 6 joueurs.",
     "sans_alarmiste": "Il manque l'alarmiste : en jeu de rôle, il est toujours là (le maître du jeu le tient s'il manque).",
     "deux_alarmistes": "Un seul alarmiste suffit.",
     "famille_manquante": "Il manque quelqu'un qui {famille}. {pourquoi}",
-    "famille_insuffisante": "À {joueurs} joueurs, il faut {minimum} archétypes qui {famille}.",
+    "duel_incomplet": "{archetype} joue sans son adversaire, {adversaire} : on distribue par duels.",
     "doublon": "{archetype} est choisi deux fois : chaque joueur a son propre archétype.",
     "inconnu": "Archétype inconnu : {archetype}.",
-    "leader_demande": "Le leader est demandé dans les réglages : il faut l'ajouter.",
     "correction": "Proposition : {ancien} devient {nouveau}.",
     "correction_ajout": "Proposition : ajouter {nouveau}.",
     "modes": {
       "concerte": "Choix concerté",
-      "tirage": "Tirage équilibré",
+      "tirage": "Tirage par duels",
       "exemple": "Exemple tout prêt"
     }
   },
@@ -250,14 +249,10 @@
       "leader": "le chef",
       "protecteur": "celui qui protège",
       "aidant": "celui qui console",
-      "debrouillard": "le bricoleur",
       "alarmiste": "celui qui donne l'alerte",
       "denegateur": "celui qui dit que tout va bien",
       "prophete": "celui qui voit des signes",
-      "cynique": "le blagueur",
-      "opportuniste": "celui qui veut tout garder pour lui",
-      "gardien_de_l_ordre": "le chef des règles",
-      "solitaire": "celui qui fait bande à part",
+      "tyran": "celui qui impose sa loi",
       "paranoiaque": "celui qui soupçonne tout le monde"
     }
   },
@@ -312,7 +307,17 @@
     "corps": "Le corps à ce palier",
     "source": "Réplique tirée de",
     "famille": "Famille",
-    "palier_courant": "Palier en cours"
+    "palier_courant": "Palier en cours",
+    "danger": "Danger",
+    "danger_dos": "Il monte en quatre paliers.",
+    "son_duel": "Son duel",
+    "contre": "contre",
+    "duel_phrase": "Lui {mien}, l'autre {sien}.",
+    "vetements": "Vêtements · facultatif",
+    "exemple": "Son exemple de vouloir",
+    "corps_actes": "Le corps, acte par acte",
+    "acte": "Acte {n}",
+    "promesse": "Rien n'est écrit"
   },
   "bibliotheque": {
     "titre": "Bibliothèque",
@@ -328,7 +333,7 @@
       },
       "archetypes": {
         "titre": "Archétypes",
-        "texte": "Les 12 convictions face au danger, en trois familles : des directions, pas des prisons."
+        "texte": "Les 8 convictions face au danger, en trois familles et quatre duels : des directions, pas des prisons."
       },
       "animaux": {
         "titre": "Animaux",
@@ -379,7 +384,7 @@
     "fiche": {
       "ce_qu_il_fait": "Ce qu'il fait",
       "montee": "Acte par acte, il est tenté de…",
-      "animaux": "Ses deux animaux",
+      "animaux": "Ses trois animaux",
       "exemple": "Un exemple",
       "modeles": "Ses modèles dans les œuvres",
       "reflets": "Ses méchants reflets",
@@ -404,6 +409,7 @@
       "lecon": "Leçon pour Destiny",
       "veut": "Veut",
       "besoin": "Besoin",
+      "adversaire": "Son adversaire, en duel",
       "face_au_danger": "Face au danger",
       "choix": "Son choix",
       "inspiration": "Inspiration",
@@ -449,12 +455,16 @@
       "rituel": "Le rituel Destiny",
       "distribution": "La distribution",
       "par_nombre": "Qui joue, selon le nombre",
-      "exemples": "Exemples équilibrés",
+      "exemples": "Exemples en duels",
       "echauffement": "L'échauffement",
       "questions": "Les trois questions",
       "joueurs": "{n} joueurs",
-      "alarmiste": "l'alarmiste ou un autre au choix",
-      "au_choix": "{n} au choix",
+      "un_duel": "1 duel complet",
+      "des_duels": "{n} duels complets",
+      "un_seul": "1 archétype seul",
+      "duels": "Les quatre duels",
+      "duel": "{premier} contre {second}",
+      "duel_enjeu": "Sur {sur} : {enjeu}.",
       "l_archetype": "L'archétype",
       "reprise": "La reprise"
     },
@@ -496,11 +506,17 @@
       "titre": "Imprimer les cartes",
       "aide": "Cartes de 63 × 88 mm, neuf par page A4. Imprime en recto verso, bord long : le verso Destiny tombe au dos de chaque carte.",
       "par_archetype": "Un recto par archétype",
-      "par_archetype_aide": "12 cartes : la famille, ce qu'il fait, sa montée, ses deux animaux.",
+      "par_archetype_aide": "8 cartes : la famille, ce qu'il fait, sa montée, ses trois animaux.",
       "par_animal": "Un recto par animal",
       "par_animal_aide": "24 cartes : la posture, la réplique, le corps à chaque palier.",
       "en_cours": "Les cartes se préparent…",
-      "echec": "Le PDF n'a pas pu être créé. Réessaie dans un instant."
+      "echec": "Le PDF n'a pas pu être créé. Réessaie dans un instant.",
+      "dangers_titre": "Imprimer les cartes de dangers",
+      "dangers_aide": "Cartes de 95 × 55 mm, dix par page A4 : le danger et ses quatre paliers. Imprime en recto verso, bord long : le dos « Danger » tombe au dos de chaque carte.",
+      "dangers_tous": "Tous les dangers",
+      "dangers_tous_aide": "{n} cartes, les dangers actifs du catalogue.",
+      "dangers_kids": "Les dangers kids",
+      "dangers_kids_aide": "{n} cartes, avec le palier 4 des enfants (personne ne meurt)."
     },
     "archetypes_principe": "Les cartes donnent des directions, pas des prisons. La fiction passe avant la carte."
   },
@@ -583,10 +599,14 @@
     "autre_lieu": "Un autre lieu",
     "autre_danger": "Un autre danger",
     "archetypes": "Les archétypes",
-    "animaux_aide": "Les deux animaux possibles de chaque archétype. Touche-en un pour le choisir, si tu veux.",
+    "animaux_aide": "Les trois animaux possibles de chaque archétype. Touche-en un pour le choisir, si tu veux.",
     "info": "En savoir plus",
     "info_de": "En savoir plus : {nom}",
     "changer_archetype": "Changer d'archétype",
+    "adversaire": "Contre {nom}",
+    "adversaire_absent": "Seul : son adversaire, {nom}, n'est pas en scène",
+    "duels": "Les duels",
+    "duels_aucun": "Aucun duel complet pour l'instant.",
     "catalogue_vide": "Aucun lieu ou danger actif à tirer : vérifie le catalogue dans les Réglages."
   },
   "echauffement": {
@@ -1352,14 +1372,10 @@
       "leader": "brave",
       "protecteur": "brave",
       "aidant": "smart",
-      "debrouillard": "smart",
       "alarmiste": "smart",
       "denegateur": "brave",
       "prophete": "smart",
-      "cynique": "smart",
-      "opportuniste": "smart",
-      "gardien_de_l_ordre": "brave",
-      "solitaire": "brave",
+      "tyran": "brave",
       "paranoiaque": "smart"
     },
     "mouvements_titre": "Les mouvements des joueurs",
@@ -1823,7 +1839,6 @@
     "distribution": "La distribution",
     "joueurs": "Joueurs par défaut",
     "mode_distribution": "Le mode de distribution",
-    "leader_obligatoire": "Le leader est obligatoire",
     "jeu_de_role": "Le jeu de rôle (Série)",
     "traitre_defaut": "Le module traître, par défaut",
     "registre_defaut": "Le registre, par défaut",
@@ -2047,7 +2062,7 @@
       },
       "personnages": {
         "titre": "Des personnages",
-        "texte": "Chacun a un archétype, sa conviction face au danger : acte par acte, il est tenté de… Et un animal, son vêtement. Douze archétypes, en trois familles :"
+        "texte": "Chacun a un archétype, sa conviction face au danger : acte par acte, il est tenté de… Et un animal, son vêtement. Huit archétypes, en trois familles :"
       }
     }
   },
