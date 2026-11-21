@@ -18,7 +18,18 @@ import sys
 WEB = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(__file__), "..", "build", "web")
 
 
+def verifier_modules():
+    """Le coffre (flutter_secure_storage_web) doit être compilé dans l'appli :
+    un cache de build périmé l'a déjà oublié (2.6.2). Sinon :
+    rm -rf .dart_tool/flutter_build, puis flutter build web."""
+    with open(os.path.join(WEB, "main.dart.js"), encoding="utf-8") as f:
+        js = f.read()
+    if "wrapKeyIv" not in js:
+        sys.exit("main.dart.js sans flutter_secure_storage_web : rm -rf .dart_tool/flutter_build et recompile")
+
+
 def main():
+    verifier_modules()
     with open(os.path.join(WEB, "version.json"), encoding="utf-8") as f:
         v = json.load(f)
     version = f"{v['version']}+{v['build_number']}"

@@ -2,6 +2,10 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.6.3 — Le coffre web (novembre 2026)
+
+- **Accès administrateur, version web : le coffre de l'appareil marche.** L'ouverture s'arrêtait à l'étape « Enregistrement sur l'appareil… » (MissingPluginException) : le module web du coffre manquait dans la compilation. Il y est, et la publication vérifie maintenant qu'il y reste.
+
 ## 2.6.2 — Des notes plus claires (novembre 2026)
 
 - **Destiny Note : la prochaine séance, en sous-parties.** 🎭 La répète (tour de cercle, ce qu'on travaille, l'organisation), 💬 le retour sur le dernier spectacle, 🏋️ les exercices, 🎬 le prochain spectacle, 📅 la suite : chaque partie se replie, avec des emoji et des puces.
