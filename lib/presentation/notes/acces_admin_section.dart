@@ -45,7 +45,7 @@ class _AccesAdminSectionState extends State<AccesAdminSection> {
     _motDePasse.clear();
     setState(() {
       _enCours = false;
-      _message = r == ResultatAcces.ok ? t.t('reglages.admin_ok') : t.t('reglages.admin_erreurs.${r.name}');
+      _message = r == ResultatAcces.ok ? t.t('reglages.acces_ok') : t.t('reglages.acces_erreurs.${r.name}');
     });
     if (r == ResultatAcces.ok) _token.clear();
   }
@@ -56,15 +56,15 @@ class _AccesAdminSectionState extends State<AccesAdminSection> {
     final motDePasse = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(t.t('reglages.admin_afficher_titre')),
+        title: Text(t.t('reglages.acces_afficher_titre')),
         content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(t.t('reglages.admin_afficher_aide')),
+          Text(t.t('reglages.acces_afficher_aide')),
           TextField(
             key: const ValueKey('mot_de_passe_afficher'),
             controller: champ,
             obscureText: true,
             autofocus: true,
-            decoration: InputDecoration(labelText: t.t('reglages.admin_mot_de_passe')),
+            decoration: InputDecoration(labelText: t.t('reglages.acces_mot_de_passe')),
           ),
         ]),
         actions: [
@@ -78,13 +78,13 @@ class _AccesAdminSectionState extends State<AccesAdminSection> {
     final token = await widget.acces.tokenEnClair(motDePasse);
     if (!mounted) return;
     if (token == null) {
-      setState(() => _message = t.t('reglages.admin_erreurs.afficher'));
+      setState(() => _message = t.t('reglages.acces_erreurs.afficher'));
       return;
     }
     await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(t.t('reglages.admin_token')),
+        title: Text(t.t('reglages.acces_token')),
         content: SelectableText(token, style: const TextStyle(fontFamily: 'monospace', fontSize: 13)),
         actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(t.t('reglages.valider')))],
       ),
@@ -114,14 +114,14 @@ class _AccesAdminSectionState extends State<AccesAdminSection> {
               child: TextButton(
                 key: const ValueKey('acces_admin'),
                 onPressed: () => setState(() => _ouvert = true),
-                child: Text(k('admin'), style: discret),
+                child: Text(k('acces'), style: discret),
               ),
             ),
           );
         }
-        return SectionDestiny(titre: k('admin'), enfants: [
+        return SectionDestiny(titre: k('acces'), enfants: [
           if (!a.actif) ...[
-            Text(k('admin_aide'), style: discret),
+            Text(k('acces_aide'), style: discret),
             const SizedBox(height: 8),
             TextField(
               key: const ValueKey('admin_token'),
@@ -129,7 +129,7 @@ class _AccesAdminSectionState extends State<AccesAdminSection> {
               obscureText: true,
               enableSuggestions: false,
               autocorrect: false,
-              decoration: InputDecoration(labelText: k('admin_token')),
+              decoration: InputDecoration(labelText: k('acces_token')),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -138,7 +138,7 @@ class _AccesAdminSectionState extends State<AccesAdminSection> {
               obscureText: true,
               enableSuggestions: false,
               autocorrect: false,
-              decoration: InputDecoration(labelText: k('admin_mot_de_passe')),
+              decoration: InputDecoration(labelText: k('acces_mot_de_passe')),
               onSubmitted: (_) => _deverrouiller(),
             ),
             const SizedBox(height: 10),
@@ -148,35 +148,35 @@ class _AccesAdminSectionState extends State<AccesAdminSection> {
               icon: _enCours
                   ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
                   : const Icon(Icons.lock_open_rounded, size: 18),
-              label: Text(_enCours ? k('admin_verification') : k('admin_ouvrir')),
+              label: Text(_enCours ? k('acces_verification') : k('acces_ouvrir')),
             ),
           ] else ...[
             Row(children: [
               Icon(Icons.verified_user_rounded, color: d.titre, size: 20),
               const SizedBox(width: 8),
               Expanded(
-                child: Text(k('admin_actif'),
+                child: Text(k('acces_actif'),
                     style: TextStyle(fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, color: d.texte)),
               ),
             ]),
             const SizedBox(height: 4),
-            Text(k('admin_token_masque', {'token': a.tokenMasque}), key: const ValueKey('token_masque'), style: discret),
+            Text(k('acces_token_masque', {'token': a.tokenMasque}), key: const ValueKey('token_masque'), style: discret),
             const SizedBox(height: 8),
             Wrap(spacing: 8, runSpacing: 6, children: [
               OutlinedButton.icon(
                 onPressed: _afficherToken,
                 icon: const Icon(Icons.visibility_outlined, size: 18),
-                label: Text(k('admin_afficher')),
+                label: Text(k('acces_afficher')),
               ),
               OutlinedButton.icon(
                 key: const ValueKey('admin_verrouiller'),
                 onPressed: _verrouiller,
                 icon: const Icon(Icons.lock_outline_rounded, size: 18),
-                label: Text(k('admin_verrouiller')),
+                label: Text(k('acces_verrouiller')),
               ),
             ]),
             const SizedBox(height: 4),
-            Text(k('admin_verrouiller_aide'), style: discret),
+            Text(k('acces_verrouiller_aide'), style: discret),
           ],
           if (_message != null)
             Padding(
