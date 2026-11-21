@@ -72,6 +72,10 @@ const seance = ProchaineSeance(
   heure: '14 h – 17 h',
   lieu: 'Salle Vilar',
   objectif: 'Les lieux et la spontanéité.',
+  ouverture: 'Vos retours sur le dernier spectacle 🙏',
+  organisation: ['On passe à quatre', 'Tout le monde peut jouer des figurants'],
+  retourTitre: 'Retour sur le spectacle du 19',
+  retourMd: '**Ce que je prends pour moi**\n- Les musiques avec la régie\n- L\'intro, faite *sur le tas*',
   deroule: ['En duo, les objets', 'En duo, objets, prénom et relation', 'En trios : l\'acte 1'],
   prochainSpectacle: 'Jeudi 3 décembre',
   distribution: 'Marouene, Gabriel, Elena',
@@ -317,35 +321,59 @@ void main() {
   });
 
   group('WhatsApp', () {
-    test('la prochaine séance respecte le modèle, mot pour mot', () {
+    test('l\'annonce de la répète respecte le modèle, mot pour mot ; une partie vide disparaît', () {
       expect(whatsappSeance(seance, modeleProchaineSeance), '''🎭 *Destiny — répète du dimanche 22 novembre*
 🕑 14 h – 17 h · 📍 Salle Vilar
 
-*🎯 Objectif*
+🗣️ *On commence par un tour de cercle*
+Vos retours sur le dernier spectacle 🙏
+
+🎯 *Ce qu'on travaille*
 Les lieux et la spontanéité.
 
-*🗓️ Déroulé*
+🧩 *L'organisation*
+• On passe à quatre
+• Tout le monde peut jouer des figurants
+
+🗓️ *Les exercices*
 1️⃣ En duo, les objets
 2️⃣ En duo, objets, prénom et relation
 3️⃣ En trios : l'acte 1
 
-*🎬 Prochain spectacle*
-Jeudi 3 décembre · Marouene, Gabriel, Elena
+🎬 *Prochain spectacle*
+Jeudi 3 décembre
 
 _Attitude et lâchez-vous_
-À dimanche ! 🔥''');
+À dimanche ! 🔥''', reason: 'rien à préparer : la partie 🎒 disparaît ; la distribution reste privée');
+      final relue = ProchaineSeance.depuisJson(jsonDecode(jsonEncode(seance.versJson())) as Map<String, dynamic>);
+      expect(relue.organisation, seance.organisation);
+      expect(relue.ouverture, seance.ouverture);
+      expect(relue.retourMd, seance.retourMd);
     });
 
-    test('un compte rendu : date, type, prochain rendez-vous ; le reste à compléter', () {
+    test('le retour passe du markdown à WhatsApp', () {
+      expect(whatsappRetour(seance), '''🌟🎬 *DESTINY — RETOUR SUR LE SPECTACLE DU 19* 🎬🌟
+
+*Ce que je prends pour moi*
+• Les musiques avec la régie
+• L'intro, faite _sur le tas_''');
+    });
+
+    test('trois styles reconnaissables : 🎭 annonce, 📝 CR de répète, 🌟 CR de spectacle', () {
+      const m = ModelesWhatsApp();
       final e = EntreeNote(
           id: 'x', date: '2026-11-19', type: TypeNote.spectacle, titre: 'M', creeLe: '', misAJourLe: '');
-      final texte = whatsappCompteRendu(e, modeleCompteRendu, suivante: seance);
-      expect(texte, startsWith('🎭 *Destiny — spectacle du 19/11*'));
+      final texte = whatsappCompteRendu(e, m.compteRenduPour(e.type), suivante: seance);
+      expect(texte, startsWith('🌟🎬 *DESTINY — CR DU SPECTACLE DU 19/11* 🎬🌟'));
+      expect(texte, contains('🙋‍♂️ *Ce que je prends pour moi*'));
       expect(texte, contains('dimanche 22 novembre · 14 h – 17 h · Salle Vilar'));
       expect(texte, contains('À dimanche ! 🔥'));
       expect(texte, contains('• {point 1}'), reason: 'à compléter à la main');
       final r = EntreeNote(id: 'y', date: '2026-11-15', type: TypeNote.repetition, titre: 'R', creeLe: '', misAJourLe: '');
-      expect(whatsappCompteRendu(r, modeleCompteRendu), startsWith('🎭 *Destiny — répète du 15/11*'));
+      expect(whatsappCompteRendu(r, m.compteRenduPour(r.type)), startsWith('📝 *Destiny — CR · répète du 15/11*'));
+      expect(whatsappSeance(seance, m.prochaineSeance), startsWith('🎭 *Destiny — répète du'));
+      final relus = ModelesWhatsApp.depuisJson(jsonDecode(jsonEncode(m.versJson())) as Map<String, dynamic>);
+      expect(relus.compteRenduSpectacle, modeleCompteRenduSpectacle);
     });
 
     test('les listes gardent leur puce, et la syntaxe reste celle de WhatsApp', () {

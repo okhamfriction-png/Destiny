@@ -239,6 +239,10 @@ class ProchaineSeance {
     this.lieu = '',
     this.type = TypeNote.repetition,
     this.objectif = '',
+    this.ouverture = '',
+    this.organisation = const [],
+    this.retourTitre = '',
+    this.retourMd = '',
     this.deroule = const [],
     this.distribution = '',
     this.aPreparer = const [],
@@ -265,7 +269,18 @@ class ProchaineSeance {
   final TypeNote type;
   final String objectif;
 
-  /// Le déroulé, une étape par ligne (avec son minutage s'il y en a un).
+  /// Par quoi on commence (le tour de cercle).
+  final String ouverture;
+
+  /// L'organisation de la séance (qui joue, comment), une idée par ligne.
+  final List<String> organisation;
+
+  /// Le retour sur le dernier spectacle : son titre (« Retour sur le
+  /// spectacle du 19 ») et son texte en markdown.
+  final String retourTitre;
+  final String retourMd;
+
+  /// Les exercices (le déroulé), une étape par ligne (avec son minutage s'il y en a un).
   final List<String> deroule;
   final String distribution;
   final List<String> aPreparer;
@@ -285,6 +300,10 @@ class ProchaineSeance {
         lieu: j['lieu'] as String? ?? '',
         type: TypeNote.depuis(j['type'] as String? ?? 'repetition'),
         objectif: j['objectif'] as String? ?? '',
+        ouverture: j['ouverture'] as String? ?? '',
+        organisation: _liste(j['organisation']),
+        retourTitre: j['retour_titre'] as String? ?? '',
+        retourMd: j['retour_md'] as String? ?? '',
         deroule: _liste(j['deroule']),
         distribution: j['distribution'] as String? ?? '',
         aPreparer: _liste(j['a_preparer']),
@@ -307,6 +326,10 @@ class ProchaineSeance {
         'lieu': lieu,
         'type': type.id,
         'objectif': objectif,
+        'ouverture': ouverture,
+        'organisation': organisation,
+        'retour_titre': retourTitre,
+        'retour_md': retourMd,
         'deroule': deroule,
         'distribution': distribution,
         'a_preparer': aPreparer,
@@ -382,55 +405,106 @@ class JournalDecisions {
       };
 }
 
-/// Les deux modèles WhatsApp (`modeles.enc`), modifiables dans l'appli.
+/// Les trois modèles WhatsApp, chacun avec son allure, reconnaissable au
+/// premier coup d'œil : 🎭 l'annonce d'une répète, 📝 le compte rendu d'une
+/// répète, 🌟 le compte rendu d'un spectacle.
 class ModelesWhatsApp {
-  const ModelesWhatsApp({this.compteRendu = modeleCompteRendu, this.prochaineSeance = modeleProchaineSeance});
+  const ModelesWhatsApp({
+    this.compteRenduRepetition = modeleCompteRenduRepetition,
+    this.compteRenduSpectacle = modeleCompteRenduSpectacle,
+    this.prochaineSeance = modeleProchaineSeance,
+  });
 
-  final String compteRendu;
+  final String compteRenduRepetition;
+  final String compteRenduSpectacle;
   final String prochaineSeance;
 
+  /// Le modèle de compte rendu qui va avec le type de la note.
+  String compteRenduPour(TypeNote type) => type == TypeNote.spectacle ? compteRenduSpectacle : compteRenduRepetition;
+
   factory ModelesWhatsApp.depuisJson(Map<String, dynamic> j) => ModelesWhatsApp(
-        compteRendu: j['compte_rendu'] as String? ?? modeleCompteRendu,
+        compteRenduRepetition: j['compte_rendu_repetition'] as String? ?? modeleCompteRenduRepetition,
+        compteRenduSpectacle: j['compte_rendu_spectacle'] as String? ?? modeleCompteRenduSpectacle,
         prochaineSeance: j['prochaine_seance'] as String? ?? modeleProchaineSeance,
       );
 
-  Map<String, Object?> versJson() => {'compte_rendu': compteRendu, 'prochaine_seance': prochaineSeance};
+  Map<String, Object?> versJson() => {
+        'compte_rendu_repetition': compteRenduRepetition,
+        'compte_rendu_spectacle': compteRenduSpectacle,
+        'prochaine_seance': prochaineSeance,
+      };
 }
 
-const String modeleCompteRendu = '''🎭 *Destiny — {type} du {date}*
+/// 🎭 L'annonce de la répète (son programme).
+const String modeleProchaineSeance = '''🎭 *Destiny — répète du {jour date}*
+🕑 {heure} · 📍 {lieu}
 
-Merci à tous pour {occasion} !
+🗣️ *On commence par un tour de cercle*
+{tour de cercle}
 
-*✅ Ce qui a marché*
+🎯 *Ce qu'on travaille*
+{objectif}
+
+🧩 *L'organisation*
+• {organisation}
+
+🗓️ *Les exercices*
+1️⃣ {étape}
+2️⃣ {étape}
+3️⃣ {étape}
+
+🎒 *À préparer*
+• {à préparer}
+
+🎬 *Prochain spectacle*
+{date}
+
+{devise}
+À {jour} ! 🔥''';
+
+/// 📝 Le compte rendu d'une répète (et des autres notes).
+const String modeleCompteRenduRepetition = '''📝 *Destiny — CR · {type} du {date}*
+
+💪 *Ce qu'on a travaillé*
+• {travail 1}
+• {travail 2}
+
+✨ *Ce qui a marché*
 • {point 1}
 • {point 2}
-• {point 3}
 
-*🎯 Ce qu'on travaille ensuite*
+🎯 *À retravailler*
 • {axe 1}
 • {axe 2}
 
-*📅 Prochain rendez-vous*
+📅 *Prochain rendez-vous*
 {jour date} · {heure} · {lieu}
 
 {phrase de motivation}
 À {jour} ! 🔥''';
 
-const String modeleProchaineSeance = '''🎭 *Destiny — répète du {jour date}*
-🕑 {heure} · 📍 {lieu}
+/// 🌟 Le compte rendu d'un spectacle.
+const String modeleCompteRenduSpectacle = '''🌟🎬 *DESTINY — CR DU SPECTACLE DU {date}* 🎬🌟
 
-*🎯 Objectif*
-{objectif en une phrase}
+👏 *Merci !*
+{merci}
 
-*🗓️ Déroulé*
-1️⃣ {étape}
-2️⃣ {étape}
-3️⃣ {étape}
+✨ *Ce qui a marché*
+• {point 1}
+• {point 2}
+• {point 3}
 
-*🎬 Prochain spectacle*
-{date} · {distribution, si elle est annoncée}
+🔧 *Ce qu'on améliore*
+• {axe 1}
+• {axe 2}
 
-{devise}
+🙋‍♂️ *Ce que je prends pour moi*
+• {pour moi}
+
+📅 *Prochain rendez-vous*
+{jour date} · {heure} · {lieu}
+
+{phrase de motivation}
 À {jour} ! 🔥''';
 
 const _jours = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
@@ -517,21 +591,66 @@ String _remplacer(String ligne, Map<String, String> valeurs) => ligne.replaceAll
       },
     );
 
-/// Le texte WhatsApp de la prochaine séance, tiré du modèle.
-String whatsappSeance(ProchaineSeance s, String modele) => remplirModele(
-      modele,
-      valeurs: {
-        'jour date': jourEtDate(s.date),
-        'heure': s.heure,
-        'lieu': s.lieu,
-        'objectif en une phrase': s.objectif,
-        'date': s.prochainSpectacle,
-        'distribution, si elle est annoncée': s.distribution,
-        'devise': s.devise,
-        'jour': jourDeLaSemaine(s.date),
-      },
-      listes: {'étape': s.deroule},
-    ).replaceAll(' · {distribution, si elle est annoncée}', '');
+/// Le texte WhatsApp de la prochaine séance, tiré du modèle. Une partie
+/// (« *🧩 L'organisation* » et ses lignes) dont le champ est vide disparaît.
+String whatsappSeance(ProchaineSeance s, String modele) {
+  final valeurs = {
+    'jour date': jourEtDate(s.date),
+    'heure': s.heure,
+    'lieu': s.lieu,
+    'tour de cercle': s.ouverture,
+    'objectif': s.objectif,
+    'date': s.prochainSpectacle,
+    'distribution, si elle est annoncée': s.distribution,
+    'devise': s.devise,
+    'jour': jourDeLaSemaine(s.date),
+  };
+  final listes = {'organisation': s.organisation, 'étape': s.deroule, 'à préparer': s.aPreparer};
+  final vides = {
+    for (final e in valeurs.entries)
+      if (e.value.isEmpty) e.key,
+    for (final e in listes.entries)
+      if (e.value.isEmpty) e.key,
+  };
+  // Les parties (sauf l'en-tête) qui commencent par un titre « 🎯 *…* » et
+  // dont un champ est vide.
+  final titre = RegExp(r'^(\S+\s+)?\*[^*]+\*$');
+  final parties = modele.split('\n\n').indexed.where((x) {
+    final (i, p) = x;
+    if (i == 0 || !titre.hasMatch(p.split('\n').first.trim())) return true;
+    return !vides.any((c) => RegExp('\\{${RegExp.escape(c)}( \\d+)?\\}').hasMatch(p));
+  }).map((x) => x.$2);
+  // Et les lignes qui ne sont qu'un champ vide (« {devise} »).
+  final lignes = parties.join('\n\n').split('\n').where((l) => !vides.contains(RegExp(r'^\{(.+)\}$').firstMatch(l.trim())?.group(1)));
+  return remplirModele(lignes.join('\n'), valeurs: valeurs, listes: listes)
+      .replaceAll(' · {distribution, si elle est annoncée}', '');
+}
+
+/// Le retour sur le dernier spectacle, à part, au style 🌟 des comptes
+/// rendus de spectacle.
+String whatsappRetour(ProchaineSeance s) {
+  final titre = s.retourTitre.isEmpty ? 'Retour sur le dernier spectacle' : s.retourTitre;
+  return '🌟🎬 *DESTINY — ${titre.toUpperCase()}* 🎬🌟\n\n${markdownVersWhatsApp(s.retourMd)}';
+}
+
+/// Du markdown simple vers la syntaxe WhatsApp : **gras** → *gras*,
+/// titres → *gras*, puces - → •, sous-puces → ◦.
+String markdownVersWhatsApp(String md) {
+  final sortie = <String>[];
+  for (var l in md.trim().split('\n')) {
+    final titre = RegExp(r'^#{1,6}\s+(.*)$').firstMatch(l);
+    if (titre != null) {
+      sortie.add('*${titre.group(1)!.replaceAll('**', '').replaceAll('*', '')}*');
+      continue;
+    }
+    final puce = RegExp(r'^(\s*)[-*+]\s+(.*)$').firstMatch(l);
+    if (puce != null) l = '${puce.group(1)!.isEmpty ? '•' : '   ◦'} ${puce.group(2)}';
+    l = l.replaceAllMapped(RegExp(r'\*\*(.+?)\*\*'), (m) => '\u0000${m.group(1)}\u0000');
+    l = l.replaceAllMapped(RegExp(r'(?<![\w*])\*([^*\s][^*]*?)\*(?![\w*])'), (m) => '_${m.group(1)}_');
+    sortie.add(l.replaceAll('\u0000', '*'));
+  }
+  return sortie.join('\n');
+}
 
 /// Le texte WhatsApp d'un compte rendu, tiré du modèle : la date, le type et
 /// le prochain rendez-vous (la prochaine séance) ; le reste se complète à la

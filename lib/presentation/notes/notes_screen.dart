@@ -158,13 +158,22 @@ class _Bandeau extends StatelessWidget {
 }
 
 /// La carte de la prochaine séance, en tête.
-class CarteSeance extends StatelessWidget {
+class CarteSeance extends StatefulWidget {
   const CarteSeance({required this.notes, super.key});
 
   final NotesController notes;
 
   @override
+  State<CarteSeance> createState() => _CarteSeanceState();
+}
+
+class _CarteSeanceState extends State<CarteSeance> {
+  /// Les sous-parties dépliées (la répète, au départ).
+  final _ouvertes = <String>{'repete'};
+
+  @override
   Widget build(BuildContext context) {
+    final notes = widget.notes;
     final t = context.textes;
     final d = context.destiny;
     String k(String x, [Map<String, String> v = const {}]) => t.t('notes.$x', v);
@@ -172,94 +181,172 @@ class CarteSeance extends StatelessWidget {
     final petit = TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: d.texte, height: 1.35);
     final etiquette = TextStyle(
         fontFamily: kPoliceTexte, fontSize: 11.5, fontWeight: FontWeight.w700, letterSpacing: 1, color: d.titre);
-    Widget bloc(String titre, List<Widget> enfants) => Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(titre.toUpperCase(), style: etiquette),
-            const SizedBox(height: 3),
-            ...enfants,
+    final sousEtiquette = TextStyle(
+        fontFamily: kPoliceTexte, fontSize: 12, fontWeight: FontWeight.w700, color: d.texteSecondaire);
+    Widget puce(String texte, {String marque = '•'}) => Padding(
+          padding: const EdgeInsets.only(bottom: 3),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            SizedBox(width: marque.length > 1 ? 26 : 16, child: Text(marque, style: petit)),
+            Expanded(child: Text(texte, style: petit)),
           ]),
         );
-    return Container(
-      key: const ValueKey('carte_seance'),
-      padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
-      decoration: BoxDecoration(
-        color: d.carte,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: d.or, width: 1.2),
-      ),
-      child: s == null
-          ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(k('prochaine_seance').toUpperCase(), style: etiquette),
-              const SizedBox(height: 6),
-              Text(k('aucune_seance'), style: petit),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                      builder: (_) => EditionSeanceScreen(notes: notes, seance: null))),
-                  child: Text(k('modifier_seance')),
-                ),
-              ),
-            ])
-          : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('${k('prochaine_seance')} · ${s.type.libelle}'.toUpperCase(), style: etiquette),
-              const SizedBox(height: 4),
-              Text(
-                _majuscule(jourEtDate(s.date)),
-                style: TextStyle(fontFamily: kPoliceTitres, fontSize: 21, fontWeight: FontWeight.w700, color: d.texte),
-              ),
-              Text([s.heure, s.lieu].where((x) => x.isNotEmpty).join(' · '),
-                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, color: d.texteSecondaire)),
-              if (s.objectif.isNotEmpty) bloc(k('objectif'), [Text(s.objectif, style: petit)]),
-              if (s.deroule.isNotEmpty)
-                bloc(k('deroule'), [
-                  for (final (i, e) in s.deroule.indexed)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 2),
-                      child: Text('${i + 1}. $e', style: petit),
-                    ),
-                ]),
-              if (s.distribution.isNotEmpty) bloc(k('distribution'), [Text(s.distribution, style: petit)]),
-              if (s.aPreparer.isNotEmpty)
-                bloc(k('a_preparer'), [for (final e in s.aPreparer) Text('• $e', style: petit)]),
-              if (s.contenuMd.isNotEmpty)
-                Padding(padding: const EdgeInsets.only(top: 8), child: TexteMarkdown(s.contenuMd)),
-              if (s.suivantesApres(notes.aujourdhui).where((x) => x.date != s.date).isNotEmpty)
-                bloc(k('ensuite'), [
-                  for (final x in s.suivantesApres(notes.aujourdhui).where((x) => x.date != s.date))
-                    Text(
-                      '${_majuscule(jourEtDate(x.date))} · ${[x.heure, x.lieu].where((y) => y.isNotEmpty).join(' · ')}'
-                      '${x.type == TypeNote.spectacle ? ' · ${x.type.libelle}' : ''}',
-                      style: petit,
-                    ),
-                ]),
-              const SizedBox(height: 8),
-              Wrap(spacing: 8, runSpacing: 4, alignment: WrapAlignment.end, children: [
-                TextButton.icon(
-                  onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
-                      builder: (_) => EditionSeanceScreen(notes: notes, seance: s))),
-                  icon: const Icon(Icons.edit_outlined, size: 18),
-                  label: Text(k('modifier')),
-                ),
-                FilledButton.icon(
-                  key: const ValueKey('copier_seance'),
-                  onPressed: () => ouvrirWhatsApp(
-                    context,
-                    texte: s.whatsapp,
-                    recreer: () => whatsappSeance(s, notes.modeles.prochaineSeance),
-                    enregistrer: (texte) => notes.enregistrerSeance(ProchaineSeance.depuisJson({
-                      ...s.versJson(),
-                      'whatsapp': texte,
-                    })),
-                  ),
-                  icon: const Icon(Icons.chat_rounded, size: 18),
-                  label: Text(k('copier_whatsapp')),
-                ),
+    // Une sous-partie repliable : « 🎭 LA RÉPÈTE ».
+    Widget partie(String id, String emoji, String titre, List<Widget> enfants) {
+      final ouverte = _ouvertes.contains(id);
+      return Container(
+        margin: const EdgeInsets.only(top: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: d.filet),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          InkWell(
+            key: ValueKey('partie_$id'),
+            borderRadius: BorderRadius.circular(12),
+            onTap: () => setState(() => ouverte ? _ouvertes.remove(id) : _ouvertes.add(id)),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
+              child: Row(children: [
+                Text(emoji, style: const TextStyle(fontSize: 16)),
+                const SizedBox(width: 8),
+                Expanded(child: Text(titre.toUpperCase(), style: etiquette)),
+                Icon(ouverte ? Icons.expand_less_rounded : Icons.expand_more_rounded, color: d.texteSecondaire),
               ]),
-            ]),
+            ),
+          ),
+          if (ouverte)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: enfants),
+            ),
+        ]),
+      );
+    }
+
+    if (s == null) {
+      return _cadre(d, Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(k('prochaine_seance').toUpperCase(), style: etiquette),
+        const SizedBox(height: 6),
+        Text(k('aucune_seance'), style: petit),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton(
+            onPressed: () => Navigator.of(context)
+                .push(MaterialPageRoute<void>(builder: (_) => EditionSeanceScreen(notes: notes, seance: null))),
+            child: Text(k('modifier_seance')),
+          ),
+        ),
+      ]));
+    }
+    final ensuite = s.suivantesApres(notes.aujourdhui).where((x) => x.date != s.date).toList();
+    return _cadre(
+      d,
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text('${k('prochaine_seance')} · ${s.type.libelle}'.toUpperCase(), style: etiquette),
+        const SizedBox(height: 4),
+        Text(
+          _majuscule(jourEtDate(s.date)),
+          style: TextStyle(fontFamily: kPoliceTitres, fontSize: 21, fontWeight: FontWeight.w700, color: d.texte),
+        ),
+        Text(['🕑 ${s.heure}', '📍 ${s.lieu}'].where((x) => x.length > 3).join('   '),
+            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, color: d.texteSecondaire)),
+        if (s.ouverture.isNotEmpty || s.objectif.isNotEmpty || s.organisation.isNotEmpty)
+          partie('repete', '🎭', k('repete'), [
+            if (s.ouverture.isNotEmpty) ...[
+              Text('🗣️ ${k('ouverture')}', style: sousEtiquette),
+              const SizedBox(height: 2),
+              Text(s.ouverture, style: petit),
+              const SizedBox(height: 10),
+            ],
+            if (s.objectif.isNotEmpty) ...[
+              Text('🎯 ${k('ce_qu_on_travaille')}', style: sousEtiquette),
+              const SizedBox(height: 2),
+              Text(s.objectif, style: petit),
+            ],
+            if (s.organisation.isNotEmpty) ...[
+              if (s.objectif.isNotEmpty) const SizedBox(height: 10),
+              Text('🧩 ${k('organisation')}', style: sousEtiquette),
+              const SizedBox(height: 2),
+              for (final e in s.organisation) puce(e),
+            ],
+          ]),
+        if (s.retourMd.isNotEmpty)
+          partie('retour', '💬', s.retourTitre.isEmpty ? k('retour') : s.retourTitre, [
+            TexteMarkdown(s.retourMd),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                key: const ValueKey('copier_retour'),
+                onPressed: () => ouvrirWhatsApp(context, texte: whatsappRetour(s), recreer: () => whatsappRetour(s)),
+                icon: const Icon(Icons.chat_rounded, size: 18),
+                label: Text(k('copier_retour')),
+              ),
+            ),
+          ]),
+        if (s.deroule.isNotEmpty)
+          partie('exercices', '🏋️', k('exercices'), [
+            for (final (i, e) in s.deroule.indexed) puce(e, marque: '${i + 1}.'),
+          ]),
+        if (s.aPreparer.isNotEmpty) partie('preparer', '🎒', k('a_preparer'), [for (final e in s.aPreparer) puce(e)]),
+        if (s.prochainSpectacle.isNotEmpty || s.distribution.isNotEmpty || s.devise.isNotEmpty)
+          partie('spectacle', '🎬', k('prochain_spectacle'), [
+            if (s.prochainSpectacle.isNotEmpty) Text(s.prochainSpectacle, style: petit.copyWith(fontWeight: FontWeight.w700)),
+            if (s.distribution.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Text('👥 ${k('distribution')}', style: sousEtiquette),
+              const SizedBox(height: 2),
+              Text(s.distribution, style: petit),
+            ],
+            if (s.devise.isNotEmpty) ...[const SizedBox(height: 6), TexteMarkdown(s.devise)],
+          ]),
+        if (s.contenuMd.isNotEmpty) partie('notes', '📝', k('autres_notes'), [TexteMarkdown(s.contenuMd)]),
+        if (ensuite.isNotEmpty)
+          partie('ensuite', '📅', k('ensuite'), [
+            for (final x in ensuite)
+              puce(
+                '${_majuscule(jourEtDate(x.date))} · ${[x.heure, x.lieu].where((y) => y.isNotEmpty).join(' · ')}'
+                '${x.type == TypeNote.spectacle ? ' · ${x.type.libelle}' : ''}',
+                marque: x.type == TypeNote.spectacle ? '🎬' : '•',
+              ),
+          ]),
+        const SizedBox(height: 8),
+        Wrap(spacing: 8, runSpacing: 4, alignment: WrapAlignment.end, children: [
+          TextButton.icon(
+            onPressed: () => Navigator.of(context)
+                .push(MaterialPageRoute<void>(builder: (_) => EditionSeanceScreen(notes: notes, seance: s))),
+            icon: const Icon(Icons.edit_outlined, size: 18),
+            label: Text(k('modifier')),
+          ),
+          FilledButton.icon(
+            key: const ValueKey('copier_seance'),
+            onPressed: () => ouvrirWhatsApp(
+              context,
+              texte: s.whatsapp,
+              recreer: () => whatsappSeance(s, notes.modeles.prochaineSeance),
+              enregistrer: (texte) => notes.enregistrerSeance(ProchaineSeance.depuisJson({
+                ...s.versJson(),
+                'whatsapp': texte,
+              })),
+            ),
+            icon: const Icon(Icons.chat_rounded, size: 18),
+            label: Text(k('copier_whatsapp')),
+          ),
+        ]),
+      ]),
     );
   }
+
+  Widget _cadre(DestinyCouleurs d, Widget enfant) => Container(
+        key: const ValueKey('carte_seance'),
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
+        decoration: BoxDecoration(
+          color: d.carte,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: d.or, width: 1.2),
+        ),
+        child: enfant,
+      );
 }
 
 String _majuscule(String s) => s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
@@ -429,7 +516,7 @@ class _EntreeScreenState extends State<EntreeScreen> {
                   onPressed: () => ouvrirWhatsApp(
                     context,
                     texte: e.whatsapp,
-                    recreer: () => whatsappCompteRendu(e, widget.notes.modeles.compteRendu, suivante: widget.notes.seance),
+                    recreer: () => whatsappCompteRendu(e, widget.notes.modeles.compteRenduPour(e.type), suivante: widget.notes.seance),
                     enregistrer: (texte) => widget.notes.enregistrerEntree(e.copie(whatsapp: texte, jour: widget.notes.aujourdhui)),
                   ),
                   icon: const Icon(Icons.chat_rounded, size: 18),

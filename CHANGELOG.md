@@ -2,6 +2,11 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.6.2 — Des notes plus claires (novembre 2026)
+
+- **Destiny Note : la prochaine séance, en sous-parties.** 🎭 La répète (tour de cercle, ce qu'on travaille, l'organisation), 💬 le retour sur le dernier spectacle, 🏋️ les exercices, 🎬 le prochain spectacle, 📅 la suite : chaque partie se replie, avec des emoji et des puces.
+- **Trois styles WhatsApp, reconnaissables au premier coup d'œil** : 🎭 l'annonce de la répète (son programme), 📝 le compte rendu d'une répète, 🌟 le compte rendu d'un spectacle. Le retour sur le spectacle se copie à part, au style 🌟. Une partie vide disparaît du texte.
+
 ## 2.6.1 — L'accès administrateur ne reste plus bloqué (novembre 2026)
 
 - **Accès administrateur : plus jamais bloqué sur « Vérification… ».** Le bouton dit où on en est (lecture des notes, calcul de la clé, vérification du mot de passe, enregistrement sur l'appareil) ; chaque étape a un délai, et une erreur s'affiche avec l'étape en cause.

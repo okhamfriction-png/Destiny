@@ -322,7 +322,8 @@ class _EditionEntreeScreenState extends State<EditionEntreeScreen> {
           IconButton(
             tooltip: k('whatsapp_recreer'),
             onPressed: () => setState(() => _whatsapp.text =
-                whatsappCompteRendu(_construire(), widget.notes.modeles.compteRendu, suivante: widget.notes.seance)),
+                whatsappCompteRendu(_construire(), widget.notes.modeles.compteRenduPour(_construire().type),
+                    suivante: widget.notes.seance)),
             icon: const Icon(Icons.restart_alt_rounded),
           ),
         ]),
@@ -359,6 +360,10 @@ class _EditionSeanceScreenState extends State<EditionSeanceScreen> {
   late final _lieu = TextEditingController(text: s?.lieu ?? '');
   late TypeNote _type = s?.type ?? TypeNote.repetition;
   late final _objectif = TextEditingController(text: s?.objectif ?? '');
+  late final _ouverture = TextEditingController(text: s?.ouverture ?? '');
+  late final _organisation = TextEditingController(text: s?.organisation.join('\n') ?? '');
+  late final _retourTitre = TextEditingController(text: s?.retourTitre ?? '');
+  late final _retour = TextEditingController(text: s?.retourMd ?? '');
   late final _deroule = TextEditingController(text: s?.deroule.join('\n') ?? '');
   late final _distribution = TextEditingController(text: s?.distribution ?? '');
   late final _aPreparer = TextEditingController(text: s?.aPreparer.join('\n') ?? '');
@@ -390,6 +395,10 @@ class _EditionSeanceScreenState extends State<EditionSeanceScreen> {
       lieu: _lieu.text.trim(),
       type: _type,
       objectif: _objectif.text.trim(),
+      ouverture: _ouverture.text.trim(),
+      organisation: _lignes(_organisation.text),
+      retourTitre: _retourTitre.text.trim(),
+      retourMd: _retour.text,
       deroule: _lignes(_deroule.text),
       distribution: _distribution.text.trim(),
       aPreparer: _lignes(_aPreparer.text),
@@ -426,7 +435,11 @@ class _EditionSeanceScreenState extends State<EditionSeanceScreen> {
       const SizedBox(height: 12),
       champ('champ_heure', _heure),
       champ('champ_lieu', _lieu),
+      champ('champ_ouverture', _ouverture, lignes: 2),
       champ('champ_objectif', _objectif, lignes: 2),
+      champ('champ_organisation', _organisation, lignes: 3),
+      champ('champ_retour_titre', _retourTitre),
+      champ('champ_retour', _retour, lignes: 5),
       champ('champ_deroule', _deroule, lignes: 4),
       champ('champ_distribution', _distribution, lignes: 2),
       champ('champ_a_preparer', _aPreparer, lignes: 2),
@@ -455,7 +468,8 @@ class ModelesScreen extends StatefulWidget {
 }
 
 class _ModelesScreenState extends State<ModelesScreen> {
-  late final _cr = TextEditingController(text: widget.notes.modeles.compteRendu);
+  late final _crRepetition = TextEditingController(text: widget.notes.modeles.compteRenduRepetition);
+  late final _crSpectacle = TextEditingController(text: widget.notes.modeles.compteRenduSpectacle);
   late final _seance = TextEditingController(text: widget.notes.modeles.prochaineSeance);
 
   @override
@@ -471,13 +485,17 @@ class _ModelesScreenState extends State<ModelesScreen> {
         ]);
     return PageDestiny(titre: k('modeles'), enfants: [
       Text(k('modele_aide'), style: Theme.of(context).textTheme.bodySmall),
-      champ(k('modele_compte_rendu'), _cr, modeleCompteRendu),
       champ(k('modele_prochaine_seance'), _seance, modeleProchaineSeance),
+      champ(k('modele_compte_rendu_repetition'), _crRepetition, modeleCompteRenduRepetition),
+      champ(k('modele_compte_rendu_spectacle'), _crSpectacle, modeleCompteRenduSpectacle),
       const SizedBox(height: 8),
       FilledButton.icon(
         onPressed: () async {
           final ok = await enregistrerNote(context, widget.notes,
-              () => widget.notes.enregistrerModeles(ModelesWhatsApp(compteRendu: _cr.text, prochaineSeance: _seance.text)));
+              () => widget.notes.enregistrerModeles(ModelesWhatsApp(
+                  compteRenduRepetition: _crRepetition.text,
+                  compteRenduSpectacle: _crSpectacle.text,
+                  prochaineSeance: _seance.text)));
           if (ok && context.mounted) Navigator.of(context).pop();
         },
         icon: const Icon(Icons.lock_rounded, size: 18),
