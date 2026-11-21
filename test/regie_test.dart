@@ -864,6 +864,21 @@ void main() {
     await tester.pump();
     expect(musique.enchainerAmbiances, isTrue);
     expect(find.text(t.t('musique.ambiances_jouees')), findsOneWidget);
+    // La roue crantée : la descente automatique, de 30 s à 40 s par défaut.
+    await tester.tap(find.byKey(const ValueKey('reglage_descente')));
+    await tester.pumpAndSettle();
+    expect(musique.descenteActive, isFalse);
+    await tester.tap(find.byKey(const ValueKey('descente_active')));
+    await tester.pumpAndSettle();
+    expect(musique.descenteActive, isTrue);
+    expect((musique.descenteDebutS, musique.descenteDureeS), (30, 10));
+    await tester.tap(find.byKey(const ValueKey('descente_debut_plus')));
+    await tester.tap(find.byKey(const ValueKey('descente_duree_moins')));
+    await tester.pumpAndSettle();
+    expect((musique.descenteDebutS, musique.descenteDureeS), (35, 9));
+    expect(find.text(t.t('musique.descente_resume', {'debut': '35', 'fin': '44'})), findsWidgets);
+    await tester.tapAt(const Offset(10, 10));
+    await tester.pumpAndSettle();
     for (var acte = 1; acte <= 4; acte++) {
       expect(find.text(t.t('musique.acte', {'n': '$acte'})), findsWidgets);
       // Chaque acte a sa musique dans le pack : aucun bouton grisé.
@@ -886,6 +901,15 @@ void main() {
     // Le premier lieu (Aéroport) montre l'icône de son groupe (l'Avion).
     final groupeAeroport = groupeMusique(resoudreMusique(m, pack.index, premier.id, 1).chemin!);
     expect(find.byIcon(iconeGroupeMusique(groupeAeroport)), findsWidgets);
+  });
+
+  test('la descente : plein volume jusqu\'au début, puis jusqu\'au silence', () {
+    double n(int ms) => MusicController.niveauDescente(Duration(milliseconds: ms), debutS: 30, dureeS: 10);
+    expect(n(0), 1);
+    expect(n(30000), 1);
+    expect(n(35000), closeTo(0.5, 1e-9));
+    expect(n(40000), 0);
+    expect(n(90000), 0);
   });
 
   test('à l\'écoute, ça suit : acte 1 → 2 → 3 → 4, puis l\'acte 1 du lieu suivant ; on saute ce qui manque', () {

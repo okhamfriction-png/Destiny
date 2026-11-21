@@ -137,10 +137,80 @@ class MusicController extends ChangeNotifier {
     } catch (_) {}
   }
 
+  static const String _kDescente = 'musique_descente_v1';
+
+  /// La descente automatique des musiques du spectacle : à partir de
+  /// [descenteDebutS] secondes, le volume baisse jusqu'au silence en
+  /// [descenteDureeS] secondes, puis la suivante part. Gardée sur l'appareil.
+  bool _descenteActive = false;
+  int _descenteDebutS = 30;
+  int _descenteDureeS = 10;
+  bool get descenteActive => _descenteActive;
+  int get descenteDebutS => _descenteDebutS;
+  int get descenteDureeS => _descenteDureeS;
+
+  Future<void> setDescente({bool? active, int? debutS, int? dureeS}) async {
+    _descenteActive = active ?? _descenteActive;
+    _descenteDebutS = (debutS ?? _descenteDebutS).clamp(5, 600);
+    _descenteDureeS = (dureeS ?? _descenteDureeS).clamp(1, 120);
+    notifyListeners();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+          _kDescente, jsonEncode({'active': _descenteActive, 'debut': _descenteDebutS, 'duree': _descenteDureeS}));
+    } catch (_) {}
+  }
+
+  /// Le niveau (0 à 1) d'une musique à la position [p] : 1 avant [debutS],
+  /// puis une descente linéaire jusqu'à 0 en [dureeS] secondes.
+  static double niveauDescente(Duration p, {required int debutS, required int dureeS}) {
+    final s = p.inMilliseconds / 1000;
+    if (s <= debutS) return 1;
+    return (1 - (s - debutS) / dureeS).clamp(0.0, 1.0);
+  }
+
+  /// La descente s'applique-t-elle à la piste en cours ?
+  bool get _descenteSurPiste => _descenteActive && _current?.category == 'Spectacle';
+  bool _descenteFinie = false;
+  double _niveauApplique = 1;
+
+  void _suivreDescente(Duration p) {
+    if (!_descenteSurPiste || _descenteFinie) return;
+    final f = niveauDescente(p, debutS: _descenteDebutS, dureeS: _descenteDureeS);
+    if ((f - _niveauApplique).abs() >= 0.01 || (f == 1 && _niveauApplique != 1)) {
+      _niveauApplique = f;
+      _player.setVolume(_volume * f).catchError((_) {});
+    }
+    if (f <= 0) {
+      _descenteFinie = true;
+      _finDePiste();
+    }
+  }
+
+  /// La musique est finie (ou descendue jusqu'au silence) : la suivante.
+  Future<void> _finDePiste() async {
+    final suite = _current?.suivante?.call();
+    if (suite != null) {
+      await playTrack(suite, forceLoop: _boucle);
+    } else {
+      await _player.stop();
+      _playing = false;
+      _position = Duration.zero;
+      notifyListeners();
+    }
+  }
+
   Future<void> _chargerPreferences() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       _enchainerAmbiances = prefs.getBool(_kEnchainerAmbiances) ?? false;
+      final d = prefs.getString(_kDescente);
+      if (d != null) {
+        final j = jsonDecode(d) as Map<String, dynamic>;
+        _descenteActive = j['active'] as bool? ?? false;
+        _descenteDebutS = (j['debut'] as num?)?.toInt() ?? 30;
+        _descenteDureeS = (j['duree'] as num?)?.toInt() ?? 10;
+      }
       notifyListeners();
     } catch (_) {}
   }
@@ -156,6 +226,7 @@ class MusicController extends ChangeNotifier {
   void _wire() {
     _player.onPositionChanged.listen((p) {
       _position = p;
+      _suivreDescente(p);
       notifyListeners();
     });
     _player.onDurationChanged.listen((d) {
@@ -170,6 +241,7 @@ class MusicController extends ChangeNotifier {
       _playing = false;
       _position = Duration.zero;
       notifyListeners();
+      if (_descenteFinie) return;
       final suite = _current?.suivante?.call();
       if (suite != null) playTrack(suite, forceLoop: _boucle);
     });
@@ -429,6 +501,8 @@ class MusicController extends ChangeNotifier {
   Future<void> playTrack(MusicTrack track, {bool forceLoop = false}) async {
     _current = track;
     _position = Duration.zero;
+    _descenteFinie = false;
+    _niveauApplique = 1;
     notifyListeners();
     // Une piste qui enchaîne sur la suivante ne boucle jamais, sinon elle ne
     // se termine pas et l'enchaînement ne part pas.

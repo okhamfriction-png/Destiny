@@ -213,9 +213,10 @@ class _MusicScreenState extends State<MusicScreen> {
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
             children: [
               if (spectacle) ...[
-                centre(Align(
-                  alignment: Alignment.centerLeft,
-                  child: FilterChip(
+                centre(Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 6,
+                  children: [FilterChip(
                     key: const ValueKey('enchainer_ambiances'),
                     avatar: Icon(c.enchainerAmbiances ? Icons.landscape_rounded : Icons.skip_next_rounded,
                         size: 16, color: c.enchainerAmbiances ? d.titre : d.texteSecondaire),
@@ -227,7 +228,24 @@ class _MusicScreenState extends State<MusicScreen> {
                     side: BorderSide(color: c.enchainerAmbiances ? d.titre : d.filet),
                     onSelected: c.setEnchainerAmbiances,
                   ),
-                )),
+                  IconButton(
+                    key: const ValueKey('reglage_descente'),
+                    tooltip: k('descente'),
+                    icon: Icon(Icons.settings_rounded, color: c.descenteActive ? d.titre : d.texteSecondaire),
+                    onPressed: () => showModalBottomSheet<void>(
+                      context: context,
+                      builder: (_) => ReglageDescente(controller: c),
+                    ),
+                  ),
+                  if (c.descenteActive)
+                    Text(
+                      k('descente_resume', {
+                        'debut': '${c.descenteDebutS}',
+                        'fin': '${c.descenteDebutS + c.descenteDureeS}',
+                      }),
+                      style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: d.titre),
+                    ),
+                ])),
                 centre(Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Text(k('spectacle_aide'),
@@ -651,6 +669,75 @@ class _NowPlayingBar extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// La descente automatique des musiques du spectacle : à partir de tant de
+/// secondes, le volume baisse jusqu'au silence, puis la suivante part.
+class ReglageDescente extends StatelessWidget {
+  const ReglageDescente({required this.controller, super.key});
+
+  final MusicController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.textes;
+    final d = context.destiny;
+    String k(String x, [Map<String, String> v = const {}]) => t.t('musique.$x', v);
+    return ListenableBuilder(
+      listenable: controller,
+      builder: (context, _) {
+        final c = controller;
+        Widget cran(String libelle, int valeur, int pas, int min, int max, void Function(int) changer, String cle) => Row(
+              children: [
+                Expanded(child: Text(libelle, style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14.5, color: d.texte))),
+                IconButton(
+                  key: ValueKey('${cle}_moins'),
+                  tooltip: '−$pas s',
+                  onPressed: c.descenteActive && valeur > min ? () => changer((valeur - pas).clamp(min, max)) : null,
+                  icon: const Icon(Icons.remove_circle_outline),
+                ),
+                SizedBox(
+                  width: 52,
+                  child: Text('$valeur s',
+                      key: ValueKey('${cle}_valeur'),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontFamily: kPoliceTexte, fontSize: 16, fontWeight: FontWeight.w700, color: d.titre)),
+                ),
+                IconButton(
+                  key: ValueKey('${cle}_plus'),
+                  tooltip: '+$pas s',
+                  onPressed: c.descenteActive && valeur < max ? () => changer((valeur + pas).clamp(min, max)) : null,
+                  icon: const Icon(Icons.add_circle_outline),
+                ),
+              ],
+            );
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+            child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              SwitchListTile(
+                key: const ValueKey('descente_active'),
+                contentPadding: EdgeInsets.zero,
+                title: Text(k('descente'),
+                    style: TextStyle(fontFamily: kPoliceTitres, fontSize: 17, fontWeight: FontWeight.w700, color: d.titre)),
+                subtitle: Text(k('descente_aide'), style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13, color: d.texteSecondaire)),
+                value: c.descenteActive,
+                onChanged: (v) => c.setDescente(active: v),
+              ),
+              cran(k('descente_debut'), c.descenteDebutS, 5, 5, 600, (v) => c.setDescente(debutS: v), 'descente_debut'),
+              cran(k('descente_duree'), c.descenteDureeS, 1, 1, 120, (v) => c.setDescente(dureeS: v), 'descente_duree'),
+              if (c.descenteActive)
+                Text(
+                  k('descente_resume', {'debut': '${c.descenteDebutS}', 'fin': '${c.descenteDebutS + c.descenteDureeS}'}),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13, color: d.texteSecondaire),
+                ),
+            ]),
+          ),
+        );
+      },
     );
   }
 }
