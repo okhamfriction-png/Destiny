@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../application/notes/acces_admin.dart';
+import '../../application/notes/notes_controller.dart';
 import '../../application/son/regie_son.dart';
 import '../../application/services/audio_service.dart';
 import '../../application/state/ai_settings.dart';
@@ -14,6 +16,7 @@ import '../accueil/decouvrir_screen.dart';
 import '../bibliotheque/bibliotheque_screen.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
+import '../notes/acces_admin_section.dart';
 import '../theme/destiny_theme.dart';
 import '../reglages/editeur_catalogue_screen.dart';
 import '../reglages/editeur_dilemmes_screen.dart';
@@ -41,8 +44,14 @@ class SettingsScreen extends StatelessWidget {
     required this.audioService,
     required this.musicController,
     this.regieSon,
+    this.accesAdmin,
+    this.notes,
     super.key,
   });
+
+  /// L'accès administrateur (Destiny Note), tout en bas.
+  final AccesAdmin? accesAdmin;
+  final NotesController? notes;
 
   final ReglagesDestiny reglages;
 
@@ -137,6 +146,7 @@ class SettingsScreen extends StatelessWidget {
           ]),
           const SizedBox(height: 8),
           Center(child: Text(k('version', {'version': kVersionAppli}), style: Theme.of(context).textTheme.bodySmall)),
+          if (accesAdmin != null) AccesAdminSection(acces: accesAdmin!, notes: notes),
         ],
       ),
     );

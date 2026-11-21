@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../application/notes/acces_admin.dart';
+import '../../application/notes/notes_controller.dart';
 import '../../application/son/regie_son.dart';
 import '../../application/services/assistant_jeu.dart';
 import '../../application/services/audio_service.dart';
@@ -19,6 +21,7 @@ import '../bibliotheque/bibliotheque_screen.dart';
 import '../destiny/donnees.dart';
 import '../exercices/exercices_screen.dart';
 import '../jouer/jouer_screen.dart';
+import '../notes/notes_screen.dart';
 import '../serie/contexte_serie.dart';
 import '../theme/destiny_theme.dart';
 import '../troupe/troupe_screen.dart';
@@ -43,8 +46,14 @@ class RootScreen extends StatefulWidget {
     required this.reglages,
     this.assistantJeu,
     this.regieSon,
+    this.accesAdmin,
+    this.notes,
     super.key,
   });
+
+  /// Destiny Note : l'onglet Notes n'existe que si l'accès est ouvert.
+  final AccesAdmin? accesAdmin;
+  final NotesController? notes;
 
   final AudioService audioService;
   final VisualSettings visualSettings;
@@ -68,14 +77,30 @@ class RootScreen extends StatefulWidget {
 }
 
 class _RootScreenState extends State<RootScreen> {
-  /// 0 Jouer · 1 Troupe · 2 Exercices.
+  /// 0 Jouer · 1 Troupe · 2 Exercices · 3 Notes (si l'accès est ouvert).
   int _index = 1;
+
+  bool get _notesVisibles => widget.accesAdmin?.actif == true && widget.notes != null;
+
+  void _accesChange() {
+    if (!mounted) return;
+    setState(() {
+      if (!_notesVisibles && _index > 2) _index = 1;
+    });
+  }
+
+  @override
+  void dispose() {
+    widget.accesAdmin?.removeListener(_accesChange);
+    super.dispose();
+  }
 
   void _ouvrir(Widget page) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
 
   @override
   void initState() {
     super.initState();
+    widget.accesAdmin?.addListener(_accesChange);
     // Au premier lancement, « Découvrir Destiny ». Vu une fois, même passé.
     if (!widget.reglages.decouverteVue) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -111,6 +136,8 @@ class _RootScreenState extends State<RootScreen> {
         audioService: widget.audioService,
         musicController: widget.musicController,
         regieSon: widget.regieSon,
+        accesAdmin: widget.accesAdmin,
+        notes: widget.notes,
       ));
 
   @override
@@ -154,6 +181,7 @@ class _RootScreenState extends State<RootScreen> {
         versBibliotheque: _ouvrirBibliotheque,
       ),
       ExercicesScreen(audioService: widget.audioService, bibliotheque: _contexteBibliotheque),
+      if (_notesVisibles) NotesScreen(notes: widget.notes!),
     ];
 
     return Scaffold(
@@ -162,7 +190,7 @@ class _RootScreenState extends State<RootScreen> {
         centerTitle: false,
         titleSpacing: 20,
         title: Text(
-          t.t('navigation.${['jouer', 'troupe', 'exercices'][_index]}'),
+          t.t('navigation.${['jouer', 'troupe', 'exercices', 'notes'][_index]}'),
           style: TextStyle(fontFamily: kPoliceTitres, fontSize: 22, fontWeight: FontWeight.w900, color: c.titre),
         ),
         actions: [
@@ -202,6 +230,12 @@ class _RootScreenState extends State<RootScreen> {
                 icon: const Icon(Icons.self_improvement_outlined),
                 selectedIcon: const Icon(Icons.self_improvement),
                 label: t.t('navigation.exercices')),
+            if (_notesVisibles)
+              NavigationDestination(
+                  key: const ValueKey('onglet_notes'),
+                  icon: const Icon(Icons.book_outlined),
+                  selectedIcon: const Icon(Icons.book),
+                  label: t.t('navigation.notes')),
           ],
         ),
       ),

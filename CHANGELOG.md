@@ -2,6 +2,11 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.6.0 — Destiny Note (novembre 2026)
+
+- **Destiny Note**, l'espace privé de la mise en scène : la prochaine séance (avec la salle et les séances suivantes), les règles en vigueur, le journal des décisions, puis le fil de tous les comptes rendus, filtrés par type et cherchables. Chaque note a son texte prêt à coller dans le groupe WhatsApp de la troupe, modifiable avant la copie, tiré de modèles qu'on change dans l'appli.
+- Invisible pour la troupe : l'onglet **Notes** n'apparaît qu'après avoir ouvert l'**accès administrateur** (tout en bas des Réglages) avec un token GitHub et le mot de passe. Les notes sont chiffrées (AES-256-GCM, clé tirée du mot de passe) sur une branche à part du dépôt ; le token et la clé restent dans le coffre de l'appareil. Hors ligne, on lit le cache chiffré, et les modifications partent au retour du réseau.
+
 ## 2.5.1 — Les musiques s'enchaînent (novembre 2026)
 
 - **Musique, catégorie Spectacle : les actes s'enchaînent vraiment.** Une musique finie, la suivante part toute seule : acte 1, 2, 3, 4, puis l'acte 1 du lieu suivant. Avant, la lecture en boucle relançait le même acte sans fin.

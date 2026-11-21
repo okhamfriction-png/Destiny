@@ -4,6 +4,8 @@ import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import 'application/notes/acces_admin.dart';
+import 'application/notes/notes_controller.dart';
 import 'application/son/regie_son.dart';
 import 'domain/grammaire/modeles.dart' show Grammaire;
 import 'application/services/assistant_jeu.dart';
@@ -109,6 +111,12 @@ Future<void> _boot() async {
 
   enregistrerLicencesPolices();
 
+  // Destiny Note : l'accès administrateur (token et clé dans le coffre de
+  // l'appareil) et les notes chiffrées.
+  final accesAdmin = AccesAdmin();
+  await accesAdmin.charger();
+  final notes = NotesController(acces: accesAdmin);
+
   runApp(DestinyApp(
     grammaire: grammaire,
     audioService: audioService,
@@ -125,6 +133,8 @@ Future<void> _boot() async {
     reglages: reglages,
     assistantJeu: assistantJeu,
     regieSon: regieSon,
+    accesAdmin: accesAdmin,
+    notes: notes,
   ));
 }
 
@@ -170,8 +180,13 @@ class DestinyApp extends StatelessWidget {
     required this.reglages,
     this.assistantJeu,
     this.regieSon,
+    this.accesAdmin,
+    this.notes,
     super.key,
   });
+
+  final AccesAdmin? accesAdmin;
+  final NotesController? notes;
 
   /// La grammaire de Destiny et les textes de l'appli.
   final GrammaireChargee grammaire;
@@ -246,6 +261,8 @@ class DestinyApp extends StatelessWidget {
         reglages: reglages,
         assistantJeu: assistantJeu,
         regieSon: regieSon,
+        accesAdmin: accesAdmin,
+        notes: notes,
       ),
     );
   }

@@ -152,6 +152,15 @@ Facultatif : il faut une clé d'API (Anthropic, OpenAI ou Google), à régler da
 - **Données** : les lieux et les dangers (espaces, rôles, quatre paliers nommés comme dans la grammaire, palier 4 en version kids, sigle KIDS), les détails des lieux, l'antisèche des relations, les **dilemmes de l'acte 4**, et le rapport de synchronisation avec la grammaire.
 - **Mode admin** : la vérification de la grammaire, la lecture des archétypes, et l'éditeur des **exemples de vouloir** (adulte et enfants, pour chaque animal ; un champ vidé reprend le texte de la grammaire).
 - **Aide** : Découvrir Destiny, Me contacter, Crédits (dont les licences des polices), À propos.
+- **Accès administrateur** (un petit lien tout en bas) : réservé à la mise en scène. Avec un token GitHub (fine-grained, ce seul dépôt, Contents : lecture et écriture) et le mot de passe des notes, il ouvre **Destiny Note**. Ouvert, il montre le token masqué (ses 4 derniers caractères), l'affiche en clair contre le mot de passe, et « Verrouiller Destiny Note » efface le token et la clé de l'appareil.
+
+## 9 bis. Destiny Note (réservé à la mise en scène)
+
+- Un quatrième onglet, **Notes**, à droite, qui n'existe que si l'accès administrateur est ouvert.
+- En tête, **la prochaine séance** : date, heure, salle, objectif, déroulé, distribution, ce qu'il faut préparer, puis les séances suivantes. Ensuite **Règles en vigueur** et **Journal des décisions** (une décision remplacée reste, barrée, avec ce qui l'a remplacée). Puis **le fil** de toutes les notes, de la plus récente à la plus ancienne, filtré par type (Répétitions, Spectacles, Séances Mark Jane, Décisions, Régie, Troupe, Promo, Idées) et cherchable.
+- Une note s'ouvre en markdown, avec ses minutages ; on la modifie ou on en crée une dans l'appli. **Copier pour WhatsApp** ouvre le texte prêt à coller (*gras*, _italique_, puces), son aperçu, « Copier » et « Recréer depuis le modèle ». Les **modèles WhatsApp** se modifient dans l'appli.
+- Stockage : la branche orpheline `destiny-story-data` du dépôt, dossier `notes/`, tout chiffré en AES-256-GCM (clé PBKDF2-HMAC-SHA256, 310 000 itérations, sel dans `crypto.json`), même l'index. L'appli écrit par l'API GitHub avec le `sha` ; si la note a changé ailleurs, elle montre la différence et laisse choisir. Hors ligne, un cache chiffré permet de tout lire, et les modifications partent au retour du réseau. Tirer vers le bas recharge.
+- En ligne de commande : `dart run tool/destiny_notes.dart init | pull | push`, avec le mot de passe dans `DESTINY_NOTES_PASSWORD` seulement.
 
 ---
 
@@ -171,6 +180,7 @@ Facultatif : il faut une clé d'API (Anthropic, OpenAI ou Google), à régler da
 - Seuls les modes IA envoient du texte, avec la clé de l'utilisateur, au fournisseur choisi (Anthropic, OpenAI ou Google). En troupe et en Série, les prénoms des comédiens ne partent pas ; le registre ne garde que des personnages. Dans l'histoire avec l'IA, seul le nom donné au héros part.
 - La transcription passe par la reconnaissance vocale du système (Google ou Apple) ; l'appli ne garde aucun son, seulement le texte, sur l'appareil.
 - **Rien n'est perdu à la mise à jour** : les anciennes campagnes deviennent des séries, les anciennes histoires se relisent, les lieux et dangers modifiés sont gardés, une sauvegarde illisible n'est jamais écrasée.
+- **Destiny Note** : les notes de la mise en scène sont chiffrées avant de quitter l'appareil ; le token GitHub et la clé restent dans le coffre de l'appareil (Keychain, Keystore ; sur le web, le stockage du navigateur, chiffré). Le mot de passe n'est jamais gardé.
 - Politique de confidentialité : [`privacy.html`](privacy.html).
 
 ---
