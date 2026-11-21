@@ -25,6 +25,7 @@ class _AccesAdminSectionState extends State<AccesAdminSection> {
   final _motDePasse = TextEditingController();
   bool _ouvert = false;
   bool _enCours = false;
+  EtapeAcces? _etape;
   String? _message;
 
   @override
@@ -38,14 +39,36 @@ class _AccesAdminSectionState extends State<AccesAdminSection> {
     final t = context.textes;
     setState(() {
       _enCours = true;
+      _etape = null;
       _message = null;
     });
-    final r = await widget.acces.deverrouiller(token: _token.text, motDePasse: _motDePasse.text);
+    ResultatAcces r;
+    try {
+      r = await widget.acces.deverrouiller(
+        token: _token.text,
+        motDePasse: _motDePasse.text,
+        etape: (e) {
+          if (mounted) setState(() => _etape = e);
+        },
+      );
+    } catch (e) {
+      widget.acces.derniereErreur = '$e';
+      r = ResultatAcces.erreur;
+    }
     if (!mounted) return;
     _motDePasse.clear();
+    final a = widget.acces;
     setState(() {
       _enCours = false;
-      _message = r == ResultatAcces.ok ? t.t('reglages.acces_ok') : t.t('reglages.acces_erreurs.${r.name}');
+      _etape = null;
+      _message = switch (r) {
+        ResultatAcces.ok => t.t('reglages.acces_ok'),
+        ResultatAcces.delai || ResultatAcces.erreur => t.t('reglages.acces_erreurs.${r.name}', {
+            'etape': t.t('reglages.acces_etapes.${(a.etapeEnEchec ?? EtapeAcces.lecture).name}'),
+            'detail': a.derniereErreur,
+          }).trim(),
+        _ => t.t('reglages.acces_erreurs.${r.name}'),
+      };
     });
     if (r == ResultatAcces.ok) _token.clear();
   }
@@ -148,7 +171,9 @@ class _AccesAdminSectionState extends State<AccesAdminSection> {
               icon: _enCours
                   ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
                   : const Icon(Icons.lock_open_rounded, size: 18),
-              label: Text(_enCours ? k('acces_verification') : k('acces_ouvrir')),
+              label: Text(_enCours
+                  ? (_etape == null ? k('acces_verification') : k('acces_etapes.${_etape!.name}'))
+                  : k('acces_ouvrir')),
             ),
           ] else ...[
             Row(children: [

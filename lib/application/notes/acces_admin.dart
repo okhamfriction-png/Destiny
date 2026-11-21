@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:cryptography/cryptography.dart';
@@ -64,33 +65,70 @@ class AccesAdmin extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Vérifie le token et le mot de passe, puis ouvre l'accès.
-  Future<ResultatAcces> deverrouiller({required String token, required String motDePasse}) async {
+  /// Le détail de la dernière erreur inattendue (pour la comprendre).
+  String derniereErreur = '';
+
+  /// L'étape où l'ouverture a échoué ou dépassé son délai.
+  EtapeAcces? etapeEnEchec;
+
+  /// Vérifie le token et le mot de passe, puis ouvre l'accès. [etape] suit
+  /// l'avancement (lecture, clé, vérification, coffre). Chaque étape a un
+  /// délai : rien ne reste bloqué.
+  Future<ResultatAcces> deverrouiller({
+    required String token,
+    required String motDePasse,
+    void Function(EtapeAcces etape)? etape,
+    Duration delai = const Duration(seconds: 60),
+  }) async {
     token = token.trim();
+    derniereErreur = '';
+    etapeEnEchec = null;
     if (token.isEmpty || motDePasse.isEmpty) return ResultatAcces.champsVides;
-    final depot = _fabrique(token);
-    final FichierDistant? parametres;
-    final FichierDistant? canari;
-    try {
-      parametres = await depot.lire('crypto.json');
-      canari = await depot.lire('canari.enc');
-    } on AccesRefuse {
-      return ResultatAcces.tokenRefuse;
-    } on HorsLigne {
-      return ResultatAcces.horsLigne;
+    var enCours = EtapeAcces.lecture;
+    Future<T> pas<T>(EtapeAcces e, Future<T> Function() action) {
+      enCours = e;
+      etape?.call(e);
+      return action().timeout(delai);
     }
-    if (parametres == null || canari == null) return ResultatAcces.notesIntrouvables;
-    final p = jsonDecode(parametres.contenu) as Map<String, dynamic>;
-    final octets = await deriver(motDePasse, p);
-    final cle = ChiffrementNotes.cleDepuisOctets(octets);
-    if (!await ChiffrementNotes.verifierCanari(cle, canari.contenu)) return ResultatAcces.motDePasseIncorrect;
-    await _coffre.ecrire(kToken, token);
-    await _coffre.ecrire(kCle, base64.encode(octets));
-    await _coffre.ecrire(kParametres, parametres.contenu);
-    _token = token;
-    _cle = cle;
-    notifyListeners();
-    return ResultatAcces.ok;
+
+    try {
+      final depot = _fabrique(token);
+      final FichierDistant? parametres;
+      final FichierDistant? canari;
+      try {
+        parametres = await pas(EtapeAcces.lecture, () => depot.lire('crypto.json'));
+        canari = await pas(EtapeAcces.lecture, () => depot.lire('canari.enc'));
+      } on AccesRefuse {
+        return ResultatAcces.tokenRefuse;
+      } on HorsLigne {
+        return ResultatAcces.horsLigne;
+      }
+      if (parametres == null || canari == null) return ResultatAcces.notesIntrouvables;
+      final texteParametres = parametres.contenu;
+      final texteCanari = canari.contenu;
+      final p = jsonDecode(texteParametres) as Map<String, dynamic>;
+      final octets = await pas(EtapeAcces.cle, () => deriver(motDePasse, p));
+      final cle = ChiffrementNotes.cleDepuisOctets(octets);
+      if (!await pas(EtapeAcces.verification, () => ChiffrementNotes.verifierCanari(cle, texteCanari))) {
+        return ResultatAcces.motDePasseIncorrect;
+      }
+      await pas(EtapeAcces.coffre, () async {
+        await _coffre.ecrire(kToken, token);
+        await _coffre.ecrire(kCle, base64.encode(octets));
+        await _coffre.ecrire(kParametres, texteParametres);
+      });
+      _token = token;
+      _cle = cle;
+      notifyListeners();
+      return ResultatAcces.ok;
+    } on TimeoutException {
+      etapeEnEchec = enCours;
+      return ResultatAcces.delai;
+    } catch (e) {
+      etapeEnEchec = enCours;
+      derniereErreur = '${e.runtimeType} : $e';
+      return ResultatAcces.erreur;
+    }
   }
 
   /// Le mot de passe est-il le bon ? (pour afficher le token en clair)
@@ -118,7 +156,10 @@ class AccesAdmin extends ChangeNotifier {
   }
 }
 
-enum ResultatAcces { ok, champsVides, tokenRefuse, horsLigne, notesIntrouvables, motDePasseIncorrect }
+enum ResultatAcces { ok, champsVides, tokenRefuse, horsLigne, notesIntrouvables, motDePasseIncorrect, delai, erreur }
+
+/// Les étapes de l'ouverture, affichées pendant la vérification.
+enum EtapeAcces { lecture, cle, verification, coffre }
 
 /// Dérive la clé hors du fil de l'interface (sur le web, le navigateur le
 /// fait lui-même, sans bloquer).

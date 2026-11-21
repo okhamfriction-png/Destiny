@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:destiny/application/notes/acces_admin.dart';
@@ -163,6 +164,26 @@ void main() {
       expect(cache.fichiers, isEmpty);
       expect(n.seance, isNull);
       expect(a.depot, isNull);
+    });
+
+    test('une étape qui bloque ou qui casse : un message avec l\'étape, jamais d\'attente sans fin', () async {
+      final depot = await depotInitialise('le bon');
+      final etapes = <EtapeAcces>[];
+      final lent = AccesAdmin(
+          coffre: CoffreMemoire(),
+          fabriqueDepot: (_) => depot,
+          deriver: (m, p) => Completer<List<int>>().future);
+      expect(
+          await lent.deverrouiller(
+              token: 't', motDePasse: 'le bon', etape: etapes.add, delai: const Duration(milliseconds: 50)),
+          ResultatAcces.delai);
+      expect(lent.etapeEnEchec, EtapeAcces.cle);
+      expect(etapes, [EtapeAcces.lecture, EtapeAcces.lecture, EtapeAcces.cle]);
+      final casse = AccesAdmin(
+          coffre: CoffreMemoire(), fabriqueDepot: (_) => depot, deriver: (m, p) async => throw StateError('boum'));
+      expect(await casse.deverrouiller(token: 't', motDePasse: 'le bon'), ResultatAcces.erreur);
+      expect(casse.derniereErreur, contains('boum'));
+      expect(casse.actif, isFalse);
     });
 
     test('token refusé, notes absentes, hors ligne : un message clair', () async {

@@ -2,6 +2,10 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.6.1 — L'accès administrateur ne reste plus bloqué (novembre 2026)
+
+- **Accès administrateur : plus jamais bloqué sur « Vérification… ».** Le bouton dit où on en est (lecture des notes, calcul de la clé, vérification du mot de passe, enregistrement sur l'appareil) ; chaque étape a un délai, et une erreur s'affiche avec l'étape en cause.
+
 ## 2.6.0 — Destiny Note (novembre 2026)
 
 - **Musique, catégorie Spectacle : la descente automatique.** Une roue crantée, à côté du bouton « Ambiances » : chaque musique du spectacle baisse toute seule à partir de 30 s (réglable), jusqu'au silence en 10 s (réglable), puis la suivante part. Pratique pour écouter toutes les musiques à la suite.
