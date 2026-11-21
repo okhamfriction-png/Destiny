@@ -2,6 +2,11 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.5.1 — Les musiques s'enchaînent (novembre 2026)
+
+- **Musique, catégorie Spectacle : les actes s'enchaînent vraiment.** Une musique finie, la suivante part toute seule : acte 1, 2, 3, 4, puis l'acte 1 du lieu suivant. Avant, la lecture en boucle relançait le même acte sans fin.
+- **Un bouton « Ambiances »** en haut de la liste : sautées (par défaut), on passe de l'acte 4 au lieu suivant ; jouées, l'ambiance du lieu passe une fois après l'acte 4.
+
 ## 2.5.0 — Huit archétypes, quatre duels (novembre 2026)
 
 - **Huit archétypes, trois vêtements chacun.** Le Débrouillard, le Cynique, l'Opportuniste et le Solitaire disparaissent ; le Gardien de l'ordre devient le **Tyran** (« Impose sa loi, rationne, punit qui désobéit »). Les 24 animaux restent, redistribués : le Renard rejoint le Leader, le Cerf le Protecteur, la Souris l'Aidant, le Chat l'Alarmiste, le Singe le Dénégateur, le Hibou le Prophète, la Hyène le Tyran, le Vautour le Paranoïaque, avec une posture, une réplique et un exemple de vouloir à leur mesure.

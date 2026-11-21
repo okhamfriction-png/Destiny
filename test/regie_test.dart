@@ -857,6 +857,13 @@ void main() {
           ..sort((a, b) => Grammaire.normaliser(a.nom).compareTo(Grammaire.normaliser(b.nom))))
         .first;
     expect(find.text(premier.nom), findsOneWidget);
+    // En haut, le bouton des ambiances : sautées par défaut, jouées d'un toucher.
+    expect(musique.enchainerAmbiances, isFalse);
+    expect(find.text(t.t('musique.ambiances_sautees')), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('enchainer_ambiances')));
+    await tester.pump();
+    expect(musique.enchainerAmbiances, isTrue);
+    expect(find.text(t.t('musique.ambiances_jouees')), findsOneWidget);
     for (var acte = 1; acte <= 4; acte++) {
       expect(find.text(t.t('musique.acte', {'n': '$acte'})), findsWidgets);
       // Chaque acte a sa musique dans le pack : aucun bouton grisé.
@@ -890,6 +897,10 @@ void main() {
     expect(acteSuivant(3, 0, 4, (l, a) => !(l == 1 && a == 1)), (1, 2));
     // Le lieu 1 n'a rien : on va au lieu 2.
     expect(acteSuivant(3, 0, 4, (l, a) => l != 1), (2, 1));
+    // Ambiances jouées : l'ambiance (étape 5) passe après l'acte 4.
+    expect(acteSuivant(3, 0, 4, tout, dernier: 5), (0, 5));
+    expect(acteSuivant(3, 0, 5, tout, dernier: 5), (1, 1));
+    expect(acteSuivant(3, 2, 5, tout, dernier: 5), isNull);
   });
 
   test('chaque texte de l\'écran Musique existe', () {

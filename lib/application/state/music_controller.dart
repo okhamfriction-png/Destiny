@@ -68,6 +68,7 @@ class MusicController extends ChangeNotifier {
     _wire();
     _load();
     _chargerImportees();
+    _chargerPreferences();
   }
 
   final AudioPlayer _player = AudioPlayer();
@@ -119,6 +120,29 @@ class MusicController extends ChangeNotifier {
   void setBoucle(bool b) {
     _boucle = b;
     notifyListeners();
+  }
+
+  static const String _kEnchainerAmbiances = 'musique_enchainer_ambiances';
+
+  /// Dans « Spectacle », l'ambiance du lieu passe après l'acte 4 (sinon on
+  /// la saute : acte 4, puis l'acte 1 du lieu suivant). Gardé sur l'appareil.
+  bool _enchainerAmbiances = false;
+  bool get enchainerAmbiances => _enchainerAmbiances;
+  Future<void> setEnchainerAmbiances(bool b) async {
+    _enchainerAmbiances = b;
+    notifyListeners();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_kEnchainerAmbiances, b);
+    } catch (_) {}
+  }
+
+  Future<void> _chargerPreferences() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      _enchainerAmbiances = prefs.getBool(_kEnchainerAmbiances) ?? false;
+      notifyListeners();
+    } catch (_) {}
   }
 
   /// Sens du tri alphabétique des pistes (A→Z si vrai, Z→A sinon).
@@ -406,8 +430,10 @@ class MusicController extends ChangeNotifier {
     _current = track;
     _position = Duration.zero;
     notifyListeners();
+    // Une piste qui enchaîne sur la suivante ne boucle jamais, sinon elle ne
+    // se termine pas et l'enchaînement ne part pas.
     await _player.setReleaseMode(
-      (forceLoop || track.loop) ? ReleaseMode.loop : ReleaseMode.release,
+      track.suivante == null && (forceLoop || track.loop) ? ReleaseMode.loop : ReleaseMode.release,
     );
     await _player.stop();
     await _player.setVolume(_volume);
