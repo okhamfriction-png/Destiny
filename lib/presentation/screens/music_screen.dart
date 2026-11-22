@@ -85,7 +85,8 @@ class _MusicScreenState extends State<MusicScreen> {
   }
 
   /// L'ambiance du lieu [i]. Enchaînée, elle passe une fois puis laisse la
-  /// place au lieu suivant ; sautée, elle se joue seule, en boucle.
+  /// place au lieu suivant ; sautée, elle se joue seule (en boucle, sauf si
+  /// « Une fois » est choisi).
   MusicTrack _pisteAmbiance(TextesDestiny t, List<LieuPack> lieux, int i) {
     final ordre = List<LieuPack>.unmodifiable(lieux);
     final enchainee = widget.controller.enchainerAmbiances;
@@ -216,9 +217,26 @@ class _MusicScreenState extends State<MusicScreen> {
                 centre(Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   spacing: 6,
-                  children: [FilterChip(
+                  children: [
+                  for (final (fin, icone) in const [
+                    (FinMusique.boucle, Icons.repeat_one_rounded),
+                    (FinMusique.suite, Icons.skip_next_rounded),
+                    (FinMusique.arret, Icons.stop_circle_outlined),
+                  ])
+                    ChoiceChip(
+                      key: ValueKey('fin_${fin.name}'),
+                      avatar: Icon(icone, size: 16, color: c.finMusique == fin ? d.titre : d.texteSecondaire),
+                      label: Text(k('fin_${fin.name}')),
+                      tooltip: k('fin_${fin.name}_aide'),
+                      selected: c.finMusique == fin,
+                      showCheckmark: false,
+                      selectedColor: d.or.withValues(alpha: 0.3),
+                      side: BorderSide(color: c.finMusique == fin ? d.titre : d.filet),
+                      onSelected: (_) => c.setFinMusique(fin),
+                    ),
+                  if (c.finMusique == FinMusique.suite) FilterChip(
                     key: const ValueKey('enchainer_ambiances'),
-                    avatar: Icon(c.enchainerAmbiances ? Icons.landscape_rounded : Icons.skip_next_rounded,
+                    avatar: Icon(c.enchainerAmbiances ? Icons.landscape_rounded : Icons.landscape_outlined,
                         size: 16, color: c.enchainerAmbiances ? d.titre : d.texteSecondaire),
                     label: Text(k(c.enchainerAmbiances ? 'ambiances_jouees' : 'ambiances_sautees')),
                     tooltip: k('ambiances_aide'),

@@ -2,6 +2,11 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.6.4 — Les musiques du spectacle, à votre rythme (novembre 2026)
+
+- **Musique, catégorie Spectacle : les actes ne sautent plus.** Avec la descente automatique, la fin d'une musique pouvait en lancer plusieurs d'un coup : on passait de l'acte 1 à l'acte 3, voire à un autre lieu. Maintenant c'est acte 1, 2, 3, 4 du même lieu ; seule l'ambiance est sautée (si on la saute).
+- **Trois choix en haut de la liste, pour la fin d'une musique** : 🔁 **En boucle** (elle repart du début), ⏭️ **À la suite** (la suivante part, par défaut), ⏹️ **Une fois, puis stop** (elle passe une fois et plus rien ne part). Le choix reste sur l'appareil, et compte aussi avec la descente automatique.
+
 ## 2.6.3 — Le coffre web (novembre 2026)
 
 - **Accès administrateur, version web : le coffre de l'appareil marche.** L'ouverture s'arrêtait à l'étape « Enregistrement sur l'appareil… » (MissingPluginException) : le module web du coffre manquait dans la compilation. Il y est, et la publication vérifie maintenant qu'il y reste.

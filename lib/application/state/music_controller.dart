@@ -62,6 +62,19 @@ class MusicTrack {
   }
 }
 
+/// Ce que fait une musique du spectacle quand elle se termine.
+enum FinMusique {
+  /// Elle repart du début, sans fin.
+  boucle,
+
+  /// La suivante part : l'acte suivant du même lieu (l'ambiance seulement
+  /// est sautée, si on la saute), puis le lieu suivant.
+  suite,
+
+  /// Elle passe une fois, puis plus rien.
+  arret,
+}
+
 /// État + lecteur du menu Musique (indépendant des effets sonores).
 class MusicController extends ChangeNotifier {
   MusicController() {
@@ -137,6 +150,49 @@ class MusicController extends ChangeNotifier {
     } catch (_) {}
   }
 
+  static const String _kFinMusique = 'musique_fin_v1';
+
+  /// À la fin d'une musique du spectacle : en boucle, la suivante, ou stop.
+  /// Gardé sur l'appareil.
+  FinMusique _finMusique = FinMusique.suite;
+  FinMusique get finMusique => _finMusique;
+  Future<void> setFinMusique(FinMusique f) async {
+    _finMusique = f;
+    final c = _current;
+    // La piste en cours suit tout de suite le nouveau choix.
+    if (c != null && c.category == 'Spectacle') {
+      try {
+        await _player.setReleaseMode(enBoucle(c, f) ? ReleaseMode.loop : ReleaseMode.release);
+      } catch (_) {}
+    }
+    notifyListeners();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_kFinMusique, f.name);
+    } catch (_) {}
+  }
+
+  /// La piste [t] tourne-t-elle en boucle avec le choix [fin] ? Le choix
+  /// compte pour les musiques du spectacle ; les autres suivent [forceLoop]
+  /// (la régie) ou leur manifeste.
+  static bool enBoucle(MusicTrack t, FinMusique fin, {bool forceLoop = false}) {
+    if (t.category == 'Spectacle') {
+      return switch (fin) {
+        FinMusique.boucle => true,
+        FinMusique.arret => false,
+        // À la suite : seule l'ambiance jouée seule (sans suivante) boucle.
+        FinMusique.suite => t.suivante == null && t.loop,
+      };
+    }
+    // Une piste qui enchaîne sur la suivante ne boucle jamais, sinon elle ne
+    // se termine pas et l'enchaînement ne part pas.
+    return t.suivante == null && (forceLoop || t.loop);
+  }
+
+  /// La piste [t] laisse-t-elle la place à la suivante avec le choix [fin] ?
+  static bool enchaine(MusicTrack t, FinMusique fin) =>
+      t.suivante != null && (t.category != 'Spectacle' || fin == FinMusique.suite);
+
   static const String _kDescente = 'musique_descente_v1';
 
   /// La descente automatique des musiques du spectacle : à partir de
@@ -174,8 +230,17 @@ class MusicController extends ChangeNotifier {
   bool _descenteFinie = false;
   double _niveauApplique = 1;
 
+  /// Une piste vient de partir : on attend sa première position d'avant la
+  /// descente. Sans ça, les dernières positions de la piste d'avant (déjà au
+  /// silence) relançaient la suivante, et ça sautait des actes, voire le lieu.
+  bool _attenteDebut = false;
+
   void _suivreDescente(Duration p) {
     if (!_descenteSurPiste || _descenteFinie) return;
+    if (_attenteDebut) {
+      if (p.inMilliseconds >= _descenteDebutS * 1000) return;
+      _attenteDebut = false;
+    }
     final f = niveauDescente(p, debutS: _descenteDebutS, dureeS: _descenteDureeS);
     if ((f - _niveauApplique).abs() >= 0.01 || (f == 1 && _niveauApplique != 1)) {
       _niveauApplique = f;
@@ -187,11 +252,15 @@ class MusicController extends ChangeNotifier {
     }
   }
 
-  /// La musique est finie (ou descendue jusqu'au silence) : la suivante.
+  /// La musique est descendue jusqu'au silence : selon le choix, elle
+  /// repart du début, la suivante part, ou on s'arrête.
   Future<void> _finDePiste() async {
-    final suite = _current?.suivante?.call();
+    final c = _current;
+    final suite = c != null && enchaine(c, _finMusique) ? c.suivante?.call() : null;
     if (suite != null) {
       await playTrack(suite, forceLoop: _boucle);
+    } else if (c != null && enBoucle(c, _finMusique, forceLoop: _boucle)) {
+      await playTrack(c, forceLoop: _boucle);
     } else {
       await _player.stop();
       _playing = false;
@@ -204,6 +273,8 @@ class MusicController extends ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       _enchainerAmbiances = prefs.getBool(_kEnchainerAmbiances) ?? false;
+      final fin = prefs.getString(_kFinMusique);
+      _finMusique = FinMusique.values.firstWhere((f) => f.name == fin, orElse: () => FinMusique.suite);
       final d = prefs.getString(_kDescente);
       if (d != null) {
         final j = jsonDecode(d) as Map<String, dynamic>;
@@ -242,7 +313,8 @@ class MusicController extends ChangeNotifier {
       _position = Duration.zero;
       notifyListeners();
       if (_descenteFinie) return;
-      final suite = _current?.suivante?.call();
+      final c = _current;
+      final suite = c != null && enchaine(c, _finMusique) ? c.suivante?.call() : null;
       if (suite != null) playTrack(suite, forceLoop: _boucle);
     });
   }
@@ -501,17 +573,23 @@ class MusicController extends ChangeNotifier {
   Future<void> playTrack(MusicTrack track, {bool forceLoop = false}) async {
     _current = track;
     _position = Duration.zero;
-    _descenteFinie = false;
+    // Pendant le changement, ni la descente ni la fin de l'ancienne piste ne
+    // déclenchent rien.
+    _descenteFinie = true;
     _niveauApplique = 1;
     notifyListeners();
-    // Une piste qui enchaîne sur la suivante ne boucle jamais, sinon elle ne
-    // se termine pas et l'enchaînement ne part pas.
-    await _player.setReleaseMode(
-      track.suivante == null && (forceLoop || track.loop) ? ReleaseMode.loop : ReleaseMode.release,
-    );
-    await _player.stop();
-    await _player.setVolume(_volume);
-    await _player.play(track.source ?? AssetSource(track.file));
+    try {
+      await _player.setReleaseMode(
+          enBoucle(track, _finMusique, forceLoop: forceLoop) ? ReleaseMode.loop : ReleaseMode.release);
+      await _player.stop();
+      await _player.setVolume(_volume);
+      await _player.play(track.source ?? AssetSource(track.file));
+    } finally {
+      if (identical(_current, track)) {
+        _attenteDebut = true;
+        _descenteFinie = false;
+      }
+    }
   }
 
   /// Lecture/pause d'une piste depuis la régie (boucle selon le réglage).

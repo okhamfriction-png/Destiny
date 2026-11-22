@@ -927,6 +927,29 @@ void main() {
     expect(acteSuivant(3, 2, 5, tout, dernier: 5), isNull);
   });
 
+  test('fin d\'une musique du spectacle : en boucle, à la suite, ou une fois puis stop', () {
+    MusicTrack? suite() => null;
+    const sp = 'Spectacle';
+    final acte = MusicTrack(file: 'a', title: 'Casino · Acte 1', category: sp, loop: false, suivante: suite);
+    const ambianceSeule = MusicTrack(file: 'b', title: 'Casino · Ambiance', category: sp, loop: true);
+    // En boucle : l'acte repart, il ne passe pas la main.
+    expect(MusicController.enBoucle(acte, FinMusique.boucle), isTrue);
+    expect(MusicController.enchaine(acte, FinMusique.boucle), isFalse);
+    // À la suite : l'acte se termine et passe à l'acte 2 du même lieu.
+    expect(MusicController.enBoucle(acte, FinMusique.suite), isFalse);
+    expect(MusicController.enchaine(acte, FinMusique.suite), isTrue);
+    // Une fois : ni boucle ni suite.
+    expect(MusicController.enBoucle(acte, FinMusique.arret), isFalse);
+    expect(MusicController.enchaine(acte, FinMusique.arret), isFalse);
+    // L'ambiance jouée seule boucle à la suite, mais pas « une fois ».
+    expect(MusicController.enBoucle(ambianceSeule, FinMusique.suite), isTrue);
+    expect(MusicController.enBoucle(ambianceSeule, FinMusique.arret), isFalse);
+    // Hors spectacle, le choix ne compte pas : la boucle de la régie décide.
+    const lieu = MusicTrack(file: 'c', title: 'Forêt', category: 'Lieux', loop: false);
+    expect(MusicController.enBoucle(lieu, FinMusique.arret, forceLoop: true), isTrue);
+    expect(MusicController.enBoucle(lieu, FinMusique.boucle), isFalse);
+  });
+
   test('chaque texte de l\'écran Musique existe', () {
     expect(textesManquants(['lib/presentation/screens/music_screen.dart']), isEmpty);
   });
