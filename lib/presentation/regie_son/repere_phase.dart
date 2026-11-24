@@ -50,13 +50,14 @@ class _ReperePhaseState extends State<ReperePhase> {
     if (mounted) setState(() {});
   }
 
-  /// Le compte à rebours ne tourne que pendant une phase qui a une fin.
+  /// Le rafraîchissement tourne pendant une phase : le compte à rebours et
+  /// le niveau de la musique, qui monte et descend.
   void _minuterie() {
-    final compte = widget.conduite.resteDePhase != null;
+    final compte = widget.conduite.phase != PhaseFluide.aucune;
     if (compte && _tic == null) {
       _tic = Timer.periodic(const Duration(milliseconds: 250), (_) {
         if (!mounted) return;
-        if (widget.conduite.resteDePhase == null) {
+        if (widget.conduite.phase == PhaseFluide.aucune) {
           _tic?.cancel();
           _tic = null;
         }
@@ -100,7 +101,26 @@ class _ReperePhaseState extends State<ReperePhase> {
             style: TextStyle(fontFamily: kPoliceTexte, fontSize: 18, fontWeight: FontWeight.w800, color: couleur),
           ),
         ),
-        if (reste != null)
+        // Le niveau réel de la musique : on voit la descente jusqu'au fond.
+        Padding(
+          padding: const EdgeInsets.only(left: 8, right: 12),
+          child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.end, children: [
+            Text(t.t('regie_son.phase.musique'),
+                style: TextStyle(fontFamily: kPoliceTexte, fontSize: 11, fontWeight: FontWeight.w700, color: couleur)),
+            Text(
+              t.t('regie_son.phase.niveau', {'n': '${(c.niveauMusique * 100).round()}'}),
+              key: const ValueKey('niveau_musique'),
+              style: TextStyle(
+                fontFamily: kPoliceTexte,
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                color: couleur,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
+            ),
+          ]),
+        ),
+        if (reste != null && reste > Duration.zero)
           Text(
             t.t('regie_son.phase.reste', {'n': '${(reste.inMilliseconds / 1000).ceil()}'}),
             style: TextStyle(

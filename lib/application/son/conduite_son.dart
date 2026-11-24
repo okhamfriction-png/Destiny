@@ -443,8 +443,46 @@ class ConduiteSon extends ChangeNotifier {
     _etapeVers(EtapeConduite.repos);
   }
 
+  bool _enPause = false;
+
+  /// Le spectacle est en pause : la musique attend, figée où elle en est.
+  bool get enPause => _enPause;
+
+  /// Pause du chrono : la séquence en cours s'arrête (Destiny, bruitages) et
+  /// la musique se met en pause, à son niveau.
+  Future<void> pause() async {
+    await annulerSequence();
+    _enPause = true;
+    for (final l in lecteurs.values) {
+      if (l.actif) await l.pause();
+    }
+    notifyListeners();
+  }
+
+  /// Reprise du chrono : la musique repart où elle en était. Si la pause a
+  /// coupé le maximum (jeu muet) ou le son Destiny, elle redescend au fond.
+  Future<void> reprendre() async {
+    if (!_enPause) return;
+    _enPause = false;
+    for (final l in lecteurs.values) {
+      if (l.enPause) await l.reprendre();
+    }
+    notifyListeners();
+    // La pause a coupé le maximum ou la descente : la musique finit de
+    // descendre jusqu'au fond.
+    final v = ValeursRegieSon.depuisJson(_v.versJson());
+    if (_sequenceFluide && lecteurs[BusSon.musique]!.actif && _niveau[BusSon.musique]! > v.niveauFond[_acte - 1] + 0.001) {
+      final seq = ++_seq;
+      await _descendreAuFond(_acte, v, seq);
+    }
+  }
+
+  /// Le niveau réel de la musique (0 à 1), fader compris : ce qu'on entend.
+  double get niveauMusique => lecteurs[BusSon.musique]!.actif ? _volumeDe(BusSon.musique) : 0;
+
   /// Arrête tout, tout de suite.
   Future<void> stopTout() async {
+    _enPause = false;
     _seq++;
     _jetonMusique++;
     _jetonBruitage++;
@@ -598,7 +636,7 @@ class ConduiteSon extends ChangeNotifier {
   /// silence, elle s'arrête (les exercices minutés).
   Future<void> _descendreAuFond(int acte, ValeursRegieSon v, int seq) async {
     _volumeMusique = v.niveauFond[acte - 1];
-    _phaseVers(PhaseFluide.fond);
+    _phaseVers(PhaseFluide.fond, v.descenteFond);
     final l = lecteurs[BusSon.musique]!;
     if (!l.actif) return;
     final source = l.enCours;

@@ -264,22 +264,22 @@ class SeanceExerciceDestiny extends ChangeNotifier {
     }
   }
 
-  /// Pause : le chrono s'arrête et la musique sort en fondu.
+  /// Pause : le chrono s'arrête et la musique se met en pause avec lui.
   Future<void> pause() async {
     if (!enCours) return;
     _timer?.cancel();
     _enPause = true;
     notifyListeners();
-    await conduite.annulerSequence();
-    await conduite.couperMusique();
+    await conduite.pause();
   }
 
-  /// Reprise : le chrono repart (la musique, elle, ne revient pas).
-  void reprendre() {
+  /// Reprise : le chrono et la musique repartent où ils en étaient.
+  Future<void> reprendre() async {
     if (!_lance || _fini || !_enPause) return;
     _enPause = false;
     _demarrerMinuteur();
     notifyListeners();
+    await conduite.reprendre();
   }
 
   /// Arrêter : tout s'arrête, on revient à la préparation.

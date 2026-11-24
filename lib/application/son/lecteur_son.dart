@@ -45,6 +45,14 @@ abstract class LecteurSon extends ChangeNotifier {
   Future<void> regler(double volume);
   Future<void> arreter();
 
+  /// Met la piste en pause (elle reste « en cours »), puis la reprend où
+  /// elle en était.
+  Future<void> pause() async {}
+  Future<void> reprendre() async {}
+
+  /// La piste est en pause.
+  bool get enPause => false;
+
   /// Se termine quand la piste en cours finit (ou est arrêtée). Une boucle ne
   /// finit qu'à l'arrêt.
   Future<void> get fin;
@@ -72,9 +80,17 @@ class LecteurAudioplayers extends LecteurSon {
   SourceSon? _enCours;
   double _volume = 1;
   Completer<void> _fin = Completer<void>()..complete();
+  bool _enPause = false;
+
+  /// Change à chaque lecture et à chaque arrêt : une lecture encore en train
+  /// de charger quand on l'arrête (ou qu'une autre part) ne démarre plus.
+  int _jeton = 0;
 
   @override
   SourceSon? get enCours => _enCours;
+
+  @override
+  bool get enPause => _enPause;
 
   @override
   double get volume => _volume;
@@ -88,22 +104,54 @@ class LecteurAudioplayers extends LecteurSon {
 
   @override
   Future<void> jouer(SourceSon source, {double volume = 1, bool boucle = false}) async {
+    final jeton = ++_jeton;
     _terminer();
     _fin = Completer<void>();
     _enCours = source;
+    _enPause = false;
     _volume = volume.clamp(0.0, 1.0);
     notifyListeners();
     try {
       await _p.stop();
+      if (jeton != _jeton) return;
       await _p.setReleaseMode(boucle ? ReleaseMode.loop : ReleaseMode.stop);
       await _p.setVolume(_volume);
+      if (jeton != _jeton) return;
       await _p.play(_vers(source));
+      // Arrêtée (ou remplacée) pendant le chargement : elle ne joue pas.
+      if (jeton != _jeton) {
+        await _p.stop();
+      } else {
+        // Le volume a pu changer pendant le chargement (fondu, descente).
+        await _p.setVolume(_volume);
+      }
     } catch (e) {
       debugPrint('Régie son : impossible de jouer ${source.chemin} ($e)');
+      if (jeton != _jeton) return;
       _enCours = null;
       _terminer();
       notifyListeners();
     }
+  }
+
+  @override
+  Future<void> pause() async {
+    if (_enCours == null || _enPause) return;
+    _enPause = true;
+    notifyListeners();
+    try {
+      await _p.pause();
+    } catch (_) {}
+  }
+
+  @override
+  Future<void> reprendre() async {
+    if (_enCours == null || !_enPause) return;
+    _enPause = false;
+    notifyListeners();
+    try {
+      await _p.resume();
+    } catch (_) {}
   }
 
   @override
@@ -117,6 +165,8 @@ class LecteurAudioplayers extends LecteurSon {
   @override
   Future<void> arreter() async {
     final jouait = _enCours != null;
+    _jeton++;
+    _enPause = false;
     _enCours = null;
     _terminer();
     try {

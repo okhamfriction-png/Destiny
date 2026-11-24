@@ -176,6 +176,62 @@ void main() {
     });
   });
 
+  group('la pause', () {
+    test('pendant les 20 s à 100 %, la pause fige la musique ; à la reprise, elle repart et descend à 5 %', () async {
+      final journal = <String>[];
+      final lecteurs = <BusSon, LecteurFactice>{};
+      var t = 0.0;
+      var bloque = true;
+      final conduite = ConduiteSon(
+        pack: PackAudio.pourTests(m, IndexPack(fichiersDuManifeste(m))),
+        reglages: ReglagesRegieSon(ValeursRegieSon()),
+        muet: () => false,
+        fabrique: (b) => lecteurs[b] = LecteurFactice(b, journal),
+        // Le maintien de 20 s ne se termine pas tant que [bloque] : on met en
+        // pause pendant.
+        attendre: (d) async {
+          if (d >= const Duration(seconds: 15) && bloque) return Completer<void>().future;
+          t += d.inMilliseconds / 1000;
+        },
+      );
+      conduite.preparer(lieuId: 'eglise', dangerId: 'incendie');
+      unawaited(conduite.ouverture());
+      await laisserTourner();
+      final musique = lecteurs[BusSon.musique]!;
+      expect(musique.volume, closeTo(1, 1e-9), reason: '100 % pendant le maintien');
+      expect(conduite.phase, PhaseFluide.jeuMuet);
+      await conduite.pause();
+      expect(journal, contains('musique:pause'));
+      expect(conduite.enPause, isTrue);
+      expect(musique.actif, isTrue, reason: 'en pause, pas arrêtée');
+      bloque = false;
+      await conduite.reprendre();
+      await laisserTourner();
+      expect(journal, contains('musique:reprendre'));
+      expect(musique.volume, closeTo(0.05, 1e-9), reason: 'elle a fini de descendre au fond');
+      expect(t, greaterThanOrEqualTo(10), reason: 'la descente prend 10 s');
+      expect(conduite.niveauMusique, closeTo(0.05, 1e-9));
+    });
+
+    test('Stop arrête la musique, même pendant qu\'elle se lance', () async {
+      final journal = <String>[];
+      final lecteurs = <BusSon, LecteurFactice>{};
+      final conduite = ConduiteSon(
+        pack: PackAudio.pourTests(m, IndexPack(fichiersDuManifeste(m))),
+        reglages: ReglagesRegieSon(ValeursRegieSon()),
+        muet: () => false,
+        fabrique: (b) => lecteurs[b] = LecteurFactice(b, journal),
+        attendre: (d) => d >= const Duration(seconds: 15) ? Completer<void>().future : Future<void>.value(),
+      );
+      conduite.preparer(lieuId: 'eglise', dangerId: 'incendie');
+      unawaited(conduite.ouverture());
+      await conduite.stopTout();
+      await laisserTourner();
+      expect(lecteurs[BusSon.musique]!.actif, isFalse);
+      expect(conduite.niveauMusique, 0);
+    });
+  });
+
   group('les règles', () {
     test('les moments des trois DESTINY se recalculent au prorata de la durée', () {
       const base = [10.0, 22.0, 40.0];
@@ -214,7 +270,7 @@ void main() {
       expect(relu.momentsDestinyMin, [8, 20, 35]);
       final vide = ReglagesExercicesDestiny.depuisJson({});
       expect(vide.fondMinute, 0);
-      expect(vide.fondLongForm, 0.1);
+      expect(vide.fondLongForm, 0.05);
       expect(vide.dureeDe(ExerciceDestiny.longForm), 2700);
     });
 
@@ -225,7 +281,7 @@ void main() {
       expect(v.maintienOuverture, 20);
       expect(v.maintienDestiny, 20);
       expect(v.descenteFond, 10);
-      expect(v.niveauFond, [0.1, 0.1, 0.1, 0.1]);
+      expect(v.niveauFond, [0.05, 0.05, 0.05, 0.05]);
       expect(v.bruitageAuto, everyElement(isFalse));
       expect(v.bruitageFinMusique, everyElement(isFalse));
       expect(v.revealActe, everyElement(isFalse));
@@ -244,9 +300,9 @@ void main() {
       final chemin = resoudreMusique(m, x.seance.pack.index, 'casino', 2).chemin!;
       expect(x.journal.first, 'musique:jouer:$chemin', reason: 'la musique de l\'acte choisi');
       final c = musique.courbe;
-      expect(volumeA(c, 0), closeTo(0.7, 1e-9), reason: 'tout de suite à son volume d\'acte');
-      expect(volumeA(c, 19.9), closeTo(0.7, 1e-9));
-      expect(volumeA(c, 25), closeTo(0.35, 0.02));
+      expect(volumeA(c, 0), closeTo(1, 1e-9), reason: 'tout de suite à 100 %');
+      expect(volumeA(c, 19.9), closeTo(1, 1e-9));
+      expect(volumeA(c, 25), closeTo(0.5, 0.02));
       expect(volumeA(c, 30.01), 0);
       expect(x.journal.last, 'musique:arreter');
     });
@@ -294,9 +350,9 @@ void main() {
       expect(x.seance.moments, [80, 176, 320]);
       await x.seance.lancer();
       await laisserTourner();
-      // Acte 1 : 20 s, puis 10 s jusqu'à 10 %, et elle continue.
+      // Acte 1 : 20 s, puis 10 s jusqu'à 5 %, et elle continue.
       final musique = x.lecteurs[BusSon.musique]!;
-      expect(volumeA(musique.courbe, 31), closeTo(0.1, 1e-9));
+      expect(volumeA(musique.courbe, 31), closeTo(0.05, 1e-9));
       expect(x.journal, isNot(contains('musique:arreter')));
 
       for (var s = 0; s < 80; s++) {

@@ -823,7 +823,9 @@
       "destiny": "Destiny — ralenti",
       "jeuMuet": "Musique — jeu muet",
       "fond": "Fond — on parle",
-      "reste": "{n} s"
+      "reste": "{n} s",
+      "musique": "Musique",
+      "niveau": "{n} %"
     },
     "onglets": {
       "danger": "Ce danger",

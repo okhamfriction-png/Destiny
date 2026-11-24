@@ -51,7 +51,7 @@ class ValeursRegieSon {
   double descenteFond = 10;
 
   /// Fluide : le niveau de fond de chaque acte (0 à 1), sous les voix.
-  List<double> niveauFond = [0.1, 0.1, 0.1, 0.1];
+  List<double> niveauFond = [0.05, 0.05, 0.05, 0.05];
 
   /// Fluide : le bruitage du palier part tant de secondes après la fin du son
   /// Destiny (négatif : avant).
@@ -65,7 +65,7 @@ class ValeursRegieSon {
 
   // Musique.
   List<bool> musiqueActe = [true, true, true, true];
-  List<double> volumeActe = [0.7, 0.7, 0.7, 0.7];
+  List<double> volumeActe = [1.0, 1.0, 1.0, 1.0];
   List<double> fonduEntree = [3, 5, 5, 5];
   double fonduSortie = 2;
 
@@ -158,12 +158,12 @@ class ValeursRegieSon {
         'maintien_destiny_v3': maintienDestiny,
         'maintien_ouverture_v3': maintienOuverture,
         'descente_fond_v3': descenteFond,
-        'niveau_fond_v3': niveauFond,
+        'niveau_fond_v4': niveauFond,
         'decalage_bruitage': decalageBruitage,
         'attenuation_fluide': attenuationFluide,
         'sortie_sous_destiny': sortieSousDestiny,
         'musique_acte': musiqueActe,
-        'volume_acte': volumeActe,
+        'volume_acte_v4': volumeActe,
         'fondu_entree': fonduEntree,
         'fondu_sortie': fonduSortie,
         'courbes': [
@@ -222,12 +222,12 @@ class ValeursRegieSon {
       ..maintienDestiny = d('maintien_destiny_v3', v.maintienDestiny).clamp(0.0, 30.0)
       ..maintienOuverture = d('maintien_ouverture_v3', v.maintienOuverture).clamp(0.0, 60.0)
       ..descenteFond = d('descente_fond_v3', v.descenteFond).clamp(1.0, 10.0)
-      ..niveauFond = _quatre(j['niveau_fond_v3'], v.niveauFond, (x) => nombre(x).clamp(0.0, 1.0))
+      ..niveauFond = _quatre(j['niveau_fond_v4'], v.niveauFond, (x) => nombre(x).clamp(0.0, 1.0))
       ..decalageBruitage = d('decalage_bruitage', v.decalageBruitage).clamp(-5.0, 5.0)
       ..attenuationFluide = d('attenuation_fluide', v.attenuationFluide).clamp(0.0, 1.0)
       ..sortieSousDestiny = d('sortie_sous_destiny', v.sortieSousDestiny).clamp(0.5, 5.0)
       ..musiqueActe = _quatre(j['musique_acte'], v.musiqueActe, booleen)
-      ..volumeActe = _quatre(j['volume_acte'], v.volumeActe, nombre)
+      ..volumeActe = _quatre(j['volume_acte_v4'], v.volumeActe, nombre)
       ..fonduEntree = _quatre(j['fondu_entree'], v.fonduEntree, nombre)
       ..fonduSortie = d('fondu_sortie', v.fonduSortie)
       ..courbes = _quatre(

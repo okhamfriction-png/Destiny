@@ -91,12 +91,24 @@ class SpectacleEnCours extends ChangeNotifier {
   void basculer() {
     if (enMarche) {
       _minuteur?.cancel();
-      // Une séquence Destiny en cours s'arrête net avec le chrono.
-      if (conduiteActive) unawaited(conduite!.annulerSequence());
+      // Pause : une séquence Destiny en cours s'arrête net, et la musique se
+      // met en pause avec le chrono.
+      if (conduiteActive) {
+        unawaited(conduite!.pause());
+      } else if (contexte.musique.playing) {
+        unawaited(contexte.musique.togglePlayPause());
+      }
       _changer();
       return;
     }
-    if (!_demarre) {
+    if (_demarre) {
+      // Reprise : la musique repart où elle en était.
+      if (conduiteActive) {
+        unawaited(conduite!.reprendre());
+      } else if (contexte.musique.current != null && !contexte.musique.playing) {
+        unawaited(contexte.musique.togglePlayPause());
+      }
+    } else {
       _demarre = true;
       if (conduiteActive) {
         // La musique de l'acte 1 (puis le bruitage du palier 1 et l'ambiance

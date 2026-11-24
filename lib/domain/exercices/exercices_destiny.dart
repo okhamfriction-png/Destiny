@@ -42,8 +42,8 @@ class ReglagesExercicesDestiny {
   /// s'arrête)…
   double fondMinute = 0;
 
-  /// …et 10 % pour le long form, aux quatre actes.
-  double fondLongForm = 0.1;
+  /// …et 5 % pour le long form, aux quatre actes.
+  double fondLongForm = 0.05;
 
   /// La durée par défaut de chaque exercice, en secondes.
   Map<ExerciceDestiny, int> dureesS = {
@@ -63,7 +63,7 @@ class ReglagesExercicesDestiny {
         'maintien_s': maintienS,
         'descente_s': descenteS,
         'fond_minute': fondMinute,
-        'fond_long_form': fondLongForm,
+        'fond_long_form_v2': fondLongForm,
         'durees_s': {for (final e in dureesS.entries) e.key.name: e.value},
         'moments_destiny_min': momentsDestinyMin,
       };
@@ -78,7 +78,7 @@ class ReglagesExercicesDestiny {
       ..maintienS = d('maintien_s', r.maintienS, 0, 600)
       ..descenteS = d('descente_s', r.descenteS, 0, 120)
       ..fondMinute = d('fond_minute', r.fondMinute, 0, 1)
-      ..fondLongForm = d('fond_long_form', r.fondLongForm, 0, 1);
+      ..fondLongForm = d('fond_long_form_v2', r.fondLongForm, 0, 1);
     final durees = j['durees_s'];
     if (durees is Map) {
       for (final e in ExerciceDestiny.values) {

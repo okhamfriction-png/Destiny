@@ -81,6 +81,25 @@ class LecteurFactice extends LecteurSon {
     if (!_fin.isCompleted) _fin.complete();
   }
 
+  bool _pause = false;
+
+  @override
+  bool get enPause => _pause;
+
+  @override
+  Future<void> pause() async {
+    if (_enCours == null) return;
+    _pause = true;
+    journal.add('${bus.name}:pause');
+  }
+
+  @override
+  Future<void> reprendre() async {
+    if (!_pause) return;
+    _pause = false;
+    journal.add('${bus.name}:reprendre');
+  }
+
   /// La piste arrive à sa fin naturelle.
   void finir() {
     _enCours = null;
@@ -100,6 +119,7 @@ ValeursRegieSon ancienneRegie({bool fluide = false}) => ValeursRegieSon()
   ..maintienOuverture = 30
   ..descenteFond = 3
   ..niveauFond = [0.4, 0.4, 0.4, 0.4]
+  ..volumeActe = [0.7, 0.7, 0.7, 0.7]
   ..revealActe = [false, false, true, false]
   ..bruitageFinMusique = [true, true, true, true]
   ..bruitageAuto = fluide ? [true, true, true, true] : [false, false, false, false]
@@ -371,10 +391,11 @@ void main() {
     test('les réglages : fluide par défaut, gardés en JSON, bornés ; une ancienne sauvegarde passe en fluide', () {
       final defaut = ValeursRegieSon();
       expect(defaut.fluide, isTrue);
-      // 2.7.0 : 20 s au maximum, puis 10 s de descente jusqu'à 10 %.
+      // 2.7.0 : 20 s à 100 %, puis 10 s de descente jusqu'à 5 %.
       expect((defaut.monteeDestiny, defaut.maintienDestiny, defaut.maintienOuverture, defaut.descenteFond),
           (10, 20, 20, 10));
-      expect(defaut.niveauFond, [0.1, 0.1, 0.1, 0.1]);
+      expect(defaut.niveauFond, [0.05, 0.05, 0.05, 0.05]);
+      expect(defaut.volumeActe, [1, 1, 1, 1]);
       expect(defaut.boucle, isFalse, reason: 'au fond jusqu\'à la fin de la musique');
       // Une sauvegarde d'avant la 2.7.0 (anciennes clés) prend les nouvelles
       // valeurs.
@@ -387,7 +408,7 @@ void main() {
         'bruitage_fin_musique_v2': [true, true, true, true],
       });
       expect((avant.maintienDestiny, avant.maintienOuverture, avant.descenteFond), (20, 20, 10));
-      expect(avant.niveauFond, [0.1, 0.1, 0.1, 0.1]);
+      expect(avant.niveauFond, [0.05, 0.05, 0.05, 0.05]);
       expect(avant.revealActe, everyElement(isFalse));
       expect(avant.bruitageFinMusique, everyElement(isFalse));
       expect((defaut.decalageBruitage, defaut.attenuationFluide, defaut.sortieSousDestiny), (0, 0.6, 2));
@@ -479,10 +500,13 @@ void main() {
       // T + 15 s = 37 s : la descente, en 3 s, vers le fond (0,4).
       await c.avancer(tester, 1.5);
       expect(t.conduite.phase, PhaseFluide.fond);
-      expect(t.conduite.resteDePhase, isNull, reason: 'le fond dure jusqu\'au Destiny suivant');
+      // Le compte à rebours de la descente (3 s), puis le fond jusqu'au
+      // Destiny suivant.
+      expect(t.conduite.resteDePhase!.inMilliseconds / 1000, inInclusiveRange(0.1, 3));
       expect(musique.volume, closeTo(0.7 - 0.3 * 0.5 / 3, 0.05));
       await c.avancer(tester, 4);
       expect(musique.volume, closeTo(0.4, 1e-6));
+      expect(t.conduite.resteDePhase, Duration.zero);
       expect(musique.actif, isTrue);
       expect(musique.enBoucle, isTrue);
       expect(t.conduite.etape, EtapeConduite.repos);
