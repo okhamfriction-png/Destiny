@@ -143,7 +143,7 @@ String promptMaitreDuDestin({
     ..writeln('- Chapitre 4 : ne remonte plus la tension ; force le choix. Les deux actions proposées sont alors '
         'le vouloir et le besoin du héros : c\'est le prix à payer.')
     ..writeln('- Quand le message du joueur contient [DESTINY], écris le rituel en trois lignes courtes '
-        '(${g.rituel.sequence.join(', ')}), puis « Quelques heures plus tard… », puis la nouvelle du palier '
+        '(${g.rituel.sequence.join(', ')}), puis la nouvelle du palier '
         'suivant : ce qu\'on entend du danger, et la réaction d\'un personnage, en une ou deux répliques.')
     ..writeln('- Les personnages que tu joues suivent la montée de leur archétype au palier en cours.')
     ..writeln('- $_interdits')

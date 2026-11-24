@@ -190,7 +190,32 @@ class ConduiteSon extends ChangeNotifier {
 
   double _volumeDe(BusSon b) => (_niveau[b]! * _gain[b]! * (b == BusSon.musique ? _facteur : 1)).clamp(0.0, 1.0);
 
-  Future<void> _appliquer(BusSon b) => lecteurs[b]!.regler(_volumeDe(b));
+  Future<void> _appliquer(BusSon b) {
+    _visibles[b]!.value = _volumeDe(b);
+    return lecteurs[b]!.regler(_volumeDe(b));
+  }
+
+  final Map<BusSon, ValueNotifier<double>> _visibles = {for (final b in BusSon.values) b: ValueNotifier<double>(1)};
+
+  /// Le volume réel de chaque voie (0 à 1), tel qu'on l'entend : il bouge
+  /// pendant les montées et les descentes. Le fader de la table le suit.
+  ValueListenable<double> volumeVisible(BusSon b) => _visibles[b]!;
+
+  /// Le fader de la table, bougé à la main pendant que la voie joue : la
+  /// voie prend ce volume tout de suite (la descente ou la courbe en cours
+  /// s'arrête).
+  Future<void> reglerVolumeManuel(BusSon b, double volume) async {
+    _annulerFondu(b);
+    _gain[b] = 1;
+    _niveau[b] = volume.clamp(0.0, 1.0);
+    if (b == BusSon.musique) {
+      _jetonDecrescendo++;
+      _facteur = 1;
+      _volumeMusique = _niveau[b]!;
+    }
+    await _appliquer(b);
+    notifyListeners();
+  }
 
   void _annulerFondu(BusSon b) => _jetonFondu[b] = (_jetonFondu[b] ?? 0) + 1;
 
@@ -221,6 +246,7 @@ class ConduiteSon extends ChangeNotifier {
       _jetonDecrescendo++;
       _facteur = 1;
     }
+    _visibles[b]!.value = _volumeDe(b);
     return lecteurs[b]!.jouer(s, volume: _volumeDe(b), boucle: boucle);
   }
 

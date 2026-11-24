@@ -65,7 +65,7 @@ String promptSpectacle({
         'que… », une image par personnage, chacun ne parle que de lui.')
     ..writeln('- DESTINY ne se lance que de l\'extérieur : quand le message du joueur contient [DESTINY], tu '
         'réponds par un tour phase="destiny" : la didascalie décrit le rituel (${g.rituel.sequence.join(', ')}), '
-        'puis l\'ellipse, puis le son du nouveau palier (le bruitage, la musique de l\'acte en fondu) ; la réplique '
+        'puis le son du nouveau palier (le bruitage, la musique de l\'acte en fondu) ; la réplique '
         'est la première réaction d\'un partenaire à ce son, pas un récit du danger ; palier et acte augmentent de '
         '1, le compteur repart à zéro. Puis tu attends que l\'application ouvre la scène '
         'suivante. Tu ne fais JAMAIS monter le danger sans [DESTINY].')

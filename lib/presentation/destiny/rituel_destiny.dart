@@ -27,7 +27,9 @@ class ReglagesRituel {
   final bool lumiereBleue;
   final Duration dureeFige;
 
-  /// Texte d'ellipse (par défaut celui des textes de l'appli).
+  /// Le texte d'une ellipse entre le figé et la carte du palier (« Quelques
+  /// heures plus tard… »). Null ou vide : pas d'ellipse, la carte arrive
+  /// tout de suite après le figé.
   final String? texteEllipse;
   final bool reduireAnimations;
   final bool rappelPremierFige;
@@ -107,12 +109,14 @@ class _RituelDestinyState extends State<RituelDestiny> with SingleTickerProvider
     if (!_reduit) _secousse.forward();
     final rapide = _reduit;
     final fige = widget.reglages.dureeFige;
+    final ellipse = (widget.reglages.texteEllipse ?? '').trim().isNotEmpty;
+    final finFige = (rapide ? 700 : 2300) + fige.inMilliseconds;
     final etapes = <(Duration, EtapeRituel)>[
       (Duration(milliseconds: rapide ? 200 : 700), EtapeRituel.rire),
       (Duration(milliseconds: rapide ? 400 : 1500), EtapeRituel.lumiere),
       (Duration(milliseconds: rapide ? 700 : 2300), EtapeRituel.fige),
-      (Duration(milliseconds: (rapide ? 700 : 2300) + fige.inMilliseconds), EtapeRituel.ellipse),
-      (Duration(milliseconds: (rapide ? 1500 : 4300) + fige.inMilliseconds), EtapeRituel.palier),
+      if (ellipse) (Duration(milliseconds: finFige), EtapeRituel.ellipse),
+      (Duration(milliseconds: ellipse ? finFige + (rapide ? 800 : 2000) : finFige), EtapeRituel.palier),
     ];
     for (final (delai, etape) in etapes) {
       _minuteurs.add(Timer(delai, () {
@@ -292,7 +296,7 @@ class _RituelDestinyState extends State<RituelDestiny> with SingleTickerProvider
         ]);
       case EtapeRituel.ellipse:
         return Text(
-          widget.reglages.texteEllipse ?? t.t('rituel.texte_ellipse'),
+          widget.reglages.texteEllipse ?? '',
           key: const ValueKey('ellipse'),
           textAlign: TextAlign.center,
           style: const TextStyle(

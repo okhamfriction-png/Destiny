@@ -3,7 +3,6 @@
   "a_propos": "Textes de l'appli qui accompagnent la grammaire (destiny_grammaire.json). Ils viennent du cahier des charges de la refonte 2.0. La grammaire reste dans son fichier : ici, seulement les messages, l'aide et les réglages par défaut.",
   "rituel": {
     "titre": "Destiny",
-    "texte_ellipse": "Quelques heures plus tard…",
     "rappel_premier_fige": "Premier figé : chacun choisit en silence sa phrase, « il veut… mais il a besoin de… ».",
     "nouvelle_palier": "La nouvelle du palier",
     "nouvelle_aide": "À faire entendre par la régie son, ou à souffler au figurant.",
@@ -1922,7 +1921,7 @@
     "lumiere_bleue": "La lumière bleue",
     "duree_fige": "La durée du ralenti à l'écran : {n} s",
     "texte_ellipse": "Le texte de l'ellipse",
-    "texte_ellipse_aide": "Vide : « {defaut} »",
+    "texte_ellipse_aide": "Un texte entre le figé et la carte du palier (« Quelques heures plus tard… », par exemple). Vide : pas d'ellipse.",
     "rappel_premier_fige": "Rappeler de fixer le besoin au premier figé",
     "rappels_regie": "Les rappels de régie, acte par acte",
     "reduire_animations": "Réduire les animations",

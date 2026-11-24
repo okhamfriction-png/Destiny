@@ -211,6 +211,12 @@ void main() {
       expect(musique.volume, closeTo(0.05, 1e-9), reason: 'elle a fini de descendre au fond');
       expect(t, greaterThanOrEqualTo(10), reason: 'la descente prend 10 s');
       expect(conduite.niveauMusique, closeTo(0.05, 1e-9));
+      // Le fader de la table suit le volume réel.
+      expect(conduite.volumeVisible(BusSon.musique).value, closeTo(0.05, 1e-9));
+      // Bougé à la main, il donne son volume à la musique, tout de suite.
+      await conduite.reglerVolumeManuel(BusSon.musique, 0.6);
+      expect(musique.volume, closeTo(0.6, 1e-9));
+      expect(conduite.volumeVisible(BusSon.musique).value, closeTo(0.6, 1e-9));
     });
 
     test('Stop arrête la musique, même pendant qu\'elle se lance', () async {

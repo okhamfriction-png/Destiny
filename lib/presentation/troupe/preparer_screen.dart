@@ -34,7 +34,7 @@ class PreparerScreen extends StatefulWidget {
 
 class _PreparerScreenState extends State<PreparerScreen> {
   final Random _hasard = Random();
-  late String _mode = widget.contexte.reglages.modeDistribution;
+  late final String _mode = widget.contexte.reglages.modeDistribution;
   int _exemple = 0;
   List<Location> _lieux = const [];
   List<Danger> _dangers = const [];

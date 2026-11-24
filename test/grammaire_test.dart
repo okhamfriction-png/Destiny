@@ -159,7 +159,7 @@ void main() {
   group('Les textes de l\'appli', () {
     test('sont lus', () async {
       final t = (await chargerGrammaire()).textes;
-      expect(t.t('rituel.texte_ellipse'), 'Quelques heures plus tard…');
+      expect(t.t('rituel.titre'), 'Destiny');
       expect(t.t('distribution.sans_alarmiste'), isNotEmpty);
       expect(t.liste('besoin.objets'), contains('argent'));
       expect(t.tables('outils_de_jeu.outils'), hasLength(4));

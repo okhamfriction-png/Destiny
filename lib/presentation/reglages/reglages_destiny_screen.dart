@@ -74,7 +74,7 @@ class ReglagesDestinyScreen extends StatelessWidget {
               ),
               _ChampTexte(
                 libelle: k('texte_ellipse'),
-                aide: k('texte_ellipse_aide', {'defaut': t.t('rituel.texte_ellipse')}),
+                aide: k('texte_ellipse_aide'),
                 valeur: r.texteEllipse,
                 onChange: (v) => r.changer(texteEllipse: v.trim()),
               ),

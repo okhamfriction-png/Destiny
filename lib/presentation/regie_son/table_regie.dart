@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../application/services/audio_service.dart';
@@ -639,13 +640,15 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
               nom: rs('bus.${b.name}'),
               lecteur: c.lecteurs[b]!,
               gain: c.gain(b),
-              niveau: c.niveau(b),
+              volume: c.volumeVisible(b),
               attenue: b == BusSon.musique && c.attenue,
               libelleAttenue: rs('attenuee'),
               libelleStop: rs('arreter_voie'),
               vu: _vu,
               phase: b.index * 1.3,
-              onGain: (g) => c.reglerGain(b, g),
+              // La voie joue : le fader règle son volume tout de suite ;
+              // à l'arrêt, il prépare le niveau des sons à venir.
+              onGain: (g) => c.lecteurs[b]!.actif ? c.reglerVolumeManuel(b, g) : c.reglerGain(b, g),
               onStop: () => c.arreterBus(b),
             ),
         ],
@@ -1115,7 +1118,7 @@ class _Tranche extends StatelessWidget {
     required this.nom,
     required this.lecteur,
     required this.gain,
-    required this.niveau,
+    required this.volume,
     required this.attenue,
     required this.libelleAttenue,
     required this.libelleStop,
@@ -1128,7 +1131,9 @@ class _Tranche extends StatelessWidget {
   final String nom;
   final LecteurSon lecteur;
   final double gain;
-  final double niveau;
+
+  /// Le volume réel de la voie : le fader le suit, comme un fader motorisé.
+  final ValueListenable<double> volume;
   final bool attenue;
   final String libelleAttenue;
   final String libelleStop;
@@ -1168,20 +1173,36 @@ class _Tranche extends StatelessWidget {
         Expanded(
           child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             AnimatedBuilder(
-              animation: vu,
+              animation: Listenable.merge([vu, volume]),
               builder: (_, __) => CustomPaint(
                 size: const Size(14, double.infinity),
                 painter: _Vumetre(
-                  niveau: actif ? (niveau * gain).clamp(0.0, 1.0) : 0,
+                  niveau: actif ? volume.value.clamp(0.0, 1.0) : 0,
                   t: vu.value,
                   phase: phase,
                 ),
               ),
             ),
             Expanded(
-              child: RotatedBox(
-                quarterTurns: 3,
-                child: Slider(value: gain, onChanged: onGain),
+              child: ValueListenableBuilder<double>(
+                valueListenable: volume,
+                builder: (_, v, __) => Column(children: [
+                  Text(
+                    '${((actif ? v : gain) * 100).round()} %',
+                    style: TextStyle(
+                        fontFamily: kPoliceTexte,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        color: actif ? Console.or : Console.doux,
+                        fontFeatures: const [FontFeature.tabularFigures()]),
+                  ),
+                  Expanded(
+                    child: RotatedBox(
+                      quarterTurns: 3,
+                      child: Slider(value: (actif ? v : gain).clamp(0.0, 1.0), onChanged: onGain),
+                    ),
+                  ),
+                ]),
               ),
             ),
           ]),

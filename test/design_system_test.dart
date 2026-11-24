@@ -153,11 +153,11 @@ void main() {
       await tester.pump(const Duration(milliseconds: 2400));
       // Le premier figé rappelle de fixer le besoin.
       expect(find.text(g.rituel.premierFige), findsOneWidget);
+      // Plus d'ellipse (« Quelques heures plus tard… ») : la carte du palier
+      // arrive juste après le figé.
       await tester.pump(const Duration(seconds: 4));
       await tester.pump(const Duration(milliseconds: 600));
-      expect(find.text(t.t('rituel.texte_ellipse')), findsOneWidget);
-      await tester.pump(const Duration(seconds: 3));
-      await tester.pump(const Duration(milliseconds: 600));
+      expect(find.text('Quelques heures plus tard…'), findsNothing);
       expect(find.text(g.palier(PalierId.enferme).nom), findsOneWidget);
       expect(find.text('Les issues sont bloquées.'), findsOneWidget);
       expect(find.text('Bloquer'), findsOneWidget);
