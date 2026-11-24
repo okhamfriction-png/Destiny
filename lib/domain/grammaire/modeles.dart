@@ -331,6 +331,8 @@ class ExempleDistribution {
   /// et un archétype seul (celui de 5, de 6, puis ceux de l'autre duel),
   /// le premier trio que [accepte] retient (les trois couleurs).
   List<String> pour(int joueurs, {bool Function(List<String>)? accepte}) {
+    // À deux : le premier duel de l'exemple.
+    if (joueurs <= 2) return aQuatre.take(2).toList();
     if (joueurs <= 3) {
       final duels = [aQuatre.take(2).toList(), aQuatre.skip(2).take(2).toList()];
       for (final (i, duel) in duels.indexed) {

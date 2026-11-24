@@ -65,7 +65,9 @@ ValeursRegieSon valeursPourExercice(ValeursRegieSon regie, ReglagesExercicesDest
     ..revealActe = [false, false, false, false]
     ..ambianceApresMusique = false
     ..sonOuverture = 'aucun'
-    ..chevauchement = 0;
+    ..chevauchement = 0
+    // Le long form : la musique tourne au fond jusqu'au DESTINY suivant.
+    ..boucle = longForm;
 }
 
 /// Les réglages que lit la conduite d'un exercice : recalculés au lancement.

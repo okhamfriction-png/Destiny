@@ -41,17 +41,17 @@ class ValeursRegieSon {
   double monteeDestiny = 10;
 
   /// Fluide : le maximum tient tant de secondes après le Destiny (jeu muet).
-  double maintienDestiny = 15;
+  double maintienDestiny = 20;
 
   /// Fluide : à l'ouverture, la musique de l'acte 1 tient son maximum tant de
   /// secondes.
-  double maintienOuverture = 30;
+  double maintienOuverture = 20;
 
   /// Fluide : la descente vers le niveau de fond, en secondes.
-  double descenteFond = 3;
+  double descenteFond = 10;
 
   /// Fluide : le niveau de fond de chaque acte (0 à 1), sous les voix.
-  List<double> niveauFond = [0.4, 0.4, 0.4, 0.4];
+  List<double> niveauFond = [0.1, 0.1, 0.1, 0.1];
 
   /// Fluide : le bruitage du palier part tant de secondes après la fin du son
   /// Destiny (négatif : avant).
@@ -110,7 +110,7 @@ class ValeursRegieSon {
 
   /// Le bruitage du palier quand la musique de l'acte arrive à sa fin : à
   /// chaque acte, la musique, puis le danger, puis l'ambiance du lieu.
-  List<bool> bruitageFinMusique = [true, true, true, true];
+  List<bool> bruitageFinMusique = [false, false, false, false];
 
   /// Après la musique d'un acte (et son bruitage), l'ambiance du lieu en
   /// fond, en boucle, à ce volume, jusqu'au Destiny suivant.
@@ -126,7 +126,7 @@ class ValeursRegieSon {
   double remontee = 1.5;
 
   // Stinger de révélation (REVEAL).
-  List<bool> revealActe = [false, false, true, false];
+  List<bool> revealActe = [false, false, false, false];
 
   /// Rang du stinger (0 = le fichier 1), ou -1 : au hasard.
   int revealFichier = 0;
@@ -155,10 +155,10 @@ class ValeursRegieSon {
         'pack_actif': packActif,
         'enchainement': fluide ? 'fluide' : 'classique',
         'montee_destiny': monteeDestiny,
-        'maintien_destiny': maintienDestiny,
-        'maintien_ouverture': maintienOuverture,
-        'descente_fond': descenteFond,
-        'niveau_fond': niveauFond,
+        'maintien_destiny_v3': maintienDestiny,
+        'maintien_ouverture_v3': maintienOuverture,
+        'descente_fond_v3': descenteFond,
+        'niveau_fond_v3': niveauFond,
         'decalage_bruitage': decalageBruitage,
         'attenuation_fluide': attenuationFluide,
         'sortie_sous_destiny': sortieSousDestiny,
@@ -180,17 +180,17 @@ class ValeursRegieSon {
         'volume_echauffement': volumeEchauffement,
         // « _v2 » : avant, le son Destiny ouvrait le spectacle.
         'son_ouverture_v2': sonOuverture,
-        'bruitage_fin_musique_v2': bruitageFinMusique,
+        'bruitage_fin_musique_v3': bruitageFinMusique,
         'son_destiny': sonDestiny,
         'chevauchement': chevauchement,
-        'bruitage_auto_v2': bruitageAuto,
+        'bruitage_auto_v3': bruitageAuto,
         'volume_bruitage': volumeBruitage,
         'duree_max_bruitage': dureeMaxBruitage,
         'fondu_bruitage': fonduBruitage,
         'decalage_codes': decalageCodes,
         'attenuation': attenuation,
         'remontee': remontee,
-        'reveal_acte': revealActe,
+        'reveal_acte_v3': revealActe,
         'reveal_fichier': revealFichier,
         'reveal_max': revealMax,
         'choix_candidat': choixCandidat,
@@ -219,10 +219,10 @@ class ValeursRegieSon {
       ..packActif = b('pack_actif', v.packActif)
       ..fluide = (j['enchainement'] as String? ?? 'fluide') != 'classique'
       ..monteeDestiny = d('montee_destiny', v.monteeDestiny).clamp(3.0, 20.0)
-      ..maintienDestiny = d('maintien_destiny', v.maintienDestiny).clamp(0.0, 30.0)
-      ..maintienOuverture = d('maintien_ouverture', v.maintienOuverture).clamp(0.0, 60.0)
-      ..descenteFond = d('descente_fond', v.descenteFond).clamp(1.0, 10.0)
-      ..niveauFond = _quatre(j['niveau_fond'], v.niveauFond, (x) => nombre(x).clamp(0.0, 1.0))
+      ..maintienDestiny = d('maintien_destiny_v3', v.maintienDestiny).clamp(0.0, 30.0)
+      ..maintienOuverture = d('maintien_ouverture_v3', v.maintienOuverture).clamp(0.0, 60.0)
+      ..descenteFond = d('descente_fond_v3', v.descenteFond).clamp(1.0, 10.0)
+      ..niveauFond = _quatre(j['niveau_fond_v3'], v.niveauFond, (x) => nombre(x).clamp(0.0, 1.0))
       ..decalageBruitage = d('decalage_bruitage', v.decalageBruitage).clamp(-5.0, 5.0)
       ..attenuationFluide = d('attenuation_fluide', v.attenuationFluide).clamp(0.0, 1.0)
       ..sortieSousDestiny = d('sortie_sous_destiny', v.sortieSousDestiny).clamp(0.5, 5.0)
@@ -245,17 +245,17 @@ class ValeursRegieSon {
       ..volumeAmbiance = d('volume_ambiance', v.volumeAmbiance)
       ..volumeEchauffement = d('volume_echauffement', v.volumeEchauffement)
       ..sonOuverture = j['son_ouverture_v2'] as String? ?? v.sonOuverture
-      ..bruitageFinMusique = _quatre(j['bruitage_fin_musique_v2'], v.bruitageFinMusique, booleen)
+      ..bruitageFinMusique = _quatre(j['bruitage_fin_musique_v3'], v.bruitageFinMusique, booleen)
       ..sonDestiny = j['son_destiny'] as String? ?? v.sonDestiny
       ..chevauchement = d('chevauchement', v.chevauchement)
-      ..bruitageAuto = _quatre(j['bruitage_auto_v2'], v.bruitageAuto, booleen)
+      ..bruitageAuto = _quatre(j['bruitage_auto_v3'], v.bruitageAuto, booleen)
       ..volumeBruitage = d('volume_bruitage', v.volumeBruitage)
       ..dureeMaxBruitage = d('duree_max_bruitage', v.dureeMaxBruitage)
       ..fonduBruitage = d('fondu_bruitage', v.fonduBruitage)
       ..decalageCodes = d('decalage_codes', v.decalageCodes)
       ..attenuation = d('attenuation', v.attenuation)
       ..remontee = d('remontee', v.remontee)
-      ..revealActe = _quatre(j['reveal_acte'], v.revealActe, booleen)
+      ..revealActe = _quatre(j['reveal_acte_v3'], v.revealActe, booleen)
       ..revealFichier = (j['reveal_fichier'] as num?)?.toInt() ?? v.revealFichier
       ..revealMax = d('reveal_max', v.revealMax)
       ..choixCandidat = {

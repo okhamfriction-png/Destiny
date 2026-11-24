@@ -746,7 +746,7 @@ void main() {
     });
   });
 
-  testWidgets('en quittant la préparation, le spectacle prend le chrono des réglages', (tester) async {
+  testWidgets('en quittant la préparation, le spectacle prend le chrono de son nombre de joueurs', (tester) async {
     final b = await _banc(tester);
     await tester.runAsync(() => b.contexte.reglages.choisirChrono(0));
     b.session.etape = EtapeSession.preparation;
@@ -761,7 +761,7 @@ void main() {
     );
     await tester.tap(find.text('aller'));
     await tester.pumpAndSettle();
-    final chrono = b.contexte.reglages.chronos[0];
+    final chrono = b.contexte.reglages.chronoPourJoueurs(b.session.personnages.length);
     expect(b.session.dureeMinutes, chrono.dureeMinutes);
     expect(b.session.destinyMinutes, chrono.destinyMinutes);
     // La régie, c'est le jeu avec la table de régie ouverte par-dessus.

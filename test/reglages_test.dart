@@ -65,11 +65,11 @@ void main() {
     await tester.runAsync(r.charger);
     await _ouvrir(tester, ReglagesDestinyScreen(reglages: r, audio: AudioService()..setMuted(true), musique: MusicController()));
     expect(find.text(t.t('reglages.chronos').toUpperCase()), findsOneWidget);
-    // Le chrono de 20 min : Destiny 1 à 8 min. On l'avance d'une minute.
+    // Le chrono à 2 joueurs (12 min) : Destiny 1 à 3 min. On l'avance d'une minute.
     final plus = find.byIcon(Icons.add_circle_outline);
     await tester.tap(plus.at(1));
     await tester.pumpAndSettle();
-    expect(r.chronos.first.destinyMinutes.first, 9);
+    expect(r.chronos.first.destinyMinutes.first, 4);
     // Réduire la durée sous le dernier Destiny est refusé.
     for (var i = 0; i < 3; i++) {
       await tester.tap(find.byIcon(Icons.remove_circle_outline).first);

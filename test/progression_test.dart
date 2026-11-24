@@ -52,11 +52,14 @@ void main() {
   });
 
   group('Chronos', () {
-    test('les trois chronos de base', () {
-      expect(kChronosParDefaut.map((c) => c.dureeMinutes), [20, 30, 45]);
-      expect(kChronosParDefaut[0].destinyMinutes, [8, 15, 18]);
-      expect(kChronosParDefaut[1].destinyMinutes, [10, 18, 27]);
-      expect(kChronosParDefaut[2].destinyMinutes, [10, 25, 40]);
+    test('les trois chronos de base, un par nombre de joueurs', () {
+      expect(kChronosParDefaut.map((c) => c.dureeMinutes), [12, 27, 33]);
+      // À 2 : 3 min par acte ; à 3 : 8 min, le dernier à 3 ; à 4 et plus :
+      // 10 min, le dernier à 3.
+      expect(kChronosParDefaut[0].dureesActes, [3, 3, 3, 3]);
+      expect(kChronosParDefaut[1].dureesActes, [8, 8, 8, 3]);
+      expect(kChronosParDefaut[2].dureesActes, [10, 10, 10, 3]);
+      expect([for (var n = 2; n <= 6; n++) rangChronoPourJoueurs(n)], [0, 1, 2, 2, 2]);
       for (final c in kChronosParDefaut) {
         expect(c.valide, isTrue);
         expect(c.dureesActes.reduce((a, b) => a + b), c.dureeMinutes);
@@ -64,12 +67,12 @@ void main() {
     });
 
     test('l\'acte en cours suit les Destiny', () {
-      final c = kChronosParDefaut[1];
+      final c = kChronosParDefaut[2];
       expect(c.acteA(0), 1);
       expect(c.acteA(9.9), 1);
       expect(c.acteA(10), 2);
       expect(c.acteA(20), 3);
-      expect(c.acteA(29), 4);
+      expect(c.acteA(32), 4);
     });
 
     test('un chrono mal réglé est refusé, et se relit depuis le JSON', () {

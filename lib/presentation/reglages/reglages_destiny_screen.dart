@@ -144,7 +144,7 @@ class ReglagesDestinyScreen extends StatelessWidget {
             SectionDestiny(titre: k('distribution'), enfants: [
               Text(k('joueurs'), style: Theme.of(context).textTheme.titleSmall),
               Wrap(spacing: 8, children: [
-                for (final n in [3, 4, 5, 6])
+                for (final n in [2, 3, 4, 5, 6])
                   ChoiceChip(
                     label: Text('$n'),
                     selected: r.joueursParDefaut == n,
@@ -281,6 +281,8 @@ class _EditeurChrono extends StatelessWidget {
             onSelected: (_) => reglages.choisirChrono(index),
           ),
         ]),
+        Text('${k('chrono_joueurs.$index')} · ${ch.dureesActes.join(' · ')} min',
+            style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: c.texteSecondaire)),
         ligne(k('duree'), ch.dureeMinutes, (v) => _changer(context, ch.copierAvec(dureeMinutes: v))),
         for (var i = 0; i < 3; i++)
           ligne(k('destiny_n', {'n': '${i + 1}'}), ch.destinyMinutes[i], (v) {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -143,6 +144,35 @@ void main() {
       });
       expect(relu.choixCandidat['DESTINY2_THRILLER'], 2);
       expect(relu.choixCandidat['DESTINY2_SURVIE'], kCandidatAleatoire);
+    });
+  });
+
+  group('le spectacle', () {
+    test('le DESTINY n°2 joue le son du type du danger ; les deux autres, le son Destiny habituel', () async {
+      final styles = {
+        for (final d in dangers) d.id: d.style,
+      };
+      final journal = <String>[];
+      final conduite = ConduiteSon(
+        pack: PackAudio.pourTests(m, IndexPack(fichiersDuManifeste(m))),
+        reglages: ReglagesRegieSon(ValeursRegieSon()),
+        muet: () => false,
+        fabrique: (b) => LecteurFactice(b, journal)..dureeConnue = const Duration(seconds: 12),
+        attendre: (d) => d >= const Duration(seconds: 60) ? Future<void>.delayed(const Duration(days: 1)) : Future<void>.value(),
+        styleDanger: (id) => styles[id],
+      );
+      final incendie = dangers.firstWhere((d) => d.id == 'incendie');
+      conduite.preparer(lieuId: 'eglise', dangerId: incendie.id, acte: 2);
+      unawaited(conduite.destiny(2));
+      await laisserTourner();
+      final code = codeDestiny2(incendie.style)!;
+      expect(journal.firstWhere((j) => j.startsWith('destiny:jouer:')), contains(code));
+      journal.clear();
+      unawaited(conduite.destiny(3));
+      await laisserTourner();
+      expect(journal.firstWhere((j) => j.startsWith('destiny:jouer:')), 'destiny:jouer:${AudioService.stormAsset}');
+      // Ni bruitage du palier ni REVEAL par défaut.
+      expect(journal.where((j) => j.startsWith('bruitage') || j.startsWith('stinger')), isEmpty);
     });
   });
 

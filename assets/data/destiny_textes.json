@@ -1896,8 +1896,13 @@
     "copier": "Copier",
     "copie": "Copié",
     "chronos": "Les chronos",
-    "chronos_aide": "Trois chronos de base, gardés tant qu'on ne les change pas. Le chrono choisi est proposé par défaut.",
+    "chronos_aide": "Un chrono par nombre de joueurs, proposé d'office quand on prépare un spectacle (on peut toujours en changer, et déplacer les Destiny). « Par défaut » : celui du jeu de rôle.",
     "chrono_n": "{n} min",
+    "chrono_joueurs": {
+      "0": "À 2 joueurs",
+      "1": "À 3 joueurs",
+      "2": "À 4 joueurs et plus"
+    },
     "duree": "Durée",
     "destiny_n": "Destiny {n}",
     "minutes": "{n} min",

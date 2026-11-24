@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../domain/entities/danger.dart';
 import '../../domain/entities/location.dart';
+import '../../domain/grammaire/chronos.dart' show rangChronoPourJoueurs;
 import '../../domain/troupe/session.dart';
 import '../bibliotheque/dangers_lieux_screen.dart';
 import '../destiny/composants.dart';
@@ -36,7 +37,7 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
   List<Danger> _propDangers = const [];
   /// Le chrono de la session parmi ceux des réglages, reconnu à sa durée
   /// (ses Destiny ont pu être déplacés à la main) ; celui des réglages sinon.
-  late int _chrono = _chronoDeLaSession() ?? widget.contexte.reglages.chronoChoisi;
+  late int _chrono = _chronoDeLaSession() ?? rangChronoPourJoueurs(s.personnages.length);
 
   int? _chronoDeLaSession() {
     final chronos = widget.contexte.reglages.chronos;

@@ -139,8 +139,8 @@ void main() {
       expect(validerDistribution(g, v.correction!.appliquer(ids)).valide, isTrue);
     });
 
-    test('refuse moins de 3 ou plus de 6 joueurs', () {
-      expect(validerDistribution(g, ['alarmiste', 'leader']).problemes.single.type, TypeProbleme.nombre);
+    test('refuse moins de 2 ou plus de 6 joueurs', () {
+      expect(validerDistribution(g, ['leader']).problemes.single.type, TypeProbleme.nombre);
       expect(validerDistribution(g, List.filled(7, 'leader')).valide, isFalse);
     });
   });
@@ -226,9 +226,21 @@ void main() {
       expect(sans, greaterThan(40));
     });
 
-    test('n\'existe ni à 2 ni à 7 joueurs', () {
-      expect(() => tirerDistribution(g, 2), throwsArgumentError);
+    test('n\'existe ni à 1 ni à 7 joueurs', () {
+      expect(() => tirerDistribution(g, 1), throwsArgumentError);
       expect(() => tirerDistribution(g, 7), throwsArgumentError);
+    });
+
+    test('à 2 joueurs : un duel complet, sans exiger les trois couleurs', () {
+      for (var i = 0; i < 30; i++) {
+        final ids = tirerDistribution(g, 2, hasard: Random(i));
+        expect(ids, hasLength(2));
+        expect(g.distribution.duelDe(ids.first)?.completDans(ids), isTrue);
+        expect(validerDistribution(g, ids).valide, isTrue);
+      }
+      for (final e in exemplesDistribution(g, 2)) {
+        expect(validerDistribution(g, e).valide, isTrue, reason: '$e');
+      }
     });
 
     test('tirerAnimal choisit un des trois animaux de l\'archétype', () {

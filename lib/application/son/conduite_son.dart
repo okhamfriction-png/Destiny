@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 
+import '../../domain/exercices/exercices_destiny.dart' show codeDestiny2;
 import '../../domain/son/manifeste_audio.dart';
 import '../../domain/son/resolution_son.dart';
 import '../services/audio_service.dart';
@@ -52,6 +53,7 @@ class ConduiteSon extends ChangeNotifier {
     DateTime Function()? maintenant,
     this.avantMusique,
     this.choixSansPack,
+    this.styleDanger,
     this.delaiSecurite = const Duration(seconds: 90),
   })  : _muet = muet ?? (() => false),
         _attendre = attendre ?? ((d) => Future<void>.delayed(d)),
@@ -77,6 +79,10 @@ class ConduiteSon extends ChangeNotifier {
   /// (« aucune », « lieu » pour l'ambiance du lieu, ou une piste embarquée
   /// `music/…`).
   final String Function(int acte)? choixSansPack;
+
+  /// Le style d'un danger (« Catastrophe », « Thriller », « Survie /
+  /// Dilemme ») : le DESTINY n°2 joue le son de son type.
+  final String? Function(String dangerId)? styleDanger;
 
   /// Au-delà, on n'attend plus la fin d'un son (un lecteur muet ne bloque
   /// jamais la suite).
@@ -335,6 +341,7 @@ class ConduiteSon extends ChangeNotifier {
   /// DESTINY n°2 des exercices, selon le type de danger).
   Future<void> destiny(int numero, {SourceSon? son}) async {
     if (!_peutJouer) return;
+    son ??= numero == 2 ? sonDestiny2() : null;
     final seq = ++_seq;
     _jetonMusique++;
     final acte = (numero + 1).clamp(1, 4);
@@ -491,7 +498,7 @@ class ConduiteSon extends ChangeNotifier {
     _sourceActe = source;
     _acteSource = acte;
     _etapeVers(EtapeConduite.musique);
-    await _jouerSur(BusSon.musique, source, niveau: _volumeMusique, boucle: true);
+    await _jouerSur(BusSon.musique, source, niveau: _volumeMusique, boucle: v.boucle);
     if (seq != _seq) return;
     _phaseVers(PhaseFluide.jeuMuet, v.maintienOuverture);
     await _attendre(_s(v.maintienOuverture));
@@ -547,7 +554,7 @@ class ConduiteSon extends ChangeNotifier {
           _sourceActe = source;
           _acteSource = acte;
           _etapeVers(EtapeConduite.musique);
-          await _jouerSur(BusSon.musique, source, niveau: 0, boucle: true);
+          await _jouerSur(BusSon.musique, source, niveau: 0, boucle: v.boucle);
           if (seq != _seq) return;
           // Si le Destiny est trop court, une montée d'une seconde au moins.
           unawaited(_fondre(BusSon.musique, _attenue ? maxi * _facteurAttenuation : maxi, max(montee, 1)));
@@ -563,7 +570,7 @@ class ConduiteSon extends ChangeNotifier {
       (
         bruitage,
         () async {
-          if (active) unawaited(_jouerBruitages(bruitagesDuPalier(acte), seq));
+          if (active && v.bruitageAuto[acte - 1]) unawaited(_jouerBruitages(bruitagesDuPalier(acte), seq));
         }
       ),
       (t + v.maintienDestiny, () => _descendreAuFond(acte, v, seq)),
@@ -666,6 +673,18 @@ class ConduiteSon extends ChangeNotifier {
     if (seq != _seq || !lecteurs[BusSon.stinger]!.actif) return;
     await _fondre(BusSon.stinger, 0, fondu);
     if (seq == _seq) await lecteurs[BusSon.stinger]!.arreter();
+  }
+
+  /// Le son du DESTINY n°2 pour le danger en cours, selon son type (null :
+  /// type inconnu ou son absent du pack, le son Destiny habituel joue).
+  SourceSon? sonDestiny2() {
+    final m = _m;
+    final d = _dangerId;
+    if (m == null || d == null || d.isEmpty || !pack.disponible) return null;
+    final code = codeDestiny2(styleDanger?.call(d) ?? '');
+    if (code == null) return null;
+    final r = resoudreCode(m, pack.index, code, choix: _v.choixCandidat, hasard: _hasard);
+    return r == null ? null : SourcePack(r.chemin, titre: m.sons[r.codeJoue]?.nom ?? code);
   }
 
   /// Les bruitages du palier [palier] pour le danger en cours.

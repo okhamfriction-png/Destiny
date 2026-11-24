@@ -114,7 +114,7 @@ void main() {
       final r = ReglagesDestiny();
       await r.charger();
       expect(r.sonDestiny, 'thunder'); // repris des réglages 1.x
-      expect(r.chronos.map((c) => c.dureeMinutes), [20, 30, 45]);
+      expect(r.chronos.map((c) => c.dureeMinutes), [12, 27, 33]);
       await r.changer(declenchement: Declenchement.manuel, musiqueFin: 'aucune');
       await r.changerMusiqueActe(2, 'music/atm_cave.m4a');
       final relu = ReglagesDestiny();

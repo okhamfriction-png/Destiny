@@ -108,7 +108,7 @@ void tirerGroupeSiVide(SessionTroupe s, TextesDestiny t, {Random? hasard}) {
 /// des réglages en quittant la préparation.
 Future<void> allerAEtape(BuildContext context, ContexteTroupe ctx, SessionTroupe s, EtapeSession etape) async {
   if (etape == s.etape) return;
-  if (s.etape == EtapeSession.preparation) appliquerChrono(s, ctx.reglages.chrono);
+  if (s.etape == EtapeSession.preparation) appliquerChrono(s, ctx.reglages.chronoPourJoueurs(s.personnages.length));
   s.etape = etape;
   await ctx.store.enregistrer(s);
   if (context.mounted) ouvrirEtape(context, ctx, s, remplacer: true);

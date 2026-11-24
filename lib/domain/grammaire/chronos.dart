@@ -59,10 +59,20 @@ class ChronoSpectacle {
   int get hashCode => Object.hash(dureeMinutes, destinyMinutes.join(','));
 }
 
-/// Les trois chronos de base, choisis par la troupe. Modifiables dans les
-/// réglages.
+/// Les trois chronos de base, un par nombre de joueurs, modifiables dans
+/// les réglages :
+/// - à 2 : 12 min, 3 min par acte ;
+/// - à 3 : 8 min par acte, le dernier à 3 min (27 min) ;
+/// - à 4 et plus : 10 min par acte, le dernier à 3 min (33 min).
 const List<ChronoSpectacle> kChronosParDefaut = [
-  ChronoSpectacle(dureeMinutes: 20, destinyMinutes: [8, 15, 18]),
-  ChronoSpectacle(dureeMinutes: 30, destinyMinutes: [10, 18, 27]),
-  ChronoSpectacle(dureeMinutes: 45, destinyMinutes: [10, 25, 40]),
+  ChronoSpectacle(dureeMinutes: 12, destinyMinutes: [3, 6, 9]),
+  ChronoSpectacle(dureeMinutes: 27, destinyMinutes: [8, 16, 24]),
+  ChronoSpectacle(dureeMinutes: 33, destinyMinutes: [10, 20, 30]),
 ];
+
+/// Le chrono de base (son rang dans [kChronosParDefaut]) pour [joueurs].
+int rangChronoPourJoueurs(int joueurs) => joueurs <= 2
+    ? 0
+    : joueurs == 3
+        ? 1
+        : 2;

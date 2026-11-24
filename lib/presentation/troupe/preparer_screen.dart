@@ -63,6 +63,7 @@ class _PreparerScreenState extends State<PreparerScreen> {
       if (nouvelle && _mode != 'concerte') _distribuer();
       if (s.lieuNom.isEmpty) _tirerLieu();
       if (s.dangerNom.isEmpty) _tirerDanger();
+      _retrouverIds();
       _sauver();
     });
   }
@@ -76,6 +77,22 @@ class _PreparerScreenState extends State<PreparerScreen> {
       _dangers = dangers;
       _catalogueCharge = true;
     });
+  }
+
+  /// Un lieu ou un danger gardé par son nom seulement (une session d'avant,
+  /// ou recopiée) retrouve son identifiant, donc son image.
+  void _retrouverIds() {
+    String norme(String x) => Grammaire.normaliser(x);
+    if (s.lieuId.isEmpty && s.lieuNom.isNotEmpty) {
+      for (final l in _lieux) {
+        if (norme(l.name) == norme(s.lieuNom)) setState(() => s.lieuId = l.id);
+      }
+    }
+    if (s.dangerId.isEmpty && s.dangerNom.isNotEmpty) {
+      for (final d in _dangers) {
+        if (norme(d.name) == norme(s.dangerNom)) setState(() => s.dangerId = d.id);
+      }
+    }
   }
 
   List<Location> get _lieuxPossibles => [
@@ -221,24 +238,11 @@ class _PreparerScreenState extends State<PreparerScreen> {
         SectionDestiny(titre: p('joueurs'), espace: 14, enfants: [
           SegmentedButton<int>(
             segments: [
-              for (final n in [3, 4, 5, 6]) ButtonSegment(value: n, label: Text('$n'))
+              for (final n in [2, 3, 4, 5, 6]) ButtonSegment(value: n, label: Text('$n'))
             ],
             selected: {s.personnages.length},
             onSelectionChanged: (v) => _changerNombre(v.first),
           ),
-        ]),
-        SectionDestiny(titre: p('distribution'), enfants: [
-          Wrap(spacing: 8, runSpacing: 8, children: [
-            for (final m in ['tirage', 'exemple', 'concerte'])
-              ChoiceChip(
-                label: Text(t.t('distribution.modes.$m')),
-                selected: _mode == m,
-                onSelected: (_) {
-                  setState(() => _mode = m);
-                  if (_mode != 'concerte') _distribuer();
-                },
-              ),
-          ]),
         ]),
         const SizedBox(height: 22),
         SizedBox(
@@ -318,7 +322,7 @@ class _PreparerScreenState extends State<PreparerScreen> {
           child: FilledButton.icon(
             onPressed: verdict.valide
                 ? () async {
-                    appliquerChrono(s, widget.contexte.reglages.chrono);
+                    appliquerChrono(s, widget.contexte.reglages.chronoPourJoueurs(s.personnages.length));
                     s.etape = EtapeSession.echauffement;
                     await _sauver();
                     if (context.mounted) ouvrirEtape(context, widget.contexte, s, remplacer: true);
@@ -478,7 +482,7 @@ class _VignetteTirage extends StatelessWidget {
               colors: [c.orFonce, c.nuit],
             ),
           ),
-          child: Center(child: Icon(icone, size: 48, color: c.orClair)),
+          child: Center(child: Icon(icone, size: 22, color: c.orClair)),
         );
     Widget bouton(IconData i, String tip, VoidCallback? onTap) => Material(
           color: Colors.black.withValues(alpha: 0.45),
@@ -486,7 +490,7 @@ class _VignetteTirage extends StatelessWidget {
           child: IconButton(
             tooltip: tip,
             visualDensity: VisualDensity.compact,
-            iconSize: 20,
+            iconSize: 16,
             color: Colors.white,
             icon: Icon(i),
             onPressed: onTap,
@@ -495,7 +499,9 @@ class _VignetteTirage extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: AspectRatio(
-        aspectRatio: 0.85,
+        // Une vignette basse : le tirage se lit d'un coup d'œil, sans prendre
+        // tout l'écran.
+        aspectRatio: 1.9,
         child: Stack(fit: StackFit.expand, children: [
           if (id.isNotEmpty && source == VisualSource.ai)
             Image.asset('assets/images/$dossier/$id.jpg', fit: BoxFit.cover, errorBuilder: (_, __, ___) => repli())
@@ -520,19 +526,19 @@ class _VignetteTirage extends StatelessWidget {
               Text(surtitre.toUpperCase(),
                   style: const TextStyle(
                       fontFamily: kPoliceTexte,
-                      fontSize: 12,
+                      fontSize: 10.5,
                       letterSpacing: 1.1,
                       fontWeight: FontWeight.w700,
                       color: Color(0xFFF0DDB0))),
               const SizedBox(height: 2),
               Text(nom.isEmpty ? '—' : nom,
-                  maxLines: 3,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                       fontFamily: kPoliceTexte,
                       fontWeight: FontWeight.w700,
-                      fontSize: 16.5,
-                      height: 1.2,
+                      fontSize: 14,
+                      height: 1.15,
                       color: Colors.white)),
             ]),
           ),

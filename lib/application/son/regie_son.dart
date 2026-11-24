@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:flutter/services.dart' show rootBundle;
+
 import '../services/audio_service.dart';
 import '../state/music_controller.dart';
 import '../state/reglages_destiny.dart';
@@ -21,7 +25,8 @@ class RegieSon {
       {required AudioService audio, required MusicController musique, ReglagesDestiny? reglagesDestiny}) async {
     final pack = PackAudio();
     final reglages = ReglagesRegieSon();
-    await Future.wait([pack.charger(), reglages.charger()]);
+    final styles = <String, String>{};
+    await Future.wait([pack.charger(), reglages.charger(), _chargerStyles(styles)]);
     final conduite = ConduiteSon(
       pack: pack,
       reglages: reglages,
@@ -32,8 +37,21 @@ class RegieSon {
       },
       // Sans pack : la musique de chaque acte choisie dans les réglages.
       choixSansPack: reglagesDestiny == null ? null : (acte) => reglagesDestiny.musiqueActe(acte),
+      // Le DESTINY n°2 joue le son du type du danger.
+      styleDanger: (id) => styles[id],
     );
     return RegieSon(pack: pack, reglages: reglages, conduite: conduite);
+  }
+
+  /// Le style de chaque danger, lu dans `dangers.json`.
+  static Future<void> _chargerStyles(Map<String, String> styles) async {
+    try {
+      final j = jsonDecode(await rootBundle.loadString('assets/data/dangers.json')) as Map<String, dynamic>;
+      for (final d in j['dangers'] as List) {
+        final m = d as Map<String, dynamic>;
+        styles['${m['id']}'] = '${m['style'] ?? ''}';
+      }
+    } catch (_) {}
   }
 }
 

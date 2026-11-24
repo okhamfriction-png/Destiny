@@ -91,6 +91,20 @@ class LecteurFactice extends LecteurSon {
   Future<Duration?> duree() async => dureeConnue;
 }
 
+/// La régie d'avant la 2.7.0 : maintien 15 s (30 s à l'ouverture), descente
+/// en 3 s vers 40 %, REVEAL à l'acte 3, bruitage à la fin de la musique ; en
+/// fluide, le bruitage du palier au Destiny et le fond en boucle. Les tests
+/// des séquences la gardent ; les valeurs d'aujourd'hui ont leur propre test.
+ValeursRegieSon ancienneRegie({bool fluide = false}) => ValeursRegieSon()
+  ..maintienDestiny = 15
+  ..maintienOuverture = 30
+  ..descenteFond = 3
+  ..niveauFond = [0.4, 0.4, 0.4, 0.4]
+  ..revealActe = [false, false, true, false]
+  ..bruitageFinMusique = [true, true, true, true]
+  ..bruitageAuto = fluide ? [true, true, true, true] : [false, false, false, false]
+  ..boucle = fluide;
+
 /// Laisse tourner les tâches en attente (les fondus des tests sont immédiats).
 Future<void> laisserTourner() async {
   for (var i = 0; i < 400; i++) {
@@ -146,7 +160,7 @@ class Chrono {
 }) {
   // Par défaut, l'enchaînement classique : ces tests gardent la séquence
   // d'avant le mode fluide, à l'identique.
-  final v = (valeurs ?? (ValeursRegieSon()..sansCourbes()))..fluide = fluide;
+  final v = (valeurs ?? (ancienneRegie(fluide: fluide)..sansCourbes()))..fluide = fluide;
   final journal = <String>[];
   final lecteurs = <BusSon, LecteurFactice>{};
   final conduite = ConduiteSon(
@@ -333,9 +347,10 @@ void main() {
       final v = ValeursRegieSon();
       // À chaque acte : la musique, puis le bruitage à sa fin, jamais en même
       // temps.
+      // Plus de bruitage du danger ni de REVEAL par défaut (2.7.0).
       expect(v.bruitageAuto, [false, false, false, false]);
-      expect(v.bruitageFinMusique, [true, true, true, true]);
-      expect(v.revealActe, [false, false, true, false]);
+      expect(v.bruitageFinMusique, [false, false, false, false]);
+      expect(v.revealActe, [false, false, false, false]);
       expect(v.courbes.map((c) => [for (final p in c) (p.secondes, p.volume)]), everyElement([(30.0, 0.5)]));
       expect(v.finAZero, [true, true, true, true]);
       v.courbes[1] = [PointVolume(20, 0.6), PointVolume(90, 0.3)];
@@ -356,9 +371,25 @@ void main() {
     test('les réglages : fluide par défaut, gardés en JSON, bornés ; une ancienne sauvegarde passe en fluide', () {
       final defaut = ValeursRegieSon();
       expect(defaut.fluide, isTrue);
+      // 2.7.0 : 20 s au maximum, puis 10 s de descente jusqu'à 10 %.
       expect((defaut.monteeDestiny, defaut.maintienDestiny, defaut.maintienOuverture, defaut.descenteFond),
-          (10, 15, 30, 3));
-      expect(defaut.niveauFond, [0.4, 0.4, 0.4, 0.4]);
+          (10, 20, 20, 10));
+      expect(defaut.niveauFond, [0.1, 0.1, 0.1, 0.1]);
+      expect(defaut.boucle, isFalse, reason: 'au fond jusqu\'à la fin de la musique');
+      // Une sauvegarde d'avant la 2.7.0 (anciennes clés) prend les nouvelles
+      // valeurs.
+      final avant = ValeursRegieSon.depuisJson({
+        'maintien_destiny': 15,
+        'maintien_ouverture': 30,
+        'descente_fond': 3,
+        'niveau_fond': [0.4, 0.4, 0.4, 0.4],
+        'reveal_acte': [false, false, true, false],
+        'bruitage_fin_musique_v2': [true, true, true, true],
+      });
+      expect((avant.maintienDestiny, avant.maintienOuverture, avant.descenteFond), (20, 20, 10));
+      expect(avant.niveauFond, [0.1, 0.1, 0.1, 0.1]);
+      expect(avant.revealActe, everyElement(isFalse));
+      expect(avant.bruitageFinMusique, everyElement(isFalse));
       expect((defaut.decalageBruitage, defaut.attenuationFluide, defaut.sortieSousDestiny), (0, 0.6, 2));
       final v = ValeursRegieSon()
         ..fluide = false
@@ -394,7 +425,10 @@ void main() {
         int numero = 2}) async {
       late Chrono chrono;
       final t = conduiteDeTest(
-          valeurs: valeurs ?? ValeursRegieSon(), fluide: true, vraiTemps: true, maintenant: () => chrono.maintenant());
+          valeurs: valeurs ?? ancienneRegie(fluide: true),
+          fluide: true,
+          vraiTemps: true,
+          maintenant: () => chrono.maintenant());
       chrono = Chrono(t.journal);
       t.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme', acte: numero);
       unawaited(t.conduite.musiqueActe(numero));
@@ -462,7 +496,7 @@ void main() {
     });
 
     testWidgets('DESTINY 1 (acte 2) : pas de REVEAL ; le bruitage décalé de +2 s', (tester) async {
-      final t = await acte3(tester, numero: 1, valeurs: ValeursRegieSon()..decalageBruitage = 2);
+      final t = await acte3(tester, numero: 1, valeurs: ancienneRegie(fluide: true)..decalageBruitage = 2);
       await t.chrono.avancer(tester, 26);
       expect(t.chrono.quand('bruitageA:jouer'), closeTo(24, 0.2));
       expect(t.journal.where((e) => e.startsWith('stinger')), isEmpty);
@@ -493,7 +527,8 @@ void main() {
         (tester) async {
       late Chrono c;
       final t =
-          conduiteDeTest(valeurs: ValeursRegieSon(), fluide: true, vraiTemps: true, maintenant: () => c.maintenant());
+          conduiteDeTest(
+              valeurs: ancienneRegie(fluide: true), fluide: true, vraiTemps: true, maintenant: () => c.maintenant());
       c = Chrono(t.journal);
       final musique = t.lecteurs[BusSon.musique]!;
       t.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
@@ -614,7 +649,7 @@ void main() {
 
     test('un son d\'ouverture choisi passe avant la musique de l\'acte 1', () async {
       final t = conduiteDeTest(
-          valeurs: ValeursRegieSon()
+          valeurs: ancienneRegie()
             ..sansCourbes()
             ..sonOuverture = 'storm');
       t.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
@@ -873,7 +908,7 @@ void main() {
     testWidgets('courbe de volume : 70 % au départ, 50 % à 30 s, puis 0 % à la fin du morceau, où elle s\'arrête',
         (tester) async {
       expect(ValeursRegieSon().boucle, isFalse, reason: 'les musiques s\'arrêtent à la fin');
-      final t = conduiteDeTest(valeurs: ValeursRegieSon(), vraiTemps: true);
+      final t = conduiteDeTest(valeurs: ancienneRegie(), vraiTemps: true);
       t.conduite.preparer(lieuId: 'eglise', dangerId: 'siege_arme');
       final musique = t.lecteurs[BusSon.musique]!;
       // La musique de l'acte 1 de l'église dure 115,2 s (manifeste).

@@ -116,6 +116,15 @@ int compterFamille(Grammaire g, Iterable<String> ids, FamilleId famille) =>
 List<FamilleId> couleursManquantes(Grammaire g, Iterable<String> ids) =>
     [for (final f in FamilleId.values) if (compterFamille(g, ids, f) == 0) f];
 
+/// Les trois couleurs sont exigées à partir de trois joueurs : à deux, un
+/// seul duel, deux couleurs au plus.
+bool couleursExigees(int joueurs) => joueurs >= 3;
+
+/// Les couleurs qui manquent à [ids], si elles sont exigées pour ce nombre de
+/// joueurs.
+List<FamilleId> _manquantes(Grammaire g, List<String> ids) =>
+    couleursExigees(ids.length) ? couleursManquantes(g, ids) : const [];
+
 /// Les archétypes de la distribution qui jouent sans leur adversaire.
 List<String> archetypesSeuls(Grammaire g, List<String> ids) => [
       for (final id in ids)
@@ -155,7 +164,7 @@ List<ProblemeDistribution> _problemes(Grammaire g, List<String> ids, ModeDistrib
   for (final id in seuls.take(enTrop < 0 ? 0 : enTrop)) {
     problemes.add(ProblemeDistribution(TypeProbleme.duelIncomplet, archetypeId: id));
   }
-  for (final f in couleursManquantes(g, ids)) {
+  for (final f in _manquantes(g, ids)) {
     problemes.add(ProblemeDistribution(TypeProbleme.familleManquante, famille: f));
   }
   return problemes;
@@ -224,7 +233,7 @@ List<String> tirerDistribution(
   final rng = hasard ?? Random();
   final compo = g.distribution.pour(joueurs);
   if (compo == null) {
-    throw ArgumentError.value(joueurs, 'joueurs', 'Destiny se joue de 3 à 6.');
+    throw ArgumentError.value(joueurs, 'joueurs', 'Destiny se joue de 2 à 6.');
   }
   final requis = <String>{
     if (mode == ModeDistribution.serie) Grammaire.alarmisteId,
@@ -263,7 +272,7 @@ List<String>? _unTirage(Grammaire g, CompositionDistribution compo, Random rng) 
       ids.add(libres[rng.nextInt(libres.length)]);
     }
   }
-  if (couleursManquantes(g, ids).isNotEmpty) return null;
+  if (_manquantes(g, ids).isNotEmpty) return null;
   return ids;
 }
 
@@ -297,7 +306,7 @@ bool _possible(Grammaire g, CompositionDistribution compo, List<String> requis) 
           ];
     for (final s in seuls) {
       final tirage = [...ids, ...s];
-      if (couleursManquantes(g, tirage).isNotEmpty) continue;
+      if (_manquantes(g, tirage).isNotEmpty) continue;
       if (requis.every(tirage.contains)) return true;
     }
   }
@@ -306,7 +315,7 @@ bool _possible(Grammaire g, CompositionDistribution compo, List<String> requis) 
 
 /// Les exemples tout prêts pour [joueurs] joueurs.
 List<List<String>> exemplesDistribution(Grammaire g, int joueurs) => [
-      for (final e in g.distribution.exemples) e.pour(joueurs, accepte: (ids) => couleursManquantes(g, ids).isEmpty),
+      for (final e in g.distribution.exemples) e.pour(joueurs, accepte: (ids) => _manquantes(g, ids).isEmpty),
     ];
 
 /// Tire un animal parmi les trois de l'archétype.

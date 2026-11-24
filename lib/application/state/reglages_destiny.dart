@@ -131,6 +131,9 @@ class ReglagesDestiny extends ChangeNotifier {
   List<ChronoSpectacle> get chronos => List.unmodifiable(_chronos);
   int get chronoChoisi => _chronoChoisi.clamp(0, _chronos.length - 1);
   ChronoSpectacle get chrono => _chronos[chronoChoisi];
+
+  /// Le chrono par défaut d'un spectacle à [joueurs] joueurs.
+  ChronoSpectacle chronoPourJoueurs(int joueurs) => _chronos[rangChronoPourJoueurs(joueurs)];
   Declenchement get declenchement => _declenchement;
 
   /// La musique de l'acte [acte] (1 à 4) : l'acte 1 au début du spectacle,
@@ -197,7 +200,9 @@ class ReglagesDestiny extends ChangeNotifier {
     final chronos = [
       for (final c in (j['chronos'] as List? ?? const [])) ChronoSpectacle.depuisJson(c),
     ].whereType<ChronoSpectacle>().toList();
-    if (chronos.length == kChronosParDefaut.length) _chronos = chronos;
+    // Les chronos d'avant (20, 30 et 45 min) laissent la place à ceux par
+    // nombre de joueurs (12, 27 et 33 min) : repris seulement s'ils en sont.
+    if (chronos.length == kChronosParDefaut.length && j['chronos_par_joueurs'] == true) _chronos = chronos;
     _chronoChoisi = (j['chrono_choisi'] as num?)?.toInt() ?? _chronoChoisi;
     _declenchement = Declenchement.depuisTexte(j['declenchement'] as String?);
     final actes = [
@@ -225,7 +230,7 @@ class ReglagesDestiny extends ChangeNotifier {
     _rappelPremierFige = j['rappel_premier_fige'] as bool? ?? _rappelPremierFige;
     _rappelsRegie = j['rappels_regie'] as bool? ?? _rappelsRegie;
     _reduireAnimations = j['reduire_animations'] as bool? ?? _reduireAnimations;
-    _joueursParDefaut = (j['joueurs'] as num?)?.toInt() ?? _joueursParDefaut;
+    _joueursParDefaut = ((j['joueurs'] as num?)?.toInt() ?? _joueursParDefaut).clamp(2, 6);
     _modeDistribution = j['mode_distribution'] as String? ?? _modeDistribution;
     _moduleTraitre = j['module_traitre'] as bool? ?? _moduleTraitre;
     _kidsParDefaut = j['kids'] as bool? ?? _kidsParDefaut;
@@ -248,6 +253,7 @@ class ReglagesDestiny extends ChangeNotifier {
 
   Map<String, dynamic> versJson() => {
         'chronos': [for (final c in _chronos) c.versJson()],
+        'chronos_par_joueurs': true,
         'chrono_choisi': _chronoChoisi,
         'declenchement': _declenchement.name,
         'musiques_actes': _musiquesActes,
@@ -358,7 +364,7 @@ class ReglagesDestiny extends ChangeNotifier {
     _rappelPremierFige = rappelPremierFige ?? _rappelPremierFige;
     _rappelsRegie = rappelsRegie ?? _rappelsRegie;
     _reduireAnimations = reduireAnimations ?? _reduireAnimations;
-    _joueursParDefaut = (joueursParDefaut ?? _joueursParDefaut).clamp(3, 6);
+    _joueursParDefaut = (joueursParDefaut ?? _joueursParDefaut).clamp(2, 6);
     _modeDistribution = modeDistribution ?? _modeDistribution;
     _moduleTraitre = moduleTraitre ?? _moduleTraitre;
     _kidsParDefaut = kidsParDefaut ?? _kidsParDefaut;
