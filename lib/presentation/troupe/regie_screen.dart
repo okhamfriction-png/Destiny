@@ -61,7 +61,13 @@ class _RegieScreenState extends State<RegieScreen> {
         widget.session,
         contexteRituel: () => mounted ? context : null,
       );
-  List<Dilemma> _dilemmes = const [];
+  List<Dilemma> _tousDilemmes = const [];
+
+  /// Les dilemmes du danger : il peut n'être tiré qu'au DESTINY n°1.
+  List<Dilemma> get _dilemmes => [
+        for (final x in _tousDilemmes)
+          if (x.dangerLie.isNotEmpty && x.dangerLie == widget.session.dangerId) x,
+      ];
 
   SessionTroupe get s => widget.session;
   ReglagesDestiny get r => widget.contexte.reglages;
@@ -75,10 +81,7 @@ class _RegieScreenState extends State<RegieScreen> {
     _sp.addListener(_maj);
     widget.contexte.catalogue.getDilemmas().then((d) {
       if (!mounted) return;
-      setState(() => _dilemmes = [
-            for (final x in d)
-              if (x.dangerLie == s.dangerId) x,
-          ]);
+      setState(() => _tousDilemmes = d);
     });
   }
 

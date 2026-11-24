@@ -217,6 +217,10 @@ class SessionTroupe implements SceneJouee {
   List<String> ceQuiAMarche;
   bool kids;
 
+  /// Le dé des survivants du DESTINY n°3 : « tous », « public », ou le
+  /// nombre de survivants (« 0 », « 1 »…). Vide : pas encore lancé.
+  String survivants = '';
+
   Map<String, dynamic> versJson() => {
         'id': id,
         'date': date.toIso8601String(),
@@ -239,6 +243,7 @@ class SessionTroupe implements SceneJouee {
         'notes': [for (final n in notes) n.versJson()],
         'ce_qui_a_marche': ceQuiAMarche,
         'kids': kids,
+        if (survivants.isNotEmpty) 'survivants': survivants,
       };
 
   factory SessionTroupe.depuisJson(Map<String, dynamic> j) {
@@ -274,6 +279,6 @@ class SessionTroupe implements SceneJouee {
       notes: [for (final n in ms(j['notes'])) NoteRegie.depuisJson(n)],
       ceQuiAMarche: ls(j['ce_qui_a_marche']),
       kids: j['kids'] as bool? ?? false,
-    );
+    )..survivants = j['survivants'] as String? ?? '';
   }
 }

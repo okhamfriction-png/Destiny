@@ -62,7 +62,8 @@ class _PreparerScreenState extends State<PreparerScreen> {
       // À l'arrivée, tout est déjà tiré : on n'a plus qu'à jouer.
       if (nouvelle && _mode != 'concerte') _distribuer();
       if (s.lieuNom.isEmpty) _tirerLieu();
-      if (s.dangerNom.isEmpty) _tirerDanger();
+      // Au début, un lieu seulement : le danger tombe au DESTINY n°1, au dé.
+      if (s.destinys.isEmpty) _oublierDanger();
       _retrouverIds();
       _sauver();
     });
@@ -99,21 +100,9 @@ class _PreparerScreenState extends State<PreparerScreen> {
         for (final l in _lieux)
           if (l.actif && (!s.kids || l.kids)) l
       ];
-  List<Danger> get _dangersPossibles => [
-        for (final d in _dangers)
-          if (d.actif && d.paliers.length == 4 && (!s.kids || d.kids)) d
-      ];
-
   Location? get _lieu {
     for (final l in _lieux) {
       if (l.id == s.lieuId) return l;
-    }
-    return null;
-  }
-
-  Danger? get _danger {
-    for (final d in _dangers) {
-      if (d.id == s.dangerId) return d;
     }
     return null;
   }
@@ -135,19 +124,21 @@ class _PreparerScreenState extends State<PreparerScreen> {
     });
   }
 
-  void _tirerDanger() {
-    final d = _autre(_dangersPossibles, (d) => d.id == s.dangerId);
+  /// Pas de danger avant le DESTINY n°1 (une session préparée avant la 2.7.0
+  /// avait déjà le sien).
+  void _oublierDanger() {
+    if (s.dangerNom.isEmpty && s.dangerId.isEmpty && s.paliers.isEmpty) return;
     setState(() {
-      s.dangerId = d?.id ?? '';
-      s.dangerNom = d?.name ?? '';
-      s.paliers = d?.paliersPour(kids: s.kids) ?? [];
+      s.dangerId = '';
+      s.dangerNom = '';
+      s.paliers = [];
+      s.survivants = '';
     });
   }
 
-  /// « Tirer » : le lieu, le danger et la distribution, d'un seul geste.
+  /// « Tirer » : le lieu et la distribution, d'un seul geste.
   void _toutTirer() {
     _tirerLieu();
-    _tirerDanger();
     if (_mode == 'exemple') _exemple++;
     if (_mode != 'concerte') _distribuer();
     _sauver();
@@ -262,7 +253,7 @@ class _PreparerScreenState extends State<PreparerScreen> {
             textAlign: TextAlign.center,
             style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: c.texteSecondaire)),
         SectionDestiny(titre: p('tirage'), enfants: [
-          if (_catalogueCharge && _lieuxPossibles.isEmpty && _dangersPossibles.isEmpty)
+          if (_catalogueCharge && _lieuxPossibles.isEmpty)
             Paragraphe(p('catalogue_vide'), italique: true)
           else
             Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -284,23 +275,7 @@ class _PreparerScreenState extends State<PreparerScreen> {
                 ),
               ),
               const SizedBox(width: 10),
-              Expanded(
-                child: _VignetteTirage(
-                  dossier: 'dangers',
-                  id: s.dangerId,
-                  surtitre: p('danger'),
-                  nom: s.dangerNom,
-                  icone: Icons.bolt_rounded,
-                  source: widget.contexte.visuels.source,
-                  onRelancer: () {
-                    _tirerDanger();
-                    _sauver();
-                  },
-                  relancer: p('autre_danger'),
-                  onInfo: _danger == null ? null : () => _ouvrir(FicheDanger(danger: _danger!)),
-                  info: p('info_de', {'nom': s.dangerNom}),
-                ),
-              ),
+              Expanded(child: _DangerAuDestiny(texte: p('danger_au_destiny'))),
             ]),
         ]),
         SectionDestiny(titre: p('archetypes'), enfants: [
@@ -770,6 +745,40 @@ class _Verdict extends StatelessWidget {
             ),
         ],
       ]),
+    );
+  }
+}
+
+/// À la place du danger : il tombe au DESTINY n°1, au dé.
+class _DangerAuDestiny extends StatelessWidget {
+  const _DangerAuDestiny({required this.texte});
+
+  final String texte;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.destiny;
+    return AspectRatio(
+      aspectRatio: 1.9,
+      child: Container(
+        key: const ValueKey('danger_au_destiny'),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: c.or.withValues(alpha: 0.5), width: 1.2),
+        ),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Icon(Icons.casino_outlined, size: 22, color: c.or),
+          const SizedBox(height: 4),
+          Flexible(
+            child: Text(texte,
+                textAlign: TextAlign.center,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, height: 1.25, color: c.texteSecondaire)),
+          ),
+        ]),
+      ),
     );
   }
 }

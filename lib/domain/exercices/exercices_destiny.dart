@@ -6,6 +6,10 @@
 /// testent seules.
 library;
 
+import 'dart:math';
+
+import '../entities/danger.dart';
+
 /// Les quatre exercices de la section Destiny.
 enum ExerciceDestiny {
   duo(joueurs: 2, idCarnet: 'destiny_duo'),
@@ -193,3 +197,50 @@ String? codeDestiny2(String style) => TypeDanger.deStyle(style)?.codeDestiny2;
 
 /// Le code de la cloche de fin d'exercice.
 const String kCodeCloche = 'FIN_EXERCICE';
+
+/// Le code d'une face du dé des survivants, pour l'enregistrer : « tous »,
+/// « public », ou le nombre (« 0 », « 1 »…).
+String codeSurvivants(FaceSurvivants f) => switch (f) {
+      FaceNombre(:final nombre) => '$nombre',
+      FaceTous() => 'tous',
+      FacePublic() => 'public',
+    };
+
+/// La face d'un code enregistré (null : code vide ou illisible).
+FaceSurvivants? faceDeCode(String code) => switch (code) {
+      'tous' => const FaceTous(),
+      'public' => const FacePublic(),
+      _ => int.tryParse(code) == null ? null : FaceNombre(int.parse(code)),
+    };
+
+/// Le dé du danger du spectacle (DESTINY n°1) : un type au hasard, puis un
+/// danger jouable de ce type (actif, quatre paliers, kids si besoin). Si le
+/// type n'a aucun danger, un danger jouable d'un autre type, et son type.
+/// [type] impose le type (« Retirer un danger » dans le même type).
+({TypeDanger type, Danger? danger}) tirerDangerAuDe(
+  List<Danger> dangers, {
+  bool kids = false,
+  TypeDanger? type,
+  String? sauf,
+  Random? hasard,
+}) {
+  final h = hasard ?? Random();
+  final jouables = [
+    for (final d in dangers)
+      if (d.actif && d.paliers.length == 4 && (!kids || d.kids)) d,
+  ];
+  final t = type ?? TypeDanger.values[h.nextInt(TypeDanger.values.length)];
+  Danger? piocher(List<Danger> liste) {
+    if (liste.isEmpty) return null;
+    final autres = liste.length > 1 ? liste.where((d) => d.id != sauf).toList() : liste;
+    return autres[h.nextInt(autres.length)];
+  }
+
+  final duType = piocher([
+    for (final d in jouables)
+      if (TypeDanger.deStyle(d.style) == t) d,
+  ]);
+  if (duType != null || type != null) return (type: t, danger: duType);
+  final autre = piocher(jouables);
+  return (type: autre == null ? t : TypeDanger.deStyle(autre.style) ?? t, danger: autre);
+}

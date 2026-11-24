@@ -39,7 +39,7 @@ En haut à droite : la **Bibliothèque**, la **Musique**, les **Réglages** et l
 
 Au premier lancement (et une fois après la 2.3.0), cinq écrans simples, **sur la Troupe seulement**, tous tirés de la grammaire :
 1. la promesse : quatre comédiens et un figurant, un lieu, un danger en quatre actes ;
-2. Préparer : le lieu et le danger donnés par le public, les archétypes attribués à l'avance, le chrono ;
+2. Préparer : le lieu (le danger tombe au DESTINY n°1, au dé), les archétypes attribués à l'avance, le chrono ;
 3. le jeu : l'échauffement qui lance la musique de l'acte 1, les quatre paliers, le rituel Destiny et la suite de la régie son ;
 4. la régie : la table de régie, DESTINY, Terminer ; le danger vient de la régie ;
 5. les personnages : les trois familles, le vouloir et le besoin, des directions pas des prisons.
@@ -52,7 +52,7 @@ On peut les passer, et les revoir depuis la Bibliothèque ou les Réglages. **Le
 
 L'accueil montre la promesse et, tirée au hasard à chaque ouverture, une règle d'or ou la réplique du jour. Puis :
 
-1. **Préparer** : spectacle ou répétition, 3, 4, 5 ou 6 joueurs.
+1. **Préparer** : spectacle ou répétition, 2 à 6 joueurs. Un lieu seulement : le danger tombe au DESTINY n°1 (le dé du danger), et le DESTINY n°3 lance le dé des survivants.
    - La distribution se fait par choix concerté, tirage ou exemple tout prêt, toujours **par duels** : huit archétypes, quatre duels qui s'opposent dans leur réflexe (Alarmiste contre Dénégateur, Leader contre Tyran, Aidant contre Paranoïaque, Protecteur contre Prophète). À 3 joueurs, un duel et un archétype seul ; à 4, deux duels ; à 5, deux duels et un seul ; à 6, trois duels. Les trois couleurs (vert, bleu, rouge) sont toujours sur scène, dès 3 joueurs : à 3 et 5, l'archétype seul complète la couleur qui manque, et à 3 le duel Alarmiste-Dénégateur, tout bleu, n'est jamais tiré. Le leader n'est pas obligatoire : les duels et les trois couleurs suffisent. L'alarmiste est facultatif au spectacle (le danger vient de la régie).
    - À côté de chaque personnage, **son adversaire** (« Contre Tyran »), et sous la liste, les duels de la distribution avec leur enjeu. Une distribution qui sort des duels est signalée, avec une phrase qui dit pourquoi et une correction en un geste (un archétype, ou tout un duel).
    - Chaque joueur choisit son animal parmi les trois de son archétype (sur un petit téléphone, les trois puces restent sur une ligne, l'image au-dessus du nom). Sous les trois animaux, en italique, un **exemple de vouloir** dans la manière de l'animal choisi (« Exemple de vouloir : « Je veux qu'il me rende les 300 euros qu'il me doit. » » pour le Rat) : un exemple à adapter au lieu et au partenaire, jamais une consigne. Il change avec l'animal ; en mode kids, c'est l'exemple des enfants.

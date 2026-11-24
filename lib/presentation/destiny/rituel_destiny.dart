@@ -49,6 +49,8 @@ Future<void> lancerRituelDestiny(
   bool premierFige = false,
   ReglagesRituel reglages = const ReglagesRituel(),
   VoidCallback? auTonnerre,
+  Future<void> Function(BuildContext context)? avantCarte,
+  String? Function()? lireNouvelle,
 }) {
   return Navigator.of(context).push(PageRouteBuilder<void>(
     opaque: false,
@@ -61,6 +63,8 @@ Future<void> lancerRituelDestiny(
       premierFige: premierFige,
       reglages: reglages,
       auTonnerre: auTonnerre,
+      avantCarte: avantCarte,
+      lireNouvelle: lireNouvelle,
     ),
     transitionsBuilder: (_, a, __, child) => FadeTransition(opacity: a, child: child),
   ));
@@ -77,6 +81,8 @@ class RituelDestiny extends StatefulWidget {
     this.premierFige = false,
     this.reglages = const ReglagesRituel(),
     this.auTonnerre,
+    this.avantCarte,
+    this.lireNouvelle,
   });
 
   final PalierId nouveauPalier;
@@ -84,6 +90,13 @@ class RituelDestiny extends StatefulWidget {
   final bool premierFige;
   final ReglagesRituel reglages;
   final VoidCallback? auTonnerre;
+
+  /// Juste avant la carte de l'acte, après le figé (le dé du danger du
+  /// DESTINY n°1, le dé des survivants du n°3) : la carte attend sa fin.
+  final Future<void> Function(BuildContext context)? avantCarte;
+
+  /// La nouvelle, relue au moment de la carte (le danger a pu changer au dé).
+  final String? Function()? lireNouvelle;
 
   @override
   State<RituelDestiny> createState() => _RituelDestinyState();
@@ -126,7 +139,12 @@ class _RituelDestinyState extends State<RituelDestiny> with SingleTickerProvider
   }
 
   /// Passe à [etape]. Sur la carte de l'acte, la fermeture automatique part.
-  void _aller(EtapeRituel etape) {
+  Future<void> _aller(EtapeRituel etape) async {
+    final avant = widget.avantCarte;
+    if (etape == EtapeRituel.palier && avant != null) {
+      await avant(context);
+      if (!mounted) return;
+    }
     setState(() => _etape = etape);
     if (etape == EtapeRituel.palier) _relancerFermeture();
   }
@@ -310,7 +328,7 @@ class _RituelDestinyState extends State<RituelDestiny> with SingleTickerProvider
         return _CartePalier(
           key: const ValueKey('palier'),
           palier: palier,
-          nouvelle: widget.nouvelle,
+          nouvelle: widget.lireNouvelle?.call() ?? widget.nouvelle,
           geste: gestePourActe(g, palier.acte)?.verbe,
           onReprendre: () => Navigator.of(context).maybePop(),
         );

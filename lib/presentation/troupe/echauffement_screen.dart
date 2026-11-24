@@ -42,7 +42,13 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
     contexteRituel: () => mounted ? context : null,
   );
   bool _regieOuverte = false;
-  List<Dilemma> _dilemmes = const [];
+  List<Dilemma> _tousDilemmes = const [];
+
+  /// Les dilemmes du danger : il peut n'être tiré qu'au DESTINY n°1.
+  List<Dilemma> get _dilemmes => [
+        for (final x in _tousDilemmes)
+          if (x.dangerLie.isNotEmpty && x.dangerLie == widget.session.dangerId) x,
+      ];
 
   @override
   void initState() {
@@ -50,10 +56,7 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
     _sp.addListener(_maj);
     widget.contexte.catalogue.getDilemmas().then((d) {
       if (!mounted) return;
-      setState(() => _dilemmes = [
-            for (final x in d)
-              if (x.dangerLie == widget.session.dangerId) x,
-          ]);
+      setState(() => _tousDilemmes = d);
     });
     // Arrivé par « Régie » (ou une régie reprise) : elle s'ouvre d'office.
     if (widget.session.etape == EtapeSession.regie) {

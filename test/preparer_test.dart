@@ -70,12 +70,13 @@ void main() {
     expect(s.type, TypeSession.repetition);
     expect(find.byType(TextField), findsNothing, reason: 'plus de prénoms en spectacle ni en répétition');
     expect(s.lieuNom, isNotEmpty);
-    expect(s.dangerNom, isNotEmpty);
-    expect(s.paliers, hasLength(4));
+    // Au début, un lieu seulement : le danger tombe au DESTINY n°1.
+    expect(s.dangerNom, isEmpty);
+    expect(s.paliers, isEmpty);
+    expect(find.byKey(const ValueKey('danger_au_destiny')), findsOneWidget);
     expect(s.personnages, hasLength(4));
     expect(validerDistribution(g, [for (final p in s.personnages) p.archetypeId]).valide, isTrue);
     expect(find.text(s.lieuNom), findsOneWidget);
-    expect(find.text(s.dangerNom), findsOneWidget);
     for (final p in s.personnages) {
       expect(find.text(g.archetype(p.archetypeId)!.nom), findsOneWidget);
       for (final a in g.animauxDe(p.archetypeId)) {
@@ -163,18 +164,16 @@ void main() {
     await tester.tap(find.byTooltip(t.t('preparer.autre_lieu')));
     await tester.pump();
     expect(s.lieuId, isNot(lieu));
-    final danger = s.dangerId;
-    await tester.tap(find.byTooltip(t.t('preparer.autre_danger')));
-    await tester.pump();
-    expect(s.dangerId, isNot(danger));
-    final avant = (s.lieuId, s.dangerId);
+    expect(find.byTooltip(t.t('preparer.autre_danger')), findsNothing);
+    final avant = s.lieuId;
     await tester.tap(find.text(t.t('preparer.tirer')));
     await tester.pumpAndSettle();
-    expect((s.lieuId, s.dangerId), isNot(avant));
+    expect(s.lieuId, isNot(avant));
+    expect(s.dangerId, isEmpty);
     expect(validerDistribution(g, [for (final p in s.personnages) p.archetypeId]).valide, isTrue);
   });
 
-  testWidgets('un bouton info à chaque niveau : lieu, danger, archétype, animal', (tester) async {
+  testWidgets('un bouton info à chaque niveau : lieu, archétype, animal', (tester) async {
     final (_, s) = await _preparer(tester);
     Future<void> info(String nom, Type fiche) async {
       await tester.tap(find.byTooltip(t.t('preparer.info_de', {'nom': nom})).first);
@@ -185,7 +184,6 @@ void main() {
     }
 
     await info(s.lieuNom, FicheLieu);
-    await info(s.dangerNom, FicheDanger);
     final arch = g.archetype(s.personnages.first.archetypeId)!;
     await info(arch.nom, FicheArchetype);
     await info(g.animauxDe(arch.id).first.nom, FicheAnimal);

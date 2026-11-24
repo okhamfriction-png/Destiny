@@ -25,6 +25,7 @@ import 'package:destiny/presentation/troupe/regie_screen.dart';
 import 'package:destiny/presentation/troupe/troupe_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:destiny/domain/exercices/exercices_destiny.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'outils/grammaire_partagee.dart';
@@ -236,7 +237,10 @@ void main() {
     expect(find.byType(RectangleArchetype), findsNWidgets(4));
     expect(find.byType(FrisePaliers), findsOneWidget);
     expect(find.text(t.t('troupe.fil.miseEnPlace')), findsNothing);
-    expect(s.paliers, hasLength(4));
+    // Au début, un lieu seulement : le danger tombe au DESTINY n°1.
+    expect(s.dangerNom, isEmpty);
+    expect(s.paliers, isEmpty);
+    expect(find.byKey(const ValueKey('danger_au_destiny')), findsOneWidget);
 
     // « Régie » : la table de régie s'ouvre directement, par-dessus le jeu,
     // avec le chrono et DESTINY ; DESTINY fait monter d'un palier.
@@ -248,17 +252,57 @@ void main() {
     final destiny = find.descendant(
         of: find.ancestor(of: find.byType(TabletteSon), matching: find.byType(Material)).first,
         matching: find.byKey(const ValueKey('pilote_destiny')));
+    // DESTINY : le tonnerre, le figé, puis le dé du danger, puis la carte.
+    Future<void> roulerPuisContinuer(String de) async {
+      // La page du dé : sa première image se construit hors scène.
+      await tester.pump();
+      expect(find.byKey(ValueKey(de)), findsOneWidget);
+      for (var i = 0; i < 30; i++) {
+        await tester.pump(const Duration(milliseconds: 300));
+      }
+      if (de == 'de_danger') {
+        expect(find.text(s.dangerNom), findsWidgets);
+        await tester.tap(find.byKey(const ValueKey('retirer_danger')));
+        await tester.pump();
+        expect(find.text(s.dangerNom), findsWidgets);
+        expect(s.paliers, hasLength(4));
+      }
+      await tester.tap(find.byKey(const ValueKey('on_continue')));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+    }
+
     await tester.tap(destiny);
     await tester.pump();
     await tester.pump();
-    await tester.pump(const Duration(seconds: 10));
-    await tester.pump(const Duration(seconds: 2));
+    await tester.pump(const Duration(seconds: 12));
+    // Le dé du danger a tiré un danger, avec ses quatre paliers.
+    expect(s.dangerNom, isNotEmpty);
+    expect(s.paliers, hasLength(4));
+    await roulerPuisContinuer('de_danger');
     expect(find.text(s.paliers[1]), findsWidgets); // la nouvelle de l'alarmiste
     await tester.tap(find.text(t.t('rituel.reprendre')));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
     expect(s.palierAtteint, 2);
     expect(s.destinys.single.manuel, isTrue);
+
+    // Les DESTINY n°2 et n°3 ; au n°3, le dé des survivants.
+    for (final n in [2, 3]) {
+      await tester.tap(destiny);
+      await tester.pump();
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 12));
+      if (n == 3) {
+        expect(s.survivants, isNotEmpty);
+        expect(faceDeCode(s.survivants), isNotNull);
+        await roulerPuisContinuer('de_survivants');
+      }
+      await tester.tap(find.text(t.t('rituel.reprendre')));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+    }
+    expect(s.palierAtteint, 4);
     await tester.tap(find.byKey(const ValueKey('fermer_regie_son')));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));

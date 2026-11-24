@@ -1,16 +1,20 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
 import '../../application/son/conduite_son.dart';
 import '../../application/son/regie_son.dart';
 import '../../application/state/reglages_destiny.dart';
+import '../../domain/entities/danger.dart';
+import '../../domain/exercices/exercices_destiny.dart';
 import '../../domain/grammaire/modeles.dart';
 import '../../domain/troupe/session.dart';
 import '../destiny/donnees.dart';
 import '../destiny/rituel_destiny.dart';
 import '../regie_son/table_regie.dart';
 import 'composants_troupe.dart';
+import 'des_spectacle.dart';
 import 'regie_screen.dart';
 import 'troupe_screen.dart';
 
@@ -25,7 +29,10 @@ class SpectacleEnCours extends ChangeNotifier {
     required this.contexteRituel,
     required this.enregistrer,
     this.aLaFin,
-  }) {
+    this.dangers,
+    this.protagonistes = 0,
+    Random? hasard,
+  }) : _hasard = hasard ?? Random() {
     if (session.destinys.isNotEmpty) _ecoule = session.destinys.last.secondes;
     conduite?.preparer(lieuId: session.lieuId, dangerId: session.dangerId, acte: session.palierAtteint);
   }
@@ -38,6 +45,8 @@ class SpectacleEnCours extends ChangeNotifier {
         contexteRituel: contexteRituel,
         enregistrer: () => c.store.enregistrer(s),
         aLaFin: () => s.etape = EtapeSession.terminee,
+        dangers: c.catalogue.getDangers,
+        protagonistes: s.personnages.length,
       );
 
   final SourcesSon contexte;
@@ -51,6 +60,20 @@ class SpectacleEnCours extends ChangeNotifier {
 
   /// L'écran d'où ouvrir le rituel Destiny (null s'il n'est plus là).
   BuildContext? Function() contexteRituel;
+
+  /// Le catalogue des dangers : sans danger au départ (la Troupe), le
+  /// DESTINY n°1 le tire au dé. Null : le danger est déjà là (la Série).
+  final Future<List<Danger>> Function()? dangers;
+
+  /// Le nombre de protagonistes, pour le dé des survivants du DESTINY n°3
+  /// (0 : pas de dé).
+  final int protagonistes;
+
+  final Random _hasard;
+  List<Danger> _catalogueDangers = const [];
+
+  /// Le type tiré au dé du danger (DESTINY n°1).
+  TypeDanger? typeDanger;
 
   Timer? _minuteur;
   int _ecoule = 0;
@@ -160,8 +183,19 @@ class SpectacleEnCours extends ChangeNotifier {
     _rituelEnCours = true;
     final premier = s.destinys.isEmpty;
     final nouveau = PalierId.values[palier.index + 1];
-    s.destinys.add(EvenementDestiny(numero: s.destinys.length + 1, secondes: _ecoule, manuel: manuel));
+    final numero = s.destinys.length + 1;
+    s.destinys.add(EvenementDestiny(numero: numero, secondes: _ecoule, manuel: manuel));
     s.palierAtteint = nouveau.numero;
+    // Le spectacle commence avec un lieu seulement : le danger tombe au
+    // DESTINY n°1, au dé. Au n°3, le dé des survivants.
+    final deDanger = numero == 1 && s.dangerNom.isEmpty && dangers != null && await _tirerDanger();
+    final session = s;
+    FaceSurvivants? survivants;
+    if (numero == 3 && protagonistes > 0 && session is SessionTroupe) {
+      final faces = facesSurvivants(protagonistes);
+      survivants = faces[_hasard.nextInt(faces.length)];
+      session.survivants = codeSurvivants(survivants);
+    }
     await enregistrer();
     _programmerMusiques(s.destinys.length);
     if (_libere) return;
@@ -182,12 +216,74 @@ class SpectacleEnCours extends ChangeNotifier {
           rappelPremierFige: r.rappelPremierFige,
         ),
         auTonnerre: () => _sonDestiny(),
+        lireNouvelle: () => s.paliers.length > nouveau.index ? s.paliers[nouveau.index] : null,
+        avantCarte: deDanger || survivants != null ? (c) => _montrerDe(c, deDanger, survivants) : null,
       );
     } else {
       _sonDestiny();
     }
     _rituelEnCours = false;
     _changer();
+  }
+
+  /// Le dé, entre le figé et la carte de l'acte : le danger (n°1) ou les
+  /// survivants (n°3).
+  Future<void> _montrerDe(BuildContext c, bool deDanger, FaceSurvivants? survivants) async {
+    if (_libere || !c.mounted) return;
+    if (deDanger && typeDanger != null) {
+      await ouvrirDeDanger(c, type: typeDanger!, danger: _dangerCourant, retirer: _retirerDanger);
+    } else if (survivants != null) {
+      await ouvrirDeSurvivants(c, protagonistes: protagonistes, resultat: survivants, danger: s.dangerNom);
+    }
+  }
+
+  Danger? get _dangerCourant {
+    for (final d in _catalogueDangers) {
+      if (d.id == s.dangerId) return d;
+    }
+    return null;
+  }
+
+  bool get _kids => s is SessionTroupe && (s as SessionTroupe).kids;
+
+  /// Le dé du danger : un type, puis un danger de ce type. Rend faux s'il
+  /// n'y a aucun danger à tirer.
+  Future<bool> _tirerDanger() async {
+    try {
+      _catalogueDangers = await dangers!();
+    } catch (_) {
+      return false;
+    }
+    final tirage = tirerDangerAuDe(_catalogueDangers, kids: _kids, hasard: _hasard);
+    typeDanger = tirage.type;
+    final d = tirage.danger;
+    if (d == null) return false;
+    _poserDanger(d);
+    return true;
+  }
+
+  void _poserDanger(Danger d) {
+    final session = s;
+    if (session is SessionTroupe) {
+      session
+        ..dangerId = d.id
+        ..dangerNom = d.name
+        ..paliers = d.paliersPour(kids: session.kids);
+    }
+    // La conduite son joue désormais les bruitages de ce danger.
+    conduite?.preparer(lieuId: s.lieuId, dangerId: s.dangerId, acte: s.palierAtteint);
+    _changer();
+  }
+
+  /// « Retirer un danger », dans le même type.
+  Danger? _retirerDanger() {
+    final t = typeDanger;
+    if (t == null) return null;
+    final d = tirerDangerAuDe(_catalogueDangers, kids: _kids, type: t, sauf: s.dangerId, hasard: _hasard).danger;
+    if (d == null) return null;
+    _poserDanger(d);
+    unawaited(enregistrer());
+    return d;
   }
 
   /// Le son du Destiny, au tonnerre du rituel.

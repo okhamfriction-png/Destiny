@@ -5,6 +5,7 @@ import '../../application/state/location_details.dart';
 import '../../application/state/visual_settings.dart';
 import '../../domain/entities/danger.dart';
 import '../../domain/entities/location.dart';
+import '../../domain/exercices/exercices_destiny.dart';
 import '../../domain/grammaire/modeles.dart';
 import '../../domain/grammaire/progression.dart';
 import '../../domain/repositories/catalog_store.dart';
@@ -15,6 +16,7 @@ import '../bibliotheque/dangers_lieux_screen.dart';
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
+import '../exercices/destiny/exercice_destiny_screen.dart';
 import '../theme/destiny_theme.dart';
 import 'troupe_screen.dart';
 
@@ -500,15 +502,42 @@ class _LieuEtDangerState extends State<LieuEtDanger> {
         source: source,
         onInfo: lieu == null ? null : () => _ouvrir(context, FicheLieu(lieu: lieu, contexte: bibliotheque)),
       ),
-      LigneDecor(
-        dossier: 'dangers',
-        id: danger?.id ?? s.dangerId,
-        surtitre: t.t('mise_en_place.danger'),
-        nom: s.dangerNom,
-        icone: Icons.bolt_rounded,
-        source: source,
-        onInfo: danger == null ? null : () => _ouvrir(context, FicheDanger(danger: danger)),
-      ),
+      if (s.dangerNom.isEmpty && s.destinys.isEmpty)
+        // Le danger tombe au DESTINY n°1, au dé.
+        Padding(
+          key: const ValueKey('danger_au_destiny'),
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Row(children: [
+            Icon(Icons.casino_outlined, color: context.destiny.or),
+            const SizedBox(width: 10),
+            Expanded(child: Paragraphe(t.t('regie.danger_au_destiny'), italique: true)),
+          ]),
+        )
+      else
+        LigneDecor(
+          dossier: 'dangers',
+          id: danger?.id ?? s.dangerId,
+          surtitre: t.t('mise_en_place.danger'),
+          nom: s.dangerNom,
+          icone: Icons.bolt_rounded,
+          source: source,
+          onInfo: danger == null ? null : () => _ouvrir(context, FicheDanger(danger: danger)),
+        ),
+      if (s case SessionTroupe(:final survivants) when survivants.isNotEmpty && faceDeCode(survivants) != null)
+        Padding(
+          key: const ValueKey('survivants_spectacle'),
+          padding: const EdgeInsets.only(top: 6),
+          child: Row(children: [
+            Icon(Icons.casino_rounded, color: context.destiny.or),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Paragraphe(
+                t.t('regie.survivants', {'r': libelleSurvivants(context, faceDeCode(survivants)!)}),
+                gras: true,
+              ),
+            ),
+          ]),
+        ),
     ]);
   }
 }

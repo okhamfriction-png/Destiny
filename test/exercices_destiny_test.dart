@@ -14,6 +14,7 @@ import 'package:destiny/domain/exercices/exercices_destiny.dart';
 import 'package:destiny/domain/son/categories_son.dart';
 import 'package:destiny/domain/son/manifeste_audio.dart';
 import 'package:destiny/domain/son/resolution_son.dart';
+import 'package:destiny/domain/troupe/session.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'regie_son_test.dart' show LecteurFactice, fichiersDuManifeste;
@@ -248,6 +249,33 @@ void main() {
       // Toujours dans l'ordre et dans la durée, même très court.
       final court = momentsAuProrata(base, 2700, 3);
       expect(court, [1, 2, 2]);
+    });
+
+    test('le dé du danger du spectacle : un type, puis un danger jouable de ce type', () {
+      // Les paliers viennent de la grammaire : ici, quatre paliers factices.
+      final jouables = [for (final d in dangers) d.copyWith(paliers: const ['1', '2', '3', '4'])];
+      for (var i = 0; i < 40; i++) {
+        final r = tirerDangerAuDe(jouables, hasard: Random(i));
+        expect(r.danger, isNotNull);
+        expect(r.danger!.actif, isTrue);
+        expect(r.danger!.paliers, hasLength(4));
+        expect(TypeDanger.deStyle(r.danger!.style), r.type);
+        final autre = tirerDangerAuDe(jouables, type: r.type, sauf: r.danger!.id, hasard: Random(i));
+        expect(autre.type, r.type);
+        expect(autre.danger!.id, isNot(r.danger!.id));
+      }
+      expect(tirerDangerAuDe(const []).danger, isNull);
+      // Sans ses quatre paliers, un danger ne se joue pas.
+      expect(tirerDangerAuDe(dangers).danger, isNull);
+    });
+
+    test('le résultat du dé des survivants s\'enregistre et se relit', () {
+      for (final f in facesSurvivants(6)) {
+        expect(faceDeCode(codeSurvivants(f)), f);
+      }
+      expect(faceDeCode(''), isNull);
+      final s = SessionTroupe(id: 'x', date: DateTime(2026))..survivants = 'public';
+      expect(SessionTroupe.depuisJson(s.versJson()).survivants, 'public');
     });
 
     test('les faces du dé des survivants, de 2 à 8 protagonistes', () {
