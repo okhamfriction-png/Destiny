@@ -220,6 +220,42 @@ void main() {
       expect(conduite.volumeVisible(BusSon.musique).value, closeTo(0.6, 1e-9));
     });
 
+    test('une pause pendant le son Destiny : à la reprise, il finit, puis la musique de l\'acte part', () async {
+      final journal = <String>[];
+      final lecteurs = <BusSon, LecteurFactice>{};
+      final conduite = ConduiteSon(
+        pack: PackAudio.pourTests(m, IndexPack(fichiersDuManifeste(m))),
+        reglages: ReglagesRegieSon(ValeursRegieSon()),
+        muet: () => false,
+        fabrique: (b) => lecteurs[b] = LecteurFactice(b, journal),
+        // Les délais de sécurité ne finissent jamais : la fin du son Destiny
+        // vient du lecteur.
+        attendre: (d) => d >= const Duration(seconds: 60) ? Completer<void>().future : Future<void>.value(),
+      );
+      conduite.preparer(lieuId: 'eglise', dangerId: 'incendie');
+      unawaited(conduite.ouverture());
+      await laisserTourner();
+      final acte1 = lecteurs[BusSon.musique]!.enCours;
+      expect(acte1, isNotNull);
+      unawaited(conduite.destiny(1));
+      await laisserTourner();
+      expect(lecteurs[BusSon.destiny]!.actif, isTrue, reason: 'le son Destiny joue');
+      // L'acte 1 est sorti sous le Destiny ; l'acte 2 n'est pas encore parti.
+      expect(lecteurs[BusSon.musique]!.enCours, isNull);
+      await conduite.pause();
+      expect(journal, contains('destiny:pause'));
+      expect(lecteurs[BusSon.destiny]!.actif, isTrue, reason: 'en pause, pas coupé');
+      unawaited(conduite.reprendre());
+      await laisserTourner();
+      expect(journal, contains('destiny:reprendre'));
+      lecteurs[BusSon.destiny]!.finir();
+      await laisserTourner();
+      final acte2 = lecteurs[BusSon.musique]!.enCours;
+      expect(acte2, isNotNull, reason: 'la musique de l\'acte 2 est partie après la pause');
+      expect(acte2!.chemin, isNot(acte1!.chemin));
+      expect(conduite.niveauMusique, closeTo(0.05, 1e-9), reason: 'puis elle est descendue au fond');
+    });
+
     test('Stop arrête la musique, même pendant qu\'elle se lance', () async {
       final journal = <String>[];
       final lecteurs = <BusSon, LecteurFactice>{};

@@ -167,6 +167,14 @@ class ConduiteSon extends ChangeNotifier {
   /// où elle en est, sans la faire remonter.
   bool _sequenceFluide = false;
 
+  /// Fluide : l'acte dont la musique doit encore partir (le son Destiny ou
+  /// d'ouverture joue encore). Une pause à ce moment-là ne la perd plus : la
+  /// reprise finit le son, puis lance la musique.
+  int? _musiqueAttendue;
+
+  /// Elle était attendue à l'ouverture (sinon, après un Destiny).
+  bool _attendueOuverture = false;
+
   // ------------------------------------------------------- volumes et fondus
 
   final Map<BusSon, double> _niveau = {for (final b in BusSon.values) b: 1.0};
@@ -477,7 +485,18 @@ class ConduiteSon extends ChangeNotifier {
   /// Pause du chrono : la séquence en cours s'arrête (Destiny, bruitages) et
   /// la musique se met en pause, à son niveau.
   Future<void> pause() async {
-    await annulerSequence();
+    if (_sequenceFluide && _musiqueAttendue != null) {
+      // Le son Destiny joue encore et la musique de l'acte n'est pas partie :
+      // tout se met en pause, rien ne se perd.
+      _seq++;
+      _jetonBruitage++;
+      for (final b in BusSon.values) {
+        _annulerFondu(b);
+      }
+      _attenue = false;
+    } else {
+      await annulerSequence();
+    }
     _enPause = true;
     for (final l in lecteurs.values) {
       if (l.actif) await l.pause();
@@ -494,13 +513,57 @@ class ConduiteSon extends ChangeNotifier {
       if (l.enPause) await l.reprendre();
     }
     notifyListeners();
+    final v = ValeursRegieSon.depuisJson(_v.versJson());
+    // La pause est tombée pendant le son Destiny : il finit, puis la musique
+    // de l'acte part, tient, et descend au fond.
+    final attendue = _musiqueAttendue;
+    if (_sequenceFluide && attendue != null) {
+      final seq = ++_seq;
+      await _musiqueApresPause(attendue, v, seq);
+      return;
+    }
     // La pause a coupé le maximum ou la descente : la musique finit de
     // descendre jusqu'au fond.
-    final v = ValeursRegieSon.depuisJson(_v.versJson());
     if (_sequenceFluide && lecteurs[BusSon.musique]!.actif && _niveau[BusSon.musique]! > v.niveauFond[_acte - 1] + 0.001) {
       final seq = ++_seq;
       await _descendreAuFond(_acte, v, seq);
     }
+  }
+
+  /// Après une pause tombée avant la musique de l'acte [acte] : la fin du son
+  /// Destiny (ou d'ouverture), puis la musique qui monte, tient, et descend.
+  Future<void> _musiqueApresPause(int acte, ValeursRegieSon v, int seq) async {
+    // La musique de l'acte d'avant (et ses bruitages) sortait sous le
+    // Destiny : elle finit de sortir.
+    unawaited(_sortirSousDestiny(seq, 1));
+    if (lecteurs[BusSon.destiny]!.actif) {
+      _etapeVers(EtapeConduite.sonDestiny);
+      _phaseVers(PhaseFluide.destiny);
+      await _attendreFin(BusSon.destiny);
+      if (seq != _seq) return;
+    }
+    final source = sourceActe(acte);
+    _musiqueAttendue = null;
+    if (source == null) {
+      _phaseVers(PhaseFluide.fond);
+      _etapeVers(EtapeConduite.repos);
+      return;
+    }
+    avantMusique?.call();
+    final maxi = v.volumeActe[acte - 1];
+    _volumeMusique = maxi;
+    _sourceActe = source;
+    _acteSource = acte;
+    _etapeVers(EtapeConduite.musique);
+    await _jouerSur(BusSon.musique, source, niveau: 0, boucle: v.boucle);
+    if (seq != _seq) return;
+    unawaited(_fondre(BusSon.musique, maxi, 1));
+    final maintien = _attendueOuverture ? v.maintienOuverture : v.maintienDestiny;
+    _phaseVers(PhaseFluide.jeuMuet, maintien);
+    await _attendre(_s(maintien));
+    if (seq != _seq) return;
+    await _descendreAuFond(acte, v, seq);
+    if (seq == _seq) _etapeVers(EtapeConduite.repos);
   }
 
   /// Le niveau réel de la musique (0 à 1), fader compris : ce qu'on entend.
@@ -509,6 +572,7 @@ class ConduiteSon extends ChangeNotifier {
   /// Arrête tout, tout de suite.
   Future<void> stopTout() async {
     _enPause = false;
+    _musiqueAttendue = null;
     _seq++;
     _jetonMusique++;
     _jetonBruitage++;
@@ -540,6 +604,8 @@ class ConduiteSon extends ChangeNotifier {
     // la suivante.
     final v = ValeursRegieSon.depuisJson(_v.versJson());
     _etapeVers(EtapeConduite.ouverture);
+    _musiqueAttendue = acte;
+    _attendueOuverture = true;
     if (lecteurs[BusSon.musique]!.actif) {
       await _fondre(BusSon.musique, 0, v.fonduSortie);
       if (seq != _seq) return;
@@ -552,6 +618,7 @@ class ConduiteSon extends ChangeNotifier {
       if (seq != _seq) return;
     }
     final source = sourceActe(acte);
+    _musiqueAttendue = null;
     if (source == null) {
       _phaseVers(PhaseFluide.fond);
       _etapeVers(EtapeConduite.repos);
@@ -582,6 +649,8 @@ class ConduiteSon extends ChangeNotifier {
   Future<void> _destinyFluide(int acte, int seq, [SourceSon? son]) async {
     final v = ValeursRegieSon.depuisJson(_v.versJson());
     _attenue = false;
+    _musiqueAttendue = acte;
+    _attendueOuverture = false;
     _etapeVers(EtapeConduite.sonDestiny);
     _phaseVers(PhaseFluide.destiny);
 
@@ -612,6 +681,7 @@ class ConduiteSon extends ChangeNotifier {
         depart,
         () async {
           final source = sourceActe(acte);
+          _musiqueAttendue = null;
           if (source == null) return;
           avantMusique?.call();
           _volumeMusique = maxi;
