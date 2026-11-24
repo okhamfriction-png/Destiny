@@ -2,6 +2,18 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.7.0 — Les exercices Destiny (novembre 2026)
+
+- **Exercices : une section Destiny, en tête.** Quatre exercices en musique, lancés en deux touches : **Duo** (2 min), **Impro filée en duo** (3 min, avec Change et Switch), **Trio** (8 min) et **Long form** (45 min). Le lieu est tiré au hasard (ou choisi parmi les 40), et « Nouveau lieu » en retire un.
+- **Duo, Impro filée, Trio : la musique du lieu, puis on joue.** La musique de l'acte choisi (1 par défaut) part à son volume, tient 20 secondes (on se tait, on pose le lieu, les objets, le décor), puis descend en 10 secondes jusqu'au silence. Le grand chrono descend ; à zéro, une **cloche de ring** sonne. Pause, Arrêter, Relancer (même lieu), Nouveau lieu.
+- **Le long form, avec les trois DESTINY** (à 10, 22 et 40 minutes, recalculés si la durée change, et réglables à la main ; « DESTINY maintenant » pour ne pas attendre) :
+  - **DESTINY n°1, le dé du danger** : il tire Catastrophe, Thriller ou Survie ou dilemme, puis un danger de ce type (« Retirer un danger » pour un autre) ;
+  - **DESTINY n°2, sans dé** : un éclair, et un son nouveau, propre au type de danger tiré ;
+  - **DESTINY n°3, le dé des survivants** : Personne, 1 survivant… Tous, ou Le public décide.
+  - À chaque acte, la musique monte pendant le DESTINY, tient 20 secondes, puis reste en fond à 10 %. Pas de bruitage du danger ni de REVEAL.
+- **Des réglages simples** (l'icône en haut de la section) : maintien, descente, niveaux de fond, durées et moments des DESTINY, avec « Valeurs par défaut ». Ils ne changent rien à la régie du spectacle.
+- **Régie son : les nouveaux sons** (trois DESTINY n°2, la cloche) ont leur rayon « Destiny & exercices » sur la table de régie, et leur prise se choisit dans la banque de sons (au hasard par défaut). Si le pack audio n'a pas encore ces sons, le son Destiny habituel et le son du REVEAL les remplacent, avec un petit message « Réimporte le pack audio ».
+
 ## 2.6.4 — Les musiques du spectacle, à votre rythme (novembre 2026)
 
 - **Musique, catégorie Spectacle : les actes ne sautent plus.** Avec la descente automatique, la fin d'une musique pouvait en lancer plusieurs d'un coup : on passait de l'acte 1 à l'acte 3, voire à un autre lieu. Maintenant c'est acte 1, 2, 3, 4 du même lieu ; seule l'ambiance est sautée (si on la saute).

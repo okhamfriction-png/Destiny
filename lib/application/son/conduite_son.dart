@@ -299,16 +299,17 @@ class ConduiteSon extends ChangeNotifier {
 
   /// Lancement du chrono : le son Destiny, puis, dès qu'il est fini, la
   /// musique de l'acte 1 en fondu, en boucle. Pas de bruitage : le palier 1
-  /// se joue à la main (« Danger »).
-  Future<void> ouverture() async {
+  /// se joue à la main (« Danger »). Les exercices Destiny ouvrent sur la
+  /// musique d'un autre [acte], au choix.
+  Future<void> ouverture({int acte = 1}) async {
     if (!_peutJouer) return;
     _ouverte = true;
     final seq = ++_seq;
     _jetonMusique++;
-    _acte = 1;
+    _acte = acte.clamp(1, 4);
     _sequenceFluide = _v.fluide;
     _phaseVers(PhaseFluide.aucune);
-    if (_v.fluide) return _ouvertureFluide(seq);
+    if (_v.fluide) return _ouvertureFluide(seq, _acte);
     _etapeVers(EtapeConduite.ouverture);
     if (lecteurs[BusSon.musique]!.actif) {
       await _fondre(BusSon.musique, 0, _v.fonduSortie);
@@ -323,15 +324,16 @@ class ConduiteSon extends ChangeNotifier {
       if (seq != _seq) return;
     }
     _etapeVers(EtapeConduite.musique);
-    await _lancerMusique(1, seq);
+    await _lancerMusique(_acte, seq);
     if (seq == _seq) _etapeVers(EtapeConduite.repos);
   }
 
   /// Le [numero]-ième DESTINY (1 à 3) ouvre l'acte [numero] + 1 : sortie de
   /// la musique, son Destiny jusqu'à sa vraie fin, stinger éventuel, bruitage
   /// du nouveau palier, silence, puis la musique de l'acte (atténuée tant que
-  /// le bruitage joue).
-  Future<void> destiny(int numero) async {
+  /// le bruitage joue). [son] remplace le son Destiny des réglages (le
+  /// DESTINY n°2 des exercices, selon le type de danger).
+  Future<void> destiny(int numero, {SourceSon? son}) async {
     if (!_peutJouer) return;
     final seq = ++_seq;
     _jetonMusique++;
@@ -340,7 +342,7 @@ class ConduiteSon extends ChangeNotifier {
     _jetonBruitage++;
     _sequenceFluide = _v.fluide;
     _phaseVers(PhaseFluide.aucune);
-    if (_v.fluide) return _destinyFluide(acte, seq);
+    if (_v.fluide) return _destinyFluide(acte, seq, son);
     _etapeVers(EtapeConduite.sortieMusique);
     // La musique sort en fondu, et le bruitage de l'acte d'avant avec elle.
     const sortants = [BusSon.musique, BusSon.bruitageA, BusSon.bruitageB];
@@ -354,7 +356,12 @@ class ConduiteSon extends ChangeNotifier {
     }
     _attenue = false;
     _etapeVers(EtapeConduite.sonDestiny);
-    await _sonDestiny(_v.sonDestiny, seq);
+    if (son != null) {
+      await _jouerSur(BusSon.destiny, son, niveau: 1);
+      await _attendreFin(BusSon.destiny);
+    } else {
+      await _sonDestiny(_v.sonDestiny, seq);
+    }
     if (seq != _seq) return;
     if (active && _v.revealActe[acte - 1]) {
       _etapeVers(EtapeConduite.reveal);
@@ -457,7 +464,7 @@ class ConduiteSon extends ChangeNotifier {
   /// son maximum (jeu muet), qui tient, puis descend au niveau de fond et
   /// tourne en boucle. Le son d'ouverture des réglages passe avant, s'il y en
   /// a un. Le bruitage du palier 1 reste manuel (« Danger »).
-  Future<void> _ouvertureFluide(int seq) async {
+  Future<void> _ouvertureFluide(int seq, [int acte = 1]) async {
     // Les valeurs du moment : un réglage changé pendant la séquence vaut pour
     // la suivante.
     final v = ValeursRegieSon.depuisJson(_v.versJson());
@@ -473,23 +480,23 @@ class ConduiteSon extends ChangeNotifier {
       await _sonDestiny(v.sonOuverture, seq);
       if (seq != _seq) return;
     }
-    final source = sourceActe(1);
+    final source = sourceActe(acte);
     if (source == null) {
       _phaseVers(PhaseFluide.fond);
       _etapeVers(EtapeConduite.repos);
       return;
     }
     avantMusique?.call();
-    _volumeMusique = v.volumeActe[0];
+    _volumeMusique = v.volumeActe[acte - 1];
     _sourceActe = source;
-    _acteSource = 1;
+    _acteSource = acte;
     _etapeVers(EtapeConduite.musique);
     await _jouerSur(BusSon.musique, source, niveau: _volumeMusique, boucle: true);
     if (seq != _seq) return;
     _phaseVers(PhaseFluide.jeuMuet, v.maintienOuverture);
     await _attendre(_s(v.maintienOuverture));
     if (seq != _seq) return;
-    await _descendreAuFond(1, v, seq);
+    await _descendreAuFond(acte, v, seq);
     if (seq == _seq) _etapeVers(EtapeConduite.repos);
   }
 
@@ -501,7 +508,7 @@ class ConduiteSon extends ChangeNotifier {
   ///   le REVEAL aussi à l'acte choisi ;
   /// - T + maintien : la musique descend au niveau de fond, puis tourne en
   ///   boucle jusqu'au Destiny suivant.
-  Future<void> _destinyFluide(int acte, int seq) async {
+  Future<void> _destinyFluide(int acte, int seq, [SourceSon? son]) async {
     final v = ValeursRegieSon.depuisJson(_v.versJson());
     _attenue = false;
     _etapeVers(EtapeConduite.sonDestiny);
@@ -509,7 +516,7 @@ class ConduiteSon extends ChangeNotifier {
 
     // 0 s : le Destiny tout de suite, la musique d'avant sort dessous.
     final asset = AudioService.assetsEffets[v.sonDestiny];
-    final destiny = asset == null ? null : SourceAsset(asset, titre: 'Destiny');
+    final destiny = son ?? (asset == null ? null : SourceAsset(asset, titre: 'Destiny'));
     if (destiny != null) await _jouerSur(BusSon.destiny, destiny, niveau: 1);
     unawaited(_sortirSousDestiny(seq, v.sortieSousDestiny));
 
@@ -580,12 +587,18 @@ class ConduiteSon extends ChangeNotifier {
   }
 
   /// La musique de l'acte descend au niveau de fond (sous un bruitage : à son
-  /// niveau atténué), puis continue en boucle.
+  /// niveau atténué), puis continue en boucle. Un fond à 0 % : arrivée au
+  /// silence, elle s'arrête (les exercices minutés).
   Future<void> _descendreAuFond(int acte, ValeursRegieSon v, int seq) async {
     _volumeMusique = v.niveauFond[acte - 1];
     _phaseVers(PhaseFluide.fond);
-    if (!lecteurs[BusSon.musique]!.actif) return;
+    final l = lecteurs[BusSon.musique]!;
+    if (!l.actif) return;
+    final source = l.enCours;
     await _fondre(BusSon.musique, _attenue ? _volumeMusique * _facteurAttenuation : _volumeMusique, v.descenteFond);
+    if (_volumeMusique <= 0 && seq == _seq && l.enCours == source && _niveau[BusSon.musique]! <= 0.001) {
+      await l.arreter();
+    }
   }
 
   /// La musique d'avant et ses bruitages sortent en fondu sous le Destiny,

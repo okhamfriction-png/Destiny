@@ -10,6 +10,8 @@ import 'package:destiny/presentation/bibliotheque/bibliotheque_screen.dart';
 import 'package:destiny/presentation/bibliotheque/pages_textes.dart';
 import 'package:destiny/presentation/destiny/donnees.dart';
 import 'package:destiny/presentation/exercices/chrono_exercice_screen.dart';
+import 'package:destiny/presentation/exercices/destiny/exercice_destiny_screen.dart';
+import 'package:destiny/presentation/exercices/destiny/exercices_destiny_section.dart';
 import 'package:destiny/presentation/exercices/exercices_screen.dart';
 import 'package:destiny/presentation/exercices/fiche_exercice_screen.dart';
 import 'package:destiny/presentation/theme/destiny_theme.dart';
@@ -56,9 +58,11 @@ void main() {
 
   group('le carnet', () {
     test('les anciens thèmes restent, intacts', () {
-      expect(carnet.exercices, hasLength(32));
+      // 32 exercices d'avant, et les 4 exercices Destiny.
+      expect(carnet.exercices, hasLength(36));
+      expect(carnet.exercices.where((e) => e.categorie != 'Destiny'), hasLength(32));
       expect({for (final e in carnet.exercices) e.categorie},
-          {'Échauffement', 'Statut', 'Spontanéité', 'Écoute', 'Dialogue', 'Imagination'});
+          {'Échauffement', 'Statut', 'Spontanéité', 'Écoute', 'Dialogue', 'Imagination', 'Destiny'});
       expect(carnet.virelangues, hasLength(50));
       expect(carnet.principes, isNotEmpty);
     });
@@ -128,7 +132,11 @@ void main() {
         for (final nom in ['Échauffement', 'Statut', 'Imagination', 'CROW', 'Lieu', 'Destiny', t.t('exercices.solo')]) {
           expect(_onglet(nom), findsOneWidget, reason: nom);
         }
-        // L'onglet ouvert d'abord : Échauffement, avec le principe du jour.
+        // L'onglet ouvert d'abord : Destiny, avec les exercices Destiny en tête.
+        expect(find.byKey(const ValueKey('section_exercices_destiny')), findsOneWidget);
+        expect(_onglet('Destiny'), findsOneWidget, reason: 'un seul onglet Destiny');
+        await tester.tap(_onglet('Échauffement'));
+        await tester.pumpAndSettle();
         expect(find.text(t.t('exercices.principe_du_jour').toUpperCase()), findsOneWidget);
         expect(find.text(carnet.principeDuJour(DateTime.now())), findsOneWidget);
 
@@ -145,8 +153,94 @@ void main() {
       });
     }
 
+    testWidgets('un Duo Destiny en deux touches : lieu au hasard, 2 min, pause', (tester) async {
+      await _ouvrir(
+          tester,
+          ExercicesScreen(
+              audioService: AudioService()..setMuted(true), carnet: carnet, bibliotheque: bibliotheque));
+      await tester.tap(find.byKey(const ValueKey('exercice_destiny_duo')));
+      await tester.pumpAndSettle();
+      expect(find.byType(PreparationExerciceDestinyScreen), findsOneWidget);
+      await tester.ensureVisible(find.byKey(const ValueKey('lancer_exercice_destiny')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('lancer_exercice_destiny')));
+      await tester.pumpAndSettle();
+      expect(find.byType(ExerciceDestinyScreen), findsOneWidget);
+      expect(find.text('02:00'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 3));
+      expect(find.text('01:57'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('pause_exercice')));
+      await tester.pump(const Duration(seconds: 3));
+      expect(find.text('01:57'), findsOneWidget, reason: 'en pause, le chrono ne bouge plus');
+      expect(find.text(t.t('exercices.destiny.reprendre')), findsOneWidget);
+      final lieu = tester.widget<Text>(find.byKey(const ValueKey('lieu_exercice'))).data;
+      await tester.tap(find.byKey(const ValueKey('nouveau_lieu_exercice')));
+      await tester.pumpAndSettle();
+      expect(tester.widget<Text>(find.byKey(const ValueKey('lieu_exercice'))).data, isNot(lieu));
+      await tester.tap(find.byKey(const ValueKey('arreter_exercice')));
+      await tester.pumpAndSettle();
+      expect(find.byType(ExerciceDestinyScreen), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('le long form : le dé du danger, l\'éclair, le dé des survivants', (tester) async {
+      await _ouvrir(
+          tester,
+          ExercicesScreen(
+              audioService: AudioService()..setMuted(true), carnet: carnet, bibliotheque: bibliotheque));
+      final carte = find.byKey(const ValueKey('exercice_destiny_longForm'));
+      await tester.ensureVisible(carte);
+      await tester.tap(carte);
+      await tester.pumpAndSettle();
+      final lancer = find.byKey(const ValueKey('lancer_exercice_destiny'));
+      await tester.ensureVisible(lancer);
+      await tester.pumpAndSettle();
+      await tester.tap(lancer);
+      await tester.pumpAndSettle();
+      expect(find.text('45:00'), findsOneWidget);
+      expect(find.text(t.t('exercices.destiny.prochain', {'n': '1', 'temps': '10:00'})), findsOneWidget);
+
+      await tester.tap(find.byKey(const ValueKey('destiny_maintenant')));
+      await tester.pump();
+      expect(find.byKey(const ValueKey('de_danger')), findsOneWidget);
+      for (var i = 0; i < 40; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(find.byKey(const ValueKey('face_posee')), findsOneWidget);
+      expect(find.byKey(const ValueKey('danger_tire')), findsOneWidget);
+      final danger = tester.widget<Text>(find.byKey(const ValueKey('danger_tire'))).data;
+      await tester.tap(find.byKey(const ValueKey('retirer_danger')));
+      await tester.pump();
+      expect(tester.widget<Text>(find.byKey(const ValueKey('danger_tire'))).data, isNot(danger));
+      await tester.tap(find.byKey(const ValueKey('on_continue')));
+      await tester.pump();
+
+      await tester.tap(find.byKey(const ValueKey('destiny_maintenant')));
+      await tester.pump();
+      expect(find.byKey(const ValueKey('eclair')), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('on_continue')));
+      await tester.pump();
+
+      await tester.tap(find.byKey(const ValueKey('destiny_maintenant')));
+      for (var i = 0; i < 40; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(find.byKey(const ValueKey('de_survivants')), findsOneWidget);
+      expect(find.byKey(const ValueKey('face_posee')), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('on_continue')));
+      await tester.pump();
+      expect(find.text(t.t('exercices.destiny.tous_passes')), findsOneWidget);
+      expect(find.byKey(const ValueKey('destiny_maintenant')), findsNothing);
+
+      await tester.tap(find.byKey(const ValueKey('fermer_exercice')));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('un exercice du carnet garde son chrono', (tester) async {
       await _ouvrir(tester, ExercicesScreen(audioService: AudioService()..setMuted(true), carnet: carnet));
+      await tester.tap(_onglet('Échauffement'));
+      await tester.pumpAndSettle();
       final premier = carnet.exercices.firstWhere((e) => e.categorie == 'Échauffement');
       await tester.tap(find.text(premier.nom));
       await tester.pumpAndSettle();

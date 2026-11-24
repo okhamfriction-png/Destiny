@@ -14,6 +14,10 @@ enum CategorieBruitage {
   machines,
   surnaturel,
   corps,
+
+  /// Les sons des exercices Destiny : le DESTINY n°2 de chaque type de danger
+  /// et la cloche de fin d'exercice.
+  destiny,
   autres;
 
   /// La famille de [code] (« Autres » pour un code inconnu, ajouté plus tard).
@@ -116,6 +120,11 @@ const Map<String, CategorieBruitage> _parCode = {
   'RESPIRATION': CategorieBruitage.corps,
   'TOUX': CategorieBruitage.corps,
   'FOULE': CategorieBruitage.corps,
+  // Les exercices Destiny.
+  'DESTINY2_CATASTROPHE': CategorieBruitage.destiny,
+  'DESTINY2_THRILLER': CategorieBruitage.destiny,
+  'DESTINY2_SURVIE': CategorieBruitage.destiny,
+  'FIN_EXERCICE': CategorieBruitage.destiny,
 };
 
 /// L'émotion d'une piste de la bibliothèque (« Colère 2 » → « Colère »).

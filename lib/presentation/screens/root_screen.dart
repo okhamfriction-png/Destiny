@@ -180,7 +180,12 @@ class _RootScreenState extends State<RootScreen> {
         versExercices: () => setState(() => _index = 2),
         versBibliotheque: _ouvrirBibliotheque,
       ),
-      ExercicesScreen(audioService: widget.audioService, bibliotheque: _contexteBibliotheque),
+      ExercicesScreen(
+        audioService: widget.audioService,
+        bibliotheque: _contexteBibliotheque,
+        regieSon: widget.regieSon,
+        musique: widget.musicController,
+      ),
       if (_notesVisibles) NotesScreen(notes: widget.notes!),
     ];
 

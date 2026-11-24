@@ -9,6 +9,7 @@ import '../../application/son/lecteur_son.dart';
 import '../../application/son/regie_son.dart';
 import '../../application/son/reglages_regie_son.dart';
 import '../../application/state/music_controller.dart';
+import '../../domain/son/categories_son.dart';
 import '../../domain/son/resolution_son.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
@@ -531,7 +532,6 @@ class _BanqueSonsState extends State<_BanqueSons> {
     final k = widget.k;
     final dangers = m.dangers.values.toList()..sort((a, b) => a.nom.compareTo(b.nom));
     final d = m.dangers[_danger] ?? dangers.first;
-    final v = rs.reglages.v;
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       DropdownButtonFormField<String>(
         initialValue: d.id,
@@ -546,75 +546,92 @@ class _BanqueSonsState extends State<_BanqueSons> {
           padding: const EdgeInsets.only(top: 8, bottom: 4),
           child: Text(k('palier', {'n': '$palier'}), style: Theme.of(context).textTheme.titleSmall),
         ),
-        for (final code in d.codes(palier))
-          Builder(builder: (context) {
-            final style = styleCode(code);
-            final candidats = candidatsBruitage(m, rs.pack.index, code);
-            final remplacant = m.remplacements[code];
-            final choix = v.choixCandidat[code] ?? 0;
-            return ExpansionTile(
-              key: PageStorageKey('banque_$code'),
-              tilePadding: EdgeInsets.zero,
-              leading: Icon(style.icone, color: style.couleur),
-              title: Text(m.sons[code]?.nom ?? code),
-              subtitle: Text(candidats.isEmpty
-                  ? (remplacant == null ? k('vide') : k('remplace_par', {'nom': m.sons[remplacant]?.nom ?? remplacant}))
-                  : (choix == kCandidatAleatoire ? k('au_hasard') : k('fichier', {'n': '${choix + 1}'}))),
-              children: [
-                if (candidats.isNotEmpty) ...[
-                  RadioGroup<int>(
-                    groupValue: choix,
-                    onChanged: (x) {
-                      if (x != null) rs.reglages.modifier((v) => v.choixCandidat[code] = x);
-                    },
-                    child: Column(children: [
-                      RadioListTile<int>(
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        value: kCandidatAleatoire,
-                        title: Text(k('au_hasard')),
-                      ),
-                      for (var i = 0; i < candidats.length; i++)
-                        RadioListTile<int>(
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
-                          value: i,
-                          title: Text(candidats[i].split('/').last, maxLines: 2, overflow: TextOverflow.ellipsis),
-                          subtitle: Text(_duree(m.dureeDe(candidats[i]))),
-                          secondary: IconButton(
-                            tooltip: k('ecouter'),
-                            icon: const Icon(Icons.play_circle_rounded),
-                            onPressed: () => rs.conduite.jouerEffet(
-                              SourcePack(candidats[i], titre: m.sons[code]?.nom),
-                              bus: BusSon.bruitageA,
-                              niveau: (v.volumeBruitage * v.volumeDe(code)).clamp(0.0, 1.0),
-                            ),
-                          ),
-                        ),
-                    ]),
-                  ),
-                  Row(children: [
-                    Text(k('volume')),
-                    Expanded(
-                      child: Slider(
-                        value: v.volumeDe(code),
-                        divisions: 20,
-                        label: '${(v.volumeDe(code) * 100).round()} %',
-                        onChanged: (x) => rs.reglages.modifier((v) => v.volumeCode[code] = x),
-                      ),
-                    ),
-                    IconButton(
-                      tooltip: k('arreter'),
-                      icon: const Icon(Icons.stop_rounded),
-                      onPressed: () => rs.conduite.arreterBus(BusSon.bruitageA),
-                    ),
-                  ]),
-                ],
-              ],
-            );
-          }),
+        for (final code in d.codes(palier)) _tuileCode(code),
       ],
+      // Les sons des exercices Destiny : la prise du DESTINY n°2 de chaque
+      // type de danger (au hasard par défaut) et la cloche.
+      Padding(
+        padding: const EdgeInsets.only(top: 14, bottom: 4),
+        child: Text(k('sons_exercices'), style: Theme.of(context).textTheme.titleSmall),
+      ),
+      for (final code in CategorieBruitage.destiny.codes)
+        if (m.sons.containsKey(code)) _tuileCode(code),
     ]);
+  }
+
+  /// Un code de la banque : ses prises à écouter, la prise par défaut (ou au
+  /// hasard) et son volume.
+  Widget _tuileCode(String code) {
+    final rs = widget.regieSon;
+    final m = rs.pack.manifeste!;
+    final k = widget.k;
+    final v = rs.reglages.v;
+    return Builder(builder: (context) {
+      final style = styleCode(code);
+      final candidats = candidatsBruitage(m, rs.pack.index, code);
+      final remplacant = m.remplacements[code];
+      final choix = v.choixCandidat[code] ?? 0;
+      return ExpansionTile(
+        key: PageStorageKey('banque_$code'),
+        tilePadding: EdgeInsets.zero,
+        leading: Icon(style.icone, color: style.couleur),
+        title: Text(m.sons[code]?.nom ?? code),
+        subtitle: Text(candidats.isEmpty
+            ? (remplacant == null ? k('vide') : k('remplace_par', {'nom': m.sons[remplacant]?.nom ?? remplacant}))
+            : (choix == kCandidatAleatoire ? k('au_hasard') : k('fichier', {'n': '${choix + 1}'}))),
+        children: [
+          if (candidats.isNotEmpty) ...[
+            RadioGroup<int>(
+              groupValue: choix,
+              onChanged: (x) {
+                if (x != null) rs.reglages.modifier((v) => v.choixCandidat[code] = x);
+              },
+              child: Column(children: [
+                RadioListTile<int>(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  value: kCandidatAleatoire,
+                  title: Text(k('au_hasard')),
+                ),
+                for (var i = 0; i < candidats.length; i++)
+                  RadioListTile<int>(
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                    value: i,
+                    title: Text(candidats[i].split('/').last, maxLines: 2, overflow: TextOverflow.ellipsis),
+                    subtitle: Text(_duree(m.dureeDe(candidats[i]))),
+                    secondary: IconButton(
+                      tooltip: k('ecouter'),
+                      icon: const Icon(Icons.play_circle_rounded),
+                      onPressed: () => rs.conduite.jouerEffet(
+                        SourcePack(candidats[i], titre: m.sons[code]?.nom),
+                        bus: BusSon.bruitageA,
+                        niveau: (v.volumeBruitage * v.volumeDe(code)).clamp(0.0, 1.0),
+                      ),
+                    ),
+                  ),
+              ]),
+            ),
+            Row(children: [
+              Text(k('volume')),
+              Expanded(
+                child: Slider(
+                  value: v.volumeDe(code),
+                  divisions: 20,
+                  label: '${(v.volumeDe(code) * 100).round()} %',
+                  onChanged: (x) => rs.reglages.modifier((v) => v.volumeCode[code] = x),
+                ),
+              ),
+              IconButton(
+                tooltip: k('arreter'),
+                icon: const Icon(Icons.stop_rounded),
+                onPressed: () => rs.conduite.arreterBus(BusSon.bruitageA),
+              ),
+            ]),
+          ],
+        ],
+      );
+    });
   }
 
   String _duree(double? s) {

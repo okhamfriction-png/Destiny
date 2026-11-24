@@ -37,6 +37,7 @@ const Map<CategorieBruitage, StyleSon> kStylesCategories = {
   CategorieBruitage.machines: StyleSon(Icons.smart_toy_rounded, Color(0xFF94A3B8)),
   CategorieBruitage.surnaturel: StyleSon(Icons.auto_awesome_rounded, Color(0xFFE879F9)),
   CategorieBruitage.corps: StyleSon(Icons.favorite_rounded, Color(0xFFF472B6)),
+  CategorieBruitage.destiny: StyleSon(Icons.bolt_rounded, Color(0xFFE6B450)),
   CategorieBruitage.autres: StyleSon(Icons.graphic_eq_rounded, Color(0xFF9CA3AF)),
 };
 

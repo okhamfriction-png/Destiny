@@ -134,7 +134,14 @@ class ValeursRegieSon {
 
   // Banque de sons : le fichier choisi (rang, ou -1 : au hasard) et le
   // volume de chaque code.
-  Map<String, int> choixCandidat = {};
+  Map<String, int> choixCandidat = {...kChoixParDefaut};
+
+  /// Les prises choisies d'office : le DESTINY n°2 des exercices, au hasard.
+  static const Map<String, int> kChoixParDefaut = {
+    'DESTINY2_CATASTROPHE': -1,
+    'DESTINY2_THRILLER': -1,
+    'DESTINY2_SURVIE': -1,
+  };
   Map<String, double> volumeCode = {};
 
   // Fin du spectacle.
@@ -252,6 +259,7 @@ class ValeursRegieSon {
       ..revealFichier = (j['reveal_fichier'] as num?)?.toInt() ?? v.revealFichier
       ..revealMax = d('reveal_max', v.revealMax)
       ..choixCandidat = {
+        ...kChoixParDefaut,
         for (final e in (j['choix_candidat'] as Map? ?? const {}).entries)
           if (e.value is num) '${e.key}': (e.value as num).toInt(),
       }

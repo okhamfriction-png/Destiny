@@ -2,7 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../../application/exercices/seance_exercice_destiny.dart';
 import '../../application/services/audio_service.dart';
+import '../../application/son/regie_son.dart';
+import '../../application/state/music_controller.dart';
 import '../../domain/entities/exercice.dart';
 import '../../domain/grammaire/modeles.dart';
 import '../../infrastructure/datasources/exercices_source.dart';
@@ -11,6 +14,7 @@ import '../destiny/donnees.dart';
 import '../destiny/page.dart';
 import '../theme/destiny_theme.dart';
 import 'chrono_exercice_screen.dart';
+import 'destiny/exercices_destiny_section.dart';
 import 'fiche_exercice_screen.dart';
 
 /// L'ordre des thèmes du carnet (le premier est l'onglet ouvert d'abord).
@@ -55,13 +59,39 @@ class _OngletSolo extends _Onglet {
   const _OngletSolo();
 }
 
+/// La section Destiny, quand la grammaire n'a pas de thème « destiny ».
+class _OngletDestiny extends _Onglet {
+  const _OngletDestiny();
+}
+
+/// La catégorie du carnet qui forme la section Destiny (pas un onglet à part).
+const String _categorieDestiny = 'Destiny';
+
 /// Les Exercices : les thèmes du carnet (Échauffement, Statut, Spontanéité,
 /// Écoute, Dialogue, Imagination), puis les trois thèmes de la grammaire
 /// (CROW, Lieu, Destiny), puis Solo (diction). Chronométrés, sans score.
+/// L'onglet Destiny passe en tête, avec les exercices Destiny en musique.
 class ExercicesScreen extends StatefulWidget {
-  const ExercicesScreen({required this.audioService, this.bibliotheque, this.carnet, super.key});
+  const ExercicesScreen({
+    required this.audioService,
+    this.bibliotheque,
+    this.carnet,
+    this.regieSon,
+    this.musique,
+    this.reglagesDestiny,
+    super.key,
+  });
 
   final AudioService audioService;
+
+  /// La régie son : le pack donne la musique de chaque lieu.
+  final RegieSon? regieSon;
+
+  /// Le lecteur de la bibliothèque, coupé quand un exercice lance sa musique.
+  final MusicController? musique;
+
+  /// Les réglages des exercices Destiny (tests) ; sinon lus sur l'appareil.
+  final ReglagesExercicesDestinyStore? reglagesDestiny;
 
   /// Pour revoir la notion d'un exercice dans la Bibliothèque.
   final ContexteBibliotheque? bibliotheque;
@@ -75,6 +105,8 @@ class ExercicesScreen extends StatefulWidget {
 
 class _ExercicesScreenState extends State<ExercicesScreen> {
   CarnetExercices? _carnet;
+  late final ReglagesExercicesDestinyStore _reglagesDestiny =
+      widget.reglagesDestiny ?? (ReglagesExercicesDestinyStore()..charger());
 
   @override
   void initState() {
@@ -97,12 +129,17 @@ class _ExercicesScreenState extends State<ExercicesScreen> {
     final t = context.textes;
     final c = context.destiny;
 
+    final themeDestiny = g.themesExercices.where((th) => th.id == 'destiny').firstOrNull;
     final onglets = <_Onglet>[
+      // Destiny en tête : les exercices en musique, puis ceux de la grammaire.
+      if (themeDestiny != null) _OngletGrammaire(themeDestiny) else const _OngletDestiny(),
       for (final th in _themesCarnet)
         if (carnet.exercices.any((e) => e.categorie == th)) _OngletCarnet(th),
-      for (final th in {for (final e in carnet.exercices) e.categorie}.where((x) => !_themesCarnet.contains(x)))
+      for (final th in {for (final e in carnet.exercices) e.categorie}
+          .where((x) => !_themesCarnet.contains(x) && x != _categorieDestiny))
         _OngletCarnet(th),
-      for (final th in g.themesExercices) _OngletGrammaire(th),
+      for (final th in g.themesExercices)
+        if (th.id != 'destiny') _OngletGrammaire(th),
       if (carnet.virelangues.isNotEmpty) const _OngletSolo(),
     ];
 
@@ -130,6 +167,7 @@ class _ExercicesScreenState extends State<ExercicesScreen> {
                 _OngletGrammaire(:final theme) =>
                   etiquette(iconeThemeExercice(theme.id), couleurThemeExercice(context, theme.id), theme.nom),
                 _OngletSolo() => etiquette(_iconeCarnet(''), _couleurCarnet(''), t.t('exercices.solo')),
+                _OngletDestiny() => etiquette(Icons.bolt_rounded, c.or, _categorieDestiny),
               },
           ],
         ),
@@ -140,6 +178,7 @@ class _ExercicesScreenState extends State<ExercicesScreen> {
                 _OngletCarnet(:final theme) => _listeCarnet(carnet, theme),
                 _OngletGrammaire(:final theme) => _listeGrammaire(theme),
                 _OngletSolo() => _OngletDiction(virelangues: carnet.virelangues),
+                _OngletDestiny() => _liste([_sectionDestiny(carnet)]),
               },
           ]),
         ),
@@ -201,10 +240,23 @@ class _ExercicesScreenState extends State<ExercicesScreen> {
     ]);
   }
 
+  Widget _sectionDestiny(CarnetExercices carnet) => SectionExercicesDestiny(
+        key: const ValueKey('section_exercices_destiny'),
+        contexte: ContexteExercicesDestiny(
+          audio: widget.audioService,
+          reglages: _reglagesDestiny,
+          carnet: carnet,
+          regieSon: widget.regieSon,
+          musique: widget.musique,
+          catalogue: widget.bibliotheque?.catalogue,
+        ),
+      );
+
   Widget _listeGrammaire(ThemeExercice theme) {
     final g = context.grammaire;
     final exercices = g.exercices.where((e) => e.themeId == theme.id).toList();
     return _liste([
+      if (theme.id == 'destiny' && _carnet != null) ...[_sectionDestiny(_carnet!), const SizedBox(height: 16)],
       _BandeauTheme(theme: theme, nombre: exercices.length),
       for (final e in exercices)
         _CarteExercice(

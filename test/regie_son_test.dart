@@ -177,7 +177,7 @@ void main() {
     test('se lit en entier, et ses ids sont ceux de l\'appli', () {
       expect(m.lieux, hasLength(40));
       expect(m.dangers, hasLength(38));
-      expect(m.sons, hasLength(79));
+      expect(m.sons, hasLength(83));
       final lieux = (jsonDecode(File('assets/data/locations.json').readAsStringSync())['locations'] as List)
           .map((x) => x['id'] as String)
           .toSet();
@@ -345,7 +345,7 @@ void main() {
         ..volumeCode = {'TIRS': 0.4};
       final w = ValeursRegieSon.depuisJson(jsonDecode(jsonEncode(v.versJson())) as Map<String, dynamic>);
       expect(w.volumeActe, [0.5, 0.6, 0.7, 0.8]);
-      expect(w.choixCandidat, {'ALARME': 2, 'TIRS': -1});
+      expect(w.choixCandidat, {...ValeursRegieSon.kChoixParDefaut, 'ALARME': 2, 'TIRS': -1});
       expect(w.volumeDe('TIRS'), 0.4);
       expect(w.volumeDe('ALARME'), 1);
       expect([for (final p in w.courbes[1]) (p.secondes, p.volume)], [(20.0, 0.6), (90.0, 0.3)]);

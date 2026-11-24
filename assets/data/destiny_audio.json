@@ -1,5 +1,5 @@
 {
- "version": 1,
+ "version": 2,
  "description": "Pack audio du spectacle Destiny : musiques par lieu et par acte, bruitages du danger par palier, stingers de révélation. Chemins relatifs à la racine du pack (le dossier Spectacle du NAS ShikaZero, ou sa copie importée dans l'app).",
  "racine_nas": "/Volumes/ShikaZero/Spectacle",
  "dossiers": {
@@ -2952,6 +2952,135 @@
     {
      "fichier": "Bruitages/ZOMBIES - Râles de zombies/3 - Zombie Bumps 3.ogg",
      "duree_s": 0.7,
+     "boucle": false
+    }
+   ]
+  },
+  "DESTINY2_CATASTROPHE": {
+   "nom": "Destiny n°2, Catastrophe",
+   "dossier": "Bruitages/DESTINY2_CATASTROPHE - Destiny n°2, Catastrophe",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/DESTINY2_CATASTROPHE - Destiny n°2, Catastrophe/1 - Destiny 2 Catastrophe A1.mp3",
+     "duree_s": 13.9,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_CATASTROPHE - Destiny n°2, Catastrophe/2 - Destiny 2 Catastrophe A2.mp3",
+     "duree_s": 13.3,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_CATASTROPHE - Destiny n°2, Catastrophe/3 - Destiny 2 Catastrophe B1.mp3",
+     "duree_s": 13.5,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_CATASTROPHE - Destiny n°2, Catastrophe/4 - Destiny 2 Catastrophe B2.mp3",
+     "duree_s": 12.6,
+     "boucle": false
+    }
+   ]
+  },
+  "DESTINY2_THRILLER": {
+   "nom": "Destiny n°2, Thriller",
+   "dossier": "Bruitages/DESTINY2_THRILLER - Destiny n°2, Thriller",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/DESTINY2_THRILLER - Destiny n°2, Thriller/1 - Destiny 2 Thriller A1.mp3",
+     "duree_s": 15.1,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_THRILLER - Destiny n°2, Thriller/2 - Destiny 2 Thriller A2.mp3",
+     "duree_s": 12.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_THRILLER - Destiny n°2, Thriller/3 - Destiny 2 Thriller B1.mp3",
+     "duree_s": 14.3,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_THRILLER - Destiny n°2, Thriller/4 - Destiny 2 Thriller B2.mp3",
+     "duree_s": 13.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_THRILLER - Destiny n°2, Thriller/5 - Destiny 2 Thriller B3.mp3",
+     "duree_s": 13.6,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_THRILLER - Destiny n°2, Thriller/6 - Destiny 2 Thriller B4.mp3",
+     "duree_s": 12.7,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_THRILLER - Destiny n°2, Thriller/7 - Destiny 2 Thriller B5.mp3",
+     "duree_s": 13.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_THRILLER - Destiny n°2, Thriller/8 - Destiny 2 Thriller B6.mp3",
+     "duree_s": 14.1,
+     "boucle": false
+    }
+   ]
+  },
+  "DESTINY2_SURVIE": {
+   "nom": "Destiny n°2, Survie ou dilemme",
+   "dossier": "Bruitages/DESTINY2_SURVIE - Destiny n°2, Survie ou dilemme",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/DESTINY2_SURVIE - Destiny n°2, Survie ou dilemme/1 - Destiny 2 Survie ou dilemme A1.mp3",
+     "duree_s": 14.4,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_SURVIE - Destiny n°2, Survie ou dilemme/2 - Destiny 2 Survie ou dilemme A2.mp3",
+     "duree_s": 13.1,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_SURVIE - Destiny n°2, Survie ou dilemme/3 - Destiny 2 Survie ou dilemme A3.mp3",
+     "duree_s": 17.1,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_SURVIE - Destiny n°2, Survie ou dilemme/4 - Destiny 2 Survie ou dilemme A4.mp3",
+     "duree_s": 15.0,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_SURVIE - Destiny n°2, Survie ou dilemme/5 - Destiny 2 Survie ou dilemme B1.mp3",
+     "duree_s": 11.9,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_SURVIE - Destiny n°2, Survie ou dilemme/6 - Destiny 2 Survie ou dilemme B2.mp3",
+     "duree_s": 10.3,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_SURVIE - Destiny n°2, Survie ou dilemme/7 - Destiny 2 Survie ou dilemme C1.mp3",
+     "duree_s": 9.8,
+     "boucle": false
+    },
+    {
+     "fichier": "Bruitages/DESTINY2_SURVIE - Destiny n°2, Survie ou dilemme/8 - Destiny 2 Survie ou dilemme C2.mp3",
+     "duree_s": 13.0,
+     "boucle": false
+    }
+   ]
+  },
+  "FIN_EXERCICE": {
+   "nom": "Cloche de fin d'exercice",
+   "dossier": "Bruitages/FIN_EXERCICE - Cloche de fin d'exercice",
+   "fichiers": [
+    {
+     "fichier": "Bruitages/FIN_EXERCICE - Cloche de fin d'exercice/1 - Cloche de ring.mp3",
+     "duree_s": 3.6,
      "boucle": false
     }
    ]
