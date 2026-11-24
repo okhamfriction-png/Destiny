@@ -160,11 +160,14 @@ class FacePublic extends FaceSurvivants {
   String toString() => 'FacePublic';
 }
 
-/// Les faces du dé des survivants pour [protagonistes] joueurs (2 à 8) :
-/// Personne, 1, …, N − 1 survivants, Tous, Le public décide.
+/// Les faces du dé des survivants pour [protagonistes] joueurs (2 à 8) : il
+/// y a toujours au moins un survivant, et jamais tout le monde. À deux, un
+/// survivant ; à trois, un ou deux ; à quatre, un, deux ou trois ; et ainsi
+/// de suite jusqu'à N − 1. (« Personne », « Tous » et « Le public décide »
+/// restent lisibles dans les anciens spectacles, mais ne sont plus des faces.)
 List<FaceSurvivants> facesSurvivants(int protagonistes) {
   final n = protagonistes.clamp(2, 8);
-  return [for (var i = 0; i < n; i++) FaceNombre(i), const FaceTous(), const FacePublic()];
+  return [for (var i = 1; i < n; i++) FaceNombre(i)];
 }
 
 /// Les trois types du dé du danger, dans l'ordre des faces.

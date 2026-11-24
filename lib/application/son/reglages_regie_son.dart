@@ -40,6 +40,11 @@ class ValeursRegieSon {
   /// dernières secondes du son Destiny et arrive à son maximum à sa fin.
   double monteeDestiny = 10;
 
+  /// Fluide : la musique du nouvel acte attend la fin du son Destiny (le
+  /// rire va jusqu'au bout), puis monte en [monteeDestiny] secondes. Sans :
+  /// elle monte pendant ses dernières secondes, par-dessus le rire.
+  bool musiqueApresDestiny = true;
+
   /// Fluide : le maximum tient tant de secondes après le Destiny (jeu muet).
   double maintienDestiny = 20;
 
@@ -155,6 +160,7 @@ class ValeursRegieSon {
         'pack_actif': packActif,
         'enchainement': fluide ? 'fluide' : 'classique',
         'montee_destiny': monteeDestiny,
+        'musique_apres_destiny': musiqueApresDestiny,
         'maintien_destiny_v3': maintienDestiny,
         'maintien_ouverture_v3': maintienOuverture,
         'descente_fond_v3': descenteFond,
@@ -219,6 +225,7 @@ class ValeursRegieSon {
       ..packActif = b('pack_actif', v.packActif)
       ..fluide = (j['enchainement'] as String? ?? 'fluide') != 'classique'
       ..monteeDestiny = d('montee_destiny', v.monteeDestiny).clamp(3.0, 20.0)
+      ..musiqueApresDestiny = b('musique_apres_destiny', v.musiqueApresDestiny)
       ..maintienDestiny = d('maintien_destiny_v3', v.maintienDestiny).clamp(0.0, 30.0)
       ..maintienOuverture = d('maintien_ouverture_v3', v.maintienOuverture).clamp(0.0, 60.0)
       ..descenteFond = d('descente_fond_v3', v.descenteFond).clamp(1.0, 10.0)

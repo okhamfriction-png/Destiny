@@ -1,21 +1,26 @@
 import 'package:audioplayers/audioplayers.dart' show AssetSource;
 import 'package:flutter/material.dart';
 
+import '../../application/services/audio_service.dart';
 import '../../application/son/conduite_son.dart';
 import '../../application/son/lecteur_son.dart';
 import '../../application/son/regie_son.dart';
 import '../../application/state/music_controller.dart';
+import '../../domain/exercices/exercices_destiny.dart' show TypeDanger;
 import '../../domain/grammaire/modeles.dart' show Grammaire;
 import '../../domain/grammaire/textes.dart' show TextesDestiny;
 import '../../domain/son/manifeste_audio.dart';
 import '../../domain/son/resolution_son.dart';
 import '../destiny/donnees.dart';
+import '../exercices/destiny/exercice_destiny_screen.dart' show libelleType;
 import '../theme/destiny_theme.dart';
 
 /// La bibliothèque musicale : les pistes par catégorie, triées de A à Z (ou
 /// de Z à A), et la barre de lecture en bas. En tête, « Spectacle » : pour
 /// chaque lieu, les musiques des actes 1 à 4 (celles du pack, comme la
-/// régie les joue) et l'ambiance du lieu.
+/// régie les joue) et l'ambiance du lieu. Puis « Rires Destiny » : le son
+/// Destiny (tonnerre et rire) et les prises du DESTINY n°2, à écouter en
+/// entier.
 class MusicScreen extends StatefulWidget {
   const MusicScreen({required this.controller, this.regieSon, super.key});
 
@@ -103,6 +108,40 @@ class _MusicScreenState extends State<MusicScreen> {
   /// La catégorie des musiques du spectacle, par lieu.
   static const String _spectacle = '\u0000spectacle';
 
+  /// La catégorie des sons Destiny, avec leur rire.
+  static const String _rires = '\u0000rires';
+
+  /// Le son Destiny (embarqué), puis chaque prise du DESTINY n°2 du pack,
+  /// type par type.
+  List<MusicTrack> _pistesRires(BuildContext context) {
+    final t = context.textes;
+    final pistes = <MusicTrack>[
+      MusicTrack(
+        file: 'rires:destiny',
+        title: t.t('musique.rire_destiny'),
+        category: 'Rires',
+        loop: false,
+        source: AssetSource(AudioService.stormAsset),
+      ),
+    ];
+    final pack = widget.regieSon?.pack;
+    final m = pack?.manifeste;
+    if (pack == null || m == null || !pack.disponible) return pistes;
+    for (final type in TypeDanger.values) {
+      final chemins = candidatsBruitage(m, pack.index, type.codeDestiny2);
+      for (var i = 0; i < chemins.length; i++) {
+        pistes.add(MusicTrack(
+          file: 'rires:${type.codeDestiny2}:$i',
+          title: t.t('musique.rire_destiny2', {'type': libelleType(context, type), 'n': '${i + 1}'}),
+          category: 'Rires',
+          loop: false,
+          source: pack.versSource(SourcePack(chemins[i])),
+        ));
+      }
+    }
+    return pistes;
+  }
+
   /// Les lieux du pack, si le pack est là.
   List<LieuPack> _lieux() {
     final pack = widget.regieSon?.pack;
@@ -143,10 +182,19 @@ class _MusicScreenState extends State<MusicScreen> {
       );
     }
 
-    final categories = [if (lieux.isNotEmpty) _spectacle, ...c.categories];
-    final selected = (_selected != null && categories.contains(_selected)) ? _selected! : categories.first;
+    final rires = _pistesRires(context);
+    final categories = [if (lieux.isNotEmpty) _spectacle, _rires, ...c.categories];
+    // Par défaut, la première catégorie de musiques (les rires attendent
+    // qu'on les choisisse).
+    final selected = (_selected != null && categories.contains(_selected))
+        ? _selected!
+        : categories.firstWhere((x) => x != _rires, orElse: () => _rires);
     final spectacle = selected == _spectacle;
-    final tracks = spectacle ? const <MusicTrack>[] : c.tracksOf(selected);
+    final tracks = spectacle
+        ? const <MusicTrack>[]
+        : selected == _rires
+            ? rires
+            : c.tracksOf(selected);
     if (spectacle) {
       lieux.sort((a, b) {
         // Sans les accents : « Aéroport » avant « Avion en vol ».
@@ -170,13 +218,23 @@ class _MusicScreenState extends State<MusicScreen> {
             children: [
               for (final category in categories)
                 ChoiceChip(
+                  key: category == _rires ? const ValueKey('categorie_rires') : null,
                   avatar: Icon(
-                      category == _spectacle ? Icons.theater_comedy : _categoryIcons[category] ?? Icons.library_music,
+                      category == _spectacle
+                          ? Icons.theater_comedy
+                          : category == _rires
+                              ? Icons.bolt_rounded
+                              : _categoryIcons[category] ?? Icons.library_music,
                       size: 18,
                       color: d.titre),
                   label: Text(k('categorie', {
-                    'nom': category == _spectacle ? k('spectacle') : category,
-                    'n': '${category == _spectacle ? lieux.length : c.tracksOf(category).length}',
+                    'nom': category == _spectacle
+                        ? k('spectacle')
+                        : category == _rires
+                            ? k('rires')
+                            : category,
+                    'n':
+                        '${category == _spectacle ? lieux.length : category == _rires ? rires.length : c.tracksOf(category).length}',
                   })),
                   selected: selected == category,
                   selectedColor: d.or.withValues(alpha: 0.3),
@@ -278,6 +336,12 @@ class _MusicScreenState extends State<MusicScreen> {
                     ambiance: _pisteAmbiance(t, lieux, i),
                   )),
               ],
+              if (selected == _rires)
+                centre(Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Text(k('rires_aide'),
+                      style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, color: d.texteSecondaire)),
+                )),
               for (final piste in tracks)
                 centre(_TrackTile(
                   track: piste,

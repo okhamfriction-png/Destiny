@@ -115,6 +115,7 @@ class LecteurFactice extends LecteurSon {
 /// fluide, le bruitage du palier au Destiny et le fond en boucle. Les tests
 /// des séquences la gardent ; les valeurs d'aujourd'hui ont leur propre test.
 ValeursRegieSon ancienneRegie({bool fluide = false}) => ValeursRegieSon()
+  ..musiqueApresDestiny = false
   ..maintienDestiny = 15
   ..maintienOuverture = 30
   ..descenteFond = 3
@@ -515,6 +516,33 @@ void main() {
       expect(musique.volume, closeTo(0.4, 1e-6));
       expect(t.journal.where((e) => e.contains('ambiences')), isEmpty);
       expect(t.journal.where((e) => e.startsWith('bruitageA:jouer')), hasLength(1));
+      await t.conduite.stopTout();
+      await tester.pump(const Duration(seconds: 120));
+    });
+
+    testWidgets(
+        'par défaut, le rire va jusqu\'au bout : la musique de l\'acte part à la fin du son Destiny (T), '
+        'monte en 10 s, tient 15 s, puis descend', (tester) async {
+      final t = await acte3(tester, valeurs: ancienneRegie(fluide: true)..musiqueApresDestiny = true);
+      final c = t.chrono;
+      final musique = t.lecteurs[BusSon.musique]!;
+      // Pendant tout le son Destiny (22 s), pas de nouvelle musique.
+      await c.avancer(tester, 21.5);
+      expect(t.journal.where((e) => e.contains('Destiny Acte 3')), isEmpty);
+      expect(t.conduite.phase, PhaseFluide.destiny);
+      // T = 22 s : elle part à 0, avec le bruitage du danger.
+      await c.avancer(tester, 1);
+      expect(c.quand('musique:jouer:Musiques Destiny/Mystère - Église/Destiny Acte 3'), closeTo(22, 0.2));
+      expect(c.quand('bruitageA:jouer'), closeTo(22, 0.2));
+      expect(t.conduite.phase, PhaseFluide.jeuMuet);
+      expect(t.conduite.resteDePhase!.inMilliseconds / 1000, closeTo(24.5, 0.4), reason: '10 s de montée + 15 s');
+      // T + 10 s + 15 s = 47 s : la descente vers le fond.
+      await c.avancer(tester, 24);
+      expect(t.conduite.phase, PhaseFluide.jeuMuet);
+      await c.avancer(tester, 1.5);
+      expect(t.conduite.phase, PhaseFluide.fond);
+      await c.avancer(tester, 4);
+      expect(musique.volume, closeTo(0.4, 1e-6));
       await t.conduite.stopTout();
       await tester.pump(const Duration(seconds: 120));
     });

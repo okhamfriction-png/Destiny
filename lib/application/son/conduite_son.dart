@@ -670,8 +670,13 @@ class ConduiteSon extends ChangeNotifier {
       t = 0;
     }
     _phaseVers(PhaseFluide.destiny, t);
-    final montee = min(v.monteeDestiny, t);
-    final depart = t - montee;
+    // Après le Destiny (par défaut) : la musique part à sa fin, le rire va
+    // jusqu'au bout, et monte en [monteeDestiny] s. Sinon, elle monte
+    // pendant ses dernières secondes et arrive au maximum à sa fin.
+    final apres = v.musiqueApresDestiny;
+    final montee = apres ? v.monteeDestiny : min(v.monteeDestiny, t);
+    final depart = apres ? t : t - montee;
+    final auMaximum = apres ? t + montee : t;
     final bruitage = max(0.0, t + v.decalageBruitage);
     final maxi = v.volumeActe[acte - 1];
 
@@ -697,7 +702,7 @@ class ConduiteSon extends ChangeNotifier {
       (
         t,
         () async {
-          _phaseVers(PhaseFluide.jeuMuet, v.maintienDestiny);
+          _phaseVers(PhaseFluide.jeuMuet, (apres ? montee : 0) + v.maintienDestiny);
           if (active && v.revealActe[acte - 1]) unawaited(_reveal(seq));
         }
       ),
@@ -707,7 +712,7 @@ class ConduiteSon extends ChangeNotifier {
           if (active && v.bruitageAuto[acte - 1]) unawaited(_jouerBruitages(bruitagesDuPalier(acte), seq));
         }
       ),
-      (t + v.maintienDestiny, () => _descendreAuFond(acte, v, seq)),
+      (auMaximum + v.maintienDestiny, () => _descendreAuFond(acte, v, seq)),
     ];
     final ordre = [for (var i = 0; i < evenements.length; i++) i]..sort((a, b) {
         final c = evenements[a].$1.compareTo(evenements[b].$1);

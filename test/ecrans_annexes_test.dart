@@ -151,6 +151,11 @@ void main() {
             .catchError((_) {}));
         await tester.pumpAndSettle();
         expect(find.byTooltip(t.t('accessibilite.arreter')), findsOneWidget);
+        // Les rires Destiny : le son Destiny, à écouter en entier.
+        await tester.tap(find.byKey(const ValueKey('categorie_rires')));
+        await tester.pumpAndSettle();
+        expect(find.text(t.t('musique.rire_destiny')), findsOneWidget);
+        expect(find.text(t.t('musique.rires_aide')), findsOneWidget);
         expect(tester.takeException(), isNull);
       });
 

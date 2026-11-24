@@ -306,7 +306,7 @@ void main() {
     });
 
     test('le résultat du dé des survivants s\'enregistre et se relit', () {
-      for (final f in facesSurvivants(6)) {
+      for (final f in [...facesSurvivants(6), const FaceNombre(0), const FaceTous(), const FacePublic()]) {
         expect(faceDeCode(codeSurvivants(f)), f);
       }
       expect(faceDeCode(''), isNull);
@@ -314,16 +314,12 @@ void main() {
       expect(SessionTroupe.depuisJson(s.versJson()).survivants, 'public');
     });
 
-    test('les faces du dé des survivants, de 2 à 8 protagonistes', () {
-      expect(facesSurvivants(4),
-          [const FaceNombre(0), const FaceNombre(1), const FaceNombre(2), const FaceNombre(3), const FaceTous(), const FacePublic()]);
+    test('les faces du dé des survivants : de 1 à N − 1, de 2 à 8 protagonistes', () {
+      expect(facesSurvivants(2), [const FaceNombre(1)]);
+      expect(facesSurvivants(3), [const FaceNombre(1), const FaceNombre(2)]);
+      expect(facesSurvivants(4), [const FaceNombre(1), const FaceNombre(2), const FaceNombre(3)]);
       for (var n = 2; n <= 8; n++) {
-        final f = facesSurvivants(n);
-        expect(f, hasLength(n + 2));
-        expect(f.first, const FaceNombre(0));
-        expect(f, contains(FaceNombre(n - 1)));
-        expect(f, isNot(contains(FaceNombre(n))));
-        expect(f.sublist(n), [const FaceTous(), const FacePublic()]);
+        expect(facesSurvivants(n), [for (var i = 1; i < n; i++) FaceNombre(i)]);
       }
     });
 

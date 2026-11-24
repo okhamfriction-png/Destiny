@@ -77,7 +77,16 @@ class RegieSonScreen extends StatelessWidget {
               const SizedBox(height: 8),
               Paragraphe(k(v.fluide ? 'fluide_aide' : 'classique_aide'), italique: true),
               if (v.fluide) ...[
-                _Curseur(k('montee'), v.monteeDestiny, 3, 20, 17, (x) => change((v) => v.monteeDestiny = x),
+                SwitchListTile(
+                  key: const ValueKey('musique_apres_destiny'),
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(k('musique_apres_destiny')),
+                  subtitle: Text(k('musique_apres_destiny_aide')),
+                  value: v.musiqueApresDestiny,
+                  onChanged: (x) => change((v) => v.musiqueApresDestiny = x),
+                ),
+                _Curseur(k(v.musiqueApresDestiny ? 'montee_apres' : 'montee'), v.monteeDestiny, 3, 20, 17,
+                    (x) => change((v) => v.monteeDestiny = x),
                     suffixe: 's'),
                 _Curseur(k('maintien'), v.maintienDestiny, 0, 30, 30, (x) => change((v) => v.maintienDestiny = x),
                     suffixe: 's'),
