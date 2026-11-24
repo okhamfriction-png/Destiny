@@ -714,6 +714,11 @@
     ],
     "par_nombre": [
       {
+        "joueurs": 2,
+        "duels": 1,
+        "seul": 0
+      },
+      {
         "joueurs": 3,
         "duels": 1,
         "seul": 1
