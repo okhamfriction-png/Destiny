@@ -58,8 +58,8 @@ void main() {
 
   group('le carnet', () {
     test('les anciens thèmes restent, intacts', () {
-      // 32 exercices d'avant, et les 4 exercices Destiny.
-      expect(carnet.exercices, hasLength(36));
+      // 32 exercices d'avant, et les 2 exercices Destiny (Duo, Impro filée).
+      expect(carnet.exercices, hasLength(34));
       expect(carnet.exercices.where((e) => e.categorie != 'Destiny'), hasLength(32));
       expect({for (final e in carnet.exercices) e.categorie},
           {'Échauffement', 'Statut', 'Spontanéité', 'Écoute', 'Dialogue', 'Imagination', 'Destiny'});
@@ -158,6 +158,10 @@ void main() {
           tester,
           ExercicesScreen(
               audioService: AudioService()..setMuted(true), carnet: carnet, bibliotheque: bibliotheque));
+      // Deux exercices Destiny seulement : plus de Trio ni de Long form.
+      expect(find.byKey(const ValueKey('exercice_destiny_improFilee')), findsOneWidget);
+      expect(find.byKey(const ValueKey('exercice_destiny_trio')), findsNothing);
+      expect(find.byKey(const ValueKey('exercice_destiny_longForm')), findsNothing);
       await tester.tap(find.byKey(const ValueKey('exercice_destiny_duo')));
       await tester.pumpAndSettle();
       expect(find.byType(PreparationExerciceDestinyScreen), findsOneWidget);
@@ -180,60 +184,6 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('arreter_exercice')));
       await tester.pumpAndSettle();
       expect(find.byType(ExerciceDestinyScreen), findsNothing);
-      expect(tester.takeException(), isNull);
-    });
-
-    testWidgets('le long form : le dé du danger, l\'éclair, le dé des survivants', (tester) async {
-      await _ouvrir(
-          tester,
-          ExercicesScreen(
-              audioService: AudioService()..setMuted(true), carnet: carnet, bibliotheque: bibliotheque));
-      final carte = find.byKey(const ValueKey('exercice_destiny_longForm'));
-      await tester.ensureVisible(carte);
-      await tester.tap(carte);
-      await tester.pumpAndSettle();
-      final lancer = find.byKey(const ValueKey('lancer_exercice_destiny'));
-      await tester.ensureVisible(lancer);
-      await tester.pumpAndSettle();
-      await tester.tap(lancer);
-      await tester.pumpAndSettle();
-      expect(find.text('45:00'), findsOneWidget);
-      expect(find.text(t.t('exercices.destiny.prochain', {'n': '1', 'temps': '10:00'})), findsOneWidget);
-
-      await tester.tap(find.byKey(const ValueKey('destiny_maintenant')));
-      await tester.pump();
-      expect(find.byKey(const ValueKey('de_danger')), findsOneWidget);
-      for (var i = 0; i < 40; i++) {
-        await tester.pump(const Duration(milliseconds: 100));
-      }
-      expect(find.byKey(const ValueKey('face_posee')), findsOneWidget);
-      expect(find.byKey(const ValueKey('danger_tire')), findsOneWidget);
-      final danger = tester.widget<Text>(find.byKey(const ValueKey('danger_tire'))).data;
-      await tester.tap(find.byKey(const ValueKey('retirer_danger')));
-      await tester.pump();
-      expect(tester.widget<Text>(find.byKey(const ValueKey('danger_tire'))).data, isNot(danger));
-      await tester.tap(find.byKey(const ValueKey('on_continue')));
-      await tester.pump();
-
-      await tester.tap(find.byKey(const ValueKey('destiny_maintenant')));
-      await tester.pump();
-      expect(find.byKey(const ValueKey('eclair')), findsOneWidget);
-      await tester.tap(find.byKey(const ValueKey('on_continue')));
-      await tester.pump();
-
-      await tester.tap(find.byKey(const ValueKey('destiny_maintenant')));
-      for (var i = 0; i < 40; i++) {
-        await tester.pump(const Duration(milliseconds: 100));
-      }
-      expect(find.byKey(const ValueKey('de_survivants')), findsOneWidget);
-      expect(find.byKey(const ValueKey('face_posee')), findsOneWidget);
-      await tester.tap(find.byKey(const ValueKey('on_continue')));
-      await tester.pump();
-      expect(find.text(t.t('exercices.destiny.tous_passes')), findsOneWidget);
-      expect(find.byKey(const ValueKey('destiny_maintenant')), findsNothing);
-
-      await tester.tap(find.byKey(const ValueKey('fermer_exercice')));
-      await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
     });
 

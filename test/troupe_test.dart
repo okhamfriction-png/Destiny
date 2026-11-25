@@ -257,9 +257,11 @@ void main() {
       // La page du dé : sa première image se construit hors scène.
       await tester.pump();
       expect(find.byKey(ValueKey(de)), findsOneWidget);
-      for (var i = 0; i < 30; i++) {
+      // Le dé roule environ 2,5 s.
+      for (var i = 0; i < 12; i++) {
         await tester.pump(const Duration(milliseconds: 300));
       }
+      expect(find.byKey(const ValueKey('face_posee')), findsOneWidget);
       if (de == 'de_danger') {
         expect(find.text(s.dangerNom), findsWidgets);
         await tester.tap(find.byKey(const ValueKey('retirer_danger')));
@@ -296,7 +298,16 @@ void main() {
       if (n == 3) {
         expect(s.survivants, isNotEmpty);
         expect(faceDeCode(s.survivants), isNotNull);
-        await roulerPuisContinuer('de_survivants');
+        // Le dé des survivants se ferme seul au bout de 5 s, sans toucher.
+        await tester.pump();
+        expect(find.byKey(const ValueKey('de_survivants')), findsOneWidget);
+        for (var i = 0; i < 16; i++) {
+          await tester.pump(const Duration(milliseconds: 300));
+        }
+        expect(find.byKey(const ValueKey('de_survivants')), findsOneWidget, reason: 'encore là à 4,8 s');
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump(const Duration(milliseconds: 400));
+        expect(find.byKey(const ValueKey('de_spectacle')), findsNothing);
       }
       await tester.tap(find.text(t.t('rituel.reprendre')));
       await tester.pump();

@@ -25,20 +25,6 @@
       "categorie": "Destiny"
     },
     {
-      "id": "destiny_trio",
-      "nom": "Trio",
-      "consigne": "Trois joueurs, 8 minutes. Pendant les 20 secondes de musique, on se tait : on pose le lieu, les objets et le décor. Quand la musique baisse, on joue. On sait tout de suite qui est de la même famille, amis ou collègues. Change : sur une question ou un refus, on transforme pour ne pas casser le rythme. Switch : on change de sujet ou on apporte un objet.",
-      "duree": 480,
-      "categorie": "Destiny"
-    },
-    {
-      "id": "destiny_long_form",
-      "nom": "Long form",
-      "consigne": "De 2 à 8 protagonistes, 45 minutes, trois DESTINY. Au premier, le dé du danger tire son type et le danger du soir. Le deuxième tombe sans dé. Au troisième, le dé des survivants décide qui s'en sort.",
-      "duree": 2700,
-      "categorie": "Destiny"
-    },
-    {
       "id": "machine",
       "nom": "La machine collective",
       "consigne": "Un joueur lance un geste et un son répétés. Chacun s'ajoute jusqu'à former une seule machine qui respire.",

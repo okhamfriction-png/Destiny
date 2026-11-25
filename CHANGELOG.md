@@ -2,6 +2,11 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.7.1 — Des DESTINY plus courts (novembre 2026)
+
+- **Les fenêtres des DESTINY se ferment seules, plus vite.** Au spectacle, le dé du danger (DESTINY n°1) reste 10 secondes à l'écran, le dé des survivants (n°3) 5 secondes, et la carte de l'acte 5 secondes (au lieu de 10). Toucher l'écran les garde un peu plus ; « On continue » et « Reprendre » ferment tout de suite.
+- **Exercices Destiny : deux exercices seulement, Duo et Impro filée en duo.** Le Trio et le Long form sont retirés, ainsi que leurs réglages (fond du long form, moments des DESTINY).
+
 ## 2.7.0 — Les exercices Destiny (novembre 2026)
 
 - **Exercices : une section Destiny, en tête.** Quatre exercices en musique, lancés en deux touches : **Duo** (2 min), **Impro filée en duo** (3 min, avec Change et Switch), **Trio** (8 min) et **Long form** (45 min). Le lieu est tiré au hasard (ou choisi parmi les 40), et « Nouveau lieu » en retire un.

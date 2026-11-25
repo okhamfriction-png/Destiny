@@ -17,7 +17,7 @@ class ReglagesRituel {
     this.texteEllipse,
     this.reduireAnimations = false,
     this.rappelPremierFige = true,
-    this.fermetureAuto = const Duration(seconds: 10),
+    this.fermetureAuto = const Duration(seconds: 5),
   });
 
   /// La carte de l'acte se ferme seule après ce temps sans action (null :
@@ -200,7 +200,7 @@ class _RituelDestinyState extends State<RituelDestiny> with SingleTickerProvider
         return Transform.translate(offset: Offset(dx, 0), child: child);
       },
       child: Listener(
-        // Un toucher, c'est une action : la carte reste encore 10 s.
+        // Un toucher, c'est une action : la carte reste encore 5 s.
         onPointerDown: (_) => _relancerFermeture(),
         child: Material(
           type: MaterialType.transparency,

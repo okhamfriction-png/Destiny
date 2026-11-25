@@ -237,7 +237,8 @@ void main() {
     await _taper(tester, find.byKey(const ValueKey('pilote_destiny')));
     await tester.pump(const Duration(seconds: 10));
     await tester.pump(const Duration(seconds: 2));
-    if (find.text(t.t('rituel.reprendre')).evaluate().isNotEmpty) {
+    // La carte de l'acte se ferme seule au bout de 5 s.
+    if (find.text(t.t('rituel.reprendre')).hitTestable().evaluate().isNotEmpty) {
       await _taper(tester, find.text(t.t('rituel.reprendre')));
     }
     await tester.pumpAndSettle();
@@ -466,7 +467,8 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(seconds: 10));
       await tester.pump(const Duration(seconds: 2));
-      if (find.text(t.t('rituel.reprendre')).evaluate().isNotEmpty) {
+      // La carte de l'acte se ferme seule au bout de 5 s.
+      if (find.text(t.t('rituel.reprendre')).hitTestable().evaluate().isNotEmpty) {
         await tester.tap(find.text(t.t('rituel.reprendre')));
       }
       await tester.pumpAndSettle();

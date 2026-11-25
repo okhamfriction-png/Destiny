@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/danger.dart';
@@ -9,44 +11,90 @@ import '../theme/destiny_theme.dart';
 /// Le dé du danger du DESTINY n°1, en plein écran par-dessus le spectacle :
 /// le type roule, tombe, puis le danger apparaît. « Retirer un danger » en
 /// tire un autre du même type ([retirer] rend le nouveau). Le chrono tourne
-/// pendant ce temps.
+/// pendant ce temps. Il se ferme seul au bout de [kDureeDeDanger] (un
+/// toucher relance le compte), ou sur « On continue ».
 Future<void> ouvrirDeDanger(
   BuildContext context, {
   required TypeDanger type,
   required Danger? danger,
   Danger? Function()? retirer,
 }) =>
-    _ouvrir(context, _DeDanger(type: type, danger: danger, retirer: retirer));
+    _ouvrir(context, _DeDanger(type: type, danger: danger, retirer: retirer), fermeture: kDureeDeDanger);
 
-/// Le dé des survivants du DESTINY n°3 : qui s'en sort.
+/// Le dé des survivants du DESTINY n°3 : qui s'en sort. Il se ferme seul au
+/// bout de [kDureeDeSurvivants].
 Future<void> ouvrirDeSurvivants(
   BuildContext context, {
   required int protagonistes,
   required FaceSurvivants resultat,
   String? danger,
 }) =>
-    _ouvrir(context, _DeSurvivants(protagonistes: protagonistes, resultat: resultat, danger: danger));
+    _ouvrir(context, _DeSurvivants(protagonistes: protagonistes, resultat: resultat, danger: danger),
+        fermeture: kDureeDeSurvivants);
 
-Future<void> _ouvrir(BuildContext context, Widget contenu) => Navigator.of(context).push(PageRouteBuilder<void>(
+/// Le temps du dé du danger à l'écran : de quoi lire le danger.
+const Duration kDureeDeDanger = Duration(seconds: 10);
+
+/// Le temps du dé des survivants à l'écran.
+const Duration kDureeDeSurvivants = Duration(seconds: 5);
+
+Future<void> _ouvrir(BuildContext context, Widget contenu, {required Duration fermeture}) =>
+    Navigator.of(context).push(PageRouteBuilder<void>(
       opaque: false,
       barrierDismissible: false,
       transitionDuration: const Duration(milliseconds: 200),
       reverseTransitionDuration: const Duration(milliseconds: 200),
-      pageBuilder: (_, __, ___) => _Fond(child: contenu),
+      pageBuilder: (_, __, ___) => _Fond(fermeture: fermeture, child: contenu),
       transitionsBuilder: (_, a, __, child) => FadeTransition(opacity: a, child: child),
     ));
 
-class _Fond extends StatelessWidget {
-  const _Fond({required this.child});
+/// Le fond noir du dé. Il se ferme seul après [fermeture] sans toucher.
+class _Fond extends StatefulWidget {
+  const _Fond({required this.fermeture, required this.child});
 
+  final Duration fermeture;
   final Widget child;
 
   @override
-  Widget build(BuildContext context) => Material(
-        key: const ValueKey('de_spectacle'),
-        color: Colors.black.withValues(alpha: 0.96),
-        child: SafeArea(
-          child: Center(child: SingleChildScrollView(padding: const EdgeInsets.all(24), child: child)),
+  State<_Fond> createState() => _FondState();
+}
+
+class _FondState extends State<_Fond> {
+  Timer? _minuteur;
+
+  @override
+  void initState() {
+    super.initState();
+    _relancer();
+  }
+
+  void _relancer() {
+    _minuteur?.cancel();
+    _minuteur = Timer(widget.fermeture, () {
+      if (!mounted) return;
+      final route = ModalRoute.of(context);
+      if (route == null || !route.isActive) return;
+      final nav = Navigator.of(context);
+      route.isCurrent ? nav.pop() : nav.removeRoute(route);
+    });
+  }
+
+  @override
+  void dispose() {
+    _minuteur?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Listener(
+        // Un toucher (« Retirer un danger »…) : le dé reste encore un peu.
+        onPointerDown: (_) => _relancer(),
+        child: Material(
+          key: const ValueKey('de_spectacle'),
+          color: Colors.black.withValues(alpha: 0.96),
+          child: SafeArea(
+            child: Center(child: SingleChildScrollView(padding: const EdgeInsets.all(24), child: widget.child)),
+          ),
         ),
       );
 }

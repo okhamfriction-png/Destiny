@@ -6,7 +6,6 @@ import '../../../application/son/regie_son.dart';
 import '../../../application/son/pack_audio.dart';
 import '../../../application/son/reglages_regie_son.dart';
 import '../../../application/state/music_controller.dart';
-import '../../../domain/entities/danger.dart';
 import '../../../domain/entities/exercice.dart';
 import '../../../domain/exercices/exercices_destiny.dart';
 import '../../../domain/grammaire/modeles.dart' show Grammaire;
@@ -62,8 +61,6 @@ class ContexteExercicesDestiny {
     return l..sort((a, b) => Grammaire.normaliser(a.nom).compareTo(Grammaire.normaliser(b.nom)));
   }
 
-  Future<List<Danger>> dangers() async => await catalogue?.getDangers() ?? const <Danger>[];
-
   /// Un exercice prêt à lancer.
   SeanceExerciceDestiny seance({
     required ExerciceDestiny exercice,
@@ -71,9 +68,6 @@ class ContexteExercicesDestiny {
     required String lieuId,
     required int dureeS,
     int acte = 1,
-    int protagonistes = 4,
-    List<int>? moments,
-    List<Danger> dangers = const [],
   }) =>
       SeanceExerciceDestiny(
         exercice: exercice,
@@ -84,9 +78,6 @@ class ContexteExercicesDestiny {
         lieuId: lieuId,
         dureeS: dureeS,
         acte: acte,
-        protagonistes: protagonistes,
-        momentsDestinyS: moments,
-        dangers: dangers,
         muet: () => audio.muted,
         // Une seule musique à la fois : la bibliothèque et la régie du
         // spectacle se taisent.
@@ -117,18 +108,14 @@ String minutesSecondes(int secondes) {
 IconData iconeExerciceDestiny(ExerciceDestiny e) => switch (e) {
       ExerciceDestiny.duo => Icons.people_alt_rounded,
       ExerciceDestiny.improFilee => Icons.swap_horiz_rounded,
-      ExerciceDestiny.trio => Icons.groups_rounded,
-      ExerciceDestiny.longForm => Icons.theater_comedy_rounded,
     };
 
 String nomExerciceDestiny(BuildContext context, ExerciceDestiny e) => context.textes.t('exercices.destiny.${switch (e) {
       ExerciceDestiny.duo => 'duo',
       ExerciceDestiny.improFilee => 'impro_filee',
-      ExerciceDestiny.trio => 'trio',
-      ExerciceDestiny.longForm => 'long_form',
     }}');
 
-/// La section Destiny, en tête des Exercices : les quatre exercices et leurs
+/// La section Destiny, en tête des Exercices : les deux exercices et leurs
 /// réglages.
 class SectionExercicesDestiny extends StatelessWidget {
   const SectionExercicesDestiny({required this.contexte, super.key});
@@ -181,7 +168,7 @@ class SectionExercicesDestiny extends StatelessWidget {
                   Text(dureeLisible(context, r.dureeDe(e)),
                       style: TextStyle(
                           fontFamily: kPoliceTexte, fontSize: 13.5, fontWeight: FontWeight.w700, color: c.titre)),
-                  Text(e == ExerciceDestiny.longForm ? k('trois_destiny') : k('joueurs', {'n': '${e.joueurs}'}),
+                  Text(k('joueurs', {'n': '${e.joueurs}'}),
                       style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: c.texteSecondaire)),
                 ]),
                 onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
@@ -208,40 +195,23 @@ class PreparationExerciceDestinyScreen extends StatefulWidget {
 
 class _PreparationExerciceDestinyScreenState extends State<PreparationExerciceDestinyScreen> {
   List<LieuExercice>? _lieux;
-  List<Danger> _dangers = const [];
 
   /// null : au hasard.
   String? _lieu;
   int _acte = 1;
   late int _dureeS = widget.contexte.reglages.v.dureeDe(widget.exercice);
-  int _protagonistes = 4;
-  late List<int> _moments = _momentsAuProrata();
-
-  bool get _longForm => widget.exercice == ExerciceDestiny.longForm;
-
-  List<int> _momentsAuProrata() {
-    final r = widget.contexte.reglages.v;
-    return momentsAuProrata(r.momentsDestinyMin, r.dureeDe(ExerciceDestiny.longForm), _dureeS);
-  }
 
   @override
   void initState() {
     super.initState();
     () async {
       final lieux = await widget.contexte.lieux();
-      final dangers = _longForm ? await widget.contexte.dangers() : const <Danger>[];
       if (!mounted) return;
-      setState(() {
-        _lieux = lieux;
-        _dangers = dangers;
-      });
+      setState(() => _lieux = lieux);
     }();
   }
 
-  void _changerDuree(int s) => setState(() {
-        _dureeS = s.clamp(30, 4 * 3600);
-        if (_longForm) _moments = _momentsAuProrata();
-      });
+  void _changerDuree(int s) => setState(() => _dureeS = s.clamp(30, 4 * 3600));
 
   Future<void> _dureeLibre() async {
     final t = context.textes;
@@ -279,9 +249,6 @@ class _PreparationExerciceDestinyScreenState extends State<PreparationExerciceDe
       lieuId: lieu,
       dureeS: _dureeS,
       acte: _acte,
-      protagonistes: _protagonistes,
-      moments: _longForm ? _moments : null,
-      dangers: _dangers,
     );
     Navigator.of(context).push(MaterialPageRoute<void>(
       builder: (_) => ExerciceDestinyScreen(
@@ -308,16 +275,6 @@ class _PreparationExerciceDestinyScreenState extends State<PreparationExerciceDe
           side: BorderSide(color: choisi ? c.titre : c.filet),
           onSelected: (_) => onTap(),
         );
-    Widget pas(String texte, VoidCallback? moins, VoidCallback? plus, {Key? key}) => Row(key: key, children: [
-          IconButton(tooltip: t.t('exercices.destiny.moins'), onPressed: moins, icon: const Icon(Icons.remove_circle_outline_rounded)),
-          Expanded(
-            child: Text(texte,
-                textAlign: TextAlign.center,
-                style:
-                    TextStyle(fontFamily: kPoliceTexte, fontSize: 17, fontWeight: FontWeight.w800, color: c.texte)),
-          ),
-          IconButton(tooltip: t.t('exercices.destiny.plus'), onPressed: plus, icon: const Icon(Icons.add_circle_outline_rounded)),
-        ]);
 
     return Scaffold(
       appBar: AppBar(title: Text(nomExerciceDestiny(context, widget.exercice))),
@@ -351,70 +308,27 @@ class _PreparationExerciceDestinyScreenState extends State<PreparationExerciceDe
                         ),
                       ),
                     ]),
-                    if (!_longForm)
-                      SectionDestiny(titre: k('acte'), espace: 14, enfants: [
+                    SectionDestiny(titre: k('acte'), espace: 14, enfants: [
                         Wrap(spacing: 8, runSpacing: 8, children: [
                           for (var a = 1; a <= 4; a++)
                             puce(k('acte_n', {'n': '$a'}), _acte == a, () => setState(() => _acte = a),
                                 key: ValueKey('acte_$a')),
                         ]),
                       ]),
-                    if (_longForm)
-                      SectionDestiny(titre: k('protagonistes'), espace: 14, enfants: [
-                        pas(
-                          '$_protagonistes',
-                          _protagonistes > 2 ? () => setState(() => _protagonistes--) : null,
-                          _protagonistes < 8 ? () => setState(() => _protagonistes++) : null,
-                          key: const ValueKey('protagonistes'),
-                        ),
-                      ]),
-                    SectionDestiny(titre: _longForm ? k('duree_totale') : k('duree'), espace: 14, enfants: [
-                      if (_longForm)
-                        pas(
-                          dureeLisible(context, _dureeS),
-                          _dureeS > 300 ? () => _changerDuree(_dureeS - 300) : () => _changerDuree(_dureeS - 60),
-                          () => _changerDuree(_dureeS + 300),
-                          key: const ValueKey('duree_totale'),
-                        ),
+                    SectionDestiny(titre: k('duree'), espace: 14, enfants: [
                       Wrap(spacing: 8, runSpacing: 8, children: [
-                        if (!_longForm)
-                          for (final s in kDureesProposeesS)
+                        for (final s in kDureesProposeesS)
                             puce(dureeLisible(context, s), _dureeS == s, () => _changerDuree(s), key: ValueKey('duree_$s')),
                         puce(
-                          _longForm || kDureesProposeesS.contains(_dureeS)
+                          kDureesProposeesS.contains(_dureeS)
                               ? k('duree_libre')
                               : '${k('duree_libre')} · ${dureeLisible(context, _dureeS)}',
-                          !_longForm && !kDureesProposeesS.contains(_dureeS),
+                          !kDureesProposeesS.contains(_dureeS),
                           _dureeLibre,
                           key: const ValueKey('duree_libre_bouton'),
                         ),
                       ]),
                     ]),
-                    if (_longForm)
-                      SectionDestiny(titre: k('moments'), espace: 14, enfants: [
-                        Text(k('moments_aide'), style: style),
-                        for (var i = 0; i < 3; i++)
-                          Row(children: [
-                            SizedBox(
-                              width: 120,
-                              child: Text(k('destiny_n', {'n': '${i + 1}'}),
-                                  style: TextStyle(
-                                      fontFamily: kPoliceTexte, fontWeight: FontWeight.w700, color: c.titre)),
-                            ),
-                            Expanded(
-                              child: pas(
-                                minutesSecondes(_moments[i]),
-                                _moments[i] > (i == 0 ? 60 : _moments[i - 1] + 60)
-                                    ? () => setState(() => _moments[i] -= 60)
-                                    : null,
-                                _moments[i] + 60 < (i == 2 ? _dureeS : _moments[i + 1])
-                                    ? () => setState(() => _moments[i] += 60)
-                                    : null,
-                                key: ValueKey('moment_$i'),
-                              ),
-                            ),
-                          ]),
-                      ]),
                     const SizedBox(height: 24),
                     FilledButton.icon(
                       key: const ValueKey('lancer_exercice_destiny'),
@@ -478,35 +392,15 @@ class ReglagesExercicesDestinySheet extends StatelessWidget {
                 ligne(k('fond_minute'), pc(r.fondMinute),
                     r.fondMinute > 0 ? () => store.modifier((v) => v.fondMinute = (v.fondMinute - 0.05).clamp(0, 1)) : null,
                     () => store.modifier((v) => v.fondMinute = (v.fondMinute + 0.05).clamp(0, 1))),
-                ligne(
-                    k('fond_long_form'),
-                    pc(r.fondLongForm),
-                    r.fondLongForm > 0
-                        ? () => store.modifier((v) => v.fondLongForm = (v.fondLongForm - 0.05).clamp(0, 1))
-                        : null,
-                    () => store.modifier((v) => v.fondLongForm = (v.fondLongForm + 0.05).clamp(0, 1))),
                 SectionDestiny(titre: k('durees'), espace: 14, enfants: [
                   for (final e in ExerciceDestiny.values)
                     ligne(
                       nomExerciceDestiny(context, e),
                       dureeLisible(context, r.dureeDe(e)),
                       r.dureeDe(e) > 30
-                          ? () => store.modifier((v) => v.dureesS[e] = v.dureeDe(e) - (e.minute ? 30 : 300))
+                          ? () => store.modifier((v) => v.dureesS[e] = v.dureeDe(e) - 30)
                           : null,
-                      () => store.modifier((v) => v.dureesS[e] = v.dureeDe(e) + (e.minute ? 30 : 300)),
-                    ),
-                ]),
-                SectionDestiny(titre: k('moments'), espace: 14, enfants: [
-                  for (var i = 0; i < 3; i++)
-                    ligne(
-                      k('destiny_n', {'n': '${i + 1}'}),
-                      k('minutes', {'n': r.momentsDestinyMin[i].round().toString()}),
-                      r.momentsDestinyMin[i] > (i == 0 ? 1 : r.momentsDestinyMin[i - 1] + 1)
-                          ? () => store.modifier((v) => v.momentsDestinyMin[i] -= 1)
-                          : null,
-                      i == 2 || r.momentsDestinyMin[i] + 1 < r.momentsDestinyMin[i + 1]
-                          ? () => store.modifier((v) => v.momentsDestinyMin[i] += 1)
-                          : null,
+                      () => store.modifier((v) => v.dureesS[e] = v.dureeDe(e) + 30),
                     ),
                 ]),
                 const SizedBox(height: 12),

@@ -5,7 +5,6 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../domain/entities/danger.dart';
 import '../../domain/exercices/exercices_destiny.dart';
 import '../../domain/son/resolution_son.dart';
 import '../services/audio_service.dart';
@@ -50,8 +49,8 @@ class ReglagesExercicesDestinyStore extends ChangeNotifier {
 /// de chaque acte, repli famille, prises choisies), avec l'enchaînement
 /// fluide, le maintien, la descente et le niveau de fond des exercices, sans
 /// bruitage de palier, sans REVEAL et sans ambiance.
-ValeursRegieSon valeursPourExercice(ValeursRegieSon regie, ReglagesExercicesDestiny r, {required bool longForm}) {
-  final fond = longForm ? r.fondLongForm : r.fondMinute;
+ValeursRegieSon valeursPourExercice(ValeursRegieSon regie, ReglagesExercicesDestiny r) {
+  final fond = r.fondMinute;
   return ValeursRegieSon.depuisJson(regie.versJson())
     ..packActif = true
     ..fluide = true
@@ -66,8 +65,7 @@ ValeursRegieSon valeursPourExercice(ValeursRegieSon regie, ReglagesExercicesDest
     ..ambianceApresMusique = false
     ..sonOuverture = 'aucun'
     ..chevauchement = 0
-    // Le long form : la musique tourne au fond jusqu'au DESTINY suivant.
-    ..boucle = longForm;
+    ..boucle = false;
 }
 
 /// Les réglages que lit la conduite d'un exercice : recalculés au lancement.
@@ -85,12 +83,8 @@ class _ReglagesConduiteExercice extends ReglagesRegieSon {
 /// Un lieu proposé pour un exercice.
 typedef LieuExercice = ({String id, String nom});
 
-/// Ce qui s'affiche en grand pendant un DESTINY du long form.
-enum EcranDestiny { aucun, deDanger, eclair, deSurvivants }
-
 /// Un exercice Destiny en cours : le chrono, la musique du lieu (par la
-/// conduite son, en enchaînement fluide), la cloche de fin, et pour le long
-/// form les trois DESTINY, le dé du danger et le dé des survivants.
+/// conduite son, en enchaînement fluide) et la cloche de fin.
 class SeanceExerciceDestiny extends ChangeNotifier {
   SeanceExerciceDestiny({
     required this.exercice,
@@ -101,9 +95,6 @@ class SeanceExerciceDestiny extends ChangeNotifier {
     required String lieuId,
     required this.dureeS,
     this.acte = 1,
-    int protagonistes = 4,
-    List<int>? momentsDestinyS,
-    this.dangers = const [],
     bool Function()? muet,
     VoidCallback? avantMusique,
     LecteurSon Function(BusSon bus)? fabrique,
@@ -112,10 +103,7 @@ class SeanceExerciceDestiny extends ChangeNotifier {
     this.minuteur = true,
   })  : _regie = regie,
         _lieuId = lieuId,
-        protagonistes = protagonistes.clamp(2, 8),
         _hasard = hasard ?? Random() {
-    moments = momentsDestinyS ??
-        momentsAuProrata(reglages.momentsDestinyMin, reglages.dureeDe(ExerciceDestiny.longForm), dureeS);
     _reglagesConduite = _ReglagesConduiteExercice(_valeurs());
     conduite = ConduiteSon(
       pack: pack,
@@ -135,19 +123,12 @@ class SeanceExerciceDestiny extends ChangeNotifier {
   final PackAudio pack;
   final ReglagesExercicesDestiny reglages;
   final List<LieuExercice> lieux;
-  final List<Danger> dangers;
 
   /// La durée totale, en secondes.
   final int dureeS;
 
-  /// L'acte dont la musique accompagne un exercice minuté (1 à 4).
+  /// L'acte dont la musique accompagne l'exercice (1 à 4).
   final int acte;
-
-  /// Le long form : le nombre de protagonistes (2 à 8).
-  final int protagonistes;
-
-  /// Le long form : les moments des trois DESTINY, en secondes.
-  late List<int> moments;
 
   /// Faux dans les tests : le temps avance par [tic].
   final bool minuteur;
@@ -157,7 +138,7 @@ class SeanceExerciceDestiny extends ChangeNotifier {
   late final _ReglagesConduiteExercice _reglagesConduite;
   late final ConduiteSon conduite;
 
-  ValeursRegieSon _valeurs() => valeursPourExercice(_regie, reglages, longForm: exercice == ExerciceDestiny.longForm);
+  ValeursRegieSon _valeurs() => valeursPourExercice(_regie, reglages);
 
   String _lieuId;
   String get lieuId => _lieuId;
@@ -184,38 +165,11 @@ class SeanceExerciceDestiny extends ChangeNotifier {
   bool _packIncomplet = false;
   bool get packIncomplet => _packIncomplet;
 
-  // ----------------------------------------------------------- long form
-
-  int _destinyFaits = 0;
-
-  /// Le nombre de DESTINY déjà tombés (0 à 3).
-  int get destinyFaits => _destinyFaits;
-
-  /// L'instant du DESTINY suivant (null : les trois sont passés).
-  int? get prochainDestiny => _destinyFaits < 3 && _destinyFaits < moments.length ? moments[_destinyFaits] : null;
-
-  TypeDanger? _type;
-  Danger? _danger;
-  FaceSurvivants? _survivants;
-  EcranDestiny _ecran = EcranDestiny.aucun;
-
-  /// Le type tiré au DESTINY n°1 (le dé du danger).
-  TypeDanger? get typeDanger => _type;
-
-  /// Le danger du soir, tiré dans ce type.
-  Danger? get danger => _danger;
-
-  /// Le résultat du dé des survivants (DESTINY n°3).
-  FaceSurvivants? get survivants => _survivants;
-
-  EcranDestiny get ecran => _ecran;
-
   Timer? _timer;
 
   // ------------------------------------------------------------ commandes
 
-  /// Lance l'exercice : la musique de l'acte (l'acte 1 en long form) et le
-  /// chrono.
+  /// Lance l'exercice : la musique de l'acte et le chrono.
   Future<void> lancer() async {
     _timer?.cancel();
     _reglagesConduite.remplacer(_valeurs());
@@ -223,15 +177,10 @@ class SeanceExerciceDestiny extends ChangeNotifier {
     _lance = true;
     _enPause = false;
     _fini = false;
-    _destinyFaits = 0;
-    _type = null;
-    _danger = null;
-    _survivants = null;
-    _ecran = EcranDestiny.aucun;
     conduite.preparer(lieuId: _lieuId, dangerId: '', acte: 1);
     _demarrerMinuteur();
     notifyListeners();
-    await conduite.ouverture(acte: exercice == ExerciceDestiny.longForm ? 1 : acte);
+    await conduite.ouverture(acte: acte);
   }
 
   void _demarrerMinuteur() {
@@ -239,14 +188,10 @@ class SeanceExerciceDestiny extends ChangeNotifier {
     if (minuteur) _timer = Timer.periodic(const Duration(seconds: 1), (_) => tic());
   }
 
-  /// Une seconde de plus : le DESTINY du moment, puis la fin.
+  /// Une seconde de plus, puis la fin.
   void tic() {
     if (!enCours) return;
     _reste = max(0, _reste - 1);
-    final p = prochainDestiny;
-    if (exercice == ExerciceDestiny.longForm && p != null && ecoule >= p && _reste > 0) {
-      unawaited(destinyMaintenant());
-    }
     if (_reste == 0) unawaited(_terminer());
     notifyListeners();
   }
@@ -254,14 +199,9 @@ class SeanceExerciceDestiny extends ChangeNotifier {
   Future<void> _terminer() async {
     _timer?.cancel();
     _fini = true;
-    _ecran = EcranDestiny.aucun;
     notifyListeners();
-    if (exercice == ExerciceDestiny.longForm) {
-      await conduite.fonduFin();
-    } else {
-      await conduite.stopTout();
-      await sonnerCloche();
-    }
+    await conduite.stopTout();
+    await sonnerCloche();
   }
 
   /// Pause : le chrono s'arrête et la musique se met en pause avec lui.
@@ -288,7 +228,6 @@ class SeanceExerciceDestiny extends ChangeNotifier {
     _lance = false;
     _enPause = false;
     _fini = false;
-    _ecran = EcranDestiny.aucun;
     notifyListeners();
     await conduite.stopTout();
   }
@@ -306,60 +245,7 @@ class SeanceExerciceDestiny extends ChangeNotifier {
     if (_lance) await relancer();
   }
 
-  /// Le DESTINY suivant, tout de suite (bouton « DESTINY maintenant »), ou
-  /// à son moment.
-  Future<void> destinyMaintenant() async {
-    if (exercice != ExerciceDestiny.longForm || !_lance || _fini || _destinyFaits >= 3) return;
-    final numero = ++_destinyFaits;
-    switch (numero) {
-      case 1:
-        _type = TypeDanger.values[_hasard.nextInt(TypeDanger.values.length)];
-        _danger = tirerDanger(dangers, _type!, hasard: _hasard);
-        _ecran = EcranDestiny.deDanger;
-        notifyListeners();
-        await conduite.destiny(1);
-      case 2:
-        _ecran = EcranDestiny.eclair;
-        notifyListeners();
-        await conduite.destiny(2, son: sonDestiny2());
-      default:
-        final faces = facesSurvivants(protagonistes);
-        _survivants = faces[_hasard.nextInt(faces.length)];
-        _ecran = EcranDestiny.deSurvivants;
-        notifyListeners();
-        await conduite.destiny(3);
-    }
-  }
-
-  /// « Retirer un danger », dans le même type.
-  void retirerDanger() {
-    final t = _type;
-    if (t == null) return;
-    _danger = tirerDanger(dangers, t, sauf: _danger?.id, hasard: _hasard) ?? _danger;
-    notifyListeners();
-  }
-
-  /// Ferme l'écran du DESTINY (le jeu continue).
-  void fermerEcran() {
-    _ecran = EcranDestiny.aucun;
-    notifyListeners();
-  }
-
   // ---------------------------------------------------------------- sons
-
-  /// Le son du DESTINY n°2 du type tiré (null : le son Destiny habituel, le
-  /// pack n'a pas encore ce son).
-  SourceSon? sonDestiny2() {
-    final code = _type?.codeDestiny2;
-    if (code == null) return null;
-    final r = _resoudre(code);
-    if (r == null) {
-      _packIncomplet = true;
-      notifyListeners();
-      return null;
-    }
-    return SourcePack(r.chemin, titre: pack.manifeste?.sons[r.codeJoue]?.nom ?? code);
-  }
 
   /// La cloche de fin d'exercice, une fois (sans pack : le son du REVEAL
   /// embarqué).
@@ -396,15 +282,4 @@ String? tirerLieu(List<LieuExercice> lieux, {String? sauf, Random? hasard}) {
   if (lieux.isEmpty) return null;
   final choix = lieux.length > 1 ? lieux.where((l) => l.id != sauf).toList() : lieux;
   return choix[(hasard ?? Random()).nextInt(choix.length)].id;
-}
-
-/// Un danger actif du type [type], autre que [sauf] s'il y en a d'autres.
-Danger? tirerDanger(List<Danger> dangers, TypeDanger type, {String? sauf, Random? hasard}) {
-  final duType = [
-    for (final d in dangers)
-      if (d.actif && TypeDanger.deStyle(d.style) == type) d,
-  ];
-  if (duType.isEmpty) return null;
-  final choix = duType.length > 1 ? duType.where((d) => d.id != sauf).toList() : duType;
-  return choix[(hasard ?? Random()).nextInt(choix.length)];
 }

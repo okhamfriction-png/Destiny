@@ -1,6 +1,6 @@
-/// Les exercices Destiny du menu Exercices : trois exercices minutés sur la
-/// musique d'un lieu (Duo, Impro filée en duo, Trio) et le long form, avec
-/// les trois DESTINY, le dé du danger et le dé des survivants.
+/// Les exercices Destiny du menu Exercices : deux exercices minutés sur la
+/// musique d'un lieu (Duo, Impro filée en duo). Et les règles des dés du
+/// spectacle : le dé du danger (DESTINY n°1) et le dé des survivants (n°3).
 ///
 /// Ce fichier ne contient que des règles, sans son ni écran : elles se
 /// testent seules.
@@ -10,22 +10,19 @@ import 'dart:math';
 
 import '../entities/danger.dart';
 
-/// Les quatre exercices de la section Destiny.
+/// Les deux exercices de la section Destiny. (Le Trio et le Long form ont
+/// été retirés en 2.7.0.)
 enum ExerciceDestiny {
   duo(joueurs: 2, idCarnet: 'destiny_duo'),
-  improFilee(joueurs: 2, idCarnet: 'destiny_impro_filee'),
-  trio(joueurs: 3, idCarnet: 'destiny_trio'),
-  longForm(joueurs: 4, idCarnet: 'destiny_long_form');
+  improFilee(joueurs: 2, idCarnet: 'destiny_impro_filee');
 
   const ExerciceDestiny({required this.joueurs, required this.idCarnet});
 
-  /// Le nombre de joueurs (le long form : par défaut, de 2 à 8).
+  /// Le nombre de joueurs.
   final int joueurs;
 
   /// L'identifiant de l'exercice dans `exercices.json` (sa consigne).
   final String idCarnet;
-
-  bool get minute => this != longForm;
 }
 
 /// Les durées proposées sur l'écran de préparation d'un exercice minuté.
@@ -42,24 +39,14 @@ class ReglagesExercicesDestiny {
   /// …puis descend en tant de secondes…
   double descenteS = 10;
 
-  /// …jusqu'à ce niveau (0 à 1) : 0 pour les exercices minutés (elle
-  /// s'arrête)…
+  /// …jusqu'à ce niveau (0 à 1) : 0 par défaut, elle s'arrête.
   double fondMinute = 0;
-
-  /// …et 5 % pour le long form, aux quatre actes.
-  double fondLongForm = 0.05;
 
   /// La durée par défaut de chaque exercice, en secondes.
   Map<ExerciceDestiny, int> dureesS = {
     ExerciceDestiny.duo: 120,
     ExerciceDestiny.improFilee: 180,
-    ExerciceDestiny.trio: 480,
-    ExerciceDestiny.longForm: 45 * 60,
   };
-
-  /// Les moments des trois DESTINY du long form, en minutes, pour sa durée
-  /// par défaut.
-  List<double> momentsDestinyMin = [10, 22, 40];
 
   int dureeDe(ExerciceDestiny e) => dureesS[e] ?? ReglagesExercicesDestiny().dureesS[e]!;
 
@@ -67,9 +54,7 @@ class ReglagesExercicesDestiny {
         'maintien_s': maintienS,
         'descente_s': descenteS,
         'fond_minute': fondMinute,
-        'fond_long_form_v2': fondLongForm,
         'durees_s': {for (final e in dureesS.entries) e.key.name: e.value},
-        'moments_destiny_min': momentsDestinyMin,
       };
 
   /// Lit des réglages enregistrés ; une valeur absente ou illisible garde sa
@@ -81,8 +66,7 @@ class ReglagesExercicesDestiny {
     r
       ..maintienS = d('maintien_s', r.maintienS, 0, 600)
       ..descenteS = d('descente_s', r.descenteS, 0, 120)
-      ..fondMinute = d('fond_minute', r.fondMinute, 0, 1)
-      ..fondLongForm = d('fond_long_form_v2', r.fondLongForm, 0, 1);
+      ..fondMinute = d('fond_minute', r.fondMinute, 0, 1);
     final durees = j['durees_s'];
     if (durees is Map) {
       for (final e in ExerciceDestiny.values) {
@@ -90,26 +74,8 @@ class ReglagesExercicesDestiny {
         if (v is num && v >= 10) r.dureesS[e] = v.toInt();
       }
     }
-    final moments = j['moments_destiny_min'];
-    if (moments is List && moments.length == 3 && moments.every((x) => x is num && x > 0)) {
-      r.momentsDestinyMin = [for (final x in moments) (x as num).toDouble()];
-    }
     return r;
   }
-}
-
-/// Les moments des trois DESTINY (en secondes) pour une durée totale de
-/// [dureeS] : ceux de [momentsMin] (prévus pour [dureeReferenceS]) ramenés au
-/// prorata, dans l'ordre, chacun dans la durée.
-List<int> momentsAuProrata(List<double> momentsMin, int dureeReferenceS, int dureeS) {
-  final ratio = dureeReferenceS <= 0 ? 1.0 : dureeS / dureeReferenceS;
-  final sortie = <int>[];
-  for (final m in momentsMin) {
-    var s = (m * 60 * ratio).round();
-    if (sortie.isNotEmpty && s <= sortie.last) s = sortie.last + 1;
-    sortie.add(s.clamp(1, dureeS > 1 ? dureeS - 1 : 1));
-  }
-  return sortie;
 }
 
 /// Une face du dé des survivants.

@@ -51,7 +51,6 @@ class LecteurHorodate extends LecteurFactice {
   ExerciceDestiny e, {
   int dureeS = 120,
   int acte = 1,
-  int protagonistes = 4,
   List<String>? fichiers,
   ReglagesExercicesDestiny? reglages,
   int graine = 1,
@@ -68,8 +67,6 @@ class LecteurHorodate extends LecteurFactice {
     lieuId: 'casino',
     dureeS: dureeS,
     acte: acte,
-    protagonistes: protagonistes,
-    dangers: dangers,
     muet: () => false,
     // Le son Destiny dure 12 s (le lecteur le dit, comme un vrai).
     fabrique: (b) => lecteurs[b] = LecteurHorodate(b, journal, () => t)
@@ -276,17 +273,6 @@ void main() {
   });
 
   group('les règles', () {
-    test('les moments des trois DESTINY se recalculent au prorata de la durée', () {
-      const base = [10.0, 22.0, 40.0];
-      expect(momentsAuProrata(base, 2700, 2700), [600, 1320, 2400]);
-      // Un long form raccourci à 6 min : 1 min 20, 2 min 56, 5 min 20.
-      expect(momentsAuProrata(base, 2700, 360), [80, 176, 320]);
-      expect(momentsAuProrata(base, 2700, 5400), [1200, 2640, 4800]);
-      // Toujours dans l'ordre et dans la durée, même très court.
-      final court = momentsAuProrata(base, 2700, 3);
-      expect(court, [1, 2, 2]);
-    });
-
     test('le dé du danger du spectacle : un type, puis un danger jouable de ce type', () {
       // Les paliers viennent de la grammaire : ici, quatre paliers factices.
       final jouables = [for (final d in dangers) d.copyWith(paliers: const ['1', '2', '3', '4'])];
@@ -326,23 +312,27 @@ void main() {
     test('les réglages se relisent, et une valeur absente garde son défaut', () {
       final r = ReglagesExercicesDestiny()
         ..maintienS = 15
-        ..dureesS[ExerciceDestiny.trio] = 600
-        ..momentsDestinyMin = [8, 20, 35];
+        ..dureesS[ExerciceDestiny.improFilee] = 600;
       final relu = ReglagesExercicesDestiny.depuisJson(jsonDecode(jsonEncode(r.versJson())) as Map<String, dynamic>);
       expect(relu.maintienS, 15);
       expect(relu.descenteS, 10);
-      expect(relu.dureeDe(ExerciceDestiny.trio), 600);
+      expect(relu.dureeDe(ExerciceDestiny.improFilee), 600);
       expect(relu.dureeDe(ExerciceDestiny.duo), 120);
-      expect(relu.momentsDestinyMin, [8, 20, 35]);
       final vide = ReglagesExercicesDestiny.depuisJson({});
       expect(vide.fondMinute, 0);
-      expect(vide.fondLongForm, 0.05);
-      expect(vide.dureeDe(ExerciceDestiny.longForm), 2700);
+      expect(vide.dureeDe(ExerciceDestiny.improFilee), 180);
+      // D'anciens réglages (avec le Trio et le Long form) se relisent.
+      final ancien = ReglagesExercicesDestiny.depuisJson({
+        'durees_s': {'duo': 90, 'trio': 600, 'longForm': 2700},
+        'moments_destiny_min': [8, 20, 35],
+      });
+      expect(ancien.dureeDe(ExerciceDestiny.duo), 90);
+      expect(ancien.dureesS.keys, ExerciceDestiny.values);
     });
 
     test('les exercices ne touchent pas à la régie : pas de bruitage, pas de REVEAL, pas d\'ambiance', () {
       final regie = ValeursRegieSon()..maintienDestiny = 15;
-      final v = valeursPourExercice(regie, ReglagesExercicesDestiny(), longForm: true);
+      final v = valeursPourExercice(regie, ReglagesExercicesDestiny()..fondMinute = 0.05);
       expect(v.fluide, isTrue);
       expect(v.maintienOuverture, 20);
       expect(v.maintienDestiny, 20);
@@ -353,7 +343,8 @@ void main() {
       expect(v.revealActe, everyElement(isFalse));
       expect(v.ambianceApresMusique, isFalse);
       expect(regie.maintienDestiny, 15, reason: 'la régie du spectacle est intacte');
-      expect(valeursPourExercice(regie, ReglagesExercicesDestiny(), longForm: false).niveauFond, [0, 0, 0, 0]);
+      expect(v.boucle, isFalse);
+      expect(valeursPourExercice(regie, ReglagesExercicesDestiny()).niveauFond, [0, 0, 0, 0]);
     });
   });
 
@@ -401,83 +392,12 @@ void main() {
     });
 
     test('Nouveau lieu : un autre lieu, et ça repart', () async {
-      final x = exercice(ExerciceDestiny.trio);
+      final x = exercice(ExerciceDestiny.improFilee);
       await x.seance.lancer();
       await x.seance.nouveauLieu();
       await laisserTourner();
       expect(x.seance.lieuId, isNot('casino'));
       expect(x.seance.reste, 120);
-    });
-  });
-
-  group('le long form', () {
-    test('les trois DESTINY : le dé du danger, le DESTINY n°2 du type tiré, le dé des survivants', () async {
-      final x = exercice(ExerciceDestiny.longForm, dureeS: 360, protagonistes: 5);
-      expect(x.seance.moments, [80, 176, 320]);
-      await x.seance.lancer();
-      await laisserTourner();
-      // Acte 1 : 20 s, puis 10 s jusqu'à 5 %, et elle continue.
-      final musique = x.lecteurs[BusSon.musique]!;
-      expect(volumeA(musique.courbe, 31), closeTo(0.05, 1e-9));
-      expect(x.journal, isNot(contains('musique:arreter')));
-
-      for (var s = 0; s < 80; s++) {
-        x.seance.tic();
-      }
-      await laisserTourner();
-      expect(x.seance.destinyFaits, 1);
-      expect(x.seance.ecran, EcranDestiny.deDanger);
-      final type = x.seance.typeDanger!;
-      expect(TypeDanger.deStyle(x.seance.danger!.style), type);
-      expect(x.journal, contains('destiny:jouer:${AudioService.stormAsset}'));
-      final avant = x.seance.danger!.id;
-      x.seance.retirerDanger();
-      expect(x.seance.danger!.id, isNot(avant));
-      expect(TypeDanger.deStyle(x.seance.danger!.style), type, reason: 'retiré dans le même type');
-
-      x.journal.clear();
-      await x.seance.destinyMaintenant();
-      await laisserTourner();
-      expect(x.seance.ecran, EcranDestiny.eclair);
-      final destiny2 = x.journal.firstWhere((j) => j.startsWith('destiny:jouer:'));
-      expect(destiny2, contains(type.codeDestiny2), reason: 'pas le tonnerre : le DESTINY n°2 du type');
-      final acte3 = resoudreMusique(m, x.seance.pack.index, 'casino', 3).chemin!;
-      expect(x.journal, contains('musique:jouer:$acte3'));
-
-      await x.seance.destinyMaintenant();
-      await laisserTourner();
-      expect(x.seance.ecran, EcranDestiny.deSurvivants);
-      expect(facesSurvivants(5), contains(x.seance.survivants));
-      expect(x.seance.destinyFaits, 3);
-      expect(x.seance.prochainDestiny, isNull);
-      // Pas de bruitage de palier ni de REVEAL.
-      expect(x.journal.where((j) => j.startsWith('bruitage') || j.startsWith('stinger')), isEmpty);
-    });
-
-    test('pack pas réimporté : le DESTINY n°2 joue le son Destiny habituel', () async {
-      final sansNouveaux = fichiersDuManifeste(m).where((f) => !f.contains('DESTINY2')).toList();
-      final x = exercice(ExerciceDestiny.longForm, dureeS: 360, fichiers: sansNouveaux);
-      await x.seance.lancer();
-      await x.seance.destinyMaintenant();
-      await laisserTourner();
-      x.journal.clear();
-      await x.seance.destinyMaintenant();
-      await laisserTourner();
-      expect(x.journal.firstWhere((j) => j.startsWith('destiny:jouer:')), 'destiny:jouer:${AudioService.stormAsset}');
-      expect(x.seance.packIncomplet, isTrue);
-    });
-
-    test('à la fin : le fondu de fin, pas de cloche', () async {
-      final x = exercice(ExerciceDestiny.longForm, dureeS: 360);
-      await x.seance.lancer();
-      for (var s = 0; s < 360; s++) {
-        x.seance.tic();
-        if (s % 40 == 0) await laisserTourner();
-      }
-      await laisserTourner();
-      expect(x.seance.fini, isTrue);
-      expect(x.seance.destinyFaits, 3);
-      expect(x.journal.where((j) => j.contains('FIN_EXERCICE')), isEmpty);
     });
   });
 }

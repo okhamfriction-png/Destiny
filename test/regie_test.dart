@@ -199,10 +199,12 @@ Future<void> _finirRituel(WidgetTester tester) async {
   await tester.pump(const Duration(seconds: 10));
   await tester.pump(const Duration(seconds: 2));
   await tester.pump();
-  // Au DESTINY n°1 sans danger, au n°3 : le dé, avant la carte de l'acte.
+  // Au DESTINY n°1 sans danger, au n°3 : le dé, avant la carte de l'acte
+  // (celui des survivants se ferme seul au bout de 5 s).
   if (find.byKey(const ValueKey('de_spectacle')).evaluate().isNotEmpty) {
-    await tester.pump(const Duration(seconds: 6));
-    await tester.tap(find.byKey(const ValueKey('on_continue')));
+    await tester.pump(const Duration(seconds: 2));
+    final continuer = find.byKey(const ValueKey('on_continue'));
+    if (continuer.evaluate().isNotEmpty) await tester.tap(continuer);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
   }

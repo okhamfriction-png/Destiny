@@ -25,8 +25,7 @@ String libelleSurvivants(BuildContext context, FaceSurvivants f) {
 
 String libelleType(BuildContext context, TypeDanger type) => context.textes.t('exercices.destiny.type_${type.name}');
 
-/// Un exercice Destiny en cours : le grand chrono, le lieu, les boutons, et
-/// pour le long form les trois DESTINY.
+/// Un exercice Destiny en cours : le grand chrono, le lieu, les boutons.
 class ExerciceDestinyScreen extends StatefulWidget {
   const ExerciceDestinyScreen({required this.seance, required this.titre, required this.consigne, super.key});
 
@@ -61,18 +60,16 @@ class _ExerciceDestinyScreenState extends State<ExerciceDestinyScreen> {
     final t = context.textes;
     final c = context.destiny;
     String k(String x, [Map<String, String> v = const {}]) => t.t('exercices.destiny.$x', v);
-    final longForm = s.exercice == ExerciceDestiny.longForm;
     return ListenableBuilder(
       listenable: s,
       builder: (context, _) {
         final etat = s.fini
-            ? (longForm ? k('fini_long_form') : k('fini'))
+            ? k('fini')
             : s.enPause
                 ? k('en_pause')
                 : s.lance
                     ? k('en_cours')
                     : k('prets');
-        final prochain = s.prochainDestiny;
         return Scaffold(
           body: Stack(children: [
             SafeArea(
@@ -112,8 +109,7 @@ class _ExerciceDestinyScreenState extends State<ExerciceDestinyScreen> {
                                         color: c.texte)),
                               ),
                             ]),
-                            if (!longForm)
-                              Text(k('acte_n', {'n': '${s.acte}'}),
+                            Text(k('acte_n', {'n': '${s.acte}'}),
                                   style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, color: c.texteSecondaire)),
                             const SizedBox(height: 18),
                             FittedBox(
@@ -132,32 +128,6 @@ class _ExerciceDestinyScreenState extends State<ExerciceDestinyScreen> {
                             Text(etat,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontFamily: kPoliceTexte, fontSize: 16, color: c.texteSecondaire)),
-                            if (longForm) ...[
-                              const SizedBox(height: 14),
-                              if (s.danger != null)
-                                Text(k('danger_du_soir', {'nom': s.danger!.name}),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontFamily: kPoliceTexte,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                        color: c.texte)),
-                              if (s.survivants != null)
-                                Text(libelleSurvivants(context, s.survivants!),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontFamily: kPoliceTexte, fontSize: 15, color: c.titre)),
-                              const SizedBox(height: 6),
-                              Text(
-                                prochain == null
-                                    ? k('tous_passes')
-                                    : k('prochain', {
-                                        'n': '${s.destinyFaits + 1}',
-                                        'temps': minutesSecondes(prochain),
-                                      }),
-                                key: const ValueKey('prochain_destiny'),
-                                style: TextStyle(fontFamily: kPoliceTexte, fontSize: 14, color: c.texteSecondaire),
-                              ),
-                            ],
                             const SizedBox(height: 18),
                             Text(widget.consigne,
                                 textAlign: TextAlign.center,
@@ -180,17 +150,6 @@ class _ExerciceDestinyScreenState extends State<ExerciceDestinyScreen> {
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 640),
                     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                      if (longForm && !s.fini && s.lance && prochain != null)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: FilledButton.icon(
-                            key: const ValueKey('destiny_maintenant'),
-                            onPressed: s.enPause ? null : s.destinyMaintenant,
-                            icon: const Icon(Icons.bolt_rounded),
-                            label: Text(k('destiny_maintenant')),
-                            style: FilledButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
-                          ),
-                        ),
                       if (s.fini)
                         Row(children: [
                           Expanded(
@@ -245,103 +204,9 @@ class _ExerciceDestinyScreenState extends State<ExerciceDestinyScreen> {
                 ]),
               ),
             ),
-            if (s.ecran != EcranDestiny.aucun) Positioned.fill(child: _EcranDestiny(seance: s)),
           ]),
         );
       },
-    );
-  }
-}
-
-/// L'écran d'un DESTINY du long form, par-dessus le chrono.
-class _EcranDestiny extends StatelessWidget {
-  const _EcranDestiny({required this.seance});
-
-  final SeanceExerciceDestiny seance;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.textes;
-    final c = context.destiny;
-    String k(String x, [Map<String, String> v = const {}]) => t.t('exercices.destiny.$x', v);
-    final s = seance;
-    final titre = TextStyle(fontFamily: kPoliceTitres, fontSize: 30, fontWeight: FontWeight.w900, color: c.orClair);
-    const texte = TextStyle(fontFamily: kPoliceTexte, fontSize: 16, color: Colors.white70);
-    final continuer = FilledButton(
-      key: const ValueKey('on_continue'),
-      onPressed: s.fermerEcran,
-      child: Text(k('on_continue')),
-    );
-    final Widget contenu = switch (s.ecran) {
-      EcranDestiny.deDanger => Column(mainAxisSize: MainAxisSize.min, children: [
-          Text(k('destiny_n', {'n': '1'}), style: titre),
-          Text(k('de_danger'), style: texte),
-          const SizedBox(height: 24),
-          DeQuiRoule(
-            key: const ValueKey('de_danger'),
-            faces: [for (final x in TypeDanger.values) libelleType(context, x)],
-            resultat: libelleType(context, s.typeDanger!),
-            apres: Column(mainAxisSize: MainAxisSize.min, children: [
-              const SizedBox(height: 20),
-              Text(s.danger?.name ?? k('aucun_danger'),
-                  key: const ValueKey('danger_tire'),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontFamily: kPoliceTitres, fontSize: 34, fontWeight: FontWeight.w900, color: Colors.white)),
-              const SizedBox(height: 18),
-              Wrap(alignment: WrapAlignment.center, spacing: 10, runSpacing: 10, children: [
-                OutlinedButton.icon(
-                  key: const ValueKey('retirer_danger'),
-                  style: OutlinedButton.styleFrom(foregroundColor: Colors.white),
-                  onPressed: s.danger == null ? null : s.retirerDanger,
-                  icon: const Icon(Icons.casino_outlined, size: 18),
-                  label: Text(k('retirer_danger')),
-                ),
-                continuer,
-              ]),
-            ]),
-          ),
-        ]),
-      EcranDestiny.eclair => GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: s.fermerEcran,
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            const _Eclair(),
-            const SizedBox(height: 16),
-            Text(k('destiny_n', {'n': '2'}), style: titre),
-            const SizedBox(height: 24),
-            continuer,
-          ]),
-        ),
-      EcranDestiny.deSurvivants => Column(mainAxisSize: MainAxisSize.min, children: [
-          Text(k('destiny_n', {'n': '3'}), style: titre),
-          Text(k('de_survivants'), style: texte),
-          const SizedBox(height: 24),
-          DeQuiRoule(
-            key: const ValueKey('de_survivants'),
-            faces: [for (final f in facesSurvivants(s.protagonistes)) libelleSurvivants(context, f)],
-            resultat: libelleSurvivants(context, s.survivants!),
-            apres: Column(mainAxisSize: MainAxisSize.min, children: [
-              if (s.danger != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 14),
-                  child: Text(k('danger_du_soir', {'nom': s.danger!.name}), style: texte),
-                ),
-              const SizedBox(height: 18),
-              continuer,
-            ]),
-          ),
-        ]),
-      EcranDestiny.aucun => const SizedBox.shrink(),
-    };
-    return ColoredBox(
-      key: const ValueKey('ecran_destiny'),
-      color: Colors.black.withValues(alpha: 0.96),
-      child: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(padding: const EdgeInsets.all(24), child: contenu),
-        ),
-      ),
     );
   }
 }
@@ -438,39 +303,5 @@ class _DeQuiRouleState extends State<DeQuiRoule> {
         child: IgnorePointer(ignoring: !_pose, child: widget.apres ?? const SizedBox.shrink()),
       ),
     ]);
-  }
-}
-
-/// L'éclair du DESTINY n°2 : un flash, puis il palpite.
-class _Eclair extends StatefulWidget {
-  const _Eclair();
-
-  @override
-  State<_Eclair> createState() => _EclairState();
-}
-
-class _EclairState extends State<_Eclair> with SingleTickerProviderStateMixin {
-  late final AnimationController _a =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 900))..repeat(reverse: true);
-
-  @override
-  void dispose() {
-    _a.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.destiny;
-    return AnimatedBuilder(
-      animation: _a,
-      builder: (_, __) => Icon(
-        Icons.bolt_rounded,
-        key: const ValueKey('eclair'),
-        size: 160,
-        color: Color.lerp(c.or, Colors.white, _a.value),
-        shadows: [Shadow(color: c.orClair.withValues(alpha: 0.4 + 0.6 * _a.value), blurRadius: 40)],
-      ),
-    );
   }
 }
