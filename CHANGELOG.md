@@ -2,6 +2,10 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.7.2 — Le dé du danger ne reste plus bloqué (novembre 2026)
+
+- **Le dé du danger ne reste plus bloqué.** Il se ferme seul au bout de 10 secondes au plus, même si on a touché l'écran ou « Retirer un danger » (avant, chaque toucher relançait le compte). Même chose pour le dé des survivants (5 s) et la carte de l'acte (5 s). « On continue » et « Reprendre » ferment toujours tout de suite.
+
 ## 2.7.1 — Des DESTINY plus courts (novembre 2026)
 
 - **Les fenêtres des DESTINY se ferment seules, plus vite.** Au spectacle, le dé du danger (DESTINY n°1) reste 10 secondes à l'écran, le dé des survivants (n°3) 5 secondes, et la carte de l'acte 5 secondes (au lieu de 10). Toucher l'écran les garde un peu plus ; « On continue » et « Reprendre » ferment tout de suite.

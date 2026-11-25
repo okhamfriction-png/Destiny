@@ -268,6 +268,13 @@ void main() {
         await tester.pump();
         expect(find.text(s.dangerNom), findsWidgets);
         expect(s.paliers, hasLength(4));
+        // 10 s au plus, même après un toucher : il se ferme seul.
+        await tester.pump(const Duration(seconds: 6));
+        expect(find.byKey(const ValueKey('de_danger')), findsOneWidget, reason: 'encore là à 9,6 s');
+        await tester.pump(const Duration(milliseconds: 500));
+        await tester.pump(const Duration(milliseconds: 400));
+        expect(find.byKey(const ValueKey('de_spectacle')), findsNothing);
+        return;
       }
       await tester.tap(find.byKey(const ValueKey('on_continue')));
       await tester.pump();

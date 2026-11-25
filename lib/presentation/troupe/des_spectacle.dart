@@ -11,8 +11,8 @@ import '../theme/destiny_theme.dart';
 /// Le dé du danger du DESTINY n°1, en plein écran par-dessus le spectacle :
 /// le type roule, tombe, puis le danger apparaît. « Retirer un danger » en
 /// tire un autre du même type ([retirer] rend le nouveau). Le chrono tourne
-/// pendant ce temps. Il se ferme seul au bout de [kDureeDeDanger] (un
-/// toucher relance le compte), ou sur « On continue ».
+/// pendant ce temps. Il se ferme seul au bout de [kDureeDeDanger] au plus,
+/// quoi qu'on touche, ou avant sur « On continue ».
 Future<void> ouvrirDeDanger(
   BuildContext context, {
   required TypeDanger type,
@@ -48,7 +48,8 @@ Future<void> _ouvrir(BuildContext context, Widget contenu, {required Duration fe
       transitionsBuilder: (_, a, __, child) => FadeTransition(opacity: a, child: child),
     ));
 
-/// Le fond noir du dé. Il se ferme seul après [fermeture] sans toucher.
+/// Le fond noir du dé. Il se ferme seul après [fermeture], au plus : un
+/// toucher ne relance pas le compte.
 class _Fond extends StatefulWidget {
   const _Fond({required this.fermeture, required this.child});
 
@@ -65,11 +66,6 @@ class _FondState extends State<_Fond> {
   @override
   void initState() {
     super.initState();
-    _relancer();
-  }
-
-  void _relancer() {
-    _minuteur?.cancel();
     _minuteur = Timer(widget.fermeture, () {
       if (!mounted) return;
       final route = ModalRoute.of(context);
@@ -86,15 +82,11 @@ class _FondState extends State<_Fond> {
   }
 
   @override
-  Widget build(BuildContext context) => Listener(
-        // Un toucher (« Retirer un danger »…) : le dé reste encore un peu.
-        onPointerDown: (_) => _relancer(),
-        child: Material(
-          key: const ValueKey('de_spectacle'),
-          color: Colors.black.withValues(alpha: 0.96),
-          child: SafeArea(
-            child: Center(child: SingleChildScrollView(padding: const EdgeInsets.all(24), child: widget.child)),
-          ),
+  Widget build(BuildContext context) => Material(
+        key: const ValueKey('de_spectacle'),
+        color: Colors.black.withValues(alpha: 0.96),
+        child: SafeArea(
+          child: Center(child: SingleChildScrollView(padding: const EdgeInsets.all(24), child: widget.child)),
         ),
       );
 }
