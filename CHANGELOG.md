@@ -2,6 +2,10 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.7.3 — Le chrono se change d'un toucher (novembre 2026)
+
+- **Le chrono du spectacle se change d'un toucher.** Touche le temps (au jeu, sur la table de régie ou à la régie) : choisis une autre durée (−5, −1, +1, +5 min), et les DESTINY pas encore passés suivent au prorata (33 → 45 min : 10, 20, 30 → 14, 27, 41). L'aperçu les montre avant de valider. Les DESTINY déjà passés ne bougent pas, et la durée ne descend pas sous le temps déjà joué.
+
 ## 2.7.2 — Le dé du danger ne reste plus bloqué (novembre 2026)
 
 - **Le dé du danger ne reste plus bloqué.** Il se ferme seul au bout de 10 secondes au plus, même si on a touché l'écran ou « Retirer un danger » (avant, chaque toucher relançait le compte). Même chose pour le dé des survivants (5 s) et la carte de l'acte (5 s). « On continue » et « Reprendre » ferment toujours tout de suite.

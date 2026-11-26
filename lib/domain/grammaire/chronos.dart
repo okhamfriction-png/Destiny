@@ -1,3 +1,5 @@
+import 'dart:math';
+
 /// Un chrono de spectacle : sa durée totale et les trois moments où tombe
 /// Destiny. Les quatre actes en découlent.
 class ChronoSpectacle {
@@ -76,3 +78,44 @@ int rangChronoPourJoueurs(int joueurs) => joueurs <= 2
     : joueurs == 3
         ? 1
         : 2;
+
+/// Les Destiny d'un spectacle dont on change la durée en cours de route :
+/// ceux pas encore lancés suivent la nouvelle durée au prorata (33 → 45 min :
+/// 10, 20, 30 → 14, 27, 41). Les [lances] premiers ne bougent pas. Chacun
+/// reste après le précédent, après le temps déjà joué ([ecouleSecondes]) et
+/// avant la fin. Null : la durée est trop courte pour ce qui reste à jouer
+/// (voir [dureeMiniSpectacle]).
+List<int>? adapterDestinys(
+  List<int> destinyMinutes, {
+  required int ancienneDuree,
+  required int nouvelleDuree,
+  int lances = 0,
+  int ecouleSecondes = 0,
+}) {
+  if (nouvelleDuree < dureeMiniSpectacle(destinyMinutes, lances: lances, ecouleSecondes: ecouleSecondes)) {
+    return null;
+  }
+  final ratio = ancienneDuree <= 0 ? 1.0 : nouvelleDuree / ancienneDuree;
+  final n = destinyMinutes.length;
+  final sortie = [...destinyMinutes];
+  // Le plus tôt possible : la minute qui suit le temps joué.
+  final apresJoue = ecouleSecondes ~/ 60 + 1;
+  for (var i = lances; i < n; i++) {
+    final mini = [1, apresJoue, if (i > 0) sortie[i - 1] + 1].reduce(max);
+    // Garder la place des suivants, et finir avant la fin.
+    final maxi = nouvelleDuree - (n - i);
+    sortie[i] = (destinyMinutes[i] * ratio).round().clamp(mini, maxi);
+  }
+  return sortie;
+}
+
+/// La durée la plus courte possible (en minutes) : assez pour les Destiny
+/// pas encore lancés, une minute chacun, après le temps déjà joué.
+int dureeMiniSpectacle(List<int> destinyMinutes, {int lances = 0, int ecouleSecondes = 0}) {
+  final restants = destinyMinutes.length - lances;
+  final base = [
+    ecouleSecondes ~/ 60,
+    if (lances > 0) destinyMinutes[lances - 1],
+  ].reduce(max);
+  return max(base + restants + 1, 2);
+}

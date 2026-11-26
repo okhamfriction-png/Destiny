@@ -7,12 +7,14 @@ import '../../application/son/conduite_son.dart';
 import '../../application/son/regie_son.dart';
 import '../../application/state/reglages_destiny.dart';
 import '../../domain/entities/danger.dart';
+import '../../domain/grammaire/chronos.dart';
 import '../../domain/exercices/exercices_destiny.dart';
 import '../../domain/grammaire/modeles.dart';
 import '../../domain/troupe/session.dart';
 import '../destiny/donnees.dart';
 import '../destiny/rituel_destiny.dart';
 import '../regie_son/table_regie.dart';
+import '../theme/destiny_theme.dart';
 import 'composants_troupe.dart';
 import 'des_spectacle.dart';
 import 'regie_screen.dart';
@@ -322,6 +324,30 @@ class SpectacleEnCours extends ChangeNotifier {
     return true;
   }
 
+  /// La durée la plus courte qu'on peut encore choisir, en minutes.
+  int get dureeMini =>
+      dureeMiniSpectacle(s.destinyMinutes, lances: s.destinys.length, ecouleSecondes: _ecoule);
+
+  /// Change la durée du chrono : les Destiny pas encore lancés suivent, au
+  /// prorata. Rend faux si la durée est trop courte pour ce qui reste.
+  bool changerDuree(int minutes) {
+    if (!avecChrono || minutes == s.dureeMinutes) return avecChrono;
+    final d = adapterDestinys(
+      s.destinyMinutes,
+      ancienneDuree: s.dureeMinutes,
+      nouvelleDuree: minutes,
+      lances: s.destinys.length,
+      ecouleSecondes: _ecoule,
+    );
+    if (d == null) return false;
+    s
+      ..dureeMinutes = minutes
+      ..destinyMinutes = d;
+    enregistrer();
+    _changer();
+    return true;
+  }
+
   /// Termine le spectacle : plus de chrono, plus de son. La scène est
   /// marquée terminée ([aLaFin]) et enregistrée.
   Future<void> terminer() async {
@@ -361,6 +387,7 @@ PiloteSpectacle piloteDe(BuildContext context, SpectacleEnCours sp) => PiloteSpe
         return '${t.t('regie.acte', {'n': '${p.acte}'})} — ${p.nom}';
       },
       enMarche: () => sp.enMarche,
+      changerDuree: () => sp.avecChrono ? () => choisirDureeSpectacle(context, sp) : null,
       basculer: sp.basculer,
       libelleBasculer: () =>
           context.textes.t(sp.enMarche ? 'regie.pause' : (sp.demarre ? 'regie.reprendre' : 'regie.demarrer')),
@@ -371,3 +398,66 @@ PiloteSpectacle piloteDe(BuildContext context, SpectacleEnCours sp) => PiloteSpe
         return p == null ? t.t('regie.destiny') : t.t('regie.destiny_n', {'n': '${p + 1}'});
       },
     );
+
+/// Touché sur le chrono : on choisit une autre durée, et les Destiny pas
+/// encore lancés suivent, au prorata. Le chrono continue pendant ce temps.
+Future<void> choisirDureeSpectacle(BuildContext context, SpectacleEnCours sp) async {
+  final t = context.textes;
+  final mini = sp.dureeMini;
+  var minutes = max(sp.s.dureeMinutes, mini);
+  final choix = await showDialog<int>(
+    context: context,
+    builder: (context) => StatefulBuilder(builder: (context, setState) {
+      final apercu = adapterDestinys(
+            sp.s.destinyMinutes,
+            ancienneDuree: sp.s.dureeMinutes,
+            nouvelleDuree: minutes,
+            lances: sp.s.destinys.length,
+            ecouleSecondes: sp.ecoule,
+          ) ??
+          sp.s.destinyMinutes;
+      void changer(int m) => setState(() => minutes = m.clamp(mini, 600));
+      Widget pas(String libelle, int delta, {Key? key}) => OutlinedButton(
+            key: key,
+            onPressed: minutes + delta < mini || minutes + delta > 600 ? null : () => changer(minutes + delta),
+            style: OutlinedButton.styleFrom(minimumSize: const Size(52, 44), padding: EdgeInsets.zero),
+            child: Text(libelle),
+          );
+      return AlertDialog(
+        title: Text(t.t('regie.duree_titre')),
+        content: Column(mainAxisSize: MainAxisSize.min, children: [
+          Text(
+            t.t('regie.duree_minutes', {'n': '$minutes'}),
+            key: const ValueKey('duree_choisie'),
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w900, fontSize: 30),
+          ),
+          const SizedBox(height: 10),
+          Wrap(alignment: WrapAlignment.center, spacing: 8, runSpacing: 8, children: [
+            pas('−5', -5, key: const ValueKey('duree_moins_5')),
+            pas('−1', -1, key: const ValueKey('duree_moins_1')),
+            pas('+1', 1, key: const ValueKey('duree_plus_1')),
+            pas('+5', 5, key: const ValueKey('duree_plus_5')),
+          ]),
+          const SizedBox(height: 14),
+          for (var i = 0; i < apercu.length; i++)
+            Text(
+              t.t(i < sp.s.destinys.length ? 'regie.duree_destiny_passe' : 'regie.duree_destiny',
+                  {'n': '${i + 1}', 'm': '${apercu[i]}'}),
+              key: ValueKey('apercu_destiny_$i'),
+              style: const TextStyle(fontFamily: kPoliceTexte, fontSize: 15),
+            ),
+        ]),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(t.t('regie.duree_annuler'))),
+          FilledButton(
+            key: const ValueKey('duree_valider'),
+            onPressed: () => Navigator.pop(context, minutes),
+            child: Text(t.t('regie.duree_valider')),
+          ),
+        ],
+      );
+    }),
+  );
+  if (choix != null) sp.changerDuree(choix);
+}

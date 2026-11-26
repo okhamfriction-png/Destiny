@@ -32,6 +32,7 @@ class PiloteSpectacle {
     required this.libelleBasculer,
     required this.destiny,
     required this.libelleDestiny,
+    this.changerDuree,
   });
 
   /// Prévient à chaque seconde et à chaque changement de la régie.
@@ -51,6 +52,10 @@ class PiloteSpectacle {
   /// L'action du bouton DESTINY, ou null quand aucun ne peut partir.
   final VoidCallback? Function() destiny;
   final String Function() libelleDestiny;
+
+  /// Touché sur le temps : changer la durée du chrono (null : pas de chrono,
+  /// le temps ne se touche pas).
+  final VoidCallback? Function()? changerDuree;
 }
 
 /// Ouvre la table de régie en pop-up, par-dessus la régie : par le bas sur un
@@ -171,6 +176,7 @@ class BarrePilote extends StatelessWidget {
         builder: (context, _) {
           final destiny = pilote.destiny();
           final enMarche = pilote.enMarche();
+          final changerDuree = pilote.changerDuree?.call();
           return Container(
             padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
             decoration: BoxDecoration(
@@ -179,7 +185,7 @@ class BarrePilote extends StatelessWidget {
               border: Border.all(color: Console.trait),
             ),
             child: LayoutBuilder(builder: (context, contraintes) {
-              final temps = Text(
+              final texteTemps = Text(
                 pilote.reste(),
                 key: const ValueKey('pilote_reste'),
                 style: const TextStyle(
@@ -190,6 +196,18 @@ class BarrePilote extends StatelessWidget {
                   color: Console.or,
                 ),
               );
+              // Touché : une autre durée, et les Destiny suivent.
+              final temps = changerDuree == null
+                  ? texteTemps
+                  : Tooltip(
+                      message: context.textes.t('regie.duree_titre'),
+                      child: InkWell(
+                        key: const ValueKey('pilote_duree'),
+                        borderRadius: BorderRadius.circular(8),
+                        onTap: changerDuree,
+                        child: Padding(padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4), child: texteTemps),
+                      ),
+                    );
               final acte = Text(
                 pilote.acte(),
                 maxLines: 2,

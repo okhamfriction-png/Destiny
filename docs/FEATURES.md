@@ -59,7 +59,7 @@ L'accueil montre la promesse et, tirée au hasard à chaque ouverture, une règl
 2. **Le jeu** (l'écran qui porte le spectacle, sans flèche de retour) : le chrono et DESTINY, les paliers du danger, la carte de chaque joueur, les trois questions (« Comment je me tiens ? »…), la limite (« le corps, pas l'histoire ») et un minuteur, qui lance l'histoire : la musique de l'acte 1.
 3. **Avant d'entrer en scène** : les règles d'or, les quatre paliers et la phrase des débriefs. Aucune critique.
 4. **La régie** : la table de régie, en pop-up par-dessus le jeu (sa croix ramène au jeu, le spectacle continue). Le jeu montre aussi :
-   - un gros chrono et l'acte en cours, puis trois cadres : le lieu et le danger, les paliers du danger, les archétypes à ce palier ;
+   - un gros chrono (touché, il change la durée du spectacle ; les DESTINY pas encore passés suivent au prorata) et l'acte en cours, puis trois cadres : le lieu et le danger, les paliers du danger, les archétypes à ce palier ;
    - le **bouton Destiny**, réservé à la régie. Il se déclenche aussi tout seul aux minutes prévues, selon le réglage ;
    - le rituel en plein écran : le tonnerre, le rire du destin, la lumière bleue, le ralenti (on ne se fige plus : on joue au ralenti en glissant vers son archétype, avec la question de l'acte : qui je suis, ce que je risque de perdre, ce que je suis prêt à sacrifier), l'ellipse ; puis la nouvelle du palier (à faire entendre par la régie son, ou à souffler au figurant), qui se ferme seule après 5 secondes au plus (le dé du danger, avant elle au DESTINY n°1, reste 10 secondes au plus ; le dé des survivants, au n°3, 5 secondes ; un toucher ne les retient pas) ;
    - au premier figé, le rappel de fixer le besoin ;

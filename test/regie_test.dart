@@ -569,6 +569,37 @@ void main() {
       return b;
     }
 
+    testWidgets('toucher le chrono change la durée, et les Destiny suivent', (tester) async {
+      final b = await echauffement(tester);
+      final s = b.session;
+      expect(s.dureeMinutes, 30);
+      expect(s.destinyMinutes, [10, 18, 27]);
+      await tester.tap(find.byKey(const ValueKey('pilote_duree')));
+      await tester.pumpAndSettle();
+      expect(find.text(t.t('regie.duree_titre')), findsWidgets);
+      await tester.tap(find.byKey(const ValueKey('duree_plus_5')));
+      await tester.tap(find.byKey(const ValueKey('duree_plus_5')));
+      await tester.pump();
+      expect(find.text(t.t('regie.duree_minutes', {'n': '40'})), findsOneWidget);
+      // L'aperçu : 10, 18, 27 → 13, 24, 36.
+      expect(find.text(t.t('regie.duree_destiny', {'n': '3', 'm': '36'})), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('duree_valider')));
+      await tester.pumpAndSettle();
+      expect(s.dureeMinutes, 40);
+      expect(s.destinyMinutes, [13, 24, 36]);
+      expect(tester.widget<Text>(find.byKey(const ValueKey('pilote_reste'))).data, '40:00');
+      expect(tester.widget<Text>(find.byKey(const ValueKey('heure_destiny_2'))).data, '24:00');
+      // Le grand chrono de l'échauffement se touche aussi ; Annuler ne change rien.
+      await tester.ensureVisible(find.byKey(const ValueKey('echauffement_duree')));
+      await tester.tap(find.byKey(const ValueKey('echauffement_duree')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('duree_moins_1')));
+      await tester.tap(find.text(t.t('regie.duree_annuler')));
+      await tester.pumpAndSettle();
+      expect(s.dureeMinutes, 40);
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets(
         'le jeu : le spectacle, le lieu, le danger et ses paliers, les Destiny prévus ; ni questions, ni régie son',
         (tester) async {

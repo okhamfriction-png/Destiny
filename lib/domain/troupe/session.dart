@@ -140,7 +140,7 @@ abstract interface class SceneJouee {
   List<String> get paliers;
 
   /// La durée du chrono (0 : sans chrono, Destiny à la main).
-  int get dureeMinutes;
+  abstract int dureeMinutes;
   abstract List<int> destinyMinutes;
 
   /// Le palier atteint (1 à 4).

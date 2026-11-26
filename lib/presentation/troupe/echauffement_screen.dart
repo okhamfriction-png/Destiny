@@ -231,11 +231,17 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
           ),
         ),
         Center(
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}',
-              style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w900, fontSize: 56, color: c.titre),
+          // Touché : une autre durée, et les Destiny suivent (avec un chrono).
+          child: InkWell(
+            key: const ValueKey('echauffement_duree'),
+            borderRadius: BorderRadius.circular(12),
+            onTap: _sp.avecChrono ? () => choisirDureeSpectacle(context, _sp) : null,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}',
+                style: TextStyle(fontFamily: kPoliceTitres, fontWeight: FontWeight.w900, fontSize: 56, color: c.titre),
+              ),
             ),
           ),
         ),

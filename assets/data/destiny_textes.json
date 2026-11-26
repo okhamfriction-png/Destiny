@@ -734,6 +734,12 @@
   },
   "regie": {
     "titre": "Régie",
+    "duree_titre": "Durée du spectacle",
+    "duree_minutes": "{n} min",
+    "duree_destiny": "DESTINY n°{n} à {m} min",
+    "duree_destiny_passe": "DESTINY n°{n} à {m} min (passé)",
+    "duree_annuler": "Annuler",
+    "duree_valider": "Valider",
     "destiny": "Destiny",
     "destiny_aide": "Lance tout de suite le prochain Destiny : le rituel, puis le danger monte d'un palier.",
     "demarrer": "Lancer le chrono",

@@ -66,6 +66,26 @@ void main() {
       }
     });
 
+    test('une autre durée : les Destiny pas encore lancés suivent, au prorata', () {
+      // 33 → 45 min : 10, 20, 30 → 14, 27, 41.
+      expect(adapterDestinys([10, 20, 30], ancienneDuree: 33, nouvelleDuree: 45), [14, 27, 41]);
+      // 33 → 20 min : 6, 12, 18.
+      expect(adapterDestinys([10, 20, 30], ancienneDuree: 33, nouvelleDuree: 20), [6, 12, 18]);
+      // Le premier déjà lancé ne bouge pas ; les autres restent après lui
+      // et après le temps joué (12 min 30).
+      expect(adapterDestinys([10, 20, 30], ancienneDuree: 33, nouvelleDuree: 16, lances: 1, ecouleSecondes: 750),
+          [10, 13, 15]);
+      // Toujours croissants, avant la fin, même très court.
+      expect(adapterDestinys([3, 6, 9], ancienneDuree: 12, nouvelleDuree: 4), [1, 2, 3]);
+      expect(dureeMiniSpectacle([3, 6, 9]), 4);
+      expect(adapterDestinys([3, 6, 9], ancienneDuree: 12, nouvelleDuree: 3), isNull);
+      expect(dureeMiniSpectacle([10, 20, 30], lances: 2, ecouleSecondes: 25 * 60), 27);
+      for (var d = 4; d <= 120; d++) {
+        final m = adapterDestinys([10, 20, 30], ancienneDuree: 33, nouvelleDuree: d)!;
+        expect(ChronoSpectacle(dureeMinutes: d, destinyMinutes: m).valide, isTrue, reason: '$d min : $m');
+      }
+    });
+
     test('l\'acte en cours suit les Destiny', () {
       final c = kChronosParDefaut[2];
       expect(c.acteA(0), 1);

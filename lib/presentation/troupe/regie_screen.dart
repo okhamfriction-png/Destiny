@@ -139,18 +139,24 @@ class _RegieScreenState extends State<RegieScreen> {
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               SizedBox(
                 height: 62,
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    horloge(reste),
-                    key: const ValueKey('chrono_reste'),
-                    style: TextStyle(
-                      fontFamily: kPoliceTitres,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 56,
-                      height: 1.05,
-                      color: couleurReste,
+                // Touché : une autre durée, et les Destiny suivent.
+                child: GestureDetector(
+                  key: const ValueKey('regie_duree'),
+                  behavior: HitTestBehavior.opaque,
+                  onTap: _sp.avecChrono ? () => choisirDureeSpectacle(context, _sp) : null,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      horloge(reste),
+                      key: const ValueKey('chrono_reste'),
+                      style: TextStyle(
+                        fontFamily: kPoliceTitres,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 56,
+                        height: 1.05,
+                        color: couleurReste,
+                      ),
                     ),
                   ),
                 ),
