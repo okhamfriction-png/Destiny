@@ -4,6 +4,7 @@
 /// **série** enchaîne les saisons. Tout reste sur l'appareil.
 library;
 
+import '../entities/danger.dart';
 import '../grammaire/modeles.dart' show ModePnj;
 import '../troupe/session.dart' show ChoixFinal, EvenementDestiny, NoteRegie, SceneJouee;
 import 'pbta.dart' show FacePiece, kCasesBlessure;
@@ -443,7 +444,7 @@ class PnjEpisode {
       );
 }
 
-/// Un épisode : un lieu, un groupe, un danger en quatre paliers, quatre actes.
+/// Un épisode : un lieu, un groupe, un danger en trois niveaux, quatre actes.
 class EpisodeSerie implements SceneJouee {
   EpisodeSerie({
     required this.id,
@@ -466,7 +467,7 @@ class EpisodeSerie implements SceneJouee {
     this.reponseMystere = '',
     this.dureeMinutes = 0,
     List<int>? destinyMinutes,
-    this.palierAtteint = 1,
+    this.acteAtteint = 1,
     List<EvenementDestiny>? destinys,
     List<NoteRegie>? notes,
     List<RoleEpisode>? roles,
@@ -519,7 +520,7 @@ class EpisodeSerie implements SceneJouee {
   @override
   String dangerNom;
 
-  /// Les quatre phrases du danger, une par palier (en kids, le palier 4 sans
+  /// Les trois phrases du danger, une par niveau (en kids, « Il tue » sans
   /// mort).
   @override
   List<String> paliers;
@@ -543,7 +544,7 @@ class EpisodeSerie implements SceneJouee {
   @override
   List<int> destinyMinutes;
   @override
-  int palierAtteint;
+  int acteAtteint;
   @override
   List<EvenementDestiny> destinys;
   List<NoteRegie> notes;
@@ -564,7 +565,7 @@ class EpisodeSerie implements SceneJouee {
   String ceQuiAMarche;
   String phrase;
 
-  /// Par où ils sortent au palier 4 : c'est le lieu de l'épisode suivant.
+  /// Par où ils sortent au dernier acte : c'est le lieu de l'épisode suivant.
   String sortie;
 
   /// Un épisode joué avec l'ancienne Campagne (lecture seule).
@@ -609,7 +610,7 @@ class EpisodeSerie implements SceneJouee {
         'reponse_mystere': reponseMystere,
         'duree_minutes': dureeMinutes,
         'destiny_minutes': destinyMinutes,
-        'palier_atteint': palierAtteint,
+        'palier_atteint': acteAtteint,
         'destinys': [for (final d in destinys) d.versJson()],
         'notes': [for (final n in notes) n.versJson()],
         'roles': [for (final r in roles) r.versJson()],
@@ -644,7 +645,7 @@ class EpisodeSerie implements SceneJouee {
         groupe: _s(j['groupe']),
         dangerId: _s(j['danger_id']),
         dangerNom: _s(j['danger_nom']),
-        paliers: _ls(j['paliers']),
+        paliers: Danger.niveauxDepuis(_ls(j['paliers'])),
         presage: _s(j['presage']),
         mechantId: _s(j['mechant']),
         objets: j['objets'] == null ? null : _ls(j['objets']),
@@ -652,7 +653,7 @@ class EpisodeSerie implements SceneJouee {
         reponseMystere: _s(j['reponse_mystere']),
         dureeMinutes: _i(j['duree_minutes']),
         destinyMinutes: [for (final x in (j['destiny_minutes'] as List? ?? const [])) (x as num).toInt()],
-        palierAtteint: _i(j['palier_atteint'], 1).clamp(1, 4),
+        acteAtteint: _i(j['palier_atteint'], 1).clamp(1, 4),
         destinys: [for (final d in _ms(j['destinys'])) EvenementDestiny.depuisJson(d)],
         notes: [for (final n in _ms(j['notes'])) NoteRegie.depuisJson(n)],
         roles: [for (final r in _ms(j['roles'])) RoleEpisode.depuisJson(r)],
@@ -716,8 +717,7 @@ class SaisonSerie {
   /// Le personnage visé (son reflet).
   String cibleId;
 
-  /// Les quatre présages : il se signale, il enferme, il envahit, il bloque
-  /// les sorties. Proposés par l'IA ou écrits par le maître du jeu, validés
+  /// Les quatre présages, un par épisode. Proposés par l'IA ou écrits par le maître du jeu, validés
   /// par lui.
   List<String> presages;
   bool presagesValides;

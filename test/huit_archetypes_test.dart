@@ -62,7 +62,7 @@ void main() {
       expect(t.famille, FamilleId.fissure);
       expect(t.ceQuIlFait, 'Impose sa loi, rationne, punit qui désobéit.');
       expect([for (final p in PalierId.values) t.monteeA(p)],
-          ['Ranger, cadrer', 'Fixer les règles', 'Punir qui désobéit', "Sacrifier quelqu'un au nom de la règle"]);
+          ['Fixer les règles', 'Punir qui désobéit', "Sacrifier quelqu'un au nom de la règle"]);
       for (final id in _supprimes) {
         expect(g.archetype(id), isNull, reason: id);
       }

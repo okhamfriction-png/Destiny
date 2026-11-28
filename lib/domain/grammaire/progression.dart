@@ -1,44 +1,40 @@
 import 'modeles.dart';
 
-/// Où en est une histoire : le palier du danger, qui est aussi le numéro de
-/// l'acte. Chaque Destiny fait monter d'un palier, jamais plus haut que 4,
+/// Où en est une histoire : l'acte (1 à 4) et le nombre de DESTINY passés.
+/// Chaque DESTINY fait passer à l'acte suivant et monter le danger d'un
+/// niveau ; l'acte 1 se joue sans danger. Jamais plus loin que l'acte 4,
 /// jamais en arrière.
 class Progression {
-  const Progression._(this.palier, this.destinys);
+  const Progression._(this.acte);
 
-  /// Le début de l'histoire : acte 1, le danger se signale.
-  const Progression.depart() : this._(PalierId.signale, 0);
+  /// Le début de l'histoire : acte 1, sans danger.
+  const Progression.depart() : this._(1);
 
-  /// Reprend une progression à un palier donné.
-  factory Progression.auPalier(PalierId p) => Progression._(p, p.index);
+  /// Reprend une progression à l'acte [acte].
+  factory Progression.aLActe(int acte) => Progression._(acte.clamp(1, kNombreActes));
 
-  final PalierId palier;
+  /// L'acte en cours (1 à 4).
+  final int acte;
 
-  /// Nombre de rituels Destiny déjà passés (0 à 3).
-  final int destinys;
+  /// Le niveau du danger (null à l'acte 1).
+  PalierId? get palier => PalierId.pourActe(acte);
 
-  int get acte => palier.numero;
+  /// Nombre de rituels DESTINY déjà passés (0 à 3).
+  int get destinys => acte - 1;
 
-  /// Le dernier acte est atteint : plus de Destiny possible.
-  bool get dernierActe => palier == PalierId.supprime;
+  /// Le dernier acte est atteint : plus de DESTINY possible.
+  bool get dernierActe => acte >= kNombreActes;
 
   bool get peutLancerDestiny => !dernierActe;
 
-  /// Le prochain Destiny est le premier : c'est pendant ce figé que chacun
-  /// fixe sa phrase « il veut… mais il a besoin de… ».
-  bool get prochainEstPremierFige => destinys == 0;
-
-  /// Après le rituel Destiny : le palier suivant. Sans effet au dernier acte.
-  Progression apresDestiny() => dernierActe
-      ? this
-      : Progression._(PalierId.values[palier.index + 1], destinys + 1);
+  /// Après le rituel DESTINY : l'acte suivant. Sans effet au dernier acte.
+  Progression apresDestiny() => dernierActe ? this : Progression._(acte + 1);
 
   @override
-  bool operator ==(Object other) =>
-      other is Progression && other.palier == palier && other.destinys == destinys;
+  bool operator ==(Object other) => other is Progression && other.acte == acte;
 
   @override
-  int get hashCode => Object.hash(palier, destinys);
+  int get hashCode => acte.hashCode;
 }
 
 /// Les rappels de la régie à un moment de l'histoire, tirés du tableau

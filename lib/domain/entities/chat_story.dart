@@ -1,3 +1,4 @@
+import 'danger.dart';
 import 'chat_message.dart';
 import '../grammaire/migration_archetypes.dart';
 
@@ -107,7 +108,7 @@ class ChatStory {
   /// grammaire, qui se relit mais ne se reprend pas.
   final String versionPrompts;
 
-  /// Les quatre phrases du danger, une par palier.
+  /// Les trois phrases du danger, une par niveau.
   final List<String> paliers;
 
   /// Après chaque Destiny, la pièce est plus dure (2 réussites sur 2).
@@ -146,7 +147,7 @@ class ChatStory {
         archived: json['archived'] as bool? ?? false,
         systeme: json['systeme'] as String? ?? '',
         versionPrompts: json['version_prompts'] as String? ?? '',
-        paliers: [for (final p in (json['paliers'] as List<dynamic>? ?? const [])) '$p'],
+        paliers: Danger.niveauxDepuis([for (final p in (json['paliers'] as List<dynamic>? ?? const [])) '$p']),
         malus: json['malus'] as bool? ?? false,
         messages: (json['messages'] as List<dynamic>)
             .map((e) => ChatMessage.fromJson(e as Map<String, dynamic>))

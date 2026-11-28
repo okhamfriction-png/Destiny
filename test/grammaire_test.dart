@@ -58,21 +58,23 @@ void main() {
       expect(g.animal('chat')!.port, 'aux aguets');
     });
 
-    test('quatre paliers nommés, quatre actes, huit règles d\'or', () async {
+    test('trois niveaux du danger, quatre actes (le premier sans danger), dix règles d\'or', () async {
       final g = (await chargerGrammaire()).grammaire;
       expect(g.paliers.map((p) => p.id), PalierId.values);
-      expect(g.palier(PalierId.supprime).nom, 'Il bloque les sorties');
+      expect(g.paliers, hasLength(3));
+      expect(g.palier(PalierId.tue).nom, 'Il tue');
       expect(g.actes, hasLength(4));
+      expect(g.actes.map((a) => a.palier), [null, ...PalierId.values]);
       expect(g.reglesDOr, hasLength(10));
       expect(g.reglesDOr.map((r) => r.id).toSet(), hasLength(10), reason: 'chaque règle a son identifiant');
       expect(g.rituel.sequence, isNotEmpty);
     });
 
-    test('38 dangers à 4 paliers, 40 lieux avec espaces et rôles', () async {
+    test('38 dangers à 3 niveaux, 40 lieux avec espaces et rôles', () async {
       final g = (await chargerGrammaire()).grammaire;
       expect(g.dangers, hasLength(38));
       for (final d in g.dangers) {
-        expect(d.textes.where((t) => t.isNotEmpty), hasLength(4), reason: d.nom);
+        expect(d.textes.where((t) => t.isNotEmpty), hasLength(3), reason: d.nom);
       }
       expect(g.lieux, hasLength(40));
       for (final l in g.lieux) {
@@ -139,14 +141,14 @@ void main() {
 
     test('une montée incomplète', () {
       final j = _brut();
-      ((j['archetypes'] as List)[0] as Map)['montee'] = {'signale': 'x'};
+      ((j['archetypes'] as List)[0] as Map)['montee'] = {'enferme': 'x'};
       expect(validerGrammaire(j).join(' '), contains('montée'));
     });
 
-    test('un danger sans son dernier palier', () {
+    test('un danger sans son dernier niveau', () {
       final j = _brut();
-      (((j['dangers'] as List)[0] as Map)['paliers'] as Map).remove('supprime');
-      expect(validerGrammaire(j).join(' '), contains('supprime'));
+      (((j['dangers'] as List)[0] as Map)['paliers'] as Map).remove('tue');
+      expect(validerGrammaire(j).join(' '), contains('tue'));
     });
 
     test('sans alarmiste', () {

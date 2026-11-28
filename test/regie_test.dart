@@ -121,7 +121,7 @@ Future<Banc> _banc(
   });
   final s = (await tester.runAsync(store.nouvelle))!;
   final lieu = catalogue.lieux.firstWhere((l) => l.actif && l.id == 'aquarium');
-  final danger = catalogue.dangers.firstWhere((d) => d.actif && d.paliers.length == 4);
+  final danger = catalogue.dangers.firstWhere((d) => d.actif && d.paliers.length == 3);
   s
     ..type = TypeSession.spectacle
     ..etape = EtapeSession.regie
@@ -192,24 +192,15 @@ Future<void> _ouvrirSon(WidgetTester tester) async {
   expect(find.byType(TabletteSon), findsOneWidget);
 }
 
-/// Laisse passer le rituel Destiny, puis « Reprendre ».
+/// Laisse passer le rituel DESTINY : l'éclair, la lumière, l'annonce, qui
+/// se ferme seule (10 s au plus). Rien à toucher.
 Future<void> _finirRituel(WidgetTester tester) async {
   await tester.pump();
   await tester.pump();
   await tester.pump(const Duration(seconds: 10));
-  await tester.pump(const Duration(seconds: 2));
-  await tester.pump();
-  // Au DESTINY n°1 sans danger, au n°3 : le dé, avant la carte de l'acte
-  // (celui des survivants se ferme seul au bout de 5 s).
-  if (find.byKey(const ValueKey('de_spectacle')).evaluate().isNotEmpty) {
-    await tester.pump(const Duration(seconds: 2));
-    final continuer = find.byKey(const ValueKey('on_continue'));
-    if (continuer.evaluate().isNotEmpty) await tester.tap(continuer);
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 400));
-  }
-  await tester.tap(find.text(t.t('rituel.reprendre')));
-  await tester.pump();
+  await tester.pump(const Duration(seconds: 8));
+  await tester.pump(const Duration(milliseconds: 400));
+  expect(find.byKey(const ValueKey('rituel_destiny')), findsNothing);
   await tester.pump(const Duration(seconds: 1));
 }
 
@@ -267,7 +258,7 @@ void main() {
   testWidgets('un Destiny lancé montre l\'heure où il l\'a été, les autres leur heure prévue', (tester) async {
     final b = await _banc(tester);
     b.session.destinys.add(const EvenementDestiny(numero: 1, secondes: 9 * 60 + 41, manuel: true));
-    b.session.palierAtteint = 2;
+    b.session.acteAtteint = 2;
     await _ouvrir(tester, RegieScreen(contexte: b.contexte, session: b.session));
     expect(tester.widget<Text>(find.byKey(const ValueKey('heure_destiny_1'))).data, '09:41');
     expect(tester.widget<Text>(find.byKey(const ValueKey('heure_destiny_2'))).data, '18:00');
@@ -277,7 +268,7 @@ void main() {
     final b = await _banc(tester);
     final s = b.session;
     s.destinys.add(const EvenementDestiny(numero: 1, secondes: 9 * 60 + 41, manuel: true));
-    s.palierAtteint = 2;
+    s.acteAtteint = 2;
     await _ouvrir(tester, RegieScreen(contexte: b.contexte, session: b.session));
     await tester.drag(find.byKey(const ValueKey('repere_destiny_1')), const Offset(120, 0));
     await tester.pumpAndSettle();
@@ -329,7 +320,7 @@ void main() {
     expect(tester.widget<ButtonStyleButton>(bouton).onPressed, isNotNull);
     await tester.tap(bouton);
     await _finirRituel(tester);
-    expect(b.session.palierAtteint, 2);
+    expect(b.session.acteAtteint, 2);
     expect(b.session.destinys.single.manuel, isTrue);
     expect(find.text(_rg('destiny_n', {'n': '2'}).toUpperCase()), findsOneWidget);
     expect(b.audio.effets, contains(b.contexte.reglages.sonDestiny));
@@ -347,7 +338,7 @@ void main() {
     expect(find.text('04:01'), findsOneWidget);
     await tester.pump(const Duration(seconds: 1));
     expect(b.session.destinys.single.manuel, isFalse);
-    expect(b.session.palierAtteint, 2);
+    expect(b.session.acteAtteint, 2);
     await _finirRituel(tester);
     // On le met en pause avant de quitter.
     await tester.tap(find.byTooltip(_rg('pause')));
@@ -454,7 +445,8 @@ void main() {
     // On ne montre que l'archétype, et l'animal seulement s'il a été choisi.
     expect(find.byType(MedaillonAnimal), findsNWidgets(2));
     final alarmiste = g.archetype('alarmiste')!;
-    expect(find.text(alarmiste.monteeA(PalierId.signale)), findsOneWidget);
+    // À l'acte 1, pas encore de danger : pas de montée affichée.
+    expect(find.text(alarmiste.monteeA(PalierId.enferme)), findsNothing);
     await tester.tap(find.byTooltip(t.t('troupe.info_de', {'nom': alarmiste.nom})));
     await tester.pumpAndSettle();
     expect(find.byType(FicheArchetype), findsOneWidget);
@@ -615,7 +607,7 @@ void main() {
       expect(find.byKey(const ValueKey('pilote_reste')), findsOneWidget);
       expect(find.byKey(const ValueKey('pilote_destiny')), findsOneWidget);
       expect(find.byKey(const ValueKey('ouvrir_regie')), findsOneWidget);
-      // La section du danger : ses quatre paliers.
+      // La section du danger : ses trois niveaux.
       expect(find.byType(FrisePaliers), findsOneWidget);
       for (final p in s.paliers) {
         expect(find.text(p), findsWidgets, reason: p);
@@ -709,7 +701,7 @@ void main() {
       expect(find.byType(SnackBar), findsNothing);
     });
 
-    testWidgets('chaque archétype montre ses quatre réactions au danger, une par palier', (tester) async {
+    testWidgets('chaque archétype montre ses trois réactions au danger, une par niveau', (tester) async {
       final b = await echauffement(tester);
       expect(find.byType(ReactionsArchetype), findsNWidgets(4));
       for (final p in b.session.personnages) {

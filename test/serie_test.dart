@@ -100,15 +100,15 @@ void main() {
       expect(catalogue.vouloirs, isNotEmpty);
     });
 
-    test('chaque univers a ses trois dangers à quatre paliers ; en kids, le palier 4 est sans mort', () {
+    test('chaque univers a ses trois dangers à trois niveaux ; en kids, « Il tue » est sans mort', () {
       for (final u in catalogue.univers) {
         expect(u.dangers, hasLength(3), reason: u.id);
         for (final d in u.dangers) {
-          expect(d.paliers, hasLength(4), reason: d.id);
+          expect(d.paliers, hasLength(3), reason: d.id);
           expect(d.paliers.every((p) => p.isNotEmpty), isTrue, reason: d.id);
           if (d.kids) {
-            expect(d.supprimeKids, isNotEmpty, reason: d.id);
-            expect(d.paliersPour(kids: true).last, d.supprimeKids);
+            expect(d.tueKids, isNotEmpty, reason: d.id);
+            expect(d.paliersPour(kids: true).last, d.tueKids);
           }
         }
         if (u.kids && !u.adulte) {
@@ -168,7 +168,7 @@ void main() {
             id: 'e1',
             date: DateTime(2026, 11, 2, 18),
             saison: 1,
-            paliers: ['1', '2', '3', '4'],
+            paliers: ['1', '2', '3'],
             roles: [
               RoleEpisode(
                   personnageId: 'p1',
@@ -288,9 +288,9 @@ void main() {
     test('un épisode est une scène jouée, comme une session de la Troupe', () {
       final SceneJouee e = EpisodeSerie(id: 'e', date: DateTime(2026), lieuNom: 'Le phare', dureeMinutes: 30, destinyMinutes: [10, 18, 27]);
       expect(e.lieuNom, 'Le phare');
-      e.palierAtteint = 3;
-      expect(e.palierAtteint, 3);
-      expect(EpisodeSerie.depuisJson((e as EpisodeSerie).versJson()).palierAtteint, 3);
+      e.acteAtteint = 3;
+      expect(e.acteAtteint, 3);
+      expect(EpisodeSerie.depuisJson((e as EpisodeSerie).versJson()).acteAtteint, 3);
       final notes = EpisodeSerie(id: 'n', date: DateTime(2026), notesMj: 'Ils ont fui par le toit.');
       expect(EpisodeSerie.depuisJson(notes.versJson()).notesMj, 'Ils ont fui par le toit.');
     });
@@ -346,7 +346,7 @@ void main() {
   });
 
   group('L\'escalade', () {
-    const paliers = ['p1', 'p2', 'p3', 'p4'];
+    const paliers = ['p1', 'p2', 'p3'];
 
     test('hors saison sans méchant : le danger monte seul', () {
       final e = escaladeEpisode(paliersDanger: paliers);
@@ -354,10 +354,11 @@ void main() {
       expect(e.map((m) => m.ceQueCaProduit), paliers);
     });
 
-    test('hors saison avec un méchant : l\'ancienne règle (le méchant prend les deux dernières marches)', () {
+    test('hors saison avec un méchant : un sbire, puis le méchant prend les deux dernières marches', () {
       final m = g.mechant('le_seigneur_des_brumes')!;
       final e = escaladeEpisode(paliersDanger: paliers, mechant: m);
-      expect(e.map((x) => x.qui), [QuiAgit.sbire, QuiAgit.sbire, QuiAgit.mechant, QuiAgit.mechant]);
+      expect(e, hasLength(3));
+      expect(e.map((x) => x.qui), [QuiAgit.sbire, QuiAgit.mechant, QuiAgit.mechant]);
     });
 
     test('épisodes 1 à 3 : le méchant reste dans l\'ombre', () {

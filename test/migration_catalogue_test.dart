@@ -29,7 +29,7 @@ Future<void> _creerBase157(String chemin) async {
   for (final e in (ref['dangers'] as Map<String, dynamic>).entries) {
     final v = e.value as Map<String, dynamic>;
     var paliers = List<String>.from(v['paliers'] as List);
-    if (e.key == 'tempete') paliers = ['Mon palier à moi', ...paliers.skip(1)];
+    if (e.key == 'tempete') paliers = [paliers.first, 'Mon palier à moi', ...paliers.skip(2)];
     if (e.key == 'zombies') continue; // supprimé par l'utilisateur
     await db.insert('dangers', {
       'id': e.key, 'name': v['nom'], 'style': 'Catastrophe', 'rue': 1, 'theatre': 1,
@@ -68,11 +68,13 @@ void main() {
     final dangers = {for (final d in await store.getDangers()) d.id: d};
     // Non modifié : reçoit les textes de la grammaire.
     expect(dangers['incendie']!.paliers, g.dangerNomme('Un incendie')!.textes);
-    // Modifié par l'utilisateur : gardé tel quel.
+    // Modifié par l'utilisateur : gardé, sans l'ancien premier niveau
+    // (avant la 2.8, un danger en avait quatre).
+    expect(dangers['tempete']!.paliers, hasLength(3));
     expect(dangers['tempete']!.paliers.first, 'Mon palier à moi');
     // Supprimé : ne revient pas. Ajouté : intouché.
     expect(dangers.containsKey('zombies'), isFalse);
-    expect(dangers['mon_danger']!.paliers, ['a', 'b', 'c', 'd']);
+    expect(dangers['mon_danger']!.paliers, ['b', 'c', 'd']);
 
     final lieux = {for (final l in await store.getLocations()) l.id: l};
     expect(lieux['banque']!.espaces, g.lieuNomme('Banque')!.espaces);
@@ -81,7 +83,7 @@ void main() {
     expect(lieux['casino']!.kids, isFalse);
     expect(dangers['incendie']!.kids, g.dangerNomme('Un incendie')!.kids);
     expect(dangers.values.where((d) => d.kids), isNotEmpty);
-    expect(dangers.values.where((d) => d.kids).every((d) => d.palier4Kids.isNotEmpty), isTrue);
+    expect(dangers.values.where((d) => d.kids).every((d) => d.tueKids.isNotEmpty), isTrue);
 
     final rapport = await store.dernierRapport();
     expect(rapport, isNotNull);
@@ -108,10 +110,10 @@ void main() {
     final chemin = dossier.path;
     var store = SqliteCatalogStore(seedSource: donneesDeTest(), dossier: () async => chemin);
     final d = (await store.getDangers()).first;
-    await store.saveDanger(d.copyWith(paliers: ['x', 'y', 'z', 'w']));
+    await store.saveDanger(d.copyWith(paliers: ['x', 'y', 'z']));
     // Nouvelle ouverture : la grammaire n'a pas changé, rien ne bouge.
     store = SqliteCatalogStore(seedSource: donneesDeTest(), dossier: () async => chemin);
     final relu = (await store.getDangers()).firstWhere((x) => x.id == d.id);
-    expect(relu.paliers, ['x', 'y', 'z', 'w']);
+    expect(relu.paliers, ['x', 'y', 'z']);
   });
 }

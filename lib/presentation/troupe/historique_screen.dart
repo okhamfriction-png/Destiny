@@ -105,7 +105,7 @@ class FicheSession extends StatelessWidget {
         SectionDestiny(titre: t.t('historique.mise_en_place'), espace: 0, enfants: [
           LieuEtDanger.troupe(contexte: contexte, session: s),
           LigneInfo(t.t('mise_en_place.groupe'), s.groupe),
-          FrisePaliers(textes: s.paliers, courant: PalierId.deNumero(s.palierAtteint)),
+          FrisePaliers(textes: s.paliers, courant: PalierId.pourActe(s.acteAtteint)),
           LigneInfo(t.t('mise_en_place.mystere'), s.mystere),
           LigneInfo(t.t('mise_en_place.reponse'), s.reponseMystere, italique: true),
         ]),

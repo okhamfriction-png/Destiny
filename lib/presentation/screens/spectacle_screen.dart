@@ -463,7 +463,7 @@ class _GameHeader extends StatelessWidget {
     final parts = <String>[
       if (turn?.acte != null) k('jeu.acte', {'n': '${turn!.acte}'}),
       if (turn?.scene != null) k('jeu.scene', {'n': '${turn!.scene}'}),
-      if (turn?.palier != null) k('jeu.palier', {'n': '${turn!.palier}'}),
+      if (PalierId.pourActe(turn?.acte ?? 1) case final p?) p.nom,
     ];
     final cible = turn?.cible;
     final posees = turn?.posees;
@@ -881,7 +881,7 @@ class _ActionBar extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 8),
               child: Row(children: [
                 Expanded(
-                  child: Text(k('jeu.lancer_destiny', {'n': '${c.palier}'}),
+                  child: Text(k('jeu.lancer_destiny', {'n': '${c.acte}'}),
                       style: TextStyle(fontFamily: kPoliceTexte, fontSize: 12.5, color: d.texteSecondaire)),
                 ),
                 const SizedBox(width: 8),

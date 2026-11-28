@@ -92,7 +92,7 @@ class _ListeCatalogueState<T> extends State<_ListeCatalogue<T>> {
   }
 }
 
-/// Les dangers, avec leur frise de quatre paliers.
+/// Les dangers, avec leur frise de trois niveaux.
 class DangersScreen extends StatelessWidget {
   const DangersScreen({super.key, required this.contexte});
 
@@ -131,7 +131,7 @@ List<Danger> dangersAImprimer(List<Danger> tous, {bool kids = false}) => [
     ]..sort((a, b) => Grammaire.normaliser(a.name).compareTo(Grammaire.normaliser(b.name)));
 
 /// Propose d'imprimer les cartes de dangers (tous, ou les dangers kids avec
-/// le palier 4 des enfants), puis partage le PDF.
+/// « Il tue » version enfants), puis partage le PDF.
 Future<void> imprimerCartesDangers(BuildContext context, ContexteBibliotheque contexte) async {
   final g = context.grammaire;
   final t = context.textes;
@@ -195,8 +195,8 @@ class FicheDanger extends StatelessWidget {
       enfants: [
         if (danger.kids) const Align(alignment: Alignment.centerLeft, child: SigleKids()),
         SectionDestiny(titre: f('paliers'), enfants: [FrisePaliers(textes: danger.paliers)]),
-        if (danger.kids && danger.palier4Kids.isNotEmpty)
-          SectionDestiny(titre: f('palier4_kids'), enfants: [Paragraphe(danger.palier4Kids)]),
+        if (danger.kids && danger.tueKids.isNotEmpty)
+          SectionDestiny(titre: f('tue_kids'), enfants: [Paragraphe(danger.tueKids)]),
       ],
     );
   }

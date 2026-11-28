@@ -5,14 +5,15 @@
 /// tous les écrans les traitent de la même façon.
 library;
 
+import '../entities/danger.dart';
 import '../grammaire/migration_archetypes.dart';
 import '../grammaire/modeles.dart';
 
 List<String> _ls(Object? v) => [for (final x in (v as List? ?? const [])) '$x'];
 String _s(Object? v) => v is String ? v.trim() : '';
 
-/// Un danger propre à un univers, en quatre paliers (et sa version kids du
-/// palier 4).
+/// Un danger propre à un univers, en trois niveaux (et sa version kids du
+/// niveau « Il tue »).
 class DangerUnivers {
   const DangerUnivers({
     required this.id,
@@ -20,22 +21,22 @@ class DangerUnivers {
     required this.nom,
     required this.paliers,
     this.kids = false,
-    this.supprimeKids = '',
+    this.tueKids = '',
   });
 
   final String id;
   final String univers;
   final String nom;
 
-  /// Les quatre phrases, dans l'ordre des paliers.
+  /// Les trois phrases, dans l'ordre des niveaux.
   final List<String> paliers;
   final bool kids;
-  final String supprimeKids;
+  final String tueKids;
 
-  /// Les paliers à jouer : en kids, le palier 4 sans mort.
+  /// Les niveaux à jouer : en kids, « Il tue » sans mort.
   List<String> paliersPour({bool kids = false}) => [
         for (var i = 0; i < paliers.length; i++)
-          i == 3 && kids && supprimeKids.isNotEmpty ? supprimeKids : paliers[i],
+          i == PalierId.tue.index && kids && tueKids.isNotEmpty ? tueKids : paliers[i],
       ];
 
   factory DangerUnivers.depuisJson(Map<String, dynamic> j, {required String univers}) {
@@ -45,10 +46,10 @@ class DangerUnivers {
       univers: univers,
       nom: _s(j['nom']),
       paliers: p is Map
-          ? [for (final cle in const ['signale', 'enferme', 'envahit', 'supprime']) _s(p[cle])]
-          : _ls(p),
+          ? [for (final n in PalierId.values) _s(p[n.name])]
+          : Danger.niveauxDepuis(_ls(p)),
       kids: j['kids'] == true,
-      supprimeKids: _s(j['supprime_kids']),
+      tueKids: _s(j['tue_kids']),
     );
   }
 }

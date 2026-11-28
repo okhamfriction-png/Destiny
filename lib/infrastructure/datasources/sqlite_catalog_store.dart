@@ -119,7 +119,9 @@ class SqliteCatalogStore implements CatalogStore {
   static const String _champRoles = 'lieu.roles';
   static const String _champEspaces = 'lieu.espaces';
   static const String _champDangerKids = 'danger.kids';
-  static const String _champPalier4Kids = 'danger.palier4_kids';
+  // « palier4_kids » : nom historique de la colonne (bases déjà installées),
+  // qui garde le texte « Il tue » des dangers en kids.
+  static const String _champTueKids = 'danger.palier4_kids';
   static const String _champLieuKids = 'lieu.kids';
 
   // Valeurs simples rangées en liste pour la synchronisation (vide = défaut).
@@ -183,7 +185,7 @@ class SqliteCatalogStore implements CatalogStore {
     final lieuxCible = await _seed.loadLocations();
     final cible = {
       for (final d in dangersCible)
-        d.id: [...d.paliers, '|', d.palier4Kids, if (d.kids) 'kids'],
+        d.id: [...d.paliers, '|', d.tueKids, if (d.kids) 'kids'],
       for (final l in lieuxCible)
         'lieu:${l.id}': [...l.roles, '|', ...l.espaces, if (l.kids) 'kids'],
     };
@@ -221,12 +223,12 @@ class SqliteCatalogStore implements CatalogStore {
       references: await _references(db, _champDangerKids),
       cible: {for (final d in dangersCible) d.id: _drapeau(d.kids)},
     );
-    final rPalier4Kids = synchroniserChamp(
+    final rTueKids = synchroniserChamp(
       actuel: {
         for (final r in dangers) r['id'] as String: _texte('${r['palier4_kids'] ?? ''}'),
       },
-      references: await _references(db, _champPalier4Kids),
-      cible: {for (final d in dangersCible) d.id: _texte(d.palier4Kids)},
+      references: await _references(db, _champTueKids),
+      cible: {for (final d in dangersCible) d.id: _texte(d.tueKids)},
     );
     final rLieuKids = synchroniserChamp(
       actuel: {for (final r in lieux) r['id'] as String: _drapeau(r['kids'] == 1)},
@@ -237,7 +239,7 @@ class SqliteCatalogStore implements CatalogStore {
     final batch = db.batch();
     rDangerKids.misesAJour.forEach((id, v) => batch.update(
         'dangers', {'kids': v.isEmpty ? 0 : 1}, where: 'id = ?', whereArgs: [id]));
-    rPalier4Kids.misesAJour.forEach((id, v) => batch.update(
+    rTueKids.misesAJour.forEach((id, v) => batch.update(
         'dangers', {'palier4_kids': v.isEmpty ? '' : v.first},
         where: 'id = ?', whereArgs: [id]));
     rLieuKids.misesAJour.forEach((id, v) => batch.update(
@@ -253,7 +255,7 @@ class SqliteCatalogStore implements CatalogStore {
       (_champRoles, rRoles),
       (_champEspaces, rEspaces),
       (_champDangerKids, rDangerKids),
-      (_champPalier4Kids, rPalier4Kids),
+      (_champTueKids, rTueKids),
       (_champLieuKids, rLieuKids),
     ]) {
       r.references.forEach((id, v) => batch.insert(
@@ -269,7 +271,7 @@ class SqliteCatalogStore implements CatalogStore {
       dangersMisAJour: {
         ...rPaliers.misesAJour.keys,
         ...rDangerKids.misesAJour.keys,
-        ...rPalier4Kids.misesAJour.keys,
+        ...rTueKids.misesAJour.keys,
       }.length,
       lieuxMisAJour: {
         ...rRoles.misesAJour.keys,
@@ -282,7 +284,7 @@ class SqliteCatalogStore implements CatalogStore {
           ...rRoles.gardes,
           ...rEspaces.gardes,
           ...rDangerKids.gardes,
-          ...rPalier4Kids.gardes,
+          ...rTueKids.gardes,
           ...rLieuKids.gardes,
         })
           noms[id] ?? id,
@@ -328,9 +330,9 @@ class SqliteCatalogStore implements CatalogStore {
           {'champ': _champDangerKids, 'id': d.id, 'valeur': jsonEncode(_drapeau(d.kids))},
           conflictAlgorithm: ConflictAlgorithm.replace);
       batch.insert('reference', {
-        'champ': _champPalier4Kids,
+        'champ': _champTueKids,
         'id': d.id,
-        'valeur': jsonEncode(_texte(d.palier4Kids)),
+        'valeur': jsonEncode(_texte(d.tueKids)),
       }, conflictAlgorithm: ConflictAlgorithm.replace);
     }
     await batch.commit(noResult: true);
@@ -356,7 +358,7 @@ class SqliteCatalogStore implements CatalogStore {
         'actif': d.actif ? 1 : 0,
         'paliers': jsonEncode(d.paliers),
         'kids': d.kids ? 1 : 0,
-        'palier4_kids': d.palier4Kids,
+        'palier4_kids': d.tueKids,
         'sort': sort,
       };
 
@@ -398,9 +400,9 @@ class SqliteCatalogStore implements CatalogStore {
               name: r['name'] as String,
               style: r['style'] as String,
               actif: (r['actif'] as int) == 1,
-              paliers: _liste(r['paliers']),
+              paliers: Danger.niveauxDepuis(_liste(r['paliers'])),
               kids: (r['kids'] as int? ?? 0) == 1,
-              palier4Kids: (r['palier4_kids'] as String?) ?? '',
+              tueKids: (r['palier4_kids'] as String?) ?? '',
             ))
         .toList(growable: false);
   }

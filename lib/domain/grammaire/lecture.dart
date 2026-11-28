@@ -71,7 +71,7 @@ List<String> validerGrammaire(Map<String, dynamic> j) {
     for (final p in PalierId.values) {
       final t = montee is Map ? montee[p.name] : null;
       if (t is! String || t.trim().isEmpty) {
-        erreurs.add('L\'archétype $id n\'a pas de montée au palier ${p.name}.');
+        erreurs.add('L\'archétype $id n\'a pas de montée au niveau ${p.name}.');
       }
     }
     final animaux = m['animaux'];
@@ -99,13 +99,13 @@ List<String> validerGrammaire(Map<String, dynamic> j) {
   }
 
   final paliers = liste('paliers');
-  if (paliers.length != 4) erreurs.add('Il faut 4 paliers.');
+  if (paliers.length != PalierId.values.length) erreurs.add('Il faut ${PalierId.values.length} niveaux du danger.');
   for (final p in PalierId.values) {
     if (!paliers.any((x) => (x as Map)['id'] == p.name)) {
-      erreurs.add('Le palier « ${p.name} » manque.');
+      erreurs.add('Le niveau « ${p.name} » manque.');
     }
   }
-  if (liste('actes').length != 4) erreurs.add('Il faut 4 actes.');
+  if (liste('actes').length != kNombreActes) erreurs.add('Il faut $kNombreActes actes.');
 
   for (final d in liste('dangers')) {
     final m = d as Map;
@@ -113,7 +113,7 @@ List<String> validerGrammaire(Map<String, dynamic> j) {
     for (final p in PalierId.values) {
       final t = pal is Map ? pal[p.name] : null;
       if (t is! String || t.trim().isEmpty) {
-        erreurs.add('Le danger « ${m['nom']} » n\'a pas son palier ${p.name}.');
+        erreurs.add('Le danger « ${m['nom']} » n\'a pas son niveau ${p.name}.');
       }
     }
   }
@@ -240,11 +240,11 @@ List<String> validerGrammaire(Map<String, dynamic> j) {
     }
   }
 
-  // Dangers kids : un palier 4 sans mort.
+  // Dangers kids : un niveau « Il tue » sans mort.
   for (final d in (j['dangers'] as List? ?? const [])) {
     final dm = d as Map;
-    if (dm['kids'] == true && '${dm['supprime_kids'] ?? ''}'.trim().isEmpty) {
-      erreurs.add('Le danger kids « ${dm['nom']} » n\'a pas son palier 4 kids.');
+    if (dm['kids'] == true && '${dm['tue_kids'] ?? ''}'.trim().isEmpty) {
+      erreurs.add('Le danger kids « ${dm['nom']} » n\'a pas son niveau « Il tue » kids.');
     }
   }
   return erreurs;
@@ -256,7 +256,7 @@ Grammaire lireGrammaire(
   Map<String, dynamic> j, {
   Map<String, DonneesAnimalAppli> animauxAppli = const {},
 }) {
-  String s(Object? v) => (v as String? ?? '').trim();
+  String s(Object? v) => avecNiveaux((v as String? ?? '').trim());
   List<String> ls(Object? v) => [for (final x in (v as List? ?? const [])) s(x)];
   Map<PalierId, String> parPalier(Object? v) => {
         for (final p in PalierId.values) p: v is Map ? s(v[p.name]) : '',
@@ -322,9 +322,7 @@ Grammaire lireGrammaire(
   final paliers = [
     for (final p in maps(j['paliers']))
       Palier(
-        id: PalierId.depuisTexte(s(p['id'])) ?? PalierId.signale,
-        nom: s(p['nom']),
-        acte: (p['acte'] as num?)?.toInt() ?? 1,
+        id: PalierId.depuisTexte(s(p['id'])) ?? PalierId.enferme,
         ambiance: s(p['ambiance']),
         etatArchetype: s(p['archetype']),
       ),
@@ -334,7 +332,7 @@ Grammaire lireGrammaire(
     for (final a in maps(j['actes']))
       Acte(
         numero: (a['acte'] as num?)?.toInt() ?? 1,
-        palier: PalierId.deNumero((a['acte'] as num?)?.toInt() ?? 1),
+        palier: PalierId.pourActe((a['acte'] as num?)?.toInt() ?? 1),
         ambiance: s(a['ambiance']),
         consignes: ls(a['consignes']),
       ),
@@ -483,7 +481,7 @@ Grammaire lireGrammaire(
           nom: s(d['nom']),
           paliers: parPalier(d['paliers']),
           kids: d['kids'] == true,
-          supprimeKids: s(d['supprime_kids']),
+          tueKids: s(d['tue_kids']),
         ),
     ],
     lieux: [
@@ -661,7 +659,7 @@ Grammaire lireGrammaire(
       regles: regles(mk['regles']),
       pouvoirsExemples: ls(mk['pouvoirs_exemples']),
       pouvoirRegle: s(mk['pouvoir_regle']),
-      palier4: s(mk['palier_4']),
+      ilTue: s(mk['il_tue']),
       dureeEpisodeMinutes: [
         for (final x in (mk['duree_episode_minutes'] as List? ?? const [])) (x as num).toInt(),
       ],

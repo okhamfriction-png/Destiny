@@ -3,19 +3,8 @@
   "a_propos": "Textes de l'appli qui accompagnent la grammaire (destiny_grammaire.json). Ils viennent du cahier des charges de la refonte 2.0. La grammaire reste dans son fichier : ici, seulement les messages, l'aide et les réglages par défaut.",
   "rituel": {
     "titre": "Destiny",
-    "rappel_premier_fige": "Premier figé : chacun choisit en silence sa phrase, « il veut… mais il a besoin de… ».",
-    "nouvelle_palier": "La nouvelle du palier",
-    "nouvelle_aide": "À faire entendre par la régie son, ou à souffler au figurant.",
-    "etapes_courtes": [
-      "Tonnerre",
-      "Rire",
-      "Lumière bleue",
-      "Ralenti"
-    ],
     "acte": "Acte {numero}",
-    "avant_acte": "Avant l'acte {n}",
-    "ralenti": "Au ralenti, vers ton archétype",
-    "reprendre": "Reprendre"
+    "avant_acte": "Avant l'acte {n}"
   },
   "distribution": {
     "ok": "Distribution en duels : chacun sait contre qui il joue.",
@@ -151,7 +140,11 @@
     "vetement": "Le vêtement donne la manière de vouloir : même vouloir, le Lion l'exige, le Rat le négocie en douce.",
     "exemples_titre": "Un exemple par vêtement",
     "exemples_intro": "Ce ne sont que des exemples : on les adapte au lieu et au partenaire.",
-    "colonnes": ["Archétype", "Animal", "Exemple"],
+    "colonnes": [
+      "Archétype",
+      "Animal",
+      "Exemple"
+    ],
     "version_kids": "Version enfants",
     "version_adultes": "Version adultes",
     "admin_titre": "Exemples de vouloir",
@@ -164,8 +157,8 @@
     "titre": "Les mots de Destiny",
     "utiliser": [
       "archétype, famille, montée",
-      "palier : il se signale, il enferme, il envahit, il bloque les sorties",
-      "Destiny (le rituel), le ralenti, l'ellipse",
+      "niveaux du danger : {niveau_1_bas}, {niveau_2_bas}, {niveau_3_bas} (l'acte 1 se joue sans danger)",
+      "Destiny (le rituel), le ralenti",
       "vouloir, besoin, blessure, prix à payer",
       "tient le groupe, interprète le danger, fissure le groupe",
       "le lieu, ses espaces, le groupe",
@@ -230,7 +223,7 @@
   },
   "mode_enfant": {
     "titre": "Mode enfant",
-    "explication": "La structure ne change pas : un lieu, un groupe, un danger en quatre paliers, et Destiny entre les actes. Les mots sont plus doux.",
+    "explication": "La structure ne change pas : un lieu, un groupe, un danger en trois niveaux, et Destiny entre les actes. Les mots sont plus doux.",
     "mots": {
       "blessure": "gros souci",
       "besoin": "ce qui l'aiderait vraiment",
@@ -303,12 +296,12 @@
     "montee": "Acte par acte, il est tenté de…",
     "port": "port",
     "posture": "Posture",
-    "corps": "Le corps à ce palier",
+    "corps": "Le corps à ce niveau",
     "source": "Réplique tirée de",
     "famille": "Famille",
-    "palier_courant": "Palier en cours",
+    "palier_courant": "Niveau en cours",
     "danger": "Danger",
-    "danger_dos": "Il monte en quatre paliers.",
+    "danger_dos": "Il monte en trois niveaux.",
     "son_duel": "Son duel",
     "contre": "contre",
     "duel_phrase": "Lui {mien}, l'autre {sien}.",
@@ -336,7 +329,7 @@
       },
       "animaux": {
         "titre": "Animaux",
-        "texte": "Les 24 vêtements des archétypes : posture, réplique, corps à chaque palier."
+        "texte": "Les 24 vêtements des archétypes : posture, réplique, corps à chaque niveau du danger."
       },
       "vouloir_besoin": {
         "titre": "Vouloir et besoin",
@@ -344,7 +337,7 @@
       },
       "dangers": {
         "titre": "Dangers",
-        "texte": "Les dangers et leurs quatre paliers."
+        "texte": "Les dangers et leurs trois niveaux."
       },
       "lieux": {
         "titre": "Lieux",
@@ -391,7 +384,7 @@
       "port": "Port",
       "temperament": "Tempérament",
       "statut": "Statut de départ",
-      "corps": "Le corps à chaque palier",
+      "corps": "Le corps à chaque niveau",
       "replique": "Sa réplique",
       "replique_kids": "Sa réplique kids",
       "source": "tirée de",
@@ -403,7 +396,7 @@
       "lieu": "Lieu",
       "groupe": "Groupe",
       "danger": "Danger",
-      "paliers": "Les paliers",
+      "paliers": "Les niveaux du danger",
       "personnages": "Les personnages",
       "lecon": "Leçon pour Destiny",
       "veut": "Veut",
@@ -427,7 +420,7 @@
       "comment_le_jouer": "Comment le jouer",
       "sert_a": "À quoi il sert",
       "ce_qu_il_est": "Ce qu'il est",
-      "palier4_kids": "Palier 4, en kids",
+      "tue_kids": "« {niveau_3} », en kids",
       "jouer_ce_personnage": "Jouer ce personnage",
       "mode": "Mode",
       "type": "Type",
@@ -449,7 +442,7 @@
     },
     "regles": {
       "regles_d_or": "Les règles d'or",
-      "paliers": "Les quatre paliers du danger",
+      "paliers": "Les trois niveaux du danger",
       "actes": "Les quatre actes",
       "rituel": "Le rituel Destiny",
       "distribution": "La distribution",
@@ -489,7 +482,7 @@
       "principe": "Le principe",
       "regles": "Les règles",
       "pouvoirs": "Idées de pouvoirs",
-      "palier4": "Au palier 4",
+      "il_tue": "« {niveau_3} », sans mort",
       "duree": "Un épisode dure de {min} à {max} minutes."
     },
     "serie": {
@@ -507,15 +500,15 @@
       "par_archetype": "Un recto par archétype",
       "par_archetype_aide": "8 cartes : la famille, ce qu'il fait, sa montée, ses trois animaux.",
       "par_animal": "Un recto par animal",
-      "par_animal_aide": "24 cartes : la posture, la réplique, le corps à chaque palier.",
+      "par_animal_aide": "24 cartes : la posture, la réplique, le corps à chaque niveau du danger.",
       "en_cours": "Les cartes se préparent…",
       "echec": "Le PDF n'a pas pu être créé. Réessaie dans un instant.",
       "dangers_titre": "Imprimer les cartes de dangers",
-      "dangers_aide": "Cartes de 95 × 55 mm, dix par page A4 : le danger et ses quatre paliers. Imprime en recto verso, bord long : le dos « Danger » tombe au dos de chaque carte.",
+      "dangers_aide": "Cartes de 95 × 55 mm, dix par page A4 : le danger et ses trois niveaux. Imprime en recto verso, bord long : le dos « Danger » tombe au dos de chaque carte.",
       "dangers_tous": "Tous les dangers",
       "dangers_tous_aide": "{n} cartes, les dangers actifs du catalogue.",
       "dangers_kids": "Les dangers kids",
-      "dangers_kids_aide": "{n} cartes, avec le palier 4 des enfants (personne ne meurt)."
+      "dangers_kids_aide": "{n} cartes, avec « {niveau_3} » version enfants (personne ne meurt)."
     },
     "archetypes_principe": "Les cartes donnent des directions, pas des prisons. La fiction passe avant la carte."
   },
@@ -593,7 +586,7 @@
     "whatsapp_apercu": "Aperçu",
     "whatsapp_recreer": "Recréer depuis le modèle",
     "whatsapp_a_completer": "Il reste des {champs} à compléter.",
-        "modele_prochaine_seance": "🎭 Annonce de la répète",
+    "modele_prochaine_seance": "🎭 Annonce de la répète",
     "modele_aide": "Syntaxe WhatsApp : *gras*, _italique_, puces •. Les {champs} se remplissent tout seuls quand c'est possible.",
     "conflit_titre": "La note a changé ailleurs",
     "conflit_aide": "Elle a été modifiée sur GitHub pendant que tu l'éditais. Voici la différence :",
@@ -671,8 +664,8 @@
     "choisir_archetype": "Choisir un archétype",
     "appliquer": "Appliquer la proposition",
     "vers_echauffement": "Passer au jeu",
-    "tirer_aide": "Un lieu et les archétypes, d'un seul geste. Le danger tombe au DESTINY n°1, au dé.",
-      "danger_au_destiny": "Le danger tombe au DESTINY n°1, au dé",
+    "tirer_aide": "Un lieu et les archétypes, d'un seul geste. Le danger tombe au DESTINY n°1, tiré au hasard.",
+    "danger_au_destiny": "Le danger tombe au DESTINY n°1",
     "tirage": "Le tirage",
     "lieu": "Le lieu",
     "danger": "Le danger",
@@ -741,7 +734,7 @@
     "duree_annuler": "Annuler",
     "duree_valider": "Valider",
     "destiny": "Destiny",
-    "destiny_aide": "Lance tout de suite le prochain Destiny : le rituel, puis le danger monte d'un palier.",
+    "destiny_aide": "Lance tout de suite le prochain Destiny : le rituel, puis le danger monte d'un niveau.",
     "demarrer": "Lancer le chrono",
     "pause": "Pause",
     "reprendre": "Reprendre",
@@ -749,10 +742,9 @@
     "prochain": "Prochain Destiny à {t}",
     "dernier_acte": "Dernier acte : il fait payer le prix.",
     "temps_ecoule": "Le temps est écoulé.",
-    "danger_au_destiny": "Le danger tombe au DESTINY n°1, au dé.",
-    "survivants": "Le dé des survivants : {r}",
+    "danger_au_destiny": "Le danger tombe au DESTINY n°1.",
     "rappel": "Pour la régie",
-    "montee": "À ce palier, il est tenté de…",
+    "montee": "À ce niveau du danger, il est tenté de…",
     "mystere": "Le mystère",
     "dilemme": "Un dilemme pour l'acte 4",
     "dilemme_aide": "À proposer comme choix final, si ça sert l'histoire.",
@@ -782,9 +774,10 @@
     "son_en_cours": "En cours : {titre}",
     "son_coupe": "Le son est coupé.",
     "son_remettre": "Remettre le son",
-    "paliers": "Les paliers du danger",
-    "archetypes": "Les archétypes à ce palier",
-    "fermer": "Fermer"
+    "paliers": "Les niveaux du danger",
+    "archetypes": "Les archétypes à ce niveau",
+    "fermer": "Fermer",
+    "sans_danger": "Sans danger"
   },
   "regie_son": {
     "titre": "Table de régie",
@@ -795,7 +788,7 @@
     "tranches": "Mixeur",
     "banques": "Banques de sons",
     "acte": "Acte {n}",
-    "palier": "Palier {n}",
+    "palier": "Acte {n}",
     "danger": "Danger",
     "autre": "Autre son",
     "reveal": "Révélation",
@@ -947,9 +940,9 @@
       "coupure_fin_aide": "Sinon, c'est toi qui lances le fondu de fin.",
       "fondu_fin": "Durée du fondu de fin",
       "banque": "La banque de sons",
-      "banque_aide": "Pour chaque danger, les sons de chaque palier. Écoute les candidats et choisis celui qui joue (ou au hasard), et son volume.",
+      "banque_aide": "Pour chaque danger, les sons de chaque acte. Écoute les candidats et choisis celui qui joue (ou au hasard), et son volume.",
       "danger": "Danger",
-      "palier": "Palier {n}",
+      "palier": "Acte {n}",
       "vide": "Aucun fichier : rien ne joue",
       "remplace_par": "Remplacé par : {nom}",
       "sons_exercices": "Exercices Destiny : le DESTINY n°2 et la cloche",
@@ -1019,7 +1012,7 @@
     "destinys": "Les Destiny",
     "destiny_n": "Destiny {n} à {t}{manuel}",
     "manuel": " (régie)",
-    "palier_atteint": "Palier atteint : {n}"
+    "acte_atteint": "Acte atteint : {n}"
   },
   "serie": {
     "titre": "Mes séries",
@@ -1109,11 +1102,11 @@
       "aucun": "Aucun méchant pour cet archétype.",
       "choisi": "Le méchant de la saison",
       "presages": "Les quatre présages",
-      "presages_aide": "Un par épisode, un par palier. Le maître du jeu les valide ou les réécrit.",
-      "presage_n": "Épisode {n} · {palier}",
+      "presages_aide": "Un par épisode. Le maître du jeu les valide ou les réécrit.",
+      "presage_n": "Épisode {n}",
       "proposer_ia": "Proposer avec l'IA",
       "ia_en_cours": "L'IA réfléchit…",
-      "ia_absente": "Sans IA, écrivez-les vous-même, guidé par les quatre paliers.",
+      "ia_absente": "Sans IA, écrivez-les vous-même, un par épisode.",
       "ia_echec": "L'IA n'a pas répondu : {erreur}",
       "valider": "Valider la saison",
       "presages_manquants": "Écrivez les quatre présages pour valider.",
@@ -1210,7 +1203,7 @@
       "micro_echec": "Le micro n'a pas démarré ({raison}). L'épisode continue.",
       "tirer_piece": "Tirer la pièce",
       "tirer_pour": "Tirer la pièce pour {nom}",
-      "horloge_episode": "L'épisode · les paliers du danger",
+      "horloge_episode": "L'épisode · les niveaux du danger",
       "horloge_saison": "La saison · les présages du méchant",
       "gravite": "En ce moment, un échec appelle un mouvement {gravite}.",
       "hors_jeu": "Hors jeu",
@@ -1243,7 +1236,7 @@
       "bascules": "Passés au service du méchant",
       "traitre": "Le traître",
       "sortie": "Par où ils sortent",
-      "sortie_aide": "La sortie du palier 4 mène au lieu de l'épisode suivant.",
+      "sortie_aide": "La sortie du dernier acte mène au lieu de l'épisode suivant.",
       "ce_qui_a_marche": "Ce qui a marché",
       "phrase": "La phrase qu'on garde",
       "heritage": "Ce que le méchant laisse",
@@ -1260,7 +1253,7 @@
       "quitte_aide": "Il a fini l'épisode hors jeu.",
       "blesses_anciens": "Les blessés (ancienne campagne)",
       "compte_rendu": "Le compte rendu",
-      "compte_rendu_aide": "Pas de transcription : l'IA écrit le compte rendu à partir de la trame de l'épisode (le lieu, le danger, les paliers, ce que sont devenus les personnages) et de vos notes.",
+      "compte_rendu_aide": "Pas de transcription : l'IA écrit le compte rendu à partir de la trame de l'épisode (le lieu, le danger, les niveaux du danger, ce que sont devenus les personnages) et de vos notes.",
       "compte_rendu_transcription": "L'IA écrit le compte rendu à partir de la transcription de l'épisode et de vos notes.",
       "notes_mj": "Ce qui s'est passé",
       "notes_mj_aide": "Quelques mots pour l'IA : les moments forts, les choix, la fin. Jamais de prénom.",
@@ -1268,7 +1261,7 @@
       "un_personnage": "un personnage",
       "trame": {
         "lieu": "Lieu : {lieu}. Danger : {danger}.",
-        "palier": "Palier {n} : {texte}",
+        "palier": "{niveau} : {texte}",
         "presage": "Le présage du méchant : {texte}",
         "mechant": "Le méchant : {nom}.",
         "mechant_vaincu": "Le méchant, {nom}, a été mis hors jeu.",
@@ -1373,7 +1366,7 @@
       "echec_phrase": "Tu t'es trompé de ligne du destin.",
       "ligne": "Sa ligne :",
       "tombees": "La pièce :",
-      "gravite": "Mouvement {gravite} · palier {n}",
+      "gravite": "Mouvement {gravite} · acte {n}",
       "doux": "doux",
       "dur": "dur",
       "idees": "Des mouvements pour le Maître du destin :",
@@ -1384,7 +1377,7 @@
     },
     "aide_mj": {
       "titre": "Aide du MJ",
-      "maintenant": "Palier {n} : un échec appelle un mouvement {gravite}.",
+      "maintenant": "Acte {n} : un échec appelle un mouvement {gravite}.",
       "onglets": [
         "La pièce",
         "Les joueurs",
@@ -1421,7 +1414,7 @@
     },
     "livret": {
       "titre": "Le jeu de rôle, simplement",
-      "principe": "Comme au théâtre : un lieu, un danger en quatre paliers, trois Destiny, la musique de chaque acte et la régie son. Les joueurs disent ce que font leurs personnages ; le Maître du destin fait vivre le lieu, le danger, le grand méchant, ses sbires et les figurants.",
+      "principe": "Comme au théâtre : un lieu, un danger en trois niveaux, trois Destiny, la musique de chaque acte et la régie son. Les joueurs disent ce que font leurs personnages ; le Maître du destin fait vivre le lieu, le danger, le grand méchant, ses sbires et les figurants.",
       "sante_titre": "Le cœur et le cerveau",
       "sante": "Chaque personnage a deux pistes. Le Maître du destin les fait bouger quand l'histoire frappe le corps ou l'esprit. Elles se gardent d'un épisode à l'autre ; un mort quitte la série.",
       "kids": "Personne ne meurt : on quitte l'histoire. Le cerveau : serein, inquiet, affolé, perdu.",
@@ -1453,8 +1446,8 @@
       "echec": "Échec",
       "succes_texte": "La pièce tombe sur ta face : tu as suivi la ligne du destin. Tu fais ce que tu voulais.",
       "echec_texte": "La pièce tombe sur l'autre face : tu t'es trompé de ligne du destin. Le Maître du destin fait un mouvement.",
-      "doux": "Aux paliers 1 et 2, son mouvement est doux : il annonce ce qui menace, et on peut encore réagir.",
-      "dur": "Aux paliers 3 et 4, son mouvement est dur : ce qui menaçait arrive, tout de suite, et ça coûte."
+      "doux": "Aux actes 1 et 2, son mouvement est doux : il annonce ce qui menace, et on peut encore réagir.",
+      "dur": "Aux actes 3 et 4, son mouvement est dur : ce qui menaçait arrive, tout de suite, et ça coûte."
     },
     "bonus": {
       "titre": "Le bonus et le second lancer",
@@ -1565,7 +1558,7 @@
     ],
     "agenda_titre": "L'agenda du Maître du destin",
     "agenda": [
-      "Fais monter le danger, palier par palier.",
+      "Fais monter le danger, niveau par niveau.",
       "Rends les personnages vivants : leur vouloir, leur besoin, leur prix.",
       "Joue pour découvrir ce qui arrive : rien n'est écrit."
     ],
@@ -1585,8 +1578,8 @@
       "principe": "Il fait un mouvement quand la pièce tombe sur l'autre face, quand les joueurs le regardent en attendant la suite, ou quand ils laissent passer une occasion.",
       "regle": "Un mouvement doux annonce ce qui vient. Si personne ne réagit, il devient dur.",
       "que_fais_tu": "Après chaque mouvement, demande : « Que fais-tu ? »",
-      "doux_titre": "Doux, aux paliers 1 et 2",
-      "durs_titre": "Durs, aux paliers 3 et 4",
+      "doux_titre": "Doux, aux actes 1 et 2",
+      "durs_titre": "Durs, aux actes 3 et 4",
       "doux": [
         {
           "id": "presage",
@@ -1612,7 +1605,7 @@
       "durs": [
         {
           "id": "destiny",
-          "nom": "Faire monter le danger d'un palier",
+          "nom": "Faire monter le danger d'un niveau",
           "texte": "Lance le rituel Destiny : le tonnerre, la lumière bleue, et le danger monte d'un cran."
         },
         {
@@ -1645,7 +1638,7 @@
     },
     "horloges": {
       "titre": "Les horloges",
-      "episode": "L'horloge de l'épisode : les quatre paliers du danger. Chaque Destiny l'avance d'un cran ; au quatrième, il faut choisir.",
+      "episode": "L'horloge de l'épisode : les trois niveaux du danger. Chaque Destiny l'avance d'un cran ; au troisième, il faut choisir.",
       "saison": "L'horloge de la saison : les quatre présages du méchant, un par épisode. Au quatrième, il apparaît en personne."
     },
     "blessures": {
@@ -1789,14 +1782,14 @@
     "court": "Court {n}",
     "normal": "Normal {n}",
     "long": "Long {n}",
-    "explication": "Par défaut « Contemporain », ton « Drame ». Le lieu, le danger et les paliers ne changent pas : seuls l'univers et le ton s'adaptent. Chaque scène vise {n} répliques ; tu choisis ton personnage à chaque nouvelle scène, et tu lances Destiny quand tu veux faire monter le danger (quatre actes).",
+    "explication": "Par défaut « Contemporain », ton « Drame ». Le lieu, le danger et les niveaux du danger ne changent pas : seuls l'univers et le ton s'adaptent. Chaque scène vise {n} répliques ; tu choisis ton personnage à chaque nouvelle scène, et tu lances Destiny quand tu veux faire monter le danger (quatre actes).",
     "tirer": "Tirer le décor",
     "retirer": "Tirer un autre décor",
     "lieu": "Lieu",
     "danger": "Danger",
     "groupe": "Groupe",
     "espaces": "Espaces",
-    "paliers": "Les paliers",
+    "paliers": "Les niveaux du danger",
     "personnages": "Les quatre personnages",
     "personnage_depart": "Personnage de départ",
     "lever": "Lever le rideau",
@@ -1804,7 +1797,6 @@
       "spectacle": "Spectacle",
       "acte": "Acte {n}",
       "scene": "Scène {n}",
-      "palier": "Palier {n}",
       "repliques": "Répliques : {posees} / {cible}",
       "quitter": "Quitter le spectacle",
       "quitter_titre": "Quitter le spectacle ?",
@@ -1865,7 +1857,7 @@
     "apparence_aide": "Thème, visuels des cartes, texte de l'histoire avec l'IA.",
     "donnees": "Les données",
     "catalogue": "Lieux et dangers",
-    "catalogue_aide": "Ajouter, renommer, activer ; paliers, espaces, kids.",
+    "catalogue_aide": "Ajouter, renommer, activer ; niveaux du danger, espaces, kids.",
     "details_lieux": "Détails des lieux",
     "details_lieux_aide": "Sous-espaces et vocabulaire par lieu.",
     "relations": "Antisèche de relations",
@@ -1901,9 +1893,23 @@
     "acces_afficher_aide": "Ton mot de passe, pour afficher le token en clair.",
     "acces_verrouiller": "Verrouiller Destiny Note",
     "acces_verrouiller_aide": "Le token et la clé sont effacés de cet appareil, et le menu Notes disparaît.",
-    "acces_etapes": {"lecture": "Lecture des notes…", "cle": "Calcul de la clé…", "verification": "Vérification du mot de passe…", "coffre": "Enregistrement sur l'appareil…"},
+    "acces_etapes": {
+      "lecture": "Lecture des notes…",
+      "cle": "Calcul de la clé…",
+      "verification": "Vérification du mot de passe…",
+      "coffre": "Enregistrement sur l'appareil…"
+    },
     "acces_ok": "Destiny Note est ouvert : le menu Notes est en bas.",
-    "acces_erreurs": {"champsVides": "Remplis le token et le mot de passe.", "tokenRefuse": "GitHub refuse ce token : vérifie qu'il donne accès au dépôt Destiny (Contents : lecture et écriture).", "horsLigne": "Pas de réseau : réessaie quand tu es connecté.", "notesIntrouvables": "Pas de notes sur ce dépôt (branche destiny-story-data introuvable).", "motDePasseIncorrect": "Mot de passe incorrect.", "afficher": "Mot de passe incorrect : le token reste masqué.", "delai": "Bloqué à l'étape « {etape} » : réessaie, et dis-le si ça recommence.", "erreur": "Erreur à l'étape « {etape} » : {detail}"},
+    "acces_erreurs": {
+      "champsVides": "Remplis le token et le mot de passe.",
+      "tokenRefuse": "GitHub refuse ce token : vérifie qu'il donne accès au dépôt Destiny (Contents : lecture et écriture).",
+      "horsLigne": "Pas de réseau : réessaie quand tu es connecté.",
+      "notesIntrouvables": "Pas de notes sur ce dépôt (branche destiny-story-data introuvable).",
+      "motDePasseIncorrect": "Mot de passe incorrect.",
+      "afficher": "Mot de passe incorrect : le token reste masqué.",
+      "delai": "Bloqué à l'étape « {etape} » : réessaie, et dis-le si ça recommence.",
+      "erreur": "Erreur à l'étape « {etape} » : {detail}"
+    },
     "annuler": "Annuler",
     "valider": "Valider",
     "copier": "Copier",
@@ -1932,9 +1938,6 @@
     "rituel": "Le rituel",
     "lumiere_bleue": "La lumière bleue",
     "duree_fige": "La durée du ralenti à l'écran : {n} s",
-    "texte_ellipse": "Le texte de l'ellipse",
-    "texte_ellipse_aide": "Un texte entre le figé et la carte du palier (« Quelques heures plus tard… », par exemple). Vide : pas d'ellipse.",
-    "rappel_premier_fige": "Rappeler de fixer le besoin au premier figé",
     "rappels_regie": "Les rappels de régie, acte par acte",
     "reduire_animations": "Réduire les animations",
     "musiques": "Les musiques",
@@ -2065,20 +2068,9 @@
       "relancer": "Relancer",
       "pack_incomplet": "Réimporte le pack audio : un son des exercices manque (un autre le remplace).",
       "sans_pack": "Sans le pack audio, l'ambiance du lieu remplace sa musique.",
-      "de_danger": "Le dé du danger",
-      "retirer_danger": "Retirer un danger",
-      "aucun_danger": "Aucun danger actif de ce type.",
       "type_catastrophe": "Catastrophe",
       "type_thriller": "Thriller",
       "type_survie": "Survie ou dilemme",
-      "de_survivants": "Le dé des survivants",
-      "personne": "Personne",
-      "un_survivant": "1 survivant",
-      "survivants_n": "{n} survivants",
-      "tous": "Tous",
-      "public": "Le public décide",
-      "danger_du_soir": "Le danger : {nom}",
-      "on_continue": "On continue",
       "prets": "Prêts ?",
       "en_cours": "On joue !",
       "en_pause": "En pause",
@@ -2127,7 +2119,7 @@
     "sous": {
       "lieu_groupe": "Le lieu et le groupe",
       "liens": "Les liens entre les personnages",
-      "danger": "Le danger, en quatre paliers",
+      "danger": "Le danger, en trois niveaux",
       "mystere": "Le mystère",
       "distribution": "La distribution des archétypes",
       "animaux": "Le choix des animaux",
@@ -2154,7 +2146,7 @@
       "directions": "Des directions, pas des prisons"
     },
     "liens": "Le groupe se connaît déjà : chaque personnage a un lien avec les autres, dit avec le mot (frère, collègue, ex…) dès la première scène. La mise en place en tire deux dans l'antisèche des relations, pour commencer.",
-    "danger": "Le danger se choisit avec le lieu. Il monte en quatre paliers, un par acte :",
+    "danger": "Le danger se choisit avec le lieu. L'acte 1 se joue sans danger ; puis il monte d'un niveau à chaque Destiny :",
     "animaux": "Chaque joueur choisit son animal parmi les deux de son archétype : c'est son vêtement et sa posture.",
     "debrief": "On fait le tour des personnages, avec une seule phrase pour chacun :",
     "mots_doux": "Les mots plus doux",
@@ -2210,7 +2202,7 @@
           {
             "icone": "spectacle",
             "titre": "Le spectacle",
-            "texte": "Le chrono et DESTINY restent en haut de l'écran. Quatre actes, un palier du danger chacun :"
+            "texte": "Le chrono et DESTINY restent en haut de l'écran. Quatre actes : le premier sans danger, puis un niveau du danger à chaque Destiny."
           }
         ],
         "rituel": "Entre deux actes, Destiny"
@@ -2269,10 +2261,10 @@
         "Thriller",
         "Libre"
       ],
-      "paliers": "Les quatre paliers",
-      "palier_aide": "Ce que fait le danger à ce palier.",
-      "palier_4_kids": "Palier 4, en version kids",
-      "palier_4_kids_aide": "Personne ne meurt : on renonce, on se sépare un moment.",
+      "paliers": "Les trois niveaux",
+      "palier_aide": "Ce que fait le danger à ce niveau.",
+      "tue_kids": "« {niveau_3} », en version kids",
+      "tue_kids_aide": "Personne ne meurt : on renonce, on se sépare un moment.",
       "kids": "Jouable avec des enfants",
       "kids_aide": "Le sigle KIDS : proposé en mode kids.",
       "actif": "Proposé à la mise en place",
@@ -2284,7 +2276,7 @@
       "supprimer_titre": "Supprimer « {nom} » ?",
       "supprimer_texte": "Il disparaît de ta liste. La liste d'origine reste là, si tu veux y revenir.",
       "nom_requis": "Il faut un nom.",
-      "paliers_n": "{n} paliers sur 4",
+      "paliers_n": "{n} niveaux sur {total}",
       "sans_espace": "Pas encore d'espace",
       "mis_de_cote": "Mis de côté",
       "enregistre": "C'est enregistré."
@@ -2546,7 +2538,7 @@
           {
             "icone": "preparer",
             "titre": "Préparer",
-            "texte": "Le lieu, le danger et ses quatre paliers, le grand méchant, ses sbires et les figurants du lieu."
+            "texte": "Le lieu, le danger et ses trois niveaux, le grand méchant, ses sbires et les figurants du lieu."
           },
           {
             "icone": "jeu",
@@ -2607,5 +2599,9 @@
         ]
       }
     }
+  },
+  "annonce": {
+    "un_survivant": "Il reste 1 survivant.",
+    "survivants": "Il reste {n} survivants."
   }
 }

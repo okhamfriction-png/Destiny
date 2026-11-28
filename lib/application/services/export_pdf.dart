@@ -111,7 +111,7 @@ Future<Uint8List> fichePdfSession({
           }),
           style: const pw.TextStyle(fontSize: 10.5),
         ),
-      ligne(t.t('historique.palier_atteint', {'n': '${s.palierAtteint}'}), g.palier(PalierId.deNumero(s.palierAtteint)).nom),
+      ligne(t.t('historique.acte_atteint', {'n': '${s.acteAtteint}'}), PalierId.pourActe(s.acteAtteint)?.nom ?? t.t('regie.sans_danger')),
       if (s.notes.isNotEmpty) h(t.t('regie.notes')),
       for (final n in s.notes) ligne(n.horodatage, n.texte),
       h(t.t('debrief.titre')),
@@ -730,9 +730,9 @@ Future<Uint8List> cartesArchetypesPdf({
 
 /// Les cartes de dangers à imprimer, dans le style des cartes d'archétypes :
 /// 95 × 55 mm, dix par page A4 (deux colonnes, cinq lignes). Au recto, le
-/// danger et ses quatre paliers ; au verso, le dé Destiny cerclé de rouge
+/// danger et ses trois niveaux ; au verso, le dé Destiny cerclé de rouge
 /// (on les tire face cachée), placé pour une impression recto verso, bord
-/// long. [kids] : le palier 4 des enfants.
+/// long. [kids] : « Il tue » version enfants.
 Future<Uint8List> cartesDangersPdf({
   required Grammaire g,
   required TextesDestiny t,

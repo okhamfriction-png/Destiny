@@ -1,6 +1,8 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 
+import 'synthese_vocale.dart';
+
 /// Lecture des effets sonores de l'app. Un lecteur dédié par canal pour que
 /// les sons courts (pièce, éclat) puissent se chevaucher sans se couper.
 class AudioService {
@@ -45,6 +47,15 @@ class AudioService {
 
   bool _muted = false; // son activé par défaut
   bool get muted => _muted;
+
+  /// La voix des annonces (synthèse vocale), quand le pack n'a pas le son.
+  final SyntheseVocale voix = SyntheseVocale();
+
+  /// Dit [texte] à voix haute, sauf si le son de l'appli est coupé.
+  Future<void> dire(String texte) async {
+    if (_muted) return;
+    await voix.dire(texte);
+  }
 
   /// Prévient quand on coupe ou remet le son (la régie son du spectacle
   /// s'arrête net avec le reste).

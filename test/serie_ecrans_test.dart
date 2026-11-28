@@ -116,7 +116,7 @@ Future<(Serie, EpisodeSerie)> _serieEnJeu(ContexteSerie ctx, {bool kids = false}
     PersonnageSerie(id: 'p3', archetypeId: 'alarmiste', animalId: 'rat', pnj: true),
   ]);
   final lieu = catalogue.lieux.firstWhere((l) => !kids || l.kids);
-  final danger = catalogue.dangers.firstWhere((d) => d.paliers.length == 4 && (!kids || d.kids));
+  final danger = catalogue.dangers.firstWhere((d) => d.paliers.length == 3 && (!kids || d.kids));
   final m = g.mechants.firstWhere((x) => !kids || x.kids);
   final e = EpisodeSerie(
     id: 'e1',
@@ -129,7 +129,7 @@ Future<(Serie, EpisodeSerie)> _serieEnJeu(ContexteSerie ctx, {bool kids = false}
     dangerNom: danger.name,
     paliers: danger.paliersPour(kids: kids),
     mechantId: m.id,
-    palierAtteint: 2,
+    acteAtteint: 2,
     roles: [
       RoleEpisode(personnageId: 'p1', vouloir: 'Sauver le chapiteau'),
       RoleEpisode(personnageId: 'p2', vouloir: 'Partir avec la caisse'),
@@ -212,7 +212,7 @@ void main() {
     expect(find.byKey(const ValueKey('fil_preparer')), findsOneWidget);
     expect(catalogue.lieux.map((l) => l.id), contains(e.lieuId));
     expect(catalogue.dangers.map((d) => d.id), contains(e.dangerId));
-    expect(e.paliers, hasLength(4));
+    expect(e.paliers, hasLength(3));
     expect(e.pnjs.map((p) => p.id), g.lieuNomme(e.lieuNom)!.figurants.map((f) => f.id));
     for (final ancien in [t.t('mise_en_place.groupe'), t.t('mise_en_place.mystere'), t.t('serie.preparation.vouloirs')]) {
       expect(find.text(ancien), findsNothing, reason: ancien);
@@ -233,16 +233,14 @@ void main() {
     expect(find.byType(BackButton), findsNothing);
     expect(find.text(t.t('serie.jeu.tirer_piece')), findsNothing);
     expect(find.text(t.t('serie.aide_mj.titre')), findsNothing);
-    // DESTINY fait monter d'un palier, avec son rituel.
+    // DESTINY fait monter le danger d'un niveau, avec son rituel : l'annonce
+    // se ferme seule (10 s au DESTINY n°1), rien à toucher.
     await _taper(tester, find.byKey(const ValueKey('pilote_destiny')));
     await tester.pump(const Duration(seconds: 10));
-    await tester.pump(const Duration(seconds: 2));
-    // La carte de l'acte se ferme seule au bout de 5 s.
-    if (find.text(t.t('rituel.reprendre')).hitTestable().evaluate().isNotEmpty) {
-      await _taper(tester, find.text(t.t('rituel.reprendre')));
-    }
+    await tester.pump(const Duration(seconds: 8));
     await tester.pumpAndSettle();
-    expect(e.palierAtteint, 2);
+    expect(find.byKey(const ValueKey('rituel_destiny')), findsNothing);
+    expect(e.acteAtteint, 2);
     // Le cœur et le cerveau de chacun.
     final premier = s.personnagesActifs.first;
     await _taper(tester, find.byKey(ValueKey('coeur_blesse_${premier.id}')));
@@ -456,7 +454,7 @@ void main() {
     final ctx = await _contexte(tester);
     final (s, e) = await _serieEnJeu(ctx, kids: true);
     e
-      ..palierAtteint = 1
+      ..acteAtteint = 1
       ..dureeMinutes = 0
       ..destinyMinutes = [];
     await tester.pumpWidget(_appli(JeuEpisodeScreen(contexte: ctx, serie: s, episode: e)));
@@ -466,16 +464,13 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('pilote_destiny')));
       await tester.pump();
       await tester.pump(const Duration(seconds: 10));
-      await tester.pump(const Duration(seconds: 2));
-      // La carte de l'acte se ferme seule au bout de 5 s.
-      if (find.text(t.t('rituel.reprendre')).hitTestable().evaluate().isNotEmpty) {
-        await tester.tap(find.text(t.t('rituel.reprendre')));
-      }
+      await tester.pump(const Duration(seconds: 8));
       await tester.pumpAndSettle();
-      expect(e.palierAtteint, i + 1);
+      expect(find.byKey(const ValueKey('rituel_destiny')), findsNothing);
+      expect(e.acteAtteint, i + 1);
     }
     final bouton = tester.widget<ButtonStyleButton>(find.byKey(const ValueKey('pilote_destiny')));
-    expect(bouton.onPressed, isNull, reason: 'au palier 4, plus de Destiny');
+    expect(bouton.onPressed, isNull, reason: 'au dernier acte, plus de Destiny');
   });
 
   testWidgets('le compte rendu par l\'IA, même sans transcription : la trame part, sans prénom', (tester) async {

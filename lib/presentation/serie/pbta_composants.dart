@@ -106,7 +106,7 @@ class PisteBlessures extends StatelessWidget {
     final c = context.destiny;
     Color teinte(int i) => switch (i) {
           0 => c.titre,
-          1 => c.palier(PalierId.envahit),
+          1 => c.palier(PalierId.manifeste),
           _ => c.famille(FamilleId.fissure),
         };
     return Wrap(spacing: 2, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
@@ -215,8 +215,8 @@ class HorlogeQuatre extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 2),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(7),
-                  color: i < rempli ? c.palier(PalierId.values[i]) : Colors.transparent,
-                  border: Border.all(color: c.palier(PalierId.values[i]), width: 1.5),
+                  color: i < rempli ? c.degre(i / 3) : Colors.transparent,
+                  border: Border.all(color: c.degre(i / 3), width: 1.5),
                 ),
               ),
             ),

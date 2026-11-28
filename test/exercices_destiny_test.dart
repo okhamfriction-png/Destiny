@@ -11,6 +11,8 @@ import 'package:destiny/application/son/pack_audio.dart';
 import 'package:destiny/application/son/reglages_regie_son.dart';
 import 'package:destiny/domain/entities/danger.dart';
 import 'package:destiny/domain/exercices/exercices_destiny.dart';
+import 'package:destiny/domain/grammaire/modeles.dart';
+import 'package:destiny/domain/troupe/annonce_destiny.dart';
 import 'package:destiny/domain/son/categories_son.dart';
 import 'package:destiny/domain/son/manifeste_audio.dart';
 import 'package:destiny/domain/son/resolution_son.dart';
@@ -274,38 +276,65 @@ void main() {
 
   group('les règles', () {
     test('le dé du danger du spectacle : un type, puis un danger jouable de ce type', () {
-      // Les paliers viennent de la grammaire : ici, quatre paliers factices.
-      final jouables = [for (final d in dangers) d.copyWith(paliers: const ['1', '2', '3', '4'])];
+      // Les niveaux viennent de la grammaire : ici, trois niveaux factices.
+      final jouables = [for (final d in dangers) d.copyWith(paliers: const ['1', '2', '3'])];
       for (var i = 0; i < 40; i++) {
         final r = tirerDangerAuDe(jouables, hasard: Random(i));
         expect(r.danger, isNotNull);
         expect(r.danger!.actif, isTrue);
-        expect(r.danger!.paliers, hasLength(4));
+        expect(r.danger!.paliers, hasLength(3));
         expect(TypeDanger.deStyle(r.danger!.style), r.type);
         final autre = tirerDangerAuDe(jouables, type: r.type, sauf: r.danger!.id, hasard: Random(i));
         expect(autre.type, r.type);
         expect(autre.danger!.id, isNot(r.danger!.id));
       }
       expect(tirerDangerAuDe(const []).danger, isNull);
-      // Sans ses quatre paliers, un danger ne se joue pas.
+      // Sans ses trois niveaux, un danger ne se joue pas.
       expect(tirerDangerAuDe(dangers).danger, isNull);
     });
 
-    test('le résultat du dé des survivants s\'enregistre et se relit', () {
-      for (final f in [...facesSurvivants(6), const FaceNombre(0), const FaceTous(), const FacePublic()]) {
-        expect(faceDeCode(codeSurvivants(f)), f);
+    test('les survivants : seulement 1, 2 ou 3, et jamais tous les protagonistes', () {
+      expect(survivantsPossibles(2), [1]);
+      expect(survivantsPossibles(3), [1, 2]);
+      expect(survivantsPossibles(4), [1, 2, 3]);
+      for (var n = 4; n <= 8; n++) {
+        expect(survivantsPossibles(n), [1, 2, 3]);
       }
-      expect(faceDeCode(''), isNull);
-      final s = SessionTroupe(id: 'x', date: DateTime(2026))..survivants = 'public';
-      expect(SessionTroupe.depuisJson(s.versJson()).survivants, 'public');
+      expect(survivantsPossibles(1), isEmpty);
+      for (var joueurs = 2; joueurs <= 8; joueurs++) {
+        final vus = <int>{};
+        for (var graine = 0; graine < 200; graine++) {
+          final n = tirerSurvivants(joueurs, hasard: Random(graine))!;
+          expect(n, inInclusiveRange(1, 3));
+          expect(n, lessThan(joueurs), reason: 'jamais tous : $joueurs joueurs');
+          vus.add(n);
+        }
+        expect(vus, survivantsPossibles(joueurs).toSet(), reason: 'chaque nombre sort ($joueurs joueurs)');
+      }
+      expect(tirerSurvivants(1), isNull);
+      final s = SessionTroupe(id: 'x', date: DateTime(2026))..survivants = '2';
+      expect(SessionTroupe.depuisJson(s.versJson()).survivants, '2');
     });
 
-    test('les faces du dé des survivants : de 1 à N − 1, de 2 à 8 protagonistes', () {
-      expect(facesSurvivants(2), [const FaceNombre(1)]);
-      expect(facesSurvivants(3), [const FaceNombre(1), const FaceNombre(2)]);
-      expect(facesSurvivants(4), [const FaceNombre(1), const FaceNombre(2), const FaceNombre(3)]);
-      for (var n = 2; n <= 8; n++) {
-        expect(facesSurvivants(n), [for (var i = 1; i < n; i++) FaceNombre(i)]);
+    test('les phrases des annonces, affichées et dites', () {
+      String t(String cle, [Map<String, String> v = const {}]) =>
+          {'annonce.un_survivant': 'Il reste 1 survivant.', 'annonce.survivants': 'Il reste {n} survivants.'}[cle]!
+              .replaceAll('{n}', v['n'] ?? '');
+      const danger = AnnonceDestiny(niveau: PalierId.enferme, danger: 'Une prise d\'otage', dangerId: 'otage');
+      expect(danger.phrase(t), 'Une prise d\'otage');
+      expect(danger.titre(), 'Il enferme');
+      expect(danger.voix(t), 'Une prise d\'otage. Il enferme.');
+      expect(danger.duree, const Duration(seconds: 10));
+      expect(danger.codeSon, 'ANNONCE_DANGER_OTAGE');
+      const manifeste = AnnonceDestiny(niveau: PalierId.manifeste);
+      expect(manifeste.phrase(t), 'Il se manifeste');
+      expect(manifeste.voix(t), 'Il se manifeste.');
+      expect(manifeste.duree, const Duration(seconds: 5));
+      for (final (n, attendu) in [(1, 'Il reste 1 survivant.'), (2, 'Il reste 2 survivants.'), (3, 'Il reste 3 survivants.')]) {
+        final a = AnnonceDestiny(niveau: PalierId.tue, survivants: n);
+        expect(a.phrase(t), attendu);
+        expect(a.voix(t), attendu);
+        expect(a.codeSon, 'ANNONCE_SURVIVANTS_$n');
       }
     });
 

@@ -9,9 +9,9 @@ import '../../application/son/lecteur_son.dart';
 import '../../application/son/regie_son.dart';
 import '../../application/state/music_controller.dart';
 import '../../application/state/reglages_destiny.dart';
-import '../../domain/grammaire/modeles.dart';
 import '../../domain/son/resolution_son.dart';
 import '../../domain/troupe/session.dart';
+import '../destiny/composants.dart' show libelleActe;
 import '../destiny/donnees.dart';
 import '../theme/destiny_theme.dart';
 import '../widgets/sound_mixer_sheet.dart';
@@ -317,7 +317,7 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
     super.initState();
     final c = _c;
     if (c != null && (c.lieuId != s.lieuId || c.dangerId != s.dangerId)) {
-      c.preparer(lieuId: s.lieuId, dangerId: s.dangerId, acte: s.palierAtteint);
+      c.preparer(lieuId: s.lieuId, dangerId: s.dangerId, acte: s.acteAtteint);
     }
     c?.addListener(_majVu);
     _majVu();
@@ -508,9 +508,8 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
   }
 
   Widget _entete(BuildContext context, String Function(String, [Map<String, String>]) rs) {
-    final g = context.grammaire;
     final c = _c;
-    final palier = g.palier(PalierId.deNumero(c?.acte ?? s.palierAtteint));
+    final acte = c?.acte ?? s.acteAtteint;
     final enDirect = c?.lecteurs.values.any((l) => l.actif) ?? _musique.playing;
     final etape = c?.etape ?? EtapeConduite.repos;
     return Container(
@@ -541,7 +540,7 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
         Wrap(spacing: 14, runSpacing: 6, crossAxisAlignment: WrapCrossAlignment.center, children: [
           _Info(Icons.place_rounded, s.lieuNom),
           _Info(Icons.warning_amber_rounded, s.dangerNom),
-          _Info(Icons.stairs_rounded, '${rs('acte', {'n': '${palier.acte}'})} — ${palier.nom}', fort: true),
+          _Info(Icons.stairs_rounded, libelleActe(context, acte), fort: true),
         ]),
         if (etape != EtapeConduite.repos) ...[
           const SizedBox(height: 8),
@@ -569,7 +568,7 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
       String Function(String, [Map<String, String>]) rg, Set<String> joue, bool muet) {
     final c = _c;
     final pack = _pack;
-    final acteCourant = c?.acte ?? s.palierAtteint;
+    final acteCourant = c?.acte ?? s.acteAtteint;
     String? origine(int acte) {
       if (c == null) return null;
       if (!pack) return c.sourceActe(acte) == null ? rs('origine_aucune') : null;
@@ -758,11 +757,10 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
 
     final m = _rs?.pack.manifeste;
     if (b.id == 'danger' && m != null) {
-      final g = context.grammaire;
       final d = m.dangers[s.dangerId]!;
-      final courant = c?.acte ?? s.palierAtteint;
-      // Les quatre paliers côte à côte (deux par ligne sur un téléphone) :
-      // chacun sa colonne, son titre et ses pads ; le palier en cours encadré.
+      final courant = c?.acte ?? s.acteAtteint;
+      // Les sons des quatre actes côte à côte (deux par ligne sur un téléphone) :
+      // chacun sa colonne, son titre et ses pads ; l'acte en cours encadré.
       return LayoutBuilder(builder: (context, contraintes) {
         const ecart = 10.0;
         final colonnes = contraintes.maxWidth >= 560 ? 4 : 2;
@@ -785,7 +783,7 @@ class _TableRegieState extends State<TableRegie> with SingleTickerProviderStateM
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
-                      '$palier · ${g.palier(PalierId.deNumero(palier)).nom}',
+                      libelleActe(context, palier),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(

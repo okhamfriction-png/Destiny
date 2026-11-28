@@ -5,28 +5,65 @@
 /// porter les données, sans logique d'affichage.
 library;
 
-/// Les quatre paliers du danger, dans l'ordre. L'identifiant technique du
-/// quatrième est `supprime` (son nom affiché vient du fichier : « Il bloque
-/// les sorties »).
+/// Les trois niveaux du danger, un par DESTINY. L'acte 1 se joue sans
+/// danger ; le DESTINY n°1 l'amène au niveau 1 (acte 2), le n°2 au niveau 2
+/// (acte 3), le n°3 au niveau 3 (acte 4).
+///
+/// Leurs libellés sont écrits ici, et seulement ici : pour les renommer,
+/// c'est cette liste qu'on change.
 enum PalierId {
-  signale,
-  enferme,
-  envahit,
-  supprime;
+  /// DESTINY n°1 : le danger arrive, on ne peut plus sortir.
+  enferme('Il enferme'),
 
-  /// Numéro du palier, de 1 à 4.
+  /// DESTINY n°2 : le danger entre dans le lieu.
+  manifeste('Il se manifeste'),
+
+  /// DESTINY n°3 : l'appli annonce le nombre de survivants.
+  tue('Il tue');
+
+  const PalierId(this.nom);
+
+  /// Le libellé affiché et dit.
+  final String nom;
+
+  /// Numéro du niveau, de 1 à 3 : c'est aussi le numéro du DESTINY qui
+  /// l'amène.
   int get numero => index + 1;
 
-  /// Palier à partir de son numéro (1 à 4).
-  static PalierId deNumero(int n) => PalierId.values[(n - 1).clamp(0, 3)];
+  /// L'acte qu'il ouvre (2 à 4).
+  int get acte => numero + 1;
 
-  /// Palier à partir de son identifiant texte (`signale`…).
+  /// Le niveau à partir de son numéro (1 à 3).
+  static PalierId deNumero(int n) => PalierId.values[(n - 1).clamp(0, PalierId.values.length - 1)];
+
+  /// Le niveau du danger pendant l'acte [acte] (1 à 4) : aucun à l'acte 1.
+  static PalierId? pourActe(int acte) => acte < 2 ? null : deNumero(acte - 1);
+
+  /// Le niveau à partir de son identifiant texte (`enferme`…).
   static PalierId? depuisTexte(String? id) {
     for (final p in PalierId.values) {
       if (p.name == id) return p;
     }
     return null;
   }
+}
+
+/// Le nombre d'actes d'un spectacle (trois DESTINY entre eux).
+const int kNombreActes = 4;
+
+/// Remplace, dans un texte des fichiers de données, `{niveau_1}` à
+/// `{niveau_3}` par les libellés de [PalierId] (« Il enferme »…), et
+/// `{niveau_1_bas}` à `{niveau_3_bas}` par les mêmes en minuscule (« il
+/// enferme »). Les fichiers n'écrivent ainsi jamais ces libellés en dur.
+String avecNiveaux(String texte) {
+  if (!texte.contains('{niveau_')) return texte;
+  var s = texte;
+  for (final p in PalierId.values) {
+    s = s
+        .replaceAll('{niveau_${p.numero}}', p.nom)
+        .replaceAll('{niveau_${p.numero}_bas}', p.nom.substring(0, 1).toLowerCase() + p.nom.substring(1));
+  }
+  return s;
 }
 
 /// Les trois familles d'archétypes.
@@ -95,7 +132,7 @@ class Archetype {
   final FamilleId famille;
   final String ceQuIlFait;
 
-  /// Ce que fait l'archétype à chaque palier.
+  /// Ce que fait l'archétype à chaque niveau du danger.
   final Map<PalierId, String> montee;
 
   /// Les trois animaux de l'archétype.
@@ -165,8 +202,7 @@ class Animal {
   /// Tempérament (venu des données des animaux de l'appli).
   final String temperament;
 
-  /// Comment le corps de l'animal joue chaque palier (les anciens niveaux,
-  /// rattachés aux paliers).
+  /// Comment le corps de l'animal joue chaque niveau du danger.
   final Map<PalierId, String> niveauxCorps;
 
   /// Ancien moteur de l'animal. Obsolète : conservé, jamais affiché.
@@ -206,20 +242,20 @@ class Animal {
       );
 }
 
-/// Un palier du danger (commun à tous les dangers).
+/// Un niveau du danger (commun à tous les dangers). Son libellé vient de
+/// [PalierId.nom].
 class Palier {
   const Palier({
     required this.id,
-    required this.nom,
-    required this.acte,
     required this.ambiance,
     required this.etatArchetype,
   });
 
   final PalierId id;
-  final String nom;
-  final int acte;
   final String ambiance;
+
+  String get nom => id.nom;
+  int get acte => id.acte;
 
   /// Ce que fait l'archétype à ce palier (« dort », « il éclate »…).
   final String etatArchetype;
@@ -237,7 +273,9 @@ class Acte {
   });
 
   final int numero;
-  final PalierId palier;
+
+  /// Le niveau du danger pendant cet acte (null à l'acte 1 : pas de danger).
+  final PalierId? palier;
   final String ambiance;
   final List<String> consignes;
 }
@@ -542,7 +580,7 @@ class DangerGrammaire {
     required this.nom,
     required this.paliers,
     this.kids = false,
-    this.supprimeKids = '',
+    this.tueKids = '',
   });
 
   final String id;
@@ -552,16 +590,16 @@ class DangerGrammaire {
   /// Jouable avec des enfants.
   final bool kids;
 
-  /// Le palier 4 en mode kids : personne ne meurt.
-  final String supprimeKids;
+  /// Le niveau « Il tue » en mode kids : personne ne meurt.
+  final String tueKids;
 
-  /// Les quatre textes dans l'ordre des paliers.
+  /// Les trois textes, dans l'ordre des niveaux.
   List<String> get textes => [for (final p in PalierId.values) paliers[p] ?? ''];
 
-  /// Les quatre textes, avec le palier 4 kids en mode kids.
+  /// Les trois textes, avec le niveau « Il tue » kids en mode kids.
   List<String> textesPour({bool kids = false}) => [
         for (final p in PalierId.values)
-          kids && p == PalierId.supprime && supprimeKids.isNotEmpty ? supprimeKids : paliers[p] ?? '',
+          kids && p == PalierId.tue && tueKids.isNotEmpty ? tueKids : paliers[p] ?? '',
       ];
 }
 
@@ -795,7 +833,7 @@ class ModeKids {
     required this.regles,
     required this.pouvoirsExemples,
     required this.pouvoirRegle,
-    required this.palier4,
+    required this.ilTue,
     required this.dureeEpisodeMinutes,
     required this.mechantIds,
     required this.dangerIds,
@@ -809,7 +847,7 @@ class ModeKids {
   final List<RegleDOr> regles;
   final List<String> pouvoirsExemples;
   final String pouvoirRegle;
-  final String palier4;
+  final String ilTue;
 
   /// Durée d'un épisode kids : de [0] à [1] minutes.
   final List<int> dureeEpisodeMinutes;

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../../domain/grammaire/modeles.dart' show PalierId;
 import '../../domain/entities/chat_message.dart';
 import '../prompts/assistant_serie.dart';
 import '../services/llm_service.dart';
@@ -165,9 +166,8 @@ class CampagneAssistant {
     return MemoireEpisode.depuis(reponse);
   }
 
-  /// Les quatre présages d'un méchant de saison : il se signale, il enferme,
-  /// il envahit, il bloque les sorties. Le maître du jeu les valide ou les
-  /// réécrit.
+  /// Les quatre présages d'un méchant de saison, un par épisode. Le maître du
+  /// jeu les valide ou les réécrit.
   Future<List<String>> proposerPresages({
     required AiSettings settings,
     required String contexte,
@@ -179,9 +179,9 @@ class CampagneAssistant {
     final contenu = StringBuffer(_entete(contexte))
       ..writeln('Le méchant de la saison :')
       ..writeln(mechant.trim())
-      ..writeln('Les quatre paliers de sa machination :');
+      ..writeln('Les niveaux de sa machination :');
     for (final (i, p) in paliers.indexed) {
-      contenu.writeln('${i + 1}. $p');
+      contenu.writeln('${i < PalierId.values.length ? PalierId.values[i].nom : '${i + 1}.'} : $p');
     }
     final reponse = await _llm.complete(
       settings: settings,

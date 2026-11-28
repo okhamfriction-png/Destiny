@@ -25,7 +25,7 @@ const Map<String, String> kNotionsExercices = {
   'relais_a_quatre': 'lieux',
   'installer_le_lieu': 'lieux',
   'mains_occupees': 'lieux',
-  'lieu_quatre_paliers': 'dangers',
+  'lieu_trois_niveaux': 'dangers',
   'deuxieme_lieu': 'lieux',
   'archetypes_du_desastre': 'archetypes',
   'sideration': 'archetypes',

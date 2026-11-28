@@ -3,8 +3,7 @@
 /// ligne du destin (BRAVE ou SMART), on lance, et la pièce dit si on l'a
 /// suivie. Le bonus, l'aide, le vouloir dit et le pouvoir kids donnent un
 /// second lancer ; la gêne en impose un second. Un échec laisse le Maître du
-/// destin faire un mouvement, doux aux paliers 1 et 2, dur aux paliers 3
-/// et 4.
+/// destin faire un mouvement, doux aux actes 1 et 2, dur aux actes 3 et 4.
 ///
 /// Sans interface. Tous les textes des règles viennent de
 /// `destiny_textes.json` (section `pbta`) : aucun n'est écrit ici.
@@ -67,9 +66,9 @@ ModeLancer modeDuLancer({
 /// La force du mouvement du Maître du destin après un échec.
 enum GraviteMouvement { doux, dur }
 
-/// Doux aux paliers 1 et 2, dur aux paliers 3 et 4 : le palier du danger de
+/// Doux aux actes 1 et 2, dur aux actes 3 et 4 : l'acte en cours de
 /// l'épisode donne la gravité.
-GraviteMouvement graviteAuPalier(int palier) => palier <= 2 ? GraviteMouvement.doux : GraviteMouvement.dur;
+GraviteMouvement graviteALActe(int acte) => acte <= 2 ? GraviteMouvement.doux : GraviteMouvement.dur;
 
 /// Faut-il lancer la pièce encore une fois, après [lancers] ? On s'arrête dès
 /// que l'issue est connue.
@@ -85,7 +84,7 @@ bool encoreUnLancer(FacePiece approche, ModeLancer mode, List<FacePiece> lancers
 
 /// Le résultat d'une action.
 class ResultatPiece {
-  const ResultatPiece({required this.approche, required this.mode, required this.lancers, required this.palier});
+  const ResultatPiece({required this.approche, required this.mode, required this.lancers, required this.acte});
 
   /// La ligne du destin choisie.
   final FacePiece approche;
@@ -94,8 +93,8 @@ class ResultatPiece {
   /// Les faces tombées, dans l'ordre (une ou deux).
   final List<FacePiece> lancers;
 
-  /// Le palier du danger au moment du lancer (1 à 4).
-  final int palier;
+  /// L'acte au moment du lancer (1 à 4).
+  final int acte;
 
   /// Tu as suivi la ligne du destin.
   bool get reussite => switch (mode) {
@@ -105,7 +104,7 @@ class ResultatPiece {
       };
 
   /// La gravité du mouvement du Maître du destin, en cas d'échec.
-  GraviteMouvement get gravite => graviteAuPalier(palier);
+  GraviteMouvement get gravite => graviteALActe(acte);
 }
 
 /// Une face au hasard.
@@ -115,7 +114,7 @@ FacePiece faceAuHasard(Random hasard) => hasard.nextBool() ? FacePiece.brave : F
 ResultatPiece lancerPiece({
   required FacePiece approche,
   ModeLancer mode = ModeLancer.simple,
-  required int palier,
+  required int acte,
   Random? hasard,
 }) {
   final rng = hasard ?? Random();
@@ -123,7 +122,7 @@ ResultatPiece lancerPiece({
   while (encoreUnLancer(approche, mode, lancers)) {
     lancers.add(faceAuHasard(rng));
   }
-  return ResultatPiece(approche: approche, mode: mode, lancers: lancers, palier: palier.clamp(1, 4));
+  return ResultatPiece(approche: approche, mode: mode, lancers: lancers, acte: acte.clamp(1, 4));
 }
 
 /// Les cases de la piste de blessures.
@@ -268,7 +267,7 @@ class ReglesPbta {
 }
 
 /// Deux ou trois mouvements du Maître du destin à proposer après un échec,
-/// de la gravité donnée par le palier.
+/// de la gravité donnée par l'acte.
 List<MouvementMj> suggestionsMj(ReglesPbta regles, GraviteMouvement gravite, {int combien = 3, Random? hasard}) {
   final pool = [...regles.mouvementsMjDe(gravite)]..shuffle(hasard ?? Random());
   return pool.take(combien).toList();

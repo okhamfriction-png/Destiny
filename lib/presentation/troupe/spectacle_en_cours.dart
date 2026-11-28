@@ -10,13 +10,14 @@ import '../../domain/entities/danger.dart';
 import '../../domain/grammaire/chronos.dart';
 import '../../domain/exercices/exercices_destiny.dart';
 import '../../domain/grammaire/modeles.dart';
+import '../../domain/troupe/annonce_destiny.dart';
 import '../../domain/troupe/session.dart';
+import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/rituel_destiny.dart';
 import '../regie_son/table_regie.dart';
 import '../theme/destiny_theme.dart';
 import 'composants_troupe.dart';
-import 'des_spectacle.dart';
 import 'regie_screen.dart';
 import 'troupe_screen.dart';
 
@@ -36,7 +37,7 @@ class SpectacleEnCours extends ChangeNotifier {
     Random? hasard,
   }) : _hasard = hasard ?? Random() {
     if (session.destinys.isNotEmpty) _ecoule = session.destinys.last.secondes;
-    conduite?.preparer(lieuId: session.lieuId, dangerId: session.dangerId, acte: session.palierAtteint);
+    conduite?.preparer(lieuId: session.lieuId, dangerId: session.dangerId, acte: session.acteAtteint);
   }
 
   /// Le spectacle d'une session de la Troupe.
@@ -91,7 +92,11 @@ class SpectacleEnCours extends ChangeNotifier {
   bool get rituelEnCours => _rituelEnCours;
   bool get enMarche => _minuteur?.isActive ?? false;
   int get total => s.dureeMinutes * 60;
-  PalierId get palier => PalierId.deNumero(s.palierAtteint);
+  /// L'acte en cours (1 à 4).
+  int get acte => s.acteAtteint.clamp(1, kNombreActes);
+
+  /// Le niveau du danger (null à l'acte 1, sans danger).
+  PalierId? get palier => PalierId.pourActe(acte);
 
   /// La conduite son du spectacle : avec le pack audio, ses musiques et ses
   /// bruitages ; sans, les musiques des réglages et l'ambiance du lieu. Les
@@ -105,7 +110,7 @@ class SpectacleEnCours extends ChangeNotifier {
   /// L'index (0 à 2) du prochain Destiny, ou null s'ils sont tous passés.
   int? get prochain {
     final nombre = avecChrono ? s.destinyMinutes.length : 3;
-    return s.destinys.length < nombre && palier != PalierId.supprime ? s.destinys.length : null;
+    return s.destinys.length < nombre && acte < kNombreActes ? s.destinys.length : null;
   }
 
   void _changer() {
@@ -138,12 +143,12 @@ class SpectacleEnCours extends ChangeNotifier {
       if (conduiteActive) {
         // La musique de l'acte 1 (puis le bruitage du palier 1 et l'ambiance
         // du lieu) ; un spectacle repris en cours repart sur son acte.
-        conduite!.preparer(lieuId: s.lieuId, dangerId: s.dangerId, acte: s.palierAtteint);
+        conduite!.preparer(lieuId: s.lieuId, dangerId: s.dangerId, acte: s.acteAtteint);
         if (s.destinys.isEmpty) {
           // Déjà ouverte par le minuteur du jeu : la musique continue.
           if (!conduite!.ouverte) unawaited(conduite!.ouverture());
         } else {
-          unawaited(conduite!.musiqueActe(s.palierAtteint));
+          unawaited(conduite!.musiqueActe(s.acteAtteint));
         }
       } else if (!contexte.audio.muted && r.musiqueActe(1) != ChoixMusique.aucune) {
         conduite?.arreterBus(BusSon.musique);
@@ -183,67 +188,64 @@ class SpectacleEnCours extends ChangeNotifier {
   Future<void> destiny({required bool manuel}) async {
     if (_rituelEnCours || prochain == null) return;
     _rituelEnCours = true;
-    final premier = s.destinys.isEmpty;
-    final nouveau = PalierId.values[palier.index + 1];
     final numero = s.destinys.length + 1;
+    final niveau = PalierId.deNumero(numero);
     s.destinys.add(EvenementDestiny(numero: numero, secondes: _ecoule, manuel: manuel));
-    s.palierAtteint = nouveau.numero;
+    s.acteAtteint = niveau.acte;
     // Le spectacle commence avec un lieu seulement : le danger tombe au
-    // DESTINY n°1, au dé. Au n°3, le dé des survivants.
-    final deDanger = numero == 1 && s.dangerNom.isEmpty && dangers != null && await _tirerDanger();
+    // DESTINY n°1. Au n°3, le nombre de survivants.
+    if (numero == 1 && s.dangerNom.isEmpty && dangers != null) await _tirerDanger();
     final session = s;
-    FaceSurvivants? survivants;
-    if (numero == 3 && protagonistes > 0 && session is SessionTroupe) {
-      final faces = facesSurvivants(protagonistes);
-      survivants = faces[_hasard.nextInt(faces.length)];
-      session.survivants = codeSurvivants(survivants);
+    int? survivants;
+    if (niveau == PalierId.tue && protagonistes > 0 && session is SessionTroupe) {
+      survivants = tirerSurvivants(protagonistes, hasard: _hasard);
+      session.survivants = survivants == null ? '' : '$survivants';
     }
     await enregistrer();
     _programmerMusiques(s.destinys.length);
     if (_libere) return;
     _changer();
-    final nouvelle = s.paliers.length > nouveau.index ? s.paliers[nouveau.index] : null;
+    final annonce = AnnonceDestiny(
+      niveau: niveau,
+      danger: niveau == PalierId.enferme ? s.dangerNom : '',
+      dangerId: niveau == PalierId.enferme ? s.dangerId : '',
+      survivants: survivants,
+    );
     final ctx = contexteRituel();
     if (ctx != null && ctx.mounted) {
       await lancerRituelDestiny(
         ctx,
-        nouveauPalier: nouveau,
-        nouvelle: nouvelle,
-        premierFige: premier,
+        annonce: annonce,
         reglages: ReglagesRituel(
           lumiereBleue: r.lumiereBleue,
           dureeFige: Duration(seconds: r.dureeFigeSecondes),
-          texteEllipse: r.texteEllipse.isEmpty ? null : r.texteEllipse,
           reduireAnimations: r.reduireAnimations,
-          rappelPremierFige: r.rappelPremierFige,
         ),
         auTonnerre: () => _sonDestiny(),
-        lireNouvelle: () => s.paliers.length > nouveau.index ? s.paliers[nouveau.index] : null,
-        avantCarte: deDanger || survivants != null ? (c) => _montrerDe(c, deDanger, survivants) : null,
+        aLAnnonce: () => unawaited(_annoncer(annonce)),
       );
     } else {
       _sonDestiny();
+      unawaited(_annoncer(annonce));
     }
     _rituelEnCours = false;
     _changer();
   }
 
-  /// Le dé, entre le figé et la carte de l'acte : le danger (n°1) ou les
-  /// survivants (n°3).
-  Future<void> _montrerDe(BuildContext c, bool deDanger, FaceSurvivants? survivants) async {
-    if (_libere || !c.mounted) return;
-    if (deDanger && typeDanger != null) {
-      await ouvrirDeDanger(c, type: typeDanger!, danger: _dangerCourant, retirer: _retirerDanger);
-    } else if (survivants != null) {
-      await ouvrirDeSurvivants(c, protagonistes: protagonistes, resultat: survivants, danger: s.dangerNom);
-    }
-  }
+  /// La dernière annonce faite (pour les tests et la régie).
+  AnnonceDestiny? derniereAnnonce;
 
-  Danger? get _dangerCourant {
-    for (final d in _catalogueDangers) {
-      if (d.id == s.dangerId) return d;
-    }
-    return null;
+  /// Dit l'annonce : le son du pack s'il existe, sinon la synthèse vocale.
+  /// Rien si le son de l'appli est coupé.
+  Future<void> _annoncer(AnnonceDestiny annonce) async {
+    derniereAnnonce = annonce;
+    if (_libere || contexte.audio.muted) return;
+    final c = conduite;
+    if (c != null && await c.jouerAnnonce(annonce.codeSon)) return;
+    final ctx = contexteRituel();
+    final textes = ctx != null && ctx.mounted ? ctx.textes : null;
+    if (textes == null) return;
+    await contexte.audio.dire(annonce.voix(textes.t));
   }
 
   bool get _kids => s is SessionTroupe && (s as SessionTroupe).kids;
@@ -273,19 +275,8 @@ class SpectacleEnCours extends ChangeNotifier {
         ..paliers = d.paliersPour(kids: session.kids);
     }
     // La conduite son joue désormais les bruitages de ce danger.
-    conduite?.preparer(lieuId: s.lieuId, dangerId: s.dangerId, acte: s.palierAtteint);
+    conduite?.preparer(lieuId: s.lieuId, dangerId: s.dangerId, acte: s.acteAtteint);
     _changer();
-  }
-
-  /// « Retirer un danger », dans le même type.
-  Danger? _retirerDanger() {
-    final t = typeDanger;
-    if (t == null) return null;
-    final d = tirerDangerAuDe(_catalogueDangers, kids: _kids, type: t, sauf: s.dangerId, hasard: _hasard).danger;
-    if (d == null) return null;
-    _poserDanger(d);
-    unawaited(enregistrer());
-    return d;
   }
 
   /// Le son du Destiny, au tonnerre du rituel.
@@ -381,11 +372,7 @@ PiloteSpectacle piloteDe(BuildContext context, SpectacleEnCours sp) => PiloteSpe
       change: sp,
       // Sans chrono, le temps passé.
       reste: () => horloge(sp.avecChrono ? sp.total - sp.ecoule : sp.ecoule),
-      acte: () {
-        final t = context.textes;
-        final p = context.grammaire.palier(sp.palier);
-        return '${t.t('regie.acte', {'n': '${p.acte}'})} — ${p.nom}';
-      },
+      acte: () => libelleActe(context, sp.acte),
       enMarche: () => sp.enMarche,
       changerDuree: () => sp.avecChrono ? () => choisirDureeSpectacle(context, sp) : null,
       basculer: sp.basculer,

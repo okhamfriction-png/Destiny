@@ -171,11 +171,10 @@ void main() {
 
     test('les archétypes : tentés de, à l\'infinitif ; le tyran punit qui désobéit', () {
       expect(t.t('cartes.montee'), 'Acte par acte, il est tenté de…');
-      expect(g.archetype('leader')!.monteeA(PalierId.signale), 'Organiser la journée');
-      expect(g.archetype('tyran')!.monteeA(PalierId.envahit), 'Punir qui désobéit');
+      expect(g.archetype('tyran')!.monteeA(PalierId.manifeste), 'Punir qui désobéit');
       expect(g.archetype('tyran')!.ceQuIlFait, 'Impose sa loi, rationne, punit qui désobéit.');
       expect(g.archetype('denegateur')!.ceQuIlFait, contains('se fiche du danger'));
-      expect(g.palier(PalierId.signale).etatArchetype, 'joué léger');
+      expect(g.palier(PalierId.enferme).etatArchetype, 'premier réflexe');
       expect(g.personnage.echauffement.limite, isNot(contains('dort')));
       expect(g.personnage.troisCartes.first.exemple, contains('Alors dégage'));
     });
@@ -183,7 +182,8 @@ void main() {
     test('le rituel, les mots, les outils et les exercices', () {
       expect(g.rituel.reprise, isNot(contains('alarmiste')));
       expect(g.rituel.suite, hasLength(3));
-      expect(t.t('rituel.nouvelle_palier'), 'La nouvelle du palier');
+      expect(t.t('rituel.nouvelle_palier'), isEmpty, reason: 'plus de carte du palier entre les actes');
+      expect(t.liste('lexique.utiliser').any((x) => x.contains(PalierId.manifeste.nom.toLowerCase())), isTrue);
       expect(t.liste('lexique.utiliser'), containsAll(['rebondir', 'tenté de', 'la minute muette', 'planter pour payer']));
       expect(t.liste('lexique.ne_plus_utiliser'), containsAll(["l'archétype dort", "l'alarmiste porte le danger"]));
       expect(g.obsolete, contains('commencer in medias res'));
@@ -213,7 +213,7 @@ void main() {
       final tous = await donneesDeTest().loadDangers();
       final dangers = dangersAImprimer(tous);
       expect(dangers, isNotEmpty);
-      expect(dangers.every((d) => d.actif && d.paliers.length == 4), isTrue);
+      expect(dangers.every((d) => d.actif && d.paliers.length == 3), isTrue);
       final pdf = await cartesDangersPdf(g: g, t: t, polices: await _polices(), dangers: dangers, lireImage: _image);
       expect(String.fromCharCodes(pdf.take(4)), '%PDF');
       expect(_pages(pdf), (dangers.length / 10).ceil() * 2);

@@ -6,41 +6,45 @@ import 'package:flutter_test/flutter_test.dart';
 import 'outils/grammaire_partagee.dart';
 
 void main() {
-  group('Progression des paliers', () {
-    test('commence à l\'acte 1, le danger se signale', () {
-      const p = Progression.depart();
-      expect(p.palier, PalierId.signale);
-      expect(p.acte, 1);
-      expect(p.prochainEstPremierFige, isTrue);
+  group('Progression : quatre actes, trois niveaux du danger', () {
+    test('le danger n\'a que trois niveaux, un par DESTINY', () {
+      expect(PalierId.values, hasLength(3));
+      expect(PalierId.values.map((p) => p.nom), ['Il enferme', 'Il se manifeste', 'Il tue']);
+      expect([for (final p in PalierId.values) p.acte], [2, 3, 4]);
+      expect(PalierId.pourActe(1), isNull, reason: 'l\'acte 1 se joue sans danger');
+      expect([for (var a = 2; a <= 4; a++) PalierId.pourActe(a)], PalierId.values);
     });
 
-    test('chaque Destiny monte d\'un palier, jusqu\'au quatrième', () {
+    test('commence à l\'acte 1, sans danger', () {
+      const p = Progression.depart();
+      expect(p.palier, isNull);
+      expect(p.acte, 1);
+      expect(p.destinys, 0);
+    });
+
+    test('chaque Destiny fait monter d\'un niveau, jusqu\'au troisième', () {
       var p = const Progression.depart();
-      final vus = <PalierId>[p.palier];
+      final vus = <PalierId>[];
       while (p.peutLancerDestiny) {
         p = p.apresDestiny();
-        vus.add(p.palier);
+        vus.add(p.palier!);
       }
       expect(vus, PalierId.values);
       expect(p.destinys, 3);
+      expect(p.acte, 4);
       expect(p.dernierActe, isTrue);
       // Au dernier acte, plus rien ne monte.
       expect(p.apresDestiny(), p);
     });
-
-    test('seul le premier Destiny est le figé du besoin', () {
-      final p = const Progression.depart().apresDestiny();
-      expect(p.prochainEstPremierFige, isFalse);
-    });
   });
 
   group('Montée attendue et gestes', () {
-    test('la montée de l\'archétype et le corps de l\'animal à chaque palier', () async {
+    test('la montée de l\'archétype et le corps de l\'animal à chaque niveau', () async {
       final g = (await chargerGrammaire()).grammaire;
-      final m = monteeAttendue(g, archetypeId: 'leader', animalId: 'lion', palier: PalierId.envahit)!;
+      final m = monteeAttendue(g, archetypeId: 'leader', animalId: 'lion', palier: PalierId.manifeste)!;
       expect(m.ceQuIlFait, 'Imposer ses choix');
       expect(m.corps, isNotEmpty);
-      expect(monteeAttendue(g, archetypeId: 'inconnu', palier: PalierId.signale), isNull);
+      expect(monteeAttendue(g, archetypeId: 'inconnu', palier: PalierId.enferme), isNull);
     });
 
     test('Dire, Fixer, Bloquer, Nommer, Choisir', () async {

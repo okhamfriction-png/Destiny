@@ -6,7 +6,7 @@ import 'outils/grammaire_partagee.dart';
 
 void main() {
   group('Le catalogue lit ses textes dans la grammaire', () {
-    test('chaque danger du catalogue a les 4 paliers de la grammaire', () async {
+    test('chaque danger du catalogue a les 3 niveaux de la grammaire', () async {
       final g = (await chargerGrammaire()).grammaire;
       final dangers = await donneesDeTest().loadDangers();
       expect(dangers, hasLength(38));
@@ -17,11 +17,11 @@ void main() {
       }
       // Les identifiants de l'appli sont gardés (images, mémoire des tirages).
       expect(dangers.first.id, 'robots_rebelle');
-      // Drapeau kids et palier 4 kids venus de la grammaire.
+      // Drapeau kids et « Il tue » kids venus de la grammaire.
       final kids = dangers.where((d) => d.kids).toList();
       expect(kids, hasLength(24));
-      expect(kids.every((d) => d.palier4Kids.isNotEmpty), isTrue);
-      expect(kids.first.paliersPour(kids: true)[3], kids.first.palier4Kids);
+      expect(kids.every((d) => d.tueKids.isNotEmpty), isTrue);
+      expect(kids.first.paliersPour(kids: true)[2], kids.first.tueKids);
     });
 
     test('tout le catalogue embarqué a son équivalent dans la grammaire', () async {

@@ -5,24 +5,24 @@ import '../../domain/grammaire/modeles.dart';
 const String kVersionPrompts = '2.3.0';
 
 /// La grammaire de Destiny en version courte, générée depuis le fichier de
-/// grammaire : la promesse, les paliers, les actes, le rituel, le personnage,
+/// grammaire : la promesse, les niveaux du danger, les actes, le rituel, le personnage,
 /// la distribution, les archétypes et ce qu'ils sont tentés de faire, les
 /// règles d'or. Rien n'est recopié à la main.
 String grammaireCourte(Grammaire g, {bool kids = false}) {
   final b = StringBuffer()
     ..writeln('DESTINY — « ${g.promesse} »')
     ..writeln('Un drame improvisé en huis clos : un lieu unique et ses espaces, un groupe qui se connaît, '
-        'et un danger qui monte d\'un palier par acte.')
+        'et un danger qui monte d\'un niveau à chaque DESTINY.')
     ..writeln()
-    ..writeln('LES QUATRE PALIERS DU DANGER (un par acte, il ne redescend jamais) :');
+    ..writeln('L\'ACTE 1 SE JOUE SANS DANGER. LES TROIS NIVEAUX DU DANGER (un par DESTINY, il ne redescend jamais) :');
   for (final p in g.paliers) {
-    b.writeln('${p.id.numero}. ${p.nom} — acte ${p.acte}, ambiance « ${p.ambiance} ».');
+    b.writeln('${p.id.numero}. ${p.nom} — DESTINY n°${p.id.numero}, acte ${p.acte}, ambiance « ${p.ambiance} ».');
   }
   b
     ..writeln()
     ..writeln('LES QUATRE ACTES :');
   for (final a in g.actes) {
-    b.writeln('Acte ${a.numero} (${g.palier(a.palier).nom}) : ${a.consignes.join(' ')}');
+    b.writeln('Acte ${a.numero} (${a.palier?.nom ?? 'sans danger'}) : ${a.consignes.join(' ')}');
   }
   b
     ..writeln()
@@ -70,7 +70,7 @@ String grammaireCourte(Grammaire g, {bool kids = false}) {
       ..writeln()
       ..writeln('MODE ENFANT : ${g.modeKids.principe}')
       ..writeln('Ses règles : ${g.modeKids.regles.map((r) => r.titre).join(' ; ')}.')
-      ..writeln('Le palier 4 sans mort : ${g.modeKids.palier4}');
+      ..writeln('« ${PalierId.tue.nom} », sans mort : ${g.modeKids.ilTue}');
   }
   return b.toString().trim();
 }

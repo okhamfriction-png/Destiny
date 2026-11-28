@@ -1053,6 +1053,17 @@ class ConduiteSon extends ChangeNotifier {
     await _jouerSur(bus, source, niveau: niveau);
   }
 
+  /// L'annonce d'un DESTINY ([code]), si le pack a son fichier : jouée sur
+  /// la voie des effets. Rend faux sinon : la synthèse vocale prend le relais.
+  Future<bool> jouerAnnonce(String code) async {
+    final m = _m;
+    if (m == null || !pack.disponible || _muet()) return false;
+    final r = resoudreCode(m, pack.index, code, choix: _v.choixCandidat, hasard: _hasard);
+    if (r == null) return false;
+    await jouerEffet(SourcePack(r.chemin, titre: m.sons[r.codeJoue]?.nom ?? code));
+    return true;
+  }
+
   /// Un pad de la banque : un code de bruitage, avec atténuation de la musique.
   Future<void> jouerCode(String code) async {
     final m = _m;

@@ -1,3 +1,5 @@
+import 'modeles.dart' show avecNiveaux;
+
 /// Les textes de l'appli qui accompagnent la grammaire
 /// (`assets/data/destiny_textes.json`) : messages, aide, libellés.
 class TextesDestiny {
@@ -25,7 +27,7 @@ class TextesDestiny {
   /// variables `{nom}` remplacées.
   String t(String chemin, [Map<String, String> variables = const {}]) {
     final v = _valeur(chemin);
-    var s = v is String ? v : '';
+    var s = avecNiveaux(v is String ? v : '');
     variables.forEach((k, val) => s = s.replaceAll('{$k}', val));
     return s;
   }
@@ -33,7 +35,7 @@ class TextesDestiny {
   /// La liste de textes au [chemin].
   List<String> liste(String chemin) {
     final v = _valeur(chemin);
-    return v is List ? [for (final x in v) '$x'] : const [];
+    return v is List ? [for (final x in v) avecNiveaux('$x')] : const [];
   }
 
   /// La table au [chemin].

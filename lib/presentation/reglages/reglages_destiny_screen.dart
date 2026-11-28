@@ -72,13 +72,6 @@ class ReglagesDestinyScreen extends StatelessWidget {
                 label: '${r.dureeFigeSecondes} s',
                 onChanged: (v) => r.changer(dureeFigeSecondes: v.round()),
               ),
-              _ChampTexte(
-                libelle: k('texte_ellipse'),
-                aide: k('texte_ellipse_aide'),
-                valeur: r.texteEllipse,
-                onChange: (v) => r.changer(texteEllipse: v.trim()),
-              ),
-              _Bascule(k('rappel_premier_fige'), r.rappelPremierFige, (v) => r.changer(rappelPremierFige: v)),
               _Bascule(k('rappels_regie'), r.rappelsRegie, (v) => r.changer(rappelsRegie: v)),
               _Bascule(k('reduire_animations'), r.reduireAnimations, (v) => r.changer(reduireAnimations: v)),
             ]),
@@ -190,36 +183,6 @@ class _Bascule extends StatelessWidget {
         subtitle: aide == null ? null : Text(aide!),
         value: valeur,
         onChanged: onChange,
-      );
-}
-
-/// Un champ texte qui garde sa valeur pendant qu'on tape.
-class _ChampTexte extends StatefulWidget {
-  const _ChampTexte({required this.libelle, required this.valeur, required this.onChange, this.aide});
-
-  final String libelle;
-  final String valeur;
-  final String? aide;
-  final ValueChanged<String> onChange;
-
-  @override
-  State<_ChampTexte> createState() => _ChampTexteState();
-}
-
-class _ChampTexteState extends State<_ChampTexte> {
-  late final TextEditingController _c = TextEditingController(text: widget.valeur);
-
-  @override
-  void dispose() {
-    _c.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => TextField(
-        controller: _c,
-        decoration: InputDecoration(labelText: widget.libelle, helperText: widget.aide, isDense: true),
-        onChanged: widget.onChange,
       );
 }
 
