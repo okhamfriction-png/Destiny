@@ -227,9 +227,9 @@ class _SaisonScreenState extends State<SaisonScreen> {
                   minLines: 1,
                   onChanged: (_) => setState(() {}),
                   decoration: InputDecoration(
-                    labelText: k('presage_n', {'n': '${i + 1}', 'palier': g.paliers[i].nom}),
+                    labelText: k('presage_n', {'n': '${i + 1}'}),
                     isDense: true,
-                    labelStyle: TextStyle(color: c.palier(PalierId.values[i])),
+                    labelStyle: TextStyle(color: c.degre(i / 3)),
                   ),
                 ),
               ),

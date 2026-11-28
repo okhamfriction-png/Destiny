@@ -1,7 +1,7 @@
 /// Tous les prompts envoyés à l'IA, en un seul endroit, versionnés
 /// ([kVersionPrompts]) et testés. Chacun contient la grammaire utile, générée
 /// depuis `destiny_grammaire.json`, et les contraintes : un lieu, un groupe
-/// qui se connaît, quatre paliers, pas de traître, pas de dé, et le
+/// qui se connaît, trois niveaux du danger, pas de traître, pas de dé, et le
 /// vocabulaire de Destiny. Chaque rôle a une variante adulte et une variante
 /// enfant.
 library;
@@ -41,7 +41,7 @@ class ScenePrompt {
     if (groupe.isNotEmpty) b.writeln('Groupe : $groupe ; tout le monde se connaît.');
     if (danger.isNotEmpty) b.writeln('Danger : $danger.');
     for (final (i, p) in paliers.indexed) {
-      b.writeln('  Palier ${i + 1} : $p');
+      b.writeln('  ${i < PalierId.values.length ? PalierId.values[i].nom : 'Niveau ${i + 1}'} : $p');
     }
     if (mystere.isNotEmpty) b.writeln('Le mystère : $mystere');
     return b.toString().trim();
@@ -72,11 +72,11 @@ class PersonnagePrompt {
   /// Joué par un joueur (sinon par l'IA).
   final bool joueur;
 
-  String decrire(Grammaire g, {PalierId palier = PalierId.signale}) {
+  String decrire(Grammaire g, {PalierId palier = PalierId.enferme}) {
     final a = g.archetype(archetypeId);
     final animal = g.animal(animalId);
     final morceaux = [
-      if (a != null) 'conviction : ${a.ceQuIlFait} (montée à ce palier : ${a.monteeA(palier)})',
+      if (a != null) 'conviction : ${a.ceQuIlFait} (montée à ce niveau du danger : ${a.monteeA(palier)})',
       if (animal != null) 'corps : ${animal.posture}, port ${animal.port}',
       if (blessure.isNotEmpty) 'blessure : $blessure',
       if (vouloir.isNotEmpty) 'vouloir : $vouloir',
@@ -104,7 +104,8 @@ const String _adulte = 'C\'est une partie entre adultes : sobre, crédible, sans
 String _public(bool kids) => kids ? _enfant : _adulte;
 
 /// 1. Le Maître du destin (le narrateur du jeu avec l'IA) : quatre chapitres,
-/// un par palier, Destiny entre les chapitres, la nouvelle de chaque palier,
+/// le premier sans danger, Destiny entre les chapitres, la nouvelle de chaque
+/// niveau du danger,
 /// la montée des personnages non joueurs, et le choix final.
 String promptMaitreDuDestin({
   required Grammaire g,
@@ -135,7 +136,7 @@ String promptMaitreDuDestin({
   b
     ..writeln()
     ..writeln('COMMENT TU MÈNES LA PARTIE')
-    ..writeln('- Quatre chapitres, un par acte et par palier. Le chapitre en cours et son palier te sont donnés '
+    ..writeln('- Quatre chapitres, un par acte : le premier sans danger, puis un niveau du danger par DESTINY. Le chapitre en cours et son niveau te sont donnés '
         'dans chaque message du joueur. Le danger bloque les vouloirs ; les autres appuient là où ça fait mal.')
     ..writeln('- Chapitre 1, léger : on sait vite le nom, le rôle dans le lieu, le lien (dit avec le mot) et le '
         'vouloir de chaque héros. Si son besoin n\'est pas donné, déduis-le et garde-le pour toi.')
@@ -143,9 +144,9 @@ String promptMaitreDuDestin({
     ..writeln('- Chapitre 4 : ne remonte plus la tension ; force le choix. Les deux actions proposées sont alors '
         'le vouloir et le besoin du héros : c\'est le prix à payer.')
     ..writeln('- Quand le message du joueur contient [DESTINY], écris le rituel en trois lignes courtes '
-        '(${g.rituel.sequence.join(', ')}), puis la nouvelle du palier '
+        '(${g.rituel.sequence.join(', ')}), puis la nouvelle du niveau '
         'suivant : ce qu\'on entend du danger, et la réaction d\'un personnage, en une ou deux répliques.')
-    ..writeln('- Les personnages que tu joues suivent la montée de leur archétype au palier en cours.')
+    ..writeln('- Les personnages que tu joues suivent la montée de leur archétype au niveau du danger en cours.')
     ..writeln('- $_interdits')
     ..writeln('- ${_public(kids)}')
     ..writeln()
@@ -162,7 +163,7 @@ String promptMaitreDuDestin({
     ..writeln('1. La narration : 2 à 3 lignes, vives, en français simple (commençant par « DONC » ou « MAIS », '
         'sauf à l\'ouverture et après le rituel).')
     ..writeln('2. Une ligne « CHOIX: » puis exactement 2 lignes : « - [BRAVE] … » et « - [SMART] … ».')
-    ..writeln('À l\'ouverture, pose la scène au palier 1 en 2 ou 3 lignes, puis les 2 actions.')
+    ..writeln('À l\'ouverture, pose la scène, encore sans danger, en 2 ou 3 lignes, puis les 2 actions.')
     ..writeln('À la toute fin, conclus par « Et c\'est ainsi que… », une image par héros, sans ligne CHOIX:.');
   return b.toString().trim();
 }
@@ -201,7 +202,7 @@ String rappelStyle(StyleNarration s) => switch (s) {
     };
 
 /// 2. Le générateur de mise en place : il complète ce qui manque (lieu,
-/// espaces, groupe, danger et ses quatre paliers, mystère).
+/// espaces, groupe, danger et ses trois niveaux, mystère).
 String promptMiseEnPlace({required Grammaire g, required ScenePrompt connu, bool kids = false}) => '''
 Tu prépares la mise en place d'une partie de Destiny. Tu complètes UNIQUEMENT ce qui manque ; ce qui est donné reste tel quel.
 ${grammaireCourte(g, kids: kids)}
@@ -209,11 +210,11 @@ ${grammaireCourte(g, kids: kids)}
 CE QUI EST DÉJÀ CHOISI :
 ${connu.decrire().isEmpty ? '(rien)' : connu.decrire()}
 
-RÈGLES : un seul lieu, avec 4 espaces ; un groupe qui se connaît ; un danger qui vient du lieu et monte en 4 paliers (il se signale, il enferme, il envahit, il bloque les sorties) ; un mystère (une question que le groupe se pose) et sa réponse, que seul le maître du jeu connaît. $_interdits
+RÈGLES : un seul lieu, avec 4 espaces ; un groupe qui se connaît ; un danger qui vient du lieu, absent de l'acte 1, puis qui monte en 3 niveaux, un par DESTINY (${PalierId.values.map((p) => p.nom.toLowerCase()).join(', ')}) ; un mystère (une question que le groupe se pose) et sa réponse, que seul le maître du jeu connaît. $_interdits
 ${_public(kids)}
 
 Réponds uniquement par un objet JSON, sans texte autour :
-{"lieu": "...", "espaces": ["...", "...", "...", "..."], "groupe": "...", "danger": "...", "paliers": ["...", "...", "...", "..."], "mystere": "...", "reponse": "..."}
+{"lieu": "...", "espaces": ["...", "...", "...", "..."], "groupe": "...", "danger": "...", "paliers": ["...", "...", "..."], "mystere": "...", "reponse": "..."}
 '''
     .trim();
 
@@ -252,7 +253,7 @@ Réponds uniquement par un objet JSON, sans texte autour :
 }
 
 /// 4. La voix de l'alarmiste : la nouvelle du palier, en une ou deux
-/// répliques, de l'inquiétude au début jusqu'à la panique au palier 3.
+/// répliques, de l'inquiétude au début jusqu'à la panique au niveau 2.
 String promptVoixAlarmiste({
   required Grammaire g,
   required ScenePrompt scene,
@@ -264,17 +265,16 @@ String promptVoixAlarmiste({
   final a = g.archetype(Grammaire.alarmisteId);
   final animal = g.animal(animalId);
   final intensite = switch (palier) {
-    PalierId.signale => 'une inquiétude, presque rien',
     PalierId.enferme => 'il s\'inquiète pour de bon, il annonce qu\'on ne sort plus',
-    PalierId.envahit => 'il panique et contamine les autres',
-    PalierId.supprime => 'il crie la fin, ou il se tait',
+    PalierId.manifeste => 'il panique et contamine les autres',
+    PalierId.tue => 'il crie la fin, ou il se tait',
   };
   return '''
 Tu es la voix de l'alarmiste dans une partie de Destiny : ${a?.ceQuIlFait ?? ''}
 ${animal == null ? '' : 'Son corps : ${animal.posture}.'}
 ${scene.decrire()}
 
-Le danger arrive au palier ${p.id.numero} : « ${p.nom} » (${p.ambiance}). La nouvelle : ${palier.index < scene.paliers.length ? scene.paliers[palier.index] : ''}
+Le danger arrive au niveau ${p.id.numero} : « ${p.nom} » (${p.ambiance}). La nouvelle : ${palier.index < scene.paliers.length ? scene.paliers[palier.index] : ''}
 Écris UNE ou DEUX répliques que l'alarmiste lance en entrant : $intensite. Rien que ses paroles, au présent, sans didascalie, sans nommer d'archétype ni d'animal.
 ${_public(kids)}
 '''

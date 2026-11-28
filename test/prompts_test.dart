@@ -64,7 +64,7 @@ void main() {
       }
       expect(t, contains(g.personnage.phraseCle));
       expect(t, isNot(contains('MODE ENFANT')));
-      expect(grammaireCourte(g, kids: true), contains(g.modeKids.palier4));
+      expect(grammaireCourte(g, kids: true), contains(g.modeKids.ilTue));
       sansAncienneGrammaire(t);
     });
 
@@ -127,10 +127,10 @@ void main() {
       expect(p, contains('UNE phrase'));
     });
 
-    test('la voix de l\'alarmiste monte avec le palier', () {
-      expect(promptVoixAlarmiste(g: g, scene: _scene, palier: PalierId.signale), contains('inquiétude'));
-      expect(promptVoixAlarmiste(g: g, scene: _scene, palier: PalierId.envahit), contains('panique'));
-      expect(promptVoixAlarmiste(g: g, scene: _scene, palier: PalierId.envahit), contains('p3 flammes'));
+    test('la voix de l\'alarmiste monte avec le niveau du danger', () {
+      expect(promptVoixAlarmiste(g: g, scene: _scene, palier: PalierId.enferme), contains('inquiète'));
+      expect(promptVoixAlarmiste(g: g, scene: _scene, palier: PalierId.manifeste), contains('panique'));
+      expect(promptVoixAlarmiste(g: g, scene: _scene, palier: PalierId.manifeste), contains('p3 flammes'));
     });
 
     test('le coach de débrief reste positif', () {
@@ -221,7 +221,7 @@ void main() {
       expect(s.versionPrompts, kVersionPrompts);
       expect(s.systeme, contains('Lila'));
       expect(s.systeme, contains('frissons doux'));
-      expect(s.paliers, hasLength(4));
+      expect(s.paliers, hasLength(3));
       expect(c.choices, hasLength(2));
 
       await c.sendChoice(c.choices.first);
@@ -288,7 +288,7 @@ void main() {
       final d = c.draw!;
       expect(d.archetypes, hasLength(4));
       expect(validerDistribution(g, [for (final p in d.archetypes) p.archetypeId]).valide, isTrue);
-      expect(d.paliers, hasLength(4));
+      expect(d.paliers, hasLength(3));
 
       await c.start();
       expect(c.peutLancerDestiny, isTrue);

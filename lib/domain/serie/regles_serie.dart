@@ -52,7 +52,7 @@ Mechant? tirerMechant(
 /// Qui agit sur une marche de l'escalade.
 enum QuiAgit { danger, sbire, mechant }
 
-/// Une marche de l'escalade, alignée sur un palier.
+/// Une marche de l'escalade, alignée sur un niveau du danger.
 class MarcheEscalade {
   const MarcheEscalade({
     required this.palier,
@@ -73,14 +73,15 @@ class MarcheEscalade {
   final String sbireId;
 }
 
-/// L'escalade d'un épisode, une marche par palier.
+/// L'escalade d'un épisode, une marche par niveau du danger (trois : l'acte 1
+/// se joue sans danger).
 ///
 /// - **Hors saison, sans méchant** : le danger monte seul.
-/// - **Hors saison, avec un méchant** (l'ancienne règle de la Campagne) : les
-///   sbires agissent d'abord, le méchant prend les deux dernières marches.
+/// - **Hors saison, avec un méchant** (l'ancienne règle de la Campagne) : un
+///   sbire agit d'abord, le méchant prend les deux dernières marches.
 /// - **En saison, épisodes 1 à 3** : le méchant reste dans l'ombre ; les
-///   marches sont jouées par le danger et par ses sbires.
-/// - **En saison, épisode 4** : ses sbires, le danger, puis le méchant en
+///   marches sont jouées par ses sbires, puis par le danger.
+/// - **En saison, épisode 4** : un sbire, le danger, puis le méchant en
 ///   personne, au final.
 ///
 /// Un sbire qui a quitté l'histoire laisse sa marche au danger.
@@ -98,17 +99,17 @@ List<MarcheEscalade> escaladeEpisode({
 
   final qui = <QuiAgit>[];
   if (mechant == null) {
-    qui.addAll(List.filled(4, QuiAgit.danger));
+    qui.addAll(List.filled(PalierId.values.length, QuiAgit.danger));
   } else if (saison == 0) {
-    qui.addAll([QuiAgit.sbire, QuiAgit.sbire, QuiAgit.mechant, QuiAgit.mechant]);
+    qui.addAll([QuiAgit.sbire, QuiAgit.mechant, QuiAgit.mechant]);
   } else if (numero < 4) {
-    qui.addAll([QuiAgit.danger, QuiAgit.sbire, QuiAgit.sbire, QuiAgit.danger]);
+    qui.addAll([QuiAgit.sbire, QuiAgit.sbire, QuiAgit.danger]);
   } else {
-    qui.addAll([QuiAgit.sbire, QuiAgit.sbire, QuiAgit.danger, QuiAgit.mechant]);
+    qui.addAll([QuiAgit.sbire, QuiAgit.danger, QuiAgit.mechant]);
   }
 
   final marches = <MarcheEscalade>[];
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < PalierId.values.length; i++) {
     final palier = PalierId.values[i];
     var q = qui[i];
     Sbire? s;

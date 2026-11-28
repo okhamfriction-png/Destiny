@@ -9,7 +9,6 @@
       "statut": "haut",
       "intention": "dominer, être le meilleur, viser le sommet",
       "niveaux": [
-        "sûr de lui, ambitieux, un peu au-dessus. « Je sais ce que je vaux. »",
         "compétitif, il veut prendre la tête, se compare, supporte mal d'être dépassé.",
         "écrase les rivaux, ne tolère aucun supérieur, tout devient conquête.",
         "mégalomane, il veut régner sur tout, prêt à sacrifier n'importe qui pour rester au sommet."
@@ -24,7 +23,6 @@
       "statut": "haut",
       "intention": "rester digne, refuser de s'abaisser, tenir son honneur",
       "niveaux": [
-        "droit, courtois, une certaine noblesse tranquille.",
         "raidit sur ses principes, refuse les compromis, se cabre au manque de respect.",
         "préfère perdre que se salir, juge durement ceux qui plient.",
         "se sacrifie ou sacrifie les autres au nom de l'honneur, jusqu'à l'absurde et la mort."
@@ -39,7 +37,6 @@
       "statut": "neutre",
       "intention": "faire à sa guise, n'appartenir à personne",
       "niveaux": [
-        "indépendant, charmant, un peu distant, va et vient.",
         "refuse les contraintes, se dérobe, séduit puis s'échappe.",
         "n'obéit à rien ni personne, imprévisible, joue avec les autres.",
         "totalement insaisissable et amoral, trahit sans état d'âme pour sa liberté."
@@ -54,7 +51,6 @@
       "statut": "bas",
       "intention": "servir et défendre celui qu'il aime",
       "niveaux": [
-        "loyal, franc, dévoué, chaleureux.",
         "se met au service de son maître/ami, le défend.",
         "loyauté aveugle, obéit sans juger, se sacrifie pour l'autre.",
         "dépendance totale, prêt à tout — y compris le pire — pour celui qu'il sert."
@@ -69,7 +65,6 @@
       "statut": "haut",
       "intention": "donner l'alerte et être entendu",
       "niveaux": [
-        "poitrine en avant, il annonce la nouvelle haut et fort, fier d'être le premier.",
         "réveille tout le monde, répète l'alerte, exige qu'on l'écoute.",
         "crie plus fort que tous, sa voix emplit le lieu, il affole et s'affole.",
         "soit un dernier cri qui fige tout le monde, soit sa voix casse et il se tait."
@@ -94,7 +89,6 @@
       "statut": "haut",
       "intention": "inspirer la terreur, qu'on le craigne",
       "niveaux": [
-        "sombre, silencieux, une présence inquiétante mais discrète.",
         "joue de la menace, laisse planer le malaise, intimide.",
         "fait régner la peur, se nourrit de l'effroi des autres.",
         "cruauté froide, terrorise pour le plaisir, sadique dans l'intimidation."
@@ -109,7 +103,6 @@
       "statut": "bas",
       "intention": "ordonner, ranger, tout mettre en règle",
       "niveaux": [
-        "sérieuse, méthodique, ponctuelle, aime que les choses soient à leur place.",
         "corrige, planifie, s'agace du désordre et de l'imprévu, veut cadrer le groupe.",
         "impose sa méthode à tous, vérifie tout, une seule bonne façon de faire — la sienne.",
         "obsessionnelle, rigidité maniaque, tout doit être contrôlé et rangé, panique ou tyrannie devant le chaos."
@@ -124,7 +117,6 @@
       "statut": "haut",
       "intention": "trouver l'issue en observant",
       "niveaux": [
-        "immobile, il observe le lieu et repère un objet dont on pourrait se servir.",
         "parle peu et juste, propose une issue que personne n'avait vue.",
         "ose le plan risqué, guide les autres d'un geste, calme mais tendu.",
         "dernier plan : il tente le tout pour le tout."
@@ -149,7 +141,6 @@
       "statut": "neutre",
       "intention": "se jeter sur le faible, achever ce qui tombe",
       "niveaux": [
-        "opportuniste discret, rôde, guette.",
         "s'en prend aux plus fragiles, teste où est la faille.",
         "s'acharne sur ceux qui tombent, cruauté opportuniste.",
         "achève sans pitié, se repaît de la faiblesse, prédateur charognard."
@@ -164,7 +155,6 @@
       "statut": "bas",
       "intention": "démasquer ce qui se cache",
       "niveaux": [
-        "aux aguets, il sursaute au moindre bruit et remarque un détail qui cloche.",
         "les oreilles dressées, il pose des questions et se méfie de chaque réponse.",
         "désigne un suspect, s'en écarte d'un bond et monte les autres contre lui.",
         "acculé, il fait condamner quelqu'un, ou se terre dans un coin sans plus croire personne."
@@ -189,7 +179,6 @@
       "statut": "haut",
       "intention": "régner, commander, mener",
       "niveaux": [
-        "charismatique, sûr, autorité naturelle, rassurant.",
         "prend les commandes, veut être suivi, décide pour tous.",
         "exige l'obéissance, sévère, tolère mal qu'on discute.",
         "tyran, veut tout contrôler, soumet par la peur, sans pitié."
@@ -204,7 +193,6 @@
       "statut": "neutre",
       "intention": "protéger son groupe, tenir sa place dans la meute",
       "niveaux": [
-        "loyal, en retrait, observe, veille sur les siens.",
         "défend le groupe, se méfie de la menace, jauge le chef.",
         "prêt à défier le chef pour protéger la meute, ou à tout pour la tenir soudée.",
         "se sacrifie ou sacrifie tout au nom du groupe ; la meute avant la vie."
@@ -219,7 +207,6 @@
       "statut": "bas",
       "intention": "garder le groupe uni",
       "niveaux": [
-        "collé au groupe, il veille à ce que personne ne reste seul.",
         "ramène chacun dans le troupeau, apaise les premières disputes.",
         "s'épuise à recoller le groupe qui se disperse, supplie qu'on reste ensemble.",
         "soit il tient la main du dernier qui reste, soit il craque et suit le troupeau."
@@ -244,7 +231,6 @@
       "statut": "haut",
       "intention": "faire rempart, protéger les siens par la force",
       "niveaux": [
-        "placide, solide, tranquille, veille sur son monde.",
         "se dresse dès qu'on menace un proche, protecteur.",
         "devient possessif, étouffe ceux qu'il protège pour les garder.",
         "enferme et contrôle au nom de la protection ; « c'est pour ton bien » devient une prison."
@@ -259,7 +245,6 @@
       "statut": "haut",
       "intention": "briller, être admiré, obtenir la validation de l'autre",
       "niveaux": [
-        "soigné, sociable, aime être remarqué, cherche les regards.",
         "quête la validation, se met en avant, souffre si on l'ignore.",
         "ne supporte pas qu'on regarde ailleurs, dramatise tout, se donne en spectacle.",
         "narcissique absolu, le monde entier doit tourner autour de lui, effondrement si on le prive du regard."
@@ -274,7 +259,6 @@
       "statut": "neutre",
       "intention": "prendre son plaisir tout de suite, se servir de l'autre",
       "niveaux": [
-        "jouisseur, bon vivant, sans-gêne bon enfant.",
         "se sert avant les autres, envahit l'espace, cède à la tentation.",
         "consomme les gens et les choses sans égard, insatiable.",
         "prédateur, l'autre n'est qu'un objet de plaisir à user et jeter."
@@ -289,7 +273,6 @@
       "statut": "bas",
       "intention": "sentir le danger avant tout le monde et prévenir",
       "niveaux": [
-        "nerveux, le nez au vent, il flaire quelque chose avant les autres.",
         "court d'un espace à l'autre, chuchote la nouvelle à chacun, guette les issues.",
         "affolé, il fait le tour de tous, sa panique gagne le groupe.",
         "soit il crie la fin en cherchant le trou par où filer, soit il se terre et se tait."
@@ -314,7 +297,6 @@
       "statut": "neutre",
       "intention": "ruser pour obtenir, puis filer",
       "niveaux": [
-        "malin, diplomate, aimable, un peu joueur.",
         "manœuvre, arrange la vérité, place ses coups en douce.",
         "ment et double avec aisance, chacun est un pion dans son jeu.",
         "fourbe sans limite, trahit tout le monde et disparaît avec le butin."
@@ -329,7 +311,6 @@
       "statut": "neutre",
       "intention": "manipuler, tout maîtriser",
       "niveaux": [
-        "calme, lisse, posé, un peu trop maître de lui.",
         "oriente les autres, distille le doute, tire des ficelles discrètes.",
         "manipule ouvertement, contrôle la situation et les gens.",
         "machiavélique, sacrifie qui il veut, la manipulation est sa nature même."
@@ -344,7 +325,6 @@
       "statut": "neutre",
       "intention": "faire rire, tourner tout en dérision",
       "niveaux": [
-        "drôle, léger, détend l'atmosphère, sympathique.",
         "utilise l'humour pour nier le danger, refuse le sérieux.",
         "rire grinçant et déplacé, met les autres mal à l'aise, dérision cynique.",
         "rit face à l'horreur, chaos, folie ; le rire devient une arme et un gouffre."
@@ -359,7 +339,6 @@
       "statut": "bas",
       "intention": "oser, se dépasser malgré la peur",
       "niveaux": [
-        "menu, effacé, timide, mais présent.",
         "trouve le courage de parler, ose un premier pas.",
         "se dépasse sous la pression, révèle une bravoure inattendue.",
         "bascule — soit l'héroïsme qui étonne tous, soit la casse (la peur qui explose en acte désespéré)."
@@ -374,7 +353,6 @@
       "statut": "haut",
       "intention": "foncer, imposer par la force",
       "niveaux": [
-        "entier, franc, direct, un peu massif.",
         "va au conflit frontal, hausse le ton, pousse.",
         "répond à tout par la force, écarte les obstacles physiquement.",
         "brutal, cogne pour se faire respecter, la violence devient sa seule langue."
@@ -389,7 +367,6 @@
       "statut": "neutre",
       "intention": "semer la zizanie et récupérer les restes",
       "niveaux": [
-        "patient, nonchalant, en observateur, un peu cynique.",
         "attise discrètement les tensions, se place pour profiter.",
         "monte ouvertement les gens les uns contre les autres, récolte.",
         "provoque l'effondrement pour tout rafler, jouit du désastre qu'il a créé."
@@ -404,7 +381,6 @@
       "statut": "bas",
       "intention": "camper sur ses positions, ne rien céder",
       "niveaux": [
-        "tranquille, placide, va à son rythme.",
         "se braque, refuse de bouger, résiste passivement.",
         "entêtement total, bloque le groupe, ne cède sur rien.",
         "obstination suicidaire, préfère tout faire échouer (et se perdre) que céder d'un pouce."

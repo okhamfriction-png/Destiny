@@ -99,12 +99,12 @@ void main() {
       expect(g.directionArtistique.couleurs['kids'], '#F2C230');
     });
 
-    test('24 dangers kids avec un palier 4 sans mort, 35 lieux kids', () {
+    test('24 dangers kids avec « Il tue » sans mort, 35 lieux kids', () {
       final kids = g.dangers.where((d) => d.kids).toList();
       expect(kids, hasLength(24));
       for (final d in kids) {
-        expect(d.textesPour(kids: true)[3], d.supprimeKids);
-        expect(d.textesPour()[3], d.paliers[PalierId.supprime]);
+        expect(d.textesPour(kids: true)[PalierId.tue.index], d.tueKids);
+        expect(d.textesPour()[PalierId.tue.index], d.paliers[PalierId.tue]);
       }
       expect(g.lieux.where((l) => l.kids), hasLength(35));
       expect(g.modeKids.dangerIds.toSet(), kids.map((d) => d.id).toSet());
@@ -146,7 +146,7 @@ void main() {
       };
       for (final e in anciensMots.entries) {
         final a = g.animal(e.key)!;
-        expect(a.niveauxCorps, hasLength(4), reason: e.key);
+        expect(a.niveauxCorps, hasLength(3), reason: e.key);
         for (final n in a.niveauxCorps.values) {
           expect(n.contains(e.value), isFalse, reason: '${e.key} : $n');
         }

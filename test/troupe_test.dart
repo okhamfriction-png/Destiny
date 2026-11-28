@@ -25,7 +25,6 @@ import 'package:destiny/presentation/troupe/regie_screen.dart';
 import 'package:destiny/presentation/troupe/troupe_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:destiny/domain/exercices/exercices_destiny.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'outils/grammaire_partagee.dart';
@@ -66,7 +65,7 @@ SessionTroupe _sessionComplete() => SessionTroupe(
       destinys: [const EvenementDestiny(numero: 1, secondes: 600, manuel: true)],
       notes: [const NoteRegie(secondes: 1390, texte: 'La sœur nomme le besoin du frère')],
       ceQuiAMarche: ['Le silence de l\'acte 3'],
-      palierAtteint: 2,
+      acteAtteint: 2,
     );
 
 void main() {
@@ -243,7 +242,7 @@ void main() {
     expect(find.byKey(const ValueKey('danger_au_destiny')), findsOneWidget);
 
     // « Régie » : la table de régie s'ouvre directement, par-dessus le jeu,
-    // avec le chrono et DESTINY ; DESTINY fait monter d'un palier.
+    // avec le chrono et DESTINY ; DESTINY fait monter le danger d'un niveau.
     await tester.tap(find.text(t.t('troupe.fil.regie')));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
@@ -252,75 +251,48 @@ void main() {
     final destiny = find.descendant(
         of: find.ancestor(of: find.byType(TabletteSon), matching: find.byType(Material)).first,
         matching: find.byKey(const ValueKey('pilote_destiny')));
-    // DESTINY : le tonnerre, le figé, puis le dé du danger, puis la carte.
-    Future<void> roulerPuisContinuer(String de) async {
-      // La page du dé : sa première image se construit hors scène.
-      await tester.pump();
-      expect(find.byKey(ValueKey(de)), findsOneWidget);
-      // Le dé roule environ 2,5 s.
-      for (var i = 0; i < 12; i++) {
-        await tester.pump(const Duration(milliseconds: 300));
-      }
-      expect(find.byKey(const ValueKey('face_posee')), findsOneWidget);
-      if (de == 'de_danger') {
-        expect(find.text(s.dangerNom), findsWidgets);
-        await tester.tap(find.byKey(const ValueKey('retirer_danger')));
-        await tester.pump();
-        expect(find.text(s.dangerNom), findsWidgets);
-        expect(s.paliers, hasLength(4));
-        // 10 s au plus, même après un toucher : il se ferme seul.
-        await tester.pump(const Duration(seconds: 6));
-        expect(find.byKey(const ValueKey('de_danger')), findsOneWidget, reason: 'encore là à 9,6 s');
-        await tester.pump(const Duration(milliseconds: 500));
-        await tester.pump(const Duration(milliseconds: 400));
-        expect(find.byKey(const ValueKey('de_spectacle')), findsNothing);
-        return;
-      }
-      await tester.tap(find.byKey(const ValueKey('on_continue')));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 400));
-    }
-
-    await tester.tap(destiny);
-    await tester.pump();
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 12));
-    // Le dé du danger a tiré un danger, avec ses quatre paliers.
-    expect(s.dangerNom, isNotEmpty);
-    expect(s.paliers, hasLength(4));
-    await roulerPuisContinuer('de_danger');
-    expect(find.text(s.paliers[1]), findsWidgets); // la nouvelle de l'alarmiste
-    await tester.tap(find.text(t.t('rituel.reprendre')));
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
-    expect(s.palierAtteint, 2);
-    expect(s.destinys.single.manuel, isTrue);
-
-    // Les DESTINY n°2 et n°3 ; au n°3, le dé des survivants.
-    for (final n in [2, 3]) {
+    // DESTINY : l'éclair, la lumière bleue, puis une seule annonce. Aucune
+    // fenêtre, aucune question, aucun bouton : elle se ferme seule et l'acte
+    // suivant repart.
+    Future<void> destinyPuisAnnonce(Duration duree, void Function() pendant) async {
       await tester.tap(destiny);
       await tester.pump();
       await tester.pump();
-      await tester.pump(const Duration(seconds: 12));
-      if (n == 3) {
-        expect(s.survivants, isNotEmpty);
-        expect(faceDeCode(s.survivants), isNotNull);
-        // Le dé des survivants se ferme seul au bout de 5 s, sans toucher.
-        await tester.pump();
-        expect(find.byKey(const ValueKey('de_survivants')), findsOneWidget);
-        for (var i = 0; i < 16; i++) {
-          await tester.pump(const Duration(milliseconds: 300));
-        }
-        expect(find.byKey(const ValueKey('de_survivants')), findsOneWidget, reason: 'encore là à 4,8 s');
-        await tester.pump(const Duration(milliseconds: 400));
-        await tester.pump(const Duration(milliseconds: 400));
-        expect(find.byKey(const ValueKey('de_spectacle')), findsNothing);
-      }
-      await tester.tap(find.text(t.t('rituel.reprendre')));
-      await tester.pump();
-      await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(seconds: 7));
+      expect(find.byKey(const ValueKey('annonce_destiny')), findsOneWidget);
+      expect(
+          find.descendant(of: find.byKey(const ValueKey('rituel_destiny')), matching: find.byType(ButtonStyleButton)),
+          findsNothing);
+      expect(find.byType(AlertDialog), findsNothing);
+      pendant();
+      await tester.pump(duree);
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(find.byKey(const ValueKey('rituel_destiny')), findsNothing, reason: 'l\'annonce se ferme seule');
     }
-    expect(s.palierAtteint, 4);
+
+    String phrase() => tester.widget<Text>(find.byKey(const ValueKey('annonce_phrase'))).data!;
+
+    // DESTINY n°1 : le danger, tiré au hasard, et rien d'autre (10 s).
+    await destinyPuisAnnonce(const Duration(seconds: 10), () {
+      expect(s.dangerNom, isNotEmpty);
+      expect(s.paliers, hasLength(3));
+      expect(phrase(), s.dangerNom);
+    });
+    expect(s.acteAtteint, 2);
+    expect(s.destinys.single.manuel, isTrue);
+
+    // DESTINY n°2 : « Il se manifeste » (5 s).
+    await destinyPuisAnnonce(const Duration(seconds: 5), () => expect(phrase(), PalierId.manifeste.nom));
+    expect(s.acteAtteint, 3);
+
+    // DESTINY n°3 : le nombre de survivants, de 1 à 3 (5 s).
+    await destinyPuisAnnonce(const Duration(seconds: 5), () {
+      final n = int.parse(s.survivants);
+      expect(n, inInclusiveRange(1, 3));
+      expect(n, lessThan(s.personnages.length));
+      expect(phrase(), n == 1 ? t.t('annonce.un_survivant') : t.t('annonce.survivants', {'n': '$n'}));
+    });
+    expect(s.acteAtteint, 4);
     await tester.tap(find.byKey(const ValueKey('fermer_regie_son')));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));

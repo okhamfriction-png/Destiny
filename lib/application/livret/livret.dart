@@ -220,7 +220,7 @@ Livret construireLivret(Grammaire g, TextesDestiny t, {bool kids = false}) {
       IntertitreLivret(sous('actes')),
       for (final a in g.actes) ...[
         InfoLivret(
-          '${t.t('rituel.acte', {'numero': '${a.numero}'})} · ${g.palier(a.palier).nom}',
+          '${t.t('rituel.acte', {'numero': '${a.numero}'})} · ${a.palier?.nom ?? t.t('regie.sans_danger')}',
           a.ambiance,
         ),
         PucesLivret(a.consignes),

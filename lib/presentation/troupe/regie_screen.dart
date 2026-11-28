@@ -71,7 +71,7 @@ class _RegieScreenState extends State<RegieScreen> {
 
   SessionTroupe get s => widget.session;
   ReglagesDestiny get r => widget.contexte.reglages;
-  PalierId get _palier => _sp.palier;
+  PalierId? get _palier => _sp.palier;
   ConduiteSon? get _conduite => _sp.conduite;
   bool get _conduiteActive => _sp.conduite?.active ?? false;
 
@@ -119,11 +119,9 @@ class _RegieScreenState extends State<RegieScreen> {
   /// Le panneau du chrono, toujours visible en haut : le temps qui reste, le
   /// temps écoulé, la frise des trois Destiny, le prochain, et DESTINY.
   Widget _panneauChrono(BuildContext context) {
-    final g = context.grammaire;
     final t = context.textes;
     final c = context.destiny;
     String rg(String k, [Map<String, String> v = const {}]) => t.t('regie.$k', v);
-    final palier = g.palier(_palier);
     final reste = _sp.total - _sp.ecoule;
     final prochain = _sp.prochain;
     final couleurReste = reste <= 0 ? Theme.of(context).colorScheme.error : c.titre;
@@ -170,13 +168,13 @@ class _RegieScreenState extends State<RegieScreen> {
                   style: TextStyle(fontFamily: kPoliceTexte, fontSize: 13.5, height: 1.3, color: c.texteSecondaire),
                 ),
                 Text(
-                  '${rg('acte', {'n': '${palier.acte}'})} — ${palier.nom}',
+                  libelleActe(context, _sp.acte),
                   style: TextStyle(
                     fontFamily: kPoliceTexte,
                     fontSize: 13.5,
                     height: 1.3,
                     fontWeight: FontWeight.w700,
-                    color: c.accent(c.palier(_palier)),
+                    color: c.accent(_palier == null ? c.orClair : c.palier(_palier!)),
                   ),
                 ),
               ]),
@@ -272,7 +270,7 @@ class _RegieScreenState extends State<RegieScreen> {
         _Cadre(titre: rg('archetypes'), enfants: [
           for (final p in s.personnages) RectangleArchetype(personnage: p, contexte: widget.contexte, palier: _palier, kids: s.kids),
         ]),
-        if (_palier == PalierId.supprime && _dilemmes.isNotEmpty)
+        if (_palier == PalierId.tue && _dilemmes.isNotEmpty)
           SectionDestiny(titre: rg('dilemme'), enfants: [
             Paragraphe(rg('dilemme_aide'), italique: true),
             for (final d in _dilemmes.take(2))

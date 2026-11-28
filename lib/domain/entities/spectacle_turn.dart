@@ -85,7 +85,6 @@ class SpectacleTurn {
     required this.phase,
     required this.acte,
     required this.scene,
-    required this.palier,
     required this.posees,
     required this.cible,
     required this.didascalie,
@@ -103,7 +102,6 @@ class SpectacleTurn {
   final String phase;
   final int? acte;
   final int? scene;
-  final int? palier;
   final int? posees;
   final int? cible;
   final String didascalie;
@@ -159,7 +157,6 @@ class SpectacleTurn {
       phase: j['phase'] as String? ?? 'jeu',
       acte: (j['acte'] as num?)?.toInt(),
       scene: (j['scene'] as num?)?.toInt(),
-      palier: (j['palier'] as num?)?.toInt(),
       posees: posees,
       cible: cible,
       didascalie: j['didascalie'] as String? ?? '',

@@ -76,18 +76,20 @@ void main() {
     expect(phare.actif, isTrue);
   });
 
-  testWidgets('un danger : les quatre paliers portent les noms de la grammaire', (tester) async {
+  testWidgets('un danger : ses trois niveaux portent les noms de l\'appli', (tester) async {
     final store = InMemoryCatalogStore(seedSource: donneesDeTest());
     final dangers = (await tester.runAsync(store.getDangers))!;
     final d = dangers.first;
     await _ouvrir(tester, FicheDangerEditeur(catalogue: store, danger: d, existants: {for (final x in dangers) x.id}),
         hauteur: 1500);
+    expect(chargee.grammaire.paliers, hasLength(3));
     for (final p in chargee.grammaire.paliers) {
       expect(find.text('${p.numero}. ${p.nom}'), findsOneWidget);
     }
+    expect(find.textContaining('signale'), findsNothing);
     // Les anciens libellés ont disparu.
     expect(find.textContaining('climax'), findsNothing);
-    await tester.enterText(find.byKey(const Key('palier_supprime')), 'Les portes se verrouillent.');
+    await tester.enterText(find.byKey(const Key('palier_tue')), 'Les portes se verrouillent.');
     final enregistrer = find.text(t.t('editeurs.catalogue.enregistrer'));
     await _visible(tester, enregistrer);
     await tester.runAsync(() async {

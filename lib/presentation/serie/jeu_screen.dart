@@ -235,7 +235,7 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
         ]),
         SectionDestiny(titre: t.t('regie.paliers'), enfants: [
           if (e.presage.isNotEmpty) ...[
-            EncartReplique(e.presage, couleur: c.palier(PalierId.deNumero(e.numero.clamp(1, 4)))),
+            EncartReplique(e.presage, couleur: c.degre((e.numero.clamp(1, 4) - 1) / 3)),
             const SizedBox(height: 8),
           ],
           FrisePaliers(textes: e.paliers, courant: _sp.palier),
@@ -322,7 +322,7 @@ class _JeuEpisodeScreenState extends State<JeuEpisodeScreen> {
             ),
           ]),
         // À l'acte 4, un dilemme du danger, si ça sert l'histoire.
-        if (_sp.palier == PalierId.supprime && _dilemmes.isNotEmpty)
+        if (_sp.palier == PalierId.tue && _dilemmes.isNotEmpty)
           SectionDestiny(titre: t.t('regie.dilemme'), enfants: [
             Paragraphe(t.t('regie.dilemme_aide'), italique: true),
             for (final d in _dilemmes.take(2))

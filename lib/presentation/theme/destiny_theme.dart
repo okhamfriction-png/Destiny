@@ -132,8 +132,11 @@ class DestinyCouleurs extends ThemeExtension<DestinyCouleurs> {
   Color famille(FamilleId f) => familles[f] ?? or;
   Color familleClaire(FamilleId f) => famillesClaires[f] ?? creme;
 
-  /// Teinte d'un palier sur la frise (1 = or clair → 4 = braise).
-  Color palier(PalierId p) => Color.lerp(orClair, braise, p.index / 3)!;
+  /// Teinte d'un niveau du danger (1 = or clair → 3 = braise).
+  Color palier(PalierId p) => degre(p.index / (PalierId.values.length - 1));
+
+  /// Teinte d'un degré, de 0 (or clair) à 1 (braise) : jauges et repères.
+  Color degre(double t) => Color.lerp(orClair, braise, t.clamp(0, 1))!;
 
   /// Construit les couleurs depuis la grammaire.
   factory DestinyCouleurs.depuisGrammaire(Grammaire g, {required bool sombre}) {

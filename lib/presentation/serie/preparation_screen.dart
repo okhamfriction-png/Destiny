@@ -62,7 +62,7 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
     if (!mounted) return;
     setState(() {
       _lieux = [for (final l in lieux) if (l.actif && (!s.kids || l.kids)) l];
-      _dangers = [for (final d in dangers) if (d.actif && d.paliers.length == 4 && (!s.kids || d.kids)) d];
+      _dangers = [for (final d in dangers) if (d.actif && d.paliers.length == PalierId.values.length && (!s.kids || d.kids)) d];
       _catalogueCharge = true;
     });
     // À l'arrivée, le lieu et le danger sont déjà tirés : on peut les changer.
@@ -173,7 +173,7 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
     }
     e
       ..etape = EtapeEpisode.jeu
-      ..palierAtteint = 1;
+      ..acteAtteint = 1;
     await _sauver();
     if (mounted) await ouvrirEpisode(context, widget.contexte, s, e, remplacer: true, regie: regie);
   }
@@ -209,7 +209,7 @@ class _PreparationEpisodeScreenState extends State<PreparationEpisodeScreen> {
         if (s.kids) const Center(child: SigleKids()),
         if (e.saison > 0) ...[
           SectionDestiny(titre: k('presage'), enfants: [
-            EncartReplique(e.presage, couleur: c.palier(PalierId.deNumero(e.numero.clamp(1, 4)))),
+            EncartReplique(e.presage, couleur: c.degre((e.numero.clamp(1, 4) - 1) / 3)),
             Paragraphe(
                 mechantEnPersonne(saison: e.saison, numero: e.numero, aUnMechant: mechant != null) ? k('final') : k('ombre'),
                 italique: true),

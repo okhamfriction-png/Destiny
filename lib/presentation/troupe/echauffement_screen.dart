@@ -298,7 +298,7 @@ class _EchauffementScreenState extends State<EchauffementScreen> {
           ),
         ]),
         // À l'acte 4, un dilemme du danger, si ça sert l'histoire.
-        if (_sp.palier == PalierId.supprime && _dilemmes.isNotEmpty)
+        if (_sp.palier == PalierId.tue && _dilemmes.isNotEmpty)
           SectionDestiny(titre: t.t('regie.dilemme'), enfants: [
             Paragraphe(t.t('regie.dilemme_aide'), italique: true),
             for (final d in _dilemmes.take(2))

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../../domain/grammaire/modeles.dart' show PalierId;
 import '../../domain/entities/danger.dart';
 import '../../domain/entities/location.dart';
 import '../../domain/grammaire/chronos.dart' show rangChronoPourJoueurs;
@@ -73,7 +74,7 @@ class _MiseEnPlaceScreenState extends State<MiseEnPlaceScreen> {
     if (!mounted) return;
     setState(() {
       _lieux = [for (final l in lieux) if (l.actif && (!s.kids || l.kids)) l];
-      _dangers = [for (final d in dangers) if (d.actif && d.paliers.length == 4 && (!s.kids || d.kids)) d];
+      _dangers = [for (final d in dangers) if (d.actif && d.paliers.length == PalierId.values.length && (!s.kids || d.kids)) d];
       _proposerLieux();
       _proposerDangers();
     });

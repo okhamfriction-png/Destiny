@@ -89,8 +89,8 @@ class ChatController extends ChangeNotifier {
   /// Le chapitre en cours de la partie active.
   int get chapitre => chapitreDe(_completedActions + 1, active?.maxResponses ?? 0);
 
-  /// Le palier en cours (un par chapitre).
-  PalierId get palier => PalierId.deNumero(chapitre);
+  /// Le niveau du danger (un par chapitre ; aucun au chapitre 1).
+  PalierId? get palier => PalierId.pourActe(chapitre);
 
   /// Le héros qui doit jouer la prochaine action.
   ChatPlayer? get currentActor {
@@ -237,7 +237,7 @@ class ChatController extends ChangeNotifier {
       final lieux = [for (final l in await catalogue.getLocations()) if (l.actif && (!childMode || l.kids)) l];
       final dangers = [
         for (final d in await catalogue.getDangers())
-          if (d.actif && d.paliers.length == 4 && (!childMode || d.kids)) d,
+          if (d.actif && d.paliers.length == PalierId.values.length && (!childMode || d.kids)) d,
       ];
       if (lieux.isEmpty || dangers.isEmpty) {
         error = 'Le catalogue de lieux et de dangers est vide.';
@@ -294,8 +294,8 @@ class ChatController extends ChangeNotifier {
             : (directAddress
                 ? 'Narration : adresse-toi directement au joueur (« tu »), comme s\'il était le héros.'
                 : 'Narration : à la troisième personne, par le nom du héros.'))
-        ..writeln('[Chapitre 1 — palier 1 : ${_g.palier(PalierId.signale).nom}.]')
-        ..write('Ouvre la partie au palier 1, puis propose 2 actions (une BRAVE, une SMART) pour ${players.first.name}.');
+        ..writeln('[Chapitre 1 — sans danger : le danger n\'est pas encore là.]')
+        ..write('Ouvre la partie sans danger, puis propose 2 actions (une BRAVE, une SMART) pour ${players.first.name}.');
       if (rappelStyle(_style).isNotEmpty) seed.write('\n[${rappelStyle(_style)}]');
 
       final now = DateTime.now().millisecondsSinceEpoch;
@@ -376,12 +376,15 @@ class ChatController extends ChangeNotifier {
     final fin = total > 0 && thisAction >= total;
     final ch = chapitreDe(thisAction, total);
     final chAvant = chapitreDe(thisAction - 1, total);
-    final palier = _g.palier(PalierId.deNumero(ch));
-    final b = StringBuffer(userMsg.content)..write('\n[Chapitre $ch — palier ${palier.id.numero} : ${palier.nom}.]');
-    if (thisAction > 1 && ch > chAvant) {
-      // Le passage d'un chapitre à l'autre : Destiny, lancé de l'extérieur.
-      final nouvelle = ch - 1 < s.paliers.length ? s.paliers[ch - 1] : '';
-      b.write('\n[DESTINY : écris le rituel, puis la nouvelle du palier (ce qu\'on entend du danger, et la '
+    final palier = PalierId.pourActe(ch);
+    final b = StringBuffer(userMsg.content)
+      ..write(palier == null
+          ? '\n[Chapitre $ch — sans danger.]'
+          : '\n[Chapitre $ch — danger au niveau ${palier.numero} : ${palier.nom}.]');
+    if (thisAction > 1 && ch > chAvant && palier != null) {
+      // Le passage d'un chapitre à l'autre : DESTINY, lancé de l'extérieur.
+      final nouvelle = palier.index < s.paliers.length ? s.paliers[palier.index] : '';
+      b.write('\n[DESTINY : écris le rituel, puis la nouvelle du niveau (ce qu\'on entend du danger, et la '
           'réaction d\'un personnage) : $nouvelle]');
       if (ch == 2) b.write('\n[Premier figé : chacun sait en silence ce qu\'il veut, et ce dont il a besoin.]');
       dangerPulse++;

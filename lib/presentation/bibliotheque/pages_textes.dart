@@ -155,7 +155,7 @@ class KidsScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Paragraphe(k.pouvoirRegle),
         ]),
-        SectionDestiny(titre: l('palier4'), enfants: [Paragraphe(k.palier4)]),
+        SectionDestiny(titre: l('il_tue'), enfants: [Paragraphe(k.ilTue)]),
         SectionDestiny(titre: t.t('bibliotheque.serie.titre'), enfants: [
           LigneInfo(t.t('serie.natures.episode'), g.serie.episode),
           LigneInfo(t.t('serie.natures.saison'), g.serie.saison),

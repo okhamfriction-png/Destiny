@@ -77,7 +77,7 @@ class LocalJsonDataSource {
       ...j,
       'paliers': dg?.textes ?? (j['paliers'] as List? ?? const []),
       'kids': dg?.kids ?? false,
-      'palier4_kids': dg?.supprimeKids ?? '',
+      'tue_kids': dg?.tueKids ?? '',
     });
   }
 

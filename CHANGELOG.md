@@ -2,6 +2,15 @@
 
 Les nouveautés de chaque version, racontées pour les comédiens, les troupes et les parents.
 
+## 2.8.0 — Trois niveaux du danger, une annonce par DESTINY (novembre 2026)
+
+- **Le danger passe de quatre niveaux à trois, un par DESTINY.** L'acte 1 se joue sans danger. Au DESTINY n°1 : « Il enferme », le danger arrive et on ne sort plus. Au n°2 : « Il se manifeste », il entre dans le lieu. Au n°3 : « Il tue ». L'ancien premier niveau a disparu partout : spectacle, régie, Série, histoire avec l'IA, bibliothèque, cartes à imprimer, éditeur du catalogue.
+- **Entre les actes, une seule annonce, et c'est tout.** Le son DESTINY, l'éclair et la lumière bleue, puis l'annonce, en grand et à voix haute : le danger (10 s), « Il se manifeste » (5 s), puis le nombre de survivants (5 s). Elle se ferme seule et l'acte suivant repart. Plus de dé à regarder rouler, plus de « Retirer un danger », plus de carte de l'acte, plus de question ni de rappel au figé, plus d'ellipse, plus de bouton.
+- **Les survivants : 1, 2 ou 3.** « Il reste 1 survivant. », « Il reste 2 survivants. », « Il reste 3 survivants. » Tiré au hasard, toujours moins que le nombre de protagonistes (à 2 : 1 ; à 3 : 1 ou 2). Plus de « Personne », « Tous » ni « Le public décide ».
+- **Une voix pour les annonces.** Si le pack audio a le son d'une annonce, il est joué ; sinon, la synthèse vocale de l'appareil la dit, en français. Rien si le son de l'appli est coupé.
+- **Les musiques et le son DESTINY ne changent pas** : mêmes déclenchements, mêmes durées, mêmes volumes.
+- Les spectacles, dangers et épisodes enregistrés avant gardent leurs textes : leur ancien premier niveau est simplement laissé de côté.
+
 ## 2.7.3 — Le chrono se change d'un toucher (novembre 2026)
 
 - **Le chrono du spectacle se change d'un toucher.** Touche le temps (au jeu, sur la table de régie ou à la régie) : choisis une autre durée (−5, −1, +1, +5 min), et les DESTINY pas encore passés suivent au prorata (33 → 45 min : 10, 20, 30 → 14, 27, 41). L'aperçu les montre avant de valider. Les DESTINY déjà passés ne bougent pas, et la durée ne descend pas sous le temps déjà joué.

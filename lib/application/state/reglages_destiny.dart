@@ -81,8 +81,6 @@ class ReglagesDestiny extends ChangeNotifier {
   // Rituel.
   bool _lumiereBleue = true;
   int _dureeFigeSecondes = 4;
-  String _texteEllipse = '';
-  bool _rappelPremierFige = true;
   bool _rappelsRegie = true;
   bool _reduireAnimations = false;
 
@@ -152,8 +150,6 @@ class ReglagesDestiny extends ChangeNotifier {
   int get dureeFigeSecondes => _dureeFigeSecondes;
 
   /// Texte d'ellipse personnalisé (vide = celui de l'appli).
-  String get texteEllipse => _texteEllipse;
-  bool get rappelPremierFige => _rappelPremierFige;
   bool get rappelsRegie => _rappelsRegie;
   bool get reduireAnimations => _reduireAnimations;
   int get joueursParDefaut => _joueursParDefaut;
@@ -226,8 +222,6 @@ class ReglagesDestiny extends ChangeNotifier {
     _regieSon = j['regie_son'] as bool? ?? _regieSon;
     _lumiereBleue = j['lumiere_bleue'] as bool? ?? _lumiereBleue;
     _dureeFigeSecondes = (j['duree_fige'] as num?)?.toInt() ?? _dureeFigeSecondes;
-    _texteEllipse = j['texte_ellipse'] as String? ?? _texteEllipse;
-    _rappelPremierFige = j['rappel_premier_fige'] as bool? ?? _rappelPremierFige;
     _rappelsRegie = j['rappels_regie'] as bool? ?? _rappelsRegie;
     _reduireAnimations = j['reduire_animations'] as bool? ?? _reduireAnimations;
     _joueursParDefaut = ((j['joueurs'] as num?)?.toInt() ?? _joueursParDefaut).clamp(2, 6);
@@ -266,8 +260,6 @@ class ReglagesDestiny extends ChangeNotifier {
         'regie_son': _regieSon,
         'lumiere_bleue': _lumiereBleue,
         'duree_fige': _dureeFigeSecondes,
-        'texte_ellipse': _texteEllipse,
-        'rappel_premier_fige': _rappelPremierFige,
         'rappels_regie': _rappelsRegie,
         'reduire_animations': _reduireAnimations,
         'joueurs': _joueursParDefaut,
@@ -329,8 +321,6 @@ class ReglagesDestiny extends ChangeNotifier {
     bool? regieSon,
     bool? lumiereBleue,
     int? dureeFigeSecondes,
-    String? texteEllipse,
-    bool? rappelPremierFige,
     bool? rappelsRegie,
     bool? reduireAnimations,
     int? joueursParDefaut,
@@ -360,8 +350,6 @@ class ReglagesDestiny extends ChangeNotifier {
     _regieSon = regieSon ?? _regieSon;
     _lumiereBleue = lumiereBleue ?? _lumiereBleue;
     _dureeFigeSecondes = (dureeFigeSecondes ?? _dureeFigeSecondes).clamp(1, 15);
-    _texteEllipse = texteEllipse ?? _texteEllipse;
-    _rappelPremierFige = rappelPremierFige ?? _rappelPremierFige;
     _rappelsRegie = rappelsRegie ?? _rappelsRegie;
     _reduireAnimations = reduireAnimations ?? _reduireAnimations;
     _joueursParDefaut = (joueursParDefaut ?? _joueursParDefaut).clamp(2, 6);

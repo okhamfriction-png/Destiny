@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../application/assistant/campagne_assistant.dart';
 import '../../application/state/serie_store.dart';
+import '../../domain/grammaire/modeles.dart' show PalierId;
 import '../../domain/serie/serie.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
@@ -109,7 +110,8 @@ class _BilanEpisodeScreenState extends State<BilanEpisodeScreen> {
     final lignes = [
       t.t('serie.bilan.trame.lieu', {'lieu': e.lieuNom, 'danger': e.dangerNom}),
       for (final (i, x) in e.paliers.indexed)
-        if (i < e.palierAtteint) t.t('serie.bilan.trame.palier', {'n': '${i + 1}', 'texte': x}),
+        if (i + 1 < e.acteAtteint && i < PalierId.values.length)
+          t.t('serie.bilan.trame.palier', {'niveau': PalierId.values[i].nom, 'texte': x}),
       if (e.presage.isNotEmpty) t.t('serie.bilan.trame.presage', {'texte': e.presage}),
       if (mechant != null)
         t.t(e.mechantSante == Sante.sorti ? 'serie.bilan.trame.mechant_vaincu' : 'serie.bilan.trame.mechant',

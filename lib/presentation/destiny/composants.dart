@@ -327,8 +327,16 @@ class BandeauAffiche extends StatelessWidget {
   }
 }
 
-/// La frise des quatre paliers. Avec [textes], chaque palier montre ce que
-/// fait le danger ; avec [courant], le palier en cours ressort.
+/// « Acte 2 — Il enferme » ; à l'acte 1, « Acte 1 — Sans danger ».
+String libelleActe(BuildContext context, int acte) {
+  final t = context.textes;
+  final p = PalierId.pourActe(acte);
+  return '${t.t('regie.acte', {'n': '$acte'})} — ${p?.nom ?? t.t('regie.sans_danger')}';
+}
+
+/// La frise des trois niveaux du danger. Avec [textes], chaque niveau montre
+/// ce que fait le danger ; avec [courant], le niveau en cours ressort (null :
+/// l'acte 1, sans danger).
 class FrisePaliers extends StatelessWidget {
   const FrisePaliers({super.key, this.textes, this.courant, this.compacte = false});
 
@@ -351,7 +359,7 @@ class FrisePaliers extends StatelessWidget {
             passe: courant != null && p.id.index < courant!.index,
             couleur: c.palier(p.id),
             compacte: compacte,
-            dernier: p.id == PalierId.supprime,
+            dernier: p.id == PalierId.values.last,
           ),
       ],
     );

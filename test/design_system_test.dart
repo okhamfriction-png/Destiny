@@ -1,3 +1,4 @@
+import 'package:destiny/domain/troupe/annonce_destiny.dart';
 import 'package:destiny/application/state/visual_settings.dart';
 import 'package:destiny/domain/grammaire/modeles.dart';
 import 'package:destiny/domain/grammaire/textes.dart';
@@ -102,7 +103,7 @@ void main() {
 
     testWidgets('frise des paliers avec un danger', (tester) async {
       final danger = g.dangerNomme('Un incendie')!;
-      await _photo(tester, FrisePaliers(textes: danger.textes, courant: PalierId.envahit), 'frise_paliers');
+      await _photo(tester, FrisePaliers(textes: danger.textes, courant: PalierId.manifeste), 'frise_paliers');
     });
   });
 
@@ -113,7 +114,7 @@ void main() {
         expect(find.textContaining(a.replique), findsOneWidget);
         expect(find.textContaining(a.sourceReplique), findsNothing);
       }
-      expect(find.text(g.archetype('alarmiste')!.monteeA(PalierId.envahit)), findsOneWidget);
+      expect(find.text(g.archetype('alarmiste')!.monteeA(PalierId.manifeste)), findsOneWidget);
       expect(find.text(g.famille(FamilleId.interprete).nom), findsOneWidget);
     });
 
@@ -132,16 +133,16 @@ void main() {
   });
 
   group('Rituel Destiny', () {
-    testWidgets('tonnerre, figé, ellipse, puis le nouveau palier', (tester) async {
+    testWidgets('l\'éclair, la lumière, puis une seule annonce, sans bouton, qui se ferme seule', (tester) async {
       var tonnerre = 0;
+      var voix = 0;
       await tester.pumpWidget(_scene(Builder(
         builder: (context) => TextButton(
           onPressed: () => lancerRituelDestiny(
             context,
-            nouveauPalier: PalierId.enferme,
-            nouvelle: 'Les issues sont bloquées.',
-            premierFige: true,
+            annonce: const AnnonceDestiny(niveau: PalierId.enferme, danger: 'Une prise d\'otage'),
             auTonnerre: () => tonnerre++,
+            aLAnnonce: () => voix++,
           ),
           child: const Text('Destiny !'),
         ),
@@ -150,27 +151,31 @@ void main() {
       await tester.pump();
       await tester.pump();
       expect(tonnerre, 1);
+      // Pendant la lumière bleue : ni question, ni texte, ni bouton.
       await tester.pump(const Duration(milliseconds: 2400));
-      // Le premier figé rappelle de fixer le besoin.
-      expect(find.text(g.rituel.premierFige), findsOneWidget);
-      // Plus d'ellipse (« Quelques heures plus tard… ») : la carte du palier
-      // arrive juste après le figé.
+      expect(find.text(g.rituel.premierFige), findsNothing);
+      expect(find.byType(ButtonStyleButton), findsNothing);
       await tester.pump(const Duration(seconds: 4));
       await tester.pump(const Duration(milliseconds: 600));
-      expect(find.text('Quelques heures plus tard…'), findsNothing);
-      expect(find.text(g.palier(PalierId.enferme).nom), findsOneWidget);
-      expect(find.text('Les issues sont bloquées.'), findsOneWidget);
-      expect(find.text('Bloquer'), findsOneWidget);
-      await tester.tap(find.text(t.t('rituel.reprendre')));
+      // L'annonce : le danger, et son niveau.
+      expect(find.text('Une prise d\'otage'), findsOneWidget);
+      expect(find.text(PalierId.enferme.nom.toUpperCase()), findsOneWidget);
+      expect(voix, 1);
+      expect(find.byType(ButtonStyleButton), findsNothing);
+      // Elle se ferme seule au bout de 10 s : l'acte repart.
+      await tester.pump(const Duration(seconds: 9));
+      expect(find.byKey(const ValueKey('annonce_destiny')), findsOneWidget);
+      await tester.pump(const Duration(seconds: 1));
       await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('rituel_destiny')), findsNothing);
       expect(find.text('Destiny !'), findsOneWidget);
     });
 
-    testWidgets('animations réduites : on arrive vite au palier', (tester) async {
+    testWidgets('animations réduites : on arrive vite à l\'annonce', (tester) async {
       await tester.pumpWidget(_scene(Builder(
         builder: (context) => TextButton(
           onPressed: () => lancerRituelDestiny(context,
-              nouveauPalier: PalierId.supprime,
+              annonce: const AnnonceDestiny(niveau: PalierId.tue, survivants: 2),
               reglages: const ReglagesRituel(reduireAnimations: true, dureeFige: Duration(seconds: 1))),
           child: const Text('Go'),
         ),
@@ -179,7 +184,11 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 2600));
       await tester.pump(const Duration(milliseconds: 200));
-      expect(find.text(g.palier(PalierId.supprime).nom), findsOneWidget);
+      expect(find.text(t.t('annonce.survivants', {'n': '2'})), findsOneWidget);
+      // 5 s au plus.
+      await tester.pump(const Duration(seconds: 5));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('rituel_destiny')), findsNothing);
     });
   });
 }

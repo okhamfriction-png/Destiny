@@ -1,6 +1,6 @@
 /// Les exercices Destiny du menu Exercices : deux exercices minutés sur la
-/// musique d'un lieu (Duo, Impro filée en duo). Et les règles des dés du
-/// spectacle : le dé du danger (DESTINY n°1) et le dé des survivants (n°3).
+/// musique d'un lieu (Duo, Impro filée en duo). Et le tirage du danger du
+/// spectacle, au DESTINY n°1.
 ///
 /// Ce fichier ne contient que des règles, sans son ni écran : elles se
 /// testent seules.
@@ -8,6 +8,7 @@ library;
 
 import 'dart:math';
 
+import '../grammaire/modeles.dart' show PalierId;
 import '../entities/danger.dart';
 
 /// Les deux exercices de la section Destiny. (Le Trio et le Long form ont
@@ -78,64 +79,6 @@ class ReglagesExercicesDestiny {
   }
 }
 
-/// Une face du dé des survivants.
-sealed class FaceSurvivants {
-  const FaceSurvivants();
-}
-
-/// « Personne », « 1 survivant », « 2 survivants »… ([nombre] de 0 à N − 1).
-class FaceNombre extends FaceSurvivants {
-  const FaceNombre(this.nombre);
-  final int nombre;
-
-  @override
-  bool operator ==(Object other) => other is FaceNombre && other.nombre == nombre;
-
-  @override
-  int get hashCode => nombre.hashCode;
-
-  @override
-  String toString() => 'FaceNombre($nombre)';
-}
-
-/// « Tous ».
-class FaceTous extends FaceSurvivants {
-  const FaceTous();
-
-  @override
-  bool operator ==(Object other) => other is FaceTous;
-
-  @override
-  int get hashCode => 1;
-
-  @override
-  String toString() => 'FaceTous';
-}
-
-/// « Le public décide ».
-class FacePublic extends FaceSurvivants {
-  const FacePublic();
-
-  @override
-  bool operator ==(Object other) => other is FacePublic;
-
-  @override
-  int get hashCode => 2;
-
-  @override
-  String toString() => 'FacePublic';
-}
-
-/// Les faces du dé des survivants pour [protagonistes] joueurs (2 à 8) : il
-/// y a toujours au moins un survivant, et jamais tout le monde. À deux, un
-/// survivant ; à trois, un ou deux ; à quatre, un, deux ou trois ; et ainsi
-/// de suite jusqu'à N − 1. (« Personne », « Tous » et « Le public décide »
-/// restent lisibles dans les anciens spectacles, mais ne sont plus des faces.)
-List<FaceSurvivants> facesSurvivants(int protagonistes) {
-  final n = protagonistes.clamp(2, 8);
-  return [for (var i = 1; i < n; i++) FaceNombre(i)];
-}
-
 /// Les trois types du dé du danger, dans l'ordre des faces.
 enum TypeDanger {
   catastrophe('Catastrophe', 'DESTINY2_CATASTROPHE'),
@@ -167,23 +110,8 @@ String? codeDestiny2(String style) => TypeDanger.deStyle(style)?.codeDestiny2;
 /// Le code de la cloche de fin d'exercice.
 const String kCodeCloche = 'FIN_EXERCICE';
 
-/// Le code d'une face du dé des survivants, pour l'enregistrer : « tous »,
-/// « public », ou le nombre (« 0 », « 1 »…).
-String codeSurvivants(FaceSurvivants f) => switch (f) {
-      FaceNombre(:final nombre) => '$nombre',
-      FaceTous() => 'tous',
-      FacePublic() => 'public',
-    };
-
-/// La face d'un code enregistré (null : code vide ou illisible).
-FaceSurvivants? faceDeCode(String code) => switch (code) {
-      'tous' => const FaceTous(),
-      'public' => const FacePublic(),
-      _ => int.tryParse(code) == null ? null : FaceNombre(int.parse(code)),
-    };
-
 /// Le dé du danger du spectacle (DESTINY n°1) : un type au hasard, puis un
-/// danger jouable de ce type (actif, quatre paliers, kids si besoin). Si le
+/// danger jouable de ce type (actif, trois niveaux, kids si besoin). Si le
 /// type n'a aucun danger, un danger jouable d'un autre type, et son type.
 /// [type] impose le type (« Retirer un danger » dans le même type).
 ({TypeDanger type, Danger? danger}) tirerDangerAuDe(
@@ -196,7 +124,7 @@ FaceSurvivants? faceDeCode(String code) => switch (code) {
   final h = hasard ?? Random();
   final jouables = [
     for (final d in dangers)
-      if (d.actif && d.paliers.length == 4 && (!kids || d.kids)) d,
+      if (d.actif && d.paliers.length == PalierId.values.length && (!kids || d.kids)) d,
   ];
   final t = type ?? TypeDanger.values[h.nextInt(TypeDanger.values.length)];
   Danger? piocher(List<Danger> liste) {

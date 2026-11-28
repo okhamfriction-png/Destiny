@@ -35,10 +35,9 @@
       "famille": "tient",
       "ce_qu_il_fait": "Décide pour le groupe et tranche les disputes.",
       "montee": {
-        "signale": "Organiser la journée",
         "enferme": "Prendre la main",
-        "envahit": "Imposer ses choix",
-        "supprime": "Décider qui passe"
+        "manifeste": "Imposer ses choix",
+        "tue": "Décider qui passe"
       },
       "animaux": [
         {
@@ -94,10 +93,9 @@
       "famille": "tient",
       "ce_qu_il_fait": "Choisit quelqu'un à protéger et se met entre lui et le danger.",
       "montee": {
-        "signale": "Veiller sur un proche",
         "enferme": "Se placer devant lui",
-        "envahit": "Se battre contre tous pour lui",
-        "supprime": "Se sacrifier pour lui"
+        "manifeste": "Se battre contre tous pour lui",
+        "tue": "Se sacrifier pour lui"
       },
       "animaux": [
         {
@@ -153,10 +151,9 @@
       "famille": "tient",
       "ce_qu_il_fait": "Soigne, rassure, réconcilie ceux qui se déchirent.",
       "montee": {
-        "signale": "Prendre soin de chacun",
         "enferme": "Calmer les premiers éclats",
-        "envahit": "Tout recoller, quitte à s'épuiser",
-        "supprime": "Tenir la main du dernier, ou craquer"
+        "manifeste": "Tout recoller, quitte à s'épuiser",
+        "tue": "Tenir la main du dernier, ou craquer"
       },
       "animaux": [
         {
@@ -212,10 +209,9 @@
       "famille": "interprete",
       "ce_qu_il_fait": "Entend le signal avant les autres, panique et contamine.",
       "montee": {
-        "signale": "Faire entendre le signal",
         "enferme": "Annoncer qu'on est enfermés",
-        "envahit": "Paniquer, contaminer les autres",
-        "supprime": "Crier la fin, ou se taire"
+        "manifeste": "Paniquer, contaminer les autres",
+        "tue": "Crier la fin, ou se taire"
       },
       "animaux": [
         {
@@ -271,10 +267,9 @@
       "famille": "interprete",
       "ce_qu_il_fait": "Minimise, contredit l'alarmiste, refuse de bouger. Il se fiche du danger.",
       "montee": {
-        "signale": "Se moquer de l'alerte",
         "enferme": "Répéter « ça va se régler »",
-        "envahit": "Nier l'évidence",
-        "supprime": "Refuser la dernière sortie"
+        "manifeste": "Nier l'évidence",
+        "tue": "Refuser la dernière sortie"
       },
       "animaux": [
         {
@@ -330,10 +325,9 @@
       "famille": "interprete",
       "ce_qu_il_fait": "Lit des signes, annonce la suite, rallie des fidèles.",
       "montee": {
-        "signale": "Voir des signes",
         "enferme": "Dire « ça devait arriver »",
-        "envahit": "Rallier, désigner la faute",
-        "supprime": "Exiger un sacrifice"
+        "manifeste": "Rallier, désigner la faute",
+        "tue": "Exiger un sacrifice"
       },
       "animaux": [
         {
@@ -389,10 +383,9 @@
       "famille": "fissure",
       "ce_qu_il_fait": "Impose sa loi, rationne, punit qui désobéit.",
       "montee": {
-        "signale": "Ranger, cadrer",
         "enferme": "Fixer les règles",
-        "envahit": "Punir qui désobéit",
-        "supprime": "Sacrifier quelqu'un au nom de la règle"
+        "manifeste": "Punir qui désobéit",
+        "tue": "Sacrifier quelqu'un au nom de la règle"
       },
       "animaux": [
         {
@@ -448,10 +441,9 @@
       "famille": "fissure",
       "ce_qu_il_fait": "Remarque, interroge, accuse, monte le groupe contre un suspect.",
       "montee": {
-        "signale": "Remarquer un détail",
         "enferme": "Poser des questions",
-        "envahit": "Accuser un suspect",
-        "supprime": "Faire condamner quelqu'un"
+        "manifeste": "Accuser un suspect",
+        "tue": "Faire condamner quelqu'un"
       },
       "animaux": [
         {
@@ -505,32 +497,21 @@
   "paliers": [
     {
       "n": 1,
-      "id": "signale",
-      "nom": "Il se signale",
-      "acte": 1,
-      "ambiance": "Tout va bien",
-      "archetype": "joué léger"
-    },
-    {
-      "n": 2,
       "id": "enferme",
-      "nom": "Il enferme",
       "acte": 2,
       "ambiance": "« C'est bizarre, mais ça va »",
       "archetype": "premier réflexe"
     },
     {
-      "n": 3,
-      "id": "envahit",
-      "nom": "Il envahit",
+      "n": 2,
+      "id": "manifeste",
       "acte": 3,
       "ambiance": "La bascule",
       "archetype": "il éclate"
     },
     {
-      "n": 4,
-      "id": "supprime",
-      "nom": "Il bloque les sorties",
+      "n": 3,
+      "id": "tue",
       "acte": 4,
       "ambiance": "Le prix à payer",
       "archetype": "jusqu'au bout"
@@ -539,7 +520,6 @@
   "actes": [
     {
       "acte": 1,
-      "palier": "Il se signale",
       "ambiance": "Tout va bien",
       "consignes": [
         "Une minute muette en musique : chacun entre dans son corps, son archétype et son vêtement. On pose le lieu et des objets : l'un pose, l'autre essaie de comprendre.",
@@ -551,7 +531,6 @@
     },
     {
       "acte": 2,
-      "palier": "Il enferme",
       "ambiance": "« C'est bizarre, mais ça va »",
       "consignes": [
         "On est bloqués comme dans un ascenseur : c'est pénible, mais ce n'est pas encore la peur. On se fixe de petits buts concrets.",
@@ -561,7 +540,6 @@
     },
     {
       "acte": 3,
-      "palier": "Il envahit",
       "ambiance": "La bascule",
       "consignes": [
         "Tout le monde est sur scène au début.",
@@ -571,7 +549,6 @@
     },
     {
       "acte": 4,
-      "palier": "Il bloque les sorties",
       "ambiance": "Le prix à payer",
       "consignes": [
         "Tout le monde sur scène, personne ne sort.",
@@ -642,13 +619,13 @@
       "les comédiens jouent au ralenti et glissent vers leur archétype",
       "ellipse : le temps passe"
     ],
-    "reprise": "Des heures ont passé, le danger a monté d'un palier : on reprend dans la situation pire, d'abord sans parler, en réagissant au son du nouveau palier.",
+    "reprise": "Des heures ont passé, le danger a monté d'un niveau : on reprend dans la situation pire, d'abord sans parler, en réagissant au son du nouveau niveau.",
     "suite": [
       "la musique du nouvel acte monte pendant le rire",
-      "à son maximum, le bruitage du nouveau palier : on joue sans parler",
+      "à son maximum, le bruitage du nouveau niveau : on joue sans parler",
       "la musique redescend sous les voix : on parle"
     ],
-    "pendant_destiny": "Pendant le son Destiny, on ne se fige plus : on joue au ralenti et on glisse vers la posture de son archétype au palier suivant. Le rire trouble les personnages sans qu'ils en parlent : un frisson, une tête qui se lève, sans être sûr d'avoir entendu.",
+    "pendant_destiny": "Pendant le son Destiny, on ne se fige plus : on joue au ralenti et on glisse vers la posture de son archétype au niveau suivant. Le rire trouble les personnages sans qu'ils en parlent : un frisson, une tête qui se lève, sans être sûr d'avoir entendu.",
     "questions_intro": "Chacun se pose une question en silence :",
     "questions": {
       "2": "qui je suis, ce que je veux, ce qui m'a marqué",
@@ -934,22 +911,20 @@
       "id": "des_robots_se_rebellent",
       "nom": "Des robots se rebellent",
       "paliers": {
-        "signale": "Une machine a un geste anormal, on se dit que c'est un bug.",
         "enferme": "Les machines se retournent et bloquent les issues, on ne sort plus.",
-        "envahit": "Elles nous traquent une par une, l'étau se resserre.",
-        "supprime": "Rébellion totale : les arrêter maintenant ou finir avec elles."
+        "manifeste": "Elles nous traquent une par une, l'étau se resserre.",
+        "tue": "Rébellion totale : les arrêter maintenant ou finir avec elles."
       },
       "kids": true,
-      "supprime_kids": "Les robots ferment tout : trouver le bouton qui les endort, ou que l'un de nous les distraie."
+      "tue_kids": "Les robots ferment tout : trouver le bouton qui les endort, ou que l'un de nous les distraie."
     },
     {
       "id": "l_air_devient_irrespirable",
       "nom": "L'air devient irrespirable",
       "paliers": {
-        "signale": "L'air se fait lourd, on respire moins bien sans savoir pourquoi.",
         "enferme": "Chaque souffle coûte, rien ne s'ouvre pour renouveler l'air.",
-        "envahit": "La tête tourne, la vue se trouble, décider avec le peu qui reste.",
-        "supprime": "Plus rien à respirer, quelques souffles pour dire l'essentiel."
+        "manifeste": "La tête tourne, la vue se trouble, décider avec le peu qui reste.",
+        "tue": "Plus rien à respirer, quelques souffles pour dire l'essentiel."
       },
       "kids": false
     },
@@ -957,10 +932,9 @@
       "id": "la_guerre_eclate",
       "nom": "La guerre éclate",
       "paliers": {
-        "signale": "Des détonations au loin, des sirènes, on veut croire que ça passe.",
         "enferme": "Les explosions coupent les rues, impossible de partir.",
-        "envahit": "Le combat est sur nous, on rampe, chaque geste peut être le dernier.",
-        "supprime": "Le front nous submerge : traverser le feu ensemble ou rester piégés."
+        "manifeste": "Le combat est sur nous, on rampe, chaque geste peut être le dernier.",
+        "tue": "Le front nous submerge : traverser le feu ensemble ou rester piégés."
       },
       "kids": false
     },
@@ -968,106 +942,97 @@
       "id": "le_lieu_va_s_autodetruire",
       "nom": "Le lieu va s'autodétruire",
       "paliers": {
-        "signale": "Une alarme s'allume, un compte à rebours démarre quelque part.",
         "enferme": "Le verrouillage s'enclenche, les sorties se scellent.",
-        "envahit": "Les systèmes lâchent un à un, le temps file, tout tremble.",
-        "supprime": "Dernières secondes : arrêter le compte ou tout perdre avec le lieu."
+        "manifeste": "Les systèmes lâchent un à un, le temps file, tout tremble.",
+        "tue": "Dernières secondes : arrêter le compte ou tout perdre avec le lieu."
       },
       "kids": true,
-      "supprime_kids": "Le compte à rebours tourne : couper le bon fil, ou laisser le trésor pour sortir."
+      "tue_kids": "Le compte à rebours tourne : couper le bon fil, ou laisser le trésor pour sortir."
     },
     {
       "id": "le_noir_total",
       "nom": "Le noir total",
       "paliers": {
-        "signale": "Les lumières faiblissent, des ombres s'étirent.",
         "enferme": "Le noir tombe d'un coup, on ne retrouve plus la sortie.",
-        "envahit": "On ne voit plus rien, chaque bruit tout près devient menace.",
-        "supprime": "Dans le noir absolu quelque chose bouge, agir à l'aveugle."
+        "manifeste": "On ne voit plus rien, chaque bruit tout près devient menace.",
+        "tue": "Dans le noir absolu quelque chose bouge, agir à l'aveugle."
       },
       "kids": true,
-      "supprime_kids": "Dans le noir, quelque chose bouge : avancer en se tenant la main, ou attendre seul."
+      "tue_kids": "Dans le noir, quelque chose bouge : avancer en se tenant la main, ou attendre seul."
     },
     {
       "id": "le_soleil_grossit_tout_brule",
       "nom": "Le soleil grossit, tout brûle",
       "paliers": {
-        "signale": "La lumière devient trop forte, il fait anormalement chaud.",
         "enferme": "La chaleur scelle le lieu, dehors est mortel.",
-        "envahit": "Les vitres se fissurent, le sol brûle, l'ombre se réduit.",
-        "supprime": "Tout s'embrase, le dernier coin vivable disparaît."
+        "manifeste": "Les vitres se fissurent, le sol brûle, l'ombre se réduit.",
+        "tue": "Tout s'embrase, le dernier coin vivable disparaît."
       },
       "kids": true,
-      "supprime_kids": "Il fait trop chaud : partager la dernière ombre, ou la garder pour soi."
+      "tue_kids": "Il fait trop chaud : partager la dernière ombre, ou la garder pour soi."
     },
     {
       "id": "le_soleil_s_eteint_le_froid_gagne",
       "nom": "Le soleil s'éteint, le froid gagne",
       "paliers": {
-        "signale": "La lumière faiblit, un froid inhabituel s'installe.",
         "enferme": "Le gel bloque les portes, on ne peut plus sortir sans mourir.",
-        "envahit": "Le froid fige tout, les doigts s'engourdissent, bouger fait mal.",
-        "supprime": "Le noir glacé avale tout, rester immobile c'est mourir."
+        "manifeste": "Le froid fige tout, les doigts s'engourdissent, bouger fait mal.",
+        "tue": "Le noir glacé avale tout, rester immobile c'est mourir."
       },
       "kids": true,
-      "supprime_kids": "Le froid gagne : se serrer autour du dernier feu, ou partir chercher du bois."
+      "tue_kids": "Le froid gagne : se serrer autour du dernier feu, ou partir chercher du bois."
     },
     {
       "id": "les_murs_se_referment",
       "nom": "Les murs se referment",
       "paliers": {
-        "signale": "Un grincement, une paroi semble un peu plus proche.",
         "enferme": "Les murs avancent, l'espace se réduit, aucune issue ne cède.",
-        "envahit": "Le plafond descend, on doit se baisser, se serrer.",
-        "supprime": "Il reste la place d'un seul corps, qui tient, qui cède."
+        "manifeste": "Le plafond descend, on doit se baisser, se serrer.",
+        "tue": "Il reste la place d'un seul corps, qui tient, qui cède."
       },
       "kids": true,
-      "supprime_kids": "Il reste un passage étroit : qui passe en premier, qui retient les murs."
+      "tue_kids": "Il reste un passage étroit : qui passe en premier, qui retient les murs."
     },
     {
       "id": "on_est_perdus",
       "nom": "On est perdus",
       "paliers": {
-        "signale": "Le chemin ne ressemble plus à rien de connu, on hésite.",
         "enferme": "Chaque direction ramène au même point, on tourne en rond.",
-        "envahit": "La nuit et le froid tombent, on ne tiendra pas éparpillés.",
-        "supprime": "Une seule chance de sortie, ensemble ou pas du tout."
+        "manifeste": "La nuit et le froid tombent, on ne tiendra pas éparpillés.",
+        "tue": "Une seule chance de sortie, ensemble ou pas du tout."
       },
       "kids": true,
-      "supprime_kids": "Une seule sortie au bout du chemin : y aller ensemble, ou pas du tout."
+      "tue_kids": "Une seule sortie au bout du chemin : y aller ensemble, ou pas du tout."
     },
     {
       "id": "on_est_traques",
       "nom": "On est traqués",
       "paliers": {
-        "signale": "Une présence, un doute, on croit être suivis.",
         "enferme": "Les sorties sont surveillées, on ne peut plus partir librement.",
-        "envahit": "Ça se rapproche, méthodique, on doit se cacher serrés.",
-        "supprime": "Ils sont là : se livrer, se sacrifier, ou tomber ensemble."
+        "manifeste": "Ça se rapproche, méthodique, on doit se cacher serrés.",
+        "tue": "Ils sont là : se livrer, se sacrifier, ou tomber ensemble."
       },
       "kids": true,
-      "supprime_kids": "Ils sont là : se cacher ensemble, ou que l'un les attire ailleurs."
+      "tue_kids": "Ils sont là : se cacher ensemble, ou que l'un les attire ailleurs."
     },
     {
       "id": "tout_se_verrouille_on_est_pieges",
       "nom": "Tout se verrouille, on est piégés",
       "paliers": {
-        "signale": "Une porte claque, on n'y prête pas attention.",
         "enferme": "Toutes les issues se scellent une à une, on est enfermés.",
-        "envahit": "Les parois se resserrent ou l'espace se dégrade, on étouffe.",
-        "supprime": "Une seule sortie possible, et pas pour tout le monde."
+        "manifeste": "Les parois se resserrent ou l'espace se dégrade, on étouffe.",
+        "tue": "Une seule sortie possible, et pas pour tout le monde."
       },
       "kids": true,
-      "supprime_kids": "Une seule porte s'ouvre, une seule fois : qui la tient pour les autres."
+      "tue_kids": "Une seule porte s'ouvre, une seule fois : qui la tient pour les autres."
     },
     {
       "id": "un_braquage",
       "nom": "Un braquage",
       "paliers": {
-        "signale": "Une tension, des regards, quelque chose cloche.",
         "enferme": "Les armes sortent, les portes se bloquent, personne ne sort.",
-        "envahit": "Les preneurs s'énervent, chaque mot peut faire basculer.",
-        "supprime": "Ça dégénère : négocier, se soumettre, ou risquer sa peau."
+        "manifeste": "Les preneurs s'énervent, chaque mot peut faire basculer.",
+        "tue": "Ça dégénère : négocier, se soumettre, ou risquer sa peau."
       },
       "kids": false
     },
@@ -1075,10 +1040,9 @@
       "id": "un_brouillard_qui_rend_fou",
       "nom": "Un brouillard qui rend fou",
       "paliers": {
-        "signale": "Une brume entre, on se sent bizarre sans comprendre.",
         "enferme": "Le brouillard scelle le lieu, on doute des autres.",
-        "envahit": "Les perceptions se déforment, on ne sait plus qui croire.",
-        "supprime": "Chacun voit un ennemi dans l'autre, se ressaisir ou s'entretuer."
+        "manifeste": "Les perceptions se déforment, on ne sait plus qui croire.",
+        "tue": "Chacun voit un ennemi dans l'autre, se ressaisir ou s'entretuer."
       },
       "kids": false
     },
@@ -1086,10 +1050,9 @@
       "id": "un_crash",
       "nom": "Un crash",
       "paliers": {
-        "signale": "Une secousse, une alarme, on veut croire que c'est rien.",
         "enferme": "L'impact tord la structure, les issues sont coincées.",
-        "envahit": "Tout se disloque, le feu ou l'eau gagnent, on rampe.",
-        "supprime": "La carcasse cède : sortir un par un, choisir qui passe."
+        "manifeste": "Tout se disloque, le feu ou l'eau gagnent, on rampe.",
+        "tue": "La carcasse cède : sortir un par un, choisir qui passe."
       },
       "kids": false
     },
@@ -1097,22 +1060,20 @@
       "id": "un_essaim",
       "nom": "Un essaim",
       "paliers": {
-        "signale": "Un bourdonnement monte, quelques insectes tournent.",
         "enferme": "L'essaim couvre les ouvertures, on ne peut plus sortir.",
-        "envahit": "Ils s'infiltrent, piqûres partout, on se colle pour se protéger.",
-        "supprime": "Le nuage vivant nous dévore, un sacrifice pour passer."
+        "manifeste": "Ils s'infiltrent, piqûres partout, on se colle pour se protéger.",
+        "tue": "Le nuage vivant nous dévore, un sacrifice pour passer."
       },
       "kids": true,
-      "supprime_kids": "Le nuage bourdonne partout : courir ensemble vers l'eau, ou que l'un l'attire ailleurs."
+      "tue_kids": "Le nuage bourdonne partout : courir ensemble vers l'eau, ou que l'un l'attire ailleurs."
     },
     {
       "id": "un_gaz_toxique_se_repand",
       "nom": "Un gaz toxique se répand",
       "paliers": {
-        "signale": "Une odeur étrange, un léger malaise, on hésite.",
         "enferme": "Le gaz sature le lieu, les sorties sont dans le nuage.",
-        "envahit": "La tête tourne, on tousse, décider vite et à plusieurs.",
-        "supprime": "L'air est mortel, un seul masque, un seul souffle, qui vit."
+        "manifeste": "La tête tourne, on tousse, décider vite et à plusieurs.",
+        "tue": "L'air est mortel, un seul masque, un seul souffle, qui vit."
       },
       "kids": false
     },
@@ -1120,34 +1081,31 @@
       "id": "un_gouffre_s_ouvre_sous_nos_pieds",
       "nom": "Un gouffre s'ouvre sous nos pieds",
       "paliers": {
-        "signale": "Le sol craque, une fissure court, on se fige.",
         "enferme": "Le gouffre coupe le lieu en deux, plus de passage.",
-        "envahit": "Les bords s'effondrent, on se retient les uns aux autres.",
-        "supprime": "Tout cède, une main peut sauver ou lâcher."
+        "manifeste": "Les bords s'effondrent, on se retient les uns aux autres.",
+        "tue": "Tout cède, une main peut sauver ou lâcher."
       },
       "kids": true,
-      "supprime_kids": "Le sol cède : tendre la main à celui qui glisse, ou sauter de l'autre côté."
+      "tue_kids": "Le sol cède : tendre la main à celui qui glisse, ou sauter de l'autre côté."
     },
     {
       "id": "un_incendie",
       "nom": "Un incendie",
       "paliers": {
-        "signale": "Une odeur de fumée, une lueur, on n'est pas sûr.",
         "enferme": "Le feu coupe une première sortie, on ne part plus.",
-        "envahit": "La chaleur est sur nous, les issues tombent une à une.",
-        "supprime": "Tout brûle : qui passe, qui reste, ce qu'on se dit avant la fin."
+        "manifeste": "La chaleur est sur nous, les issues tombent une à une.",
+        "tue": "Tout brûle : qui passe, qui reste, ce qu'on se dit avant la fin."
       },
       "kids": true,
-      "supprime_kids": "Les flammes bloquent la porte : sauver l'objet précieux, ou sauver le groupe."
+      "tue_kids": "Les flammes bloquent la porte : sauver l'objet précieux, ou sauver le groupe."
     },
     {
       "id": "un_jeu_mortel",
       "nom": "Un jeu mortel",
       "paliers": {
-        "signale": "Une règle absurde s'impose, on croit à une farce.",
         "enferme": "Les portes se verrouillent, impossible de refuser.",
-        "envahit": "Les épreuves frappent, chaque choix sacrifie quelqu'un.",
-        "supprime": "Dernière manche : se trahir, se sacrifier, ou tout perdre."
+        "manifeste": "Les épreuves frappent, chaque choix sacrifie quelqu'un.",
+        "tue": "Dernière manche : se trahir, se sacrifier, ou tout perdre."
       },
       "kids": false
     },
@@ -1155,70 +1113,64 @@
       "id": "un_monstre_geant",
       "nom": "Un monstre géant",
       "paliers": {
-        "signale": "Un grondement, le sol vibre, on doute de ce qu'on a vu.",
         "enferme": "La créature bloque l'issue, on est acculés.",
-        "envahit": "Elle démolit tout autour, on se terre, serrés.",
-        "supprime": "Elle nous trouve : la distraire, se livrer, ou fuir au prix d'un des nôtres."
+        "manifeste": "Elle démolit tout autour, on se terre, serrés.",
+        "tue": "Elle nous trouve : la distraire, se livrer, ou fuir au prix d'un des nôtres."
       },
       "kids": true,
-      "supprime_kids": "Il est là : le distraire, le comprendre, ou fuir sans lui avoir parlé."
+      "tue_kids": "Il est là : le distraire, le comprendre, ou fuir sans lui avoir parlé."
     },
     {
       "id": "un_naufrage",
       "nom": "Un naufrage",
       "paliers": {
-        "signale": "Une gîte, un choc sourd, on veut croire que ça tient.",
         "enferme": "L'eau bloque les coursives, on ne remonte plus.",
-        "envahit": "Le niveau monte, le navire penche, on s'accroche ensemble.",
-        "supprime": "Il coule : une place de moins dans le canot, qui monte."
+        "manifeste": "Le niveau monte, le navire penche, on s'accroche ensemble.",
+        "tue": "Il coule : une place de moins dans le canot, qui monte."
       },
       "kids": true,
-      "supprime_kids": "Le bateau penche : une place de moins dans le canot, qui rame à côté."
+      "tue_kids": "Le bateau penche : une place de moins dans le canot, qui rame à côté."
     },
     {
       "id": "un_pacte_ancien_reactive",
       "nom": "Un pacte ancien réactivé",
       "paliers": {
-        "signale": "Un signe étrange, un malaise, on se moque à moitié.",
         "enferme": "Le lieu se scelle, on est liés au pacte, on ne part pas.",
-        "envahit": "La force réclame son dû, elle frappe l'un après l'autre.",
-        "supprime": "Le pacte exige un sacrifice : lequel d'entre nous."
+        "manifeste": "La force réclame son dû, elle frappe l'un après l'autre.",
+        "tue": "Le pacte exige un sacrifice : lequel d'entre nous."
       },
       "kids": true,
-      "supprime_kids": "Le pacte réclame un gage : ce qu'on a de plus précieux, et qui le donne."
+      "tue_kids": "Le pacte réclame un gage : ce qu'on a de plus précieux, et qui le donne."
     },
     {
       "id": "un_raz_de_maree",
       "nom": "Un raz-de-marée",
       "paliers": {
-        "signale": "La mer se retire trop loin, un grondement monte.",
         "enferme": "La vague coupe la route, plus moyen de rejoindre les hauteurs.",
-        "envahit": "L'eau envahit le lieu, on grimpe, on se hisse.",
-        "supprime": "La vague nous prend : une main tendue, un choix de vie ou de mort."
+        "manifeste": "L'eau envahit le lieu, on grimpe, on se hisse.",
+        "tue": "La vague nous prend : une main tendue, un choix de vie ou de mort."
       },
       "kids": true,
-      "supprime_kids": "La vague arrive : monter tout en haut ensemble, en laissant ses affaires."
+      "tue_kids": "La vague arrive : monter tout en haut ensemble, en laissant ses affaires."
     },
     {
       "id": "un_tremblement_de_terre",
       "nom": "Un tremblement de terre",
       "paliers": {
-        "signale": "Une vibration, un objet tombe, on se fige.",
         "enferme": "La secousse bloque les issues, les gravats scellent les sorties.",
-        "envahit": "Tout s'effondre autour, on se protège collés au sol.",
-        "supprime": "Le bâtiment cède : dégager quelqu'un ou se sauver."
+        "manifeste": "Tout s'effondre autour, on se protège collés au sol.",
+        "tue": "Le bâtiment cède : dégager quelqu'un ou se sauver."
       },
       "kids": true,
-      "supprime_kids": "Tout tremble : aider celui qui est coincé, ou courir dehors."
+      "tue_kids": "Tout tremble : aider celui qui est coincé, ou courir dehors."
     },
     {
       "id": "un_tueur_en_serie",
       "nom": "Un tueur en série",
       "paliers": {
-        "signale": "Un détail dérange, un malaise, on se rassure.",
         "enferme": "Une porte verrouillée, un absent, on est enfermés avec lui.",
-        "envahit": "Il frappe dans l'ombre, la peur monte, on se soupçonne.",
-        "supprime": "Il est parmi nous : le démasquer, se livrer, ou tomber un à un."
+        "manifeste": "Il frappe dans l'ombre, la peur monte, on se soupçonne.",
+        "tue": "Il est parmi nous : le démasquer, se livrer, ou tomber un à un."
       },
       "kids": false
     },
@@ -1226,46 +1178,42 @@
       "id": "un_volcan_en_eruption",
       "nom": "Un volcan en éruption",
       "paliers": {
-        "signale": "La terre gronde, une odeur de soufre, on hésite.",
         "enferme": "La coulée coupe les routes, on est cernés.",
-        "envahit": "Les cendres étouffent, la chaleur monte, on se serre.",
-        "supprime": "La lave arrive : le dernier passage, pour qui."
+        "manifeste": "Les cendres étouffent, la chaleur monte, on se serre.",
+        "tue": "La lave arrive : le dernier passage, pour qui."
       },
       "kids": true,
-      "supprime_kids": "La lave approche : un dernier pont, qui passe, qui le tient."
+      "tue_kids": "La lave approche : un dernier pont, qui passe, qui le tient."
     },
     {
       "id": "une_ia_prend_le_controle",
       "nom": "Une IA prend le contrôle",
       "paliers": {
-        "signale": "Un système agit tout seul, on croit à un bug.",
         "enferme": "L'IA verrouille tout, coupe les issues, on est à sa merci.",
-        "envahit": "Elle nous isole, nous manipule, monte les uns contre les autres.",
-        "supprime": "Elle exige un choix : la débrancher au prix d'un des nôtres."
+        "manifeste": "Elle nous isole, nous manipule, monte les uns contre les autres.",
+        "tue": "Elle exige un choix : la débrancher au prix d'un des nôtres."
       },
       "kids": true,
-      "supprime_kids": "Elle pose une devinette : la résoudre ensemble, ou lui donner ce qu'elle veut."
+      "tue_kids": "Elle pose une devinette : la résoudre ensemble, ou lui donner ce qu'elle veut."
     },
     {
       "id": "une_creature_nous_traque",
       "nom": "Une créature nous traque",
       "paliers": {
-        "signale": "Un bruit, une trace, on n'est pas sûrs d'avoir vu.",
         "enferme": "Elle coupe la sortie, on est acculés.",
-        "envahit": "Elle rôde tout près, on retient son souffle, serrés.",
-        "supprime": "Elle attaque : la distraire, se sacrifier, ou fuir sans tous."
+        "manifeste": "Elle rôde tout près, on retient son souffle, serrés.",
+        "tue": "Elle attaque : la distraire, se sacrifier, ou fuir sans tous."
       },
       "kids": true,
-      "supprime_kids": "Elle nous a trouvés : lui laisser ce qu'elle cherche, ou l'attirer loin des autres."
+      "tue_kids": "Elle nous a trouvés : lui laisser ce qu'elle cherche, ou l'attirer loin des autres."
     },
     {
       "id": "une_fuite_de_gaz_ca_va_exploser",
       "nom": "Une fuite de gaz, ça va exploser",
       "paliers": {
-        "signale": "Un sifflement, une odeur de gaz qu'on ne situe pas.",
         "enferme": "La moindre étincelle est fatale, on ne peut plus sortir.",
-        "envahit": "La concentration monte, chaque geste compte.",
-        "supprime": "Ça va sauter : une seule issue, un seul geste, qui le fait."
+        "manifeste": "La concentration monte, chaque geste compte.",
+        "tue": "Ça va sauter : une seule issue, un seul geste, qui le fait."
       },
       "kids": false
     },
@@ -1273,22 +1221,20 @@
       "id": "une_inondation",
       "nom": "Une inondation",
       "paliers": {
-        "signale": "L'eau s'infiltre, on lève les pieds sans s'alarmer.",
         "enferme": "Le niveau bloque les portes, on ne sort plus.",
-        "envahit": "L'eau monte vite, on grimpe, on se tient les uns aux autres.",
-        "supprime": "Il reste un souffle d'air en haut, pas pour tous."
+        "manifeste": "L'eau monte vite, on grimpe, on se tient les uns aux autres.",
+        "tue": "Il reste un souffle d'air en haut, pas pour tous."
       },
       "kids": true,
-      "supprime_kids": "L'eau monte : grimper tout en haut, et choisir ce qu'on emporte."
+      "tue_kids": "L'eau monte : grimper tout en haut, et choisir ce qu'on emporte."
     },
     {
       "id": "une_invasion_de_zombies",
       "nom": "Une invasion de zombies",
       "paliers": {
-        "signale": "Des cris dehors, on barricade sans y croire.",
         "enferme": "Ils encerclent le lieu, les issues sont prises.",
-        "envahit": "Ils forcent l'entrée, on recule, on se serre.",
-        "supprime": "Ils sont dans la place : sacrifier une porte, un des nôtres, pour passer."
+        "manifeste": "Ils forcent l'entrée, on recule, on se serre.",
+        "tue": "Ils sont dans la place : sacrifier une porte, un des nôtres, pour passer."
       },
       "kids": false
     },
@@ -1296,22 +1242,20 @@
       "id": "une_invasion_extraterrestre",
       "nom": "Une invasion extraterrestre",
       "paliers": {
-        "signale": "Une lumière, un silence anormal, on doute de nos yeux.",
         "enferme": "Ils scellent le lieu, coupent tout contact, on est captifs.",
-        "envahit": "Ils fouillent, prélèvent, on se cache serrés dans le noir.",
-        "supprime": "Ils nous trouvent : livrer l'un pour sauver les autres, ou tomber ensemble."
+        "manifeste": "Ils fouillent, prélèvent, on se cache serrés dans le noir.",
+        "tue": "Ils nous trouvent : livrer l'un pour sauver les autres, ou tomber ensemble."
       },
       "kids": true,
-      "supprime_kids": "Ils veulent l'un de nous à bord : y aller pour leur parler, ou se cacher ensemble."
+      "tue_kids": "Ils veulent l'un de nous à bord : y aller pour leur parler, ou se cacher ensemble."
     },
     {
       "id": "une_meute_lachee",
       "nom": "Une meute lâchée",
       "paliers": {
-        "signale": "Des grognements, une présence, on se rapproche.",
         "enferme": "La meute garde les sorties, on est bloqués.",
-        "envahit": "Elle attaque par vagues, on se protège dos à dos.",
-        "supprime": "Elles percent : un appât, un sacrifice, pour que les autres passent."
+        "manifeste": "Elle attaque par vagues, on se protège dos à dos.",
+        "tue": "Elles percent : un appât, un sacrifice, pour que les autres passent."
       },
       "kids": false
     },
@@ -1319,10 +1263,9 @@
       "id": "une_prise_d_otage",
       "nom": "Une prise d'otage",
       "paliers": {
-        "signale": "Une tension monte, un ton qui change, on sent le danger.",
         "enferme": "Les issues sont bloquées, les armes sortent, personne ne part.",
-        "envahit": "Le preneur s'agite, chaque parole peut sauver ou tuer.",
-        "supprime": "Ça bascule : se soumettre, résister, ou se sacrifier pour les autres."
+        "manifeste": "Le preneur s'agite, chaque parole peut sauver ou tuer.",
+        "tue": "Ça bascule : se soumettre, résister, ou se sacrifier pour les autres."
       },
       "kids": false
     },
@@ -1330,34 +1273,31 @@
       "id": "une_tempete",
       "nom": "Une tempête",
       "paliers": {
-        "signale": "Le vent forcit, le ciel noircit, on se met à l'abri.",
         "enferme": "La tempête scelle les issues, dehors est mortel.",
-        "envahit": "Tout craque, le toit menace, on se regroupe au centre.",
-        "supprime": "La structure cède : le dernier refuge, pour combien d'entre nous."
+        "manifeste": "Tout craque, le toit menace, on se regroupe au centre.",
+        "tue": "La structure cède : le dernier refuge, pour combien d'entre nous."
       },
       "kids": true,
-      "supprime_kids": "Le toit s'envole : le dernier abri, et on se serre pour tenir tous dedans."
+      "tue_kids": "Le toit s'envole : le dernier abri, et on se serre pour tenir tous dedans."
     },
     {
       "id": "une_tornade",
       "nom": "Une tornade",
       "paliers": {
-        "signale": "Le ciel vire, une colonne se forme au loin.",
         "enferme": "Elle coupe la route, on doit rester terrés.",
-        "envahit": "Elle arrache tout autour, on s'accroche les uns aux autres.",
-        "supprime": "Elle passe sur nous : lâcher prise ou tenir, qui tient qui."
+        "manifeste": "Elle arrache tout autour, on s'accroche les uns aux autres.",
+        "tue": "Elle passe sur nous : lâcher prise ou tenir, qui tient qui."
       },
       "kids": true,
-      "supprime_kids": "Elle passe sur nous : s'accrocher les uns aux autres, ou lâcher le trésor."
+      "tue_kids": "Elle passe sur nous : s'accrocher les uns aux autres, ou lâcher le trésor."
     },
     {
       "id": "une_emeute",
       "nom": "Une émeute",
       "paliers": {
-        "signale": "Des cris montent dehors, une tension dans l'air.",
         "enferme": "La foule encercle le lieu, les issues sont prises.",
-        "envahit": "Ça force les portes, la violence entre, on se barricade.",
-        "supprime": "Ils envahissent : livrer quelqu'un, se cacher, ou affronter la vague."
+        "manifeste": "Ça force les portes, la violence entre, on se barricade.",
+        "tue": "Ils envahissent : livrer quelqu'un, se cacher, ou affronter la vague."
       },
       "kids": false
     },
@@ -1365,10 +1305,9 @@
       "id": "une_epidemie_se_propage",
       "nom": "Une épidémie se propage",
       "paliers": {
-        "signale": "Quelqu'un tousse, pâle, on le remarque à peine.",
         "enferme": "Le lieu est mis en quarantaine, les portes se scellent.",
-        "envahit": "Les symptômes frappent vite, la peur du contact monte.",
-        "supprime": "Le mal est partout : sacrifier un contaminé, s'isoler, choisir qui vit."
+        "manifeste": "Les symptômes frappent vite, la peur du contact monte.",
+        "tue": "Le mal est partout : sacrifier un contaminé, s'isoler, choisir qui vit."
       },
       "kids": false
     }
@@ -3425,7 +3364,6 @@
       "groupe": "Des familles nobles liées par le sang, les mariages et les trahisons.",
       "danger": "L'hiver, et l'armée des morts qui arrive avec lui.",
       "paliers": [
-        "Un déserteur de la Garde de nuit dit avoir vu les marcheurs blancs. Ned Stark l'exécute. Personne n'y croit.",
         "Au-delà du Mur, les morts se relèvent. La Garde de nuit se retrouve seule, pendant qu'au Sud les rois continuent leur guerre.",
         "Le Mur tombe : l'armée des morts entre dans les Sept Couronnes.",
         "La longue nuit : les armées des vivants se retranchent à Winterfell, et l'armée des morts les encercle."
@@ -3506,7 +3444,6 @@
       "groupe": "Des cadets de la même promotion militaire, et leurs chefs.",
       "danger": "Les Titans, des géants qui dévorent les humains.",
       "paliers": [
-        "Cent ans de paix derrière les murs. Les soldats de garde boivent ; seuls quelques enfants rêvent de l'extérieur.",
         "Le Titan colossal défonce le mur extérieur : il faut abandonner la ville et se replier derrière le mur suivant.",
         "Les Titans entrent dans la ville de Trost. Les jeunes recrues se battent en pleine rue.",
         "Certains Titans sont des humains, cachés parmi les soldats eux-mêmes : plus personne n'est sûr de personne."
@@ -3567,7 +3504,7 @@
           "choix": "Il renonce à la vie tranquille, rejoint le Bataillon d'exploration et devient un chef."
         }
       ],
-      "lecon": "Chaque palier retire une protection : le mur, puis la ville, puis la confiance. Le dernier danger est toujours à l'intérieur du groupe."
+      "lecon": "Chaque niveau retire une protection : le mur, puis la ville, puis la confiance. Le dernier danger est toujours à l'intérieur du groupe."
     },
     {
       "categorie": "serie_roman",
@@ -3578,7 +3515,6 @@
       "groupe": "Des survivants devenus une famille : Rick, sa femme, son fils, et son meilleur ami, Shane.",
       "danger": "Les rôdeurs, des morts qui marchent.",
       "paliers": [
-        "Rick se réveille seul dans un hôpital vide. Au camp, on croit encore que l'armée va venir.",
         "Les rôdeurs attaquent le camp. Le centre de contrôle des maladies, dernier espoir, explose : il n'y a plus de secours.",
         "À la ferme, des rôdeurs sont enfermés dans la grange, et la menace est entrée dans le groupe : Shane.",
         "Une horde envahit la ferme. Rick révèle que tout le monde est déjà infecté : quoi qu'il arrive, on se relève après la mort."
@@ -3650,7 +3586,6 @@
       "groupe": "Les passagers d'un même vol, liés en secret par leur passé.",
       "danger": "La fumée noire, les « Autres », et l'île elle-même.",
       "paliers": [
-        "L'avion s'écrase. La première nuit, quelque chose d'énorme arrache les arbres dans la jungle.",
         "Aucun secours n'arrive. Une radio capte un appel à l'aide en français qui tourne en boucle depuis seize ans.",
         "Les « Autres » enlèvent des survivants. L'un d'eux vivait parmi le groupe sans que personne le sache.",
         "Partir devient impossible : ceux qui quittent l'île doivent y revenir."
@@ -3722,7 +3657,6 @@
       "groupe": "Une famille royale : le roi, ses fils, ses belles-filles, ses frères, ses cousins et ses ministres.",
       "danger": "La malédiction des Templiers, et la couronne qui passe de main en main.",
       "paliers": [
-        "Sur le bûcher, Jacques de Molay maudit le pape, le roi et leurs descendants jusqu'à la treizième génération.",
         "Le scandale de la tour de Nesle : deux belles-filles du roi sont convaincues d'adultère, la troisième de complicité, et toutes trois sont enfermées. Dans l'année, le pape puis le roi meurent.",
         "Le ministre Marigny est pendu, Louis X meurt à son tour, et son fils nouveau-né ne vit que quelques jours.",
         "Les fils de Philippe le Bel meurent sans héritier mâle. La couronne passe aux cousins Valois, et la guerre de Cent Ans se prépare."
@@ -3794,7 +3728,6 @@
       "groupe": "Les habitants d'une même ville : un médecin, un journaliste, un prêtre, un juge, un trafiquant.",
       "danger": "La peste.",
       "paliers": [
-        "Le docteur Rieux trouve un rat mort sur son palier, puis des milliers. Le concierge de son immeuble est sûr que ce sont des farceurs.",
         "On déclare la peste : les portes de la ville se ferment. Plus personne n'entre, plus personne ne sort.",
         "L'été, l'épidémie est partout : on enterre à la chaîne, puis on brûle les corps.",
         "Un enfant agonise devant le médecin et le prêtre. L'épidémie recule enfin, mais emporte encore des proches à la toute fin."
@@ -3866,7 +3799,6 @@
       "groupe": "Des écoliers anglais, dont une chorale.",
       "danger": "« La bête », que personne n'a vue, et la peur qu'elle fait naître.",
       "paliers": [
-        "Les plus petits parlent d'une bête qui rôde la nuit. Les grands en rient.",
         "Le feu qui devait attirer les bateaux s'éteint pendant la chasse : un navire passe sans les voir.",
         "Le groupe se coupe en deux : les chasseurs de Jack contre Ralph. On offre une tête de cochon à la bête.",
         "Simon, puis Piggy, sont tués. Les chasseurs mettent le feu à l'île pour traquer Ralph."
@@ -3920,7 +3852,6 @@
       "groupe": "Des scientifiques, des ministres, des ingénieurs et des mineurs, tous pris dans le même système.",
       "danger": "La radiation, invisible et mortelle.",
       "paliers": [
-        "Une explosion dans la nuit. L'équipe de garde refuse de croire que le cœur du réacteur a explosé ; les pompiers partent sans protection.",
         "La radiation dépasse tout ce que les appareils peuvent mesurer. Il faudrait évacuer la ville, mais on tarde.",
         "Le combustible menace de traverser le sol et d'empoisonner l'eau de millions de gens : il faut envoyer des hommes au sacrifice.",
         "Au procès, quelqu'un doit dire la vérité devant tous, au prix de tout ce qu'il a."
@@ -3992,7 +3923,6 @@
       "groupe": "Trois inconnus : Garcin, un journaliste ; Inès, une employée des postes ; Estelle, une femme du monde.",
       "danger": "Le regard des autres, pour l'éternité.",
       "paliers": [
-        "Le garçon d'étage fait entrer Garcin. Pas de bourreau, pas de torture : un salon, et une sonnette qui marche quand elle veut.",
         "Inès puis Estelle arrivent. Chacun cache pourquoi il est là. Inès comprend la première : le bourreau, c'est chacun d'eux pour les deux autres.",
         "Les aveux sortent, un par un : Garcin a torturé sa femme, Inès a détruit un couple, Estelle a noyé son enfant. Plus tard, Garcin avoue qu'il a fui.",
         "La porte s'ouvre enfin. Personne ne sort. « L'enfer, c'est les autres. » Puis : « Eh bien, continuons. »"
@@ -4037,7 +3967,6 @@
       "groupe": "Une famille royale et sa cour : le prince, sa mère, son oncle devenu roi, le conseiller et ses enfants, l'ami fidèle.",
       "danger": "Un meurtre caché au cœur de la famille, et la vengeance qu'il appelle.",
       "paliers": [
-        "Sur les remparts, les gardes voient le spectre du roi mort. Ils préviennent Horatio, qui prévient Hamlet.",
         "Le spectre révèle à Hamlet qu'il a été empoisonné par son frère, Claudius. Hamlet feint la folie, et tout le château le surveille.",
         "Hamlet fait jouer devant le roi une pièce qui reproduit le meurtre : Claudius quitte la salle. Peu après, Hamlet tue Polonius, caché derrière une tenture.",
         "Le duel final : une épée empoisonnée, une coupe empoisonnée. La reine, le roi, Laërte puis Hamlet meurent ; un prince étranger entre dans un château plein de morts."
@@ -4100,7 +4029,6 @@
       "groupe": "Une famille et les notables de la ville : le médecin, son frère le maire, sa femme, sa fille, le journal local, l'imprimeur.",
       "danger": "Une eau empoisonnée, et une vérité qui menace toute la ville.",
       "paliers": [
-        "Le docteur Stockmann reçoit les analyses : l'eau des bains est polluée par les tanneries. Il est fier de sa découverte.",
         "Le maire, son propre frère, exige qu'il se taise : réparer coûterait trop cher et ferait fuir les curistes.",
         "Le journal qui le soutenait le lâche. Dans une réunion publique, la foule le déclare ennemi du peuple.",
         "Il perd sa place, sa fille perd la sienne, on lance des pierres dans ses fenêtres. Il décide de rester."
@@ -4163,7 +4091,6 @@
       "groupe": "Les familles d'un même village, avec leurs vieilles rancunes.",
       "danger": "La chasse aux sorcières : n'importe qui peut être accusé.",
       "paliers": [
-        "La fille du pasteur ne se réveille plus après une nuit dans la forêt. Le mot « sorcellerie » circule.",
         "Le révérend Hale, expert en sorcellerie, arrive. Pour se sauver, les jeunes filles dénoncent des noms.",
         "Le tribunal siège. Les accusations se multiplient : on dénonce son voisin pour une terre ou une vieille rancune.",
         "Avouer sauve la vie, nier mène à la potence. John Proctor doit choisir."
@@ -4235,7 +4162,6 @@
       "groupe": "Des amis, des collègues de bureau, des voisins.",
       "danger": "La « rhinocérite » : chacun peut devenir rhinocéros, et finir par trouver ça normal.",
       "paliers": [
-        "Un rhinocéros traverse la place, puis un second écrase un chat. On se dispute : un ou deux rhinocéros, une corne ou deux ?",
         "Au bureau, un collègue s'est transformé, et un rhinocéros détruit l'escalier : on ne peut plus sortir que par la fenêtre.",
         "Jean, l'ami de Bérenger, se transforme sous ses yeux. Dans la ville, les rhinocéros deviennent la majorité.",
         "Daisy, la femme qu'il aime, rejoint les rhinocéros. Bérenger reste le dernier homme."
@@ -4287,7 +4213,7 @@
           "choix": "Elle part les rejoindre."
         }
       ],
-      "lecon": "Le danger, c'est de s'habituer. À chaque palier, un personnage de plus trouve que ce n'est pas si grave : la montée du dénégateur, poussée jusqu'à l'absurde."
+      "lecon": "Le danger, c'est de s'habituer. À chaque niveau, un personnage de plus trouve que ce n'est pas si grave : la montée du dénégateur, poussée jusqu'à l'absurde."
     },
     {
       "categorie": "theatre",
@@ -4298,7 +4224,6 @@
       "groupe": "Douze hommes qui ne se connaissent pas, réunis par le tirage au sort.",
       "danger": "Envoyer un innocent à la mort, sous la pression du groupe.",
       "paliers": [
-        "Premier vote : onze coupables, un non coupable. Il fait une chaleur écrasante, et certains ont mieux à faire.",
         "Le juré n° 8 sort un couteau identique à l'arme du crime, acheté dans le quartier. Au vote suivant, un deuxième juré doute.",
         "Les témoignages s'effondrent un par un. Les votes basculent, et la colère monte contre ceux qui résistent.",
         "Il ne reste qu'un juré pour « coupable ». Seul face aux onze, il craque."
@@ -4359,7 +4284,7 @@
           "choix": "Il suit la procédure jusqu'au bout, et vote avec les autres."
         }
       ],
-      "lecon": "Pas de monstre : le danger, c'est la décision à prendre. Chaque palier fait basculer un vote, et chaque vote révèle un archétype."
+      "lecon": "Pas de monstre : le danger, c'est la décision à prendre. Chaque niveau fait basculer un vote, et chaque vote révèle un archétype."
     },
     {
       "categorie": "theatre",
@@ -4370,7 +4295,6 @@
       "groupe": "Une famille, ses domestiques et ses proches : la propriétaire, son frère, ses filles, un marchand, un étudiant, un vieux valet.",
       "danger": "La vente aux enchères du domaine.",
       "paliers": [
-        "Lopakhine, le marchand, prévient : le domaine sera vendu en août. Il a une solution : abattre la cerisaie et louer des datchas.",
         "On l'écoute à peine. Personne ne veut abattre la cerisaie ; Gaïev rêve d'un emprunt ou d'une vieille tante riche, mais rien ne se fait.",
         "Le jour de la vente, la famille donne un bal. Lopakhine revient : c'est lui qui a acheté la cerisaie.",
         "Tout le monde part. On entend les haches abattre les cerisiers, et le vieux Firs, oublié, reste enfermé dans la maison."
@@ -4433,7 +4357,6 @@
       "groupe": "Douze hommes qui vivent ensemble depuis des mois.",
       "danger": "Une créature capable d'imiter n'importe lequel d'entre eux.",
       "paliers": [
-        "Un hélicoptère norvégien poursuit un chien en lui tirant dessus. Les Américains recueillent le chien.",
         "Au chenil, le chien se transforme. La tempête et la radio sabotée coupent la base du monde.",
         "N'importe qui peut être la chose : on s'enferme, on s'accuse, on se menace au lance-flammes.",
         "La base brûle. Il ne reste que deux hommes dans la neige, et aucun ne sait si l'autre est encore humain."
@@ -4505,7 +4428,6 @@
       "groupe": "Des chasseurs de primes, un shérif, un bourreau, un vieux général, un cow-boy : la plupart se connaissent de réputation.",
       "danger": "Le blizzard qui les enferme, et un complot pour libérer la prisonnière.",
       "paliers": [
-        "Minnie, la patronne, n'est pas là. L'homme qui garde l'auberge dit qu'elle est partie voir sa mère.",
         "Le blizzard bloque tout le monde pour plusieurs jours. John Ruth prévient : l'un d'entre eux n'est pas celui qu'il prétend être.",
         "Le café était empoisonné : John Ruth meurt, son cocher aussi.",
         "Un complice est caché sous le plancher. Plus personne ne sortira de la pièce indemne."
@@ -4559,7 +4481,6 @@
       "groupe": "Des braqueurs qui ne se connaissent que par leurs noms de code : M. Blanc, M. Rose, M. Orange, M. Blonde.",
       "danger": "La police dehors, et un policier infiltré dedans.",
       "paliers": [
-        "M. Orange, blessé au ventre, perd son sang. M. Rose arrive : on leur a tendu un piège.",
         "Impossible d'aller à l'hôpital, impossible de partir : ils doivent attendre Joe, le chef.",
         "M. Blonde arrive avec un policier en otage, et le torture.",
         "Joe accuse M. Orange. Tout le monde se tient en joue, et personne ne baisse son arme."
@@ -4604,7 +4525,6 @@
       "groupe": "Deux familles : l'unité spéciale de la police, et la bande de Costello.",
       "danger": "La taupe : dans chaque camp, quelqu'un renseigne l'ennemi.",
       "paliers": [
-        "Une opération de police échoue : quelqu'un a prévenu Costello.",
         "Chaque camp comprend qu'il a une taupe, et commence à la chercher.",
         "Le capitaine Queenan, l'un des deux seuls à savoir qui est Billy, est jeté d'un toit.",
         "Billy et Sullivan se retrouvent face à face. Presque personne ne sort vivant."
@@ -4667,7 +4587,6 @@
       "groupe": "Des voisins d'une petite ville du Maine.",
       "danger": "La brume, et les créatures qu'elle cache.",
       "paliers": [
-        "Un homme entre en courant, le nez en sang : il y a quelque chose dans la brume.",
         "Un jeune employé ouvre la porte de la réserve. Un tentacule l'emporte.",
         "Des insectes géants entrent par les vitres. Mme Carmody gagne des fidèles.",
         "Mme Carmody réclame un sacrifice humain. Il faut sortir dans la brume."
@@ -4721,7 +4640,6 @@
       "groupe": "Des passagers : un père et sa fille, un couple qui attend un bébé, une équipe de baseball, deux vieilles sœurs, un patron.",
       "danger": "Une épidémie de zombies.",
       "paliers": [
-        "Une jeune femme blessée monte dans le train au dernier moment.",
         "Elle se transforme, et l'épidémie gagne les wagons. Dehors, les villes tombent aussi.",
         "À Daejeon, la gare qui devait les sauver est envahie.",
         "Le train ne peut plus avancer. Il faut finir à pied, et chacun choisit qui sauver."
@@ -4774,7 +4692,6 @@
       "lieu": "La cuisine d'une ferme française, en 1941.",
       "danger": "Le colonel Landa, venu chercher une famille juive.",
       "paliers": [
-        "Une voiture allemande approche. Le fermier demande à ses filles de rentrer.",
         "Landa demande un verre de lait, s'installe, et pose des questions polies sur les voisins disparus.",
         "Il passe à l'anglais, pour que ceux qui sont cachés ne comprennent pas, et demande où ils sont.",
         "Le fermier craque et montre le plancher. Les soldats tirent ; une jeune fille s'échappe."
@@ -4787,7 +4704,6 @@
       "lieu": "Une taverne en sous-sol.",
       "danger": "Un officier de la Gestapo qui s'invite à la table.",
       "paliers": [
-        "Des espions alliés, déguisés en officiers allemands, attendent leur contact.",
         "Un major de la Gestapo s'assoit avec eux et remarque l'accent étrange de l'un d'eux.",
         "L'espion commande trois verres avec les mauvais doigts : un Allemand ne compte pas comme ça.",
         "Le major révèle qu'il a un pistolet pointé sous la table. Tout le monde tire."
@@ -4800,17 +4716,16 @@
       "lieu": "La salle à manger de Candyland, un grand domaine.",
       "danger": "Stephen, le majordome, qui devine la ruse.",
       "paliers": [
-        "Deux chasseurs de primes viennent racheter une esclave en faisant semblant d'acheter un combattant.",
         "Stephen, le vieux majordome, observe, et comprend leur vrai but.",
         "Il prévient son maître en secret, dans la bibliothèque.",
         "Calvin Candie revient à table avec un marteau et un crâne : il sait tout."
       ],
-      "lecon": "Le danger, c'est un homme qui voit clair. La tension monte sans un coup de feu, jusqu'au dernier palier."
+      "lecon": "Le danger, c'est un homme qui voit clair. La tension monte sans un coup de feu, jusqu'au dernier niveau."
     }
   ],
   "serie": {
-    "episode": "Le one-shot : un lieu, un groupe, un danger en quatre paliers, quatre actes. Il se suffit à lui-même.",
-    "saison": "Quatre épisodes. Un méchant et sa machination en quatre présages, un par épisode (il se signale, il enferme, il envahit, il bloque les sorties). Chaque danger d'épisode est l'un de ses coups. Le besoin du personnage appartient à la saison : fixé à l'épisode 1, nommé à l'épisode 3, payé au final. Le vouloir change à chaque épisode. La sortie du palier 4 mène au lieu de l'épisode suivant.",
+    "episode": "Le one-shot : un lieu, un groupe, un danger en trois niveaux, quatre actes. Il se suffit à lui-même.",
+    "saison": "Quatre épisodes. Un méchant et sa machination en quatre présages, un par épisode. Chaque danger d'épisode est l'un de ses coups. Le besoin du personnage appartient à la saison : fixé à l'épisode 1, nommé à l'épisode 3, payé au final. Le vouloir change à chaque épisode. La sortie du dernier acte mène au lieu de l'épisode suivant.",
     "serie": "Une suite de saisons. Entre deux saisons, un personnage qui a payé son besoin peut changer d'archétype. Un registre garde les figurants, les lieux, les secrets, les morts et les promesses, que l'IA propose au MJ de ressortir.",
     "regles_du_mechant": [
       "Son reflet : il a le même archétype que le protagoniste qu'il vise, c'est pour ça qu'il lui en veut.",
@@ -5867,7 +5782,7 @@
         "nom": "Sceptique",
         "ce_qu_il_est": "Il refuse de croire au danger.",
         "veut": "Une explication normale.",
-        "comment_le_jouer": "Il trouve une raison à tout, jusqu'au palier 3.",
+        "comment_le_jouer": "Il trouve une raison à tout, jusqu'à « {niveau_2} ».",
         "sert_a": "Fait douter le groupe."
       },
       {
@@ -5922,7 +5837,7 @@
       },
       {
         "titre": "Personne ne meurt",
-        "texte": "Au palier 4, le prix est un renoncement : un trésor, son pouvoir le temps d'un épisode, un secret qu'on avoue."
+        "texte": "À « {niveau_3} », le prix est un renoncement : un trésor, son pouvoir le temps d'un épisode, un secret qu'on avoue."
       },
       {
         "titre": "Des épisodes courts",
@@ -5952,7 +5867,7 @@
       "lire dans les pensées"
     ],
     "pouvoir_regle": "Un pouvoir choisi avec l'animal, gardé toute la saison. Il aide, il ne résout jamais tout seul.",
-    "palier_4": "Personne ne meurt : on choisit, on renonce (un trésor, son pouvoir le temps d'un épisode, un secret qu'on avoue), on se sépare un moment.",
+    "il_tue": "Personne ne meurt : on choisit, on renonce (un trésor, son pouvoir le temps d'un épisode, un secret qu'on avoue), on se sépare un moment.",
     "duree_episode_minutes": [
       20,
       30
@@ -6238,23 +6153,23 @@
       "variante": "L'activité s'arrête net au moment où ça fait mal."
     },
     {
-      "id": "lieu_quatre_paliers",
+      "id": "lieu_trois_niveaux",
       "theme": "lieu",
-      "titre": "Le lieu à quatre paliers",
+      "titre": "Le lieu à trois niveaux",
       "source": "Troupe Destiny, novembre 2026",
       "duree": "4 min",
       "joueurs": "tout le groupe",
       "notion": "le lieu qui change avec le danger",
-      "but": "Jouer le même lieu quatre fois, une minute par palier, sans changer de place.",
+      "but": "Jouer le même lieu quatre fois, une minute par acte, sans changer de place : d'abord sans danger, puis à chaque niveau.",
       "consignes": [
-        "Une minute par palier : il se signale, il enferme, il envahit, il bloque les sorties.",
-        "Entre deux paliers, le rituel Destiny et le figé.",
+        "Une minute par acte : sans danger, puis {niveau_1_bas}, {niveau_2_bas}, {niveau_3_bas}.",
+        "Entre deux actes, le rituel Destiny.",
         "Le lieu change (bruits, lumière, objets renversés, sorties condamnées), mais on ne change pas de place."
       ],
       "exemples": [
         "La banque : un bruit dans la salle des coffres, puis les portes qui se bloquent, puis l'alarme et la bombe, puis plus aucune sortie."
       ],
-      "debrief": "Qu'est-ce qui a changé dans le lieu d'un palier à l'autre ?",
+      "debrief": "Qu'est-ce qui a changé dans le lieu d'un niveau à l'autre ?",
       "variante": "Chacun garde son espace préféré et le voit se dégrader."
     },
     {
@@ -6299,7 +6214,7 @@
         "Mark : la menace provoque la réaction, puis la réaction révèle le vrai problème du personnage."
       ],
       "debrief": "La réaction s'est-elle ajoutée au personnage, sans le remplacer ? Le moment du figé a-t-il duré assez longtemps ?",
-      "variante": "Avec le danger en quatre paliers : l'archétype est joué léger, a un premier réflexe, éclate, puis va jusqu'au bout.",
+      "variante": "Avec le danger en trois niveaux : l'archétype a un premier réflexe, éclate, puis va jusqu'au bout.",
       "theme": "destiny"
     },
     {
@@ -6333,12 +6248,12 @@
       "consignes": [
         "On choisit les archétypes ensemble, en respectant la distribution.",
         "Chacun se pose trois questions : comment je me tiens, ce que je dis quand ça tourne mal, jusqu'où j'irais à la fin.",
-        "Traversée de la salle avec la posture de l'animal, en montant les quatre paliers."
+        "Traversée de la salle avec la posture de l'animal, en montant les trois niveaux du danger."
       ],
       "exemples": [
         "Le paon, au centre, qui prêche pour être regardé : « L'hiver vient. »"
       ],
-      "debrief": "Qu'est-ce qui a changé dans ton corps d'un palier à l'autre ?",
+      "debrief": "Qu'est-ce qui a changé dans ton corps d'un niveau à l'autre ?",
       "variante": "On prépare le corps, pas l'histoire : le vouloir viendra du lieu et du groupe.",
       "theme": "destiny"
     },
@@ -6511,7 +6426,7 @@
       "nom": "Destiny",
       "sous_titre": "Le danger, les archétypes, le prix à payer",
       "principe": "« Comme la tension monte, la vérité commence à sortir. » (Mark Jane)",
-      "explication": "Le danger monte en quatre paliers ; chaque archétype y réagit ; le besoin sort et l'acte 4 fait choisir."
+      "explication": "Le danger monte en trois niveaux, un par Destiny ; chaque archétype y réagit ; le besoin sort et l'acte 4 fait choisir."
     }
   ],
   "obsolete": [

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../domain/grammaire/modeles.dart' show PalierId;
 import '../../domain/entities/danger.dart';
 import '../../domain/entities/location.dart';
 import '../../domain/repositories/catalog_store.dart';
@@ -31,7 +32,7 @@ List<String> _lignes(String texte) => [
     ];
 
 /// L'éditeur des lieux et des dangers : les espaces et les rôles d'un lieu,
-/// les quatre paliers d'un danger (nommés comme dans la grammaire) et sa
+/// les trois niveaux d'un danger (nommés comme dans l'appli) et sa
 /// version kids, le sigle KIDS, et ce qui est proposé à la mise en place.
 class EditeurCatalogueScreen extends StatefulWidget {
   const EditeurCatalogueScreen({required this.catalogue, super.key});
@@ -167,7 +168,7 @@ class _EditeurCatalogueScreenState extends State<EditeurCatalogueScreen> with Si
                   ElementListe(
                     titre: d.name,
                     sousTitre:
-                        '${d.style} · ${k('paliers_n', {'n': '${d.paliers.where((p) => p.trim().isNotEmpty).length}'})}',
+                        '${d.style} · ${k('paliers_n', {'n': '${d.paliers.where((p) => p.trim().isNotEmpty).length}', 'total': '${PalierId.values.length}'})}',
                     apres: _marques(d.kids, d.actif),
                     onTap: () => _ouvrir(FicheDangerEditeur(
                         catalogue: widget.catalogue, danger: d, existants: {for (final x in _dangers) x.id})),
@@ -337,8 +338,8 @@ class _FicheLieuEditeurState extends State<FicheLieuEditeur> {
   }
 }
 
-/// La fiche d'un danger : nom, style, les quatre paliers nommés comme dans la
-/// grammaire, le palier 4 en version kids, KIDS, proposé ou non.
+/// La fiche d'un danger : nom, style, ses trois niveaux, « Il tue » en
+/// version kids, KIDS, proposé ou non.
 class FicheDangerEditeur extends StatefulWidget {
   const FicheDangerEditeur({required this.catalogue, required this.existants, this.danger, super.key});
 
@@ -353,11 +354,11 @@ class FicheDangerEditeur extends StatefulWidget {
 class _FicheDangerEditeurState extends State<FicheDangerEditeur> {
   late final _nom = TextEditingController(text: widget.danger?.name ?? '');
   late final _paliers = [
-    for (var i = 0; i < 4; i++)
+    for (var i = 0; i < PalierId.values.length; i++)
       TextEditingController(
           text: widget.danger != null && i < widget.danger!.paliers.length ? widget.danger!.paliers[i] : ''),
   ];
-  late final _palier4Kids = TextEditingController(text: widget.danger?.palier4Kids ?? '');
+  late final _tueKids = TextEditingController(text: widget.danger?.tueKids ?? '');
   late String? _style = widget.danger?.style;
   late bool _kids = widget.danger?.kids ?? false;
   late bool _actif = widget.danger?.actif ?? true;
@@ -368,7 +369,7 @@ class _FicheDangerEditeurState extends State<FicheDangerEditeur> {
     for (final c in _paliers) {
       c.dispose();
     }
-    _palier4Kids.dispose();
+    _tueKids.dispose();
     super.dispose();
   }
 
@@ -386,7 +387,7 @@ class _FicheDangerEditeurState extends State<FicheDangerEditeur> {
       name: nom,
       style: style,
       paliers: [for (final c in _paliers) c.text.trim()],
-      palier4Kids: _palier4Kids.text.trim(),
+      tueKids: _tueKids.text.trim(),
       kids: _kids,
       actif: _actif,
     ));
@@ -449,7 +450,7 @@ class _FicheDangerEditeurState extends State<FicheDangerEditeur> {
           onChanged: (v) => setState(() => _kids = v),
         ),
         if (_kids)
-          _Champ(controleur: _palier4Kids, libelle: k('palier_4_kids'), aide: k('palier_4_kids_aide'), lignes: 2),
+          _Champ(controleur: _tueKids, libelle: k('tue_kids'), aide: k('tue_kids_aide'), lignes: 2),
         SwitchListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(k('actif')),

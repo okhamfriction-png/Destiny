@@ -3,6 +3,7 @@
 /// débrief.
 library;
 
+import '../entities/danger.dart';
 import '../grammaire/migration_archetypes.dart';
 
 /// Le choix final de l'acte 4.
@@ -131,7 +132,7 @@ enum EtapeSession { preparation, echauffement, miseEnPlace, regie, debrief, term
 
 /// Ce qui se joue sous le chrono, au théâtre (une session de la Troupe) comme
 /// au jeu de rôle (un épisode de la Série) : un lieu, un danger en quatre
-/// paliers, trois Destiny. La régie son et le chrono n'ont besoin que de ça.
+/// niveaux du danger, trois Destiny. La régie son et le chrono n'ont besoin que de ça.
 abstract interface class SceneJouee {
   String get lieuId;
   String get lieuNom;
@@ -144,7 +145,7 @@ abstract interface class SceneJouee {
   abstract List<int> destinyMinutes;
 
   /// Le palier atteint (1 à 4).
-  abstract int palierAtteint;
+  abstract int acteAtteint;
   List<EvenementDestiny> get destinys;
 }
 
@@ -166,7 +167,7 @@ class SessionTroupe implements SceneJouee {
     this.reponseMystere = '',
     this.dureeMinutes = 30,
     List<int>? destinyMinutes,
-    this.palierAtteint = 1,
+    this.acteAtteint = 1,
     List<EvenementDestiny>? destinys,
     List<NoteRegie>? notes,
     List<String>? ceQuiAMarche,
@@ -194,7 +195,7 @@ class SessionTroupe implements SceneJouee {
   @override
   String dangerNom;
 
-  /// Les quatre paliers du danger, tels que joués.
+  /// Les trois niveaux du danger, tels que joués.
   @override
   List<String> paliers;
 
@@ -210,15 +211,15 @@ class SessionTroupe implements SceneJouee {
 
   /// Palier atteint (1 à 4).
   @override
-  int palierAtteint;
+  int acteAtteint;
   @override
   List<EvenementDestiny> destinys;
   List<NoteRegie> notes;
   List<String> ceQuiAMarche;
   bool kids;
 
-  /// Le dé des survivants du DESTINY n°3 : « tous », « public », ou le
-  /// nombre de survivants (« 0 », « 1 »…). Vide : pas encore lancé.
+  /// Le nombre de survivants annoncé au DESTINY n°3 (« 1 », « 2 » ou
+  /// « 3 »). Vide : pas encore annoncé.
   String survivants = '';
 
   Map<String, dynamic> versJson() => {
@@ -238,7 +239,7 @@ class SessionTroupe implements SceneJouee {
         'reponse_mystere': reponseMystere,
         'duree': dureeMinutes,
         'destiny_minutes': destinyMinutes,
-        'palier': palierAtteint,
+        'palier': acteAtteint,
         'destinys': [for (final d in destinys) d.versJson()],
         'notes': [for (final n in notes) n.versJson()],
         'ce_qui_a_marche': ceQuiAMarche,
@@ -268,13 +269,13 @@ class SessionTroupe implements SceneJouee {
       groupe: j['groupe'] as String? ?? '',
       dangerId: j['danger_id'] as String? ?? '',
       dangerNom: j['danger'] as String? ?? '',
-      paliers: ls(j['paliers']),
+      paliers: Danger.niveauxDepuis(ls(j['paliers'])),
       objets: ls(j['objets']).length == 3 ? ls(j['objets']) : null,
       mystere: j['mystere'] as String? ?? '',
       reponseMystere: j['reponse_mystere'] as String? ?? '',
       dureeMinutes: (j['duree'] as num?)?.toInt() ?? 30,
       destinyMinutes: [for (final x in (j['destiny_minutes'] as List? ?? const [])) (x as num).toInt()],
-      palierAtteint: (j['palier'] as num?)?.toInt() ?? 1,
+      acteAtteint: (j['palier'] as num?)?.toInt() ?? 1,
       destinys: [for (final d in ms(j['destinys'])) EvenementDestiny.depuisJson(d)],
       notes: [for (final n in ms(j['notes'])) NoteRegie.depuisJson(n)],
       ceQuiAMarche: ls(j['ce_qui_a_marche']),

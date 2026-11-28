@@ -49,7 +49,7 @@ String consigneResume({required bool kids, List<String> categoriesRegistre = con
 /// La consigne des quatre présages d'un méchant de saison.
 String consignePresages({required bool kids}) => '${kids ? _consigneEnfant : _consigneAdulte} '
     'Tu proposes les quatre présages d\'une saison de quatre épisodes : un par '
-    'épisode, un par palier. Le méchant reste dans l\'ombre : on voit ses coups '
+    'épisode. Le méchant reste dans l\'ombre : on voit ses coups '
     'et ses sbires, pas lui, jusqu\'au final de l\'épisode 4. Chaque présage est '
     'une phrase courte, au présent, que les joueurs peuvent voir ou entendre. '
     'Forme : {"presages": ["...", "...", "...", "..."]}.';

@@ -49,5 +49,9 @@
         <intent>
             <action android:name="android.speech.RecognitionService"/>
         </intent>
+        <!-- La synthèse vocale des annonces DESTINY (Android 11 et plus). -->
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
     </queries>
 </manifest>

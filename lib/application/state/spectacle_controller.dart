@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 
 import '../../domain/entities/chat_message.dart';
 import '../../domain/entities/spectacle_turn.dart';
+import '../../domain/entities/danger.dart';
 import '../../domain/grammaire/distribution.dart';
 import '../../domain/grammaire/modeles.dart';
 import '../../domain/repositories/catalog_store.dart';
@@ -114,7 +115,7 @@ class SpectacleDraw {
       espaces: ls(j['espaces']),
       groupe: j['groupe'] as String? ?? '',
       danger: j['danger'] as String? ?? '',
-      paliers: ls(j['paliers']),
+      paliers: Danger.niveauxDepuis(ls(j['paliers'])),
       archetypes: [
         for (final p in (j['personnages'] as List? ?? const []))
           if (p is Map) PersonnageSpectacle.depuisJson(p.cast<String, dynamic>()),
@@ -248,13 +249,13 @@ class SpectacleController extends ChangeNotifier {
   /// Numéro de la scène qui va s'ouvrir (pour l'invite de choix).
   int get sceneNumber => _sceneNumber;
 
-  /// Le palier atteint (d'après le dernier tour de l'IA).
-  int get palier => (_current?.palier ?? 1).clamp(1, 4);
+  /// L'acte en cours (d'après le dernier tour de l'IA).
+  int get acte => (_current?.acte ?? 1).clamp(1, kNombreActes);
 
   /// Destiny se lance de l'extérieur : seulement en cours de partie, avant le
-  /// palier 4, et pas pendant qu'on attend l'IA.
+  /// dernier acte, et pas pendant qu'on attend l'IA.
   bool get peutLancerDestiny =>
-      _started && !_loading && !(_current?.isFin ?? false) && _current != null && palier < 4;
+      _started && !_loading && !(_current?.isFin ?? false) && _current != null && acte < kNombreActes;
 
   // --- Reprise d'une partie en cours ---
   Map<String, dynamic>? _savedSession;
@@ -350,7 +351,7 @@ class SpectacleController extends ChangeNotifier {
       final lieux = [for (final l in await _catalogue.getLocations()) if (l.actif && (!_kids || l.kids)) l];
       final dangers = [
         for (final d in await _catalogue.getDangers())
-          if (d.actif && d.paliers.length == 4 && (!_kids || d.kids)) d,
+          if (d.actif && d.paliers.length == PalierId.values.length && (!_kids || d.kids)) d,
       ];
       if (lieux.isEmpty || dangers.isEmpty) {
         _error = 'Catalogue insuffisant pour le spectacle.';
@@ -434,7 +435,7 @@ class SpectacleController extends ChangeNotifier {
       kids: _kids,
     );
     await _send(
-      'Lève le rideau : acte 1, scène 1, au palier 1. Je joue ${_j(_playerIndex)} (${playerArchetype?.name ?? ''}). '
+      'Lève le rideau : acte 1, scène 1, sans danger. Je joue ${_j(_playerIndex)} (${playerArchetype?.name ?? ''}). '
       'Ouvre la scène avec UNE seule réplique d\'entrée du partenaire, '
       '${_mode == SpectacleMode.classique ? 'puis mes 4 propositions' : 'puis attends ma réplique'}. '
       'Réponds uniquement avec le premier objet JSON.',
@@ -456,11 +457,11 @@ class SpectacleController extends ChangeNotifier {
     );
   }
 
-  /// La régie lance Destiny : le danger monte d'un palier.
+  /// La régie lance Destiny : le danger monte d'un niveau.
   Future<void> lancerDestiny() async {
     if (!peutLancerDestiny) return;
     _awaitingCharacter = false;
-    await _send('[DESTINY] La régie lance Destiny. Écris le rituel, le son du nouveau palier et la première réaction '
+    await _send('[DESTINY] La régie lance Destiny. Écris le rituel, le son du nouveau niveau du danger et la première réaction '
         'd\'un partenaire, en JSON.');
   }
 

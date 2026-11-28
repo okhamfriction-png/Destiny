@@ -29,8 +29,8 @@ class FauxHasard implements Random {
 const b = FacePiece.brave;
 const sm = FacePiece.smart;
 
-ResultatPiece lancer(FacePiece approche, ModeLancer mode, List<bool> faces, {int palier = 1}) =>
-    lancerPiece(approche: approche, mode: mode, palier: palier, hasard: FauxHasard(faces));
+ResultatPiece lancer(FacePiece approche, ModeLancer mode, List<bool> faces, {int acte = 1}) =>
+    lancerPiece(approche: approche, mode: mode, acte: acte, hasard: FauxHasard(faces));
 
 void main() {
   late Grammaire g;
@@ -99,19 +99,19 @@ void main() {
       expect(tout.reussite, isFalse);
     });
 
-    test('la gravité suit le palier : doux aux paliers 1 et 2, dur aux paliers 3 et 4', () {
-      expect(graviteAuPalier(1), GraviteMouvement.doux);
-      expect(graviteAuPalier(2), GraviteMouvement.doux);
-      expect(graviteAuPalier(3), GraviteMouvement.dur);
-      expect(graviteAuPalier(4), GraviteMouvement.dur);
-      expect(lancer(b, ModeLancer.simple, [false], palier: 2).gravite, GraviteMouvement.doux);
-      expect(lancer(b, ModeLancer.simple, [false], palier: 3).gravite, GraviteMouvement.dur);
+    test('la gravité suit l\'acte : doux aux actes 1 et 2, dur aux actes 3 et 4', () {
+      expect(graviteALActe(1), GraviteMouvement.doux);
+      expect(graviteALActe(2), GraviteMouvement.doux);
+      expect(graviteALActe(3), GraviteMouvement.dur);
+      expect(graviteALActe(4), GraviteMouvement.dur);
+      expect(lancer(b, ModeLancer.simple, [false], acte: 2).gravite, GraviteMouvement.doux);
+      expect(lancer(b, ModeLancer.simple, [false], acte: 3).gravite, GraviteMouvement.dur);
     });
 
     test('avec la même graine, les mêmes lancers', () {
       for (var graine = 0; graine < 20; graine++) {
-        final a = lancerPiece(approche: b, mode: ModeLancer.secondeChance, palier: 2, hasard: Random(graine));
-        final c = lancerPiece(approche: b, mode: ModeLancer.secondeChance, palier: 2, hasard: Random(graine));
+        final a = lancerPiece(approche: b, mode: ModeLancer.secondeChance, acte: 2, hasard: Random(graine));
+        final c = lancerPiece(approche: b, mode: ModeLancer.secondeChance, acte: 2, hasard: Random(graine));
         expect(a.lancers, c.lancers);
         expect(a.reussite, c.reussite);
       }
@@ -122,8 +122,8 @@ void main() {
       var simple = 0;
       var chance = 0;
       for (var i = 0; i < 4000; i++) {
-        if (lancerPiece(approche: b, palier: 1, hasard: rng).reussite) simple++;
-        if (lancerPiece(approche: b, mode: ModeLancer.secondeChance, palier: 1, hasard: rng).reussite) chance++;
+        if (lancerPiece(approche: b, acte: 1, hasard: rng).reussite) simple++;
+        if (lancerPiece(approche: b, mode: ModeLancer.secondeChance, acte: 1, hasard: rng).reussite) chance++;
       }
       expect(simple / 4000, closeTo(0.5, 0.05));
       expect(chance / 4000, closeTo(0.75, 0.05));

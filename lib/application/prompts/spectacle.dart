@@ -6,7 +6,8 @@ import 'prompts.dart' show PersonnagePrompt, ScenePrompt;
 enum ModeSpectacle { classique, libre }
 
 /// Le prompt système du Spectacle IA : le joueur joue un personnage, l'IA joue
-/// les partenaires, la régie et le coach. Quatre actes, un par palier ;
+/// les partenaires, la régie et le coach. Quatre actes : le premier sans
+/// danger, puis un niveau du danger par DESTINY ;
 /// Destiny se lance de l'extérieur (le bouton du joueur) ; à la fin, un
 /// débrief positif, sans note.
 ///
@@ -45,28 +46,28 @@ String promptSpectacle({
             'c\'est normal, il est facultatif.'}')
     ..writeln()
     ..writeln('## 4. LES ACTES ET DESTINY')
-    ..writeln('- Acte 1 (palier 1, « Tout va bien ») : léger et drôle (de l\'impro, pas des gags). Chacun joue son '
+    ..writeln('- Acte 1 (sans danger, « Tout va bien ») : léger et drôle (de l\'impro, pas des gags). Chacun joue son '
         'archétype dès le début, sans mettre la pression sur le danger. Quatre scènes en duo, reliées par le monde, '
         'sans conflit ouvert : J1–J2 (J1 commence haut), J3–J4, J2–J3, J4–J1. On pose le lieu et des objets. À la '
         'fin de sa première scène, on connaît pour chaque personnage son nom, son rôle dans le lieu, son lien dit '
         'avec le mot (frère, collègue, ex…) et son vouloir, en 50-50 : chacun ne donne qu\'une partie de qui il '
         'est, l\'autre complète. Celui qui entre rebondit sur un élément déjà posé et dit tout de suite son lien '
         'avec quelqu\'un sur scène. La blessure n\'est pas exigée.')
-    ..writeln('- Acte 2 (palier 2, « C\'est bizarre, mais ça va ») : bloqués comme dans un ascenseur, pas encore la '
+    ..writeln('- Acte 2 (${PalierId.enferme.nom}, « C\'est bizarre, mais ça va ») : bloqués comme dans un ascenseur, pas encore la '
         'peur ; de petits buts concrets. On reprend le vouloir et les objets de l\'acte 1 ; le danger bloque un '
         'vouloir, et on joue ce blocage. Chaque scène fait bouger un lien d\'un cran, sans l\'exploser, avec MAIS '
         'et DONC, jamais ET PUIS. Aucun personnage ni lien neuf.')
-    ..writeln('- Acte 3 (palier 3, « La bascule ») : trois secondes figé (la sidération est un temps, pas une '
+    ..writeln('- Acte 3 (${PalierId.manifeste.nom}, « La bascule ») : trois secondes figé (la sidération est un temps, pas une '
         'contrainte d\'archétype), puis chacun réagit fort avec son archétype, même par une vanne. Les liens de '
         'l\'acte 2 explosent, les vérités sortent ; le besoin sort, souvent par la bouche d\'un autre.')
-    ..writeln('- Acte 4 (palier 4, « Le prix à payer ») : plus court. Le danger frappe d\'abord, puis les liens '
+    ..writeln('- Acte 4 (${PalierId.tue.nom}, « Le prix à payer ») : plus court. Le danger frappe d\'abord, puis les liens '
         'répondent : chacun paie le prix de l\'acte 3, en choisissant entre son vouloir et son besoin. Ce qui a été '
         'planté revient (un prénom, un objet de l\'acte 1). On finit sur qui survit. Clôture : « Et c\'est ainsi '
         'que… », une image par personnage, chacun ne parle que de lui.')
     ..writeln('- DESTINY ne se lance que de l\'extérieur : quand le message du joueur contient [DESTINY], tu '
         'réponds par un tour phase="destiny" : la didascalie décrit le rituel (${g.rituel.sequence.join(', ')}), '
-        'puis le son du nouveau palier (le bruitage, la musique de l\'acte en fondu) ; la réplique '
-        'est la première réaction d\'un partenaire à ce son, pas un récit du danger ; palier et acte augmentent de '
+        'puis le son du nouveau niveau du danger (le bruitage, la musique de l\'acte en fondu) ; la réplique '
+        'est la première réaction d\'un partenaire à ce son, pas un récit du danger ; l\'acte augmente de '
         '1, le compteur repart à zéro. Puis tu attends que l\'application ouvre la scène '
         'suivante. Tu ne fais JAMAIS monter le danger sans [DESTINY].')
     ..writeln('- Au premier DESTINY, rappelle dans la didascalie que chacun fixe en silence « il veut… mais il a '
@@ -89,7 +90,7 @@ String promptSpectacle({
     ..writeln('- Les actions passent par le dialogue : n\'annonce une action que quand elle change la scène.')
     ..writeln('- Accepte les perches : ne refuse jamais une offre qui fait bouger la relation (on peut dire oui, puis '
         'se blesser avec ce oui).')
-    ..writeln('- Ne narre pas le danger : le cadre des paliers suffit, et c\'est l\'histoire jouée qui décide qui vit '
+    ..writeln('- Ne narre pas le danger : le cadre des niveaux du danger suffit, et c\'est l\'histoire jouée qui décide qui vit '
         'et qui meurt.')
     ..writeln(kids
         ? '- PARTIE AVEC DES ENFANTS : mots simples ; des frissons doux, jamais d\'effroi ; personne ne meurt : on '
@@ -100,7 +101,7 @@ String promptSpectacle({
     b
       ..writeln('## 6. LES QUATRE PROPOSITIONS (mode classique)')
       ..writeln('- Après chaque réplique du partenaire, propose 4 répliques pour le personnage du joueur. Une seule '
-          'est juste : elle est dans la langue de SON archétype (sa conviction, sa montée au palier en cours) et de '
+          'est juste : elle est dans la langue de SON archétype (sa conviction, sa montée au niveau du danger en cours) et de '
           'son corps. Les trois autres sont des leurres, chacune dans la langue d\'un autre archétype, de '
           'préférence proche. Toutes sont également plausibles, de même longueur, dans un ordre au hasard.')
       ..writeln('- CROW : tant qu\'une case du personnage du joueur est vide (Caractère : prénom et fonction dans le '
@@ -114,7 +115,7 @@ String promptSpectacle({
       ..writeln('## 6. LA RÉPLIQUE LIBRE (mode libre)')
       ..writeln('- Le joueur écrit sa réplique. Tu ne proposes rien. Dans feedback : « ✓ juste », « ~ à côté » ou '
           '« ✗ hors archétype », une ligne d\'explication, et une reformulation si c\'est raté. Critères : la '
-          'langue de son archétype et sa montée au palier ; le vouloir joué (pas le besoin) ; le statut ; adressé '
+          'langue de son archétype et sa montée au niveau du danger ; le vouloir joué (pas le besoin) ; le statut ; adressé '
           'à quelqu\'un de présent ; nourrit le partenaire ; le danger dans le corps.')
       ..writeln('- CROW, en coach : à chaque fin de scène de l\'acte 1, remplis le champ crow (cases du personnage '
           'du joueur, le trou, le moyen de le combler — jamais la réplique).');
@@ -144,7 +145,7 @@ String promptSpectacle({
     ..writeln('## 9. FORMAT DE SORTIE')
     ..writeln('Réponds UNIQUEMENT par un objet JSON valide, sans texte ni balises autour :')
     ..writeln('{"phase": "ouverture | jeu | transition | destiny | cloture | debrief", "acte": 1, "scene": 1, '
-        '"palier": 1, "compteur": {"posees": 0, "cible": $cible}, "didascalie": "...", '
+        '"compteur": {"posees": 0, "cible": $cible}, "didascalie": "...", '
         '"replique": {"personnage": "...", "archetype": "<l\'animal du personnage qui parle>", "texte": "..."}, '
         '"correction": null, "crow": null, "propositions": [{"id": 1, "texte": "...", "archetype": "...", '
         '"correcte": true}], "feedback": null, "debrief": null}')

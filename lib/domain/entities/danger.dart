@@ -1,20 +1,4 @@
-/// Un stade de la grammaire commune d'escalade d'un danger : un mot (le stade)
-/// et ce qu'il fait. Les 4 paliers concrets d'un danger suivent cet ordre.
-class StadeEscalade {
-  const StadeEscalade(this.mot, this.sens);
-  final String mot;
-  final String sens;
-}
-
-/// Ancienne grammaire commune d'escalade (1.x). Obsolète : les noms des
-/// paliers viennent maintenant de la grammaire (`Grammaire.paliers`).
-@Deprecated('Utiliser Grammaire.paliers.')
-const List<StadeEscalade> kStadesEscalade = [
-  StadeEscalade('Signale', 'le danger se manifeste, extérieur et diffus'),
-  StadeEscalade('Enferme', 'il coupe les sorties : on ne sort plus'),
-  StadeEscalade('Envahit', 'il entre et transforme le lieu, touche les corps'),
-  StadeEscalade('Supprime', 'il détruit le dernier refuge : survivre ou mourir'),
-];
+import '../grammaire/modeles.dart' show PalierId;
 
 class Danger {
   const Danger({
@@ -26,8 +10,13 @@ class Danger {
     this.actif = true,
     this.paliers = const [],
     this.kids = false,
-    this.palier4Kids = '',
+    this.tueKids = '',
   });
+
+  /// Les trois niveaux d'un danger. Un danger enregistré avant la 2.8 en a
+  /// quatre : le premier (l'ancien niveau d'avant l'acte 2) est retiré.
+  static List<String> niveauxDepuis(List<String> textes) =>
+      textes.length > PalierId.values.length ? textes.sublist(textes.length - PalierId.values.length) : textes;
 
   final String id;
   final String name;
@@ -35,7 +24,7 @@ class Danger {
   /// Tonalité narrative (Catastrophe, Fantastique, Mystère, ...).
   final String style;
 
-  /// Les 4 paliers d'escalade du danger (style PBTA), du plus léger au climax.
+  /// Les trois niveaux du danger (Il enferme, Il se manifeste, Il tue).
   final List<String> paliers;
 
   /// Éligible au mode Rue (visuel, vital, immédiat, extérieur).
@@ -50,13 +39,13 @@ class Danger {
   /// Jouable avec des enfants (venu de la grammaire).
   final bool kids;
 
-  /// Le palier 4 en mode kids : personne ne meurt.
-  final String palier4Kids;
+  /// Le niveau « Il tue » en mode kids : personne ne meurt.
+  final String tueKids;
 
-  /// Les quatre paliers, avec le palier 4 kids en mode kids.
+  /// Les trois niveaux, avec « Il tue » version kids en mode kids.
   List<String> paliersPour({bool kids = false}) => [
         for (var i = 0; i < paliers.length; i++)
-          kids && i == 3 && palier4Kids.isNotEmpty ? palier4Kids : paliers[i],
+          kids && i == PalierId.tue.index && tueKids.isNotEmpty ? tueKids : paliers[i],
       ];
 
   Danger copyWith({
@@ -68,7 +57,7 @@ class Danger {
     bool? actif,
     List<String>? paliers,
     bool? kids,
-    String? palier4Kids,
+    String? tueKids,
   }) {
     return Danger(
       id: id ?? this.id,
@@ -79,7 +68,7 @@ class Danger {
       actif: actif ?? this.actif,
       paliers: paliers ?? this.paliers,
       kids: kids ?? this.kids,
-      palier4Kids: palier4Kids ?? this.palier4Kids,
+      tueKids: tueKids ?? this.tueKids,
     );
   }
 
@@ -92,12 +81,10 @@ class Danger {
       rue: json['rue'] as bool? ?? json['fun'] as bool? ?? false,
       theatre: json['theatre'] as bool? ?? true,
       actif: json['actif'] as bool? ?? true,
-      paliers: (json['paliers'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList(growable: false) ??
-          const [],
+      paliers: niveauxDepuis([for (final e in (json['paliers'] as List<dynamic>? ?? const [])) e as String]),
       kids: json['kids'] as bool? ?? false,
-      palier4Kids: json['palier4_kids'] as String? ?? '',
+      // Rétro-compat : ancien champ `palier4_kids`.
+      tueKids: json['tue_kids'] as String? ?? json['palier4_kids'] as String? ?? '',
     );
   }
 
@@ -110,6 +97,6 @@ class Danger {
         'actif': actif,
         'paliers': paliers,
         'kids': kids,
-        'palier4_kids': palier4Kids,
+        'tue_kids': tueKids,
       };
 }

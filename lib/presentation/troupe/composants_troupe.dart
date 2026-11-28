@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../../application/state/location_details.dart';
 import '../../application/state/visual_settings.dart';
+import '../../domain/troupe/annonce_destiny.dart';
 import '../../domain/entities/danger.dart';
 import '../../domain/entities/location.dart';
-import '../../domain/exercices/exercices_destiny.dart';
 import '../../domain/grammaire/modeles.dart';
 import '../../domain/grammaire/progression.dart';
 import '../../domain/repositories/catalog_store.dart';
@@ -16,7 +16,6 @@ import '../bibliotheque/dangers_lieux_screen.dart';
 import '../destiny/composants.dart';
 import '../destiny/donnees.dart';
 import '../destiny/page.dart';
-import '../exercices/destiny/exercice_destiny_screen.dart';
 import '../theme/destiny_theme.dart';
 import 'troupe_screen.dart';
 
@@ -249,7 +248,7 @@ class RectangleArchetype extends StatelessWidget {
   /// À la régie : la montée à ce palier (voir [EnteteArchetype]).
   final PalierId? palier;
 
-  /// À l'échauffement : ses quatre réactions au danger, une par palier.
+  /// À l'échauffement : ses trois réactions au danger, une par niveau.
   final bool reactions;
 
   /// Changer d'archétype à la main (voir [EnteteArchetype]).
@@ -275,8 +274,8 @@ class RectangleArchetype extends StatelessWidget {
   }
 }
 
-/// Les quatre réactions d'un archétype au danger, une par palier, numérotées
-/// dans la couleur du palier.
+/// Les trois réactions d'un archétype au danger, une par niveau, numérotées
+/// dans la couleur du niveau.
 class ReactionsArchetype extends StatelessWidget {
   const ReactionsArchetype({super.key, required this.archetype});
 
@@ -523,7 +522,7 @@ class _LieuEtDangerState extends State<LieuEtDanger> {
           source: source,
           onInfo: danger == null ? null : () => _ouvrir(context, FicheDanger(danger: danger)),
         ),
-      if (s case SessionTroupe(:final survivants) when survivants.isNotEmpty && faceDeCode(survivants) != null)
+      if (s case SessionTroupe(:final survivants) when (int.tryParse(survivants) ?? 0) >= 1)
         Padding(
           key: const ValueKey('survivants_spectacle'),
           padding: const EdgeInsets.only(top: 6),
@@ -532,7 +531,7 @@ class _LieuEtDangerState extends State<LieuEtDanger> {
             const SizedBox(width: 10),
             Expanded(
               child: Paragraphe(
-                t.t('regie.survivants', {'r': libelleSurvivants(context, faceDeCode(survivants)!)}),
+                AnnonceDestiny.phraseSurvivants(t.t, int.parse(survivants)),
                 gras: true,
               ),
             ),
